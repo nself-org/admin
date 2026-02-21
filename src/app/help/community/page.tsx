@@ -67,7 +67,7 @@ function CommunityContent() {
                       on GitHub.
                     </p>
                     <a
-                      href="https://github.com/acamarata/nself/discussions"
+                      href="https://github.com/nself-org/cli/discussions"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="inline-flex items-center gap-2 text-blue-600 hover:underline dark:text-blue-400"
@@ -204,7 +204,7 @@ function CommunityContent() {
               </div>
               <div className="mt-6">
                 <a
-                  href="https://github.com/acamarata/nself/blob/main/CONTRIBUTING.md"
+                  href="https://github.com/nself-org/cli/blob/main/CONTRIBUTING.md"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 text-blue-600 hover:underline dark:text-blue-400"

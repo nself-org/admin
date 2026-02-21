@@ -412,4 +412,4 @@ Built by [nself](https://nself.org) · [GitHub](https://github.com/nself-org) ·
 
 **Star us on GitHub** if you find nself-admin useful!
 
-[![GitHub stars](https://img.shields.io/github/nself-org/admin?style=social)](https://github.com/nself-org/admin)
+[![GitHub stars](https://img.shields.io/github/stars/nself-org/admin?style=social)](https://github.com/nself-org/admin)

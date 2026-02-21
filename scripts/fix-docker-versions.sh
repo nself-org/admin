@@ -16,7 +16,7 @@ if docker pull nself/nself-admin:latest > /dev/null 2>&1; then
     echo "✓ Already logged in to Docker Hub"
 else
     echo "✗ Not logged in. Please login using Docker Desktop or run:"
-    echo "  docker login -u acamarata"
+    echo "  docker login -u nself"
     exit 1
 fi
 
@@ -25,7 +25,7 @@ echo "=== Option 1: Remove incorrect 0.2.0 tag ==="
 echo "Unfortunately, Docker Hub doesn't allow removing tags via CLI."
 echo "You need to:"
 echo "1. Go to https://hub.docker.com/r/nself/nself-admin/tags"
-echo "2. Login as acamarata"
+echo "2. Login as nself"
 echo "3. Delete the 0.2.0 tag manually"
 echo ""
 

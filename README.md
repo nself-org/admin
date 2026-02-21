@@ -5,13 +5,11 @@
 [![Docker Pulls](https://img.shields.io/docker/pulls/nself/nself-admin)](https://hub.docker.com/r/nself/nself-admin)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
-[![Build](https://img.shields.io/github/nself-org/admin/test.yml?branch=main&label=build)](https://github.com/nself-org/admin/actions/workflows/test.yml)
-[![Tests](https://img.shields.io/github/nself-org/admin/test.yml?branch=main&label=tests)](https://github.com/nself-org/admin/actions/workflows/test.yml)
-[![codecov](https://codecov.io/gh/nself-org/admin/branch/main/graph/badge.svg)](https://codecov.io/gh/nself-org/admin)
-[![Security](https://img.shields.io/github/nself-org/admin/dependency-audit.yml?label=security)](https://github.com/nself-org/admin/actions/workflows/dependency-audit.yml)
+[![Build](https://github.com/nself-org/admin/actions/workflows/test.yml/badge.svg)](https://github.com/nself-org/admin/actions/workflows/test.yml)
+[![Security](https://github.com/nself-org/admin/actions/workflows/dependency-audit.yml/badge.svg)](https://github.com/nself-org/admin/actions/workflows/dependency-audit.yml)
 
-[![GitHub stars](https://img.shields.io/github/nself-org/admin?style=social)](https://github.com/nself-org/admin)
-[![GitHub issues](https://img.shields.io/github/nself-org/admin)](https://github.com/nself-org/admin/issues)
+[![GitHub stars](https://img.shields.io/github/stars/nself-org/admin?style=social)](https://github.com/nself-org/admin)
+[![GitHub issues](https://img.shields.io/github/issues/nself-org/admin)](https://github.com/nself-org/admin/issues)
 [![GitHub pull requests](https://img.shields.io/github/issues-pr/nself-org/admin)](https://github.com/nself-org/admin/pulls)
 
 **Production-ready web UI for the [nself CLI](https://github.com/nself-org/cli)** - Enterprise-grade management interface for your self-hosted backend stack.
@@ -399,7 +397,7 @@ MIT - See [LICENSE](LICENSE) for details.
 
 ## Credits
 
-Built with love by the nself team and contributors.
+Built by [nself](https://nself.org) · [GitHub](https://github.com/nself-org) · [Docker Hub](https://hub.docker.com/r/nself/nself-admin)
 
 ### Key Technologies
 

@@ -6,7 +6,7 @@ on:
       - 'v*'
 
 env:
-  DOCKER_IMAGE: acamarata/nself-admin
+  DOCKER_IMAGE: nself/nself-admin
 
 jobs:
   release:

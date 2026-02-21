@@ -185,10 +185,10 @@ pnpm run build
 
 ```bash
 # On staging server
-docker pull acamarata/nself-admin:staging-<previous-sha>
+docker pull nself/nself-admin:staging-<previous-sha>
 docker stop nself-admin-staging
 docker rm nself-admin-staging
-docker run -d --name nself-admin-staging ... acamarata/nself-admin:staging-<previous-sha>
+docker run -d --name nself-admin-staging ... nself/nself-admin:staging-<previous-sha>
 ```
 
 ---
@@ -740,7 +740,7 @@ scrape_configs:
 version: '3.8'
 services:
   nself-admin:
-    image: acamarata/nself-admin:latest
+    image: nself/nself-admin:latest
     logging:
       driver: loki
       options:
@@ -973,7 +973,7 @@ ssh -i <key-file> user@staging-host
 docker login
 
 # Check image exists
-docker pull acamarata/nself-admin:staging
+docker pull nself/nself-admin:staging
 ```
 
 **Issue**: Health check fails

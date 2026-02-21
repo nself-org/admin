@@ -210,8 +210,8 @@ Test in all supported browsers:
 **Build Docker Image**
 
 ```bash
-docker build -t acamarata/nself-admin:0.5.0 .
-docker build -t acamarata/nself-admin:latest .
+docker build -t nself/nself-admin:0.5.0 .
+docker build -t nself/nself-admin:latest .
 ```
 
 - [ ] Docker image builds successfully
@@ -234,7 +234,7 @@ docker run -d \
   -p 3021:3021 \
   -v $(pwd)/test-project:/workspace \
   -v /var/run/docker.sock:/var/run/docker.sock \
-  acamarata/nself-admin:0.5.0
+  nself/nself-admin:0.5.0
 
 # Verify it works
 curl http://localhost:3021/api/health
@@ -341,10 +341,10 @@ git push origin v0.5.0
 
 ```bash
 # Build with version tag
-docker build -t acamarata/nself-admin:0.5.0 .
+docker build -t nself/nself-admin:0.5.0 .
 
 # Build latest tag
-docker build -t acamarata/nself-admin:latest .
+docker build -t nself/nself-admin:latest .
 
 # Verify images
 docker images | grep nself-admin
@@ -358,12 +358,12 @@ docker images | grep nself-admin
 
 ```bash
 # Test version tag
-docker run -d --name test-v0.5.0 -p 3021:3021 acamarata/nself-admin:0.5.0
+docker run -d --name test-v0.5.0 -p 3021:3021 nself/nself-admin:0.5.0
 curl http://localhost:3021/api/health
 docker stop test-v0.5.0 && docker rm test-v0.5.0
 
 # Test latest tag
-docker run -d --name test-latest -p 3021:3021 acamarata/nself-admin:latest
+docker run -d --name test-latest -p 3021:3021 nself/nself-admin:latest
 curl http://localhost:3021/api/health
 docker stop test-latest && docker rm test-latest
 ```
@@ -379,13 +379,13 @@ docker stop test-latest && docker rm test-latest
 docker login
 
 # Push version tag
-docker push acamarata/nself-admin:0.5.0
+docker push nself/nself-admin:0.5.0
 
 # Push latest tag
-docker push acamarata/nself-admin:latest
+docker push nself/nself-admin:latest
 
 # Verify on Docker Hub
-open https://hub.docker.com/r/acamarata/nself-admin/tags
+open https://hub.docker.com/r/nself/nself-admin/tags
 ```
 
 - [ ] Logged into Docker Hub
@@ -441,7 +441,7 @@ docker run -d \
   -p 3021:3021 \
   -v $(pwd):/workspace \
   -v /var/run/docker.sock:/var/run/docker.sock \
-  acamarata/nself-admin:0.5.0
+  nself/nself-admin:0.5.0
 ```
 ````
 

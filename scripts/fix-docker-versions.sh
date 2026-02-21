@@ -12,7 +12,7 @@ echo ""
 
 # Check if logged in
 echo "Checking Docker login status..."
-if docker pull acamarata/nself-admin:latest > /dev/null 2>&1; then
+if docker pull nself/nself-admin:latest > /dev/null 2>&1; then
     echo "✓ Already logged in to Docker Hub"
 else
     echo "✗ Not logged in. Please login using Docker Desktop or run:"
@@ -24,7 +24,7 @@ echo ""
 echo "=== Option 1: Remove incorrect 0.2.0 tag ==="
 echo "Unfortunately, Docker Hub doesn't allow removing tags via CLI."
 echo "You need to:"
-echo "1. Go to https://hub.docker.com/r/acamarata/nself-admin/tags"
+echo "1. Go to https://hub.docker.com/r/nself/nself-admin/tags"
 echo "2. Login as acamarata"
 echo "3. Delete the 0.2.0 tag manually"
 echo ""
@@ -39,19 +39,19 @@ cat << 'EOF'
 docker build -t nself-admin:0.0.3 .
 
 # 2. Tag for Docker Hub
-docker tag nself-admin:0.0.3 acamarata/nself-admin:0.0.3
-docker tag nself-admin:0.0.3 acamarata/nself-admin:latest
+docker tag nself-admin:0.0.3 nself/nself-admin:0.0.3
+docker tag nself-admin:0.0.3 nself/nself-admin:latest
 
 # 3. Optionally, if you have 0.0.2 locally, push it too:
-# docker tag nself-admin:0.0.2 acamarata/nself-admin:0.0.2
-# docker push acamarata/nself-admin:0.0.2
+# docker tag nself-admin:0.0.2 nself/nself-admin:0.0.2
+# docker push nself/nself-admin:0.0.2
 
 # 4. Push to Docker Hub
-docker push acamarata/nself-admin:0.0.3
-docker push acamarata/nself-admin:latest
+docker push nself/nself-admin:0.0.3
+docker push nself/nself-admin:latest
 
 # 5. Verify on Docker Hub
-echo "Check: https://hub.docker.com/r/acamarata/nself-admin/tags"
+echo "Check: https://hub.docker.com/r/nself/nself-admin/tags"
 EOF
 
 echo ""
@@ -67,8 +67,8 @@ CMD ["cat", "/notice.txt"]
 DOCKERFILE
 
 # Build and push deprecation notice
-docker build -f Dockerfile.deprecated -t acamarata/nself-admin:0.2.0 .
-docker push acamarata/nself-admin:0.2.0
+docker build -f Dockerfile.deprecated -t nself/nself-admin:0.2.0 .
+docker push nself/nself-admin:0.2.0
 EOF
 
 echo ""

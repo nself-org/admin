@@ -209,7 +209,7 @@ function getServiceInfo(name: string): {
       description: 'nself Admin UI',
       details: [
         'Container: nself-admin',
-        'Image: acamarata/nself-admin:latest',
+        'Image: nself/nself-admin:latest',
         'Port: 3021',
         'Web management interface',
       ],

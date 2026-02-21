@@ -163,7 +163,7 @@ async function generateDockerCompose(config: any): Promise<string> {
     config.NADMIN_ENABLED === 'true'
   ) {
     services.push(`  nself-admin:
-    image: acamarata/nself-admin:latest
+    image: nself/nself-admin:latest
     ports:
       - "3021:3021"
     environment:

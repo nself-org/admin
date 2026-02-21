@@ -1,7 +1,7 @@
 # nself-admin - Web UI for nself CLI
 
 [![Version](https://img.shields.io/badge/version-0.5.0-blue.svg)](https://github.com/nself-org/admin/releases)
-[![Docker Pulls](https://img.shields.io/docker/pulls/acamarata/nself-admin)](https://hub.docker.com/r/acamarata/nself-admin)
+[![Docker Pulls](https://img.shields.io/docker/pulls/nself/nself-admin)](https://hub.docker.com/r/nself/nself-admin)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](https://github.com/nself-org/admin/blob/main/LICENSE)
 
 Production-ready web interface for managing your self-hosted backend stack using the [nself CLI](https://github.com/nself-org/cli).
@@ -14,7 +14,7 @@ docker run -d \
   -p 3021:3021 \
   -v $(pwd):/workspace \
   -v /var/run/docker.sock:/var/run/docker.sock \
-  acamarata/nself-admin:latest
+  nself/nself-admin:latest
 ```
 
 Open http://localhost:3021 in your browser.
@@ -67,7 +67,7 @@ version: '3.8'
 
 services:
   nself-admin:
-    image: acamarata/nself-admin:latest
+    image: nself/nself-admin:latest
     container_name: nself-admin
     restart: unless-stopped
     ports:

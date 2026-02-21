@@ -23,7 +23,7 @@ docker run -d \
   -p 3021:3021 \
   -v $(pwd):/workspace:rw \
   -v nself-admin-data:/app/data \
-  acamarata/nself-admin:latest
+  nself/nself-admin:latest
 ```
 
 Open your browser to http://localhost:3021

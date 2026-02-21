@@ -376,7 +376,7 @@ This is the **first production-ready release** of nself-admin, representing a co
 
 #### Docker Image
 
-- Image: `acamarata/nself-admin:0.5.0`
+- Image: `nself/nself-admin:0.5.0`
 - Size: 450MB (optimized)
 - Base: `node:18-alpine`
 - Multi-stage build
@@ -396,7 +396,7 @@ See [MIGRATION_v0.4_to_v0.5.md](MIGRATION_v0.4_to_v0.5.md) for detailed upgrade 
 **Recommended Steps:**
 
 1. Backup your current installation
-2. Update Docker image: `docker pull acamarata/nself-admin:0.5.0`
+2. Update Docker image: `docker pull nself/nself-admin:0.5.0`
 3. Review environment variables
 4. Restart containers
 5. Test all critical workflows
@@ -521,7 +521,7 @@ See [MIGRATION_v0.4_to_v0.5.md](MIGRATION_v0.4_to_v0.5.md) for detailed upgrade 
 - New plugin command wrapping infrastructure
 - Enhanced database command support
 - Plugin registry integration
-- Docker image: `acamarata/nself-admin:0.0.8`
+- Docker image: `nself/nself-admin:0.0.8`
 - 50+ files changed with security hardening
 
 ---
@@ -568,7 +568,7 @@ See [MIGRATION_v0.4_to_v0.5.md](MIGRATION_v0.4_to_v0.5.md) for detailed upgrade 
 - 20+ files changed
 - New API routes: `/api/deploy/*` (3 endpoints), `/api/env` (1 endpoint)
 - New pages: `/deployment/*` (3 pages)
-- Docker image: `acamarata/nself-admin:0.0.7`
+- Docker image: `nself/nself-admin:0.0.7`
 - Aligned with nself CLI v0.4.4
 
 ## [0.0.6] - 2026-01-22
@@ -606,7 +606,7 @@ See [MIGRATION_v0.4_to_v0.5.md](MIGRATION_v0.4_to_v0.5.md) for detailed upgrade 
 
 - 45 files changed, 2,362 insertions(+), 264 deletions(-)
 - New API routes: `/api/config/ssl/*` (4 endpoints)
-- Docker image: `acamarata/nself-admin:0.0.6`
+- Docker image: `nself/nself-admin:0.0.6`
 
 ## [0.0.5] - 2026-01-21
 

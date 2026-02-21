@@ -163,10 +163,10 @@ docker rm nself-admin
 
 ```bash
 # Pull specific version
-docker pull acamarata/nself-admin:0.5.0
+docker pull nself/nself-admin:0.5.0
 
 # Or latest
-docker pull acamarata/nself-admin:latest
+docker pull nself/nself-admin:latest
 ```
 
 ---
@@ -189,7 +189,7 @@ version: '3.8'
 
 services:
   nself-admin:
-    image: acamarata/nself-admin:0.5.0 # Update version
+    image: nself/nself-admin:0.5.0 # Update version
     container_name: nself-admin
     restart: unless-stopped
     ports:
@@ -236,7 +236,7 @@ docker run -d \
   -e NSELF_PROJECT_PATH=/workspace \
   -e NODE_ENV=production \
   -e PORT=3021 \
-  acamarata/nself-admin:0.5.0
+  nself/nself-admin:0.5.0
 ```
 
 ---
@@ -438,7 +438,7 @@ docker run -d \
   -v nself-admin-data:/app/data \
   -e PROJECT_PATH=/workspace \
   -e ADMIN_PASSWORD=your_password \
-  acamarata/nself-admin:0.4.0
+  nself/nself-admin:0.4.0
 ```
 
 **Note**: You will lose any data created during v0.5.0 usage.

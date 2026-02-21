@@ -41,7 +41,7 @@ docker run -d \
   -v /path/to/your/project:/workspace:rw \
   -v nself-admin-data:/app/data \
   -e NSELF_PROJECT_PATH=/workspace \
-  acamarata/nself-admin:latest
+  nself/nself-admin:latest
 ```
 
 ### Method 3: Docker Compose
@@ -53,7 +53,7 @@ version: '3.8'
 
 services:
   nself-admin:
-    image: acamarata/nself-admin:latest
+    image: nself/nself-admin:latest
     container_name: nself-admin
     ports:
       - '3021:3021'
@@ -84,7 +84,7 @@ If port 3021 is already in use, nAdmin will automatically try ports 3022-3030:
 docker run -d \
   -p 8080:3021 \
   # ... other options
-  acamarata/nself-admin:latest
+  nself/nself-admin:latest
 ```
 
 Then access at http://localhost:8080
@@ -156,7 +156,7 @@ You should see:
 ### Pull Latest Image
 
 ```bash
-docker pull acamarata/nself-admin:latest
+docker pull nself/nself-admin:latest
 ```
 
 ### Restart Container
@@ -190,7 +190,7 @@ docker rm nself-admin
 ### Remove Image (Optional)
 
 ```bash
-docker rmi acamarata/nself-admin:latest
+docker rmi nself/nself-admin:latest
 ```
 
 ### Remove Data Volume (Optional)

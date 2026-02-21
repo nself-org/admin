@@ -15,7 +15,7 @@ echo "======================================="
 
 # Get version from package.json or use provided argument
 VERSION=${1:-$(node -p "require('./package.json').version")}
-DOCKER_REPO="acamarata/nself-admin"
+DOCKER_REPO="nself/nself-admin"
 
 echo -e "Version: ${YELLOW}$VERSION${NC}"
 echo -e "Repository: ${YELLOW}$DOCKER_REPO${NC}"

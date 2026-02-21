@@ -51,7 +51,7 @@ docker run -d \
   -p 3021:3021 \
   -v $(pwd):/workspace \
   -v /var/run/docker.sock:/var/run/docker.sock \
-  acamarata/nself-admin:latest
+  nself/nself-admin:latest
 ```
 
 **Option 3: Development Mode**

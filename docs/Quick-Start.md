@@ -25,7 +25,7 @@ docker run -d \
   -p 3021:3021 \
   -v $(pwd):/workspace \
   -v /var/run/docker.sock:/var/run/docker.sock \
-  acamarata/nself-admin:latest
+  nself/nself-admin:latest
 ```
 
 ### What This Does:
@@ -247,7 +247,7 @@ docker run -d \
   -p 3022:3021 \  # Changed port
   -v $(pwd):/workspace \
   -v /var/run/docker.sock:/var/run/docker.sock \
-  acamarata/nself-admin:latest
+  nself/nself-admin:latest
 ```
 
 ### Docker Not Running

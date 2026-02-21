@@ -234,7 +234,7 @@ docker rm nself-admin
 ### Step 2: Pull New Docker Image
 
 ```bash
-docker pull acamarata/nself-admin:0.5.0
+docker pull nself/nself-admin:0.5.0
 ```
 
 ### Step 3: Update Launch Command
@@ -248,7 +248,7 @@ docker run -d \
   -v $(pwd):/project \
   -e PROJECT_PATH=/project \
   -e ADMIN_PASSWORD=your-password \
-  acamarata/nself-admin:0.4.0
+  nself/nself-admin:0.4.0
 ```
 
 **New Command (v0.5.0):**
@@ -260,7 +260,7 @@ docker run -d \
   -v $(pwd):/workspace \
   -v /var/run/docker.sock:/var/run/docker.sock \
   -e NSELF_PROJECT_PATH=/workspace \
-  acamarata/nself-admin:0.5.0
+  nself/nself-admin:0.5.0
 ```
 
 **Key Changes:**
@@ -289,7 +289,7 @@ docker run -d \
   -v $(pwd):/workspace \
   -v /var/run/docker.sock:/var/run/docker.sock \
   -e NSELF_PROJECT_PATH=/workspace \
-  acamarata/nself-admin:latest
+  nself/nself-admin:latest
 ```
 
 ### Step 5: First Login
@@ -438,7 +438,7 @@ docker run -d \
   -v $(pwd)/nadmin-backup-YYYYMMDD.db:/app/data/nadmin.db \
   -e PROJECT_PATH=/project \
   -e ADMIN_PASSWORD=your-old-password \
-  acamarata/nself-admin:0.4.0
+  nself/nself-admin:0.4.0
 ```
 
 ### Full Rollback with Data Restore
@@ -461,7 +461,7 @@ docker run -d \
   -v $(pwd):/project \
   -e PROJECT_PATH=/project \
   -e ADMIN_PASSWORD=your-old-password \
-  acamarata/nself-admin:0.4.0
+  nself/nself-admin:0.4.0
 
 # 4. Verify rollback
 curl http://localhost:3021/api/health | jq .version
@@ -624,7 +624,7 @@ docker run -d \
   -p 3021:3021 \
   -v $(pwd):/workspace \
   -v /var/run/docker.sock:/var/run/docker.sock \
-  acamarata/nself-admin:0.5.0
+  nself/nself-admin:0.5.0
 ```
 
 ---

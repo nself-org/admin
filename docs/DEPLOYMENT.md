@@ -85,7 +85,7 @@ docker run -d \
   -v nself-admin-data:/app/data \
   -e NSELF_PROJECT_PATH=/workspace \
   -e NODE_ENV=production \
-  acamarata/nself-admin:0.5.0
+  nself/nself-admin:0.5.0
 ```
 
 ### Method 3: Docker Compose
@@ -97,7 +97,7 @@ version: '3.8'
 
 services:
   nself-admin:
-    image: acamarata/nself-admin:0.5.0
+    image: nself/nself-admin:0.5.0
     container_name: nself-admin
     restart: unless-stopped
     ports:
@@ -145,10 +145,10 @@ Always use specific version tags in production:
 
 ```bash
 # Good - specific version
-docker pull acamarata/nself-admin:0.5.0
+docker pull nself/nself-admin:0.5.0
 
 # Avoid - latest tag can change
-docker pull acamarata/nself-admin:latest
+docker pull nself/nself-admin:latest
 ```
 
 ### Volume Mounts
@@ -211,7 +211,7 @@ services:
       - '127.0.0.1:2375:2375'
 
   nself-admin:
-    image: acamarata/nself-admin:0.5.0
+    image: nself/nself-admin:0.5.0
     environment:
       - DOCKER_HOST=tcp://docker-proxy:2375
 ```
@@ -247,7 +247,7 @@ docker run -d \
   -e NSELF_PROJECT_PATH=/workspace \
   -e NODE_ENV=production \
   -e LOG_LEVEL=info \
-  acamarata/nself-admin:0.5.0
+  nself/nself-admin:0.5.0
 ```
 
 **Docker Compose:**
@@ -274,7 +274,7 @@ LOG_LEVEL=info
 Load with:
 
 ```bash
-docker run -d --env-file .env.production acamarata/nself-admin:0.5.0
+docker run -d --env-file .env.production nself/nself-admin:0.5.0
 ```
 
 ---
@@ -424,7 +424,7 @@ Add labels to Docker Compose:
 ```yaml
 services:
   nself-admin:
-    image: acamarata/nself-admin:0.5.0
+    image: nself/nself-admin:0.5.0
     labels:
       - 'traefik.enable=true'
       - 'traefik.http.routers.nself-admin.rule=Host(`admin.example.com`)'
@@ -688,7 +688,7 @@ Prevent brute-force attacks:
 Keep Docker images up to date:
 
 ```bash
-docker pull acamarata/nself-admin:latest
+docker pull nself/nself-admin:latest
 docker-compose down
 docker-compose up -d
 ```
@@ -734,11 +734,11 @@ Run multiple instances behind a load balancer:
 ```yaml
 services:
   nself-admin-1:
-    image: acamarata/nself-admin:0.5.0
+    image: nself/nself-admin:0.5.0
     # ... config
 
   nself-admin-2:
-    image: acamarata/nself-admin:0.5.0
+    image: nself/nself-admin:0.5.0
     # ... config
 
   nginx:

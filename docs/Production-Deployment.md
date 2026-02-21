@@ -126,7 +126,7 @@ version: '3.8'
 
 services:
   nself-admin:
-    image: acamarata/nself-admin:latest
+    image: nself/nself-admin:latest
     container_name: nself-admin-prod
     restart: unless-stopped
 
@@ -389,7 +389,7 @@ spec:
         fsGroup: 1000
       containers:
         - name: nself-admin
-          image: acamarata/nself-admin:latest
+          image: nself/nself-admin:latest
           ports:
             - containerPort: 3021
           env:
@@ -504,7 +504,7 @@ spec:
   "containerDefinitions": [
     {
       "name": "nself-admin",
-      "image": "acamarata/nself-admin:latest",
+      "image": "nself/nself-admin:latest",
       "portMappings": [
         {
           "containerPort": 3021,
@@ -1640,10 +1640,10 @@ echo "🔄 Rolling back to version: $PREVIOUS_VERSION"
 docker-compose down
 
 # Pull previous image
-docker pull "acamarata/nself-admin:$PREVIOUS_VERSION"
+docker pull "nself/nself-admin:$PREVIOUS_VERSION"
 
 # Update image tag
-sed -i "s|acamarata/nself-admin:.*|acamarata/nself-admin:$PREVIOUS_VERSION|" docker-compose.yml
+sed -i "s|nself/nself-admin:.*|nself/nself-admin:$PREVIOUS_VERSION|" docker-compose.yml
 
 # Start with previous version
 docker-compose up -d

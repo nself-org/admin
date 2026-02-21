@@ -40,7 +40,7 @@ nself-admin is a **visual companion** to the nself CLI. It does NOT reimplement 
 
 **Release Date**: February 1, 2026
 **GitHub**: https://github.com/nself-org/admin/releases/tag/v0.9.0
-**Docker**: `docker pull acamarata/nself-admin:0.9.0`
+**Docker**: `docker pull nself/nself-admin:0.9.0`
 
 Complete feature implementation with all TODOs resolved and comprehensive testing:
 
@@ -74,7 +74,7 @@ Complete feature implementation with all TODOs resolved and comprehensive testin
 
 **Release Date**: February 1, 2026
 **GitHub**: https://github.com/nself-org/admin/releases/tag/v0.8.0
-**Docker**: `docker pull acamarata/nself-admin:0.8.0`
+**Docker**: `docker pull nself/nself-admin:0.8.0`
 
 Production-ready release with comprehensive testing and stability improvements:
 
@@ -104,7 +104,7 @@ Production-ready release with comprehensive testing and stability improvements:
 
 **Release Date**: February 1, 2026
 **GitHub**: https://github.com/nself-org/admin/releases/tag/v0.7.0
-**Docker**: `docker pull acamarata/nself-admin:0.7.0`
+**Docker**: `docker pull nself/nself-admin:0.7.0`
 
 Real-time collaboration and analytics features:
 
@@ -148,7 +148,7 @@ Real-time collaboration and analytics features:
 
 **Release Date**: February 1, 2026
 **GitHub**: https://github.com/nself-org/admin/releases/tag/v0.6.0
-**Docker**: `docker pull acamarata/nself-admin:0.6.0`
+**Docker**: `docker pull nself/nself-admin:0.6.0`
 
 Multi-tenancy and organization management features:
 
@@ -192,7 +192,7 @@ Multi-tenancy and organization management features:
 
 **Release Date**: January 31, 2026
 **GitHub**: https://github.com/nself-org/admin/releases/tag/v0.4.0
-**Docker**: `docker pull acamarata/nself-admin:0.4.0`
+**Docker**: `docker pull nself/nself-admin:0.4.0`
 **Stats**: 45 files, +6,387 lines
 
 9 new service management pages with 36 API routes:
@@ -211,7 +211,7 @@ Multi-tenancy and organization management features:
 
 **Release Date**: January 31, 2026
 **GitHub**: https://github.com/nself-org/admin/releases/tag/v0.3.0
-**Docker**: `docker pull acamarata/nself-admin:0.3.0`
+**Docker**: `docker pull nself/nself-admin:0.3.0`
 **Stats**: 39 files, +6,470 lines
 
 8 new auth/security features with 29 API routes:
@@ -229,7 +229,7 @@ Multi-tenancy and organization management features:
 
 **Release Date**: January 31, 2026
 **GitHub**: https://github.com/nself-org/admin/releases/tag/v0.2.0
-**Docker**: `docker pull acamarata/nself-admin:0.2.0`
+**Docker**: `docker pull nself/nself-admin:0.2.0`
 **Stats**: 25 files
 
 Complete config management system:

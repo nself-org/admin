@@ -10,10 +10,10 @@ nAdmin is designed as a Docker-first application, running in a container that ma
 
 ```bash
 # Pull from Docker Hub
-docker pull acamarata/nself-admin:latest
+docker pull nself/nself-admin:latest
 
 # Specific version
-docker pull acamarata/nself-admin:v1.2.0
+docker pull nself/nself-admin:v1.2.0
 ```
 
 ### Building from Source
@@ -95,7 +95,7 @@ docker run -d \
   -p 3021:3021 \
   -v /path/to/project:/workspace:rw \
   -v nself-admin-data:/app/data \
-  acamarata/nself-admin:latest
+  nself/nself-admin:latest
 ```
 
 ### Advanced Configuration
@@ -119,7 +119,7 @@ docker run -d \
   --health-interval=30s \
   --health-timeout=3s \
   --health-retries=3 \
-  acamarata/nself-admin:latest
+  nself/nself-admin:latest
 ```
 
 ## Docker Compose
@@ -132,7 +132,7 @@ version: '3.8'
 
 services:
   nself-admin:
-    image: acamarata/nself-admin:latest
+    image: nself/nself-admin:latest
     container_name: nself-admin
     restart: unless-stopped
     ports:
@@ -162,7 +162,7 @@ version: '3.8'
 
 services:
   nself-admin:
-    image: acamarata/nself-admin:latest
+    image: nself/nself-admin:latest
     container_name: nself-admin
     restart: unless-stopped
     networks:
@@ -212,7 +212,7 @@ services:
       - nself-admin
 
   nself-admin:
-    image: acamarata/nself-admin:latest
+    image: nself/nself-admin:latest
     container_name: nself-admin
     restart: unless-stopped
     expose:
@@ -280,7 +280,7 @@ docker run -d \
   --network nself-network \
   -p 3021:3021 \
   # ... other options
-  acamarata/nself-admin:latest
+  nself/nself-admin:latest
 ```
 
 ### Host Network
@@ -292,7 +292,7 @@ docker run -d \
   --network host \
   -e PORT=3021 \
   # ... other options
-  acamarata/nself-admin:latest
+  nself/nself-admin:latest
 ```
 
 ## Environment Variables
@@ -320,13 +320,13 @@ docker run -d \
   -e NODE_ENV=production \
   -e TZ=America/New_York \
   # ... other options
-  acamarata/nself-admin:latest
+  nself/nself-admin:latest
 
 # Via env file
 docker run -d \
   --env-file .env.production \
   # ... other options
-  acamarata/nself-admin:latest
+  nself/nself-admin:latest
 ```
 
 ## Security Hardening
@@ -350,7 +350,7 @@ docker run -d \
   --tmpfs /app/.next/cache \
   -v nself-admin-data:/app/data \
   # ... other options
-  acamarata/nself-admin:latest
+  nself/nself-admin:latest
 ```
 
 ### Security Options
@@ -362,7 +362,7 @@ docker run -d \
   --cap-drop ALL \
   --cap-add NET_BIND_SERVICE \
   # ... other options
-  acamarata/nself-admin:latest
+  nself/nself-admin:latest
 ```
 
 ## Monitoring
@@ -417,7 +417,7 @@ docker exec nself-admin df -h
 
 ```bash
 # 1. Pull new image
-docker pull acamarata/nself-admin:latest
+docker pull nself/nself-admin:latest
 
 # 2. Create new container
 docker run -d \
@@ -425,7 +425,7 @@ docker run -d \
   -p 3022:3021 \
   -v /path/to/project:/workspace:rw \
   -v nself-admin-data:/app/data \
-  acamarata/nself-admin:latest
+  nself/nself-admin:latest
 
 # 3. Test new container
 curl http://localhost:3022/api/health
@@ -450,7 +450,7 @@ docker rm nself-admin-old
 
 ```bash
 # Tag current version before upgrade
-docker tag acamarata/nself-admin:latest acamarata/nself-admin:backup
+docker tag nself/nself-admin:latest nself/nself-admin:backup
 
 # If rollback needed
 docker stop nself-admin
@@ -460,7 +460,7 @@ docker run -d \
   -p 3021:3021 \
   -v /path/to/project:/workspace:rw \
   -v nself-admin-data:/app/data \
-  acamarata/nself-admin:backup
+  nself/nself-admin:backup
 ```
 
 ## Troubleshooting
@@ -478,7 +478,7 @@ docker events --filter container=nself-admin
 docker run -it --rm \
   -v /path/to/project:/workspace:rw \
   -v nself-admin-data:/app/data \
-  acamarata/nself-admin:latest \
+  nself/nself-admin:latest \
   sh
 ```
 
@@ -507,7 +507,7 @@ docker run -d \
   --memory="1g" \
   --memory-swap="2g" \
   # ... other options
-  acamarata/nself-admin:latest
+  nself/nself-admin:latest
 ```
 
 ### Network Issues

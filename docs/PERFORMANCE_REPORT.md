@@ -304,7 +304,7 @@ Largest Dependencies:
 ### Docker Build Command
 
 ```bash
-docker build -t acamarata/nself-admin:0.5.0 .
+docker build -t nself/nself-admin:0.5.0 .
 ```
 
 ### Docker Run (Production)
@@ -316,7 +316,7 @@ docker run -d \
   -v /var/run/docker.sock:/var/run/docker.sock \
   -v /path/to/project:/workspace \
   -e NODE_ENV=production \
-  acamarata/nself-admin:0.5.0
+  nself/nself-admin:0.5.0
 ```
 
 ### Resource Monitoring

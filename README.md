@@ -1,8 +1,8 @@
 # nself-admin (nAdmin)
 
 [![Version](https://img.shields.io/badge/version-0.5.0-blue.svg)](https://github.com/nself-org/admin/releases)
-[![Docker](https://img.shields.io/docker/v/acamarata/nself-admin?label=docker)](https://hub.docker.com/r/acamarata/nself-admin)
-[![Docker Pulls](https://img.shields.io/docker/pulls/acamarata/nself-admin)](https://hub.docker.com/r/acamarata/nself-admin)
+[![Docker](https://img.shields.io/docker/v/nself/nself-admin?label=docker)](https://hub.docker.com/r/nself/nself-admin)
+[![Docker Pulls](https://img.shields.io/docker/pulls/nself/nself-admin)](https://hub.docker.com/r/nself/nself-admin)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
 [![Build](https://img.shields.io/github/nself-org/admin/test.yml?branch=main&label=build)](https://github.com/nself-org/admin/actions/workflows/test.yml)
@@ -164,7 +164,7 @@ docker run -d \
   -p 3021:3021 \
   -v $(pwd):/workspace \
   -v /var/run/docker.sock:/var/run/docker.sock \
-  acamarata/nself-admin:latest
+  nself/nself-admin:latest
 ```
 
 ### First-Time Setup

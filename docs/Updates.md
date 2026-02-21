@@ -15,7 +15,7 @@ Pull the latest stable release:
 docker stop nself-admin
 
 # Pull latest image
-docker pull acamarata/nself-admin:latest
+docker pull nself/nself-admin:latest
 
 # Remove old container
 docker rm nself-admin
@@ -25,7 +25,7 @@ docker run -d --name nself-admin \
   -p 3021:3021 \
   -v $(pwd):/workspace \
   -v /var/run/docker.sock:/var/run/docker.sock \
-  acamarata/nself-admin:latest
+  nself/nself-admin:latest
 ```
 
 #### Specific Version
@@ -34,14 +34,14 @@ Update to a specific version:
 
 ```bash
 # Pull specific version
-docker pull acamarata/nself-admin:0.0.8
+docker pull nself/nself-admin:0.0.8
 
 # Update container with specific version
 docker run -d --name nself-admin \
   -p 3021:3021 \
   -v $(pwd):/workspace \
   -v /var/run/docker.sock:/var/run/docker.sock \
-  acamarata/nself-admin:0.0.8
+  nself/nself-admin:0.0.8
 ```
 
 ### Development Updates
@@ -116,10 +116,10 @@ Pin to specific versions in production:
 ```bash
 # Production deployment
 docker run -d --name nself-admin \
-  acamarata/nself-admin:0.0.8  # Specific version
+  nself/nself-admin:0.0.8  # Specific version
 
 # Kubernetes deployment
-image: acamarata/nself-admin:0.0.8
+image: nself/nself-admin:0.0.8
 ```
 
 ## Migration Guide
@@ -231,7 +231,7 @@ cp ../production/data/nadmin.db ./data/
 # Test update
 docker run --rm \
   -v $(pwd)/data:/app/data \
-  acamarata/nself-admin:latest \
+  nself/nself-admin:latest \
   npm run migrate
 ```
 
@@ -270,7 +270,7 @@ echo "Starting nself Admin update..."
 docker exec nself-admin cp /app/data/nadmin.db /app/data/nadmin.db.backup
 
 # Pull latest image
-docker pull acamarata/nself-admin:latest
+docker pull nself/nself-admin:latest
 
 # Stop current container
 docker stop nself-admin
@@ -283,7 +283,7 @@ docker run -d --name nself-admin \
   -p 3021:3021 \
   -v $(pwd):/workspace \
   -v /var/run/docker.sock:/var/run/docker.sock \
-  acamarata/nself-admin:latest
+  nself/nself-admin:latest
 
 # Wait for startup
 sleep 10
@@ -300,7 +300,7 @@ else
     -p 3021:3021 \
     -v $(pwd):/workspace \
     -v /var/run/docker.sock:/var/run/docker.sock \
-    acamarata/nself-admin:0.0.7  # Previous version
+    nself/nself-admin:0.0.7  # Previous version
   exit 1
 fi
 ```
@@ -347,7 +347,7 @@ docker run -d --name nself-admin \
   -p 3021:3021 \
   -v $(pwd):/workspace \
   -v /var/run/docker.sock:/var/run/docker.sock \
-  acamarata/nself-admin:0.0.6  # Previous version
+  nself/nself-admin:0.0.6  # Previous version
 
 # Restore database if needed
 docker exec nself-admin cp /app/data/nadmin.db.backup /app/data/nadmin.db
@@ -467,11 +467,11 @@ For critical security issues:
 docker stop nself-admin
 
 # 2. Pull security update
-docker pull acamarata/nself-admin:security-patch
+docker pull nself/nself-admin:security-patch
 
 # 3. Start with security update
 docker run -d --name nself-admin \
-  acamarata/nself-admin:security-patch
+  nself/nself-admin:security-patch
 
 # 4. Verify security fix
 curl http://localhost:3021/api/security/status
@@ -554,5 +554,5 @@ For more information, see:
 
 - [Changelog](CHANGELOG.md)
 - [GitHub Releases](https://github.com/nself-org/admin/releases)
-- [Docker Hub](https://hub.docker.com/r/acamarata/nself-admin)
+- [Docker Hub](https://hub.docker.com/r/nself/nself-admin)
 - [Security Policy](SECURITY.md)

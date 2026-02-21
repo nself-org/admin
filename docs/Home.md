@@ -91,7 +91,7 @@
 ## Project Links
 
 - **GitHub**: [nself-org/admin](https://github.com/nself-org/admin)
-- **Docker Hub**: [acamarata/nself-admin](https://hub.docker.com/r/acamarata/nself-admin)
+- **Docker Hub**: [nself/nself-admin](https://hub.docker.com/r/nself/nself-admin)
 - **Issues**: [Report bugs or request features](https://github.com/nself-org/admin/issues)
 - **Discussions**: [Join the community](https://github.com/nself-org/admin/discussions)
 

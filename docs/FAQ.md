@@ -62,7 +62,7 @@ docker run -d \
   -p 3021:3021 \
   -v $(pwd):/workspace \
   -v /var/run/docker.sock:/var/run/docker.sock \
-  acamarata/nself-admin:latest
+  nself/nself-admin:latest
 ```
 
 ### Can I change the default port (3021)?
@@ -76,7 +76,7 @@ docker run -d \
   -p 8080:3021 \
   -v $(pwd):/workspace \
   -v /var/run/docker.sock:/var/run/docker.sock \
-  acamarata/nself-admin:latest
+  nself/nself-admin:latest
 ```
 
 Then access at `http://localhost:8080`
@@ -91,7 +91,7 @@ docker stop nself-admin
 docker rm nself-admin
 
 # Pull latest image
-docker pull acamarata/nself-admin:latest
+docker pull nself/nself-admin:latest
 
 # Run new container with same volumes
 docker run -d \
@@ -99,7 +99,7 @@ docker run -d \
   -p 3021:3021 \
   -v $(pwd):/workspace \
   -v /var/run/docker.sock:/var/run/docker.sock \
-  acamarata/nself-admin:latest
+  nself/nself-admin:latest
 ```
 
 ### Can I run multiple nself Admin instances?

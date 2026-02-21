@@ -7,7 +7,7 @@
 ## v0.9.0 - 100% Feature Complete (February 1, 2026) ✅
 
 **Status**: Released
-**Docker**: `docker pull acamarata/nself-admin:0.9.0`
+**Docker**: `docker pull nself/nself-admin:0.9.0`
 **GitHub**: [v0.9.0 Release](https://github.com/nself-org/admin/releases/tag/v0.9.0)
 
 ### Overview
@@ -68,7 +68,7 @@ v0.9.0 represents a major milestone - 100% feature completion with all TODOs res
 ## v0.8.0 - Production-Ready Stable Release (February 1, 2026) ✅
 
 **Status**: Released
-**Docker**: `docker pull acamarata/nself-admin:0.8.0`
+**Docker**: `docker pull nself/nself-admin:0.8.0`
 **GitHub**: [v0.8.0 Release](https://github.com/nself-org/admin/releases/tag/v0.8.0)
 
 ### Overview
@@ -107,7 +107,7 @@ Production-ready release with comprehensive testing and stability improvements. 
 ## v0.7.0 - Real-time Collaboration & Analytics (February 1, 2026) ✅
 
 **Status**: Released
-**Docker**: `docker pull acamarata/nself-admin:0.7.0`
+**Docker**: `docker pull nself/nself-admin:0.7.0`
 **GitHub**: [v0.7.0 Release](https://github.com/nself-org/admin/releases/tag/v0.7.0)
 
 ### Overview
@@ -170,7 +170,7 @@ Real-time collaboration and advanced analytics features. Comprehensive notificat
 ## v0.6.0 - Multi-Tenancy & Organizations (February 1, 2026) ✅
 
 **Status**: Released
-**Docker**: `docker pull acamarata/nself-admin:0.6.0`
+**Docker**: `docker pull nself/nself-admin:0.6.0`
 **GitHub**: [v0.6.0 Release](https://github.com/nself-org/admin/releases/tag/v0.6.0)
 
 ### Overview
@@ -294,10 +294,10 @@ Complete multi-tenancy support with organization management, role-based access c
 
 ```bash
 # Latest stable release
-docker pull acamarata/nself-admin:latest
+docker pull nself/nself-admin:latest
 
 # Specific version
-docker pull acamarata/nself-admin:0.9.0
+docker pull nself/nself-admin:0.9.0
 
 # Run with nself CLI
 nself admin

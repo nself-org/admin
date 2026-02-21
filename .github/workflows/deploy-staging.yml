@@ -5,7 +5,7 @@ on:
     branches: [main]
 
 env:
-  DOCKER_IMAGE: acamarata/nself-admin
+  DOCKER_IMAGE: nself/nself-admin
   DOCKER_TAG_STAGING: staging
 
 jobs:

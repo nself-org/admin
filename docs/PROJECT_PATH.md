@@ -29,7 +29,7 @@ docker run -d \
   -v /var/run/docker.sock:/var/run/docker.sock:ro \
   -e PROJECT_PATH=/project \
   -e ADMIN_PASSWORD=secure_password \
-  acamarata/nself-admin:latest
+  nself/nself-admin:latest
 ```
 
 ## How It Works

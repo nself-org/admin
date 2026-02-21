@@ -45,7 +45,7 @@ The repository includes three main workflow files:
   - Manual workflow dispatch
 - Publishes to:
   - Docker Hub: `nself/admin`
-  - GitHub Container Registry: `ghcr.io/acamarata/nself-admin`
+  - GitHub Container Registry: `ghcr.io/nself-org/admin`
 
 ### docker-buildx.yml
 

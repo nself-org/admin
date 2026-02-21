@@ -644,7 +644,7 @@ Navigate to `Settings > Secrets and variables > Actions` and add:
 ```bash
 # Visit https://codecov.io
 # Sign in with GitHub
-# Add repository: acamarata/nself-admin
+# Add repository: nself-org/admin
 # Copy token and add to GitHub secrets as CODECOV_TOKEN
 ```
 
@@ -1095,8 +1095,8 @@ npx pa11y http://localhost:3021
 
 For CI/CD related issues:
 
-- Open an issue: [GitHub Issues](https://github.com/acamarata/nself-admin/issues)
-- Discussion: [GitHub Discussions](https://github.com/acamarata/nself-admin/discussions)
+- Open an issue: [GitHub Issues](https://github.com/nself-org/admin/issues)
+- Discussion: [GitHub Discussions](https://github.com/nself-org/admin/discussions)
 - Security: See [SECURITY.md](SECURITY.md)
 
 ---

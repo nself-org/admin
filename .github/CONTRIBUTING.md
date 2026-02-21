@@ -26,7 +26,7 @@ This project and everyone participating in it is governed by our [Code of Conduc
 - 🐛 **Report Bugs**: Found a bug? Let us know!
 - 💡 **Suggest Features**: Have an idea? We'd love to hear it!
 - 📝 **Improve Documentation**: Help make our docs better
-- 🔧 **Fix Issues**: Browse our [issues](https://github.com/acamarata/nself-admin/issues)
+- 🔧 **Fix Issues**: Browse our [issues](https://github.com/nself-org/admin/issues)
 - 🌐 **Translate**: Help localize nself Admin
 - ⭐ **Spread the Word**: Star the repo, share with others
 
@@ -346,14 +346,14 @@ Our `/docs` folder syncs to the GitHub Wiki:
 
 ### Getting Help
 
-- 📚 **[Documentation](https://github.com/acamarata/nself-admin/wiki)**
-- 💬 **[GitHub Discussions](https://github.com/acamarata/nself-admin/discussions)**
-- 🐛 **[Issues](https://github.com/acamarata/nself-admin/issues)**
+- 📚 **[Documentation](https://github.com/nself-org/admin/wiki)**
+- 💬 **[GitHub Discussions](https://github.com/nself-org/admin/discussions)**
+- 🐛 **[Issues](https://github.com/nself-org/admin/issues)**
 - 📧 **[Email](mailto:community@nself.org)**
 
 ### Stay Connected
 
-- ⭐ **[Star the repository](https://github.com/acamarata/nself-admin)**
+- ⭐ **[Star the repository](https://github.com/nself-org/admin)**
 - 🐦 **[Follow on Twitter](https://twitter.com/nselforg)**
 - 📺 **[YouTube Channel](https://youtube.com/@nselforg)**
 - 📧 **[Newsletter](https://nself.org/newsletter)**

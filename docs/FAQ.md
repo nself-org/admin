@@ -581,8 +581,8 @@ services:
 ### Where can I get help?
 
 - 📚 **[Full Documentation](Home)**
-- 💬 **[GitHub Discussions](https://github.com/acamarata/nself-admin/discussions)**
-- 🐛 **[Report Issues](https://github.com/acamarata/nself-admin/issues)**
+- 💬 **[GitHub Discussions](https://github.com/nself-org/admin/discussions)**
+- 🐛 **[Report Issues](https://github.com/nself-org/admin/issues)**
 - 🎮 **[Discord Community](https://discord.gg/nself)**
 
 ### How can I contribute?
@@ -590,11 +590,11 @@ services:
 We welcome contributions!
 
 - Read [Contributing Guide](Contributing)
-- Check [open issues](https://github.com/acamarata/nself-admin/issues)
+- Check [open issues](https://github.com/nself-org/admin/issues)
 - Submit pull requests
 - Improve documentation
 - Share your experience
 
 ---
 
-**Didn't find your answer?** [Ask in Discussions](https://github.com/acamarata/nself-admin/discussions/new)
+**Didn't find your answer?** [Ask in Discussions](https://github.com/nself-org/admin/discussions/new)

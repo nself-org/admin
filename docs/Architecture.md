@@ -23,7 +23,7 @@ Comprehensive technical architecture documentation for nself-admin v0.5.0.
 
 ## System Overview
 
-nself-admin is a **web-based UI wrapper** for the [nself CLI](https://github.com/acamarata/nself). It provides a visual interface for managing your self-hosted backend stack without reimplementing any CLI logic.
+nself-admin is a **web-based UI wrapper** for the [nself CLI](https://github.com/nself-org/cli). It provides a visual interface for managing your self-hosted backend stack without reimplementing any CLI logic.
 
 ### Key Characteristics
 
@@ -977,8 +977,8 @@ performance.measure('api-call', 'api-call-start', 'api-call-end')
 - [API Documentation](API.md)
 - [Deployment Guide](DEPLOYMENT.md)
 - [Development Guide](DEVELOPMENT.md)
-- [nself CLI Documentation](https://github.com/acamarata/nself)
+- [nself CLI Documentation](https://github.com/nself-org/cli)
 
 ---
 
-**Questions?** Open an issue on [GitHub](https://github.com/acamarata/nself-admin/issues).
+**Questions?** Open an issue on [GitHub](https://github.com/nself-org/admin/issues).

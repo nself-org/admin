@@ -800,7 +800,7 @@ Solution: Check Docker logs, ensure Docker is running
 
 - [FAQ](FAQ)
 - [Common Issues](Troubleshooting)
-- [GitHub Issues](https://github.com/acamarata/nself-admin/issues)
+- [GitHub Issues](https://github.com/nself-org/admin/issues)
 - [Discord Community](https://discord.gg/nself)
 
 ## Next Steps

@@ -512,11 +512,11 @@ PORT=3022 nself admin
 
 ## Getting Help
 
-- **Documentation**: Available at `/help` or [GitHub Wiki](https://github.com/acamarata/nself-admin/wiki)
+- **Documentation**: Available at `/help` or [GitHub Wiki](https://github.com/nself-org/admin/wiki)
 - **System Check**: Run diagnostics at `/doctor`
 - **View Logs**: Check service logs for errors
-- **GitHub Issues**: [Report bugs](https://github.com/acamarata/nself-admin/issues)
-- **Discussions**: [Community support](https://github.com/acamarata/nself-admin/discussions)
+- **GitHub Issues**: [Report bugs](https://github.com/nself-org/admin/issues)
+- **Discussions**: [Community support](https://github.com/nself-org/admin/discussions)
 - **Telegram**: [@nselforg](https://t.me/nselforg) for announcements
 - **Commercial Support**: [nself.org/commercial](https://nself.org/commercial)
 

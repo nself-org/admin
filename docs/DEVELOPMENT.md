@@ -31,7 +31,7 @@ This guide covers local development setup for contributing to nself-admin.
 
 ```bash
 # Clone the repository
-git clone https://github.com/acamarata/nself-admin.git
+git clone https://github.com/nself-org/admin.git
 cd nself-admin
 
 # Install dependencies
@@ -881,4 +881,4 @@ test(auth): add login flow tests
 
 ---
 
-**Questions?** Open an issue on [GitHub](https://github.com/acamarata/nself-admin/issues).
+**Questions?** Open an issue on [GitHub](https://github.com/nself-org/admin/issues).

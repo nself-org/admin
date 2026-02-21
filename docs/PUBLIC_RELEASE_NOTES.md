@@ -8,7 +8,7 @@
 
 **Status**: Released
 **Docker**: `docker pull acamarata/nself-admin:0.9.0`
-**GitHub**: [v0.9.0 Release](https://github.com/acamarata/nself-admin/releases/tag/v0.9.0)
+**GitHub**: [v0.9.0 Release](https://github.com/nself-org/admin/releases/tag/v0.9.0)
 
 ### Overview
 
@@ -69,7 +69,7 @@ v0.9.0 represents a major milestone - 100% feature completion with all TODOs res
 
 **Status**: Released
 **Docker**: `docker pull acamarata/nself-admin:0.8.0`
-**GitHub**: [v0.8.0 Release](https://github.com/acamarata/nself-admin/releases/tag/v0.8.0)
+**GitHub**: [v0.8.0 Release](https://github.com/nself-org/admin/releases/tag/v0.8.0)
 
 ### Overview
 
@@ -108,7 +108,7 @@ Production-ready release with comprehensive testing and stability improvements. 
 
 **Status**: Released
 **Docker**: `docker pull acamarata/nself-admin:0.7.0`
-**GitHub**: [v0.7.0 Release](https://github.com/acamarata/nself-admin/releases/tag/v0.7.0)
+**GitHub**: [v0.7.0 Release](https://github.com/nself-org/admin/releases/tag/v0.7.0)
 
 ### Overview
 
@@ -171,7 +171,7 @@ Real-time collaboration and advanced analytics features. Comprehensive notificat
 
 **Status**: Released
 **Docker**: `docker pull acamarata/nself-admin:0.6.0`
-**GitHub**: [v0.6.0 Release](https://github.com/acamarata/nself-admin/releases/tag/v0.6.0)
+**GitHub**: [v0.6.0 Release](https://github.com/nself-org/admin/releases/tag/v0.6.0)
 
 ### Overview
 
@@ -307,7 +307,7 @@ nself admin
 
 ```bash
 # Clone repository
-git clone https://github.com/acamarata/nself-admin.git
+git clone https://github.com/nself-org/admin.git
 cd nself-admin
 
 # Install dependencies
@@ -335,9 +335,9 @@ pnpm start
 ## Support & Resources
 
 - **Documentation**: https://nself.dev/docs
-- **GitHub**: https://github.com/acamarata/nself-admin
-- **Issues**: https://github.com/acamarata/nself-admin/issues
-- **Discussions**: https://github.com/acamarata/nself-admin/discussions
+- **GitHub**: https://github.com/nself-org/admin
+- **Issues**: https://github.com/nself-org/admin/issues
+- **Discussions**: https://github.com/nself-org/admin/discussions
 
 ---
 

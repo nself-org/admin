@@ -27,7 +27,7 @@ git clone https://github.com/YOUR_USERNAME/nself-admin.git
 cd nself-admin
 
 # Add upstream remote
-git remote add upstream https://github.com/acamarata/nself-admin.git
+git remote add upstream https://github.com/nself-org/admin.git
 ```
 
 ### 2. Install Dependencies
@@ -80,7 +80,7 @@ mkdir ../nself-test
 cd ../nself-test
 
 # Initialize nself project
-curl -fsSL https://raw.githubusercontent.com/acamarata/nself/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/nself-org/cli/main/install.sh | bash
 nself init
 nself build
 nself start

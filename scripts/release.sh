@@ -13,7 +13,7 @@ NC='\033[0m' # No Color
 
 # Configuration
 DOCKER_REGISTRY="nself/admin"
-GITHUB_REPO="acamarata/nself-admin"
+GITHUB_REPO="nself-org/admin"
 
 # Functions
 print_success() {

@@ -58,7 +58,7 @@ export async function POST(_request: NextRequest) {
                     'The nself command-line tool is required but was not found on your system.',
                   instructions: [
                     'To install nself:',
-                    '1. Visit https://github.com/acamarata/nself',
+                    '1. Visit https://github.com/nself-org/cli',
                     '2. Follow the installation instructions for your operating system',
                     '3. Ensure nself is in your PATH or installed in /usr/local/bin',
                     '4. Try running "nself version" in your terminal to verify installation',
@@ -337,7 +337,7 @@ export async function POST(_request: NextRequest) {
                 'The nself command could not be executed.',
                 'Please ensure nself is properly installed:',
                 '1. Run "nself version" in your terminal to check if it\'s installed',
-                '2. If not installed, visit https://github.com/acamarata/nself',
+                '2. If not installed, visit https://github.com/nself-org/cli',
                 '3. Follow the installation instructions for your OS',
                 '4. Restart this application after installation',
               ]

@@ -104,7 +104,7 @@ class AutoUpdater {
 
     try {
       const response = await fetch(
-        'https://api.github.com/repos/acamarata/nself-admin/releases/latest',
+        'https://api.github.com/repos/nself-org/admin/releases/latest',
       )
       const data = await response.json()
 

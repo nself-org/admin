@@ -89,8 +89,8 @@ We aim to respond to security reports within:
 
 Security advisories will be published on:
 
-- [GitHub Security Advisories](https://github.com/acamarata/nself-admin/security/advisories)
-- [Release Notes](https://github.com/acamarata/nself-admin/releases)
+- [GitHub Security Advisories](https://github.com/nself-org/admin/security/advisories)
+- [Release Notes](https://github.com/nself-org/admin/releases)
 - [Security Mailing List](https://nself.org/security-updates) (optional subscription)
 
 ## Contact

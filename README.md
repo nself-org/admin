@@ -1,20 +1,20 @@
 # nself-admin (nAdmin)
 
-[![Version](https://img.shields.io/badge/version-0.5.0-blue.svg)](https://github.com/acamarata/nself-admin/releases)
+[![Version](https://img.shields.io/badge/version-0.5.0-blue.svg)](https://github.com/nself-org/admin/releases)
 [![Docker](https://img.shields.io/docker/v/acamarata/nself-admin?label=docker)](https://hub.docker.com/r/acamarata/nself-admin)
 [![Docker Pulls](https://img.shields.io/docker/pulls/acamarata/nself-admin)](https://hub.docker.com/r/acamarata/nself-admin)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
-[![Build](https://img.shields.io/github/actions/workflow/status/acamarata/nself-admin/test.yml?branch=main&label=build)](https://github.com/acamarata/nself-admin/actions/workflows/test.yml)
-[![Tests](https://img.shields.io/github/actions/workflow/status/acamarata/nself-admin/test.yml?branch=main&label=tests)](https://github.com/acamarata/nself-admin/actions/workflows/test.yml)
-[![codecov](https://codecov.io/gh/acamarata/nself-admin/branch/main/graph/badge.svg)](https://codecov.io/gh/acamarata/nself-admin)
-[![Security](https://img.shields.io/github/actions/workflow/status/acamarata/nself-admin/dependency-audit.yml?label=security)](https://github.com/acamarata/nself-admin/actions/workflows/dependency-audit.yml)
+[![Build](https://img.shields.io/github/nself-org/admin/test.yml?branch=main&label=build)](https://github.com/nself-org/admin/actions/workflows/test.yml)
+[![Tests](https://img.shields.io/github/nself-org/admin/test.yml?branch=main&label=tests)](https://github.com/nself-org/admin/actions/workflows/test.yml)
+[![codecov](https://codecov.io/gh/nself-org/admin/branch/main/graph/badge.svg)](https://codecov.io/gh/nself-org/admin)
+[![Security](https://img.shields.io/github/nself-org/admin/dependency-audit.yml?label=security)](https://github.com/nself-org/admin/actions/workflows/dependency-audit.yml)
 
-[![GitHub stars](https://img.shields.io/github/stars/acamarata/nself-admin?style=social)](https://github.com/acamarata/nself-admin)
-[![GitHub issues](https://img.shields.io/github/issues/acamarata/nself-admin)](https://github.com/acamarata/nself-admin/issues)
-[![GitHub pull requests](https://img.shields.io/github/issues-pr/acamarata/nself-admin)](https://github.com/acamarata/nself-admin/pulls)
+[![GitHub stars](https://img.shields.io/github/nself-org/admin?style=social)](https://github.com/nself-org/admin)
+[![GitHub issues](https://img.shields.io/github/nself-org/admin)](https://github.com/nself-org/admin/issues)
+[![GitHub pull requests](https://img.shields.io/github/issues-pr/nself-org/admin)](https://github.com/nself-org/admin/pulls)
 
-**Production-ready web UI for the [nself CLI](https://github.com/acamarata/nself)** - Enterprise-grade management interface for your self-hosted backend stack.
+**Production-ready web UI for the [nself CLI](https://github.com/nself-org/cli)** - Enterprise-grade management interface for your self-hosted backend stack.
 
 > **v0.5.0** is the first production-ready release featuring 198 fully functional pages, 60+ production-grade components, real-time updates, comprehensive error handling, and enterprise-level security.
 
@@ -37,7 +37,7 @@
 
 ## What is nself-admin?
 
-nself-admin (nAdmin) is a **web-based administration interface** that wraps the powerful [nself CLI](https://github.com/acamarata/nself). Instead of running commands in your terminal, you get a beautiful, real-time dashboard to manage your entire self-hosted backend stack.
+nself-admin (nAdmin) is a **web-based administration interface** that wraps the powerful [nself CLI](https://github.com/nself-org/cli). Instead of running commands in your terminal, you get a beautiful, real-time dashboard to manage your entire self-hosted backend stack.
 
 ### Why nself-admin?
 
@@ -318,7 +318,7 @@ We welcome contributions! Here's how to get started:
 
 ```bash
 # Clone repository
-git clone https://github.com/acamarata/nself-admin.git
+git clone https://github.com/nself-org/admin.git
 cd nself-admin
 
 # Install dependencies
@@ -369,8 +369,8 @@ See [CONTRIBUTING.md](docs/contributing/CONTRIBUTING.md) for detailed guidelines
 
 ## Support
 
-- **Issues**: [GitHub Issues](https://github.com/acamarata/nself-admin/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/acamarata/nself-admin/discussions)
+- **Issues**: [GitHub Issues](https://github.com/nself-org/admin/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/nself-org/admin/discussions)
 - **Security**: See [SECURITY.md](docs/SECURITY.md) for reporting vulnerabilities
 - **Documentation**: [Full Documentation](docs/)
 
@@ -414,4 +414,4 @@ Built with love by the nself team and contributors.
 
 **Star us on GitHub** if you find nself-admin useful!
 
-[![GitHub stars](https://img.shields.io/github/stars/acamarata/nself-admin?style=social)](https://github.com/acamarata/nself-admin)
+[![GitHub stars](https://img.shields.io/github/nself-org/admin?style=social)](https://github.com/nself-org/admin)

@@ -196,7 +196,7 @@ If not:
 nself update --cli
 
 # Or reinstall
-curl -fsSL https://raw.githubusercontent.com/acamarata/nself/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/nself-org/cli/main/install.sh | bash
 ```
 
 ### 4. Check Running Services
@@ -673,13 +673,13 @@ If you encounter issues not covered here:
    ```
 
 3. **Search GitHub Issues:**
-   [github.com/acamarata/nself-admin/issues](https://github.com/acamarata/nself-admin/issues)
+   [github.com/nself-org/admin/issues](https://github.com/nself-org/admin/issues)
 
 4. **Ask Community:**
-   [github.com/acamarata/nself-admin/discussions](https://github.com/acamarata/nself-admin/discussions)
+   [github.com/nself-org/admin/discussions](https://github.com/nself-org/admin/discussions)
 
 5. **Report Bug:**
-   [github.com/acamarata/nself-admin/issues/new](https://github.com/acamarata/nself-admin/issues/new)
+   [github.com/nself-org/admin/issues/new](https://github.com/nself-org/admin/issues/new)
 
 ---
 
@@ -729,4 +729,4 @@ After successful migration:
 
 You're now running v0.5.0 with all the latest features and improvements.
 
-For questions or issues, see [TROUBLESHOOTING.md](TROUBLESHOOTING.md) or join our [community](https://github.com/acamarata/nself-admin/discussions).
+For questions or issues, see [TROUBLESHOOTING.md](TROUBLESHOOTING.md) or join our [community](https://github.com/nself-org/admin/discussions).

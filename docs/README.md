@@ -82,8 +82,8 @@ Welcome to the nself Admin documentation! This comprehensive guide will help you
 
 ## 🆘 Support
 
-- **[GitHub Issues](https://github.com/acamarata/nself-admin/issues)** - Report bugs or request features
-- **[Discussions](https://github.com/acamarata/nself-admin/discussions)** - Community support
+- **[GitHub Issues](https://github.com/nself-org/admin/issues)** - Report bugs or request features
+- **[Discussions](https://github.com/nself-org/admin/discussions)** - Community support
 - **[Discord](https://discord.gg/nself)** - Real-time chat support
 
 ---
@@ -269,13 +269,13 @@ Please report security vulnerabilities to our [security policy](SECURITY.md). Do
 ### Getting Help
 
 1. **Documentation**: Start with this comprehensive documentation
-2. **GitHub Issues**: https://github.com/acamarata/nself-admin/issues
+2. **GitHub Issues**: https://github.com/nself-org/admin/issues
 3. **Community**: Join our Discord
 4. **Commercial Support**: Available for enterprise users
 
 ### Useful Links
 
-- [nself CLI Repository](https://github.com/acamarata/nself)
+- [nself CLI Repository](https://github.com/nself-org/cli)
 - [Docker Documentation](https://docs.docker.com)
 - [Hasura Documentation](https://hasura.io/docs)
 
@@ -285,6 +285,6 @@ nself-admin is licensed under the MIT License. See [LICENSE.md](LICENSE.md) for 
 
 ---
 
-**Need help?** Check our [FAQ](FAQ.md) or [open an issue](https://github.com/acamarata/nself-admin/issues).
+**Need help?** Check our [FAQ](FAQ.md) or [open an issue](https://github.com/nself-org/admin/issues).
 
 **Want to contribute?** See our [Contributing Guide](contributing/CONTRIBUTING.md).

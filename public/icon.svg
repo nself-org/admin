@@ -1,0 +1,13 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#AAE4FF;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#38BDF8;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <!-- Rounded square background -->
+  <rect x="32" y="32" width="448" height="448" rx="64" fill="url(#gradient)" />
+  <!-- Terminal prompt symbols -->
+  <path d="M128 192 L224 256 L128 320" stroke="white" stroke-width="32" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+  <line x1="256" y1="320" x2="384" y2="320" stroke="white" stroke-width="32" stroke-linecap="round" />
+</svg>

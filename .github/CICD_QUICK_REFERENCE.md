@@ -117,5 +117,5 @@ pnpm run type-check
 
 ## Support
 
-- Issues: https://github.com/acamarata/nself-admin/issues
-- Discussions: https://github.com/acamarata/nself-admin/discussions
+- Issues: https://github.com/nself-org/admin/issues
+- Discussions: https://github.com/nself-org/admin/discussions

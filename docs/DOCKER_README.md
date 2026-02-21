@@ -1,10 +1,10 @@
 # nself-admin - Web UI for nself CLI
 
-[![Version](https://img.shields.io/badge/version-0.5.0-blue.svg)](https://github.com/acamarata/nself-admin/releases)
+[![Version](https://img.shields.io/badge/version-0.5.0-blue.svg)](https://github.com/nself-org/admin/releases)
 [![Docker Pulls](https://img.shields.io/docker/pulls/acamarata/nself-admin)](https://hub.docker.com/r/acamarata/nself-admin)
-[![License](https://img.shields.io/badge/license-MIT-green.svg)](https://github.com/acamarata/nself-admin/blob/main/LICENSE)
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](https://github.com/nself-org/admin/blob/main/LICENSE)
 
-Production-ready web interface for managing your self-hosted backend stack using the [nself CLI](https://github.com/acamarata/nself).
+Production-ready web interface for managing your self-hosted backend stack using the [nself CLI](https://github.com/nself-org/cli).
 
 ## Quick Start
 
@@ -166,23 +166,23 @@ scrape_configs:
 
 ## Documentation
 
-- [GitHub Repository](https://github.com/acamarata/nself-admin)
-- [Full Documentation](https://github.com/acamarata/nself-admin/tree/main/docs)
-- [CI/CD Pipeline](https://github.com/acamarata/nself-admin/blob/main/docs/CICD.md)
-- [User Guide](https://github.com/acamarata/nself-admin/blob/main/docs/USER_GUIDE.md)
+- [GitHub Repository](https://github.com/nself-org/admin)
+- [Full Documentation](https://github.com/nself-org/admin/tree/main/docs)
+- [CI/CD Pipeline](https://github.com/nself-org/admin/blob/main/docs/CICD.md)
+- [User Guide](https://github.com/nself-org/admin/blob/main/docs/USER_GUIDE.md)
 
 ## Support
 
-- [GitHub Issues](https://github.com/acamarata/nself-admin/issues)
-- [Discussions](https://github.com/acamarata/nself-admin/discussions)
-- [Security](https://github.com/acamarata/nself-admin/blob/main/docs/SECURITY.md)
+- [GitHub Issues](https://github.com/nself-org/admin/issues)
+- [Discussions](https://github.com/nself-org/admin/discussions)
+- [Security](https://github.com/nself-org/admin/blob/main/docs/SECURITY.md)
 
 ## License
 
-MIT - See [LICENSE](https://github.com/acamarata/nself-admin/blob/main/LICENSE)
+MIT - See [LICENSE](https://github.com/nself-org/admin/blob/main/LICENSE)
 
 ---
 
 **Built with**: Next.js, React, TypeScript, Tailwind CSS, Docker
 
-**Maintained by**: [acamarata](https://github.com/acamarata)
+**Maintained by**: [nself-org](https://github.com/nself-org)

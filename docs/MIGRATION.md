@@ -572,8 +572,8 @@ curl -i -N \
 
 **Need help with migration?**
 
-- GitHub Issues: https://github.com/acamarata/nself-admin/issues
-- GitHub Discussions: https://github.com/acamarata/nself-admin/discussions
+- GitHub Issues: https://github.com/nself-org/admin/issues
+- GitHub Discussions: https://github.com/nself-org/admin/discussions
 
 ---
 

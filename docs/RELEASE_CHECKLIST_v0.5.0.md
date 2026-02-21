@@ -405,7 +405,7 @@ gh release create v0.5.0 \
 
 **Or manually:**
 
-1. Go to https://github.com/acamarata/nself-admin/releases/new
+1. Go to https://github.com/nself-org/admin/releases/new
 2. Select tag: `v0.5.0`
 3. Release title: `v0.5.0 - Production Ready`
 4. Copy release notes from CHANGELOG.md
@@ -447,18 +447,18 @@ docker run -d \
 
 ## Upgrading from v0.4.0
 
-See [MIGRATION_v0.4_to_v0.5.md](https://github.com/acamarata/nself-admin/blob/main/docs/MIGRATION_v0.4_to_v0.5.md) for detailed upgrade instructions.
+See [MIGRATION_v0.4_to_v0.5.md](https://github.com/nself-org/admin/blob/main/docs/MIGRATION_v0.4_to_v0.5.md) for detailed upgrade instructions.
 
 ## Full Changelog
 
-See [CHANGELOG.md](https://github.com/acamarata/nself-admin/blob/main/docs/CHANGELOG.md) for complete details.
+See [CHANGELOG.md](https://github.com/nself-org/admin/blob/main/docs/CHANGELOG.md) for complete details.
 
 ## Documentation
 
-- [User Guide](https://github.com/acamarata/nself-admin/blob/main/docs/USER_GUIDE.md)
-- [Developer Guide](https://github.com/acamarata/nself-admin/blob/main/docs/DEVELOPER_GUIDE.md)
-- [API Reference](https://github.com/acamarata/nself-admin/blob/main/docs/API.md)
-- [Troubleshooting](https://github.com/acamarata/nself-admin/blob/main/docs/TROUBLESHOOTING.md)
+- [User Guide](https://github.com/nself-org/admin/blob/main/docs/USER_GUIDE.md)
+- [Developer Guide](https://github.com/nself-org/admin/blob/main/docs/DEVELOPER_GUIDE.md)
+- [API Reference](https://github.com/nself-org/admin/blob/main/docs/API.md)
+- [Troubleshooting](https://github.com/nself-org/admin/blob/main/docs/TROUBLESHOOTING.md)
 
 ```
 

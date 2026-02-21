@@ -60,7 +60,7 @@ The easiest way to deploy nself-admin is through the nself CLI:
 
 ```bash
 # On your server
-curl -fsSL https://raw.githubusercontent.com/acamarata/nself/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/nself-org/cli/main/install.sh | bash
 nself admin --port=3021
 ```
 
@@ -901,4 +901,4 @@ For more information, see:
 
 ---
 
-**Need help?** Open an issue on [GitHub](https://github.com/acamarata/nself-admin/issues).
+**Need help?** Open an issue on [GitHub](https://github.com/nself-org/admin/issues).

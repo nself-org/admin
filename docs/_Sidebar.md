@@ -55,6 +55,6 @@
 ## Resources
 
 - [[Updates]]
-- [GitHub Repository](https://github.com/acamarata/nself-admin)
-- [Issue Tracker](https://github.com/acamarata/nself-admin/issues)
-- [nself CLI](https://github.com/acamarata/nself)
+- [GitHub Repository](https://github.com/nself-org/admin)
+- [Issue Tracker](https://github.com/nself-org/admin/issues)
+- [nself CLI](https://github.com/nself-org/cli)

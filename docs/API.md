@@ -588,4 +588,4 @@ X-RateLimit-Reset: 1234567890
 
 ---
 
-**Questions?** Open an issue on [GitHub](https://github.com/acamarata/nself-admin/issues).
+**Questions?** Open an issue on [GitHub](https://github.com/nself-org/admin/issues).

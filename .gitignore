@@ -49,7 +49,6 @@ next-env.d.ts
 nadmin.db
 
 # IDEs
-.claude/
 .vscode/
 .idea/
 *.swp
@@ -97,3 +96,31 @@ next.md
 NEXT.md
 feedback*.md
 feedback.md
+
+
+# AI agent directories (private)
+.ai/
+.claude/
+.codex/
+.cursor/
+
+# Standard entries (added by global compliance)
+Thumbs.db
+.env.local
+.env.*.local
+.secrets/
+*.key
+node_modules/
+dist/
+build/
+logs/
+.cache/
+*.tmp
+*.temp
+coverage/
+test-results/
+TODO.md
+DONE.md
+FEEDBACK.md
+TRACKING.md
+PLAN.md

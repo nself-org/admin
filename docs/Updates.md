@@ -317,7 +317,7 @@ metadata:
   name: nself-admin
 spec:
   source:
-    repoURL: https://github.com/acamarata/nself-admin
+    repoURL: https://github.com/nself-org/admin
     path: k8s/
     targetRevision: HEAD
   destination:
@@ -398,7 +398,7 @@ Check for updates programmatically:
 ```javascript
 // Check for updates
 const response = await fetch(
-  'https://api.github.com/repos/acamarata/nself-admin/releases/latest',
+  'https://api.github.com/repos/nself-org/admin/releases/latest',
 )
 const latest = await response.json()
 const currentVersion = '0.0.8'
@@ -434,7 +434,7 @@ UPDATE_EMAIL_FROM=nself-admin@yourcompany.com
 
 Monitor releases on GitHub:
 
-1. Go to https://github.com/acamarata/nself-admin
+1. Go to https://github.com/nself-org/admin
 2. Click **Watch** → **Custom** → **Releases**
 3. Choose notification preferences
 
@@ -553,6 +553,6 @@ If update fails:
 For more information, see:
 
 - [Changelog](CHANGELOG.md)
-- [GitHub Releases](https://github.com/acamarata/nself-admin/releases)
+- [GitHub Releases](https://github.com/nself-org/admin/releases)
 - [Docker Hub](https://hub.docker.com/r/acamarata/nself-admin)
 - [Security Policy](SECURITY.md)

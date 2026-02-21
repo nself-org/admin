@@ -280,7 +280,7 @@ sudo usermod -aG docker $USER
 
 - 📚 **[Full Documentation](Home)**
 - 💬 **[Discord Community](https://discord.gg/nself)**
-- 🐛 **[Report Issues](https://github.com/acamarata/nself-admin/issues)**
+- 🐛 **[Report Issues](https://github.com/nself-org/admin/issues)**
 - ❓ **[FAQ](FAQ)**
 
 ## Pro Tips

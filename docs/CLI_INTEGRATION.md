@@ -38,7 +38,7 @@ docker run -d \
   nself/admin:latest
 
 # Using docker-compose
-wget https://raw.githubusercontent.com/acamarata/nself-admin/main/docker-compose.nself-admin.yml
+wget https://raw.githubusercontent.com/nself-org/admin/main/docker-compose.nself-admin.yml
 docker-compose -f docker-compose.nself-admin.yml up -d
 ```
 
@@ -171,7 +171,7 @@ nself Admin v0.0.8 wraps the CLI plugin system with a visual UI. These are the C
 | Sync button           | `nself plugin <name> sync`    |
 | View plugin status    | `nself plugin status <name>`  |
 
-> **Full CLI docs**: See [nself CLI](https://github.com/acamarata/nself) for complete plugin command reference.
+> **Full CLI docs**: See [nself CLI](https://github.com/nself-org/cli) for complete plugin command reference.
 
 ## Database Commands (v0.4.8+)
 
@@ -187,7 +187,7 @@ nself Admin v0.0.8 wraps database operations. These are the CLI commands execute
 | Execute SQL query     | `nself db query "<sql>"`  |
 | Schema browser        | `nself db inspect`        |
 
-> **Full CLI docs**: See [nself CLI](https://github.com/acamarata/nself) for complete database command reference.
+> **Full CLI docs**: See [nself CLI](https://github.com/nself-org/cli) for complete database command reference.
 
 ## Versioning
 
@@ -269,7 +269,7 @@ docker run -d \
 
 ```bash
 # Clone repository
-git clone https://github.com/acamarata/nself-admin.git
+git clone https://github.com/nself-org/admin.git
 cd nself-admin
 
 # Install dependencies
@@ -294,7 +294,7 @@ npm test
 
 ## Support
 
-- GitHub Issues: https://github.com/acamarata/nself-admin/issues
+- GitHub Issues: https://github.com/nself-org/admin/issues
 - Documentation: https://docs.nself.org/admin
 - Discord: https://discord.gg/nself
 

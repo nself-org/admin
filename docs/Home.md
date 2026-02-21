@@ -15,7 +15,7 @@
 
 ## Welcome to nself Admin
 
-**nself Admin (nAdmin)** is a web-based UI wrapper for the [nself CLI](https://github.com/acamarata/nself) that makes setting up and managing modern development stacks effortless. With an intuitive wizard interface, real-time monitoring, and comprehensive service management, nAdmin transforms complex Docker orchestration into a simple point-and-click experience.
+**nself Admin (nAdmin)** is a web-based UI wrapper for the [nself CLI](https://github.com/nself-org/cli) that makes setting up and managing modern development stacks effortless. With an intuitive wizard interface, real-time monitoring, and comprehensive service management, nAdmin transforms complex Docker orchestration into a simple point-and-click experience.
 
 ### Why nself Admin?
 
@@ -90,10 +90,10 @@
 
 ## Project Links
 
-- **GitHub**: [acamarata/nself-admin](https://github.com/acamarata/nself-admin)
+- **GitHub**: [nself-org/admin](https://github.com/nself-org/admin)
 - **Docker Hub**: [acamarata/nself-admin](https://hub.docker.com/r/acamarata/nself-admin)
-- **Issues**: [Report bugs or request features](https://github.com/acamarata/nself-admin/issues)
-- **Discussions**: [Join the community](https://github.com/acamarata/nself-admin/discussions)
+- **Issues**: [Report bugs or request features](https://github.com/nself-org/admin/issues)
+- **Discussions**: [Join the community](https://github.com/nself-org/admin/discussions)
 
 ---
 

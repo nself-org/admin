@@ -58,7 +58,7 @@ docker run -d \
 
 ```bash
 # Clone the repository
-git clone https://github.com/acamarata/nself-admin.git
+git clone https://github.com/nself-org/admin.git
 cd nself-admin
 
 # Install dependencies
@@ -899,9 +899,9 @@ nself build
 If you're still stuck:
 
 1. **Check Documentation**: [docs/TROUBLESHOOTING.md](TROUBLESHOOTING.md)
-2. **Search Issues**: [GitHub Issues](https://github.com/acamarata/nself-admin/issues)
-3. **Ask Community**: [GitHub Discussions](https://github.com/acamarata/nself-admin/discussions)
-4. **Report Bug**: [New Issue](https://github.com/acamarata/nself-admin/issues/new)
+2. **Search Issues**: [GitHub Issues](https://github.com/nself-org/admin/issues)
+3. **Ask Community**: [GitHub Discussions](https://github.com/nself-org/admin/discussions)
+4. **Report Bug**: [New Issue](https://github.com/nself-org/admin/issues/new)
 
 ### Diagnostic Tools
 
@@ -954,4 +954,4 @@ Now that you're familiar with nself-admin:
 
 ---
 
-**Need help?** Join our [community discussions](https://github.com/acamarata/nself-admin/discussions)!
+**Need help?** Join our [community discussions](https://github.com/nself-org/admin/discussions)!

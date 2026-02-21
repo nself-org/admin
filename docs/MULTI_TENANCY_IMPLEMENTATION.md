@@ -626,6 +626,6 @@ await setCurrentTenantId('tenant_default')
 
 For issues or questions:
 
-- GitHub Issues: https://github.com/acamarata/nself-admin/issues
-- Documentation: https://github.com/acamarata/nself-admin/wiki
-- nself CLI: https://github.com/acamarata/nself
+- GitHub Issues: https://github.com/nself-org/admin/issues
+- Documentation: https://github.com/nself-org/admin/wiki
+- nself CLI: https://github.com/nself-org/cli

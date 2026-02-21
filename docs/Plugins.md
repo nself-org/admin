@@ -4,7 +4,7 @@
 
 nself Admin provides a **visual interface** for managing plugins installed via the nself CLI. While the CLI handles all plugin operations (install, remove, sync), nself Admin gives you dashboards, monitoring, and point-and-click management.
 
-> **Note**: For complete CLI plugin documentation, see the [nself CLI docs](https://github.com/acamarata/nself). For plugin development, see [nself-plugins](https://github.com/acamarata/nself-plugins).
+> **Note**: For complete CLI plugin documentation, see the [nself CLI docs](https://github.com/nself-org/cli). For plugin development, see [nself-plugins](https://github.com/nself-org/plugins).
 
 ---
 
@@ -379,8 +379,8 @@ interface PluginConfig {
 
 ## External Resources
 
-- [nself CLI](https://github.com/acamarata/nself) - Full CLI documentation
-- [nself Plugins](https://github.com/acamarata/nself-plugins) - Plugin development and registry
+- [nself CLI](https://github.com/nself-org/cli) - Full CLI documentation
+- [nself Plugins](https://github.com/nself-org/plugins) - Plugin development and registry
 
 ---
 

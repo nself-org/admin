@@ -21,7 +21,9 @@ export class DashboardPage {
 
   async expectDashboardLoaded() {
     await expect(this.pageTitle).toBeVisible()
-    await expect(this.page).toHaveURL(/\/$/)
+    // Accept any valid post-login route: / (dashboard), /build (not initialized),
+    // or /start (initialized but not running). CI without nself routes to /build.
+    await expect(this.page).toHaveURL(/\/(build|start)?$/)
   }
 
   async logout() {

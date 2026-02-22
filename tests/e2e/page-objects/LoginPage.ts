@@ -38,6 +38,7 @@ export class LoginPage {
   }
 
   async expectSetupMode() {
-    await expect(this.welcomeHeading).toContainText(/Welcome|Setup/)
+    // Use longer timeout: /api/auth/init cold-start can take 7+ seconds in CI
+    await expect(this.welcomeHeading).toContainText(/Welcome|Setup/, { timeout: 15000 })
   }
 }

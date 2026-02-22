@@ -328,6 +328,7 @@ export default function LoginPage() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   onKeyDown={handleKeyDown}
+                  aria-label={isSetupMode ? 'Create password' : 'Password'}
                   aria-describedby={
                     error
                       ? 'password-error'

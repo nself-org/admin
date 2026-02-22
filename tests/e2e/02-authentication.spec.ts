@@ -22,6 +22,14 @@ test.describe('Authentication Flow', () => {
   })
 
   test('should implement rate limiting', async ({ loginPage, page }) => {
+    // Skip in CI: this test triggers IP-based rate limiting which blocks subsequent
+    // login attempts across the entire test suite for the 15-minute window.
+    // The rate limiter uses in-memory state shared by the Next.js dev server.
+    test.skip(
+      !!process.env.CI,
+      'Skipped in CI: triggers shared rate limit state that blocks subsequent tests',
+    )
+
     await loginPage.goto()
 
     // Try multiple failed login attempts

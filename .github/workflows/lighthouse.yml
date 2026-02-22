@@ -50,7 +50,7 @@ jobs:
             http://localhost:3021/login
             http://localhost:3021/services
             http://localhost:3021/database
-          uploadArtifacts: true
+          uploadArtifacts: false
           temporaryPublicStorage: true
           runs: 3
 
@@ -60,7 +60,7 @@ jobs:
         with:
           urls: http://localhost:3021
           configPath: './.lighthouserc.json'
-          uploadArtifacts: true
+          uploadArtifacts: false
           temporaryPublicStorage: true
 
       - name: Parse Lighthouse scores

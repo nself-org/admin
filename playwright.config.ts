@@ -24,6 +24,14 @@ export default defineConfig({
    * With pre-warmed routes, setupAuth() completes in < 10 s.
    * 30 s gives the test body a comfortable budget after auth. */
   timeout: 30000,
+
+  /* Default timeout for individual expect() assertions.
+   * Playwright default is 5 s, but several pages (build, services, database,
+   * config) show a loading skeleton before the h1 renders.  20 s gives the
+   * skeleton enough time to clear without making failure feedback too slow. */
+  expect: {
+    timeout: 20000,
+  },
   /* Run tests in files in parallel */
   fullyParallel: true,
   /* Fail the build on CI if you accidentally left test.only in the source code. */

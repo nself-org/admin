@@ -16,7 +16,12 @@ export class LoginPage {
   }
 
   async goto() {
-    await this.page.goto('/login')
+    // waitUntil: 'networkidle' ensures all Next.js JS bundles are downloaded
+    // and the /api/auth/init fetch has completed before returning.  Without
+    // this, Playwright can click the submit button before React has hydrated —
+    // causing the native form submit (page reload to /login) to fire instead
+    // of the React onClick handler.
+    await this.page.goto('/login', { waitUntil: 'networkidle' })
   }
 
   async login(password: string) {

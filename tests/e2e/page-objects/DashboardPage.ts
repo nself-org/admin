@@ -20,10 +20,18 @@ export class DashboardPage {
   }
 
   async expectDashboardLoaded() {
-    await expect(this.pageTitle).toBeVisible()
+    // Wait for post-login navigation to complete before checking the URL.
+    // The default expect.timeout (5 s) is too short for the full auth chain
+    // (CSRF fetch → login API → project/status → router.push → middleware).
+    // With pre-warmed routes the chain takes ~2 s, but we budget 20 s for
+    // safety.  Check URL first so we wait for navigation before asserting
+    // that the page title is visible (the login page h1 is also visible, so
+    // checking title first would give a false positive).
+    //
     // Accept any valid post-login route: / (dashboard), /build (not initialized),
     // or /start (initialized but not running). CI without nself routes to /build.
-    await expect(this.page).toHaveURL(/\/(build|start)?$/)
+    await expect(this.page).toHaveURL(/\/(build|start)?$/, { timeout: 20000 })
+    await expect(this.pageTitle).toBeVisible()
   }
 
   async logout() {

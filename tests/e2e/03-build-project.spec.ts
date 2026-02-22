@@ -109,9 +109,7 @@ test.describe('Build Project Flow', () => {
     const focusedTag = await page.evaluate(
       () => document.activeElement?.tagName ?? '',
     )
-    expect(['BUTTON', 'A', 'INPUT', 'SELECT', 'TEXTAREA']).toContain(
-      focusedTag,
-    )
+    expect(['BUTTON', 'A', 'INPUT', 'SELECT', 'TEXTAREA']).toContain(focusedTag)
   })
 
   test('should display build configuration', async ({ buildPage, page }) => {

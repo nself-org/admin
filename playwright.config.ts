@@ -13,11 +13,17 @@ import { defineConfig, devices } from '@playwright/test'
  */
 export default defineConfig({
   testDir: './tests/e2e',
+
+  /* globalSetup pre-warms all Next.js routes and sets the admin password once
+   * before any test worker starts.  Without it, the cold-start compilation of
+   * 6+ routes in the auth chain (login page, csrf, login API, project/status,
+   * middleware, validate-session, /build) takes 35–50 s and blows the timeout. */
+  globalSetup: './tests/e2e/global-setup.ts',
+
   /* Per-test timeout: includes beforeEach + test body.
-   * setupAuth() can take up to 35s in CI (CSRF fetch + login API + redirect),
-   * so we need at least 35s for beforeEach alone. 60s gives the test body
-   * a comfortable ~25s budget after auth completes. */
-  timeout: 60000,
+   * With pre-warmed routes, setupAuth() completes in < 10 s.
+   * 30 s gives the test body a comfortable budget after auth. */
+  timeout: 30000,
   /* Run tests in files in parallel */
   fullyParallel: true,
   /* Fail the build on CI if you accidentally left test.only in the source code. */

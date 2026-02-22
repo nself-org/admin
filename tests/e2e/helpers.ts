@@ -13,7 +13,7 @@ export async function setupAuth(page: Page, password = TEST_PASSWORD) {
   // (dashboard|build|start) — NOT optional — so this never resolves on
   // /login itself (which would match the old /\/(dashboard|build|start)?/
   // regex due to the optional group matching zero characters).
-  await page.waitForURL(/\/(dashboard|build|start)/, { timeout: 20000 })
+  await page.waitForURL(/\/(dashboard|build|start)/, { timeout: 35000 })
 }
 
 /**

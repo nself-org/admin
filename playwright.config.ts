@@ -13,6 +13,11 @@ import { defineConfig, devices } from '@playwright/test'
  */
 export default defineConfig({
   testDir: './tests/e2e',
+  /* Per-test timeout: includes beforeEach + test body.
+   * setupAuth() can take up to 35s in CI (CSRF fetch + login API + redirect),
+   * so we need at least 35s for beforeEach alone. 60s gives the test body
+   * a comfortable ~25s budget after auth completes. */
+  timeout: 60000,
   /* Run tests in files in parallel */
   fullyParallel: true,
   /* Fail the build on CI if you accidentally left test.only in the source code. */

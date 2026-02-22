@@ -1,4 +1,4 @@
-import { exec } from 'child_process'
+import { exec, execFile } from 'child_process'
 import fs from 'fs'
 import path from 'path'
 import { promisify } from 'util'
@@ -157,12 +157,16 @@ export async function initializeProject(config: any): Promise<{
 
   try {
     // Run nself init --full with config
-    const envVars = Object.entries(config)
-      .map(([key, value]) => `${key}="${value}"`)
-      .join(' ')
+    // Pass config values as environment variables — never interpolate into shell strings
+    const execFileAsync = promisify(execFile)
+    const envOverrides: Record<string, string> = {}
+    for (const [key, value] of Object.entries(config)) {
+      envOverrides[key] = String(value)
+    }
 
-    await execAsync(`${envVars} ${nselfPath} init --full`, {
+    await execFileAsync(nselfPath, ['init', '--full'], {
       cwd: projectPath,
+      env: { ...process.env, ...envOverrides },
     })
 
     return { success: true }

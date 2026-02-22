@@ -35,7 +35,6 @@ jobs:
   typecheck:
     name: TypeScript
     runs-on: ubuntu-latest
-    continue-on-error: true  # Allow build to proceed even if type-check fails
     steps:
       - uses: actions/checkout@v4
 
@@ -57,7 +56,6 @@ jobs:
   test:
     name: Unit Tests
     runs-on: ubuntu-latest
-    continue-on-error: true  # Don't fail the pipeline on flaky tests
     steps:
       - uses: actions/checkout@v4
 
@@ -74,7 +72,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Run tests with coverage
-        run: pnpm run test:ci || echo "Tests completed with failures - check report"
+        run: pnpm run test:ci
 
       - name: Upload coverage report
         uses: actions/upload-artifact@v4

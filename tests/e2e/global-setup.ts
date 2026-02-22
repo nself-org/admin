@@ -78,7 +78,9 @@ export default async function globalSetup(config: FullConfig) {
     //   all client-side JS modules for the login page on the server.
     // • waitUntil: 'networkidle' ensures every /_next/… request has returned
     //   (i.e. all bundles are compiled and served) before we continue.
-    console.log('[globalSetup] Navigating to /login (warming SSR + JS bundles)…')
+    console.log(
+      '[globalSetup] Navigating to /login (warming SSR + JS bundles)…',
+    )
     await page.goto('/login', { waitUntil: 'networkidle', timeout: 60000 })
 
     // Step 2: Check password status (warms /api/auth/init GET).

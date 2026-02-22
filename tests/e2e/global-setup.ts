@@ -1,63 +1,96 @@
 /**
  * Playwright globalSetup — runs once before all test workers start.
  *
- * Purpose: pre-warm every Next.js route that the auth flow touches so that
- * the JIT compilation cost is paid here, not inside individual tests.
+ * Purpose: pre-warm every Next.js route AND client-side JS bundle that the
+ * auth flow touches so that the JIT compilation cost is paid here, not inside
+ * individual tests.
  *
- * Without this, a cold Next.js dev server compiles each route on its first
- * request (3–10 s per route).  The full auth chain touches 6+ routes, making
- * the total cold-start 35–50 s — which blows past the waitForURL timeout
- * used in setupAuth().
+ * WHY A REAL BROWSER (not just APIRequestContext):
+ *   Next.js dev mode has two compilation layers:
+ *   1. Server-side: React SSR handler compiled on first HTTP request
+ *   2. Client-side: JS module chunks compiled when the browser fetches them
+ *      via /_next/static/chunks/…
+ *
+ *   An HTTP-only warm-up (APIRequestContext) only covers layer 1.  The client
+ *   JS bundles for the login page are still uncompiled when the first test
+ *   browser opens.  React hydration therefore takes 10–20 s, so Playwright
+ *   clicks the submit button BEFORE React attaches its event handler.  The
+ *   browser then executes the native form submit (page reload to /login)
+ *   instead of the AJAX login flow — and the test never navigates away.
+ *
+ *   A real browser (even headless) fetches all /_next/… JS chunks, causing
+ *   Next.js to compile them.  Once compiled they are cached in memory by the
+ *   dev server and served instantly to all subsequent browser contexts.
+ *
+ * WHY WE PARAMETERISE THE BROWSER TYPE:
+ *   Each CI matrix job (chromium / firefox / webkit) installs only its own
+ *   browser binary.  Using chromium.launch() in globalSetup would break the
+ *   firefox and webkit jobs.  We read WARMUP_BROWSER (set in the CI workflow)
+ *   to launch the same binary that is actually installed.
+ *   Falls back to chromium for local/mobile runs.
  *
  * This setup also sets the admin password exactly once so that every test
  * worker finds the server in login mode from the start.
  *
- * Implementation uses Playwright's APIRequestContext (pure HTTP — no browser
- * launch).  This avoids the "browser executable not found" error that occurs
- * when each CI job installs only its own browser (chromium / firefox / webkit)
- * but globalSetup was previously trying to launch chromium in all of them.
- * The APIRequestContext manages cookies automatically (CSRF + session).
- *
- * Routes warmed in order:
- *   GET  /login                     — login page SSR compilation
+ * Routes and bundles warmed:
+ *   /login                          — page SSR + client JS bundles
  *   GET  /api/auth/init             — setup/login mode check
  *   POST /api/auth/init             — password setup (if needed)
- *   GET  /api/auth/csrf             — CSRF token generation, sets cookie
- *   POST /api/auth/login            — credential verification, sets session cookie
+ *   GET  /api/auth/csrf             — CSRF token route
+ *   POST /api/auth/login            — credential verification
  *   GET  /api/project/status        — post-login routing logic
- *   GET  /build                     — triggers middleware → validate-session +
- *                                     /build page compilation
+ *        middleware                 — session validation on every protected route
+ *   POST /api/auth/validate-session — middleware's internal endpoint
+ *   /build                          — destination page SSR + client JS bundles
  */
 
-import { request, type FullConfig } from '@playwright/test'
+import {
+  chromium,
+  firefox,
+  webkit,
+  type BrowserType,
+  type FullConfig,
+} from '@playwright/test'
 
 import { TEST_PASSWORD } from './helpers'
+
+const BROWSER_TYPES: Record<string, BrowserType> = { chromium, firefox, webkit }
 
 export default async function globalSetup(config: FullConfig) {
   const { baseURL } = config.projects[0].use
   const base = baseURL ?? 'http://localhost:3021'
 
-  // APIRequestContext manages cookies automatically — no browser needed.
-  const ctx = await request.newContext({ baseURL: base })
+  // Each CI job installs only its own browser.  WARMUP_BROWSER is set by the
+  // e2e-tests.yml workflow to match the matrix entry for that job.
+  // Falls back to chromium for local runs and the mobile job.
+  const browserName = (process.env.WARMUP_BROWSER ?? 'chromium').toLowerCase()
+  const browserType = BROWSER_TYPES[browserName] ?? chromium
+
+  console.log(`[globalSetup] Using ${browserName} to warm up routes…`)
+  const browser = await browserType.launch()
+  const context = await browser.newContext({ baseURL: base })
+  const page = await context.newPage()
 
   try {
-    // Step 1: GET /login — triggers SSR compilation of the login page component.
-    console.log('[globalSetup] Warming /login…')
-    await ctx.get('/login')
+    // Step 1: Full browser navigation to /login.
+    // • Triggers SSR compilation of the login page component.
+    // • Causes the browser to fetch /_next/static/chunks/… → Next.js compiles
+    //   all client-side JS modules for the login page on the server.
+    // • waitUntil: 'networkidle' ensures every /_next/… request has returned
+    //   (i.e. all bundles are compiled and served) before we continue.
+    console.log('[globalSetup] Navigating to /login (warming SSR + JS bundles)…')
+    await page.goto('/login', { waitUntil: 'networkidle', timeout: 60000 })
 
-    // Step 2: GET /api/auth/init — compiles the init route handler.
-    console.log('[globalSetup] Checking password status…')
-    const initRes = await ctx.get('/api/auth/init')
+    // Step 2: Check password status (warms /api/auth/init GET).
+    const initRes = await page.request.get('/api/auth/init')
     const { passwordExists } = (await initRes.json()) as {
       passwordExists: boolean
     }
 
-    // Step 3: POST /api/auth/init — set password if not already set.
-    // Server-side LokiJS state persists for the entire server process, so all
-    // test workers will see the same passwordExists=true state we set here.
+    // Step 3: Set password if not already set (server-side LokiJS persists).
     if (!passwordExists) {
       console.log('[globalSetup] Setting admin password…')
-      const r = await ctx.post('/api/auth/init', {
+      const r = await page.request.post('/api/auth/init', {
         data: { password: TEST_PASSWORD },
       })
       if (!r.ok()) {
@@ -65,46 +98,43 @@ export default async function globalSetup(config: FullConfig) {
           `[globalSetup] Failed to set admin password: ${await r.text()}`,
         )
       }
+      // Reload so the component reflects the new password state (login mode).
+      // Also warms any bundles that differ between setup-mode and login-mode.
+      console.log('[globalSetup] Reloading page to enter login mode…')
+      await page.reload({ waitUntil: 'networkidle', timeout: 60000 })
     }
 
-    // Step 4: GET /api/auth/csrf — compiles CSRF route handler; the response
-    // cookie is stored in the APIRequestContext cookie jar automatically.
-    console.log('[globalSetup] Warming CSRF route…')
-    const csrfRes = await ctx.get('/api/auth/csrf')
-    const { token: csrfToken } = (await csrfRes.json()) as { token: string }
-
-    // Step 5: POST /api/auth/login — compiles login route handler; sets the
-    // session cookie in the context jar for subsequent requests.
-    console.log('[globalSetup] Warming login route…')
-    const loginRes = await ctx.post('/api/auth/login', {
-      data: { password: TEST_PASSWORD, rememberMe: false },
-      headers: { 'X-CSRF-Token': csrfToken },
+    // Step 4: Wait for React hydration.
+    // Once networkidle resolves all JS chunks are compiled, but React still
+    // needs a moment to attach event handlers (hydrate).  Waiting for the
+    // password input to be in a stable, visible state ensures handleSubmit
+    // will intercept the click rather than the native form submit.
+    await page.waitForSelector('input[type="password"]', {
+      state: 'visible',
+      timeout: 15000,
     })
-    if (!loginRes.ok()) {
-      throw new Error(
-        `[globalSetup] Login failed: ${await loginRes.text()}`,
-      )
-    }
 
-    // Step 6: GET /api/project/status — compiles the routing logic called by
-    // getCorrectRoute() after login.  This is a PUBLIC route, so no session
-    // needed — but we have one anyway from step 5.
-    console.log('[globalSetup] Warming /api/project/status…')
-    await ctx.get('/api/project/status')
+    // Step 5: Submit the login form via the React handler.
+    // This warms the remaining server-side routes in a single authenticated pass:
+    //   GET  /api/auth/csrf             (called by handleSubmit before POST)
+    //   POST /api/auth/login            (credential check + session cookie)
+    //   GET  /api/project/status        (called by getCorrectRoute after login)
+    //        middleware                 (fires on first protected-route navigation)
+    //   POST /api/auth/validate-session (middleware's internal fetch)
+    //   /build page SSR + JS bundles    (destination after login)
+    console.log('[globalSetup] Submitting login form to warm remaining routes…')
+    await page.fill('input[type="password"]', TEST_PASSWORD)
+    await page.click('button[type="submit"]')
 
-    // Step 7: GET /build — a PROTECTED route.  The session cookie from step 5
-    // is forwarded automatically.  This triggers:
-    //   • Next.js middleware execution (Edge runtime compilation)
-    //   • Middleware's internal POST /api/auth/validate-session (compiles that
-    //     route handler)
-    //   • /build page SSR compilation
-    console.log('[globalSetup] Warming /build (triggers middleware + validate-session)…')
-    await ctx.get('/build')
+    // 60 s budget for the full cold-start chain.  After this, all routes and
+    // JS bundles are cached; subsequent auth in tests completes in < 5 s.
+    await page.waitForURL(/\/(dashboard|build|start)/, { timeout: 60000 })
 
     console.log(
-      '[globalSetup] All routes pre-compiled. Tests will run with a warm server.',
+      '[globalSetup] All routes and JS bundles pre-compiled. Tests will run with a warm server.',
     )
   } finally {
-    await ctx.dispose()
+    await context.close()
+    await browser.close()
   }
 }

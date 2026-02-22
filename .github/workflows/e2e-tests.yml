@@ -39,6 +39,10 @@ jobs:
 
       - name: Run E2E tests
         run: pnpm test:e2e --project=${{ matrix.browser }}
+        env:
+          # globalSetup launches this browser for warmup.  Each matrix job only
+          # installs its own browser, so we must tell globalSetup which to use.
+          WARMUP_BROWSER: ${{ matrix.browser }}
 
       - name: Upload test results
         if: always()
@@ -86,6 +90,9 @@ jobs:
 
       - name: Run Mobile E2E tests
         run: pnpm test:e2e:mobile
+        env:
+          # Mobile job installs chromium + webkit; use chromium for the warmup.
+          WARMUP_BROWSER: chromium
 
       - name: Upload test results
         if: always()

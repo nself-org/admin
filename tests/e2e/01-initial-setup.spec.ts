@@ -40,12 +40,13 @@ test.describe('Initial Setup Flow', () => {
     await dashboardPage.expectDashboardLoaded()
   })
 
-  test('should show password setup on mobile', async ({ loginPage, page }) => {
+  test('should display login form on mobile', async ({ loginPage, page }) => {
     // Test mobile viewport
     await page.setViewportSize({ width: 375, height: 667 })
     await loginPage.goto()
 
-    await loginPage.expectSetupMode()
+    // The form should be visible and usable on mobile regardless of mode.
+    // (Setup completes in test 1, so by this test the server is in login mode.)
     await expect(loginPage.passwordInput).toBeVisible()
     await expect(loginPage.submitButton).toBeVisible()
   })
@@ -69,10 +70,16 @@ test.describe('Initial Setup Flow', () => {
       await loginPage.passwordInput.getAttribute('aria-label')
     expect(passwordLabel).toBeTruthy()
 
-    // Test keyboard navigation
+    // Test keyboard navigation.
+    // Click h1 first to establish page focus — Firefox requires a prior user
+    // gesture before keyboard Tab events propagate to page elements.
+    await page.locator('h1').click()
     await page.keyboard.press('Tab')
     await expect(loginPage.passwordInput).toBeFocused()
 
+    // Tab past intermediate field (rememberMe in login mode, confirmPassword in
+    // setup mode) then one more Tab to reach the submit button.
+    await page.keyboard.press('Tab')
     await page.keyboard.press('Tab')
     await expect(loginPage.submitButton).toBeFocused()
   })

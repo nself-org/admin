@@ -119,6 +119,10 @@ test.describe('Authentication Flow', () => {
   test('should support keyboard navigation', async ({ loginPage, page }) => {
     await loginPage.goto()
 
+    // Click h1 first to establish page focus — Firefox requires a prior user
+    // gesture before keyboard Tab events propagate to page elements.
+    await page.locator('h1').click()
+
     // Tab to password input
     await page.keyboard.press('Tab')
     await expect(loginPage.passwordInput).toBeFocused()
@@ -126,7 +130,8 @@ test.describe('Authentication Flow', () => {
     // Type password
     await page.keyboard.type(TEST_PASSWORD)
 
-    // Tab to submit button
+    // Tab past intermediate field (rememberMe in login mode) then to submit.
+    await page.keyboard.press('Tab')
     await page.keyboard.press('Tab')
     await expect(loginPage.submitButton).toBeFocused()
 

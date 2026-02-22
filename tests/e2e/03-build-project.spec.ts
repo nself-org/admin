@@ -36,7 +36,10 @@ test.describe('Build Project Flow', () => {
     await buildPage.expectBuildLogsVisible()
   })
 
-  test.skip('should view build logs in real-time', async ({ buildPage, page }) => {
+  test.skip('should view build logs in real-time', async ({
+    buildPage,
+    page,
+  }) => {
     // Skipped: requires a running nself CLI installation.
     await buildPage.goto()
     await buildPage.runBuild()
@@ -55,7 +58,10 @@ test.describe('Build Project Flow', () => {
     await expect(errorAlert).toBeAttached()
   })
 
-  test.skip('should show build progress indicator', async ({ buildPage, page }) => {
+  test.skip('should show build progress indicator', async ({
+    buildPage,
+    page,
+  }) => {
     // Skipped: requires a running nself CLI installation. runBuild() triggers
     // an API call to nself which times out in CI (no nself binary installed).
     await buildPage.goto()

@@ -15,10 +15,22 @@ export async function setupAuth(page: Page, password = TEST_PASSWORD) {
 
 /**
  * Clear all application state
+ *
+ * Note: page.evaluate() requires the page to have a navigated origin before
+ * it can access localStorage/sessionStorage. Firefox enforces this strictly
+ * (throws "The operation is insecure" on about:blank). Navigate to the app
+ * root first so there is a valid origin, then clear storage.
  */
 export async function clearAppState(page: Page) {
-  // Clear cookies
+  // Clear cookies via context (works without a navigated page)
   await page.context().clearCookies()
+  // Navigate to the app root so we have a valid origin for storage access.
+  // This prevents Firefox from throwing "The operation is insecure" when
+  // page.evaluate() is called on an unnavigated (about:blank) page.
+  const currentUrl = page.url()
+  if (currentUrl === 'about:blank' || currentUrl === '') {
+    await page.goto('/')
+  }
   // Clear local storage
   await page.evaluate(() => localStorage.clear())
   // Clear session storage

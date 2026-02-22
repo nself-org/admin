@@ -47,7 +47,19 @@ export default defineConfig({
 
     {
       name: 'firefox',
-      use: { ...devices['Desktop Firefox'] },
+      use: {
+        ...devices['Desktop Firefox'],
+        // Relax Firefox's strict origin policy so that page.evaluate() does not
+        // throw "The operation is insecure" when running against localhost.
+        // The root cause is fixed in helpers.ts (navigate before evaluate), but
+        // this preference provides an additional safety net for any future
+        // page.evaluate() calls made before a full navigation.
+        launchOptions: {
+          firefoxUserPrefs: {
+            'security.fileuri.strict_origin_policy': false,
+          },
+        },
+      },
     },
 
     {

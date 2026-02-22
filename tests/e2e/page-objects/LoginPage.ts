@@ -39,7 +39,7 @@ export class LoginPage {
     // Longer timeout: login → CSRF fetch → /api/auth/init or /api/auth/login
     // → getCorrectRoute() fetch → router.push() → Next.js navigation — can take 5-10s in CI.
     await expect(this.page).toHaveURL(/\/(dashboard|build|start)?$/, {
-      timeout: 15000,
+      timeout: 25000,
     })
   }
 

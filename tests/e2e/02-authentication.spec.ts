@@ -45,6 +45,15 @@ test.describe('Authentication Flow', () => {
   })
 
   test('should logout successfully', async ({ loginPage, dashboardPage }) => {
+    // Skip in CI: without a running nself project, all authenticated routes
+    // redirect to /build (a fullscreen page with no Header/logout button).
+    // The logout button is in the Header which only renders on non-fullscreen
+    // pages — none of which are reachable in CI without a real backend.
+    test.skip(
+      !!process.env.CI,
+      'Skipped in CI: logout button unreachable on /build (fullscreen, no Header)',
+    )
+
     // Login first
     await loginPage.goto()
     await loginPage.login(TEST_PASSWORD)

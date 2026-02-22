@@ -9,8 +9,11 @@ export async function setupAuth(page: Page, password = TEST_PASSWORD) {
   await page.goto('/login')
   await page.fill('input[type="password"]', password)
   await page.click('button[type="submit"]')
-  // Wait for redirect after login
-  await page.waitForURL(/\/(dashboard|build|start)?/, { timeout: 10000 })
+  // Wait for redirect after login. Use a regex that requires the word
+  // (dashboard|build|start) — NOT optional — so this never resolves on
+  // /login itself (which would match the old /\/(dashboard|build|start)?/
+  // regex due to the optional group matching zero characters).
+  await page.waitForURL(/\/(dashboard|build|start)/, { timeout: 20000 })
 }
 
 /**

@@ -22,6 +22,14 @@ export class LoginPage {
     // causing the native form submit (page reload to /login) to fire instead
     // of the React onClick handler.
     await this.page.goto('/login', { waitUntil: 'networkidle' })
+    // The password input starts disabled while /api/auth/init is in flight
+    // (isCheckingSetup === true).  Explicitly wait for it to become enabled so
+    // the caller can immediately call fill() without risking a stale-element
+    // interaction before React's state update renders.
+    await this.page.waitForSelector('#password:not([disabled])', {
+      state: 'visible',
+      timeout: 15000,
+    })
   }
 
   async login(password: string) {

@@ -12,6 +12,12 @@ export async function setupAuth(page: Page, password = TEST_PASSWORD) {
   // hydrates — the browser then executes the native form submit (reload to
   // /login) instead of the React onClick handler.
   await page.goto('/login', { waitUntil: 'networkidle' })
+  // Wait for the password input to become enabled (after /api/auth/init
+  // completes and React sets isCheckingSetup → false).
+  await page.waitForSelector('input[type="password"]:not([disabled])', {
+    state: 'visible',
+    timeout: 15000,
+  })
   await page.fill('input[type="password"]', password)
   await page.click('button[type="submit"]')
   // Wait for redirect after login. Use a regex that requires the word

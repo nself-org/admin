@@ -132,6 +132,14 @@ export default async function globalSetup(config: FullConfig) {
     // JS bundles are cached; subsequent auth in tests completes in < 5 s.
     await page.waitForURL(/\/(dashboard|build|start)/, { timeout: 60000 })
 
+    // Drain the /build page's mount-time API calls so they complete BEFORE
+    // any test worker fires its own requests.  Specifically, build/page.tsx
+    // calls runPreBuildChecks() → GET /api/project/status on mount.  Waiting
+    // for networkidle here ensures that request resolves and populates the
+    // server-side status cache — giving every test a sub-millisecond cache
+    // hit instead of a 10–15 s cold shell-command execution.
+    await page.waitForLoadState('networkidle', { timeout: 30000 })
+
     console.log(
       '[globalSetup] All routes and JS bundles pre-compiled. Tests will run with a warm server.',
     )

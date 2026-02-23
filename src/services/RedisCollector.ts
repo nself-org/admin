@@ -3,7 +3,10 @@
  * Collects metrics and statistics from Redis cache
  */
 
-import { exec } from 'child_process'
+import { execFile } from 'child_process'
+import { promisify } from 'util'
+
+const execFileAsync = promisify(execFile)
 
 export interface RedisStats {
   status: 'healthy' | 'unhealthy' | 'stopped'
@@ -82,12 +85,23 @@ export class RedisCollector {
   }
 
   /**
+   * Validate container name to prevent injection
+   */
+  private validateContainerName(name: string): void {
+    if (!/^[a-zA-Z0-9_-]+$/.test(name)) {
+      throw new Error('Invalid container name')
+    }
+  }
+
+  /**
    * Check if Redis container is running
    */
   private async checkContainerStatus(): Promise<boolean> {
     try {
+      this.validateContainerName(this.containerName)
       const { stdout } = await this.execWithTimeout(
-        `docker ps --filter "name=${this.containerName}" --format "{{.Status}}"`,
+        'docker',
+        ['ps', '--filter', `name=${this.containerName}`, '--format', '{{.Status}}'],
         2000,
       )
       return stdout.trim().toLowerCase().includes('up')
@@ -100,8 +114,10 @@ export class RedisCollector {
    * Get Redis INFO output
    */
   private async getRedisInfo(): Promise<string> {
+    this.validateContainerName(this.containerName)
     const { stdout } = await this.execWithTimeout(
-      `docker exec ${this.containerName} redis-cli INFO`,
+      'docker',
+      ['exec', this.containerName, 'redis-cli', 'INFO'],
       5000,
     )
     return stdout
@@ -258,29 +274,29 @@ export class RedisCollector {
   }
 
   /**
-   * Execute command with timeout
+   * Execute command with timeout using execFile (no shell injection)
    */
   private execWithTimeout(
-    command: string,
+    bin: string,
+    args: string[],
     timeout: number,
   ): Promise<{ stdout: string; stderr: string }> {
     return new Promise((resolve, reject) => {
-      const child = exec(command, (error, stdout, stderr) => {
-        if (error) {
-          reject(error)
-        } else {
-          resolve({ stdout, stderr })
-        }
-      })
-
+      const controller = new AbortController()
       const timer = setTimeout(() => {
-        child.kill()
-        reject(new Error(`Command timed out: ${command}`))
+        controller.abort()
+        reject(new Error(`Command timed out: ${bin} ${args.join(' ')}`))
       }, timeout)
 
-      child.on('exit', () => {
-        clearTimeout(timer)
-      })
+      execFileAsync(bin, args, { signal: controller.signal })
+        .then(({ stdout, stderr }) => {
+          clearTimeout(timer)
+          resolve({ stdout, stderr })
+        })
+        .catch((err) => {
+          clearTimeout(timer)
+          reject(err)
+        })
     })
   }
 }

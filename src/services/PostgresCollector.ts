@@ -3,7 +3,10 @@
  * Collects metrics and statistics from PostgreSQL database
  */
 
-import { exec } from 'child_process'
+import { execFile } from 'child_process'
+import { promisify } from 'util'
+
+const execFileAsync = promisify(execFile)
 
 export interface PostgresStats {
   status: 'healthy' | 'unhealthy' | 'stopped'
@@ -89,12 +92,23 @@ export class PostgresCollector {
   }
 
   /**
+   * Validate container name to prevent injection
+   */
+  private validateContainerName(name: string): void {
+    if (!/^[a-zA-Z0-9_-]+$/.test(name)) {
+      throw new Error('Invalid container name')
+    }
+  }
+
+  /**
    * Check if PostgreSQL container is running
    */
   private async checkContainerStatus(): Promise<boolean> {
     try {
+      this.validateContainerName(this.containerName)
       const { stdout } = await this.execWithTimeout(
-        `docker ps --filter "name=${this.containerName}" --format "{{.Status}}"`,
+        'docker',
+        ['ps', '--filter', `name=${this.containerName}`, '--format', '{{.Status}}'],
         2000,
       )
       return stdout.trim().toLowerCase().includes('up')
@@ -108,6 +122,7 @@ export class PostgresCollector {
    */
   private async getConnectionStats() {
     try {
+      this.validateContainerName(this.containerName)
       // Query pg_stat_database for connection info
       const query = `
         SELECT 
@@ -117,7 +132,8 @@ export class PostgresCollector {
       `
 
       const { stdout } = await this.execWithTimeout(
-        `docker exec ${this.containerName} psql -U postgres -d nself -t -c "${query}"`,
+        'docker',
+        ['exec', this.containerName, 'psql', '-U', 'postgres', '-d', 'nself', '-t', '-c', query],
         5000,
       )
 
@@ -144,6 +160,7 @@ export class PostgresCollector {
    */
   private async getDatabaseStats() {
     try {
+      this.validateContainerName(this.containerName)
       // Query for database sizes and stats
       const query = `
         SELECT 
@@ -156,7 +173,8 @@ export class PostgresCollector {
       `
 
       const { stdout } = await this.execWithTimeout(
-        `docker exec ${this.containerName} psql -U postgres -t -c "${query}"`,
+        'docker',
+        ['exec', this.containerName, 'psql', '-U', 'postgres', '-t', '-c', query],
         5000,
       )
 
@@ -182,7 +200,8 @@ export class PostgresCollector {
       // Get total database size
       const totalQuery = `SELECT pg_size_pretty(sum(pg_database_size(datname))) FROM pg_database`
       const { stdout: totalOut } = await this.execWithTimeout(
-        `docker exec ${this.containerName} psql -U postgres -t -c "${totalQuery}"`,
+        'docker',
+        ['exec', this.containerName, 'psql', '-U', 'postgres', '-t', '-c', totalQuery],
         5000,
       )
 
@@ -201,6 +220,7 @@ export class PostgresCollector {
    */
   private async getPerformanceStats() {
     try {
+      this.validateContainerName(this.containerName)
       // Query for performance metrics
       const query = `
         SELECT 
@@ -211,7 +231,8 @@ export class PostgresCollector {
       `
 
       const { stdout } = await this.execWithTimeout(
-        `docker exec ${this.containerName} psql -U postgres -d nself -t -c "${query}"`,
+        'docker',
+        ['exec', this.containerName, 'psql', '-U', 'postgres', '-d', 'nself', '-t', '-c', query],
         5000,
       )
 
@@ -257,29 +278,29 @@ export class PostgresCollector {
   }
 
   /**
-   * Execute command with timeout
+   * Execute command with timeout using execFile (no shell injection)
    */
   private execWithTimeout(
-    command: string,
+    bin: string,
+    args: string[],
     timeout: number,
   ): Promise<{ stdout: string; stderr: string }> {
     return new Promise((resolve, reject) => {
-      const child = exec(command, (error, stdout, stderr) => {
-        if (error) {
-          reject(error)
-        } else {
-          resolve({ stdout, stderr })
-        }
-      })
-
+      const controller = new AbortController()
       const timer = setTimeout(() => {
-        child.kill()
-        reject(new Error(`Command timed out: ${command}`))
+        controller.abort()
+        reject(new Error(`Command timed out: ${bin} ${args.join(' ')}`))
       }, timeout)
 
-      child.on('exit', () => {
-        clearTimeout(timer)
-      })
+      execFileAsync(bin, args, { signal: controller.signal })
+        .then(({ stdout, stderr }) => {
+          clearTimeout(timer)
+          resolve({ stdout, stderr })
+        })
+        .catch((err) => {
+          clearTimeout(timer)
+          reject(err)
+        })
     })
   }
 }

@@ -14,7 +14,7 @@ function validateIdentifier(name: string): boolean {
 const DANGEROUS_PATTERNS = [
   /^\s*DROP\s+/i,
   /^\s*TRUNCATE\s+/i,
-  /^\s*DELETE\s+FROM\s+[^W]*$/i, // DELETE without WHERE
+  /^\s*DELETE\s+FROM\s+\S+\s*$/i, // DELETE without WHERE
   /^\s*ALTER\s+/i,
   /^\s*CREATE\s+/i,
   /;\s*DROP\s+/i,

@@ -24,6 +24,32 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
       )
     }
 
+    // Validate MIME type — only allow image formats
+    const allowedTypes = ['image/png', 'image/jpeg', 'image/webp', 'image/gif', 'image/svg+xml']
+    if (!allowedTypes.includes(file.type)) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: 'Invalid file type',
+          details: `Allowed types: ${allowedTypes.join(', ')}`,
+        },
+        { status: 400 },
+      )
+    }
+
+    // Enforce a reasonable file size limit (5 MB)
+    const MAX_SIZE = 5 * 1024 * 1024
+    if (file.size > MAX_SIZE) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: 'File too large',
+          details: 'Logo must be 5 MB or smaller',
+        },
+        { status: 400 },
+      )
+    }
+
     // Save file temporarily
     const bytes = await file.arrayBuffer()
     const buffer = Buffer.from(bytes)

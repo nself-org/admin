@@ -3,7 +3,10 @@
  * Efficient collection of Docker container statistics
  */
 
-import { exec } from 'child_process'
+import { execFile } from 'child_process'
+import { promisify } from 'util'
+
+const execFileAsync = promisify(execFile)
 
 export interface DockerStats {
   cpu: number
@@ -89,13 +92,41 @@ export class DockerStatsCollector {
   }
 
   /**
+   * Execute command with timeout using execFile (no shell injection)
+   */
+  private execWithTimeout(
+    bin: string,
+    args: string[],
+    timeout: number,
+    options: { maxBuffer?: number } = {},
+  ): Promise<{ stdout: string; stderr: string }> {
+    return new Promise((resolve, reject) => {
+      const controller = new AbortController()
+      const timer = setTimeout(() => {
+        controller.abort()
+        reject(new Error(`Command timed out: ${bin} ${args.join(' ')}`))
+      }, timeout)
+
+      execFileAsync(bin, args, { signal: controller.signal, maxBuffer: options.maxBuffer })
+        .then(({ stdout, stderr }) => {
+          clearTimeout(timer)
+          resolve({ stdout, stderr })
+        })
+        .catch((err) => {
+          clearTimeout(timer)
+          reject(err)
+        })
+    })
+  }
+
+  /**
    * Get container counts and health status
    */
   private async getContainers() {
     try {
-      // Simple approach - get container list
       const { stdout: psOutput } = await this.execWithTimeout(
-        'docker ps -a --format "{{.State}}|{{.Status}}"',
+        'docker',
+        ['ps', '-a', '--format', '{{.State}}|{{.Status}}'],
         2000,
       )
 
@@ -132,83 +163,65 @@ export class DockerStatsCollector {
   }
 
   /**
+   * Parse a memory unit string like "3.5MiB" or "1.2GiB" into MiB
+   */
+  private parseToMiB(str: string): number {
+    const match = str.trim().match(/^([0-9.]+)\s*([a-zA-Z]+)$/)
+    if (!match) return 0
+    const value = parseFloat(match[1])
+    const unit = match[2].toLowerCase()
+    if (unit.startsWith('g')) return value * 1024
+    if (unit.startsWith('m')) return value
+    if (unit.startsWith('k')) return value / 1024
+    if (unit === 'b') return value / (1024 * 1024)
+    return value
+  }
+
+  /**
    * Get CPU and Memory stats efficiently
    */
   private async getResourceStats() {
     try {
-      // Get CPU stats - docker stats can be slow, increase timeout
-      const { stdout: cpuOut } = await this.execWithTimeout(
-        "docker stats --no-stream --format '{{.CPUPerc}}' | sed 's/%//' | awk '{s+=$1} END {print s}'",
-        8000, // Increased timeout for slow Docker daemon
+      // Get per-container stats as JSON lines for reliable parsing
+      const { stdout } = await this.execWithTimeout(
+        'docker',
+        ['stats', '--no-stream', '--format', '{{json .}}'],
+        8000,
+        { maxBuffer: 5 * 1024 * 1024 },
       )
 
-      // Get Memory stats - just first container for total
-      const { stdout: memOut } = await this.execWithTimeout(
-        "docker stats --no-stream --format '{{.MemUsage}}' | head -1",
-        8000, // Increased timeout
-      )
+      const lines = stdout.trim().split('\n').filter((l) => l)
+      let totalCpu = 0
+      let totalMemUsedMiB = 0
+      let memTotal = 8 // default GB
 
-      const cpu = parseFloat(cpuOut.trim()) || 0
-
-      // Parse memory (e.g., "3.359MiB / 7.654GiB" or "1.5GiB / 8GiB")
-      const memMatch = memOut.match(/([0-9.]+)(\w+)\s*\/\s*([0-9.]+)(\w+)/)
-      let memUsed = 0,
-        memTotal = 8
-
-      if (memMatch) {
-        const used = parseFloat(memMatch[1])
-        const usedUnit = memMatch[2].toLowerCase()
-        const total = parseFloat(memMatch[3])
-        const totalUnit = memMatch[4].toLowerCase()
-
-        // Convert to GB - handle both MiB and GiB
-        if (usedUnit.includes('g')) {
-          memUsed = used
-        } else if (usedUnit.includes('m')) {
-          memUsed = used / 1024
-        } else if (usedUnit.includes('k')) {
-          memUsed = used / (1024 * 1024)
-        }
-
-        if (totalUnit.includes('g')) {
-          memTotal = total
-        } else if (totalUnit.includes('m')) {
-          memTotal = total / 1024
-        } else if (totalUnit.includes('k')) {
-          memTotal = total / (1024 * 1024)
-        }
-
-        // Actually sum up all container memory usage with proper unit handling
+      for (const line of lines) {
         try {
-          const { stdout: allMemOut } = await this.execWithTimeout(
-            `docker stats --no-stream --format '{{.MemUsage}}' | awk -F'/' '{print $1}' | awk '
-            {
-              value = $1
-              if (index($0, "GiB") > 0) {
-                gsub(/GiB/, "", value)
-                sum += value * 1024
-              } else if (index($0, "MiB") > 0) {
-                gsub(/MiB/, "", value)
-                sum += value
-              } else if (index($0, "KiB") > 0) {
-                gsub(/KiB/, "", value)
-                sum += value / 1024
-              }
+          const data = JSON.parse(line)
+
+          // CPU: "12.34%"
+          const cpuMatch = (data.CPUPerc || '').replace('%', '')
+          totalCpu += parseFloat(cpuMatch) || 0
+
+          // Memory: "used / total"
+          if (data.MemUsage && data.MemUsage !== '--') {
+            const parts = data.MemUsage.split('/')
+            if (parts.length === 2) {
+              totalMemUsedMiB += this.parseToMiB(parts[0])
+              // Use the last container's total as the system total (they all share the same host)
+              const totalMiB = this.parseToMiB(parts[1])
+              if (totalMiB > 0) memTotal = totalMiB / 1024
             }
-            END {print sum}'`,
-            8000,
-          )
-          const totalUsedMiB = parseFloat(allMemOut.trim()) || 0
-          if (totalUsedMiB > 0) {
-            memUsed = totalUsedMiB / 1024 // Convert MiB to GiB
           }
         } catch {
-          // Intentionally empty - fallback to single container memory if sum fails
+          // Skip invalid JSON lines
         }
       }
 
+      const memUsed = totalMemUsedMiB / 1024 // Convert MiB to GiB
+
       return {
-        cpu: Math.round(cpu * 10) / 10,
+        cpu: Math.round(totalCpu * 10) / 10,
         memory: {
           used: Math.round(memUsed * 10) / 10,
           total: Math.round(memTotal * 10) / 10,
@@ -229,7 +242,8 @@ export class DockerStatsCollector {
   private async getStorageStats() {
     try {
       const { stdout } = await this.execWithTimeout(
-        "docker system df --format '{{json .}}'",
+        'docker',
+        ['system', 'df', '--format', '{{json .}}'],
         5000,
       )
 
@@ -256,10 +270,6 @@ export class DockerStatsCollector {
           }
 
           totalSize += parseSize(data.Size)
-          if (data.Active && data.Active !== 'N/A') {
-            // activeSize is computed but not used - future enhancement
-            // _activeSize += parseSize(data.Size)
-          }
         } catch {
           // Intentionally empty - skip invalid JSON lines
         }
@@ -284,8 +294,10 @@ export class DockerStatsCollector {
   private async getNetworkStats() {
     try {
       const { stdout } = await this.execWithTimeout(
-        "docker stats --no-stream --format '{{json .}}'",
+        'docker',
+        ['stats', '--no-stream', '--format', '{{json .}}'],
         8000,
+        { maxBuffer: 5 * 1024 * 1024 },
       )
 
       const lines = stdout
@@ -333,33 +345,6 @@ export class DockerStatsCollector {
     } catch (_error) {
       return { rx: 0, tx: 0 }
     }
-  }
-
-  /**
-   * Execute command with timeout
-   */
-  private execWithTimeout(
-    command: string,
-    timeout: number,
-  ): Promise<{ stdout: string; stderr: string }> {
-    return new Promise((resolve, reject) => {
-      const child = exec(command, (error, stdout, stderr) => {
-        if (error) {
-          reject(error)
-        } else {
-          resolve({ stdout, stderr })
-        }
-      })
-
-      const timer = setTimeout(() => {
-        child.kill()
-        reject(new Error(`Command timed out: ${command}`))
-      }, timeout)
-
-      child.on('exit', () => {
-        clearTimeout(timer)
-      })
-    })
   }
 }
 

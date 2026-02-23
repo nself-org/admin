@@ -28,14 +28,14 @@ const SMART_DEFAULTS = {
   POSTGRES_PORT: '5432',
   POSTGRES_DB: 'nself',
   POSTGRES_USER: 'postgres',
-  POSTGRES_PASSWORD: 'postgres',
+  POSTGRES_PASSWORD: '', // Required: set a secure password,
   POSTGRES_EXTENSIONS: 'uuid-ossp,pg_trgm,pgcrypto',
-  DATABASE_URL: 'postgresql://postgres:postgres@postgres:5432/nself',
+  DATABASE_URL: '', // Required: set after configuring POSTGRES_USER and POSTGRES_PASSWORD,
 
   // Hasura GraphQL Engine
   HASURA_VERSION: 'latest',
-  HASURA_GRAPHQL_ADMIN_SECRET: 'hasura-admin-secret',
-  HASURA_JWT_KEY: 'your-256-bit-secret-key-here',
+  HASURA_GRAPHQL_ADMIN_SECRET: '', // Required: set a secure admin secret,
+  HASURA_JWT_KEY: '', // Required: set a 256-bit secret key,
   HASURA_JWT_TYPE: 'HS256',
   HASURA_GRAPHQL_ENABLE_CONSOLE: 'true',
   HASURA_GRAPHQL_DEV_MODE: 'true',
@@ -43,7 +43,7 @@ const SMART_DEFAULTS = {
   HASURA_GRAPHQL_CORS_DOMAIN: '*',
   HASURA_ROUTE: '/hasura',
   HASURA_GRAPHQL_DATABASE_URL:
-    'postgresql://postgres:postgres@postgres:5432/nself',
+    '', // Required: set after configuring POSTGRES_USER and POSTGRES_PASSWORD,
 
   // Hasura Auth Service
   AUTH_VERSION: 'latest',
@@ -65,15 +65,15 @@ const SMART_DEFAULTS = {
   STORAGE_VERSION: 'latest',
   STORAGE_ROUTE: '/storage',
   STORAGE_CONSOLE_ROUTE: '/storage-console',
-  MINIO_ROOT_USER: 'minioadmin',
-  MINIO_ROOT_PASSWORD: 'minioadmin',
+  MINIO_ROOT_USER: '', // Required: set a secure MinIO root username,
+  MINIO_ROOT_PASSWORD: '', // Required: set a secure MinIO root password,
   MINIO_ENDPOINT: 'minio',
   MINIO_PORT: '9000',
   MINIO_USE_SSL: 'false',
   S3_BUCKET: 'nself',
   S3_ENDPOINT: 'http://minio:9000',
-  S3_ACCESS_KEY: 'minioadmin',
-  S3_SECRET_KEY: 'minioadmin',
+  S3_ACCESS_KEY: '', // Required: set your S3 access key,
+  S3_SECRET_KEY: '', // Required: set your S3 secret key,
   S3_REGION: 'us-east-1',
 
   // Nginx

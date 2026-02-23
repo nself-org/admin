@@ -70,7 +70,31 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL('/login', request.url))
   }
 
-  // Validate session token via internal API call
+  // For page routes: cookie existence is sufficient. The client-side
+  // AuthContext validates the session via /api/auth/check on mount, and
+  // Layout redirects to /login if isAuthenticated becomes false.
+  //
+  // Avoiding the internal HTTP fetch here fixes a race condition in Next.js
+  // dev mode (Turbopack): the validate-session API route may execute in a
+  // worker thread whose LokiJS instance hasn't loaded the newly-created
+  // session from disk yet, causing a false 401 redirect on every page
+  // navigation immediately after login.
+  if (!pathname.startsWith('/api/')) {
+    const response = NextResponse.next()
+    response.headers.set('X-Content-Type-Options', 'nosniff')
+    response.headers.set('X-Frame-Options', 'DENY')
+    response.headers.set('X-XSS-Protection', '1; mode=block')
+    response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin')
+    response.headers.set(
+      'Permissions-Policy',
+      'camera=(), microphone=(), geolocation=()',
+    )
+    return response
+  }
+
+  // For API routes: validate session token via internal API call.
+  // API calls happen after page load, so the session has had time to persist
+  // to disk and propagate across LokiJS instances.
   const baseUrl = request.nextUrl.origin
   try {
     const validateResponse = await fetch(
@@ -85,20 +109,13 @@ export async function middleware(request: NextRequest) {
     )
 
     if (!validateResponse.ok) {
-      if (pathname.startsWith('/api/')) {
-        return NextResponse.json({ error: 'Invalid session' }, { status: 401 })
-      }
-      return NextResponse.redirect(new URL('/login', request.url))
+      return NextResponse.json({ error: 'Invalid session' }, { status: 401 })
     }
   } catch {
-    // If validation fails, reject the request
-    if (pathname.startsWith('/api/')) {
-      return NextResponse.json(
-        { error: 'Session validation failed' },
-        { status: 401 },
-      )
-    }
-    return NextResponse.redirect(new URL('/login', request.url))
+    return NextResponse.json(
+      { error: 'Session validation failed' },
+      { status: 401 },
+    )
   }
 
   // Add security headers for all requests

@@ -346,8 +346,10 @@ jest.mock('lokijs', () => {
         collections.set(name, collection)
         return collection
       }),
-      loadDatabase: jest.fn((callback) => {
-        if (callback) {
+      loadDatabase: jest.fn((...args) => {
+        // LokiJS supports loadDatabase(callback) and loadDatabase(options, callback)
+        const callback = typeof args[0] === 'function' ? args[0] : args[1]
+        if (typeof callback === 'function') {
           setTimeout(() => callback(), 0)
         }
       }),

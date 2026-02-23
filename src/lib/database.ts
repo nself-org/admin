@@ -495,7 +495,21 @@ export async function getSession(token: string): Promise<SessionItem | null> {
   // indices are flagged dirty by LokiJS 1.5.12 after update() calls.
   // 'token' was removed from the binary `indices` array to prevent a binary
   // index from being created on this field at all.
-  const session = sessionsCollection?.findOne({ token }) ?? null
+  let session = sessionsCollection?.findOne({ token }) ?? null
+
+  // If not found in memory, reload from disk and retry once.  In Next.js dev
+  // mode with Turbopack, another worker thread may have created and persisted
+  // the session to disk but this thread's LokiJS instance hasn't seen it yet.
+  if (!session && db) {
+    await new Promise<void>((resolve) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      ;(db as any).loadDatabase({}, () => {
+        syncCollectionsFromDb()
+        resolve()
+      })
+    })
+    session = sessionsCollection?.findOne({ token }) ?? null
+  }
 
   if (!session) return null
 

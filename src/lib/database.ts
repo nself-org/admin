@@ -490,11 +490,12 @@ export async function createSession(
 
 export async function getSession(token: string): Promise<SessionItem | null> {
   await initDatabase()
-  // Use the unique-index O(1) hash-map lookup (.by()) instead of findOne().
-  // findOne() uses the binary index, which is flagged dirty by every update()
-  // call and can return null during the rebuild in LokiJS 1.5.12.
-  // The unique index is always consistent regardless of binary index state.
-  const session = (sessionsCollection?.by('token', token) as SessionItem | undefined) ?? null
+  // findOne() with a unique-indexed field automatically uses the O(1) unique
+  // hash-map lookup (not the binary index), so it is safe even when binary
+  // indices are flagged dirty by LokiJS 1.5.12 after update() calls.
+  // 'token' was removed from the binary `indices` array to prevent a binary
+  // index from being created on this field at all.
+  const session = sessionsCollection?.findOne({ token }) ?? null
 
   if (!session) return null
 
@@ -536,7 +537,7 @@ export async function getSession(token: string): Promise<SessionItem | null> {
 
 export async function deleteSession(token: string): Promise<void> {
   await initDatabase()
-  const session = (sessionsCollection?.by('token', token) as SessionItem | undefined) ?? null
+  const session = sessionsCollection?.findOne({ token }) ?? null
   if (session) {
     sessionsCollection?.remove(session)
     await addAuditLog('session_deleted', { userId: session.userId }, true)
@@ -602,7 +603,7 @@ export async function refreshSession(
   token: string,
 ): Promise<SessionItem | null> {
   await initDatabase()
-  const session = (sessionsCollection?.by('token', token) as SessionItem | undefined) ?? null
+  const session = sessionsCollection?.findOne({ token }) ?? null
 
   if (!session) return null
 

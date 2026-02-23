@@ -44,11 +44,16 @@ async function initApiKeyCollections(): Promise<void> {
   }
 
   // API Keys collection
+  // Note: 'keyPrefix' is intentionally NOT in indices.  rotateApiKey() mutates
+  // keyPrefix on the live record object before calling update(), which would
+  // corrupt a binary index on that field (LokiJS 1.5.12 limitation).
+  // Without a binary index, findOne({keyPrefix}) does a linear scan which is
+  // always correct regardless of in-place mutations.
   apiKeysCollection =
     db.getCollection('apiKeys') ||
     db.addCollection('apiKeys', {
       unique: ['id'],
-      indices: ['id', 'keyPrefix', 'status', 'tenantId'],
+      indices: ['id', 'status', 'tenantId'],
     })
 
   // API Key Usage collection

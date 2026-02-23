@@ -338,7 +338,8 @@ async function readConfigFile(fileName: string) {
     // Parse environment variables if it's an env file
     let parsed = null
     if (safeFileName.startsWith('.env')) {
-      parsed = parseEnvContent(content)
+      const rawParsed = parseEnvContent(content)
+      parsed = redactSensitive(rawParsed)
     }
 
     return NextResponse.json({
@@ -458,7 +459,8 @@ async function updateConfigFile(fileName: string, options: any) {
       // Update environment variables
       if (options.variables) {
         for (const [key, value] of Object.entries(options.variables)) {
-          const regex = new RegExp(`^${key}=.*$`, 'm')
+          const escapedKey = key.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+          const regex = new RegExp(`^${escapedKey}=.*$`, 'm')
           if (regex.test(content)) {
             content = content.replace(regex, `${key}=${value}`)
           } else {
@@ -683,7 +685,8 @@ EMAIL_FROM=admin@localhost
     // Apply custom values if provided
     if (options.variables) {
       for (const [key, value] of Object.entries(options.variables)) {
-        const regex = new RegExp(`^${key}=.*$`, 'm')
+        const escapedKey = key.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+        const regex = new RegExp(`^${escapedKey}=.*$`, 'm')
         if (regex.test(template)) {
           template = template.replace(regex, `${key}=${value}`)
         } else {
@@ -877,6 +880,20 @@ async function applyEnvironmentChanges() {
       error: error instanceof Error ? error.message : 'Unknown error',
     }
   }
+}
+
+
+const SENSITIVE_KEY_PATTERNS = [
+  /password/i, /secret/i, /key/i, /token/i, /credential/i, /private/i,
+]
+
+function redactSensitive(env: Record<string, string>): Record<string, string> {
+  const result: Record<string, string> = {}
+  for (const [k, v] of Object.entries(env)) {
+    const isSensitive = SENSITIVE_KEY_PATTERNS.some(pattern => pattern.test(k))
+    result[k] = isSensitive ? '***REDACTED***' : v
+  }
+  return result
 }
 
 function parseEnvContent(content: string): Record<string, string> {

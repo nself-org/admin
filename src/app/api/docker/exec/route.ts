@@ -125,7 +125,7 @@ export async function POST(request: Request) {
             ...process.env,
             DOCKER_HOST: `unix://${getDockerSocketPath()}`,
           },
-          timeout: command === 'logs' && options?.follow ? 0 : 30000,
+          timeout: command === 'logs' && options?.follow ? 300000 : 30000,
         },
       )
       stdout = result.stdout
@@ -137,7 +137,7 @@ export async function POST(request: Request) {
           ...process.env,
           DOCKER_HOST: `unix://${getDockerSocketPath()}`,
         },
-        timeout: command === 'logs' && options?.follow ? 0 : 30000,
+        timeout: command === 'logs' && options?.follow ? 300000 : 30000,
       })
       stdout = result.stdout
       stderr = result.stderr

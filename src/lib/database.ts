@@ -167,7 +167,30 @@ export async function initDatabase(): Promise<void> {
   // Sync state from Node.js global so all route bundles share one Loki instance.
   // In Next.js dev mode each API route is compiled as its own Webpack bundle
   // with an independent module instance; global is shared across all bundles.
-  if (global.__lokiDb != null && db == null) db = global.__lokiDb
+  //
+  // CRITICAL: do NOT guard with `db == null`. A bundle may have already initialized
+  // its own separate Loki instance (before global was set by the first initializer).
+  // If the global now points to a different (authoritative) instance — e.g. the login
+  // bundle just created a session in it — we must switch to that instance here so that
+  // session is visible in this bundle's collection references too.
+  if (global.__lokiDb != null && db !== global.__lokiDb) {
+    // Switch to the shared global Loki instance and reset collection refs so they
+    // get re-synced from the authoritative db below.
+    db = global.__lokiDb
+    configCollection = null
+    sessionsCollection = null
+    projectCacheCollection = null
+    auditLogCollection = null
+    tenantsCollection = null
+    organizationsCollection = null
+    tenantMembersCollection = null
+    orgMembersCollection = null
+    teamsCollection = null
+    tenantDomainsCollection = null
+    userPresenceCollection = null
+    documentStateCollection = null
+    collaborationCursorCollection = null
+  }
   if (global.__lokiIsInitialized === true) isInitialized = true
   if (global.__lokiInitPromise !== undefined)
     initializationPromise = global.__lokiInitPromise
@@ -193,7 +216,7 @@ export async function initDatabase(): Promise<void> {
   if (initializationPromise) {
     await initializationPromise
     // After another bundle's init completes, sync db and collection references
-    if (global.__lokiDb != null && db == null) db = global.__lokiDb
+    if (global.__lokiDb != null && db !== global.__lokiDb) db = global.__lokiDb
     if (db && !configCollection) syncCollectionsFromDb()
     return
   }

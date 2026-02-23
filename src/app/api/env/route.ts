@@ -34,7 +34,7 @@ interface Environment {
 }
 
 // GET /api/env - List all environments
-export async function GET() {
+export async function GET(): Promise<NextResponse> {
   try {
     const projectPath = getProjectPath()
     const environmentsDir = path.join(projectPath, '.environments')
@@ -163,7 +163,7 @@ export async function GET() {
 }
 
 // POST /api/env - Execute environment commands
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
     const body = await request.json()
     const { action, name, template, force } = body

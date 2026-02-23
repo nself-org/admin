@@ -306,7 +306,7 @@ function isValidEnvironment(env: string): env is ValidEnvironment {
   return VALID_ENVIRONMENTS.includes(env as ValidEnvironment)
 }
 
-export async function GET(request: NextRequest) {
+export async function GET(request: NextRequest): Promise<NextResponse> {
   try {
     const searchParams = request.nextUrl.searchParams
     const envParam = searchParams.get('env') || 'local'
@@ -409,7 +409,7 @@ export async function GET(request: NextRequest) {
   }
 }
 
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
     const body = await request.json()
     const { environment, variables, action } = body
@@ -470,9 +470,7 @@ export async function POST(request: NextRequest) {
 
       try {
         await fs.writeFile(envFile, content, 'utf-8')
-        console.log(
-          `Successfully wrote ${Object.keys(varsToSave).length} variables to ${envFile}`,
-        )
+
       } catch (writeError) {
         const msg =
           writeError instanceof Error

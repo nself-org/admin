@@ -2,7 +2,7 @@ import { ErrorCode } from '@/lib/errors/codes'
 import { executeDbQuery } from '@/lib/nselfCLI'
 import { NextResponse } from 'next/server'
 
-export async function GET() {
+export async function GET(): Promise<NextResponse> {
   try {
     // Get database status and stats
     const [statusResult, tablesResult, sizeResult] = await Promise.all([

@@ -3,7 +3,7 @@ import { executeDbQuery } from '@/lib/nselfCLI'
 import { faker } from '@faker-js/faker'
 import { NextRequest, NextResponse } from 'next/server'
 
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
     const { action, tables, rowCount = 10, seed } = await request.json()
 

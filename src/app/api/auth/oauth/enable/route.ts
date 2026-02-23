@@ -6,7 +6,7 @@ import { NextRequest, NextResponse } from 'next/server'
  * Enables an OAuth provider via nself auth oauth enable --provider=<name>
  * Body: { provider: string }
  */
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
     const body = await request.json()
     const { provider } = body

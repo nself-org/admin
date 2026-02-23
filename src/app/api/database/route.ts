@@ -39,7 +39,7 @@ const getDbClient = () => {
   return client
 }
 
-export async function GET(request: NextRequest) {
+export async function GET(request: NextRequest): Promise<NextResponse> {
   const searchParams = request.nextUrl.searchParams
   const action = searchParams.get('action')
 
@@ -234,7 +234,7 @@ export async function GET(request: NextRequest) {
   }
 }
 
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   const body = await request.json()
   const { query, allowDangerous } = body
 

@@ -3,7 +3,7 @@ import { executeNselfCommand } from '@/lib/nselfCLI'
 import { NextRequest, NextResponse } from 'next/server'
 
 // GET /api/performance/queries - Get slow queries
-export async function GET(_request: NextRequest) {
+export async function GET(_request: NextRequest): Promise<NextResponse> {
   const startTime = Date.now()
 
   try {

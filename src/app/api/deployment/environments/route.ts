@@ -5,7 +5,7 @@ import { promisify } from 'util'
 
 const execAsync = promisify(exec)
 
-export async function GET() {
+export async function GET(): Promise<NextResponse> {
   try {
     const projectPath = getProjectPath()
 
@@ -32,7 +32,7 @@ export async function GET() {
   }
 }
 
-export async function POST(request: Request) {
+export async function POST(request: Request): Promise<NextResponse> {
   try {
     const body = await request.json()
     const { action, environment, options = {} } = body

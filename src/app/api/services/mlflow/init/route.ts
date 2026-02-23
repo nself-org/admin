@@ -5,7 +5,7 @@ import { NextResponse } from 'next/server'
  * POST /api/services/mlflow/init
  * Initializes the MLflow service via nself service mlflow init
  */
-export async function POST() {
+export async function POST(): Promise<NextResponse> {
   try {
     const result = await executeNselfCommand('service', ['mlflow', 'init'])
 

@@ -7,12 +7,10 @@ import { promisify } from 'util'
 
 const execAsync = promisify(exec)
 
-export async function GET(_request: NextRequest) {
+export async function GET(_request: NextRequest): Promise<NextResponse> {
   try {
     // Use the same project path as the build API uses (from getProjectPath)
     const projectPath = getProjectPath()
-    console.log('API: Project path:', projectPath)
-
     let projectInfo: any = {
       projectName: 'nself-project',
       environment: 'development',
@@ -42,9 +40,7 @@ export async function GET(_request: NextRequest) {
 
       for (const envFile of envFiles) {
         const envPath = path.join(projectPath, envFile)
-        console.log('API: Checking env file:', envPath)
         if (fs.existsSync(envPath)) {
-          console.log('API: Found env file:', envPath)
           envContent = fs.readFileSync(envPath, 'utf8')
           break // Use the first one found
         }
@@ -57,10 +53,6 @@ export async function GET(_request: NextRequest) {
         const domainMatch = envContent.match(/BASE_DOMAIN=(.+)/)
         const dbNameMatch = envContent.match(/POSTGRES_DB=(.+)/)
         const dbPasswordMatch = envContent.match(/POSTGRES_PASSWORD=(.+)/)
-        console.log(
-          'API: Password match:',
-          dbPasswordMatch ? dbPasswordMatch[1] : 'NOT FOUND',
-        )
         const backupEnabledMatch = envContent.match(/BACKUP_ENABLED=(.+)/)
         const backupScheduleMatch = envContent.match(/BACKUP_SCHEDULE=(.+)/)
         const monitoringEnabledMatch = envContent.match(
@@ -138,20 +130,6 @@ export async function GET(_request: NextRequest) {
         // Debug logging
         const monitoringEnabled =
           monitoringEnabledMatch && monitoringEnabledMatch[1].trim() === 'true'
-        console.log('Service count debug:', {
-          core: 4,
-          storage: storageEnabled ? 1 : 0,
-          redis: redisEnabled ? 1 : 0,
-          functions: functionsEnabled ? 1 : 0,
-          mlflow: mlflowEnabled ? 1 : 0,
-          mailpit: mailpitEnabled ? 1 : 0,
-          search: searchEnabled ? 1 : 0,
-          nselfAdmin: nselfAdminEnabled ? 1 : 0,
-          customServices: customServiceCount,
-          monitoring: monitoringEnabled ? 8 : 0,
-          total: totalServices,
-        })
-
         // Parse frontend apps
         if (frontendAppsMatch) {
           const appsStr = frontendAppsMatch[1]
@@ -464,7 +442,6 @@ export async function GET(_request: NextRequest) {
           )
         }
       } catch {
-        console.log('docker-compose command failed, using file parsing')
       }
     }
 

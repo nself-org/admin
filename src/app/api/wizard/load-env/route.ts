@@ -3,7 +3,7 @@ import fs from 'fs/promises'
 import { NextRequest, NextResponse } from 'next/server'
 import path from 'path'
 
-export async function GET(_request: NextRequest) {
+export async function GET(_request: NextRequest): Promise<NextResponse> {
   try {
     // Get the project path using centralized resolution
     const projectPath = getProjectPath()

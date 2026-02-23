@@ -12,7 +12,7 @@ import { NextRequest, NextResponse } from 'next/server'
  *   - totalRequests24h: number
  *   - topKeys: { key: ApiKey, requests: number }[]
  */
-export async function GET(_request: NextRequest) {
+export async function GET(_request: NextRequest): Promise<NextResponse> {
   try {
     const stats = await apiKeysApi.getApiKeyStats()
 

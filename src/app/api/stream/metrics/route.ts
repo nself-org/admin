@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 
 // SSE endpoint for streaming metrics updates
-export async function GET(request: NextRequest) {
+export async function GET(request: NextRequest): Promise<NextResponse> {
   // Set up SSE headers
   const headers = new Headers({
     'Content-Type': 'text/event-stream',

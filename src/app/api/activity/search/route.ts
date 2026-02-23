@@ -8,7 +8,7 @@ import { NextRequest, NextResponse } from 'next/server'
  * - q: Search query string (required)
  * - limit: Maximum number of results (optional, default: 50)
  */
-export async function GET(request: NextRequest) {
+export async function GET(request: NextRequest): Promise<NextResponse> {
   try {
     const searchParams = request.nextUrl.searchParams
     const query = searchParams.get('q')

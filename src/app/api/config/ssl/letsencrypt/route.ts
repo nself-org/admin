@@ -19,7 +19,7 @@ const letsEncryptSchema = z.object({
  * GET /api/config/ssl/letsencrypt
  * Check Let's Encrypt configuration status
  */
-export async function GET() {
+export async function GET(): Promise<NextResponse> {
   try {
     const projectPath = getProjectPath()
 
@@ -111,7 +111,7 @@ export async function GET() {
  * Note: This only updates configuration. Actual certificate issuance
  * happens when services are started with SSL_MODE=letsencrypt
  */
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
     const body = await request.json()
     const validation = letsEncryptSchema.safeParse(body)

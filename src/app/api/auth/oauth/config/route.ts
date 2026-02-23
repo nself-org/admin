@@ -5,7 +5,7 @@ import { NextRequest, NextResponse } from 'next/server'
  * GET /api/auth/oauth/config?provider=<name>
  * Gets OAuth provider configuration via nself auth oauth config --provider=<name>
  */
-export async function GET(request: NextRequest) {
+export async function GET(request: NextRequest): Promise<NextResponse> {
   try {
     const provider = request.nextUrl.searchParams.get('provider')
 
@@ -54,7 +54,7 @@ export async function GET(request: NextRequest) {
  * Sets OAuth provider configuration via nself auth oauth config
  * Body: { provider, clientId, clientSecret, redirectUri }
  */
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
     const body = await request.json()
     const { provider, clientId, clientSecret, redirectUri } = body

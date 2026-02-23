@@ -37,13 +37,13 @@ function initializeWebSocketServer(req: NextRequest): void {
   const wsServer = getWebSocketServer()
   wsServer.initialize(httpServer)
 
-  console.log('WebSocket server initialized')
+  // WebSocket server initialized
 }
 
 /**
  * GET endpoint - Health check
  */
-export async function GET(request: NextRequest) {
+export async function GET(request: NextRequest): Promise<NextResponse> {
   try {
     // Initialize WebSocket server if not already done
     initializeWebSocketServer(request)
@@ -79,7 +79,7 @@ export async function GET(request: NextRequest) {
 /**
  * POST endpoint - Emit event to connected clients
  */
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
     const body = await request.json()
     const { eventType, data, room } = body

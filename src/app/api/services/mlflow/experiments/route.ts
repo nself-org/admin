@@ -5,7 +5,7 @@ import { NextResponse } from 'next/server'
  * GET /api/services/mlflow/experiments
  * Lists MLflow experiments via nself service mlflow experiments
  */
-export async function GET() {
+export async function GET(): Promise<NextResponse> {
   try {
     const result = await executeNselfCommand('service', [
       'mlflow',

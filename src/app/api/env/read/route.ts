@@ -1,7 +1,7 @@
 import { readEnvFile } from '@/lib/env-handler'
 import { NextResponse } from 'next/server'
 
-export async function GET() {
+export async function GET(): Promise<NextResponse> {
   try {
     const env = await readEnvFile()
 

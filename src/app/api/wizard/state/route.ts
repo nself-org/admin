@@ -2,7 +2,7 @@ import { getDatabase } from '@/lib/database'
 import { NextRequest, NextResponse } from 'next/server'
 
 // GET wizard state
-export async function GET(_request: NextRequest) {
+export async function GET(_request: NextRequest): Promise<NextResponse> {
   try {
     const db = await getDatabase()
     if (!db) {
@@ -35,7 +35,7 @@ export async function GET(_request: NextRequest) {
 }
 
 // POST wizard state
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
     const { state, step } = await request.json()
     const db = await getDatabase()
@@ -99,7 +99,7 @@ export async function POST(request: NextRequest) {
 }
 
 // DELETE wizard state (clear)
-export async function DELETE(_request: NextRequest) {
+export async function DELETE(_request: NextRequest): Promise<NextResponse> {
   try {
     const db = await getDatabase()
     if (!db) {

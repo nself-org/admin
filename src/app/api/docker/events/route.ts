@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 
-export async function GET() {
+export async function GET(): Promise<NextResponse> {
   // For WebSocket support in Next.js App Router, we'd need to use a separate WebSocket server
   // or use Server-Sent Events (SSE) as an alternative
 

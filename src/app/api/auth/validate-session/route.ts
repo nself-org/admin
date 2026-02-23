@@ -1,7 +1,7 @@
 import { getSession } from '@/lib/database'
 import { NextRequest, NextResponse } from 'next/server'
 
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
     const { token } = await request.json()
 

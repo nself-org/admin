@@ -48,7 +48,7 @@ function generateMockCustomers(count: number): StripeCustomer[] {
   )
 }
 
-export async function GET(request: NextRequest) {
+export async function GET(request: NextRequest): Promise<NextResponse> {
   const startTime = Date.now()
 
   try {

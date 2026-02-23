@@ -5,7 +5,7 @@ import {
 } from '@/lib/database'
 import { NextRequest, NextResponse } from 'next/server'
 
-export async function GET(request: NextRequest) {
+export async function GET(request: NextRequest): Promise<NextResponse> {
   // This is a debug endpoint, only available in development
   if (process.env.NODE_ENV !== 'development') {
     return NextResponse.json(

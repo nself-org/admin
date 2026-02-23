@@ -138,7 +138,7 @@ function parseDockerCompose(content: string): Record<string, ServiceDetail> {
   return services
 }
 
-export async function GET(_request: NextRequest) {
+export async function GET(_request: NextRequest): Promise<NextResponse> {
   try {
     const projectPath = getProjectPath()
     let services: Record<string, ServiceDetail> = {}

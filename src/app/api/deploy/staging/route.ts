@@ -30,7 +30,7 @@ function validateInput(
 }
 
 // GET /api/deploy/staging - Get staging status
-export async function GET() {
+export async function GET(): Promise<NextResponse> {
   try {
     const projectPath = getProjectPath()
     const nselfPath = await findNselfPath()
@@ -80,7 +80,7 @@ export async function GET() {
 }
 
 // POST /api/deploy/staging - Execute staging commands
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
     const body = await request.json()
     const { action, options = {} } = body

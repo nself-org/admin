@@ -4,7 +4,7 @@ import type { BenchmarkBaseline } from '@/types/performance'
 import { NextRequest, NextResponse } from 'next/server'
 
 // GET /api/benchmark/baseline - Read saved baseline
-export async function GET(_request: NextRequest) {
+export async function GET(_request: NextRequest): Promise<NextResponse> {
   const startTime = Date.now()
 
   try {
@@ -74,7 +74,7 @@ export async function GET(_request: NextRequest) {
 }
 
 // POST /api/benchmark/baseline - Create new baseline
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   const startTime = Date.now()
 
   try {

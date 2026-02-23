@@ -15,7 +15,7 @@ import { NextRequest, NextResponse } from 'next/server'
 /**
  * GET /api/collaboration/presence - Get online users
  */
-export async function GET(_request: NextRequest) {
+export async function GET(_request: NextRequest): Promise<NextResponse> {
   try {
     const onlineUsers = await getOnlineUsers()
 
@@ -38,7 +38,7 @@ export async function GET(_request: NextRequest) {
 /**
  * POST /api/collaboration/presence - Update user presence
  */
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
     const body = await request.json()
     const { userId, userName, status, currentPage, currentDocument, metadata } =
@@ -96,7 +96,7 @@ export async function POST(request: NextRequest) {
 /**
  * DELETE /api/collaboration/presence - Remove user presence
  */
-export async function DELETE(request: NextRequest) {
+export async function DELETE(request: NextRequest): Promise<NextResponse> {
   try {
     const body = await request.json()
     const { userId, userName } = body

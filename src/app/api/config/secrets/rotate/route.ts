@@ -6,7 +6,7 @@ import { NextRequest, NextResponse } from 'next/server'
  * Rotate secrets by wrapping `nself config secrets rotate`
  * Can rotate a single key or all secrets
  */
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
     const body = await request.json()
     const { key, env } = body as {

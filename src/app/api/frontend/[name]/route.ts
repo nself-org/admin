@@ -11,7 +11,7 @@ interface RouteParams {
   params: Promise<{ name: string }>
 }
 
-export async function GET(_request: NextRequest, { params }: RouteParams) {
+export async function GET(_request: NextRequest, { params }: RouteParams): Promise<NextResponse> {
   const startTime = Date.now()
   try {
     const { name } = await params
@@ -53,7 +53,7 @@ export async function GET(_request: NextRequest, { params }: RouteParams) {
   }
 }
 
-export async function PUT(request: NextRequest, { params }: RouteParams) {
+export async function PUT(request: NextRequest, { params }: RouteParams): Promise<NextResponse> {
   const startTime = Date.now()
   try {
     const { name } = await params
@@ -103,7 +103,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
   }
 }
 
-export async function DELETE(_request: NextRequest, { params }: RouteParams) {
+export async function DELETE(_request: NextRequest, { params }: RouteParams): Promise<NextResponse> {
   const startTime = Date.now()
   try {
     const { name } = await params

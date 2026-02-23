@@ -4,7 +4,7 @@ import { NextResponse } from 'next/server'
  * POST /api/plugins/github/sync
  * Triggers a sync of GitHub data (repos, issues, PRs, etc.)
  */
-export async function POST() {
+export async function POST(): Promise<NextResponse> {
   try {
     // Mock sync - will be replaced with real GitHub API integration
     // This would:

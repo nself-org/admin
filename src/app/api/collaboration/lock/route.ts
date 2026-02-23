@@ -11,7 +11,7 @@ import { NextRequest, NextResponse } from 'next/server'
 /**
  * POST /api/collaboration/lock - Lock or unlock document
  */
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
     // Get user from session
     const cookieStore = await cookies()

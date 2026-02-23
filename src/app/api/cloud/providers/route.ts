@@ -12,7 +12,7 @@ const execAsync = promisify(exec)
  * GET /api/cloud/providers - List all 26 cloud providers
  * Executes: nself cloud provider list --json
  */
-export async function GET() {
+export async function GET(): Promise<NextResponse> {
   const startTime = Date.now()
 
   try {

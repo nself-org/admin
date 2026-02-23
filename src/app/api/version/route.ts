@@ -1,7 +1,7 @@
 import { autoUpdater } from '@/lib/updater'
 import { NextResponse } from 'next/server'
 
-export async function GET() {
+export async function GET(): Promise<NextResponse> {
   try {
     const versionInfo = await autoUpdater.getLatestVersion()
     const githubInfo = await autoUpdater.checkGitHubReleases()
@@ -25,7 +25,7 @@ export async function GET() {
   }
 }
 
-export async function POST(request: Request) {
+export async function POST(request: Request): Promise<NextResponse> {
   try {
     const body = await request.json()
     const { version, autoCheck } = body

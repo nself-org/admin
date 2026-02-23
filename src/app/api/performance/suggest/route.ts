@@ -4,7 +4,7 @@ import type { OptimizationSuggestion } from '@/types/performance'
 import { NextRequest, NextResponse } from 'next/server'
 
 // GET /api/performance/suggest - Get optimization suggestions
-export async function GET(_request: NextRequest) {
+export async function GET(_request: NextRequest): Promise<NextResponse> {
   const startTime = Date.now()
 
   try {

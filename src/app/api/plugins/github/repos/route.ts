@@ -5,7 +5,7 @@ import { NextRequest, NextResponse } from 'next/server'
  * GET /api/plugins/github/repos
  * Returns list of GitHub repositories with pagination and search
  */
-export async function GET(request: NextRequest) {
+export async function GET(request: NextRequest): Promise<NextResponse> {
   try {
     const searchParams = request.nextUrl.searchParams
     const page = parseInt(searchParams.get('page') || '1')

@@ -5,7 +5,7 @@ import { promisify } from 'util'
 
 const execAsync = promisify(exec)
 
-export async function GET(request: NextRequest) {
+export async function GET(request: NextRequest): Promise<NextResponse> {
   try {
     const { searchParams } = new URL(request.url)
     const action = searchParams.get('action') || 'dashboard'
@@ -48,7 +48,7 @@ export async function GET(request: NextRequest) {
   }
 }
 
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
     const { action, service, options = {} } = await request.json()
 

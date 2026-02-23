@@ -19,36 +19,6 @@ const PUBLIC_ROUTES = [
   '/sw.js',
 ]
 
-// Define API routes that should be protected
-// API routes protected by middleware (cookie presence is checked above)
-const _PROTECTED_API_ROUTES = [
-  '/api/docker',
-  '/api/services',
-  '/api/database',
-  '/api/config',
-  '/api/system',
-  '/api/project',
-  '/api/nself',
-  '/api/storage',
-  '/api/monitoring',
-  '/api/graphql',
-  '/api/redis',
-  '/api/cli',
-  '/api/backup',
-  '/api/deploy',
-  '/api/environments',
-  '/api/cloud',
-  '/api/k8s',
-  '/api/helm',
-  '/api/frontend',
-  '/api/benchmark',
-  '/api/logs',
-  '/api/scale',
-  '/api/performance',
-  '/api/plugins',
-  '/api/version',
-]
-
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
 

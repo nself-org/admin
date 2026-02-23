@@ -2,17 +2,13 @@ import { nselfInit } from '@/lib/nselfCLI'
 import { getProjectPath } from '@/lib/paths'
 import { NextRequest, NextResponse } from 'next/server'
 
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
     const { projectName = 'my_project' } = await request.json()
     const projectPath = getProjectPath()
 
-    console.log('=== nself init API ===')
-    console.log('Project path:', projectPath)
-    console.log('Project name:', projectName)
 
     // Run nself init --full using secure CLI wrapper
-    console.log('Running nself init --full...')
 
     const result = await nselfInit({ full: true })
 
@@ -37,7 +33,6 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    console.log('Init output:', result.stdout)
     if (result.stderr && !result.stderr.includes('warning')) {
       console.error('Init stderr:', result.stderr)
     }

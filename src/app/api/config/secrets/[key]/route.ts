@@ -8,7 +8,7 @@ import { NextRequest, NextResponse } from 'next/server'
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ key: string }> },
-) {
+): Promise<NextResponse> {
   try {
     const { key } = await params
 
@@ -66,7 +66,7 @@ export async function GET(
 export async function DELETE(
   _request: NextRequest,
   { params }: { params: Promise<{ key: string }> },
-) {
+): Promise<NextResponse> {
   try {
     const { key } = await params
 

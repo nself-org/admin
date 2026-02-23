@@ -4,7 +4,7 @@ import { promisify } from 'util'
 
 const execAsync = promisify(exec)
 
-export async function GET(request: NextRequest) {
+export async function GET(request: NextRequest): Promise<NextResponse> {
   try {
     const searchParams = request.nextUrl.searchParams
     const action = searchParams.get('action') || 'info'
@@ -40,7 +40,7 @@ export async function GET(request: NextRequest) {
   }
 }
 
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
     const body = await request.json()
     const { action, key, value, ttl, pattern, command } = body

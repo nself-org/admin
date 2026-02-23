@@ -18,7 +18,7 @@ interface ValidationResult {
  * POST /api/cloud/providers/validate - Validate provider configuration
  * Executes: nself cloud provider validate --json
  */
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   const startTime = Date.now()
 
   try {

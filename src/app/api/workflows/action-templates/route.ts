@@ -5,7 +5,7 @@ import { NextResponse } from 'next/server'
  * GET /api/workflows/action-templates
  * Get all available action templates
  */
-export async function GET() {
+export async function GET(): Promise<NextResponse> {
   try {
     const templates = await workflowsApi.getActionTemplates()
 

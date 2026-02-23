@@ -2,7 +2,7 @@ import * as reports from '@/lib/reports'
 import { NextRequest, NextResponse } from 'next/server'
 
 // GET /api/reports/stats - Get report statistics
-export async function GET(_request: NextRequest) {
+export async function GET(_request: NextRequest): Promise<NextResponse> {
   try {
     const stats = await reports.getReportStats()
 

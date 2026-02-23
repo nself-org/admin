@@ -6,7 +6,7 @@ import { NextRequest, NextResponse } from 'next/server'
 /**
  * GET /api/notifications/stats - Get notification statistics
  */
-export async function GET(request: NextRequest) {
+export async function GET(request: NextRequest): Promise<NextResponse> {
   const startTime = Date.now()
 
   try {

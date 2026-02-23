@@ -20,7 +20,7 @@ function validateContainerId(id: string | null): string | null {
   return id
 }
 
-export async function GET(request: NextRequest) {
+export async function GET(request: NextRequest): Promise<NextResponse> {
   try {
     const searchParams = request.nextUrl.searchParams
     const containerIdRaw = searchParams.get('container')
@@ -146,7 +146,7 @@ export async function GET(request: NextRequest) {
 }
 
 // Clear logs (requires write access to Docker)
-export async function DELETE(request: NextRequest) {
+export async function DELETE(request: NextRequest): Promise<NextResponse> {
   try {
     const searchParams = request.nextUrl.searchParams
     const containerIdRaw = searchParams.get('container')

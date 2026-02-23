@@ -1,7 +1,7 @@
 import { readEnvFile, writeEnvFile } from '@/lib/env-handler'
 import { NextRequest, NextResponse } from 'next/server'
 
-export async function POST(_request: NextRequest) {
+export async function POST(_request: NextRequest): Promise<NextResponse> {
   try {
     // Read the current env file
     const currentEnv = await readEnvFile()

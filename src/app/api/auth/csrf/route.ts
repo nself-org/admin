@@ -1,7 +1,7 @@
 import { generateCSRFToken } from '@/lib/csrf'
 import { NextResponse } from 'next/server'
 
-export async function GET() {
+export async function GET(): Promise<NextResponse> {
   const token = generateCSRFToken()
 
   const response = NextResponse.json({ token })

@@ -14,7 +14,7 @@ const execFileAsync = promisify(execFile)
  *
  * Delegates to: nself ssl bootstrap (if available) or runs mkcert directly
  */
-export async function POST() {
+export async function POST(): Promise<Response | NextResponse> {
   try {
     const projectPath = getProjectPath()
 

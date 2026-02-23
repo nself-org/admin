@@ -27,7 +27,7 @@ function parseLogLevel(line: string): 'info' | 'warn' | 'error' | 'debug' {
 /**
  * GET /api/logs/stream - Start WebSocket log streaming
  */
-export async function GET(request: NextRequest) {
+export async function GET(request: NextRequest): Promise<NextResponse> {
   const searchParams = request.nextUrl.searchParams
   const service = searchParams.get('service') || 'all'
   const lines = searchParams.get('lines') || '100'
@@ -73,7 +73,7 @@ export async function GET(request: NextRequest) {
         console.error('Log stream error:', error)
       },
       (code) => {
-        console.log('Log stream closed with code:', code)
+        console.warn('Log stream closed with code:', code)
       },
     )
 
@@ -100,7 +100,7 @@ export async function GET(request: NextRequest) {
 }
 
 // Get log history (non-streaming)
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
     const { service, lines = 100, since, until, grep } = await request.json()
 

@@ -2,7 +2,7 @@ import { getSessionInfo } from '@/lib/auth-db'
 import { cookies } from 'next/headers'
 import { NextRequest, NextResponse } from 'next/server'
 
-export async function GET(_request: NextRequest) {
+export async function GET(_request: NextRequest): Promise<NextResponse> {
   try {
     const cookieStore = await cookies()
     const sessionToken = cookieStore.get('session')?.value

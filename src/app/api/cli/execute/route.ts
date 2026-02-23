@@ -93,7 +93,7 @@ const commandSchema = z.object({
   options: z.record(z.string(), z.string()).optional(),
 })
 
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
     const body = await request.json()
 
@@ -105,6 +105,14 @@ export async function POST(request: NextRequest) {
     }
 
     if (typeof body.command === 'string') {
+      // Reject commands with shell metacharacters before any parsing
+      if (/[;&|`$<>\\]/.test(body.command)) {
+        return NextResponse.json(
+          { success: false, error: 'Invalid command format: shell metacharacters are not allowed' },
+          { status: 400 },
+        )
+      }
+
       // Parse string command into structured format
       const parts = body.command.trim().split(/\s+/)
 
@@ -240,14 +248,15 @@ export async function POST(request: NextRequest) {
         stdout,
         stderr,
       })
-    } catch (execError: any) {
+    } catch (execError) {
       // Command failed but we still want to return the output
+      const execErr = execError as { message?: string; stdout?: string; stderr?: string }
       return NextResponse.json({
         success: false,
-        error: execError.message,
-        output: execError.stdout || execError.stderr || execError.message,
-        stdout: execError.stdout,
-        stderr: execError.stderr,
+        error: execErr.message,
+        output: execErr.stdout || execErr.stderr || execErr.message,
+        stdout: execErr.stdout,
+        stderr: execErr.stderr,
       })
     }
   } catch (error) {

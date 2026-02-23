@@ -6,7 +6,7 @@ import { NextRequest, NextResponse } from 'next/server'
  * Disables an OAuth provider via nself auth oauth disable --provider=<name>
  * Body: { provider: string }
  */
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
     const body = await request.json()
     const { provider } = body

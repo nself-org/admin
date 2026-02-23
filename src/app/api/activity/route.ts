@@ -24,7 +24,7 @@ import { NextRequest, NextResponse } from 'next/server'
  * - cursor: Cursor-based pagination
  * - includeChanges: Include change details (default: false)
  */
-export async function GET(request: NextRequest) {
+export async function GET(request: NextRequest): Promise<NextResponse> {
   try {
     const searchParams = request.nextUrl.searchParams
 
@@ -55,10 +55,15 @@ export async function GET(request: NextRequest) {
     const search = searchParams.get('search')
     if (search) filter.search = search
 
+    const rawLimit = parseInt(searchParams.get('limit') || '20', 10)
+    const rawOffset = parseInt(searchParams.get('offset') || '0', 10)
+    const limit = isNaN(rawLimit) ? 20 : Math.max(1, Math.min(rawLimit, 1000))
+    const offset = isNaN(rawOffset) ? 0 : Math.max(0, rawOffset)
+
     const options: ActivityFeedOptions = {
       filter,
-      limit: parseInt(searchParams.get('limit') || '20'),
-      offset: parseInt(searchParams.get('offset') || '0'),
+      limit,
+      offset,
       cursor: searchParams.get('cursor') || undefined,
       includeChanges: searchParams.get('includeChanges') === 'true',
     }

@@ -5,7 +5,7 @@ import { NextResponse } from 'next/server'
  * POST /api/services/functions/init
  * Initializes the functions service via nself service functions init
  */
-export async function POST() {
+export async function POST(): Promise<NextResponse> {
   try {
     const result = await executeNselfCommand('service', ['functions', 'init'])
 

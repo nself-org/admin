@@ -5,7 +5,7 @@ import { promisify } from 'util'
 
 const execAsync = promisify(exec)
 
-export async function POST(request: Request) {
+export async function POST(request: Request): Promise<NextResponse> {
   try {
     const body = await request.json()
     const { environment, version, options = {} } = body
@@ -53,7 +53,7 @@ export async function POST(request: Request) {
   }
 }
 
-export async function GET(request: Request) {
+export async function GET(request: Request): Promise<NextResponse> {
   try {
     const { searchParams } = new URL(request.url)
     const environment = searchParams.get('environment') || 'staging'

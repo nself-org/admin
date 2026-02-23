@@ -2,7 +2,7 @@ import * as reports from '@/lib/reports'
 import { NextRequest, NextResponse } from 'next/server'
 
 // GET /api/reports/templates - List all report templates
-export async function GET(request: NextRequest) {
+export async function GET(request: NextRequest): Promise<NextResponse> {
   try {
     const { searchParams } = new URL(request.url)
     const tenantId = searchParams.get('tenantId') || undefined
@@ -26,7 +26,7 @@ export async function GET(request: NextRequest) {
 }
 
 // POST /api/reports/templates - Create a new report template
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
     const body = await request.json()
 

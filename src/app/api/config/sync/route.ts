@@ -5,7 +5,7 @@ import { NextRequest, NextResponse } from 'next/server'
  * GET /api/config/sync
  * Returns the current sync status between environments
  */
-export async function GET(_request: NextRequest) {
+export async function GET(_request: NextRequest): Promise<NextResponse> {
   try {
     const result = await executeNselfCommand('config', ['sync', '--status'], {
       timeout: 15000,
@@ -37,7 +37,7 @@ export async function GET(_request: NextRequest) {
  * Sync configuration between environments
  * Body: { source: string, target: string }
  */
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
     const body = await request.json()
     const { source, target } = body

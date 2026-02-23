@@ -3,7 +3,7 @@ import { executeDbQuery } from '@/lib/nselfCLI'
 import type { TableInfo } from '@/types/database'
 import { NextRequest, NextResponse } from 'next/server'
 
-export async function GET(request: NextRequest) {
+export async function GET(request: NextRequest): Promise<NextResponse> {
   try {
     const { searchParams } = new URL(request.url)
     const tableName = searchParams.get('table')
@@ -118,7 +118,7 @@ export async function GET(request: NextRequest) {
 }
 
 // Export schema as SQL
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
     const { table, format = 'sql' } = await request.json()
 

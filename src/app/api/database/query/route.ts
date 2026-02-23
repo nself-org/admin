@@ -3,7 +3,7 @@ import { getRateLimitInfo, isRateLimited } from '@/lib/rateLimiter'
 import { databaseQuerySchema, validateRequest } from '@/lib/validation'
 import { NextRequest, NextResponse } from 'next/server'
 
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   // Rate limiting for heavy operations
   if (isRateLimited(request, 'heavy')) {
     const info = getRateLimitInfo(request, 'heavy')
@@ -33,7 +33,8 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    const { query, database, timeout = 30000 } = validation.data
+    const { query, database, timeout: rawTimeout = 30000 } = validation.data
+    const timeout = Math.max(1000, Math.min(typeof rawTimeout === 'number' ? rawTimeout : 30000, 300000))
 
     // Execute query using nself CLI
     const result = await executeNselfCommand('db', ['query', '--json', query], {
@@ -88,7 +89,7 @@ export async function POST(request: NextRequest) {
 }
 
 // Get database list
-export async function GET(_request: NextRequest) {
+export async function GET(_request: NextRequest): Promise<NextResponse> {
   try {
     // Get list of databases
     const result = await executeNselfCommand('db', ['list', '--json'])

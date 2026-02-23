@@ -5,7 +5,7 @@ import { NextResponse } from 'next/server'
  * GET /api/workflows/stats
  * Get workflow statistics
  */
-export async function GET() {
+export async function GET(): Promise<NextResponse> {
   try {
     const stats = await workflowsApi.getWorkflowStats()
 

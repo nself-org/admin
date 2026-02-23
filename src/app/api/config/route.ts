@@ -109,7 +109,7 @@ function validateFilePath(fileName: string): {
   return { valid: true, sanitized: baseName }
 }
 
-export async function GET(request: NextRequest) {
+export async function GET(request: NextRequest): Promise<NextResponse> {
   try {
     const { searchParams } = new URL(request.url)
     const action = searchParams.get('action') || 'list'
@@ -153,7 +153,7 @@ export async function GET(request: NextRequest) {
   }
 }
 
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
     const { action, file, content, options = {} } = await request.json()
 

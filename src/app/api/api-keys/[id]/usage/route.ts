@@ -13,7 +13,7 @@ interface RouteParams {
  *   - startDate?: string (ISO date)
  *   - endDate?: string (ISO date)
  */
-export async function GET(request: NextRequest, { params }: RouteParams) {
+export async function GET(request: NextRequest, { params }: RouteParams): Promise<NextResponse> {
   try {
     const { id } = await params
     const searchParams = request.nextUrl.searchParams

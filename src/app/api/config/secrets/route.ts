@@ -5,7 +5,7 @@ import { NextRequest, NextResponse } from 'next/server'
  * GET /api/config/secrets
  * List all secrets by wrapping `nself config secrets list`
  */
-export async function GET(request: NextRequest) {
+export async function GET(request: NextRequest): Promise<NextResponse> {
   try {
     const { searchParams } = new URL(request.url)
     const env = searchParams.get('env')
@@ -64,7 +64,7 @@ export async function GET(request: NextRequest) {
  * POST /api/config/secrets
  * Set a secret by wrapping `nself config secrets set [key] [value]`
  */
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
     const body = await request.json()
     const { key, value, env } = body as {

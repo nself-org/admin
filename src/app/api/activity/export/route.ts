@@ -17,7 +17,7 @@ import { NextRequest, NextResponse } from 'next/server'
  *   - endDate: Filter activities until this date
  *   - search: Search query string
  */
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
     const body = await request.json()
     const format = body.format === 'csv' ? 'csv' : 'json'

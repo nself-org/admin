@@ -4,7 +4,7 @@ import { backupSchema, restoreSchema, validateRequest } from '@/lib/validation'
 import { NextRequest, NextResponse } from 'next/server'
 
 // List backups
-export async function GET(_request: NextRequest) {
+export async function GET(_request: NextRequest): Promise<NextResponse> {
   try {
     const result = await executeNselfCommand('backup', ['list', '--json'])
 
@@ -68,7 +68,7 @@ export async function GET(_request: NextRequest) {
 }
 
 // Create backup
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   // Rate limiting for heavy operations
   if (isRateLimited(request, 'heavy')) {
     return NextResponse.json(
@@ -263,7 +263,7 @@ export async function POST(request: NextRequest) {
 }
 
 // Delete backup
-export async function DELETE(request: NextRequest) {
+export async function DELETE(request: NextRequest): Promise<NextResponse> {
   try {
     const { backupFile } = await request.json()
 

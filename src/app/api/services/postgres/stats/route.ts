@@ -1,7 +1,7 @@
 import { getServiceStatus } from '@/lib/nself-service'
 import { NextResponse } from 'next/server'
 
-export async function GET() {
+export async function GET(): Promise<NextResponse> {
   try {
     const result = await getServiceStatus('postgres')
 

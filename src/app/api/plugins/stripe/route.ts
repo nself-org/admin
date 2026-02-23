@@ -14,7 +14,7 @@ import { logger } from '@/lib/logger'
 import type { StripeStats } from '@/types/stripe'
 import { NextRequest, NextResponse } from 'next/server'
 
-export async function GET(_request: NextRequest) {
+export async function GET(_request: NextRequest): Promise<NextResponse> {
   const startTime = Date.now()
 
   try {

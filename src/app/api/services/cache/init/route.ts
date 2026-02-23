@@ -1,7 +1,7 @@
 import { executeNselfCommand } from '@/lib/nselfCLI'
 import { NextRequest, NextResponse } from 'next/server'
 
-export async function POST(_request: NextRequest) {
+export async function POST(_request: NextRequest): Promise<NextResponse> {
   try {
     const result = await executeNselfCommand('service', ['cache', 'init'], {
       timeout: 120000,

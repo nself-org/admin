@@ -10,7 +10,7 @@ interface SearchResult extends HelpArticle {
   highlight: string
 }
 
-export async function GET(request: NextRequest) {
+export async function GET(request: NextRequest): Promise<NextResponse> {
   try {
     const searchParams = request.nextUrl.searchParams
     const query = searchParams.get('q')

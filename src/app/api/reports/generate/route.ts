@@ -2,7 +2,7 @@ import * as reports from '@/lib/reports'
 import { NextRequest, NextResponse } from 'next/server'
 
 // POST /api/reports/generate - Generate a report
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
     const body = await request.json()
 

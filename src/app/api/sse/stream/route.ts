@@ -17,7 +17,7 @@ async function ensureInitialized() {
   await initPromise
 }
 
-export async function GET(_request: NextRequest) {
+export async function GET(_request: NextRequest): Promise<Response> {
   // Ensure SSE manager is initialized
   await ensureInitialized()
 
@@ -39,7 +39,7 @@ export async function GET(_request: NextRequest) {
 }
 
 // Handle POST for manual refresh
-export async function POST() {
+export async function POST(): Promise<Response> {
   await ensureInitialized()
   await sseManager.refresh()
 

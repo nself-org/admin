@@ -143,7 +143,7 @@ async function hashPassword(password: string): Promise<string> {
   return bcrypt.hash(password, salt)
 }
 
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
     const setupData: SetupData = await request.json()
 

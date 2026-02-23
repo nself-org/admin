@@ -5,7 +5,7 @@ import { NextRequest, NextResponse } from 'next/server'
  * POST /api/services/realtime/test
  * Send a test message via nself service realtime test
  */
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
     const body = await request.json()
     const { channel, message, event } = body as {

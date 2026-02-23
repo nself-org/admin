@@ -7,7 +7,7 @@ import { NextRequest, NextResponse } from 'next/server'
  * Query params:
  *   - tenantId: Filter by tenant (optional)
  */
-export async function GET(request: NextRequest) {
+export async function GET(request: NextRequest): Promise<NextResponse> {
   try {
     const searchParams = request.nextUrl.searchParams
     const tenantId = searchParams.get('tenantId') || undefined
@@ -44,7 +44,7 @@ export async function GET(request: NextRequest) {
  *
  * Returns the key AND the secret (one-time only)
  */
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
     // Validate session
     const token = request.cookies.get('session')?.value

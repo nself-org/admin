@@ -139,7 +139,7 @@ async function checkDistrolessHealth(
   }
 }
 
-export async function GET(request: NextRequest) {
+export async function GET(request: NextRequest): Promise<NextResponse> {
   try {
     const searchParams = request.nextUrl.searchParams
 
@@ -160,11 +160,6 @@ export async function GET(request: NextRequest) {
     const detailed = params.detailed === 'true'
     const withStats = params.stats === 'true'
 
-    console.log(`[CONTAINERS API] Request params:`, {
-      detailed,
-      withStats,
-      all: params.all,
-    })
 
     // Get container list using docker ps safely
     const { stdout: containerJson } = await execFileAsync(
@@ -173,9 +168,6 @@ export async function GET(request: NextRequest) {
       { timeout: 10000 },
     )
 
-    console.log(
-      `[CONTAINERS API] Raw docker output length: ${containerJson.length} chars`,
-    )
 
     const containers = containerJson
       .trim()
@@ -190,9 +182,6 @@ export async function GET(request: NextRequest) {
       })
       .filter((c) => c !== null)
 
-    console.log(
-      `[CONTAINERS API] Parsed ${containers.length} total containers from docker`,
-    )
 
     // Get project prefix for filtering containers
     let projectPrefix = 'nproj' // Default fallback
@@ -216,16 +205,11 @@ export async function GET(request: NextRequest) {
       // Path error, use default
     }
 
-    console.log(`[CONTAINERS API] Using project prefix: "${projectPrefix}"`)
 
     // Filter for project containers (unless explicitly requesting all)
     const showAll = searchParams.get('all') === 'true'
 
     // Debug: Log all container names before filtering
-    console.log(
-      `[CONTAINERS API] All container names:`,
-      containers.map((c) => c.Names),
-    )
 
     const projectContainers = showAll
       ? containers
@@ -234,9 +218,6 @@ export async function GET(request: NextRequest) {
 
           // Explicitly exclude buildx/buildkit containers - these are build infrastructure, not services
           if (name.includes('buildx_buildkit') || name.includes('buildkit')) {
-            console.log(
-              `[CONTAINERS API] ✗ Excluding buildx container: ${container.Names}`,
-            )
             return false
           }
 
@@ -266,17 +247,11 @@ export async function GET(request: NextRequest) {
             ].some((service) => name.includes(service))
 
           if (matches) {
-            console.log(
-              `[CONTAINERS API] ✓ Including container: ${container.Names} (State: ${container.State}, Status: ${container.Status})`,
-            )
           }
 
           return matches
         })
 
-    console.log(
-      `[CONTAINERS API] Filtered to ${projectContainers.length} project containers`,
-    )
 
     // Get stats if requested
     let statsMap = new Map()
@@ -334,9 +309,6 @@ export async function GET(request: NextRequest) {
                 ? 'Docker healthcheck unavailable (distroless) - verified healthy via HTTP'
                 : 'Verified via HTTP endpoint'
               if (dockerSaysUnhealthy) {
-                console.log(
-                  `[CONTAINERS API] ${container.Names}: Docker reports unhealthy but HTTP check passed`,
-                )
               }
             } else {
               health = 'unhealthy'
@@ -345,9 +317,6 @@ export async function GET(request: NextRequest) {
           }
         }
 
-        console.log(
-          `[CONTAINERS API] Processing ${container.Names}: State=${container.State}, Status="${container.Status}", Health=${health}`,
-        )
 
         return {
           id: container.ID,
@@ -389,11 +358,6 @@ export async function GET(request: NextRequest) {
       {} as Record<string, number>,
     )
 
-    console.log(`[CONTAINERS API] Final summary:`, {
-      total: formattedContainers.length,
-      healthCounts,
-      timestamp: new Date().toISOString(),
-    })
 
     return NextResponse.json({
       success: true,

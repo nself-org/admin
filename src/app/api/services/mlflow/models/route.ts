@@ -5,7 +5,7 @@ import { NextResponse } from 'next/server'
  * GET /api/services/mlflow/models
  * Lists MLflow registered models via nself service mlflow models
  */
-export async function GET() {
+export async function GET(): Promise<NextResponse> {
   try {
     const result = await executeNselfCommand('service', ['mlflow', 'models'])
 

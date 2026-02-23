@@ -16,7 +16,7 @@ interface RouteParams {
  * GET /api/cloud/providers/[name] - Get provider details
  * Executes: nself cloud provider info {name} --json
  */
-export async function GET(_request: NextRequest, { params }: RouteParams) {
+export async function GET(_request: NextRequest, { params }: RouteParams): Promise<NextResponse> {
   const startTime = Date.now()
   const { name } = await params
 
@@ -82,7 +82,7 @@ export async function GET(_request: NextRequest, { params }: RouteParams) {
  * POST /api/cloud/providers/[name] - Configure provider credentials
  * Executes: nself cloud provider init {name} with credentials
  */
-export async function POST(request: NextRequest, { params }: RouteParams) {
+export async function POST(request: NextRequest, { params }: RouteParams): Promise<NextResponse> {
   const startTime = Date.now()
   const { name } = await params
 

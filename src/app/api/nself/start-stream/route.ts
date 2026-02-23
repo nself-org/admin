@@ -5,12 +5,9 @@ import fs from 'fs'
 import { NextRequest } from 'next/server'
 import path from 'path'
 
-export async function POST(_request: NextRequest) {
+export async function POST(_request: NextRequest): Promise<Response> {
   const encoder = new TextEncoder()
   const projectPath = getProjectPath()
-
-  console.log('Start-stream API called')
-  console.log('Project path:', projectPath)
 
   // Check if docker-compose.yml exists
   const dockerComposePath = path.join(projectPath, 'docker-compose.yml')
@@ -70,9 +67,6 @@ export async function POST(_request: NextRequest) {
             return
           }
         }
-
-        console.log('Using nself command:', nselfPath)
-
         // First, check which images need to be pulled
         const checkProcess = spawn('docker-compose', ['config', '--images'], {
           cwd: projectPath,
@@ -141,13 +135,6 @@ export async function POST(_request: NextRequest) {
             }) + '\n',
           ),
         )
-
-        console.log('Executing nself start:', {
-          command: nselfPath,
-          args: ['start'],
-          cwd: projectPath,
-        })
-
         const composeProcess = spawn(nselfPath, ['start'], {
           cwd: projectPath,
           env: {
@@ -377,9 +364,7 @@ export async function POST(_request: NextRequest) {
           })
 
           composeProcess.on('close', (code) => {
-            console.log('nself start process closed with code:', code)
-            console.log('Output:', allOutput)
-            console.log('Error output:', errorOutput)
+
 
             // Check if containers were actually started or already running
             const hasStartedContainers =

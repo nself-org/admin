@@ -64,7 +64,7 @@ const VALID_TEMPLATES = [
  * Scaffolds a new service from a template via nself service scaffold
  * Body: { template: string, name: string }
  */
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
     const body = await request.json()
     const { template, name } = body
@@ -148,7 +148,7 @@ export async function POST(request: NextRequest) {
  * GET /api/services/scaffold
  * Lists available scaffold templates via nself service scaffold --list
  */
-export async function GET() {
+export async function GET(): Promise<NextResponse> {
   try {
     const result = await executeNselfCommand('service', ['scaffold', '--list'])
 

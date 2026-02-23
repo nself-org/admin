@@ -18,7 +18,7 @@ interface RouteContext {
   params: Promise<{ name: string }>
 }
 
-export async function GET(_request: NextRequest, context: RouteContext) {
+export async function GET(_request: NextRequest, context: RouteContext): Promise<NextResponse> {
   const startTime = Date.now()
   const { name } = await context.params
 
@@ -90,7 +90,7 @@ export async function GET(_request: NextRequest, context: RouteContext) {
   }
 }
 
-export async function DELETE(_request: NextRequest, context: RouteContext) {
+export async function DELETE(_request: NextRequest, context: RouteContext): Promise<NextResponse> {
   const startTime = Date.now()
   const { name } = await context.params
 

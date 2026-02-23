@@ -6,7 +6,7 @@ import { NextRequest, NextResponse } from 'next/server'
 /**
  * POST /api/notifications/read-all - Mark all notifications as read
  */
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   const startTime = Date.now()
 
   try {

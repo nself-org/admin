@@ -6,7 +6,7 @@ import { NextRequest, NextResponse } from 'next/server'
  * Initializes a new service via nself service init --name=<name>
  * Body: { name: string }
  */
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
     const body = await request.json()
     const { name } = body

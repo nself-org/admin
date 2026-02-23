@@ -14,7 +14,7 @@ function validateContainerName(name: string): boolean {
   return name.length <= 64 && VALID_CONTAINER_NAME.test(name)
 }
 
-export async function GET() {
+export async function GET(): Promise<NextResponse> {
   try {
     // Get project prefix for filtering containers
     let projectPrefix = 'nproj' // Default fallback

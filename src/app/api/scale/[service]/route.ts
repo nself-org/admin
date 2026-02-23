@@ -11,7 +11,7 @@ interface RouteParams {
   params: Promise<{ service: string }>
 }
 
-export async function GET(_request: NextRequest, { params }: RouteParams) {
+export async function GET(_request: NextRequest, { params }: RouteParams): Promise<NextResponse> {
   const startTime = Date.now()
   try {
     const { service } = await params
@@ -53,7 +53,7 @@ export async function GET(_request: NextRequest, { params }: RouteParams) {
   }
 }
 
-export async function POST(request: NextRequest, { params }: RouteParams) {
+export async function POST(request: NextRequest, { params }: RouteParams): Promise<NextResponse> {
   const startTime = Date.now()
   try {
     const { service } = await params

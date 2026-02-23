@@ -9,7 +9,7 @@ import path from 'path'
  * Import configuration from uploaded content
  * Body: { environment: string, content: string, format: 'json' | 'yaml', preview?: boolean }
  */
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
     const body = await request.json()
     const { environment, content, format, preview } = body

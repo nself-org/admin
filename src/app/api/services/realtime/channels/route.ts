@@ -5,7 +5,7 @@ import { NextResponse } from 'next/server'
  * GET /api/services/realtime/channels
  * List real-time channels via nself service realtime channels
  */
-export async function GET() {
+export async function GET(): Promise<NextResponse> {
   try {
     const result = await executeNselfCommand('service', [
       'realtime',

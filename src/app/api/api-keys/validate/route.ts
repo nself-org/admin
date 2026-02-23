@@ -11,7 +11,7 @@ import { NextRequest, NextResponse } from 'next/server'
  *   - key?: ApiKey (if valid, returns the key metadata)
  *   - error?: string (if invalid, returns the reason)
  */
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
     const body = await request.json()
 

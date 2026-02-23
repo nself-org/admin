@@ -15,7 +15,7 @@ const execAsync = promisify(exec)
 
 const REGISTRY_URL = 'https://plugins.nself.org/registry.json'
 
-export async function GET(_request: NextRequest) {
+export async function GET(_request: NextRequest): Promise<NextResponse> {
   const startTime = Date.now()
 
   try {

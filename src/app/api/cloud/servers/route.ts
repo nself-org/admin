@@ -12,7 +12,7 @@ const execAsync = promisify(exec)
  * GET /api/cloud/servers - List all servers
  * Executes: nself cloud server list --json
  */
-export async function GET(request: NextRequest) {
+export async function GET(request: NextRequest): Promise<NextResponse> {
   const startTime = Date.now()
 
   try {

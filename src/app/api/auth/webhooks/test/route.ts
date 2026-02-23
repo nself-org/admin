@@ -8,7 +8,7 @@ const VALID_ID_PATTERN = /^[a-zA-Z0-9_-]+$/
  * Tests a webhook delivery via nself auth webhooks test --id=<id>
  * Body: { id: string }
  */
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
     const body = await request.json()
     const { id } = body as { id?: string }

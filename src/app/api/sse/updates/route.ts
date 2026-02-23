@@ -1,7 +1,7 @@
 // Server-Sent Events endpoint for real-time updates
 import { NextRequest } from 'next/server'
 
-export async function GET(request: NextRequest) {
+export async function GET(request: NextRequest): Promise<Response> {
   // Create a TransformStream for SSE
   const encoder = new TextEncoder()
   const stream = new TransformStream()

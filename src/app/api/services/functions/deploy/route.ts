@@ -5,7 +5,7 @@ import { NextResponse } from 'next/server'
  * POST /api/services/functions/deploy
  * Deploys functions via nself service functions deploy
  */
-export async function POST() {
+export async function POST(): Promise<NextResponse> {
   try {
     const result = await executeNselfCommand('service', ['functions', 'deploy'])
 

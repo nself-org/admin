@@ -198,13 +198,11 @@ ${volumes.map((v) => `  ${v}:`).join('\n')}
   return dockerCompose
 }
 
-export async function POST(_request: NextRequest) {
+export async function POST(_request: NextRequest): Promise<NextResponse> {
   try {
     // Get project path - use the same as other APIs
     const projectPath = getProjectPath()
 
-    console.log('=== Simple Build Starting ===')
-    console.log('Project path:', projectPath)
 
     // Ensure project directory exists
     try {
@@ -283,8 +281,6 @@ export async function POST(_request: NextRequest) {
     const nginxPath = path.join(projectPath, 'nginx/conf.d/default.conf')
     await fs.writeFile(nginxPath, nginxConfig, 'utf-8').catch(() => {})
 
-    console.log('=== Build Complete ===')
-    console.log(`Generated docker-compose.yml with ${serviceCount} services`)
 
     return NextResponse.json({
       success: true,

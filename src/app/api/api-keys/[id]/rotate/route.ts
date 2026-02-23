@@ -10,7 +10,7 @@ interface RouteParams {
  * Generates a new secure key while maintaining permissions and settings
  * Returns the new secret key (one-time only)
  */
-export async function POST(_request: NextRequest, { params }: RouteParams) {
+export async function POST(_request: NextRequest, { params }: RouteParams): Promise<NextResponse> {
   try {
     const { id } = await params
     const result = await apiKeysApi.rotateApiKey(id)

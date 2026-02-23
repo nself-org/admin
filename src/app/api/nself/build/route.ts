@@ -5,18 +5,15 @@ import fs from 'fs/promises'
 import { NextRequest, NextResponse } from 'next/server'
 import path from 'path'
 
-export async function POST(_request: NextRequest) {
+export async function POST(_request: NextRequest): Promise<NextResponse> {
   try {
     // Get the actual backend project path where we want to build
     const backendProjectPath = getProjectPath()
 
-    console.log('=== Starting nself build ===')
-    console.log('Backend project path:', backendProjectPath)
 
     // Ensure the backend project directory exists
     try {
       await fs.mkdir(backendProjectPath, { recursive: true })
-      console.log('Backend directory ready')
     } catch (mkdirError) {
       console.error('Failed to create backend directory:', mkdirError)
     }
@@ -28,13 +25,11 @@ export async function POST(_request: NextRequest) {
     let envFileFound = false
     try {
       await fs.access(envPath)
-      console.log('.env found')
       envFileFound = true
     } catch {
       // Check for .env.dev as fallback
       try {
         await fs.access(envDevPath)
-        console.log('.env.dev found')
         envFileFound = true
       } catch {
         console.error('Neither .env nor .env.dev found')
@@ -52,7 +47,6 @@ export async function POST(_request: NextRequest) {
     }
 
     // Run nself build in the backend project directory
-    console.log('Executing nself build command...')
 
     // Emit build start event
     emitBuildProgress({
@@ -80,10 +74,7 @@ export async function POST(_request: NextRequest) {
       // Run nself build using secure CLI wrapper
       const result = await nselfBuild({ force: true })
 
-      console.log('=== Build Output ===')
-      console.log('stdout:', result.stdout)
       if (result.stderr) {
-        console.log('stderr:', result.stderr)
       }
 
       // Check if build failed
@@ -111,7 +102,6 @@ export async function POST(_request: NextRequest) {
       )
       try {
         await fs.access(dockerComposePath)
-        console.log('docker-compose.yml created successfully')
 
         // Count services in the generated file
         const dockerComposeContent = await fs.readFile(
@@ -174,9 +164,10 @@ export async function POST(_request: NextRequest) {
           { status: 500 },
         )
       }
-    } catch (buildError: any) {
+    } catch (buildError) {
+      const buildErr = buildError instanceof Error ? buildError : new Error(String(buildError))
       console.error('=== Build Error ===')
-      console.error('Error message:', buildError.message)
+      console.error('Error message:', buildErr.message)
 
       // Check if docker-compose.yml exists despite error (sometimes nself returns non-zero but succeeds)
       const dockerComposePath = path.join(
@@ -192,7 +183,6 @@ export async function POST(_request: NextRequest) {
         const serviceMatches = dockerComposeContent.match(/^ {2}\w+:/gm)
         const serviceCount = serviceMatches ? serviceMatches.length : 0
 
-        console.log('Build appears successful despite error')
 
         // Emit success event
         emitBuildProgress({
@@ -217,16 +207,17 @@ export async function POST(_request: NextRequest) {
           step: 'build',
           status: 'failed',
           progress: 0,
-          message: buildError.message || 'Build failed',
+          message: 'Build failed. Check server logs for details.',
           currentStep: 1,
           totalSteps: 6,
           timestamp: new Date().toISOString(),
         })
 
+        console.error('Build failed:', buildError)
         return NextResponse.json(
           {
             error: 'Build failed',
-            details: buildError.message || 'Unknown error during build',
+            details: 'Build failed. Check server logs for details.',
           },
           { status: 500 },
         )
@@ -247,10 +238,11 @@ export async function POST(_request: NextRequest) {
       timestamp: new Date().toISOString(),
     })
 
+    console.error('Fatal error in build API:', error)
     return NextResponse.json(
       {
         error: 'Failed to build project',
-        details: error instanceof Error ? error.message : 'Unknown error',
+        details: 'An unexpected error occurred. Check server logs for details.',
       },
       { status: 500 },
     )

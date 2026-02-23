@@ -8,7 +8,7 @@ const VALID_ID_PATTERN = /^[a-zA-Z0-9_-]+$/
  * Fetches webhook delivery logs via nself auth webhooks logs
  * Query params: ?id=<webhookId>&limit=50
  */
-export async function GET(request: NextRequest) {
+export async function GET(request: NextRequest): Promise<NextResponse> {
   try {
     const { searchParams } = new URL(request.url)
     const id = searchParams.get('id')

@@ -1,7 +1,7 @@
 import { getWidgetTemplates } from '@/lib/dashboards'
 import { NextResponse } from 'next/server'
 
-export async function GET() {
+export async function GET(): Promise<NextResponse> {
   try {
     const templates = getWidgetTemplates()
 

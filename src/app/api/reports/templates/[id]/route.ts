@@ -6,7 +6,7 @@ interface RouteContext {
 }
 
 // GET /api/reports/templates/[id] - Get a single template
-export async function GET(_request: NextRequest, context: RouteContext) {
+export async function GET(_request: NextRequest, context: RouteContext): Promise<NextResponse> {
   try {
     const { id } = await context.params
     const template = await reports.getTemplateById(id)
@@ -36,7 +36,7 @@ export async function GET(_request: NextRequest, context: RouteContext) {
 }
 
 // PATCH /api/reports/templates/[id] - Update a template
-export async function PATCH(request: NextRequest, context: RouteContext) {
+export async function PATCH(request: NextRequest, context: RouteContext): Promise<NextResponse> {
   try {
     const { id } = await context.params
     const body = await request.json()
@@ -72,7 +72,7 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
 }
 
 // DELETE /api/reports/templates/[id] - Delete a template
-export async function DELETE(_request: NextRequest, context: RouteContext) {
+export async function DELETE(_request: NextRequest, context: RouteContext): Promise<NextResponse> {
   try {
     const { id } = await context.params
 

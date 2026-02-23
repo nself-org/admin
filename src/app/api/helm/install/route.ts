@@ -56,7 +56,7 @@ function validateTimeout(input: string): boolean {
   return SAFE_TIMEOUT_PATTERN.test(input)
 }
 
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   const startTime = Date.now()
   try {
     const projectPath = getProjectPath()

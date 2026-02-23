@@ -5,7 +5,7 @@ import { NextResponse } from 'next/server'
  * POST /api/config/vault/init
  * Initialize HashiCorp Vault by wrapping `nself config vault init`
  */
-export async function POST() {
+export async function POST(): Promise<NextResponse> {
   try {
     const result = await executeNselfCommand('config', ['vault', 'init'], {
       timeout: 120000,

@@ -16,7 +16,7 @@ const VALID_PROVIDERS = [
  * GET /api/auth/oauth
  * Lists all OAuth providers via nself auth oauth list
  */
-export async function GET() {
+export async function GET(): Promise<NextResponse> {
   try {
     const result = await executeNselfCommand('auth', ['oauth', 'list'])
 
@@ -52,7 +52,7 @@ export async function GET() {
  * Installs an OAuth provider via nself auth oauth install
  * Body: { provider: string }
  */
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
     const body = await request.json()
     const { provider } = body

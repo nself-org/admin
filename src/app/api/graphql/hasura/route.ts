@@ -55,7 +55,7 @@ function isQueryAllowed(query: string): { allowed: boolean; reason?: string } {
   return { allowed: true }
 }
 
-export async function GET(request: NextRequest) {
+export async function GET(request: NextRequest): Promise<NextResponse> {
   try {
     const searchParams = request.nextUrl.searchParams
     const action = searchParams.get('action') || 'metadata'
@@ -92,7 +92,7 @@ export async function GET(request: NextRequest) {
   }
 }
 
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
     const body = await request.json()
     const { query, variables, action } = body

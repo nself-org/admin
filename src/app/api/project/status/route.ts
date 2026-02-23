@@ -280,7 +280,7 @@ async function computeStatus(): Promise<StatusPayload> {
   return payload
 }
 
-export async function GET() {
+export async function GET(): Promise<NextResponse> {
   // Return cached result if still fresh — sub-millisecond response for all
   // concurrent callers after the first request warms the cache.
   if (_cache && Date.now() < _cache.expiresAt) {

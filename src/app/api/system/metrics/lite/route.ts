@@ -11,7 +11,7 @@ let metricsCache: any = null
 let lastCacheTime = 0
 const CACHE_TTL = 1000 // 1 second cache
 
-export async function GET() {
+export async function GET(): Promise<NextResponse> {
   try {
     const now = Date.now()
 

@@ -6,7 +6,7 @@ import { NextRequest, NextResponse } from 'next/server'
  * GET /api/workflows
  * List all workflows with optional filtering
  */
-export async function GET(request: NextRequest) {
+export async function GET(request: NextRequest): Promise<NextResponse> {
   try {
     const { searchParams } = new URL(request.url)
     const status = searchParams.get('status') as WorkflowStatus | null
@@ -42,7 +42,7 @@ export async function GET(request: NextRequest) {
  * POST /api/workflows
  * Create a new workflow
  */
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
     const body = await request.json()
 

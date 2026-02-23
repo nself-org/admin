@@ -5,7 +5,7 @@ import { NextRequest, NextResponse } from 'next/server'
  * POST /api/config/vault/config
  * Configure Vault connection settings by wrapping `nself config vault config`
  */
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
     const body = await request.json()
     const { url, token, namespace } = body as {

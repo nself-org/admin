@@ -5,7 +5,7 @@ import { NextResponse } from 'next/server'
  * GET /api/auth/rate-limit/config
  * Returns current rate limit configuration via nself auth rate-limit config
  */
-export async function GET() {
+export async function GET(): Promise<NextResponse> {
   try {
     const result = await executeNselfCommand('auth', ['rate-limit', 'config'])
 

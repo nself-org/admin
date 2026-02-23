@@ -6,7 +6,7 @@ import { NextRequest, NextResponse } from 'next/server'
  * Export configuration for a given environment and format
  * Body: { environment: string, format: 'json' | 'yaml' }
  */
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
     const body = await request.json()
     const { environment, format } = body

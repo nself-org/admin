@@ -3,7 +3,7 @@ import fs from 'fs/promises'
 import { NextRequest, NextResponse } from 'next/server'
 import path from 'path'
 
-export async function POST(req: NextRequest) {
+export async function POST(req: NextRequest): Promise<NextResponse> {
   try {
     const { key, value, remove = false, environment } = await req.json()
 
@@ -90,7 +90,7 @@ export async function POST(req: NextRequest) {
 }
 
 // Batch update multiple variables
-export async function PUT(req: NextRequest) {
+export async function PUT(req: NextRequest): Promise<NextResponse> {
   try {
     const { variables, environment } = await req.json()
 

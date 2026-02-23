@@ -5,7 +5,7 @@ import { NextResponse } from 'next/server'
  * GET /api/services/functions/logs
  * Retrieves function logs via nself service functions logs
  */
-export async function GET() {
+export async function GET(): Promise<NextResponse> {
   try {
     const result = await executeNselfCommand('service', ['functions', 'logs'])
 

@@ -7,7 +7,7 @@ import { NextRequest, NextResponse } from 'next/server'
 const VALID_TARGETS = ['api', 'database', 'full', 'graphql', 'auth', 'storage']
 
 // POST /api/benchmark/run - Run benchmark
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   const startTime = Date.now()
 
   try {

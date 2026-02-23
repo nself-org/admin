@@ -5,7 +5,7 @@ import { promisify } from 'util'
 
 const execAsync = promisify(exec)
 
-export async function GET() {
+export async function GET(): Promise<NextResponse> {
   try {
     const nselfCommand = await findNselfPath()
 

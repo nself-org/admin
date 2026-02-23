@@ -16,7 +16,7 @@ let speedCache: {
 
 const CACHE_DURATION = 3600000 // 1 hour cache for ISP speed tests
 
-export async function GET() {
+export async function GET(): Promise<NextResponse> {
   try {
     const now = Date.now()
 
@@ -212,7 +212,7 @@ export async function GET() {
 }
 
 // POST endpoint to save ISP speed from actual speed tests
-export async function POST(request: Request) {
+export async function POST(request: Request): Promise<NextResponse> {
   try {
     const data = await request.json()
     const { ispSpeed } = data

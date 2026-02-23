@@ -1,7 +1,7 @@
 import { getHasuraCollector } from '@/services/HasuraCollector'
 import { NextResponse } from 'next/server'
 
-export async function GET() {
+export async function GET(): Promise<NextResponse> {
   try {
     const collector = getHasuraCollector()
     const stats = await collector.collect()

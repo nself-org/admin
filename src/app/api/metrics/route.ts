@@ -216,7 +216,7 @@ async function getApplicationMetrics(): Promise<Metric[]> {
   return metrics
 }
 
-export async function GET() {
+export async function GET(): Promise<NextResponse> {
   try {
     // Collect all metrics
     const [systemMetrics, databaseMetrics, appMetrics] = await Promise.all([

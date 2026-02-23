@@ -5,7 +5,7 @@ import {
 } from '@/lib/auth-db'
 import { NextRequest, NextResponse } from 'next/server'
 
-export async function GET(_request: NextRequest) {
+export async function GET(_request: NextRequest): Promise<NextResponse> {
   try {
     const passwordExists = await checkPasswordExists()
     const isDev = await isDevMode()
@@ -23,7 +23,7 @@ export async function GET(_request: NextRequest) {
   }
 }
 
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
     const { password } = await request.json()
 

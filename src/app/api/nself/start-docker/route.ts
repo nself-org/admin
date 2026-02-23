@@ -8,10 +8,9 @@ import { promisify } from 'util'
 
 const execFileAsync = promisify(execFile)
 
-export async function POST(_request: NextRequest) {
+export async function POST(_request: NextRequest): Promise<NextResponse> {
   try {
     const projectPath = getProjectPath()
-    console.log('Starting services with docker-compose in:', projectPath)
 
     // Check if docker-compose.yml exists
     const dockerComposePath = path.join(projectPath, 'docker-compose.yml')
@@ -29,7 +28,6 @@ export async function POST(_request: NextRequest) {
 
     // Find nself CLI using the centralized utility
     const nselfPath = await findNselfPath()
-    console.log('Using nself from:', nselfPath)
 
     // Use nself CLI to start services
     const { stdout, stderr } = await execFileAsync(nselfPath, ['start'], {

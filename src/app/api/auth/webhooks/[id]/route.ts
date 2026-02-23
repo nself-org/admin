@@ -10,7 +10,7 @@ const VALID_ID_PATTERN = /^[a-zA-Z0-9_-]+$/
 export async function GET(
   _request: NextRequest,
   { params }: { params: Promise<{ id: string }> },
-) {
+): Promise<NextResponse> {
   try {
     const { id } = await params
 
@@ -57,7 +57,7 @@ export async function GET(
 export async function DELETE(
   _request: NextRequest,
   { params }: { params: Promise<{ id: string }> },
-) {
+): Promise<NextResponse> {
   try {
     const { id } = await params
 

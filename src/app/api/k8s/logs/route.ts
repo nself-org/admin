@@ -34,7 +34,7 @@ function validateSince(input: string): boolean {
   return SAFE_SINCE_PATTERN.test(input)
 }
 
-export async function GET(request: NextRequest) {
+export async function GET(request: NextRequest): Promise<NextResponse> {
   const startTime = Date.now()
   try {
     const projectPath = getProjectPath()

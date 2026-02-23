@@ -11,7 +11,7 @@ import { promisify } from 'util'
 
 const execAsync = promisify(exec)
 
-export async function GET(_request: NextRequest) {
+export async function GET(_request: NextRequest): Promise<NextResponse> {
   try {
     const projectPath = getProjectPath()
 
@@ -35,11 +35,9 @@ export async function GET(_request: NextRequest) {
     }
 
     // No env file exists, run nself init --full to create one
-    console.log('No .env.local found, running nself init --full...')
 
     // Find nself CLI using the centralized utility
     const nselfPath = await findNselfPath()
-    console.log('Using nself from:', nselfPath)
 
     // Run nself init --full to create all env files
     const { stdout, stderr } = await execAsync(`${nselfPath} init --full`, {
@@ -51,7 +49,6 @@ export async function GET(_request: NextRequest) {
       timeout: 30000,
     })
 
-    console.log('nself init output:', stdout)
     if (stderr && !stderr.includes('warning')) {
       console.error('nself init stderr:', stderr)
     }

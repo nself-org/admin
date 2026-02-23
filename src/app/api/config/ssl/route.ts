@@ -26,7 +26,7 @@ interface SSLStatus {
  * GET /api/config/ssl
  * Returns the current SSL configuration status
  */
-export async function GET() {
+export async function GET(): Promise<NextResponse> {
   try {
     const projectPath = getProjectPath()
     const status: SSLStatus = {

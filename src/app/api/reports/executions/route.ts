@@ -3,7 +3,7 @@ import { ReportStatus } from '@/types/report'
 import { NextRequest, NextResponse } from 'next/server'
 
 // GET /api/reports/executions - List all report executions
-export async function GET(request: NextRequest) {
+export async function GET(request: NextRequest): Promise<NextResponse> {
   try {
     const { searchParams } = new URL(request.url)
     const reportId = searchParams.get('reportId') || undefined

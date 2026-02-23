@@ -10,7 +10,7 @@ interface ValidationIssue {
   severity: 'error' | 'warning'
 }
 
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
     const { config: _config } = await request.json()
     const issues: ValidationIssue[] = []

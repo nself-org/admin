@@ -5,7 +5,7 @@ interface RouteParams {
   params: Promise<{ id: string; widgetId: string }>
 }
 
-export async function PATCH(request: NextRequest, { params }: RouteParams) {
+export async function PATCH(request: NextRequest, { params }: RouteParams): Promise<NextResponse> {
   try {
     const { id, widgetId } = await params
 
@@ -58,7 +58,7 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
   }
 }
 
-export async function DELETE(_request: NextRequest, { params }: RouteParams) {
+export async function DELETE(_request: NextRequest, { params }: RouteParams): Promise<NextResponse> {
   try {
     const { id, widgetId } = await params
 

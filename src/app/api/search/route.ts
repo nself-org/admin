@@ -1,7 +1,7 @@
 import { getSearchFilters, getSuggestions, search } from '@/lib/search-index'
 import { NextRequest, NextResponse } from 'next/server'
 
-export async function GET(request: NextRequest) {
+export async function GET(request: NextRequest): Promise<NextResponse> {
   try {
     const searchParams = request.nextUrl.searchParams
     const query = searchParams.get('q') || ''

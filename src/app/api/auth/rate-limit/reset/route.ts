@@ -6,7 +6,7 @@ import { NextRequest, NextResponse } from 'next/server'
  * Resets rate limit counters via nself auth rate-limit reset
  * Optional body: { endpoint?: string } to reset a specific endpoint
  */
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
     const body = await request.json().catch(() => ({}))
     const { endpoint } = body as { endpoint?: string }

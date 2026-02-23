@@ -1,7 +1,7 @@
 import { readEnvFile, updateEnvFile } from '@/lib/env-handler'
 import { NextRequest, NextResponse } from 'next/server'
 
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
     const { frontendApps, environment = 'development' } = await request.json()
 

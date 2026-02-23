@@ -34,7 +34,7 @@ async function getMinIOClient(): Promise<Minio.Client> {
 // GET handler
 // ---------------------------------------------------------------------------
 
-export async function GET(request: NextRequest) {
+export async function GET(request: NextRequest): Promise<NextResponse> {
   try {
     const { searchParams } = new URL(request.url)
     const action = searchParams.get('action') || 'overview'
@@ -99,7 +99,7 @@ export async function GET(request: NextRequest) {
 // POST handler
 // ---------------------------------------------------------------------------
 
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
     const { action, bucket, file, options = {} } = await request.json()
 

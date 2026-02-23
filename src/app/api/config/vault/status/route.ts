@@ -5,7 +5,7 @@ import { NextResponse } from 'next/server'
  * GET /api/config/vault/status
  * Returns the current Vault status by wrapping `nself config vault status`
  */
-export async function GET() {
+export async function GET(): Promise<NextResponse> {
   try {
     const result = await executeNselfCommand('config', ['vault', 'status'])
 

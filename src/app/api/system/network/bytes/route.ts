@@ -4,7 +4,7 @@ import { promisify } from 'util'
 
 const execAsync = promisify(exec)
 
-export async function GET() {
+export async function GET(): Promise<NextResponse> {
   try {
     // Get the primary network interface
     const { stdout: primaryInterface } = await execAsync(

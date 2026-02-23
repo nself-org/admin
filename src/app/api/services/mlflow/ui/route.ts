@@ -5,7 +5,7 @@ import { NextResponse } from 'next/server'
  * GET /api/services/mlflow/ui
  * Gets MLflow UI URL and status via nself service mlflow ui
  */
-export async function GET() {
+export async function GET(): Promise<NextResponse> {
   try {
     const result = await executeNselfCommand('service', ['mlflow', 'ui'])
 

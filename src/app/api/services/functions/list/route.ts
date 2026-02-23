@@ -5,7 +5,7 @@ import { NextResponse } from 'next/server'
  * GET /api/services/functions/list
  * Lists all functions via nself service functions list
  */
-export async function GET() {
+export async function GET(): Promise<NextResponse> {
   try {
     const result = await executeNselfCommand('service', ['functions', 'list'])
 

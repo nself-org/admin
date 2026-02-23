@@ -204,7 +204,7 @@ async function getCpuUsage(): Promise<number> {
   }
 }
 
-export async function GET() {
+export async function GET(): Promise<NextResponse> {
   try {
     const startTime = process.hrtime()
 

@@ -17,7 +17,7 @@ interface TrustStatus {
  * GET /api/config/ssl/trust
  * Check if mkcert CA is installed in system trust store
  */
-export async function GET() {
+export async function GET(): Promise<NextResponse> {
   try {
     const platform = process.platform
     const status: TrustStatus = {
@@ -90,7 +90,7 @@ export async function GET() {
  *
  * Note: This requires elevated permissions and may prompt for password
  */
-export async function POST() {
+export async function POST(): Promise<NextResponse> {
   try {
     // Check if mkcert is installed
     try {

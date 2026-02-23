@@ -1,7 +1,7 @@
 import { executeNselfCommand } from '@/lib/nselfCLI'
 import { NextResponse } from 'next/server'
 
-export async function POST() {
+export async function POST(): Promise<NextResponse> {
   try {
     const result = await executeNselfCommand('build')
 

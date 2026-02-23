@@ -12,7 +12,7 @@ import { NextResponse } from 'next/server'
  * 3. Webhook handlers for real-time updates
  * 4. Database storage for cached repository data
  */
-export async function GET() {
+export async function GET(): Promise<NextResponse> {
   try {
     // DEMO DATA - Replace with GitHub API calls for production use
     const stats: GitHubStats = {

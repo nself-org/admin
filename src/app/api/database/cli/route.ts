@@ -13,7 +13,7 @@ import { NextRequest, NextResponse } from 'next/server'
  * Database CLI operations - wraps nself db commands
  * All database management operations should go through nself CLI
  */
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
     const body = await request.json()
     const { action, options } = body
@@ -111,7 +111,7 @@ export async function POST(request: NextRequest) {
 /**
  * GET endpoint for database CLI status/info
  */
-export async function GET(request: NextRequest) {
+export async function GET(request: NextRequest): Promise<NextResponse> {
   const searchParams = request.nextUrl.searchParams
   const action = searchParams.get('action')
 

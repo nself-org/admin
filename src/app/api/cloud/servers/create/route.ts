@@ -58,7 +58,7 @@ function validateTagValue(input: string): boolean {
  * POST /api/cloud/servers/create - Provision a new server
  * Executes: nself cloud server create {provider} --name {name} --size {size} --region {region}
  */
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   const startTime = Date.now()
 
   try {

@@ -9,18 +9,14 @@ import { promisify } from 'util'
 
 const execAsync = promisify(exec)
 
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
     const { mode } = await request.json() // mode can be 'edit' or 'reset'
     const projectPath = getProjectPath()
 
-    console.log('=== nself reset API ===')
-    console.log('Project path:', projectPath)
-    console.log('Mode:', mode)
 
     // Find nself CLI using the centralized utility
     const nselfPath = await findNselfPath()
-    console.log('Using nself from:', nselfPath)
 
     // If mode is 'edit', save current .env.local BEFORE reset
     const envPath = path.join(projectPath, '.env.local')
@@ -31,21 +27,17 @@ export async function POST(request: NextRequest) {
       try {
         // Save current .env.local to temp location before reset
         await fs.copyFile(envPath, tempBackupPath)
-        console.log('Saved current .env.local to temp backup')
 
         // Read the config now before reset
         const env = await readEnvFile()
         if (env) {
           savedConfig = envToWizardConfig(env)
-          console.log('Saved config:', savedConfig)
         }
       } catch (err) {
-        console.log('Could not save .env.local:', err)
       }
     }
 
     // Run nself reset with --force to stop and clean
-    console.log('Running nself reset --force...')
 
     let stdout = ''
     let stderr = ''
@@ -62,14 +54,12 @@ export async function POST(request: NextRequest) {
       })
       stdout = result.stdout
       stderr = result.stderr
-    } catch (execError: any) {
+    } catch (_execError) {
       // If it times out or fails, assume it's because reset isn't fully implemented
       // For edit mode, we just need to preserve the config
-      console.log('Reset command failed or timed out:', execError.message)
 
       // For edit mode, we can continue since we're preserving config
       if (mode === 'edit') {
-        console.log('Continuing with edit mode despite reset failure')
         stdout = 'Reset simulated for edit mode'
       } else {
         // For full reset, we should at least try to clean up docker
@@ -88,7 +78,6 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    console.log('Reset output:', stdout)
     if (stderr && !stderr.includes('warning')) {
       console.error('Reset stderr:', stderr)
     }
@@ -102,14 +91,12 @@ export async function POST(request: NextRequest) {
         try {
           await fs.access(tempBackupPath)
           await fs.copyFile(tempBackupPath, envPath)
-          console.log('Restored .env.local from temp backup')
           // Clean up temp file
           await fs.unlink(tempBackupPath).catch(() => {})
         } catch {
           // If no temp backup, try .env.local.old from nself reset
           await fs.access(envBackupPath)
           await fs.copyFile(envBackupPath, envPath)
-          console.log('Restored .env.local from .old backup')
         }
 
         // Return the saved config we read before reset
@@ -133,7 +120,6 @@ export async function POST(request: NextRequest) {
           })
         }
       } catch (err) {
-        console.log('Could not restore .env.local:', err)
         return NextResponse.json({
           success: true,
           message: 'Project reset',
@@ -152,12 +138,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(
       {
         error: 'Failed to reset project',
-        details:
-          error instanceof Error
-            ? error instanceof Error
-              ? error.message
-              : 'Unknown error'
-            : 'Unknown error',
+        details: 'Reset failed. Check server logs for details.',
       },
       { status: 500 },
     )

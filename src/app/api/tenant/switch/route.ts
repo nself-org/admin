@@ -2,7 +2,7 @@ import { getTenant } from '@/lib/database'
 import { switchTenant } from '@/lib/tenant/tenant-context'
 import { NextRequest, NextResponse } from 'next/server'
 
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
     const body = await request.json()
     const { tenantId } = body

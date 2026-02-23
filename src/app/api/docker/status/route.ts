@@ -4,7 +4,7 @@ import { promisify } from 'util'
 
 const execAsync = promisify(exec)
 
-export async function GET() {
+export async function GET(): Promise<NextResponse> {
   try {
     // Check if Docker daemon is running
     await execAsync('docker info', {

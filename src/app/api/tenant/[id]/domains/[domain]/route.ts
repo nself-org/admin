@@ -5,7 +5,7 @@ interface RouteParams {
   params: Promise<{ id: string; domain: string }>
 }
 
-export async function GET(_request: NextRequest, { params }: RouteParams) {
+export async function GET(_request: NextRequest, { params }: RouteParams): Promise<NextResponse> {
   try {
     const { id, domain } = await params
     const decodedDomain = decodeURIComponent(domain)
@@ -55,7 +55,7 @@ export async function GET(_request: NextRequest, { params }: RouteParams) {
   }
 }
 
-export async function DELETE(_request: NextRequest, { params }: RouteParams) {
+export async function DELETE(_request: NextRequest, { params }: RouteParams): Promise<NextResponse> {
   try {
     const { id, domain } = await params
     const decodedDomain = decodeURIComponent(domain)

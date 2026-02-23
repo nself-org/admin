@@ -3,7 +3,7 @@ import { validateCSRFToken } from '@/lib/csrf'
 import { cookies } from 'next/headers'
 import { NextRequest, NextResponse } from 'next/server'
 
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
     const cookieStore = await cookies()
     const sessionToken = cookieStore.get('session')?.value

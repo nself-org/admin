@@ -2,11 +2,9 @@ import { nselfStart, nselfStatus } from '@/lib/nselfCLI'
 import { getProjectPath } from '@/lib/paths'
 import { NextRequest, NextResponse } from 'next/server'
 
-export async function POST(_request: NextRequest) {
+export async function POST(_request: NextRequest): Promise<NextResponse> {
   try {
     const projectPath = getProjectPath()
-    console.log('Starting nself services in:', projectPath)
-    console.log('NODE_ENV:', process.env.NODE_ENV)
 
     // Run nself start using secure CLI wrapper
     const result = await nselfStart()
@@ -101,8 +99,9 @@ export async function POST(_request: NextRequest) {
           }
         })
       }
-    } catch (statusError: any) {
-      console.warn('Could not get detailed status:', statusError?.message)
+    } catch (statusError) {
+      const statusErr = statusError instanceof Error ? statusError : new Error(String(statusError))
+      console.warn('Could not get detailed status:', statusErr.message)
     }
 
     return NextResponse.json({
@@ -137,14 +136,15 @@ export async function POST(_request: NextRequest) {
     } else if (isMissingDependency) {
       userMessage = 'nself CLI not found - please ensure nself is installed'
     } else {
-      userMessage = errorMessage
+      userMessage = 'Failed to start services. Check server logs for details.'
     }
 
+    console.error('nself start error:', error)
     return NextResponse.json(
       {
         success: false,
         message: userMessage,
-        error: errorMessage,
+        error: 'Start failed. Check server logs for details.',
         suggestions: [
           'Check if Docker is running',
           'Ensure no other services are using required ports',

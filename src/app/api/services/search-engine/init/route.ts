@@ -9,7 +9,7 @@ const ALLOWED_ENGINES = [
   'algolia',
 ]
 
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
     const body = await request.json()
     const { engine } = body as { engine?: string }

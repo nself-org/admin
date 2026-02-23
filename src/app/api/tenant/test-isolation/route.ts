@@ -13,7 +13,7 @@ import { NextResponse } from 'next/server'
 /**
  * Generate test data for tenant isolation testing
  */
-export async function POST() {
+export async function POST(): Promise<NextResponse> {
   try {
     // Clean up any existing test data first
     await cleanupTestData()
@@ -47,7 +47,7 @@ export async function POST() {
 /**
  * Verify tenant isolation by querying data
  */
-export async function GET() {
+export async function GET(): Promise<NextResponse> {
   try {
     const tenants = await listTenants()
     const testTenants = tenants.filter((t) => t.id.startsWith('tenant_'))
@@ -128,7 +128,7 @@ export async function GET() {
 /**
  * Clean up test data
  */
-export async function DELETE() {
+export async function DELETE(): Promise<NextResponse> {
   try {
     await cleanupTestData()
 

@@ -6,7 +6,7 @@ import { promisify } from 'util'
 
 const execFileAsync = promisify(execFile)
 
-export async function POST(_request: NextRequest) {
+export async function POST(_request: NextRequest): Promise<NextResponse> {
   try {
     const projectPath = getProjectPath()
     const body = await _request.json().catch(() => ({}))

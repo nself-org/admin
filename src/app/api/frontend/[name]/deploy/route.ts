@@ -11,7 +11,7 @@ interface RouteParams {
   params: Promise<{ name: string }>
 }
 
-export async function POST(request: NextRequest, { params }: RouteParams) {
+export async function POST(request: NextRequest, { params }: RouteParams): Promise<NextResponse> {
   const startTime = Date.now()
   try {
     const { name } = await params

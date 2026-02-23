@@ -10,7 +10,7 @@ interface RouteParams {
 /**
  * GET /api/notifications/[id] - Get a single notification
  */
-export async function GET(request: NextRequest, { params }: RouteParams) {
+export async function GET(request: NextRequest, { params }: RouteParams): Promise<NextResponse> {
   const startTime = Date.now()
 
   try {
@@ -71,7 +71,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
  *   - read: boolean (optional)
  *   - data: object (optional, merged with existing data)
  */
-export async function PATCH(request: NextRequest, { params }: RouteParams) {
+export async function PATCH(request: NextRequest, { params }: RouteParams): Promise<NextResponse> {
   const startTime = Date.now()
 
   try {
@@ -146,7 +146,7 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
 /**
  * DELETE /api/notifications/[id] - Delete a notification
  */
-export async function DELETE(request: NextRequest, { params }: RouteParams) {
+export async function DELETE(request: NextRequest, { params }: RouteParams): Promise<NextResponse> {
   const startTime = Date.now()
 
   try {

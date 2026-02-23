@@ -6,7 +6,7 @@ import { NextRequest, NextResponse } from 'next/server'
 /**
  * GET /api/notifications/preferences - Get notification preferences
  */
-export async function GET(request: NextRequest) {
+export async function GET(request: NextRequest): Promise<NextResponse> {
   const startTime = Date.now()
 
   try {
@@ -61,7 +61,7 @@ export async function GET(request: NextRequest) {
  *   - quietHoursStart: string HH:MM (optional)
  *   - quietHoursEnd: string HH:MM (optional)
  */
-export async function PUT(request: NextRequest) {
+export async function PUT(request: NextRequest): Promise<NextResponse> {
   const startTime = Date.now()
 
   try {

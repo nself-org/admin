@@ -10,7 +10,7 @@ const execFileAsync = promisify(execFile)
 const ALLOWED_ENVIRONMENTS = ['staging', 'production', 'development']
 
 // GET /api/deploy - Get deployment status
-export async function GET(request: NextRequest) {
+export async function GET(request: NextRequest): Promise<NextResponse> {
   try {
     const { searchParams } = new URL(request.url)
     const environment = searchParams.get('environment')
@@ -64,7 +64,7 @@ export async function GET(request: NextRequest) {
 }
 
 // POST /api/deploy - Execute deployment actions
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
     const body = await request.json()
     const { action, environment, options = {} } = body

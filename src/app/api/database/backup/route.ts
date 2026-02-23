@@ -8,7 +8,7 @@ import { NextRequest, NextResponse } from 'next/server'
  * GET /api/database/backup - List database backups
  * Executes `nself db backup list --json`
  */
-export async function GET(_request: Request) {
+export async function GET(_request: Request): Promise<NextResponse> {
   const startTime = Date.now()
 
   try {
@@ -124,7 +124,7 @@ export async function GET(_request: Request) {
  * POST /api/database/backup - Create a new database backup
  * Executes `nself db backup` with options
  */
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   const startTime = Date.now()
 
   // Rate limiting for heavy operations

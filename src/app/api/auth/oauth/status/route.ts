@@ -5,7 +5,7 @@ import { NextResponse } from 'next/server'
  * GET /api/auth/oauth/status
  * Gets the status of all configured OAuth providers via nself auth oauth status
  */
-export async function GET() {
+export async function GET(): Promise<NextResponse> {
   try {
     const result = await executeNselfCommand('auth', ['oauth', 'status'])
 

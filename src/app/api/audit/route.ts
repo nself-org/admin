@@ -1,7 +1,7 @@
 import { executeNselfCommand } from '@/lib/nselfCLI'
 import { NextRequest, NextResponse } from 'next/server'
 
-export async function GET(request: NextRequest) {
+export async function GET(request: NextRequest): Promise<NextResponse> {
   try {
     const { searchParams } = request.nextUrl
     const action = searchParams.get('action')
@@ -17,7 +17,9 @@ export async function GET(request: NextRequest) {
       args.push(`--since=${since}`)
     }
     if (limit) {
-      args.push(`--limit=${limit}`)
+      const rawLimit = parseInt(limit, 10)
+      const clampedLimit = isNaN(rawLimit) ? 50 : Math.max(1, Math.min(rawLimit, 1000))
+      args.push(`--limit=${clampedLimit}`)
     }
 
     const result = await executeNselfCommand('audit', args)

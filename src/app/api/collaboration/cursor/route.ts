@@ -15,7 +15,7 @@ import { NextRequest, NextResponse } from 'next/server'
 /**
  * GET /api/collaboration/cursor - Get cursors for document
  */
-export async function GET(request: NextRequest) {
+export async function GET(request: NextRequest): Promise<NextResponse> {
   try {
     const searchParams = request.nextUrl.searchParams
     const documentId = searchParams.get('documentId')
@@ -51,7 +51,7 @@ export async function GET(request: NextRequest) {
 /**
  * POST /api/collaboration/cursor - Update cursor position
  */
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
     const body = await request.json()
     const { userId, userName, documentId, position, selection, color } = body
@@ -125,7 +125,7 @@ export async function POST(request: NextRequest) {
 /**
  * DELETE /api/collaboration/cursor - Remove cursor
  */
-export async function DELETE(request: NextRequest) {
+export async function DELETE(request: NextRequest): Promise<NextResponse> {
   try {
     const body = await request.json()
     const { userId, documentId } = body

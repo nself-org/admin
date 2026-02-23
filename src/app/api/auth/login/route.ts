@@ -24,7 +24,7 @@ const loginSchema = z.object({
   rememberMe: z.boolean().optional().default(false),
 })
 
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   // Check for account lockout (excessive failed attempts)
   const { isLockedOut } = await import('@/lib/rateLimiter')
   if (isLockedOut(request)) {
@@ -180,7 +180,7 @@ export async function POST(request: NextRequest) {
 }
 
 // Logout endpoint
-export async function DELETE(request: NextRequest) {
+export async function DELETE(request: NextRequest): Promise<NextResponse> {
   const token = request.cookies.get('nself-session')?.value
 
   if (token) {

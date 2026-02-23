@@ -15,7 +15,7 @@ interface NetworkSnapshot {
 
 let lastNetworkSnapshot: NetworkSnapshot | null = null
 
-export async function GET() {
+export async function GET(): Promise<NextResponse> {
   try {
     // Get data from our orchestrator
     // Use global orchestrator instance

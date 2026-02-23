@@ -7,7 +7,7 @@ import { NextResponse } from 'next/server'
  * GET /api/database/status - Get database status
  * Executes `nself db status --json` or queries database directly
  */
-export async function GET(_request: Request) {
+export async function GET(_request: Request): Promise<NextResponse> {
   const startTime = Date.now()
 
   try {

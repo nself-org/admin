@@ -19,7 +19,7 @@ interface AddServerRequest {
  * POST /api/cloud/servers/add - Add an existing server
  * Executes: nself cloud server add {ip} --name {name}
  */
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   const startTime = Date.now()
 
   try {

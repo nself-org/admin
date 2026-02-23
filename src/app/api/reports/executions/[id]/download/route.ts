@@ -6,7 +6,7 @@ interface RouteContext {
 }
 
 // GET /api/reports/executions/[id]/download - Download report file
-export async function GET(_request: NextRequest, context: RouteContext) {
+export async function GET(_request: NextRequest, context: RouteContext): Promise<Response | NextResponse> {
   try {
     const { id } = await context.params
 

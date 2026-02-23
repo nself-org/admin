@@ -5,7 +5,7 @@ import { NextResponse } from 'next/server'
  * GET /api/services/admin
  * Lists admin-managed services via nself service admin
  */
-export async function GET() {
+export async function GET(): Promise<NextResponse> {
   try {
     const result = await executeNselfCommand('service', ['admin'])
 

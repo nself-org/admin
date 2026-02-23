@@ -7,7 +7,7 @@ import { NextRequest, NextResponse } from 'next/server'
  * Query parameters:
  * - tenantId: Optional tenant ID to filter stats
  */
-export async function GET(request: NextRequest) {
+export async function GET(request: NextRequest): Promise<NextResponse> {
   try {
     const searchParams = request.nextUrl.searchParams
     const tenantId = searchParams.get('tenantId') || undefined

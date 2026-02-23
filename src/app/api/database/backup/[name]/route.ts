@@ -9,7 +9,7 @@ import path from 'path'
 export async function GET(
   _request: Request,
   { params }: { params: Promise<{ name: string }> },
-) {
+): Promise<NextResponse> {
   const startTime = Date.now()
 
   try {
@@ -124,7 +124,7 @@ export async function GET(
 export async function DELETE(
   _request: NextRequest,
   { params }: { params: Promise<{ name: string }> },
-) {
+): Promise<NextResponse> {
   const startTime = Date.now()
 
   try {

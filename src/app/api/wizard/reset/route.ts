@@ -8,16 +8,14 @@ import { promisify } from 'util'
 
 const execAsync = promisify(exec)
 
-export async function POST(_req: NextRequest) {
+export async function POST(_req: NextRequest): Promise<NextResponse> {
   try {
     // Get project path using centralized resolution
     const absoluteProjectPath = getProjectPath()
 
-    console.log('Resetting project with nself reset command...')
 
     // Find nself CLI using the centralized utility
     const nselfCommand = await findNselfPath()
-    console.log('Using nself from:', nselfCommand)
 
     // Execute nself reset command with force flag
     try {
@@ -34,10 +32,7 @@ export async function POST(_req: NextRequest) {
         },
       )
 
-      console.log('=== Reset Output ===')
-      console.log('stdout:', stdout)
       if (stderr) {
-        console.log('stderr:', stderr)
       }
 
       return NextResponse.json({
@@ -49,15 +44,15 @@ export async function POST(_req: NextRequest) {
             'Project has been reset using nself reset. All containers, volumes, and configuration have been removed.',
         },
       })
-    } catch (execError: any) {
+    } catch (execError) {
+      const execErr = execError as { code?: number; message?: string; stdout?: string; stderr?: string }
       console.error('=== Reset Error ===')
-      console.error('Error code:', execError.code)
-      console.error('Error message:', execError.message)
-      console.error('stdout:', execError.stdout)
-      console.error('stderr:', execError.stderr)
+      console.error('Error code:', execErr.code)
+      console.error('Error message:', execErr.message)
+      console.error('stdout:', execErr.stdout)
+      console.error('stderr:', execErr.stderr)
 
       // If nself reset fails, fall back to manual cleanup
-      console.log('Falling back to manual cleanup...')
 
       // Remove key files to reset project state
       const filesToRemove = [
@@ -178,7 +173,7 @@ POSTGRES_PORT=5433
     return NextResponse.json(
       {
         error: 'Failed to reset project',
-        details: error instanceof Error ? error.message : 'Unknown error',
+        details: 'Reset failed. Check server logs for details.',
       },
       { status: 500 },
     )

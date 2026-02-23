@@ -8,21 +8,16 @@ import { promisify } from 'util'
 
 const execAsync = promisify(exec)
 
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
     const config = await request.json()
     const projectPath = getProjectPath()
 
-    console.log('=== Starting nself init ===')
-    console.log('Project path:', projectPath)
-    console.log('Config:', config)
 
     // Find nself CLI using the centralized utility
     const nselfPath = await findNselfPath()
-    console.log('Using nself from:', nselfPath)
 
     // First, run nself init --full to create all env files
-    console.log('Running nself init --full...')
     const { stdout: initOut, stderr: initErr } = await execAsync(
       `${nselfPath} init --full`,
       {
@@ -35,7 +30,6 @@ export async function POST(request: NextRequest) {
       },
     )
 
-    console.log('Init output:', initOut)
     if (initErr && !initErr.includes('warning')) {
       console.error('Init stderr:', initErr)
     }
@@ -168,7 +162,6 @@ export async function POST(request: NextRequest) {
 
     // Write the updated .env.local file
     await fs.writeFile(envPath, newEnvContent + '\n', 'utf-8')
-    console.log('Updated .env.local file')
 
     return NextResponse.json({
       success: true,

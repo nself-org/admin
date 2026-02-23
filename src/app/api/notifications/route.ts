@@ -13,7 +13,7 @@ import { NextRequest, NextResponse } from 'next/server'
  *   - category: NotificationCategory
  *   - priority: NotificationPriority
  */
-export async function GET(request: NextRequest) {
+export async function GET(request: NextRequest): Promise<NextResponse> {
   const startTime = Date.now()
 
   try {
@@ -86,7 +86,7 @@ export async function GET(request: NextRequest) {
  *   - actionUrl: string (optional)
  *   - actionLabel: string (optional)
  */
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   const startTime = Date.now()
 
   try {
@@ -173,7 +173,7 @@ export async function POST(request: NextRequest) {
 /**
  * DELETE /api/notifications - Delete all notifications
  */
-export async function DELETE(request: NextRequest) {
+export async function DELETE(request: NextRequest): Promise<NextResponse> {
   const startTime = Date.now()
 
   try {

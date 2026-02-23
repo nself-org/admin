@@ -5,7 +5,7 @@ import { NextRequest, NextResponse } from 'next/server'
  * GET /api/auth/webhooks
  * Lists all webhooks via nself auth webhooks list
  */
-export async function GET() {
+export async function GET(): Promise<NextResponse> {
   try {
     const result = await executeNselfCommand('auth', ['webhooks', 'list'])
 
@@ -51,7 +51,7 @@ const VALID_EVENTS = [
  * Creates a new webhook via nself auth webhooks create
  * Body: { url: string, events: string[], secret?: string }
  */
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
     const body = await request.json()
     const { url, events, secret } = body as {

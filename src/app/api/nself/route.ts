@@ -22,7 +22,7 @@ function validateSafeArg(input: string): boolean {
   )
 }
 
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
     const { command, args = [] } = await request.json()
 
@@ -132,7 +132,7 @@ export async function POST(request: NextRequest) {
 }
 
 // GET endpoint for common status queries
-export async function GET(request: NextRequest) {
+export async function GET(request: NextRequest): Promise<NextResponse> {
   const { searchParams } = new URL(request.url)
   const action = searchParams.get('action') || 'status'
 

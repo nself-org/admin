@@ -53,7 +53,7 @@ import {
   type FullConfig,
 } from '@playwright/test'
 
-import { TEST_PASSWORD } from './helpers'
+import { mockProjectStatus, TEST_PASSWORD } from './helpers'
 
 const BROWSER_TYPES: Record<string, BrowserType> = { chromium, firefox, webkit }
 
@@ -73,6 +73,10 @@ export default async function globalSetup(config: FullConfig) {
   const page = await context.newPage()
 
   try {
+    // Mock /api/project/status so ProjectStateWrapper routes to /build
+    // instead of /init/1 (CI has no real nself project).
+    await mockProjectStatus(page)
+
     // Step 1: Full browser navigation to /login.
     // • Triggers SSR compilation of the login page component.
     // • Causes the browser to fetch /_next/static/chunks/… → Next.js compiles
@@ -129,10 +133,10 @@ export default async function globalSetup(config: FullConfig) {
     await page.fill('input[type="password"]', TEST_PASSWORD)
     await page.click('button[type="submit"]')
 
-    // 60 s budget for the full cold-start chain.  In CI (no nself project),
-    // ProjectStateWrapper redirects to /init/1 (setup wizard).  With a real
-    // project the destination is /build, /start, or /dashboard.  After this,
-    // all routes and JS bundles are cached; subsequent auth in tests < 5 s.
+    // 60 s budget for the full cold-start chain.  The project status mock
+    // ensures we land on /build (configured, not built).  Without the mock
+    // (local dev with a real project) it may be /start or /dashboard.
+    // After this, all routes and JS bundles are cached; subsequent auth < 5 s.
     await page.waitForURL(/\/(dashboard|build|start|init)/, { timeout: 60000 })
 
     // Drain the /build page's mount-time API calls so all server-side routes

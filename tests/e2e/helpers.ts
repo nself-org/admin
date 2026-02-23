@@ -3,9 +3,52 @@ import { type Page } from '@playwright/test'
 export const TEST_PASSWORD = 'Test123!@#'
 
 /**
+ * Mock /api/project/status to simulate a configured (but not running) project.
+ *
+ * In CI there is no nself project, so the real endpoint returns needsSetup: true
+ * and ProjectStateWrapper redirects every page to /init/1.  This mock lets tests
+ * navigate to /build, /config, /dashboard, etc. without being hijacked.
+ *
+ * Call this BEFORE any navigation that triggers ProjectStateWrapper (which is
+ * every authenticated page load).
+ */
+export async function mockProjectStatus(page: Page) {
+  await page.route('**/api/project/status', (route) =>
+    route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({
+        success: true,
+        projectState: 'configured',
+        needsSetup: false,
+        hasEnvFile: true,
+        hasDockerCompose: false,
+        isBuilt: false,
+        hasAdminPassword: true,
+        servicesRunning: false,
+        runningServices: [],
+        dockerContainers: [],
+        containerCount: 0,
+        config: { projectName: 'test', baseDomain: 'localhost' },
+        projectPath: '/tmp/test',
+        summary: {
+          initialized: true,
+          configured: true,
+          built: false,
+          running: false,
+        },
+      }),
+    }),
+  )
+}
+
+/**
  * Setup authentication for tests
  */
 export async function setupAuth(page: Page, password = TEST_PASSWORD) {
+  // Mock project status so ProjectStateWrapper doesn't redirect to /init/1.
+  await mockProjectStatus(page)
+
   // waitUntil: 'networkidle' ensures all Next.js JS bundles have been
   // downloaded and the /api/auth/init check has completed before we
   // interact with the form.  Without this, the click can fire before React
@@ -20,10 +63,9 @@ export async function setupAuth(page: Page, password = TEST_PASSWORD) {
   })
   await page.fill('input[type="password"]', password)
   await page.click('button[type="submit"]')
-  // Wait for redirect after login. Use a regex that requires the word
-  // (dashboard|build|start) — NOT optional — so this never resolves on
-  // /login itself (which would match the old /\/(dashboard|build|start)?/
-  // regex due to the optional group matching zero characters).
+  // Wait for redirect after login.  With the project status mock, the app
+  // routes to /build (configured but not built).  Without the mock (e.g.,
+  // in local dev with a real project) it may go to /start or /dashboard.
   await page.waitForURL(/\/(dashboard|build|start|init)/, { timeout: 20000 })
 }
 

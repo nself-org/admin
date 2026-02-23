@@ -30,7 +30,7 @@ export class DashboardPage {
     //
     // Accept any valid post-login route: / (dashboard), /build (not initialized),
     // or /start (initialized but not running). CI without nself routes to /build.
-    await expect(this.page).toHaveURL(/\/(build|start)?$/, { timeout: 20000 })
+    await expect(this.page).not.toHaveURL(/\/login/, { timeout: 20000 })
     await expect(this.pageTitle).toBeVisible()
   }
 

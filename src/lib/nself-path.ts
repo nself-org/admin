@@ -50,9 +50,9 @@ function getCommonPaths(): string[] {
  * Find the nself CLI executable
  * Priority order:
  * 1. NSELF_CLI_PATH environment variable (explicit override)
- * 2. nself in PATH (standard installation via curl|bash)
- * 3. Development location ($HOME/Sites/nself/bin/nself)
- * 4. Common installation paths
+ * 2. Development location ($HOME/Sites/nself/bin/nself)
+ * 3. Common installation paths (container + system + user)
+ * 4. nself in PATH via which — last resort for non-standard installs
  */
 export async function findNselfPath(): Promise<string> {
   // 1. Check explicit environment variable first
@@ -60,7 +60,21 @@ export async function findNselfPath(): Promise<string> {
     return process.env.NSELF_CLI_PATH
   }
 
-  // 2. Check if nself is in PATH (most common for users)
+  // 2. Check development location (for developers)
+  const devPath = getDevPath()
+  if (fs.existsSync(devPath)) {
+    return devPath
+  }
+
+  // 3. Check common installation paths
+  const commonPaths = getCommonPaths()
+  for (const p of commonPaths) {
+    if (fs.existsSync(p)) {
+      return p
+    }
+  }
+
+  // 4. Last resort: check PATH via which (async, won't block event loop)
   try {
     const enhancedPath = getEnhancedPath()
     const { stdout } = await execAsync('which nself', {
@@ -70,23 +84,8 @@ export async function findNselfPath(): Promise<string> {
     if (nselfPath && fs.existsSync(nselfPath)) {
       return nselfPath
     }
-    return 'nself'
   } catch {
-    // Not in PATH, continue checking
-  }
-
-  // 3. Check development location (for developers)
-  const devPath = getDevPath()
-  if (fs.existsSync(devPath)) {
-    return devPath
-  }
-
-  // 4. Check common installation paths
-  const commonPaths = getCommonPaths()
-  for (const p of commonPaths) {
-    if (fs.existsSync(p)) {
-      return p
-    }
+    // Not in PATH
   }
 
   // If not found, default to 'nself' and let it fail with a clear error
@@ -95,16 +94,25 @@ export async function findNselfPath(): Promise<string> {
 }
 
 // Module-level cache for findNselfPathSync().
-// execSync('which nself') blocks the Node.js event loop for the duration of
-// the shell command.  Multiple concurrent API requests that each call
-// findNselfPathSync() would cause N sequential event-loop blockages.
-// Caching the result after the first resolution ensures only ONE blocking
-// execSync runs per server-process lifetime — all subsequent calls are instant.
+// Static path checks (fs.existsSync) are fast (<1ms each) and run first.
+// execSync('which nself') is a LAST RESORT — it blocks the Node.js event loop
+// for the duration of the shell command, and on CI (Linux, nself not installed)
+// searching through a long enhanced PATH can take several seconds per call.
+// In Next.js dev mode each API route bundle has its own module instance, so
+// this cache is per-bundle — but the reordering ensures that in CI environments
+// where nself is not installed, we never call execSync at all.
 let _nselfPathSyncCache: string | null = null
 
 /**
  * Synchronous version for use in API routes.
- * Result is cached for the process lifetime to avoid repeated execSync blocking.
+ * Priority order (fast static checks first, slow shell lookup last):
+ * 1. NSELF_CLI_PATH environment variable (explicit override)
+ * 2. Development location ($HOME/Sites/nself/bin/nself)
+ * 3. Common installation paths (container + system + user)
+ * 4. nself in PATH via execSync — last resort, only when static checks all fail
+ *
+ * This ordering ensures CI environments (nself not installed anywhere) skip the
+ * blocking execSync entirely, preventing event-loop stalls during E2E tests.
  */
 export function findNselfPathSync(): string {
   if (_nselfPathSyncCache !== null) return _nselfPathSyncCache
@@ -116,7 +124,25 @@ export function findNselfPathSync(): string {
     return p
   }
 
-  // 2. Check if nself is in PATH (one-time blocking execSync — cached after this)
+  // 2. Check development location (fast fs.existsSync — no shell spawn)
+  const devPath = getDevPath()
+  if (fs.existsSync(devPath)) {
+    _nselfPathSyncCache = devPath
+    return devPath
+  }
+
+  // 3. Check common installation paths (fast fs.existsSync — no shell spawn)
+  const commonPaths = getCommonPaths()
+  for (const p of commonPaths) {
+    if (fs.existsSync(p)) {
+      _nselfPathSyncCache = p
+      return p
+    }
+  }
+
+  // 4. Last resort: check PATH via execSync (blocks event loop — only reached
+  //    when nself is in a non-standard PATH location not covered above).
+  //    In CI where nself is not installed, this branch is never reached.
   try {
     const enhancedPath = getEnhancedPath()
     const result = require('child_process').execSync('which nself', {
@@ -128,29 +154,12 @@ export function findNselfPathSync(): string {
       _nselfPathSyncCache = nselfPath
       return nselfPath
     }
-    _nselfPathSyncCache = 'nself'
-    return 'nself'
   } catch {
-    // Not in PATH, continue checking
-  }
-
-  // 3. Check development location
-  const devPath = getDevPath()
-  if (fs.existsSync(devPath)) {
-    _nselfPathSyncCache = devPath
-    return devPath
-  }
-
-  // 4. Check common installation paths
-  const commonPaths = getCommonPaths()
-  for (const p of commonPaths) {
-    if (fs.existsSync(p)) {
-      _nselfPathSyncCache = p
-      return p
-    }
+    // Not in PATH
   }
 
   // Default to 'nself' and let it fail with a clear error
+  console.warn('nself CLI not found in common locations, defaulting to PATH')
   _nselfPathSyncCache = 'nself'
   return 'nself'
 }

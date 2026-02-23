@@ -60,7 +60,7 @@ export default function LoginPage() {
   }>({ locked: false, remainingSeconds: 0, attempts: 0 })
 
   const router = useRouter()
-  const { login } = useAuth()
+  const { login, checkAuth } = useAuth()
   const passwordRef = useRef<HTMLInputElement>(null)
   const timerRef = useRef<NodeJS.Timeout | null>(null)
 
@@ -211,6 +211,11 @@ export default function LoginPage() {
         const data = await response.json()
 
         if (response.ok && data.success) {
+          // Update AuthContext state before navigating. Without this,
+          // isAuthenticated stays false (set when the page first mounted with
+          // no cookie), and Layout's useEffect immediately redirects back to
+          // /login when the pathname changes away from /login.
+          await checkAuth()
           // Success - redirect
           const routingResult = await getCorrectRoute()
           console.log('Post-login routing:', routingResult.reason)

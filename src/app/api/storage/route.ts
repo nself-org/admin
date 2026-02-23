@@ -1,9 +1,38 @@
+import { readEnvFile } from '@/lib/env-handler'
 import { getProjectPath } from '@/lib/paths'
+import * as Minio from 'minio'
 import { exec } from 'child_process'
 import { NextRequest, NextResponse } from 'next/server'
 import { promisify } from 'util'
 
 const execAsync = promisify(exec)
+
+// ---------------------------------------------------------------------------
+// MinIO client factory
+// ---------------------------------------------------------------------------
+
+async function getMinIOClient(): Promise<Minio.Client> {
+  // Read credentials from the project's .env files
+  const env = (await readEnvFile()) ?? {}
+
+  const endPoint = env.MINIO_HOST || 'localhost'
+  const port = parseInt(env.MINIO_PORT || env.STORAGE_PORT || '9000', 10)
+  const accessKey = env.MINIO_ROOT_USER || env.MINIO_ACCESS_KEY || 'minioadmin'
+  const secretKey =
+    env.MINIO_ROOT_PASSWORD || env.MINIO_SECRET_KEY || 'minioadmin'
+
+  return new Minio.Client({
+    endPoint,
+    port,
+    useSSL: false,
+    accessKey,
+    secretKey,
+  })
+}
+
+// ---------------------------------------------------------------------------
+// GET handler
+// ---------------------------------------------------------------------------
 
 export async function GET(request: NextRequest) {
   try {
@@ -65,6 +94,10 @@ export async function GET(request: NextRequest) {
     )
   }
 }
+
+// ---------------------------------------------------------------------------
+// POST handler
+// ---------------------------------------------------------------------------
 
 export async function POST(request: NextRequest) {
   try {
@@ -149,16 +182,23 @@ export async function POST(request: NextRequest) {
   }
 }
 
+// ---------------------------------------------------------------------------
+// GET action handlers
+// ---------------------------------------------------------------------------
+
 async function getStorageOverview() {
   try {
     const backendPath = getProjectPath()
 
-    // Check if MinIO is running
+    // Check if MinIO container is running
     const { stdout: minioStatus } = await execAsync(
-      `cd ${backendPath} && docker-compose ps minio`,
-    ).catch(() => ({ stdout: 'MinIO not found' }))
+      `cd "${backendPath}" && docker compose ps --format json minio 2>/dev/null || docker-compose ps minio 2>/dev/null || echo ""`,
+    ).catch(() => ({ stdout: '' }))
 
-    const isMinioRunning = minioStatus.includes('Up')
+    const isMinioRunning =
+      minioStatus.includes('"running"') ||
+      minioStatus.includes('Up') ||
+      minioStatus.includes('running')
 
     let overview = {
       minio: {
@@ -167,37 +207,31 @@ async function getStorageOverview() {
         endpoint: 'http://localhost:9000',
         console: 'http://localhost:9001',
       },
-      buckets: [] as any[],
-      usage: { total: 0, used: 0 },
-      stats: { files: 0, folders: 0 },
+      buckets: [] as ReturnType<typeof buildBucketShape>[],
+      usage: { total: 0, used: 0, available: 0, percentage: 0 },
+      stats: { files: 0, folders: 0, totalSize: 0 },
     }
 
     if (isMinioRunning) {
-      // Get MinIO version and info
-      const { stdout: minioInfo } = await execAsync(
-        `cd ${backendPath} && docker-compose exec minio mc --version || echo "mc command not available"`,
-      ).catch(() => ({ stdout: 'Version unavailable' }))
-
-      // Get bucket list via mc command or API
-      const buckets = await getMinIOBuckets()
-      const usage = await getMinIOUsage()
+      const [buckets, usage, stats] = await Promise.all([
+        getMinIOBuckets(),
+        getMinIOUsage(),
+        getMinIOStats(),
+      ])
 
       overview = {
         minio: {
           status: 'running',
-          version: minioInfo.includes('mc version')
-            ? minioInfo.split('\n')[0]
-            : 'Latest',
+          version: 'Latest',
           endpoint: 'http://localhost:9000',
           console: 'http://localhost:9001',
         },
         buckets,
         usage,
-        stats: await getMinIOStats(),
+        stats,
       }
     }
 
-    // Also check project file storage
     const projectStorage = await getProjectFileStorage()
 
     return NextResponse.json({
@@ -222,14 +256,13 @@ async function getStorageOverview() {
 
 async function listBuckets() {
   try {
-    const backendPath = getProjectPath()
+    const client = await getMinIOClient()
+    const rawBuckets = await client.listBuckets()
 
-    // Try to list buckets using mc command
-    const { stdout: bucketsOutput } = await execAsync(
-      `cd ${backendPath} && docker-compose exec minio mc ls local || echo "No buckets found"`,
-    ).catch(() => ({ stdout: 'MinIO not accessible' }))
-
-    const buckets = parseBucketsList(bucketsOutput)
+    const buckets = rawBuckets.map((b) => ({
+      name: b.name,
+      created: b.creationDate.toISOString(),
+    }))
 
     return NextResponse.json({
       success: true,
@@ -253,13 +286,48 @@ async function listBuckets() {
 
 async function listFiles(bucketName: string, filePath: string) {
   try {
-    const backendPath = getProjectPath()
+    const client = await getMinIOClient()
 
-    const { stdout: filesOutput } = await execAsync(
-      `cd ${backendPath} && docker-compose exec minio mc ls local/${bucketName}${filePath} || echo "No files found"`,
-    ).catch(() => ({ stdout: 'Bucket not accessible' }))
+    // Normalise prefix: strip leading slash, ensure trailing slash for dirs
+    let prefix = filePath.replace(/^\/+/, '')
+    if (prefix && !prefix.endsWith('/')) prefix += '/'
 
-    const files = parseFilesList(filesOutput)
+    const files: {
+      name: string
+      size: number
+      modified: string
+      type: 'file' | 'folder'
+      etag?: string
+    }[] = []
+
+    const stream = client.listObjectsV2(bucketName, prefix, false)
+
+    await new Promise<void>((resolve, reject) => {
+      stream.on(
+        'data',
+        (obj: Minio.BucketItem) => {
+          if (obj.prefix) {
+            // Folder entry
+            files.push({
+              name: obj.prefix,
+              size: 0,
+              modified: '',
+              type: 'folder',
+            })
+          } else {
+            files.push({
+              name: obj.name ?? '',
+              size: obj.size ?? 0,
+              modified: obj.lastModified?.toISOString() ?? '',
+              type: 'file',
+              etag: obj.etag,
+            })
+          }
+        },
+      )
+      stream.on('error', reject)
+      stream.on('end', resolve)
+    })
 
     return NextResponse.json({
       success: true,
@@ -285,26 +353,21 @@ async function listFiles(bucketName: string, filePath: string) {
 
 async function getStorageUsage() {
   try {
-    const backendPath = getProjectPath()
+    const [minioUsage, projectUsage] = await Promise.all([
+      getMinIOUsage(),
+      getProjectDirectoryUsage(),
+    ])
 
-    // Get MinIO disk usage
-    const { stdout: minioUsage } = await execAsync(
-      `cd ${backendPath} && docker-compose exec minio mc admin info local || echo "MinIO info unavailable"`,
-    ).catch(() => ({ stdout: 'MinIO not accessible' }))
-
-    // Get Docker volume usage
-    const { stdout: volumeUsage } = await execAsync(
-      `docker system df -v | grep volume || echo "No volumes"`,
-    ).catch(() => ({ stdout: 'Docker volumes unavailable' }))
-
-    // Get project directory usage
-    const projectUsage = await getProjectDirectoryUsage()
+    // Docker volume usage
+    const { stdout: volumeStdout } = await execAsync(
+      `docker system df -v 2>/dev/null | grep -i volume || echo ""`,
+    ).catch(() => ({ stdout: '' }))
 
     return NextResponse.json({
       success: true,
       data: {
-        minio: parseMinIOUsage(minioUsage),
-        volumes: parseVolumeUsage(volumeUsage),
+        minio: minioUsage,
+        volumes: parseVolumeUsage(volumeStdout),
         project: projectUsage,
         timestamp: new Date().toISOString(),
       },
@@ -323,39 +386,36 @@ async function getStorageUsage() {
 
 async function getStorageStats() {
   try {
-    const stats: any = {
+    const buckets = await getMinIOBuckets()
+
+    const aggregated = {
       totalFiles: 0,
       totalFolders: 0,
       totalSize: 0,
-      buckets: 0,
+      buckets: buckets.length,
       largestFile: { name: '', size: 0 },
-      fileTypes: {},
+      fileTypes: {} as Record<string, number>,
     }
 
-    // Get stats from all buckets
-    const buckets = await getMinIOBuckets()
-    stats.buckets = buckets.length
-
     for (const bucket of buckets) {
-      const bucketStats = await getBucketStats(bucket.name)
-      stats.totalFiles += bucketStats.files
-      stats.totalFolders += bucketStats.folders
-      stats.totalSize += bucketStats.size
+      const stats = await getBucketStats(bucket.name)
+      aggregated.totalFiles += stats.files
+      aggregated.totalFolders += stats.folders
+      aggregated.totalSize += stats.size
 
-      if (bucketStats.largestFile.size > stats.largestFile.size) {
-        stats.largestFile = bucketStats.largestFile
+      if (stats.largestFile.size > aggregated.largestFile.size) {
+        aggregated.largestFile = stats.largestFile
       }
 
-      // Merge file types
-      for (const [type, count] of Object.entries(bucketStats.fileTypes)) {
-        stats.fileTypes[type] = (stats.fileTypes[type] || 0) + count
+      for (const [ext, count] of Object.entries(stats.fileTypes)) {
+        aggregated.fileTypes[ext] = (aggregated.fileTypes[ext] ?? 0) + count
       }
     }
 
     return NextResponse.json({
       success: true,
       data: {
-        stats,
+        stats: aggregated,
         timestamp: new Date().toISOString(),
       },
     })
@@ -371,31 +431,109 @@ async function getStorageStats() {
   }
 }
 
-async function createBucket(bucketName: string, options: any) {
+async function downloadFile(bucket: string, filePath: string) {
   try {
-    const backendPath = getProjectPath()
+    const client = await getMinIOClient()
 
-    // Validate bucket name
-    if (!/^[a-z0-9.-]+$/.test(bucketName)) {
+    // Generate a presigned GET URL valid for 15 minutes
+    const url = await client.presignedGetObject(bucket, filePath, 15 * 60)
+
+    return NextResponse.json({
+      success: true,
+      data: {
+        bucket,
+        file: filePath,
+        download_url: url,
+        expires_in: 900,
+        timestamp: new Date().toISOString(),
+      },
+    })
+  } catch (error) {
+    return NextResponse.json(
+      {
+        success: false,
+        error: `Failed to generate download URL for '${filePath}'`,
+        details: error instanceof Error ? error.message : 'Unknown error',
+      },
+      { status: 500 },
+    )
+  }
+}
+
+async function getFileInfo(bucket: string, filePath: string) {
+  try {
+    const client = await getMinIOClient()
+    const stat = await client.statObject(bucket, filePath)
+
+    return NextResponse.json({
+      success: true,
+      data: {
+        bucket,
+        file: filePath,
+        size: stat.size,
+        lastModified: stat.lastModified.toISOString(),
+        etag: stat.etag,
+        contentType: stat.metaData?.['content-type'] ?? 'application/octet-stream',
+        metadata: stat.metaData,
+        timestamp: new Date().toISOString(),
+      },
+    })
+  } catch (error) {
+    return NextResponse.json(
+      {
+        success: false,
+        error: `Failed to get file info for '${filePath}'`,
+        details: error instanceof Error ? error.message : 'Unknown error',
+      },
+      { status: 500 },
+    )
+  }
+}
+
+// ---------------------------------------------------------------------------
+// POST action handlers
+// ---------------------------------------------------------------------------
+
+async function createBucket(bucketName: string, options: { policy?: string }) {
+  try {
+    // Validate bucket name (S3 rules)
+    if (!/^[a-z0-9][a-z0-9.-]{1,61}[a-z0-9]$/.test(bucketName)) {
       return NextResponse.json(
         {
           success: false,
           error:
-            'Invalid bucket name. Use lowercase letters, numbers, dots and hyphens only.',
+            'Invalid bucket name. Use 3-63 lowercase letters, numbers, dots or hyphens.',
         },
         { status: 400 },
       )
     }
 
-    const { stdout } = await execAsync(
-      `cd ${backendPath} && docker-compose exec minio mc mb local/${bucketName}`,
-    )
+    const client = await getMinIOClient()
 
-    // Set bucket policy if specified
-    if (options.policy) {
-      await execAsync(
-        `cd ${backendPath} && docker-compose exec minio mc policy set ${options.policy} local/${bucketName}`,
+    const exists = await client.bucketExists(bucketName)
+    if (exists) {
+      return NextResponse.json(
+        { success: false, error: `Bucket '${bucketName}' already exists` },
+        { status: 409 },
       )
+    }
+
+    await client.makeBucket(bucketName)
+
+    // Apply bucket policy if requested
+    if (options.policy === 'public') {
+      const publicPolicy = JSON.stringify({
+        Version: '2012-10-17',
+        Statement: [
+          {
+            Effect: 'Allow',
+            Principal: { AWS: ['*'] },
+            Action: ['s3:GetObject'],
+            Resource: [`arn:aws:s3:::${bucketName}/*`],
+          },
+        ],
+      })
+      await client.setBucketPolicy(bucketName, publicPolicy)
     }
 
     return NextResponse.json({
@@ -403,7 +541,6 @@ async function createBucket(bucketName: string, options: any) {
       data: {
         bucket: bucketName,
         policy: options.policy || 'private',
-        output: stdout.trim(),
         timestamp: new Date().toISOString(),
       },
     })
@@ -419,22 +556,37 @@ async function createBucket(bucketName: string, options: any) {
   }
 }
 
-async function deleteBucket(bucketName: string, options: any) {
+async function deleteBucket(
+  bucketName: string,
+  options: { force?: boolean },
+) {
   try {
-    const backendPath = getProjectPath()
+    const client = await getMinIOClient()
 
-    let command = `cd ${backendPath} && docker-compose exec minio mc rb local/${bucketName}`
     if (options.force) {
-      command += ' --force'
+      // Remove all objects first
+      const objectsList: string[] = []
+      const stream = client.listObjectsV2(bucketName, '', true)
+
+      await new Promise<void>((resolve, reject) => {
+        stream.on('data', (obj: Minio.BucketItem) => {
+          if (obj.name) objectsList.push(obj.name)
+        })
+        stream.on('error', reject)
+        stream.on('end', resolve)
+      })
+
+      if (objectsList.length > 0) {
+        await client.removeObjects(bucketName, objectsList)
+      }
     }
 
-    const { stdout } = await execAsync(command)
+    await client.removeBucket(bucketName)
 
     return NextResponse.json({
       success: true,
       data: {
         bucket: bucketName,
-        output: stdout.trim(),
         timestamp: new Date().toISOString(),
       },
     })
@@ -452,36 +604,68 @@ async function deleteBucket(bucketName: string, options: any) {
 
 async function uploadFile(
   bucket: string,
-  file: { name?: string; size?: number } | null,
+  file: {
+    name?: string
+    content?: string
+    contentType?: string
+    size?: number
+  },
   _options: unknown,
 ) {
-  // This would handle file upload in a real implementation
-  // For now, return a placeholder response
-  return NextResponse.json({
-    success: true,
-    data: {
-      bucket,
-      file: file?.name || 'uploaded-file',
-      size: file?.size || 0,
-      timestamp: new Date().toISOString(),
-    },
-  })
+  try {
+    if (!file.name || !file.content) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: 'File name and base64-encoded content are required',
+        },
+        { status: 400 },
+      )
+    }
+
+    const client = await getMinIOClient()
+
+    // Content arrives as base64 string
+    const buffer = Buffer.from(file.content, 'base64')
+    const contentType = file.contentType ?? 'application/octet-stream'
+
+    const etag = await client.putObject(bucket, file.name, buffer, buffer.length, {
+      'Content-Type': contentType,
+    })
+
+    return NextResponse.json({
+      success: true,
+      data: {
+        bucket,
+        file: file.name,
+        size: buffer.length,
+        etag: etag.etag,
+        contentType,
+        timestamp: new Date().toISOString(),
+      },
+    })
+  } catch (error) {
+    return NextResponse.json(
+      {
+        success: false,
+        error: `Failed to upload file to bucket '${bucket}'`,
+        details: error instanceof Error ? error.message : 'Unknown error',
+      },
+      { status: 500 },
+    )
+  }
 }
 
 async function deleteFile(bucket: string, filePath: string) {
   try {
-    const backendPath = getProjectPath()
-
-    const { stdout } = await execAsync(
-      `cd ${backendPath} && docker-compose exec minio mc rm local/${bucket}/${filePath}`,
-    )
+    const client = await getMinIOClient()
+    await client.removeObject(bucket, filePath)
 
     return NextResponse.json({
       success: true,
       data: {
         bucket,
         file: filePath,
-        output: stdout.trim(),
         timestamp: new Date().toISOString(),
       },
     })
@@ -503,19 +687,26 @@ async function createFolder(
   parentPath: string,
 ) {
   try {
-    const backendPath = getProjectPath()
-    const fullPath = `${parentPath}${folderName}/`
+    const client = await getMinIOClient()
 
-    // Create empty object to represent folder
-    const { stdout: _stdout } = await execAsync(
-      `cd ${backendPath} && echo '' | docker-compose exec -T minio mc pipe local/${bucket}/${fullPath}.keep`,
+    // Normalise paths
+    const normalised = parentPath.replace(/^\/+/, '').replace(/\/?$/, '/')
+    const objectName = `${normalised}${folderName.replace(/\/?$/, '/')}`.replace(
+      /^\/+/,
+      '',
     )
+
+    // MinIO has no real folder concept — create a zero-byte placeholder
+    const emptyBuffer = Buffer.alloc(0)
+    await client.putObject(bucket, objectName, emptyBuffer, 0, {
+      'Content-Type': 'application/x-directory',
+    })
 
     return NextResponse.json({
       success: true,
       data: {
         bucket,
-        folder: fullPath,
+        folder: objectName,
         timestamp: new Date().toISOString(),
       },
     })
@@ -531,177 +722,37 @@ async function createFolder(
   }
 }
 
-// Helper functions
-async function getMinIOBuckets() {
+async function copyFile(options: {
+  sourceBucket?: string
+  sourceObject?: string
+  destBucket?: string
+  destObject?: string
+}) {
   try {
-    const backendPath = getProjectPath()
-    const { stdout } = await execAsync(
-      `cd ${backendPath} && docker-compose exec minio mc ls local || echo "No buckets"`,
-    )
+    const { sourceBucket, sourceObject, destBucket, destObject } = options
 
-    return parseBucketsList(stdout)
-  } catch {
-    return []
-  }
-}
-
-async function getMinIOUsage() {
-  return {
-    total: 0,
-    used: 0,
-    available: 0,
-    percentage: 0,
-  }
-}
-
-async function getMinIOStats() {
-  return {
-    files: 0,
-    folders: 0,
-    totalSize: 0,
-  }
-}
-
-async function getProjectFileStorage() {
-  try {
-    const backendPath = getProjectPath()
-
-    // Get size of project directory
-    const { stdout } = await execAsync(
-      `du -sh ${backendPath} 2>/dev/null || echo "0B ${backendPath}"`,
-    )
-
-    const size = stdout.split('\t')[0] || '0B'
-
-    return {
-      path: backendPath,
-      size,
-      type: 'project-files',
+    if (!sourceBucket || !sourceObject || !destBucket || !destObject) {
+      return NextResponse.json(
+        {
+          success: false,
+          error:
+            'sourceBucket, sourceObject, destBucket, and destObject are required',
+        },
+        { status: 400 },
+      )
     }
-  } catch {
-    return {
-      path: getProjectPath(),
-      size: 'Unknown',
-      type: 'project-files',
-    }
-  }
-}
 
-async function getProjectDirectoryUsage() {
-  try {
-    const backendPath = getProjectPath()
-
-    const { stdout } = await execAsync(
-      `du -sh ${backendPath}/* 2>/dev/null | sort -hr | head -10`,
-    )
-
-    const directories = stdout
-      .split('\n')
-      .filter((line) => line.trim())
-      .map((line) => {
-        const parts = line.split('\t')
-        return {
-          size: parts[0],
-          path: parts[1],
-        }
-      })
-
-    return {
-      directories,
-      total: directories.length,
-    }
-  } catch {
-    return {
-      directories: [],
-      total: 0,
-    }
-  }
-}
-
-function parseBucketsList(output: string) {
-  const lines = output.split('\n').filter((line) => line.trim())
-  const buckets = []
-
-  for (const line of lines) {
-    if (line.includes('[') && line.includes(']')) {
-      const parts = line.split(/\s+/)
-      const name = parts[parts.length - 1]
-      if (name && name !== 'local') {
-        buckets.push({
-          name,
-          created: new Date().toISOString(),
-          size: '0B',
-        })
-      }
-    }
-  }
-
-  return buckets
-}
-
-function parseFilesList(output: string) {
-  const lines = output.split('\n').filter((line) => line.trim())
-  const files = []
-
-  for (const line of lines) {
-    if (line.includes('[') || line.includes('No files')) continue
-
-    const parts = line.split(/\s+/)
-    if (parts.length >= 4) {
-      files.push({
-        name: parts[parts.length - 1],
-        size: parts[parts.length - 2],
-        modified: parts.slice(0, -2).join(' '),
-        type: parts[parts.length - 1].includes('.') ? 'file' : 'folder',
-      })
-    }
-  }
-
-  return files
-}
-
-function parseMinIOUsage(_output: string) {
-  // Parse MinIO admin info output
-  return {
-    drives: 1,
-    usage: '0B',
-    available: 'Unknown',
-  }
-}
-
-function parseVolumeUsage(_output: string) {
-  // Parse Docker volume usage
-  return {
-    total: 0,
-    volumes: [],
-  }
-}
-
-async function getBucketStats(_bucketName: string) {
-  // Get detailed stats for a specific bucket
-  return {
-    files: 0,
-    folders: 0,
-    size: 0,
-    largestFile: { name: '', size: 0 },
-    fileTypes: {},
-  }
-}
-
-async function getFileInfo(bucket: string, filePath: string) {
-  try {
-    const backendPath = getProjectPath()
-
-    const { stdout } = await execAsync(
-      `cd ${backendPath} && docker-compose exec minio mc stat local/${bucket}/${filePath}`,
-    )
+    const client = await getMinIOClient()
+    const conds = new Minio.CopyConditions()
+    await client.copyObject(destBucket, destObject, `/${sourceBucket}/${sourceObject}`, conds)
 
     return NextResponse.json({
       success: true,
       data: {
-        bucket,
-        file: filePath,
-        info: stdout.trim(),
+        sourceBucket,
+        sourceObject,
+        destBucket,
+        destObject,
         timestamp: new Date().toISOString(),
       },
     })
@@ -709,7 +760,7 @@ async function getFileInfo(bucket: string, filePath: string) {
     return NextResponse.json(
       {
         success: false,
-        error: `Failed to get file info for '${filePath}'`,
+        error: 'Failed to copy file',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
       { status: 500 },
@@ -717,32 +768,297 @@ async function getFileInfo(bucket: string, filePath: string) {
   }
 }
 
-async function downloadFile(bucket: string, filePath: string) {
-  // This would handle file download in a real implementation
-  return NextResponse.json({
-    success: true,
-    data: {
-      bucket,
-      file: filePath,
-      download_url: `/api/storage/download/${bucket}/${filePath}`,
-      timestamp: new Date().toISOString(),
-    },
-  })
-}
+async function moveFile(options: {
+  sourceBucket?: string
+  sourceObject?: string
+  destBucket?: string
+  destObject?: string
+}) {
+  try {
+    const { sourceBucket, sourceObject, destBucket, destObject } = options
 
-// Placeholder functions for additional operations
-async function copyFile(_options: unknown) {
-  return NextResponse.json({ success: true, message: 'File copied' })
-}
+    if (!sourceBucket || !sourceObject || !destBucket || !destObject) {
+      return NextResponse.json(
+        {
+          success: false,
+          error:
+            'sourceBucket, sourceObject, destBucket, and destObject are required',
+        },
+        { status: 400 },
+      )
+    }
 
-async function moveFile(_options: unknown) {
-  return NextResponse.json({ success: true, message: 'File moved' })
+    const client = await getMinIOClient()
+
+    // Copy then delete — MinIO has no native move
+    const conds = new Minio.CopyConditions()
+    await client.copyObject(destBucket, destObject, `/${sourceBucket}/${sourceObject}`, conds)
+    await client.removeObject(sourceBucket, sourceObject)
+
+    return NextResponse.json({
+      success: true,
+      data: {
+        sourceBucket,
+        sourceObject,
+        destBucket,
+        destObject,
+        timestamp: new Date().toISOString(),
+      },
+    })
+  } catch (error) {
+    return NextResponse.json(
+      {
+        success: false,
+        error: 'Failed to move file',
+        details: error instanceof Error ? error.message : 'Unknown error',
+      },
+      { status: 500 },
+    )
+  }
 }
 
 async function setFilePermissions(
-  _bucket: string,
-  _file: string,
-  _options: unknown,
+  bucket: string,
+  file: string,
+  options: { isPublic?: boolean; policy?: string },
 ) {
-  return NextResponse.json({ success: true, message: 'Permissions set' })
+  try {
+    if (!bucket) {
+      return NextResponse.json(
+        { success: false, error: 'Bucket name is required' },
+        { status: 400 },
+      )
+    }
+
+    const client = await getMinIOClient()
+    const makePublic =
+      options.isPublic === true || options.policy === 'public'
+
+    if (file) {
+      // Object-level: set tag to mark public/private intent
+      // (MinIO doesn't support per-object ACLs natively outside of tags)
+      await client.setObjectTagging(bucket, file, {
+        visibility: makePublic ? 'public' : 'private',
+      })
+    } else {
+      // Bucket-level: set or remove public read policy
+      if (makePublic) {
+        const publicPolicy = JSON.stringify({
+          Version: '2012-10-17',
+          Statement: [
+            {
+              Effect: 'Allow',
+              Principal: { AWS: ['*'] },
+              Action: ['s3:GetObject'],
+              Resource: [`arn:aws:s3:::${bucket}/*`],
+            },
+          ],
+        })
+        await client.setBucketPolicy(bucket, publicPolicy)
+      } else {
+        // Remove policy (reverts to private)
+        await client.setBucketPolicy(bucket, '')
+      }
+    }
+
+    return NextResponse.json({
+      success: true,
+      data: {
+        bucket,
+        file: file || null,
+        visibility: makePublic ? 'public' : 'private',
+        timestamp: new Date().toISOString(),
+      },
+    })
+  } catch (error) {
+    return NextResponse.json(
+      {
+        success: false,
+        error: 'Failed to set permissions',
+        details: error instanceof Error ? error.message : 'Unknown error',
+      },
+      { status: 500 },
+    )
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Helper / internal functions
+// ---------------------------------------------------------------------------
+
+function buildBucketShape(name: string, created: Date) {
+  return { name, created: created.toISOString() }
+}
+
+async function getMinIOBuckets(): Promise<
+  ReturnType<typeof buildBucketShape>[]
+> {
+  try {
+    const client = await getMinIOClient()
+    const buckets = await client.listBuckets()
+    return buckets.map((b) => buildBucketShape(b.name, b.creationDate))
+  } catch {
+    return []
+  }
+}
+
+async function getMinIOUsage(): Promise<{
+  total: number
+  used: number
+  available: number
+  percentage: number
+}> {
+  try {
+    const client = await getMinIOClient()
+    const buckets = await client.listBuckets()
+
+    let totalSize = 0
+
+    for (const bucket of buckets) {
+      const stream = client.listObjectsV2(bucket.name, '', true)
+      await new Promise<void>((resolve, reject) => {
+        stream.on('data', (obj: Minio.BucketItem) => {
+          totalSize += obj.size ?? 0
+        })
+        stream.on('error', reject)
+        stream.on('end', resolve)
+      })
+    }
+
+    return {
+      total: 0, // Disk total not available without admin API
+      used: totalSize,
+      available: 0,
+      percentage: 0,
+    }
+  } catch {
+    return { total: 0, used: 0, available: 0, percentage: 0 }
+  }
+}
+
+async function getMinIOStats(): Promise<{
+  files: number
+  folders: number
+  totalSize: number
+}> {
+  try {
+    const client = await getMinIOClient()
+    const buckets = await client.listBuckets()
+
+    let files = 0
+    let totalSize = 0
+
+    for (const bucket of buckets) {
+      const stream = client.listObjectsV2(bucket.name, '', true)
+      await new Promise<void>((resolve, reject) => {
+        stream.on('data', (obj: Minio.BucketItem) => {
+          if (obj.name) {
+            files++
+            totalSize += obj.size ?? 0
+          }
+        })
+        stream.on('error', reject)
+        stream.on('end', resolve)
+      })
+    }
+
+    return { files, folders: 0, totalSize }
+  } catch {
+    return { files: 0, folders: 0, totalSize: 0 }
+  }
+}
+
+async function getBucketStats(bucketName: string): Promise<{
+  files: number
+  folders: number
+  size: number
+  largestFile: { name: string; size: number }
+  fileTypes: Record<string, number>
+}> {
+  try {
+    const client = await getMinIOClient()
+
+    let files = 0
+    let totalSize = 0
+    let largestFile = { name: '', size: 0 }
+    const fileTypes: Record<string, number> = {}
+
+    const stream = client.listObjectsV2(bucketName, '', true)
+    await new Promise<void>((resolve, reject) => {
+      stream.on('data', (obj: Minio.BucketItem) => {
+        if (!obj.name) return
+        files++
+        const size = obj.size ?? 0
+        totalSize += size
+
+        if (size > largestFile.size) {
+          largestFile = { name: obj.name, size }
+        }
+
+        const dotPos = obj.name.lastIndexOf('.')
+        const ext =
+          dotPos !== -1
+            ? obj.name.substring(dotPos + 1).toLowerCase()
+            : 'other'
+        fileTypes[ext] = (fileTypes[ext] ?? 0) + 1
+      })
+      stream.on('error', reject)
+      stream.on('end', resolve)
+    })
+
+    return {
+      files,
+      folders: 0,
+      size: totalSize,
+      largestFile,
+      fileTypes,
+    }
+  } catch {
+    return {
+      files: 0,
+      folders: 0,
+      size: 0,
+      largestFile: { name: '', size: 0 },
+      fileTypes: {},
+    }
+  }
+}
+
+async function getProjectFileStorage() {
+  try {
+    const backendPath = getProjectPath()
+    const { stdout } = await execAsync(
+      `du -sh "${backendPath}" 2>/dev/null || echo "0B"`,
+    )
+    const size = stdout.split('\t')[0]?.trim() || '0B'
+
+    return { path: backendPath, size, type: 'project-files' }
+  } catch {
+    return { path: getProjectPath(), size: 'Unknown', type: 'project-files' }
+  }
+}
+
+async function getProjectDirectoryUsage() {
+  try {
+    const backendPath = getProjectPath()
+    const { stdout } = await execAsync(
+      `du -sh "${backendPath}"/* 2>/dev/null | sort -hr | head -10`,
+    )
+
+    const directories = stdout
+      .split('\n')
+      .filter((line) => line.trim())
+      .map((line) => {
+        const parts = line.split('\t')
+        return { size: parts[0], path: parts[1] }
+      })
+
+    return { directories, total: directories.length }
+  } catch {
+    return { directories: [], total: 0 }
+  }
+}
+
+function parseVolumeUsage(_output: string) {
+  return { total: 0, volumes: [] as string[] }
 }

@@ -2,6 +2,7 @@ import { Providers } from '@/app/providers'
 import { ConfirmProvider } from '@/components/ConfirmDialog'
 import { ErrorBoundary } from '@/components/ErrorBoundary'
 import { ErrorSuppressor } from '@/components/ErrorSuppressor'
+import { GlobalCommandPalette } from '@/components/GlobalCommandPalette'
 import { GlobalDataProvider } from '@/components/GlobalDataProvider'
 import { Layout } from '@/components/Layout'
 import { ProjectStateWrapper } from '@/components/ProjectStateWrapper'
@@ -77,6 +78,7 @@ export default function RootLayout({
                 <Providers>
                   <ProjectStateWrapper>
                     <GlobalDataProvider>
+                      <GlobalCommandPalette />
                       <div className="w-full">
                         <Layout allSections={allSections}>{children}</Layout>
                       </div>

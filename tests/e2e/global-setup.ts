@@ -42,6 +42,7 @@
  *        middleware                 — session validation on every protected route
  *   POST /api/auth/validate-session — middleware's internal endpoint
  *   /build                          — destination page SSR + client JS bundles
+ *        (networkidle drain)        — warms remaining route module caches
  */
 
 import {
@@ -132,13 +133,23 @@ export default async function globalSetup(config: FullConfig) {
     // JS bundles are cached; subsequent auth in tests completes in < 5 s.
     await page.waitForURL(/\/(dashboard|build|start)/, { timeout: 60000 })
 
-    // Drain the /build page's mount-time API calls so they complete BEFORE
-    // any test worker fires its own requests.  Specifically, build/page.tsx
-    // calls runPreBuildChecks() → GET /api/project/status on mount.  Waiting
-    // for networkidle here ensures that request resolves and populates the
-    // server-side status cache — giving every test a sub-millisecond cache
-    // hit instead of a 10–15 s cold shell-command execution.
-    await page.waitForLoadState('networkidle', { timeout: 30000 })
+    // Drain the /build page's mount-time API calls so all server-side routes
+    // are compiled and their module-level caches are warm before tests start.
+    // This is safe because findNselfPathSync() caches its execSync result after
+    // the first call, so the event-loop blockage is bounded to one shell exec
+    // (already paid during the login warm-up above) rather than one per request.
+    //
+    // We use a try/catch because some /build page components may hold open
+    // SSE or polling connections that prevent networkidle from ever resolving.
+    // If that happens we continue after 15 s with whatever is already warm —
+    // the critical /api/project/status cache was populated by getCorrectRoute()
+    // during the login step above, so tests will still have cache hits.
+    try {
+      await page.waitForLoadState('networkidle', { timeout: 15000 })
+    } catch {
+      // networkidle timed out (persistent connections on /build page) — that's
+      // OK.  Core caches are warm; tests can proceed.
+    }
 
     console.log(
       '[globalSetup] All routes and JS bundles pre-compiled. Tests will run with a warm server.',

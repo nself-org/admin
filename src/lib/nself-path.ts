@@ -94,16 +94,28 @@ export async function findNselfPath(): Promise<string> {
   return 'nself'
 }
 
+// Module-level cache for findNselfPathSync().
+// execSync('which nself') blocks the Node.js event loop for the duration of
+// the shell command.  Multiple concurrent API requests that each call
+// findNselfPathSync() would cause N sequential event-loop blockages.
+// Caching the result after the first resolution ensures only ONE blocking
+// execSync runs per server-process lifetime — all subsequent calls are instant.
+let _nselfPathSyncCache: string | null = null
+
 /**
- * Synchronous version for use in API routes
+ * Synchronous version for use in API routes.
+ * Result is cached for the process lifetime to avoid repeated execSync blocking.
  */
 export function findNselfPathSync(): string {
+  if (_nselfPathSyncCache !== null) return _nselfPathSyncCache
+
   // 1. Check explicit environment variable first
   if (process.env.NSELF_CLI_PATH && fs.existsSync(process.env.NSELF_CLI_PATH)) {
-    return process.env.NSELF_CLI_PATH
+    _nselfPathSyncCache = process.env.NSELF_CLI_PATH
+    return _nselfPathSyncCache
   }
 
-  // 2. Check if nself is in PATH
+  // 2. Check if nself is in PATH (one-time blocking execSync — cached after this)
   try {
     const enhancedPath = getEnhancedPath()
     const result = require('child_process').execSync('which nself', {
@@ -112,9 +124,11 @@ export function findNselfPathSync(): string {
     })
     const nselfPath = result.trim()
     if (nselfPath && fs.existsSync(nselfPath)) {
-      return nselfPath
+      _nselfPathSyncCache = nselfPath
+      return _nselfPathSyncCache
     }
-    return 'nself'
+    _nselfPathSyncCache = 'nself'
+    return _nselfPathSyncCache
   } catch {
     // Not in PATH, continue checking
   }
@@ -122,19 +136,22 @@ export function findNselfPathSync(): string {
   // 3. Check development location
   const devPath = getDevPath()
   if (fs.existsSync(devPath)) {
-    return devPath
+    _nselfPathSyncCache = devPath
+    return _nselfPathSyncCache
   }
 
   // 4. Check common installation paths
   const commonPaths = getCommonPaths()
   for (const p of commonPaths) {
     if (fs.existsSync(p)) {
-      return p
+      _nselfPathSyncCache = p
+      return _nselfPathSyncCache
     }
   }
 
   // Default to 'nself' and let it fail with a clear error
-  return 'nself'
+  _nselfPathSyncCache = 'nself'
+  return _nselfPathSyncCache
 }
 
 /**

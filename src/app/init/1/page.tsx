@@ -1,5 +1,40 @@
 'use client'
 
+interface WizardBackupSchedule {
+  frequency?: 'daily' | 'weekly' | 'monthly' | 'custom'
+  time?: string
+  dayOfWeek?: number
+  dayOfMonth?: number
+  customCron?: string
+}
+
+interface WizardBackupConfig {
+  enabled?: boolean
+  types?: {
+    database?: boolean
+    images?: boolean
+    configs?: boolean
+  }
+  schedule?: WizardBackupSchedule
+  retention?: number
+  compression?: boolean
+  encryption?: boolean
+}
+
+interface WizardConfig {
+  projectName?: string
+  environment?: string
+  domain?: string
+  databaseName?: string
+  databasePassword?: string
+  adminEmail?: string
+  backup?: WizardBackupConfig
+  backupEnabled?: boolean
+  backupSchedule?: string
+  [key: string]: unknown
+}
+
+
 import { BackupConfiguration } from '@/components/BackupConfiguration'
 import { useAutoSave } from '@/hooks/useAutoSave'
 import { ArrowRight, ChevronDown, Eye, EyeOff } from 'lucide-react'
@@ -11,12 +46,12 @@ export default function InitStep1() {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
-  const [errors, setErrors] = useState<any>({})
-  const [touched, setTouched] = useState<any>({})
+  const [errors, setErrors] = useState<Record<string, string | undefined>>({})
+  const [touched, setTouched] = useState<Record<string, boolean>>({})
   const [hasLoaded, setHasLoaded] = useState(false)
 
   // Start with null config - will be loaded from env file
-  const [config, setConfig] = useState<any>(null)
+  const [config, setConfig] = useState<WizardConfig | null>(null)
 
   // Load configuration from env file on mount and when page gains focus
   useEffect(() => {
@@ -204,7 +239,7 @@ export default function InitStep1() {
 
   const validateField = (field: string, value: any, currentEnv?: string) => {
     let error = ''
-    const env = currentEnv || config.environment
+    const env = currentEnv || config?.environment
 
     switch (field) {
       case 'projectName':
@@ -273,8 +308,8 @@ export default function InitStep1() {
     })
 
     // Validate optional email if provided
-    if (config.adminEmail) {
-      const emailError = validateField('adminEmail', config.adminEmail)
+    if (config?.adminEmail) {
+      const emailError = validateField('adminEmail', config?.adminEmail)
       if (emailError) {
         newErrors.adminEmail = emailError
       }
@@ -634,8 +669,16 @@ export default function InitStep1() {
       {/* Backup Configuration */}
       <div className="pt-2">
         <BackupConfiguration
-          value={config.backup}
-          onChange={(backup) => setConfig({ ...config, backup })}
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          value={(config.backup as any) ?? {
+            enabled: false,
+            types: { database: true, images: false, configs: false },
+            schedule: { frequency: 'daily', time: '02:00' },
+            retention: 7,
+            compression: true,
+            encryption: false,
+          }}
+          onChange={(backup) => setConfig({ ...config, backup: backup as WizardBackupConfig })}
         />
       </div>
 

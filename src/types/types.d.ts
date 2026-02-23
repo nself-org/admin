@@ -11,16 +11,19 @@ declare module '@/mdx/search.mjs' {
 }
 
 declare module '*.svg' {
-  const content: any
-  export default content
+  import type { FC, SVGProps } from 'react'
+  const ReactComponent: FC<SVGProps<SVGSVGElement>>
+  export default ReactComponent
 }
 
 declare module '@/images/logos/*.svg' {
-  const content: any
-  export default content
+  import type { FC, SVGProps } from 'react'
+  const ReactComponent: FC<SVGProps<SVGSVGElement>>
+  export default ReactComponent
 }
 
 declare module '@/images/*.svg' {
-  const content: any
-  export default content
+  import type { FC, SVGProps } from 'react'
+  const ReactComponent: FC<SVGProps<SVGSVGElement>>
+  export default ReactComponent
 }

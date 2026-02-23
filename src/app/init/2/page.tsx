@@ -19,7 +19,7 @@ export default function InitStep2() {
   const [loading, setLoading] = useState(false)
   const [dataLoaded, setDataLoaded] = useState(false)
   const [modalService, setModalService] = useState<string | null>(null)
-  const [initialConfig, setInitialConfig] = useState<any>({})
+  const [initialConfig, setInitialConfig] = useState<Record<string, unknown>>({})
   const [serviceConfigs, setServiceConfigs] = useState<Record<string, any>>({
     postgresql: {},
     hasura: {},

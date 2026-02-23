@@ -107,6 +107,12 @@ export default [
     },
   },
   {
+    files: ['src/app/api/**/*.ts'],
+    rules: {
+      'no-console': ['warn', { allow: ['error', 'warn'] }],
+    },
+  },
+  {
     ignores: ['node_modules/**', '.next/**', 'dist/**', '*.config.*'],
   },
 ]

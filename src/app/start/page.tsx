@@ -1,5 +1,47 @@
 'use client'
 
+interface ServiceInfo {
+  container_name?: string
+  image?: string
+  ports?: string[]
+  restart?: string
+  customInfo?: {
+    type?: string
+    route?: string
+  }
+}
+
+interface ProjectInfo {
+  projectName?: string
+  environment?: string
+  domain?: string
+  databaseName?: string
+  dbPassword?: string
+  totalServices?: number
+  backupEnabled?: boolean
+  backupSchedule?: string
+  projectPath?: string
+  servicesByCategory?: {
+    required?: string[]
+    optional?: string[]
+    user?: string[]
+  }
+  frontendApps?: Array<{ name?: string; url?: string }>
+  services?: Record<string, ServiceInfo>
+}
+
+interface ServiceDetail {
+  ports?: string[]
+  restart?: string
+  image?: string
+  container_name?: string
+  customInfo?: {
+    type?: string
+    route?: string
+  }
+}
+
+
 import { Button } from '@/components/Button'
 import { GridPattern } from '@/components/GridPattern'
 import { HeroPattern } from '@/components/HeroPattern'
@@ -452,8 +494,8 @@ function getServiceDisplayName(name: string): string {
 
 export default function StartPage() {
   const router = useRouter()
-  const [projectInfo, setProjectInfo] = useState<any>(null)
-  const [_serviceDetails, setServiceDetails] = useState<any>(null)
+  const [projectInfo, setProjectInfo] = useState<ProjectInfo | null>(null)
+  const [_serviceDetails, setServiceDetails] = useState<Record<string, ServiceDetail> | null>(null)
   const [_loadingServices, setLoadingServices] = useState(true)
   const [starting, setStarting] = useState(false)
   const [showDetails, setShowDetails] = useState(false)
@@ -833,18 +875,18 @@ export default function StartPage() {
                     {showDetails && (
                       <div className="mt-3 space-y-3 border-t border-zinc-200 pt-3 dark:border-zinc-700">
                         {/* Required Services */}
-                        {projectInfo.servicesByCategory?.required?.length >
+                        {(projectInfo.servicesByCategory?.required?.length ?? 0) >
                           0 && (
                           <div>
                             <div className="mb-2 flex items-center space-x-2">
                               <span className="text-sm font-semibold text-blue-600 dark:text-blue-400">
                                 Required (
-                                {projectInfo.servicesByCategory.required.length}
+                                {projectInfo.servicesByCategory?.required?.length ?? 0}
                                 )
                               </span>
                             </div>
                             <div className="ml-4 space-y-1">
-                              {projectInfo.servicesByCategory.required.map(
+                              {projectInfo.servicesByCategory?.required?.map(
                                 (service: string, _idx: number) => {
                                   const serviceData = _serviceDetails?.[service]
                                   const info = serviceData
@@ -856,8 +898,8 @@ export default function StartPage() {
                                             `Container: ${serviceData.container_name}`,
                                           serviceData.image &&
                                             `Image: ${serviceData.image}`,
-                                          serviceData.ports?.length > 0 &&
-                                            `Ports: ${serviceData.ports.map((p: string) => p.split(':')[0]).join(', ')}`,
+                                          (serviceData.ports?.length ?? 0) > 0 &&
+                                            `Ports: ${serviceData.ports?.map((p: string) => p.split(':')[0]).join(', ')}`,
                                           serviceData.restart &&
                                             `Restart: ${serviceData.restart}`,
                                         ].filter(Boolean),
@@ -909,18 +951,18 @@ export default function StartPage() {
                         )}
 
                         {/* Optional Services */}
-                        {projectInfo.servicesByCategory?.optional?.length >
+                        {(projectInfo.servicesByCategory?.optional?.length ?? 0) >
                           0 && (
                           <div>
                             <div className="mb-2 flex items-center space-x-2">
                               <span className="text-sm font-semibold text-purple-600 dark:text-purple-400">
                                 Optional (
-                                {projectInfo.servicesByCategory.optional.length}
+                                {projectInfo.servicesByCategory?.optional?.length ?? 0}
                                 )
                               </span>
                             </div>
                             <div className="ml-4 space-y-1">
-                              {projectInfo.servicesByCategory.optional.map(
+                              {projectInfo.servicesByCategory?.optional?.map(
                                 (service: string, _idx: number) => {
                                   const serviceData = _serviceDetails?.[service]
                                   const info = serviceData
@@ -932,8 +974,8 @@ export default function StartPage() {
                                             `Container: ${serviceData.container_name}`,
                                           serviceData.image &&
                                             `Image: ${serviceData.image}`,
-                                          serviceData.ports?.length > 0 &&
-                                            `Ports: ${serviceData.ports.map((p: string) => p.split(':')[0]).join(', ')}`,
+                                          (serviceData.ports?.length ?? 0) > 0 &&
+                                            `Ports: ${serviceData.ports?.map((p: string) => p.split(':')[0]).join(', ')}`,
                                           serviceData.restart &&
                                             `Restart: ${serviceData.restart}`,
                                         ].filter(Boolean),
@@ -985,16 +1027,16 @@ export default function StartPage() {
                         )}
 
                         {/* Custom Services */}
-                        {projectInfo.servicesByCategory?.user?.length > 0 && (
+                        {(projectInfo.servicesByCategory?.user?.length ?? 0) > 0 && (
                           <div>
                             <div className="mb-2 flex items-center space-x-2">
                               <span className="text-sm font-semibold text-orange-600 dark:text-orange-400">
                                 Custom (
-                                {projectInfo.servicesByCategory.user.length})
+                                {projectInfo.servicesByCategory?.user?.length ?? 0})
                               </span>
                             </div>
                             <div className="ml-4 space-y-1">
-                              {projectInfo.servicesByCategory.user.map(
+                              {projectInfo.servicesByCategory?.user?.map(
                                 (service: string, _idx: number) => {
                                   const serviceData = _serviceDetails?.[service]
                                   const info = serviceData
@@ -1005,8 +1047,8 @@ export default function StartPage() {
                                             `Container: ${serviceData.container_name}`,
                                           serviceData.image &&
                                             `Image: ${serviceData.image}`,
-                                          serviceData.ports?.length > 0 &&
-                                            `Ports: ${serviceData.ports.map((p: string) => p.split(':')[0]).join(', ')}`,
+                                          (serviceData.ports?.length ?? 0) > 0 &&
+                                            `Ports: ${serviceData.ports?.map((p: string) => p.split(':')[0]).join(', ')}`,
                                           serviceData.customInfo?.type &&
                                             `Type: ${serviceData.customInfo.type}`,
                                           serviceData.customInfo?.route &&

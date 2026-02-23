@@ -1,44 +1,45 @@
 declare module '*.svg' {
-  const content: any
-  export default content
+  import type { FC, SVGProps } from 'react'
+  const ReactComponent: FC<SVGProps<SVGSVGElement>>
+  export default ReactComponent
 }
 
 declare module '*.png' {
-  const content: any
+  const content: string
   export default content
 }
 
 declare module '*.jpg' {
-  const content: any
+  const content: string
   export default content
 }
 
 declare module '*.jpeg' {
-  const content: any
+  const content: string
   export default content
 }
 
 declare module '*.gif' {
-  const content: any
+  const content: string
   export default content
 }
 
 declare module '*.webp' {
-  const content: any
+  const content: string
   export default content
 }
 
 declare module '*.avif' {
-  const content: any
+  const content: string
   export default content
 }
 
 declare module '*.ico' {
-  const content: any
+  const content: string
   export default content
 }
 
 declare module '*.bmp' {
-  const content: any
+  const content: string
   export default content
 }

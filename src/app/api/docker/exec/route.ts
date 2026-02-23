@@ -46,98 +46,83 @@ export async function POST(request: Request) {
 
     // Build the Docker command arguments safely
     const backendPath = getProjectPath()
-    let cmdArgs: string[] = []
-    let useCompose = !service
-
-    if (useCompose) {
-      // Use docker-compose for multi-service operations
-      cmdArgs = ['docker-compose']
-
-      switch (command) {
-        case 'start':
-          cmdArgs.push('up', '-d')
-          break
-        case 'stop':
-          cmdArgs.push('down')
-          break
-        case 'restart':
-          cmdArgs.push('restart')
-          break
-        case 'logs':
-          cmdArgs.push('logs')
-          if (options?.tail) {
-            cmdArgs.push('--tail', options.tail.toString())
-          } else {
-            cmdArgs.push('--tail', '50')
-          }
-          if (options?.follow) {
-            cmdArgs.push('-f')
-          }
-          if (options?.since) {
-            cmdArgs.push('--since', options.since)
-          }
-          break
-        case 'stats':
-          cmdArgs.push('ps', '--format', 'json')
-          break
-        case 'inspect':
-          cmdArgs.push('config')
-          break
-      }
-    } else {
-      // Use docker for single service operations
-      cmdArgs = ['docker', command]
-
-      if (command === 'logs') {
-        if (options?.tail) {
-          cmdArgs.push('--tail', options.tail.toString())
-        } else {
-          cmdArgs.push('--tail', '50')
-        }
-        if (options?.follow) {
-          cmdArgs.push('-f')
-        }
-        if (options?.since) {
-          cmdArgs.push('--since', options.since)
-        }
-      }
-
-      // Add the validated service name
-      if (service) {
-        cmdArgs.push(service)
-      }
+    const dockerEnv = {
+      ...process.env,
+      DOCKER_HOST: `unix://${getDockerSocketPath()}`,
     }
+    const timeout = command === 'logs' && options?.follow ? 300000 : 30000
 
-    // Execute the command safely
     let stdout: string
     let stderr: string
 
-    if (useCompose) {
-      // Need to cd to project directory for docker-compose
-      const result = await execFileAsync(
-        '/bin/sh',
-        [
-          '-c',
-          `cd "${backendPath}" && ${cmdArgs.map((arg) => `"${arg}"`).join(' ')}`,
-        ],
-        {
-          env: {
-            ...process.env,
-            DOCKER_HOST: `unix://${getDockerSocketPath()}`,
-          },
-          timeout: command === 'logs' && options?.follow ? 300000 : 30000,
-        },
-      )
+    if (!service) {
+      // Use docker-compose for multi-service operations — pass args array directly
+      // with cwd set to backendPath, no shell string interpolation needed
+      const composeArgs: string[] = []
+
+      switch (command) {
+        case 'start':
+          composeArgs.push('up', '-d')
+          break
+        case 'stop':
+          composeArgs.push('down')
+          break
+        case 'restart':
+          composeArgs.push('restart')
+          break
+        case 'logs':
+          composeArgs.push('logs')
+          if (options?.tail) {
+            composeArgs.push('--tail', options.tail.toString())
+          } else {
+            composeArgs.push('--tail', '50')
+          }
+          if (options?.follow) {
+            composeArgs.push('-f')
+          }
+          if (options?.since) {
+            composeArgs.push('--since', options.since)
+          }
+          break
+        case 'stats':
+          composeArgs.push('ps', '--format', 'json')
+          break
+        case 'inspect':
+          composeArgs.push('config')
+          break
+      }
+
+      const result = await execFileAsync('docker-compose', composeArgs, {
+        cwd: backendPath,
+        env: dockerEnv,
+        timeout,
+      })
       stdout = result.stdout
       stderr = result.stderr
     } else {
-      // Direct docker command
-      const result = await execFileAsync(cmdArgs[0], cmdArgs.slice(1), {
-        env: {
-          ...process.env,
-          DOCKER_HOST: `unix://${getDockerSocketPath()}`,
-        },
-        timeout: command === 'logs' && options?.follow ? 300000 : 30000,
+      // Use docker for single service operations — service name is validated by
+      // schema regex (/^[a-z0-9][a-z0-9_.-]*$/i) so it is safe to pass directly
+      const dockerArgs: string[] = [command]
+
+      if (command === 'logs') {
+        if (options?.tail) {
+          dockerArgs.push('--tail', options.tail.toString())
+        } else {
+          dockerArgs.push('--tail', '50')
+        }
+        if (options?.follow) {
+          dockerArgs.push('-f')
+        }
+        if (options?.since) {
+          dockerArgs.push('--since', options.since)
+        }
+      }
+
+      dockerArgs.push(service)
+
+      const result = await execFileAsync('docker', dockerArgs, {
+        env: dockerEnv,
+        timeout,
       })
       stdout = result.stdout
       stderr = result.stderr
@@ -146,7 +131,9 @@ export async function POST(request: Request) {
     return NextResponse.json({
       success: true,
       data: {
-        command: cmdArgs.join(' '),
+        command: service
+          ? `docker ${command} ${service}`
+          : `docker-compose ...`,
         output: stdout,
         error: stderr,
       },

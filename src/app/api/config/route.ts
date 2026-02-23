@@ -53,6 +53,32 @@ const ALLOWED_CONFIG_FILES = [
   'docker-compose.prod.yml',
 ]
 
+// Typed option interfaces replacing options: any
+interface WriteConfigOptions {
+  backup?: boolean
+  apply?: boolean
+  variables?: Record<string, string>
+}
+
+interface UpdateConfigOptions {
+  variables?: Record<string, string>
+  apply?: boolean
+}
+
+interface CreateEnvOptions {
+  environment?: string
+  variables?: Record<string, string>
+}
+
+interface ApplyConfigOptions {
+  restart?: boolean
+  rebuild?: boolean
+}
+
+interface RestoreConfigOptions {
+  backup_path?: string
+}
+
 // Validate and sanitize file path
 function validateFilePath(fileName: string): {
   valid: boolean
@@ -149,7 +175,7 @@ export async function POST(request: NextRequest) {
             { status: 400 },
           )
         }
-        return await writeConfigFile(file, content, options)
+        return await writeConfigFile(file, content, options as WriteConfigOptions)
       case 'update':
         if (!file) {
           return NextResponse.json(
@@ -157,13 +183,13 @@ export async function POST(request: NextRequest) {
             { status: 400 },
           )
         }
-        return await updateConfigFile(file, options)
+        return await updateConfigFile(file, options as UpdateConfigOptions)
       case 'create-env':
-        return await createEnvironmentFile(options)
+        return await createEnvironmentFile(options as CreateEnvOptions)
       case 'apply':
-        return await applyConfiguration(options)
+        return await applyConfiguration(options as ApplyConfigOptions)
       case 'restore':
-        return await restoreConfiguration(options)
+        return await restoreConfiguration(options as RestoreConfigOptions)
       default:
         return NextResponse.json(
           { success: false, error: `Unknown action: ${action}` },
@@ -371,7 +397,7 @@ async function readConfigFile(fileName: string) {
 async function writeConfigFile(
   fileName: string,
   content: string,
-  options: any,
+  options: WriteConfigOptions,
 ) {
   const backendPath = getProjectPath()
 
@@ -409,7 +435,22 @@ async function writeConfigFile(
 
     // Apply configuration if requested
     if (options.apply && safeFileName.startsWith('.env')) {
-      await applyEnvironmentChanges()
+      try {
+        await applyEnvironmentChanges()
+      } catch (err) {
+        console.error('Failed to apply environment changes:', err)
+        return NextResponse.json({
+          success: true,
+          data: {
+            file: safeFileName,
+            size: stats.size,
+            modified: stats.mtime,
+            applied: false,
+            timestamp: new Date().toISOString(),
+          },
+          warning: 'Changes saved but could not be applied automatically',
+        })
+      }
     }
 
     return NextResponse.json({
@@ -434,7 +475,7 @@ async function writeConfigFile(
   }
 }
 
-async function updateConfigFile(fileName: string, options: any) {
+async function updateConfigFile(fileName: string, options: UpdateConfigOptions) {
   const backendPath = getProjectPath()
 
   // Validate file path
@@ -500,18 +541,26 @@ async function validateConfiguration() {
   const backendPath = getProjectPath()
 
   try {
-    // Validate using nself doctor
+    // Validate using nself doctor — use execFile with cwd to avoid shell injection
     const { stdout: nselfValidation, stderr } = await execFileAsync(
-      '/bin/sh',
-      ['-c', `cd "${backendPath}" && nself doctor`],
-      { timeout: 30000, env: { ...process.env, PATH: getEnhancedPath() } },
+      'nself',
+      ['doctor'],
+      {
+        timeout: 30000,
+        cwd: backendPath,
+        env: { ...process.env, PATH: getEnhancedPath() },
+      },
     )
 
     // Validate Docker Compose
     const { stdout: dockerValidation } = await execFileAsync(
-      '/bin/sh',
-      ['-c', `cd "${backendPath}" && docker-compose config --quiet`],
-      { timeout: 30000, env: { ...process.env, PATH: getEnhancedPath() } },
+      'docker-compose',
+      ['config', '--quiet'],
+      {
+        timeout: 30000,
+        cwd: backendPath,
+        env: { ...process.env, PATH: getEnhancedPath() },
+      },
     ).catch((error) => ({
       stdout: '',
       stderr: error instanceof Error ? error.message : 'Unknown error',
@@ -577,7 +626,7 @@ async function validateConfiguration() {
   }
 }
 
-async function applyConfiguration(options: any) {
+async function applyConfiguration(options: ApplyConfigOptions) {
   const backendPath = getProjectPath()
 
   try {
@@ -586,9 +635,13 @@ async function applyConfiguration(options: any) {
     // Restart services if requested
     if (options.restart) {
       const { stdout, stderr } = await execFileAsync(
-        '/bin/sh',
-        ['-c', `cd "${backendPath}" && docker-compose restart`],
-        { timeout: 60000, env: { ...process.env, PATH: getEnhancedPath() } },
+        'docker-compose',
+        ['restart'],
+        {
+          timeout: 60000,
+          cwd: backendPath,
+          env: { ...process.env, PATH: getEnhancedPath() },
+        },
       )
       results.push({ action: 'restart', stdout, stderr })
     }
@@ -596,18 +649,26 @@ async function applyConfiguration(options: any) {
     // Rebuild services if requested
     if (options.rebuild) {
       const { stdout, stderr } = await execFileAsync(
-        '/bin/sh',
-        ['-c', `cd "${backendPath}" && docker-compose build`],
-        { timeout: 300000, env: { ...process.env, PATH: getEnhancedPath() } },
+        'docker-compose',
+        ['build'],
+        {
+          timeout: 300000,
+          cwd: backendPath,
+          env: { ...process.env, PATH: getEnhancedPath() },
+        },
       )
       results.push({ action: 'rebuild', stdout, stderr })
     }
 
     // Apply nself configuration
     const { stdout: nselfOutput, stderr: nselfError } = await execFileAsync(
-      '/bin/sh',
-      ['-c', `cd "${backendPath}" && nself apply`],
-      { timeout: 30000, env: { ...process.env, PATH: getEnhancedPath() } },
+      'nself',
+      ['apply'],
+      {
+        timeout: 30000,
+        cwd: backendPath,
+        env: { ...process.env, PATH: getEnhancedPath() },
+      },
     ).catch((error) => ({
       stdout: '',
       stderr: error instanceof Error ? error.message : 'Unknown error',
@@ -638,7 +699,7 @@ async function applyConfiguration(options: any) {
   }
 }
 
-async function createEnvironmentFile(options: any) {
+async function createEnvironmentFile(options: CreateEnvOptions) {
   const backendPath = getProjectPath()
   const requestedFile = options.environment || '.env.dev'
 
@@ -802,7 +863,7 @@ async function getEnvTemplate() {
   }
 }
 
-async function restoreConfiguration(options: any) {
+async function restoreConfiguration(options: RestoreConfigOptions) {
   if (!options.backup_path) {
     return NextResponse.json(
       {
@@ -865,21 +926,18 @@ async function restoreConfiguration(options: any) {
 async function applyEnvironmentChanges() {
   const backendPath = getProjectPath()
 
-  try {
-    // Restart containers to pick up new environment variables
-    const { stdout, stderr } = await execFileAsync(
-      '/bin/sh',
-      ['-c', `cd "${backendPath}" && docker-compose restart`],
-      { timeout: 60000, env: { ...process.env, PATH: getEnhancedPath() } },
-    )
+  // Restart containers to pick up new environment variables
+  const { stdout, stderr } = await execFileAsync(
+    'docker-compose',
+    ['restart'],
+    {
+      timeout: 60000,
+      cwd: backendPath,
+      env: { ...process.env, PATH: getEnhancedPath() },
+    },
+  )
 
-    return { success: true, stdout, stderr }
-  } catch (error) {
-    return {
-      success: false,
-      error: error instanceof Error ? error.message : 'Unknown error',
-    }
-  }
+  return { success: true, stdout, stderr }
 }
 
 

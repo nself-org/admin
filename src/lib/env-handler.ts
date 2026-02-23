@@ -640,10 +640,22 @@ export function wizardConfigToEnv(config: any): EnvConfig {
 
     config.customServices.forEach((service: any, index: number) => {
       const num = index + 1
+      // Validate service fields before building the colon-delimited CS_N value.
+      // Colons are the delimiter in the CS_N format (name:framework:port:route),
+      // so they must not appear inside any field.
+      const shellMetaRe = /[:;|&`$(){}[\]<>!\\]/
+      const serviceName = String(service.name || '')
+      const serviceFramework = String(service.framework || 'custom')
+      if (shellMetaRe.test(serviceName) || shellMetaRe.test(serviceFramework)) {
+        console.warn(
+          `Custom service at index ${index} has invalid characters in name or framework — skipping`,
+        )
+        return
+      }
       // Build the CS_N value in format: name:framework:port:route
       const parts = [
-        service.name,
-        service.framework,
+        serviceName,
+        serviceFramework,
         service.port || 3000 + num,
         service.route || '', // Empty route is fine
       ]

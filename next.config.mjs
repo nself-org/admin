@@ -12,7 +12,7 @@ const nextConfig = {
     PROJECT_PATH: process.env.PROJECT_PATH || '.backend',
   },
   typescript: {
-    ignoreBuildErrors: true
+    ignoreBuildErrors: true,
   },
   experimental: {
     optimizeCss: true,
@@ -30,31 +30,32 @@ const nextConfig = {
         headers: [
           {
             key: 'X-DNS-Prefetch-Control',
-            value: 'on'
+            value: 'on',
           },
           {
             key: 'Strict-Transport-Security',
-            value: 'max-age=63072000; includeSubDomains; preload'
+            value: 'max-age=63072000; includeSubDomains; preload',
           },
           {
             key: 'X-Frame-Options',
-            value: 'DENY'
+            value: 'DENY',
           },
           {
             key: 'X-Content-Type-Options',
-            value: 'nosniff'
+            value: 'nosniff',
           },
           {
             key: 'X-XSS-Protection',
-            value: '1; mode=block'
+            value: '1; mode=block',
           },
           {
             key: 'Referrer-Policy',
-            value: 'strict-origin-when-cross-origin'
+            value: 'strict-origin-when-cross-origin',
           },
           {
             key: 'Permissions-Policy',
-            value: 'camera=(), microphone=(), geolocation=(), interest-cohort=()'
+            value:
+              'camera=(), microphone=(), geolocation=(), interest-cohort=()',
           },
           {
             key: 'Content-Security-Policy',
@@ -67,9 +68,9 @@ const nextConfig = {
               "connect-src 'self' ws: wss:",
               "frame-ancestors 'none'",
               "base-uri 'self'",
-              "form-action 'self'"
-            ].join('; ')
-          }
+              "form-action 'self'",
+            ].join('; '),
+          },
         ],
       },
     ]
@@ -85,7 +86,7 @@ const nextConfig = {
     // Ignore native bindings
     config.resolve.alias = {
       ...config.resolve.alias,
-      'ssh2': false,
+      ssh2: false,
       'cpu-features': false,
     }
 

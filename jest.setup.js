@@ -268,6 +268,16 @@ jest.mock('lokijs', () => {
       count: jest.fn(function () {
         return this.data.length
       }),
+      // LokiJS unique-index O(1) lookup by field value
+      by: jest.fn(function (field, value) {
+        if (value === undefined) {
+          const col = this
+          return function (v) {
+            return col.by(field, v)
+          }
+        }
+        return this.data.find((doc) => doc[field] === value) || undefined
+      }),
       // Add chain() method for LokiJS query chaining
       chain: jest.fn(function () {
         const resultset = {

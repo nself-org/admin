@@ -4,31 +4,31 @@
 version: 2
 updates:
   # Enable version updates for npm
-  - package-ecosystem: "npm"
-    directory: "/"
+  - package-ecosystem: 'npm'
+    directory: '/'
     schedule:
-      interval: "weekly"
-      day: "monday"
-      time: "04:00"
+      interval: 'weekly'
+      day: 'monday'
+      time: '04:00'
     open-pull-requests-limit: 10
     # Group updates to reduce PR noise
     groups:
       production-dependencies:
         patterns:
-          - "*"
-        dependency-type: "production"
+          - '*'
+        dependency-type: 'production'
       development-dependencies:
         patterns:
-          - "*"
-        dependency-type: "development"
+          - '*'
+        dependency-type: 'development'
     # Automatically approve and merge patch updates
     labels:
-      - "dependencies"
-      - "npm"
+      - 'dependencies'
+      - 'npm'
     commit-message:
-      prefix: "chore"
-      prefix-development: "chore(dev)"
-      include: "scope"
+      prefix: 'chore'
+      prefix-development: 'chore(dev)'
+      include: 'scope'
     # Ignore specific dependencies if needed
     ignore:
       # Example: Keep Next.js on v15 for now
@@ -36,31 +36,31 @@ updates:
       #   versions: ["16.x"]
 
   # Enable version updates for GitHub Actions
-  - package-ecosystem: "github-actions"
-    directory: "/"
+  - package-ecosystem: 'github-actions'
+    directory: '/'
     schedule:
-      interval: "weekly"
-      day: "monday"
-      time: "04:00"
+      interval: 'weekly'
+      day: 'monday'
+      time: '04:00'
     open-pull-requests-limit: 5
     labels:
-      - "dependencies"
-      - "github-actions"
+      - 'dependencies'
+      - 'github-actions'
     commit-message:
-      prefix: "ci"
-      include: "scope"
+      prefix: 'ci'
+      include: 'scope'
 
   # Enable version updates for Docker base images
-  - package-ecosystem: "docker"
-    directory: "/"
+  - package-ecosystem: 'docker'
+    directory: '/'
     schedule:
-      interval: "weekly"
-      day: "monday"
-      time: "04:00"
+      interval: 'weekly'
+      day: 'monday'
+      time: '04:00'
     open-pull-requests-limit: 5
     labels:
-      - "dependencies"
-      - "docker"
+      - 'dependencies'
+      - 'docker'
     commit-message:
-      prefix: "build"
-      include: "scope"
+      prefix: 'build'
+      include: 'scope'

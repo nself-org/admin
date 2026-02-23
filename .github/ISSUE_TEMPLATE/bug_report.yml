@@ -1,14 +1,14 @@
 name: 🐛 Bug Report
 description: Create a report to help us improve nself Admin
-title: "[Bug]: "
-labels: ["bug", "triage"]
+title: '[Bug]: '
+labels: ['bug', 'triage']
 assignees: []
 body:
   - type: markdown
     attributes:
       value: |
         Thank you for taking the time to report a bug! 🐛
-        
+
         Please fill out this form completely to help us understand and fix the issue.
 
   - type: checkboxes
@@ -132,7 +132,7 @@ body:
       placeholder: |
         You can get logs with:
         docker logs nself-admin
-        
+
         Or from the browser console (F12)
       render: shell
 

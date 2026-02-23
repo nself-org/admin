@@ -36,7 +36,7 @@ jobs:
   type-check:
     name: TypeScript Type Check
     runs-on: ubuntu-latest
-    continue-on-error: true  # Allow workflow to proceed even if type-check fails
+    continue-on-error: true # Allow workflow to proceed even if type-check fails
     steps:
       - uses: actions/checkout@v4
 
@@ -60,7 +60,7 @@ jobs:
   unit-test:
     name: Unit Tests
     runs-on: ubuntu-latest
-    continue-on-error: true  # Don't fail pipeline on flaky tests
+    continue-on-error: true # Don't fail pipeline on flaky tests
     steps:
       - uses: actions/checkout@v4
 
@@ -92,7 +92,7 @@ jobs:
   e2e-test:
     name: E2E Tests
     runs-on: ubuntu-latest
-    continue-on-error: true  # E2E tests can be flaky in CI environments
+    continue-on-error: true # E2E tests can be flaky in CI environments
     steps:
       - uses: actions/checkout@v4
 

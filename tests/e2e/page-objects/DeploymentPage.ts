@@ -30,7 +30,7 @@ export class DeploymentPage {
   }
 
   async gotoProduction() {
-    await this.page.goto('/deployment/production')
+    await this.page.goto('/deployment/prod')
   }
 
   async selectEnvironment(env: string) {

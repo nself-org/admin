@@ -41,7 +41,7 @@
  *   GET  /api/project/status        — post-login routing logic
  *        middleware                 — session validation on every protected route
  *   POST /api/auth/validate-session — middleware's internal endpoint
- *   /build                          — destination page SSR + client JS bundles
+ *   /build or /init/1               — destination page SSR + client JS bundles
  *        (networkidle drain)        — warms remaining route module caches
  */
 
@@ -129,9 +129,11 @@ export default async function globalSetup(config: FullConfig) {
     await page.fill('input[type="password"]', TEST_PASSWORD)
     await page.click('button[type="submit"]')
 
-    // 60 s budget for the full cold-start chain.  After this, all routes and
-    // JS bundles are cached; subsequent auth in tests completes in < 5 s.
-    await page.waitForURL(/\/(dashboard|build|start)/, { timeout: 60000 })
+    // 60 s budget for the full cold-start chain.  In CI (no nself project),
+    // ProjectStateWrapper redirects to /init/1 (setup wizard).  With a real
+    // project the destination is /build, /start, or /dashboard.  After this,
+    // all routes and JS bundles are cached; subsequent auth in tests < 5 s.
+    await page.waitForURL(/\/(dashboard|build|start|init)/, { timeout: 60000 })
 
     // Drain the /build page's mount-time API calls so all server-side routes
     // are compiled and their module-level caches are warm before tests start.

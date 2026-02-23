@@ -6,6 +6,7 @@ const PUBLIC_ROUTES = [
   '/init', // Allow init pages for project setup
   '/api/auth/login',
   '/api/auth/init',
+  '/api/auth/csrf', // CSRF token must be fetchable before login (no session yet)
   '/api/auth/check', // Allow checking auth status
   '/api/auth/validate-session', // Allow session validation from middleware
   '/api/health',

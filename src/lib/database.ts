@@ -377,8 +377,18 @@ export async function setConfig(key: string, value: any): Promise<void> {
     })
   }
 
-  // Force save to disk
-  db?.saveDatabase()
+  // Force save to disk (await so caller can rely on data being persisted)
+  await new Promise<void>((resolve) => {
+    if (!db) {
+      resolve()
+      return
+    }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    ;(db as any).saveDatabase((err: unknown) => {
+      if (err) console.warn('Failed to persist config to disk:', err)
+      resolve()
+    })
+  })
 }
 
 export async function deleteConfig(key: string): Promise<void> {
@@ -444,6 +454,24 @@ export async function createSession(
 
   sessionsCollection?.insert(session)
   await addAuditLog('session_created', { userId, ip, rememberMe }, true)
+
+  // Persist the new session to disk immediately.  In Next.js dev mode with
+  // Turbopack, API routes may execute in separate worker threads that do NOT
+  // share the Node.js `global` object, so the validate-session route cannot
+  // see an in-memory-only session.  Flushing to disk here ensures the session
+  // is available to any thread that loads LokiJS from the file on its first
+  // request (before the 4-second autosave would have fired).
+  await new Promise<void>((resolve) => {
+    if (!db) {
+      resolve()
+      return
+    }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    ;(db as any).saveDatabase((err: unknown) => {
+      if (err) console.warn('Failed to persist session to disk:', err)
+      resolve()
+    })
+  })
 
   return token
 }

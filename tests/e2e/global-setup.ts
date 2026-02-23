@@ -134,10 +134,13 @@ export default async function globalSetup(config: FullConfig) {
     await page.click('button[type="submit"]')
 
     // 60 s budget for the full cold-start chain.  The project status mock
-    // ensures we land on /build (configured, not built).  Without the mock
-    // (local dev with a real project) it may be /start or /dashboard.
-    // After this, all routes and JS bundles are cached; subsequent auth < 5 s.
-    await page.waitForURL(/\/(dashboard|build|start|init)/, { timeout: 60000 })
+    // ensures the app stays on /build or / (depending on routing race order).
+    // Just wait until we've left /login — the exact destination doesn't matter
+    // for warmup.  After this, routes and JS bundles are cached; auth < 5 s.
+    await page.waitForURL(
+      (url) => !url.pathname.includes('/login'),
+      { timeout: 60000 },
+    )
 
     // Drain the /build page's mount-time API calls so all server-side routes
     // are compiled and their module-level caches are warm before tests start.

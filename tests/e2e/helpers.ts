@@ -63,10 +63,13 @@ export async function setupAuth(page: Page, password = TEST_PASSWORD) {
   })
   await page.fill('input[type="password"]', password)
   await page.click('button[type="submit"]')
-  // Wait for redirect after login.  With the project status mock, the app
-  // routes to /build (configured but not built).  Without the mock (e.g.,
-  // in local dev with a real project) it may go to /start or /dashboard.
-  await page.waitForURL(/\/(dashboard|build|start|init)/, { timeout: 20000 })
+  // Wait until we've left /login.  With the mock, the app may route to
+  // /build, /, /start, or /dashboard depending on race order between
+  // Layout's useEffect and the login page's getCorrectRoute call.
+  await page.waitForURL(
+    (url) => !url.pathname.includes('/login'),
+    { timeout: 20000 },
+  )
 }
 
 /**

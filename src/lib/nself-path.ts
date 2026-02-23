@@ -111,8 +111,9 @@ export function findNselfPathSync(): string {
 
   // 1. Check explicit environment variable first
   if (process.env.NSELF_CLI_PATH && fs.existsSync(process.env.NSELF_CLI_PATH)) {
-    _nselfPathSyncCache = process.env.NSELF_CLI_PATH
-    return _nselfPathSyncCache
+    const p = process.env.NSELF_CLI_PATH
+    _nselfPathSyncCache = p
+    return p
   }
 
   // 2. Check if nself is in PATH (one-time blocking execSync — cached after this)
@@ -125,10 +126,10 @@ export function findNselfPathSync(): string {
     const nselfPath = result.trim()
     if (nselfPath && fs.existsSync(nselfPath)) {
       _nselfPathSyncCache = nselfPath
-      return _nselfPathSyncCache
+      return nselfPath
     }
     _nselfPathSyncCache = 'nself'
-    return _nselfPathSyncCache
+    return 'nself'
   } catch {
     // Not in PATH, continue checking
   }
@@ -137,7 +138,7 @@ export function findNselfPathSync(): string {
   const devPath = getDevPath()
   if (fs.existsSync(devPath)) {
     _nselfPathSyncCache = devPath
-    return _nselfPathSyncCache
+    return devPath
   }
 
   // 4. Check common installation paths
@@ -145,13 +146,13 @@ export function findNselfPathSync(): string {
   for (const p of commonPaths) {
     if (fs.existsSync(p)) {
       _nselfPathSyncCache = p
-      return _nselfPathSyncCache
+      return p
     }
   }
 
   // Default to 'nself' and let it fail with a clear error
   _nselfPathSyncCache = 'nself'
-  return _nselfPathSyncCache
+  return 'nself'
 }
 
 /**

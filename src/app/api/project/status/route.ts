@@ -128,9 +128,7 @@ async function computeStatus(): Promise<StatusPayload> {
           dockerComposePath,
           'utf8',
         )
-        const projectMatch = dockerComposeContent.match(
-          /# Project: ([^\s\n]+)/,
-        )
+        const projectMatch = dockerComposeContent.match(/# Project: ([^\s\n]+)/)
         if (projectMatch) {
           projectPrefix = projectMatch[1].trim()
         }
@@ -174,11 +172,7 @@ async function computeStatus(): Promise<StatusPayload> {
       if (isRunning && runningServices.length === 0) {
         runningServices.push({
           name: name,
-          status: isHealthy
-            ? 'healthy'
-            : isUnhealthy
-              ? 'unhealthy'
-              : 'running',
+          status: isHealthy ? 'healthy' : isUnhealthy ? 'unhealthy' : 'running',
           details: status,
         })
       }

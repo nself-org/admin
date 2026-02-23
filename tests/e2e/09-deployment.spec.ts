@@ -69,7 +69,10 @@ test.describe('Deployment Flow', () => {
     }
   })
 
-  test.skip('should verify deployment success', async ({ deploymentPage, page }) => {
+  test.skip('should verify deployment success', async ({
+    deploymentPage,
+    page,
+  }) => {
     // Skipped: requires a running nself backend; deploy button is disabled in CI.
     await deploymentPage.gotoStaging()
 

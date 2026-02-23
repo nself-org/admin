@@ -41,7 +41,10 @@ test.describe('Help & Search Flow', () => {
     }
   })
 
-  test.skip('should navigate to documentation page', async ({ helpPage, page }) => {
+  test.skip('should navigate to documentation page', async ({
+    helpPage,
+    page,
+  }) => {
     // Skipped: doc page has no [data-testid="doc-content"] element yet.
     await helpPage.goto()
 
@@ -56,7 +59,10 @@ test.describe('Help & Search Flow', () => {
     }
   })
 
-  test.skip('should use command palette (Cmd+K)', async ({ helpPage, page }) => {
+  test.skip('should use command palette (Cmd+K)', async ({
+    helpPage,
+    page,
+  }) => {
     // Skipped: command palette feature not yet implemented.
     await helpPage.goto()
 

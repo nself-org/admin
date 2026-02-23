@@ -175,7 +175,11 @@ export async function POST(request: NextRequest) {
             { status: 400 },
           )
         }
-        return await writeConfigFile(file, content, options as WriteConfigOptions)
+        return await writeConfigFile(
+          file,
+          content,
+          options as WriteConfigOptions,
+        )
       case 'update':
         if (!file) {
           return NextResponse.json(
@@ -475,7 +479,10 @@ async function writeConfigFile(
   }
 }
 
-async function updateConfigFile(fileName: string, options: UpdateConfigOptions) {
+async function updateConfigFile(
+  fileName: string,
+  options: UpdateConfigOptions,
+) {
   const backendPath = getProjectPath()
 
   // Validate file path
@@ -940,15 +947,21 @@ async function applyEnvironmentChanges() {
   return { success: true, stdout, stderr }
 }
 
-
 const SENSITIVE_KEY_PATTERNS = [
-  /password/i, /secret/i, /key/i, /token/i, /credential/i, /private/i,
+  /password/i,
+  /secret/i,
+  /key/i,
+  /token/i,
+  /credential/i,
+  /private/i,
 ]
 
 function redactSensitive(env: Record<string, string>): Record<string, string> {
   const result: Record<string, string> = {}
   for (const [k, v] of Object.entries(env)) {
-    const isSensitive = SENSITIVE_KEY_PATTERNS.some(pattern => pattern.test(k))
+    const isSensitive = SENSITIVE_KEY_PATTERNS.some((pattern) =>
+      pattern.test(k),
+    )
     result[k] = isSensitive ? '***REDACTED***' : v
   }
   return result

@@ -20,7 +20,8 @@ const PUBLIC_ROUTES = [
 ]
 
 // Define API routes that should be protected
-const PROTECTED_API_ROUTES = [
+// API routes protected by middleware (cookie presence is checked above)
+const _PROTECTED_API_ROUTES = [
   '/api/docker',
   '/api/services',
   '/api/database',

@@ -1,7 +1,7 @@
 import { readEnvFile } from '@/lib/env-handler'
 import { getProjectPath } from '@/lib/paths'
-import * as Minio from 'minio'
 import { exec } from 'child_process'
+import * as Minio from 'minio'
 import { NextRequest, NextResponse } from 'next/server'
 import { promisify } from 'util'
 
@@ -303,28 +303,25 @@ async function listFiles(bucketName: string, filePath: string) {
     const stream = client.listObjectsV2(bucketName, prefix, false)
 
     await new Promise<void>((resolve, reject) => {
-      stream.on(
-        'data',
-        (obj: Minio.BucketItem) => {
-          if (obj.prefix) {
-            // Folder entry
-            files.push({
-              name: obj.prefix,
-              size: 0,
-              modified: '',
-              type: 'folder',
-            })
-          } else {
-            files.push({
-              name: obj.name ?? '',
-              size: obj.size ?? 0,
-              modified: obj.lastModified?.toISOString() ?? '',
-              type: 'file',
-              etag: obj.etag,
-            })
-          }
-        },
-      )
+      stream.on('data', (obj: Minio.BucketItem) => {
+        if (obj.prefix) {
+          // Folder entry
+          files.push({
+            name: obj.prefix,
+            size: 0,
+            modified: '',
+            type: 'folder',
+          })
+        } else {
+          files.push({
+            name: obj.name ?? '',
+            size: obj.size ?? 0,
+            modified: obj.lastModified?.toISOString() ?? '',
+            type: 'file',
+            etag: obj.etag,
+          })
+        }
+      })
       stream.on('error', reject)
       stream.on('end', resolve)
     })
@@ -473,7 +470,8 @@ async function getFileInfo(bucket: string, filePath: string) {
         size: stat.size,
         lastModified: stat.lastModified.toISOString(),
         etag: stat.etag,
-        contentType: stat.metaData?.['content-type'] ?? 'application/octet-stream',
+        contentType:
+          stat.metaData?.['content-type'] ?? 'application/octet-stream',
         metadata: stat.metaData,
         timestamp: new Date().toISOString(),
       },
@@ -556,10 +554,7 @@ async function createBucket(bucketName: string, options: { policy?: string }) {
   }
 }
 
-async function deleteBucket(
-  bucketName: string,
-  options: { force?: boolean },
-) {
+async function deleteBucket(bucketName: string, options: { force?: boolean }) {
   try {
     const client = await getMinIOClient()
 
@@ -629,9 +624,15 @@ async function uploadFile(
     const buffer = Buffer.from(file.content, 'base64')
     const contentType = file.contentType ?? 'application/octet-stream'
 
-    const etag = await client.putObject(bucket, file.name, buffer, buffer.length, {
-      'Content-Type': contentType,
-    })
+    const etag = await client.putObject(
+      bucket,
+      file.name,
+      buffer,
+      buffer.length,
+      {
+        'Content-Type': contentType,
+      },
+    )
 
     return NextResponse.json({
       success: true,
@@ -691,10 +692,8 @@ async function createFolder(
 
     // Normalise paths
     const normalised = parentPath.replace(/^\/+/, '').replace(/\/?$/, '/')
-    const objectName = `${normalised}${folderName.replace(/\/?$/, '/')}`.replace(
-      /^\/+/,
-      '',
-    )
+    const objectName =
+      `${normalised}${folderName.replace(/\/?$/, '/')}`.replace(/^\/+/, '')
 
     // MinIO has no real folder concept — create a zero-byte placeholder
     const emptyBuffer = Buffer.alloc(0)
@@ -744,7 +743,12 @@ async function copyFile(options: {
 
     const client = await getMinIOClient()
     const conds = new Minio.CopyConditions()
-    await client.copyObject(destBucket, destObject, `/${sourceBucket}/${sourceObject}`, conds)
+    await client.copyObject(
+      destBucket,
+      destObject,
+      `/${sourceBucket}/${sourceObject}`,
+      conds,
+    )
 
     return NextResponse.json({
       success: true,
@@ -792,7 +796,12 @@ async function moveFile(options: {
 
     // Copy then delete — MinIO has no native move
     const conds = new Minio.CopyConditions()
-    await client.copyObject(destBucket, destObject, `/${sourceBucket}/${sourceObject}`, conds)
+    await client.copyObject(
+      destBucket,
+      destObject,
+      `/${sourceBucket}/${sourceObject}`,
+      conds,
+    )
     await client.removeObject(sourceBucket, sourceObject)
 
     return NextResponse.json({
@@ -831,8 +840,7 @@ async function setFilePermissions(
     }
 
     const client = await getMinIOClient()
-    const makePublic =
-      options.isPublic === true || options.policy === 'public'
+    const makePublic = options.isPublic === true || options.policy === 'public'
 
     if (file) {
       // Object-level: set tag to mark public/private intent
@@ -997,9 +1005,7 @@ async function getBucketStats(bucketName: string): Promise<{
 
         const dotPos = obj.name.lastIndexOf('.')
         const ext =
-          dotPos !== -1
-            ? obj.name.substring(dotPos + 1).toLowerCase()
-            : 'other'
+          dotPos !== -1 ? obj.name.substring(dotPos + 1).toLowerCase() : 'other'
         fileTypes[ext] = (fileTypes[ext] ?? 0) + 1
       })
       stream.on('error', reject)

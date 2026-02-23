@@ -152,7 +152,10 @@ export async function GET(request: NextRequest) {
 
     const validation = querySchema.safeParse(params)
     if (!validation.success) {
-      return NextResponse.json({ error: 'Invalid query parameters' }, { status: 400 })
+      return NextResponse.json(
+        { error: 'Invalid query parameters' },
+        { status: 400 },
+      )
     }
     const detailed = params.detailed === 'true'
     const withStats = params.stats === 'true'

@@ -66,10 +66,9 @@ export async function setupAuth(page: Page, password = TEST_PASSWORD) {
   // Wait until we've left /login.  With the mock, the app may route to
   // /build, /, /start, or /dashboard depending on race order between
   // Layout's useEffect and the login page's getCorrectRoute call.
-  await page.waitForURL(
-    (url) => !url.pathname.includes('/login'),
-    { timeout: 20000 },
-  )
+  await page.waitForURL((url) => !url.pathname.includes('/login'), {
+    timeout: 20000,
+  })
 }
 
 /**

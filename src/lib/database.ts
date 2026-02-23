@@ -12,6 +12,16 @@ import Loki from 'lokijs'
 import path from 'path'
 import { getProjectPath } from './paths'
 
+// Use Node.js global to share the Loki instance across all route bundles in
+// Next.js dev mode. Each API route compiles as its own Webpack bundle with its
+// own module instance — module-level variables are per-bundle and NOT shared.
+// The Node.js `global` object IS shared across all bundles in the same process.
+declare global {
+  var __lokiDb: Loki | null | undefined
+  var __lokiIsInitialized: boolean | undefined
+  var __lokiInitPromise: Promise<void> | null | undefined
+}
+
 // Database configuration
 const isDevelopment = process.env.NODE_ENV === 'development'
 const DB_NAME = 'nadmin.db'
@@ -134,15 +144,42 @@ export interface CollaborationCursorItem {
   lastUpdated: Date
 }
 
+/** Refresh all collection references from the shared db instance. */
+function syncCollectionsFromDb(): void {
+  if (!db) return
+  configCollection = db.getCollection('config')
+  sessionsCollection = db.getCollection('sessions')
+  projectCacheCollection = db.getCollection('projectCache')
+  auditLogCollection = db.getCollection('auditLog')
+  tenantsCollection = db.getCollection('tenants')
+  organizationsCollection = db.getCollection('organizations')
+  tenantMembersCollection = db.getCollection('tenantMembers')
+  orgMembersCollection = db.getCollection('orgMembers')
+  teamsCollection = db.getCollection('teams')
+  tenantDomainsCollection = db.getCollection('tenantDomains')
+  userPresenceCollection = db.getCollection('userPresence')
+  documentStateCollection = db.getCollection('documentState')
+  collaborationCursorCollection = db.getCollection('collaborationCursor')
+}
+
 // Initialize database with race condition protection
 export async function initDatabase(): Promise<void> {
-  // If already initialized, return immediately
-  if (isInitialized && db && configCollection) return
+  // Sync state from Node.js global so all route bundles share one Loki instance.
+  // In Next.js dev mode each API route is compiled as its own Webpack bundle
+  // with an independent module instance; global is shared across all bundles.
+  if (global.__lokiDb != null && db == null) db = global.__lokiDb
+  if (global.__lokiIsInitialized === true) isInitialized = true
+  if (global.__lokiInitPromise !== undefined)
+    initializationPromise = global.__lokiInitPromise
 
-  // If initialization is in progress, wait for it
-  if (initializationPromise) {
-    return initializationPromise
+  // If already initialized (possibly by another bundle), wire up collections
+  if (isInitialized && db && !configCollection) {
+    syncCollectionsFromDb()
+    return
   }
+
+  // If already initialized and collections are set, return immediately
+  if (isInitialized && db && configCollection) return
 
   // Reset initialization flag if db is null
   if (!db) {
@@ -151,6 +188,15 @@ export async function initDatabase(): Promise<void> {
 
   // Ensure directory exists before initializing database
   ensureDataDir()
+
+  // If initialization is in progress (in this or another bundle), wait for it
+  if (initializationPromise) {
+    await initializationPromise
+    // After another bundle's init completes, sync db and collection references
+    if (global.__lokiDb != null && db == null) db = global.__lokiDb
+    if (db && !configCollection) syncCollectionsFromDb()
+    return
+  }
 
   // Create and store the initialization promise to prevent race conditions
   initializationPromise = new Promise<void>((resolve, reject) => {
@@ -264,16 +310,23 @@ export async function initDatabase(): Promise<void> {
             })
 
           isInitialized = true
+          global.__lokiIsInitialized = true
+          global.__lokiDb = db
           initializationPromise = null // Clear the promise after successful init
+          global.__lokiInitPromise = null
           console.log('Database initialized at:', DB_PATH)
           resolve()
         } catch (error) {
           initializationPromise = null // Clear the promise on error to allow retry
+          global.__lokiInitPromise = null
           reject(error)
         }
       },
     })
   })
+
+  // Publish the promise to global so other route bundles can wait on it
+  global.__lokiInitPromise = initializationPromise
 
   return initializationPromise
 }

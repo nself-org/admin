@@ -27,30 +27,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const checkAuth = async () => {
     try {
-      // First check if we have a session cookie at all
-      // This avoids making unnecessary API calls that result in 401 errors
-      const hasCookie = document.cookie.includes('nself-session')
-
-      if (!hasCookie) {
-        // No session cookie, so don't even try to authenticate
-        setIsAuthenticated(false)
-        return
-      }
-
-      // We have a cookie, now check if it's valid
+      // Validate session via the API.  The session cookie is httpOnly so
+      // document.cookie cannot see it — credentials: 'include' sends it
+      // automatically and the server reads it from the request headers.
       const response = await fetch('/api/auth/check', {
         method: 'GET',
-        credentials: 'include', // Include cookies
+        credentials: 'include',
       })
 
       if (response.ok) {
         setIsAuthenticated(true)
       } else {
-        // Session cookie exists but is invalid or expired
         setIsAuthenticated(false)
       }
     } catch (_error) {
-      // Network error - also treat as not authenticated
+      // Network error - treat as not authenticated
       setIsAuthenticated(false)
     }
   }

@@ -242,10 +242,22 @@ export async function initDatabase(): Promise<void> {
             db!.getCollection('sessions') ||
             db!.addCollection('sessions', {
               unique: ['token'],
-              indices: ['token', 'userId'],
+              indices: ['userId'],
               ttl: 7 * 24 * 60 * 60 * 1000, // 7 days TTL to match SESSION_DURATION_HOURS
               ttlInterval: 60000, // Check every minute
             })
+
+          // Remove any stale binary index on 'token' that may have been persisted by
+          // an older database file.  We look up sessions via the unique-index (O(1)
+          // hash-map) which is unaffected by LokiJS's dirty-rebuild code path.
+          // Keeping a binary index on 'token' would cause it to be flagged dirty on
+          // every update() call; the subsequent rebuild can return incorrect results
+          // in LokiJS 1.5.12, making validate-session return 401 on the second call.
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          if ((sessionsCollection as any).binaryIndices?.['token']) {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            delete (sessionsCollection as any).binaryIndices['token']
+          }
 
           projectCacheCollection =
             db!.getCollection('projectCache') ||
@@ -478,7 +490,11 @@ export async function createSession(
 
 export async function getSession(token: string): Promise<SessionItem | null> {
   await initDatabase()
-  const session = sessionsCollection?.findOne({ token })
+  // Use the unique-index O(1) hash-map lookup (.by()) instead of findOne().
+  // findOne() uses the binary index, which is flagged dirty by every update()
+  // call and can return null during the rebuild in LokiJS 1.5.12.
+  // The unique index is always consistent regardless of binary index state.
+  const session = (sessionsCollection?.by('token', token) as SessionItem | undefined) ?? null
 
   if (!session) return null
 
@@ -520,7 +536,7 @@ export async function getSession(token: string): Promise<SessionItem | null> {
 
 export async function deleteSession(token: string): Promise<void> {
   await initDatabase()
-  const session = sessionsCollection?.findOne({ token })
+  const session = (sessionsCollection?.by('token', token) as SessionItem | undefined) ?? null
   if (session) {
     sessionsCollection?.remove(session)
     await addAuditLog('session_deleted', { userId: session.userId }, true)
@@ -586,7 +602,7 @@ export async function refreshSession(
   token: string,
 ): Promise<SessionItem | null> {
   await initDatabase()
-  const session = sessionsCollection?.findOne({ token })
+  const session = (sessionsCollection?.by('token', token) as SessionItem | undefined) ?? null
 
   if (!session) return null
 

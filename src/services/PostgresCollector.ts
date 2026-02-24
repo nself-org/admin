@@ -108,7 +108,13 @@ export class PostgresCollector {
       this.validateContainerName(this.containerName)
       const { stdout } = await this.execWithTimeout(
         'docker',
-        ['ps', '--filter', `name=${this.containerName}`, '--format', '{{.Status}}'],
+        [
+          'ps',
+          '--filter',
+          `name=${this.containerName}`,
+          '--format',
+          '{{.Status}}',
+        ],
         2000,
       )
       return stdout.trim().toLowerCase().includes('up')
@@ -133,7 +139,18 @@ export class PostgresCollector {
 
       const { stdout } = await this.execWithTimeout(
         'docker',
-        ['exec', this.containerName, 'psql', '-U', 'postgres', '-d', 'nself', '-t', '-c', query],
+        [
+          'exec',
+          this.containerName,
+          'psql',
+          '-U',
+          'postgres',
+          '-d',
+          'nself',
+          '-t',
+          '-c',
+          query,
+        ],
         5000,
       )
 
@@ -174,7 +191,16 @@ export class PostgresCollector {
 
       const { stdout } = await this.execWithTimeout(
         'docker',
-        ['exec', this.containerName, 'psql', '-U', 'postgres', '-t', '-c', query],
+        [
+          'exec',
+          this.containerName,
+          'psql',
+          '-U',
+          'postgres',
+          '-t',
+          '-c',
+          query,
+        ],
         5000,
       )
 
@@ -201,7 +227,16 @@ export class PostgresCollector {
       const totalQuery = `SELECT pg_size_pretty(sum(pg_database_size(datname))) FROM pg_database`
       const { stdout: totalOut } = await this.execWithTimeout(
         'docker',
-        ['exec', this.containerName, 'psql', '-U', 'postgres', '-t', '-c', totalQuery],
+        [
+          'exec',
+          this.containerName,
+          'psql',
+          '-U',
+          'postgres',
+          '-t',
+          '-c',
+          totalQuery,
+        ],
         5000,
       )
 
@@ -232,7 +267,18 @@ export class PostgresCollector {
 
       const { stdout } = await this.execWithTimeout(
         'docker',
-        ['exec', this.containerName, 'psql', '-U', 'postgres', '-d', 'nself', '-t', '-c', query],
+        [
+          'exec',
+          this.containerName,
+          'psql',
+          '-U',
+          'postgres',
+          '-d',
+          'nself',
+          '-t',
+          '-c',
+          query,
+        ],
         5000,
       )
 

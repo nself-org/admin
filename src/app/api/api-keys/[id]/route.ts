@@ -8,7 +8,10 @@ interface RouteParams {
 /**
  * GET /api/api-keys/[id] - Get a single API key by ID
  */
-export async function GET(_request: NextRequest, { params }: RouteParams): Promise<NextResponse> {
+export async function GET(
+  _request: NextRequest,
+  { params }: RouteParams,
+): Promise<NextResponse> {
   try {
     const { id } = await params
     const apiKey = await apiKeysApi.getApiKeyById(id)
@@ -48,7 +51,10 @@ export async function GET(_request: NextRequest, { params }: RouteParams): Promi
  *   - permissions?: ApiKeyPermission[]
  *   - expiresAt?: string
  */
-export async function PATCH(request: NextRequest, { params }: RouteParams): Promise<NextResponse> {
+export async function PATCH(
+  request: NextRequest,
+  { params }: RouteParams,
+): Promise<NextResponse> {
   try {
     const { id } = await params
     const body = await request.json()
@@ -121,7 +127,10 @@ export async function PATCH(request: NextRequest, { params }: RouteParams): Prom
 /**
  * DELETE /api/api-keys/[id] - Delete an API key permanently
  */
-export async function DELETE(_request: NextRequest, { params }: RouteParams): Promise<NextResponse> {
+export async function DELETE(
+  _request: NextRequest,
+  { params }: RouteParams,
+): Promise<NextResponse> {
   try {
     const { id } = await params
     const deleted = await apiKeysApi.deleteApiKey(id)

@@ -10,7 +10,10 @@ interface RouteParams {
 /**
  * POST /api/notifications/[id]/read - Mark a notification as read
  */
-export async function POST(request: NextRequest, { params }: RouteParams): Promise<NextResponse> {
+export async function POST(
+  request: NextRequest,
+  { params }: RouteParams,
+): Promise<NextResponse> {
   const startTime = Date.now()
 
   try {

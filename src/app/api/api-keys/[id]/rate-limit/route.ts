@@ -15,7 +15,10 @@ interface RouteParams {
  *   - resetAt: string (ISO date)
  *   - isLimited: boolean
  */
-export async function GET(_request: NextRequest, { params }: RouteParams): Promise<NextResponse> {
+export async function GET(
+  _request: NextRequest,
+  { params }: RouteParams,
+): Promise<NextResponse> {
   try {
     const { id } = await params
 

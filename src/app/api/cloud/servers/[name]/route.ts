@@ -23,7 +23,10 @@ interface RouteParams {
  * GET /api/cloud/servers/[name] - Get server status
  * Executes: nself cloud server status {name} --json
  */
-export async function GET(_request: NextRequest, { params }: RouteParams): Promise<NextResponse> {
+export async function GET(
+  _request: NextRequest,
+  { params }: RouteParams,
+): Promise<NextResponse> {
   const startTime = Date.now()
   const { name } = await params
 
@@ -104,7 +107,10 @@ export async function GET(_request: NextRequest, { params }: RouteParams): Promi
  * DELETE /api/cloud/servers/[name] - Destroy server
  * Executes: nself cloud server destroy {name}
  */
-export async function DELETE(_request: NextRequest, { params }: RouteParams): Promise<NextResponse> {
+export async function DELETE(
+  _request: NextRequest,
+  { params }: RouteParams,
+): Promise<NextResponse> {
   const startTime = Date.now()
   const { name } = await params
 

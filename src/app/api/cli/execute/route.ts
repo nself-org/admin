@@ -108,7 +108,11 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       // Reject commands with shell metacharacters before any parsing
       if (/[;&|`$<>\\]/.test(body.command)) {
         return NextResponse.json(
-          { success: false, error: 'Invalid command format: shell metacharacters are not allowed' },
+          {
+            success: false,
+            error:
+              'Invalid command format: shell metacharacters are not allowed',
+          },
           { status: 400 },
         )
       }
@@ -250,7 +254,11 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       })
     } catch (execError) {
       // Command failed but we still want to return the output
-      const execErr = execError as { message?: string; stdout?: string; stderr?: string }
+      const execErr = execError as {
+        message?: string
+        stdout?: string
+        stderr?: string
+      }
       return NextResponse.json({
         success: false,
         error: execErr.message,

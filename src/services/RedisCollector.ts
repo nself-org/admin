@@ -101,7 +101,13 @@ export class RedisCollector {
       this.validateContainerName(this.containerName)
       const { stdout } = await this.execWithTimeout(
         'docker',
-        ['ps', '--filter', `name=${this.containerName}`, '--format', '{{.Status}}'],
+        [
+          'ps',
+          '--filter',
+          `name=${this.containerName}`,
+          '--format',
+          '{{.Status}}',
+        ],
         2000,
       )
       return stdout.trim().toLowerCase().includes('up')

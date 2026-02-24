@@ -7,7 +7,7 @@ const execFileAsync = promisify(execFile)
 // Valid container ID pattern (Docker container IDs are hex strings or names)
 const VALID_CONTAINER_ID = /^[a-zA-Z0-9][a-zA-Z0-9_.-]*$/
 const VALID_TAIL = /^\d{1,5}$/
-// eslint-disable-next-line security/detect-unsafe-regex
+ 
 const VALID_SINCE =
   /^(\d+[smhd]?|\d{4}-\d{2}-\d{2}(T\d{2}:\d{2}:\d{2}(Z|[+-]\d{2}:\d{2})?)?)$/
 

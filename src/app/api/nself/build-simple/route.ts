@@ -203,7 +203,6 @@ export async function POST(_request: NextRequest): Promise<NextResponse> {
     // Get project path - use the same as other APIs
     const projectPath = getProjectPath()
 
-
     // Ensure project directory exists
     try {
       await fs.access(projectPath)
@@ -280,7 +279,6 @@ export async function POST(_request: NextRequest): Promise<NextResponse> {
 
     const nginxPath = path.join(projectPath, 'nginx/conf.d/default.conf')
     await fs.writeFile(nginxPath, nginxConfig, 'utf-8').catch(() => {})
-
 
     return NextResponse.json({
       success: true,

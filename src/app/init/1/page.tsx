@@ -34,7 +34,6 @@ interface WizardConfig {
   [key: string]: unknown
 }
 
-
 import { BackupConfiguration } from '@/components/BackupConfiguration'
 import { useAutoSave } from '@/hooks/useAutoSave'
 import { ArrowRight, ChevronDown, Eye, EyeOff } from 'lucide-react'
@@ -669,16 +668,19 @@ export default function InitStep1() {
       {/* Backup Configuration */}
       <div className="pt-2">
         <BackupConfiguration
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          value={(config.backup as any) ?? {
-            enabled: false,
-            types: { database: true, images: false, configs: false },
-            schedule: { frequency: 'daily', time: '02:00' },
-            retention: 7,
-            compression: true,
-            encryption: false,
-          }}
-          onChange={(backup) => setConfig({ ...config, backup: backup as WizardBackupConfig })}
+          value={
+            (config.backup as any) ?? {
+              enabled: false,
+              types: { database: true, images: false, configs: false },
+              schedule: { frequency: 'daily', time: '02:00' },
+              retention: 7,
+              compression: true,
+              encryption: false,
+            }
+          }
+          onChange={(backup) =>
+            setConfig({ ...config, backup: backup as WizardBackupConfig })
+          }
         />
       </div>
 

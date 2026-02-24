@@ -39,8 +39,7 @@ export class HasuraCollector {
 
   private readonly CACHE_TTL = 10000 // 10 seconds cache
   private readonly containerName = 'nself_hasura'
-  private readonly adminSecret =
-    process.env.HASURA_GRAPHQL_ADMIN_SECRET || ''
+  private readonly adminSecret = process.env.HASURA_GRAPHQL_ADMIN_SECRET || ''
 
   /**
    * Collect all Hasura statistics
@@ -104,7 +103,13 @@ export class HasuraCollector {
       this.validateContainerName(this.containerName)
       const { stdout } = await this.execWithTimeout(
         'docker',
-        ['ps', '--filter', `name=${this.containerName}`, '--format', '{{.Status}}'],
+        [
+          'ps',
+          '--filter',
+          `name=${this.containerName}`,
+          '--format',
+          '{{.Status}}',
+        ],
         2000,
       )
       return stdout.trim().toLowerCase().includes('up')
@@ -128,11 +133,18 @@ export class HasuraCollector {
       const { stdout } = await this.execWithTimeout(
         'docker',
         [
-          'exec', this.containerName,
-          'curl', '-s', '-X', 'POST',
-          '-H', 'Content-Type: application/json',
-          '-H', `X-Hasura-Admin-Secret: ${this.adminSecret}`,
-          '-d', queryBody,
+          'exec',
+          this.containerName,
+          'curl',
+          '-s',
+          '-X',
+          'POST',
+          '-H',
+          'Content-Type: application/json',
+          '-H',
+          `X-Hasura-Admin-Secret: ${this.adminSecret}`,
+          '-d',
+          queryBody,
           'http://localhost:8080/v1/metadata',
         ],
         10000,
@@ -204,11 +216,18 @@ export class HasuraCollector {
       const { stdout } = await this.execWithTimeout(
         'docker',
         [
-          'exec', this.containerName,
-          'curl', '-s', '-X', 'POST',
-          '-H', 'Content-Type: application/json',
-          '-H', `X-Hasura-Admin-Secret: ${this.adminSecret}`,
-          '-d', inconsistentBody,
+          'exec',
+          this.containerName,
+          'curl',
+          '-s',
+          '-X',
+          'POST',
+          '-H',
+          'Content-Type: application/json',
+          '-H',
+          `X-Hasura-Admin-Secret: ${this.adminSecret}`,
+          '-d',
+          inconsistentBody,
           'http://localhost:8080/v1/metadata',
         ],
         5000,
@@ -222,9 +241,12 @@ export class HasuraCollector {
       const { stdout: versionOut } = await this.execWithTimeout(
         'docker',
         [
-          'exec', this.containerName,
-          'curl', '-s',
-          '-H', `X-Hasura-Admin-Secret: ${this.adminSecret}`,
+          'exec',
+          this.containerName,
+          'curl',
+          '-s',
+          '-H',
+          `X-Hasura-Admin-Secret: ${this.adminSecret}`,
           'http://localhost:8080/v1/version',
         ],
         5000,
@@ -298,7 +320,10 @@ export class HasuraCollector {
         reject(new Error(`Command timed out: ${bin} ${args.join(' ')}`))
       }, timeout)
 
-      execFileAsync(bin, args, { signal: controller.signal, maxBuffer: options.maxBuffer })
+      execFileAsync(bin, args, {
+        signal: controller.signal,
+        maxBuffer: options.maxBuffer,
+      })
         .then(({ stdout, stderr }) => {
           clearTimeout(timer)
           resolve({ stdout, stderr })

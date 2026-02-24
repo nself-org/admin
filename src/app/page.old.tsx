@@ -1139,7 +1139,10 @@ export default function DashboardPage() {
   )
 
   // Project info for name prefix stripping
-  const [projectInfo, setProjectInfo] = useState<{ projectName?: string; [key: string]: unknown } | null>(null)
+  const [projectInfo, setProjectInfo] = useState<{
+    projectName?: string
+    [key: string]: unknown
+  } | null>(null)
 
   // Mark initial load complete after first render
   useEffect(() => {

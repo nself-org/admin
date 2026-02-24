@@ -441,8 +441,7 @@ export async function GET(_request: NextRequest): Promise<NextResponse> {
             },
           )
         }
-      } catch {
-      }
+      } catch {}
     }
 
     return NextResponse.json({

@@ -7,7 +7,6 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     const { projectName = 'my_project' } = await request.json()
     const projectPath = getProjectPath()
 
-
     // Run nself init --full using secure CLI wrapper
 
     const result = await nselfInit({ full: true })

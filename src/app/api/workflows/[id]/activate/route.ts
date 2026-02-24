@@ -9,7 +9,10 @@ interface RouteParams {
  * POST /api/workflows/[id]/activate
  * Activate a workflow
  */
-export async function POST(_request: NextRequest, { params }: RouteParams): Promise<NextResponse> {
+export async function POST(
+  _request: NextRequest,
+  { params }: RouteParams,
+): Promise<NextResponse> {
   try {
     const { id } = await params
 

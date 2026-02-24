@@ -13,7 +13,6 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     const config = await request.json()
     const projectPath = getProjectPath()
 
-
     // Find nself CLI using the centralized utility
     const nselfPath = await findNselfPath()
 

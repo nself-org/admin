@@ -6,7 +6,10 @@ interface RouteContext {
 }
 
 // GET /api/reports/executions/[id] - Get a single execution
-export async function GET(_request: NextRequest, context: RouteContext): Promise<NextResponse> {
+export async function GET(
+  _request: NextRequest,
+  context: RouteContext,
+): Promise<NextResponse> {
   try {
     const { id } = await context.params
     const execution = await reports.getExecutionById(id)

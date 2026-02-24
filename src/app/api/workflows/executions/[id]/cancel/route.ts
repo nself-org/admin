@@ -9,7 +9,10 @@ interface RouteParams {
  * POST /api/workflows/executions/[id]/cancel
  * Cancel a running or pending workflow execution
  */
-export async function POST(_request: NextRequest, { params }: RouteParams): Promise<NextResponse> {
+export async function POST(
+  _request: NextRequest,
+  { params }: RouteParams,
+): Promise<NextResponse> {
   try {
     const { id } = await params
 

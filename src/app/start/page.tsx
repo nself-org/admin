@@ -41,7 +41,6 @@ interface ServiceDetail {
   }
 }
 
-
 import { Button } from '@/components/Button'
 import { GridPattern } from '@/components/GridPattern'
 import { HeroPattern } from '@/components/HeroPattern'
@@ -495,7 +494,10 @@ function getServiceDisplayName(name: string): string {
 export default function StartPage() {
   const router = useRouter()
   const [projectInfo, setProjectInfo] = useState<ProjectInfo | null>(null)
-  const [_serviceDetails, setServiceDetails] = useState<Record<string, ServiceDetail> | null>(null)
+  const [_serviceDetails, setServiceDetails] = useState<Record<
+    string,
+    ServiceDetail
+  > | null>(null)
   const [_loadingServices, setLoadingServices] = useState(true)
   const [starting, setStarting] = useState(false)
   const [showDetails, setShowDetails] = useState(false)
@@ -875,13 +877,14 @@ export default function StartPage() {
                     {showDetails && (
                       <div className="mt-3 space-y-3 border-t border-zinc-200 pt-3 dark:border-zinc-700">
                         {/* Required Services */}
-                        {(projectInfo.servicesByCategory?.required?.length ?? 0) >
-                          0 && (
+                        {(projectInfo.servicesByCategory?.required?.length ??
+                          0) > 0 && (
                           <div>
                             <div className="mb-2 flex items-center space-x-2">
                               <span className="text-sm font-semibold text-blue-600 dark:text-blue-400">
                                 Required (
-                                {projectInfo.servicesByCategory?.required?.length ?? 0}
+                                {projectInfo.servicesByCategory?.required
+                                  ?.length ?? 0}
                                 )
                               </span>
                             </div>
@@ -898,7 +901,8 @@ export default function StartPage() {
                                             `Container: ${serviceData.container_name}`,
                                           serviceData.image &&
                                             `Image: ${serviceData.image}`,
-                                          (serviceData.ports?.length ?? 0) > 0 &&
+                                          (serviceData.ports?.length ?? 0) >
+                                            0 &&
                                             `Ports: ${serviceData.ports?.map((p: string) => p.split(':')[0]).join(', ')}`,
                                           serviceData.restart &&
                                             `Restart: ${serviceData.restart}`,
@@ -951,13 +955,14 @@ export default function StartPage() {
                         )}
 
                         {/* Optional Services */}
-                        {(projectInfo.servicesByCategory?.optional?.length ?? 0) >
-                          0 && (
+                        {(projectInfo.servicesByCategory?.optional?.length ??
+                          0) > 0 && (
                           <div>
                             <div className="mb-2 flex items-center space-x-2">
                               <span className="text-sm font-semibold text-purple-600 dark:text-purple-400">
                                 Optional (
-                                {projectInfo.servicesByCategory?.optional?.length ?? 0}
+                                {projectInfo.servicesByCategory?.optional
+                                  ?.length ?? 0}
                                 )
                               </span>
                             </div>
@@ -974,7 +979,8 @@ export default function StartPage() {
                                             `Container: ${serviceData.container_name}`,
                                           serviceData.image &&
                                             `Image: ${serviceData.image}`,
-                                          (serviceData.ports?.length ?? 0) > 0 &&
+                                          (serviceData.ports?.length ?? 0) >
+                                            0 &&
                                             `Ports: ${serviceData.ports?.map((p: string) => p.split(':')[0]).join(', ')}`,
                                           serviceData.restart &&
                                             `Restart: ${serviceData.restart}`,
@@ -1027,12 +1033,15 @@ export default function StartPage() {
                         )}
 
                         {/* Custom Services */}
-                        {(projectInfo.servicesByCategory?.user?.length ?? 0) > 0 && (
+                        {(projectInfo.servicesByCategory?.user?.length ?? 0) >
+                          0 && (
                           <div>
                             <div className="mb-2 flex items-center space-x-2">
                               <span className="text-sm font-semibold text-orange-600 dark:text-orange-400">
                                 Custom (
-                                {projectInfo.servicesByCategory?.user?.length ?? 0})
+                                {projectInfo.servicesByCategory?.user?.length ??
+                                  0}
+                                )
                               </span>
                             </div>
                             <div className="ml-4 space-y-1">
@@ -1047,7 +1056,8 @@ export default function StartPage() {
                                             `Container: ${serviceData.container_name}`,
                                           serviceData.image &&
                                             `Image: ${serviceData.image}`,
-                                          (serviceData.ports?.length ?? 0) > 0 &&
+                                          (serviceData.ports?.length ?? 0) >
+                                            0 &&
                                             `Ports: ${serviceData.ports?.map((p: string) => p.split(':')[0]).join(', ')}`,
                                           serviceData.customInfo?.type &&
                                             `Type: ${serviceData.customInfo.type}`,

@@ -34,7 +34,10 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     }
 
     const { query, database, timeout: rawTimeout = 30000 } = validation.data
-    const timeout = Math.max(1000, Math.min(typeof rawTimeout === 'number' ? rawTimeout : 30000, 300000))
+    const timeout = Math.max(
+      1000,
+      Math.min(typeof rawTimeout === 'number' ? rawTimeout : 30000, 300000),
+    )
 
     // Execute query using nself CLI
     const result = await executeNselfCommand('db', ['query', '--json', query], {

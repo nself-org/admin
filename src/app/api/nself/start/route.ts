@@ -100,7 +100,10 @@ export async function POST(_request: NextRequest): Promise<NextResponse> {
         })
       }
     } catch (statusError) {
-      const statusErr = statusError instanceof Error ? statusError : new Error(String(statusError))
+      const statusErr =
+        statusError instanceof Error
+          ? statusError
+          : new Error(String(statusError))
       console.warn('Could not get detailed status:', statusErr.message)
     }
 

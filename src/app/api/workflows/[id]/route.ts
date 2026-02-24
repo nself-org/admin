@@ -9,7 +9,10 @@ interface RouteParams {
  * GET /api/workflows/[id]
  * Get a single workflow by ID
  */
-export async function GET(_request: NextRequest, { params }: RouteParams): Promise<NextResponse> {
+export async function GET(
+  _request: NextRequest,
+  { params }: RouteParams,
+): Promise<NextResponse> {
   try {
     const { id } = await params
 
@@ -42,7 +45,10 @@ export async function GET(_request: NextRequest, { params }: RouteParams): Promi
  * PATCH /api/workflows/[id]
  * Update a workflow
  */
-export async function PATCH(request: NextRequest, { params }: RouteParams): Promise<NextResponse> {
+export async function PATCH(
+  request: NextRequest,
+  { params }: RouteParams,
+): Promise<NextResponse> {
   try {
     const { id } = await params
     const body = await request.json()
@@ -87,7 +93,10 @@ export async function PATCH(request: NextRequest, { params }: RouteParams): Prom
  * DELETE /api/workflows/[id]
  * Delete a workflow
  */
-export async function DELETE(_request: NextRequest, { params }: RouteParams): Promise<NextResponse> {
+export async function DELETE(
+  _request: NextRequest,
+  { params }: RouteParams,
+): Promise<NextResponse> {
   try {
     const { id } = await params
 

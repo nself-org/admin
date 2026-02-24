@@ -107,7 +107,10 @@ export class DockerStatsCollector {
         reject(new Error(`Command timed out: ${bin} ${args.join(' ')}`))
       }, timeout)
 
-      execFileAsync(bin, args, { signal: controller.signal, maxBuffer: options.maxBuffer })
+      execFileAsync(bin, args, {
+        signal: controller.signal,
+        maxBuffer: options.maxBuffer,
+      })
         .then(({ stdout, stderr }) => {
           clearTimeout(timer)
           resolve({ stdout, stderr })
@@ -190,7 +193,10 @@ export class DockerStatsCollector {
         { maxBuffer: 5 * 1024 * 1024 },
       )
 
-      const lines = stdout.trim().split('\n').filter((l) => l)
+      const lines = stdout
+        .trim()
+        .split('\n')
+        .filter((l) => l)
       let totalCpu = 0
       let totalMemUsedMiB = 0
       let memTotal = 8 // default GB

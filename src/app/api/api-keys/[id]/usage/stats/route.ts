@@ -17,7 +17,10 @@ interface RouteParams {
  *   - Top endpoints
  *   - Error rate
  */
-export async function GET(_request: NextRequest, { params }: RouteParams): Promise<NextResponse> {
+export async function GET(
+  _request: NextRequest,
+  { params }: RouteParams,
+): Promise<NextResponse> {
   try {
     const { id } = await params
 

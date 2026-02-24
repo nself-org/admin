@@ -6,7 +6,10 @@ interface RouteContext {
 }
 
 // GET /api/reports/schedules/[id] - Get a single schedule
-export async function GET(_request: NextRequest, context: RouteContext): Promise<NextResponse> {
+export async function GET(
+  _request: NextRequest,
+  context: RouteContext,
+): Promise<NextResponse> {
   try {
     const { id } = await context.params
     const schedule = await reports.getScheduleById(id)
@@ -36,7 +39,10 @@ export async function GET(_request: NextRequest, context: RouteContext): Promise
 }
 
 // PATCH /api/reports/schedules/[id] - Update a schedule
-export async function PATCH(request: NextRequest, context: RouteContext): Promise<NextResponse> {
+export async function PATCH(
+  request: NextRequest,
+  context: RouteContext,
+): Promise<NextResponse> {
   try {
     const { id } = await context.params
     const body = await request.json()
@@ -99,7 +105,10 @@ export async function PATCH(request: NextRequest, context: RouteContext): Promis
 }
 
 // DELETE /api/reports/schedules/[id] - Delete a schedule
-export async function DELETE(_request: NextRequest, context: RouteContext): Promise<NextResponse> {
+export async function DELETE(
+  _request: NextRequest,
+  context: RouteContext,
+): Promise<NextResponse> {
   try {
     const { id } = await context.params
 

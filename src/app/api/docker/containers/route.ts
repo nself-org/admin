@@ -160,14 +160,12 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     const detailed = params.detailed === 'true'
     const withStats = params.stats === 'true'
 
-
     // Get container list using docker ps safely
     const { stdout: containerJson } = await execFileAsync(
       'docker',
       ['ps', '-a', '--format', '{{json .}}'],
       { timeout: 10000 },
     )
-
 
     const containers = containerJson
       .trim()
@@ -181,7 +179,6 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         }
       })
       .filter((c) => c !== null)
-
 
     // Get project prefix for filtering containers
     let projectPrefix = 'nproj' // Default fallback
@@ -204,7 +201,6 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     } catch {
       // Path error, use default
     }
-
 
     // Filter for project containers (unless explicitly requesting all)
     const showAll = searchParams.get('all') === 'true'
@@ -251,7 +247,6 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 
           return matches
         })
-
 
     // Get stats if requested
     let statsMap = new Map()
@@ -317,7 +312,6 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
           }
         }
 
-
         return {
           id: container.ID,
           name: container.Names,
@@ -357,7 +351,6 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       },
       {} as Record<string, number>,
     )
-
 
     return NextResponse.json({
       success: true,

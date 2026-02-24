@@ -9,7 +9,10 @@ interface RouteParams {
  * GET /api/workflows/executions/[id]
  * Get a single workflow execution by ID
  */
-export async function GET(_request: NextRequest, { params }: RouteParams): Promise<NextResponse> {
+export async function GET(
+  _request: NextRequest,
+  { params }: RouteParams,
+): Promise<NextResponse> {
   try {
     const { id } = await params
 

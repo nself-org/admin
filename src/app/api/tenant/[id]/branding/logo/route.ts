@@ -7,7 +7,10 @@ interface RouteParams {
   params: Promise<{ id: string }>
 }
 
-export async function PUT(request: NextRequest, { params }: RouteParams): Promise<NextResponse> {
+export async function PUT(
+  request: NextRequest,
+  { params }: RouteParams,
+): Promise<NextResponse> {
   try {
     const { id } = await params
     const formData = await request.formData()
@@ -25,7 +28,13 @@ export async function PUT(request: NextRequest, { params }: RouteParams): Promis
     }
 
     // Validate MIME type — only allow image formats
-    const allowedTypes = ['image/png', 'image/jpeg', 'image/webp', 'image/gif', 'image/svg+xml']
+    const allowedTypes = [
+      'image/png',
+      'image/jpeg',
+      'image/webp',
+      'image/gif',
+      'image/svg+xml',
+    ]
     if (!allowedTypes.includes(file.type)) {
       return NextResponse.json(
         {

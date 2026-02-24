@@ -5,7 +5,10 @@ interface RouteParams {
   params: Promise<{ id: string }>
 }
 
-export async function PUT(request: NextRequest, { params }: RouteParams): Promise<NextResponse> {
+export async function PUT(
+  request: NextRequest,
+  { params }: RouteParams,
+): Promise<NextResponse> {
   try {
     const { id } = await params
     const body = await request.json()

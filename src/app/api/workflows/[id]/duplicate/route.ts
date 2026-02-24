@@ -9,7 +9,10 @@ interface RouteParams {
  * POST /api/workflows/[id]/duplicate
  * Duplicate a workflow
  */
-export async function POST(request: NextRequest, { params }: RouteParams): Promise<NextResponse> {
+export async function POST(
+  request: NextRequest,
+  { params }: RouteParams,
+): Promise<NextResponse> {
   try {
     const { id } = await params
     const body = await request.json().catch(() => ({}))

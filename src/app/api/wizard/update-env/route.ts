@@ -66,9 +66,13 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         if (config.hasuraConfig) {
           // Save allowed Hasura config keys (whitelist)
           const ALLOWED_HASURA_KEYS = new Set([
-            'HASURA_GRAPHQL_ADMIN_SECRET', 'HASURA_JWT_KEY', 'HASURA_JWT_TYPE',
-            'HASURA_GRAPHQL_ENABLE_CONSOLE', 'HASURA_GRAPHQL_DEV_MODE',
-            'HASURA_GRAPHQL_ENABLED_APIS', 'HASURA_GRAPHQL_CORS_DOMAIN',
+            'HASURA_GRAPHQL_ADMIN_SECRET',
+            'HASURA_JWT_KEY',
+            'HASURA_JWT_TYPE',
+            'HASURA_GRAPHQL_ENABLE_CONSOLE',
+            'HASURA_GRAPHQL_DEV_MODE',
+            'HASURA_GRAPHQL_ENABLED_APIS',
+            'HASURA_GRAPHQL_CORS_DOMAIN',
           ])
           Object.keys(config.hasuraConfig).forEach((key) => {
             if (ALLOWED_HASURA_KEYS.has(key)) {
@@ -81,14 +85,26 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         if (config.authConfig) {
           // Save allowed Auth config keys (whitelist)
           const ALLOWED_AUTH_KEYS = new Set([
-            'AUTH_EMAIL_ENABLED', 'AUTH_EMAIL_PASSWORDLESS_ENABLED',
-            'AUTH_GITHUB_ENABLED', 'AUTH_GOOGLE_ENABLED', 'AUTH_FACEBOOK_ENABLED',
-            'AUTH_APPLE_ENABLED', 'AUTH_TWITTER_ENABLED', 'AUTH_LINKEDIN_ENABLED',
-            'AUTH_DISCORD_ENABLED', 'AUTH_TWITCH_ENABLED',
-            'AUTH_SMTP_HOST', 'AUTH_SMTP_PORT', 'AUTH_SMTP_USER',
-            'AUTH_SMTP_PASS', 'AUTH_SMTP_SENDER', 'AUTH_SMTP_SECURE',
-            'AUTH_ACCESS_TOKEN_EXPIRES_IN', 'AUTH_REFRESH_TOKEN_EXPIRES_IN',
-            'AUTH_MFA_ENABLED', 'AUTH_MFA_TOTP_ENABLED',
+            'AUTH_EMAIL_ENABLED',
+            'AUTH_EMAIL_PASSWORDLESS_ENABLED',
+            'AUTH_GITHUB_ENABLED',
+            'AUTH_GOOGLE_ENABLED',
+            'AUTH_FACEBOOK_ENABLED',
+            'AUTH_APPLE_ENABLED',
+            'AUTH_TWITTER_ENABLED',
+            'AUTH_LINKEDIN_ENABLED',
+            'AUTH_DISCORD_ENABLED',
+            'AUTH_TWITCH_ENABLED',
+            'AUTH_SMTP_HOST',
+            'AUTH_SMTP_PORT',
+            'AUTH_SMTP_USER',
+            'AUTH_SMTP_PASS',
+            'AUTH_SMTP_SENDER',
+            'AUTH_SMTP_SECURE',
+            'AUTH_ACCESS_TOKEN_EXPIRES_IN',
+            'AUTH_REFRESH_TOKEN_EXPIRES_IN',
+            'AUTH_MFA_ENABLED',
+            'AUTH_MFA_TOTP_ENABLED',
           ])
           Object.keys(config.authConfig).forEach((key) => {
             if (ALLOWED_AUTH_KEYS.has(key)) {
@@ -101,9 +117,13 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         if (config.nginxConfig) {
           // Save allowed Nginx config keys (whitelist)
           const ALLOWED_NGINX_KEYS = new Set([
-            'NGINX_HOST', 'NGINX_PORT', 'NGINX_SSL_PORT',
-            'NGINX_SSL_ENABLED', 'NGINX_CLIENT_MAX_BODY_SIZE',
-            'NGINX_KEEPALIVE_TIMEOUT', 'NGINX_WORKER_CONNECTIONS',
+            'NGINX_HOST',
+            'NGINX_PORT',
+            'NGINX_SSL_PORT',
+            'NGINX_SSL_ENABLED',
+            'NGINX_CLIENT_MAX_BODY_SIZE',
+            'NGINX_KEEPALIVE_TIMEOUT',
+            'NGINX_WORKER_CONNECTIONS',
           ])
           Object.keys(config.nginxConfig).forEach((key) => {
             if (ALLOWED_NGINX_KEYS.has(key)) {

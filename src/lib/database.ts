@@ -253,9 +253,8 @@ export async function initDatabase(): Promise<void> {
           // Keeping a binary index on 'token' would cause it to be flagged dirty on
           // every update() call; the subsequent rebuild can return incorrect results
           // in LokiJS 1.5.12, making validate-session return 401 on the second call.
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
           if ((sessionsCollection as any).binaryIndices?.['token']) {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             delete (sessionsCollection as any).binaryIndices['token']
           }
 
@@ -395,7 +394,7 @@ export async function setConfig(key: string, value: any): Promise<void> {
       resolve()
       return
     }
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
     ;(db as any).saveDatabase((err: unknown) => {
       if (err) console.warn('Failed to persist config to disk:', err)
       resolve()
@@ -478,7 +477,7 @@ export async function createSession(
       resolve()
       return
     }
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
     ;(db as any).saveDatabase((err: unknown) => {
       if (err) console.warn('Failed to persist session to disk:', err)
       resolve()
@@ -502,7 +501,6 @@ export async function getSession(token: string): Promise<SessionItem | null> {
   // the session to disk but this thread's LokiJS instance hasn't seen it yet.
   if (!session && db) {
     await new Promise<void>((resolve) => {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       ;(db as any).loadDatabase({}, () => {
         syncCollectionsFromDb()
         resolve()

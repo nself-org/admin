@@ -13,7 +13,6 @@ export async function POST(_req: NextRequest): Promise<NextResponse> {
     // Get project path using centralized resolution
     const absoluteProjectPath = getProjectPath()
 
-
     // Find nself CLI using the centralized utility
     const nselfCommand = await findNselfPath()
 
@@ -45,7 +44,12 @@ export async function POST(_req: NextRequest): Promise<NextResponse> {
         },
       })
     } catch (execError) {
-      const execErr = execError as { code?: number; message?: string; stdout?: string; stderr?: string }
+      const execErr = execError as {
+        code?: number
+        message?: string
+        stdout?: string
+        stderr?: string
+      }
       console.error('=== Reset Error ===')
       console.error('Error code:', execErr.code)
       console.error('Error message:', execErr.message)

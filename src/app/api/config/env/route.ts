@@ -42,8 +42,7 @@ const SMART_DEFAULTS = {
   HASURA_GRAPHQL_ENABLE_TELEMETRY: 'false',
   HASURA_GRAPHQL_CORS_DOMAIN: '*',
   HASURA_ROUTE: '/hasura',
-  HASURA_GRAPHQL_DATABASE_URL:
-    '', // Required: set after configuring POSTGRES_USER and POSTGRES_PASSWORD,
+  HASURA_GRAPHQL_DATABASE_URL: '', // Required: set after configuring POSTGRES_USER and POSTGRES_PASSWORD,
 
   // Hasura Auth Service
   AUTH_VERSION: 'latest',
@@ -470,7 +469,6 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
       try {
         await fs.writeFile(envFile, content, 'utf-8')
-
       } catch (writeError) {
         const msg =
           writeError instanceof Error

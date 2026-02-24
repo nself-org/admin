@@ -14,7 +14,6 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     const { mode } = await request.json() // mode can be 'edit' or 'reset'
     const projectPath = getProjectPath()
 
-
     // Find nself CLI using the centralized utility
     const nselfPath = await findNselfPath()
 
@@ -33,8 +32,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         if (env) {
           savedConfig = envToWizardConfig(env)
         }
-      } catch (err) {
-      }
+      } catch (err) {}
     }
 
     // Run nself reset with --force to stop and clean

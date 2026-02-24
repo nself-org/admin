@@ -6,7 +6,10 @@ interface RouteParams {
   params: Promise<{ id: string; domain: string }>
 }
 
-export async function POST(request: NextRequest, { params }: RouteParams): Promise<NextResponse> {
+export async function POST(
+  request: NextRequest,
+  { params }: RouteParams,
+): Promise<NextResponse> {
   try {
     const { id, domain } = await params
     const decodedDomain = decodeURIComponent(domain)
@@ -50,7 +53,10 @@ export async function POST(request: NextRequest, { params }: RouteParams): Promi
   }
 }
 
-export async function GET(request: NextRequest, { params }: RouteParams): Promise<NextResponse> {
+export async function GET(
+  request: NextRequest,
+  { params }: RouteParams,
+): Promise<NextResponse> {
   try {
     const { id, domain } = await params
     const decodedDomain = decodeURIComponent(domain)

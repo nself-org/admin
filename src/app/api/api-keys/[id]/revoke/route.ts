@@ -9,7 +9,10 @@ interface RouteParams {
  * POST /api/api-keys/[id]/revoke - Revoke an API key
  * This sets the key status to 'revoked', making it permanently unusable.
  */
-export async function POST(_request: NextRequest, { params }: RouteParams): Promise<NextResponse> {
+export async function POST(
+  _request: NextRequest,
+  { params }: RouteParams,
+): Promise<NextResponse> {
   try {
     const { id } = await params
     const revoked = await apiKeysApi.revokeApiKey(id)

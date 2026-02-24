@@ -1,7 +1,10 @@
 declare module '*.svg' {
-  import type { FC, SVGProps } from 'react'
-  const ReactComponent: FC<SVGProps<SVGSVGElement>>
-  export default ReactComponent
+  /**
+   * Use `any` to avoid conflicts with Next.js image optimization
+   * and `@svgr/webpack` plugin.
+   */
+  const content: any
+  export default content
 }
 
 declare module '*.png' {

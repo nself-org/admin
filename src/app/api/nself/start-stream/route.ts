@@ -364,8 +364,6 @@ export async function POST(_request: NextRequest): Promise<Response> {
           })
 
           composeProcess.on('close', (code) => {
-
-
             // Check if containers were actually started or already running
             const hasStartedContainers =
               allOutput.includes('Container') ||

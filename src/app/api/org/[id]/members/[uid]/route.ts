@@ -5,7 +5,10 @@ interface RouteParams {
   params: Promise<{ id: string; uid: string }>
 }
 
-export async function PUT(request: NextRequest, { params }: RouteParams): Promise<NextResponse> {
+export async function PUT(
+  request: NextRequest,
+  { params }: RouteParams,
+): Promise<NextResponse> {
   try {
     const { id, uid } = await params
     const body = await request.json()
@@ -54,7 +57,10 @@ export async function PUT(request: NextRequest, { params }: RouteParams): Promis
   }
 }
 
-export async function DELETE(_request: NextRequest, { params }: RouteParams): Promise<NextResponse> {
+export async function DELETE(
+  _request: NextRequest,
+  { params }: RouteParams,
+): Promise<NextResponse> {
   try {
     const { id, uid } = await params
     const result = await executeNselfCommand('tenant', [

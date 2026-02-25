@@ -34,6 +34,11 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Install nself CLI
+        run: |
+          curl -fsSL https://install.nself.org | bash
+          echo "$HOME/.nself/bin" >> $GITHUB_PATH
+
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps ${{ matrix.browser }}
 

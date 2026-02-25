@@ -226,6 +226,14 @@ test.describe('Help & Search Flow', () => {
     const focusedElement = page.locator(':focus')
     const tagName = await focusedElement.evaluate((el) => el.tagName)
 
-    expect(['A', 'BUTTON', 'INPUT', 'DIV', 'SPAN', 'TEXTAREA', 'SELECT']).toContain(tagName)
+    expect([
+      'A',
+      'BUTTON',
+      'INPUT',
+      'DIV',
+      'SPAN',
+      'TEXTAREA',
+      'SELECT',
+    ]).toContain(tagName)
   })
 })

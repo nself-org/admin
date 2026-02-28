@@ -125,3 +125,10 @@ FEEDBACK.md
 TRACKING.md
 PLAN.md
 .allow-ai-terms
+.vscode/*
+.aider/
+.aider.chat.history.md
+.continue/
+.windsurf/
+.gemini/
+.codeium/

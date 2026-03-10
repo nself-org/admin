@@ -8,8 +8,8 @@
  * Skip: SKIP_E2E=1 pnpm test:e2e
  */
 
-import { test, expect } from '@playwright/test'
 import AxeBuilder from '@axe-core/playwright'
+import { expect, test } from '@playwright/test'
 
 const BASE = process.env.NSELF_ADMIN_URL ?? 'http://localhost:3021'
 const skipAll = process.env.SKIP_E2E === '1' || !process.env.NSELF_ADMIN_URL
@@ -31,18 +31,24 @@ test.describe('nAdmin smoke', () => {
   // ------------------------------------------------------------------
   // Scenario 2 — Plugin management tab shows plugins with health status
   // ------------------------------------------------------------------
-  test('plugin management tab shows plugins with health status', async ({ page }) => {
+  test('plugin management tab shows plugins with health status', async ({
+    page,
+  }) => {
     test.skip(skipAll, 'Skipped: set NSELF_ADMIN_URL and unset SKIP_E2E to run')
 
     await page.goto('/plugins')
 
     // The plugins page must render without a 5xx
-    await expect(page.locator('body')).not.toContainText('Internal Server Error')
+    await expect(page.locator('body')).not.toContainText(
+      'Internal Server Error',
+    )
 
     // Plugin list or marketplace tiles must be visible
-    const pluginList = page.locator(
-      '[data-testid="plugin-list"], [data-testid="plugin-card"], ul li, table tbody tr'
-    ).first()
+    const pluginList = page
+      .locator(
+        '[data-testid="plugin-list"], [data-testid="plugin-card"], ul li, table tbody tr',
+      )
+      .first()
     await expect(pluginList).toBeVisible({ timeout: 10000 })
 
     // At least one status badge must be present (installed / not_installed / error)
@@ -67,14 +73,18 @@ test.describe('nAdmin smoke', () => {
 
     // DLQ / dead-letter queue section: look for any heading or label containing "dlq" or "dead"
     // Accept both a real DLQ panel and an empty-state placeholder
-    const dlqSection = page.locator(
-      '[data-testid="dlq"], h2:has-text("DLQ"), h3:has-text("DLQ"), text=/dead.letter/i, text=/failed/i'
-    ).first()
+    const dlqSection = page
+      .locator(
+        '[data-testid="dlq"], h2:has-text("DLQ"), h3:has-text("DLQ"), text=/dead.letter/i, text=/failed/i',
+      )
+      .first()
     // Non-fatal: the BullMQ plugin may not be installed; just verify the page itself is usable
     const visible = await dlqSection.isVisible().catch(() => false)
     if (!visible) {
       // Accept a "not installed" or placeholder state as a passing result
-      const placeholder = page.locator('text=/install|not available|no queues/i').first()
+      const placeholder = page
+        .locator('text=/install|not available|no queues/i')
+        .first()
       await expect(placeholder.or(page.locator('main'))).toBeVisible()
     }
   })
@@ -95,9 +105,11 @@ test.describe('nAdmin smoke', () => {
     expect(resp?.status()).toBeLessThan(500)
 
     // Should show either the claw conversation interface or the plugin install prompt
-    const convUI = page.locator(
-      '[data-testid="claw-chat"], textarea, input[type="text"], text=/install claw/i'
-    ).first()
+    const convUI = page
+      .locator(
+        '[data-testid="claw-chat"], textarea, input[type="text"], text=/install claw/i',
+      )
+      .first()
     await expect(convUI).toBeVisible({ timeout: 10000 })
   })
 
@@ -115,14 +127,14 @@ test.describe('nAdmin smoke', () => {
       .analyze()
 
     const criticalViolations = results.violations.filter(
-      (v) => v.impact === 'critical'
+      (v) => v.impact === 'critical',
     )
 
     if (criticalViolations.length > 0) {
       const summary = criticalViolations
         .map((v) => `[${v.id}] ${v.description} (${v.nodes.length} node(s))`)
         .join('\n')
-      expect.fail(`Critical axe violations found:\n${summary}`)
+      throw new Error(`Critical axe violations found:\n${summary}`)
     }
 
     expect(criticalViolations).toHaveLength(0)

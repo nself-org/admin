@@ -50,7 +50,10 @@ async function runAudit() {
       try {
         const context = await browser.newContext()
         const browserPage = await context.newPage()
-        await browserPage.goto(page.url, { waitUntil: 'networkidle', timeout: 30000 })
+        await browserPage.goto(page.url, {
+          waitUntil: 'networkidle',
+          timeout: 30000,
+        })
         await browserPage.waitForTimeout(1000)
 
         // Inject axe-core and run analysis
@@ -74,8 +77,12 @@ async function runAudit() {
         })
 
         const violations = axeResults.violations || []
-        const critical = violations.filter((v) => v.impact === 'critical' || v.impact === 'serious').length
-        const warnings = violations.filter((v) => v.impact === 'moderate').length
+        const critical = violations.filter(
+          (v) => v.impact === 'critical' || v.impact === 'serious',
+        ).length
+        const warnings = violations.filter(
+          (v) => v.impact === 'moderate',
+        ).length
         const notices = violations.filter((v) => v.impact === 'minor').length
 
         totalIssues += violations.length

@@ -151,8 +151,8 @@
     "zustand": "^5.0.6"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.11.1",
     "@axe-core/react": "^4.11.0",
-    "axe-core": "^4.11.0",
     "@eslint/eslintrc": "^3.3.3",
     "@eslint/js": "^9.39.2",
     "@jest/globals": "^30.2.0",
@@ -168,6 +168,7 @@
     "@types/react-dom": "^19.1.9",
     "@typescript-eslint/eslint-plugin": "^8.53.1",
     "@typescript-eslint/parser": "^8.53.1",
+    "axe-core": "^4.11.0",
     "eslint": "^9.34.0",
     "eslint-config-next": "^16",
     "eslint-plugin-security": "^3.0.1",

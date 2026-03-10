@@ -44,14 +44,14 @@ interface InstallState {
 
 const TIER_COLORS: Record<string, string> = {
   free: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20',
-  pro:  'bg-indigo-500/10 text-indigo-400 border-indigo-500/20',
-  max:  'bg-purple-500/10 text-purple-400 border-purple-500/20',
+  pro: 'bg-indigo-500/10 text-indigo-400 border-indigo-500/20',
+  max: 'bg-purple-500/10 text-purple-400 border-purple-500/20',
 }
 
 const TIER_LABELS: Record<string, string> = {
   free: 'Free',
-  pro:  'Pro',
-  max:  'Max',
+  pro: 'Pro',
+  max: 'Max',
 }
 
 function PluginCard({
@@ -86,12 +86,12 @@ function PluginCard({
       </div>
 
       {plugin.category && (
-        <p className="mb-2 text-xs text-zinc-600 uppercase tracking-wider">
+        <p className="mb-2 text-xs tracking-wider text-zinc-600 uppercase">
           {plugin.category}
         </p>
       )}
 
-      <p className="mb-4 flex-1 text-sm text-zinc-400 line-clamp-2">
+      <p className="mb-4 line-clamp-2 flex-1 text-sm text-zinc-400">
         {plugin.description}
       </p>
 
@@ -129,10 +129,7 @@ function PluginCard({
       )}
 
       {isError && installState?.message && (
-        <p
-          role="alert"
-          className="mt-2 text-xs text-red-400"
-        >
+        <p role="alert" className="mt-2 text-xs text-red-400">
           {installState.message}
         </p>
       )}
@@ -186,7 +183,11 @@ export default function PluginInstallPage() {
   const handleInstall = async (pluginName: string) => {
     setInstallStates((prev) => ({
       ...prev,
-      [pluginName]: { plugin: pluginName, status: 'installing', message: 'Starting installation...' },
+      [pluginName]: {
+        plugin: pluginName,
+        status: 'installing',
+        message: 'Starting installation...',
+      },
     }))
 
     try {
@@ -246,13 +247,13 @@ export default function PluginInstallPage() {
 
         {/* Search */}
         <div className="relative mb-6">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-500" />
+          <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-zinc-500" />
           <input
             type="search"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search plugins..."
-            className="w-full rounded-xl border border-zinc-700 bg-zinc-800/50 py-2.5 pl-10 pr-4 text-sm text-white placeholder-zinc-500 focus:border-indigo-500 focus:outline-none"
+            className="w-full rounded-xl border border-zinc-700 bg-zinc-800/50 py-2.5 pr-4 pl-10 text-sm text-white placeholder-zinc-500 focus:border-indigo-500 focus:outline-none"
             aria-label="Search plugins"
           />
         </div>
@@ -292,7 +293,7 @@ export default function PluginInstallPage() {
 
             return (
               <div key={category} className="mb-8">
-                <h2 className="mb-3 text-sm font-medium uppercase tracking-wider text-zinc-500 capitalize">
+                <h2 className="mb-3 text-sm font-medium tracking-wider text-zinc-500 capitalize uppercase">
                   {category}
                 </h2>
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">

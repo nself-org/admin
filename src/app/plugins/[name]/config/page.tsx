@@ -83,7 +83,7 @@ function SecretInput({
       <button
         type="button"
         onClick={() => setShow(!show)}
-        className="absolute right-2 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-white"
+        className="absolute top-1/2 right-2 -translate-y-1/2 text-zinc-400 hover:text-white"
         aria-label={show ? 'Hide value' : 'Show value'}
       >
         {show ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
@@ -192,16 +192,16 @@ export default function PluginConfigPage() {
   }, [configData])
 
   const handleChange = (key: string, value: string) => {
-    setFields((prev) =>
-      prev.map((f) => (f.key === key ? { ...f, value } : f)),
-    )
+    setFields((prev) => prev.map((f) => (f.key === key ? { ...f, value } : f)))
   }
 
   const handleAddField = () => {
     const key = prompt('Environment variable name (e.g. PLUGIN_AI_API_KEY):')
     if (!key) return
     if (!/^[A-Za-z_][A-Za-z0-9_]*$/.test(key)) {
-      alert('Invalid variable name. Use only letters, numbers, and underscores.')
+      alert(
+        'Invalid variable name. Use only letters, numbers, and underscores.',
+      )
       return
     }
     setFields((prev) => [...prev, { key, value: '', required: false }])
@@ -312,7 +312,7 @@ export default function PluginConfigPage() {
                 <button
                   type="button"
                   onClick={() => handleRemoveField(field.key)}
-                  className="absolute right-3 top-3 text-xs text-zinc-600 hover:text-red-400"
+                  className="absolute top-3 right-3 text-xs text-zinc-600 hover:text-red-400"
                   aria-label={`Remove ${field.key}`}
                 >
                   Remove

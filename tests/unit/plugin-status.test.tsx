@@ -77,7 +77,10 @@ function DlqBadge() {
   if (count === null) return <span data-testid="dlq-badge-loading">…</span>
 
   return (
-    <span data-testid="dlq-badge" className="rounded-full bg-red-500 px-2 text-xs text-white">
+    <span
+      data-testid="dlq-badge"
+      className="rounded-full bg-red-500 px-2 text-xs text-white"
+    >
       {count}
     </span>
   )
@@ -144,7 +147,9 @@ describe('PluginConfigForm', () => {
 
     await user.click(screen.getByRole('button', { name: /save/i }))
 
-    expect(screen.getByTestId('validation-error')).toHaveTextContent('API Key is required')
+    expect(screen.getByTestId('validation-error')).toHaveTextContent(
+      'API Key is required',
+    )
     expect(onSubmit).not.toHaveBeenCalled()
   })
 })
@@ -177,8 +182,15 @@ jest.mock('recharts', () => {
   }
 })
 
-const { ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip } =
-  require('recharts')
+const {
+  ResponsiveContainer,
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+} = require('recharts')
 
 function AiUsageChart({ data }: { data: { date: string; tokens: number }[] }) {
   return (

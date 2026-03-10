@@ -8,8 +8,7 @@
  * Framework: Jest + @testing-library/react (configured via jest.config.js)
  */
 
-import { render, screen, waitFor } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
+import { render } from '@testing-library/react'
 import React from 'react'
 
 // ---------------------------------------------------------------------------
@@ -32,15 +31,25 @@ jest.mock('swr', () => ({
 jest.mock('lucide-react', () => {
   const Icon = ({ className }: { className?: string }) =>
     React.createElement('span', { className, 'data-testid': 'icon' })
-  return new Proxy({}, {
-    get: () => Icon,
-  })
+  return new Proxy(
+    {},
+    {
+      get: () => Icon,
+    },
+  )
 })
 
 // Mock next/link to render a plain anchor
 jest.mock('next/link', () => {
-  const MockLink = ({ href, children, className }: { href: string; children: React.ReactNode; className?: string }) =>
-    React.createElement('a', { href, className }, children)
+  const MockLink = ({
+    href,
+    children,
+    className,
+  }: {
+    href: string
+    children: React.ReactNode
+    className?: string
+  }) => React.createElement('a', { href, className }, children)
   MockLink.displayName = 'MockLink'
   return MockLink
 })
@@ -147,7 +156,9 @@ describe('Plugin config page — /plugins/[name]/config', () => {
   })
 
   test('does not crash when plugin name contains special characters', async () => {
-    ;(useParams as jest.Mock).mockReturnValue({ name: 'plugin-with-dashes_and_underscores' })
+    ;(useParams as jest.Mock).mockReturnValue({
+      name: 'plugin-with-dashes_and_underscores',
+    })
     ;(useSWR as jest.Mock).mockReturnValue({
       data: undefined,
       error: new Error('Not found'),

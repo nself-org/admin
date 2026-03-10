@@ -24,12 +24,14 @@ const customJestConfig = {
     '!src/app/**/loading.tsx',
     '!src/app/not-found.tsx',
   ],
+  collectCoverage: true,
+  coverageProvider: 'v8',
   coverageThreshold: {
     global: {
-      branches: 3,
-      functions: 3,
-      lines: 3,
-      statements: 3,
+      branches: 80,
+      functions: 80,
+      lines: 80,
+      statements: 80,
     },
   },
   testTimeout: 10000,

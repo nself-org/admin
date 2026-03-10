@@ -14,9 +14,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: pnpm/action-setup@v3
-        with:
-          version: 9
+      - uses: pnpm/action-setup@v4
 
       - uses: actions/setup-node@v4
         with:
@@ -27,8 +25,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Run Jest with coverage
-        run: pnpm test -- --coverage
-        # jest exits non-zero when coverageThreshold is not met (configured in jest.config.js)
+        run: pnpm run test:ci
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v4

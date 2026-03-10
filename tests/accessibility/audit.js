@@ -2,7 +2,7 @@
 
 /**
  * Automated Accessibility Testing Script
- * Uses pa11y to test all pages for WCAG 2.1 AA compliance
+ * Uses Playwright + axe-core to test pages for WCAG 2.1 AA compliance
  *
  * Usage:
  *   node tests/accessibility/audit.js
@@ -12,12 +12,11 @@
  *   - pnpm dev
  */
 
-const pa11y = require('pa11y')
+const { chromium } = require('@playwright/test')
 const fs = require('fs').promises
 
 const BASE_URL = 'http://localhost:3021'
 
-// Pages to test (requires authentication, so we'll test what we can)
 const PAGES = [
   {
     url: `${BASE_URL}/login`,
@@ -34,56 +33,76 @@ const PAGES = [
   // },
 ]
 
-const PA11Y_OPTIONS = {
-  standard: 'WCAG2AA',
-  runners: ['axe'],
-  timeout: 30000,
-  wait: 1000,
-  ignore: [
-    // Ignore third-party issues if any
-  ],
-}
-
 async function runAudit() {
   console.log('Starting Accessibility Audit...\n')
   console.log(`Testing ${PAGES.length} pages for WCAG 2.1 AA compliance\n`)
 
+  const browser = await chromium.launch()
   const results = []
   let totalIssues = 0
   let criticalIssues = 0
 
-  for (const page of PAGES) {
-    console.log(`Testing: ${page.name}`)
-    console.log(`URL: ${page.url}`)
+  try {
+    for (const page of PAGES) {
+      console.log(`Testing: ${page.name}`)
+      console.log(`URL: ${page.url}`)
 
-    try {
-      const result = await pa11y(page.url, PA11Y_OPTIONS)
+      try {
+        const context = await browser.newContext()
+        const browserPage = await context.newPage()
+        await browserPage.goto(page.url, { waitUntil: 'networkidle', timeout: 30000 })
+        await browserPage.waitForTimeout(1000)
 
-      const issues = result.issues || []
-      const critical = issues.filter((i) => i.type === 'error').length
-      const warnings = issues.filter((i) => i.type === 'warning').length
-      const notices = issues.filter((i) => i.type === 'notice').length
+        // Inject axe-core and run analysis
+        await browserPage.addScriptTag({
+          path: require.resolve('axe-core/axe.min.js'),
+        })
 
-      totalIssues += issues.length
-      criticalIssues += critical
+        const axeResults = await browserPage.evaluate(() => {
+          return new Promise((resolve) => {
+            window.axe.run(
+              document,
+              {
+                runOnly: {
+                  type: 'tag',
+                  values: ['wcag2a', 'wcag2aa'],
+                },
+              },
+              (_err, results) => resolve(results),
+            )
+          })
+        })
 
-      results.push({
-        page: page.name,
-        url: page.url,
-        issues,
-        critical,
-        warnings,
-        notices,
-      })
+        const violations = axeResults.violations || []
+        const critical = violations.filter((v) => v.impact === 'critical' || v.impact === 'serious').length
+        const warnings = violations.filter((v) => v.impact === 'moderate').length
+        const notices = violations.filter((v) => v.impact === 'minor').length
 
-      console.log(`  ✓ Errors: ${critical}`)
-      console.log(`  ⚠ Warnings: ${warnings}`)
-      console.log(`  ℹ Notices: ${notices}`)
-      console.log('')
-    } catch (error) {
-      console.error(`  ✗ Error testing ${page.name}:`, error.message)
-      console.log('')
+        totalIssues += violations.length
+        criticalIssues += critical
+
+        results.push({
+          page: page.name,
+          url: page.url,
+          violations,
+          critical,
+          warnings,
+          notices,
+        })
+
+        console.log(`  ✓ Critical/Serious: ${critical}`)
+        console.log(`  ⚠ Moderate: ${warnings}`)
+        console.log(`  ℹ Minor: ${notices}`)
+        console.log('')
+
+        await context.close()
+      } catch (error) {
+        console.error(`  ✗ Error testing ${page.name}:`, error.message)
+        console.log('')
+      }
     }
+  } finally {
+    await browser.close()
   }
 
   // Generate report
@@ -94,7 +113,7 @@ async function runAudit() {
   console.log('ACCESSIBILITY AUDIT SUMMARY')
   console.log('='.repeat(60))
   console.log(`Total Issues: ${totalIssues}`)
-  console.log(`Critical Errors: ${criticalIssues}`)
+  console.log(`Critical/Serious Errors: ${criticalIssues}`)
   console.log(`\nDetailed report saved to: tests/accessibility/report.md`)
 
   // Exit with error if critical issues found
@@ -114,14 +133,14 @@ async function generateReport(results, summary) {
 
 **Date:** ${timestamp}
 **Standard:** WCAG 2.1 AA
-**Tool:** pa11y with axe-core
+**Tool:** Playwright + axe-core
 
 ---
 
 ## Summary
 
 - **Total Issues:** ${summary.totalIssues}
-- **Critical Errors:** ${summary.criticalIssues}
+- **Critical/Serious Errors:** ${summary.criticalIssues}
 - **Pages Tested:** ${results.length}
 
 ---
@@ -135,20 +154,21 @@ async function generateReport(results, summary) {
 
 **URL:** \`${result.url}\`
 
-- Errors: ${result.critical}
-- Warnings: ${result.warnings}
-- Notices: ${result.notices}
+- Critical/Serious: ${result.critical}
+- Moderate: ${result.warnings}
+- Minor: ${result.notices}
 
 `
 
-    if (result.issues.length > 0) {
+    if (result.violations.length > 0) {
       report += `#### Issues Found:\n\n`
 
-      for (const issue of result.issues) {
-        report += `- **[${issue.type.toUpperCase()}]** ${issue.message}
-  - Code: \`${issue.code}\`
-  - Selector: \`${issue.selector}\`
-  - Context: \`${issue.context}\`
+      for (const violation of result.violations) {
+        const nodeCount = violation.nodes ? violation.nodes.length : 0
+        report += `- **[${(violation.impact || 'unknown').toUpperCase()}]** ${violation.description}
+  - Rule: \`${violation.id}\`
+  - Help: ${violation.helpUrl}
+  - Affected nodes: ${nodeCount}
 
 `
       }

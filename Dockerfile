@@ -76,12 +76,12 @@ RUN ARCH=$(uname -m) && \
     chmod +x /usr/local/bin/mkcert
 
 # Install nself CLI (can be overridden by mounting local source at /opt/nself)
-ARG NSELF_VERSION=0.4.4
+ARG NSELF_VERSION=0.9.9
 RUN mkdir -p /opt/nself \
-    && curl -fsSL "https://github.com/acamarata/nself/archive/refs/tags/v${NSELF_VERSION}.tar.gz" \
+    && curl -fsSL "https://github.com/nself-org/cli/archive/refs/tags/v${NSELF_VERSION}.tar.gz" \
        | tar -xz -C /opt/nself --strip-components=1 \
-    && ln -s /opt/nself/src/cli/nself.sh /usr/local/bin/nself \
-    && chmod +x /opt/nself/src/cli/nself.sh
+    && ln -s /opt/nself/bin/nself /usr/local/bin/nself \
+    && chmod +x /opt/nself/bin/nself
 
 # Note: For development, mount your local nself source at /opt/nself to override
 # The symlink at /usr/local/bin/nself will work with either installed or mounted source

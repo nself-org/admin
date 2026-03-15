@@ -13,9 +13,6 @@ import { AuthProvider } from '@/contexts/AuthContext'
 import '@/styles/tailwind.css'
 import { type Metadata, type Viewport } from 'next'
 import { Inter } from 'next/font/google'
-// DEV ONLY - REMOVE FOR PRODUCTION
-import '@/services/DevLogger'
-
 const inter = Inter({
   subsets: ['latin'],
   display: 'swap',
@@ -25,8 +22,7 @@ const inter = Inter({
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
-  maximumScale: 1,
-  userScalable: false,
+  maximumScale: 5,
   themeColor: '#0066CC',
 }
 

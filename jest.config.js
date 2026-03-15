@@ -26,9 +26,13 @@ const customJestConfig = {
   ],
   collectCoverage: true,
   coverageProvider: 'v8',
-  // Coverage thresholds removed — overall coverage is low because the full src/
-  // surface is measured including complex services/stores with no unit tests yet.
-  // Reports are still generated and uploaded in CI for visibility.
+  coverageReporters: ['text', 'lcov'],
+  coverageThreshold: {
+    global: {
+      lines: 80,
+      branches: 80,
+    },
+  },
   testTimeout: 10000,
   passWithNoTests: true,
   globals: {

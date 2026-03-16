@@ -18,6 +18,108 @@ import {
 import { remToPx } from '@/lib/remToPx'
 import { CloseButton } from '@headlessui/react'
 
+// ---- License status widget --------------------------------------------------
+
+interface LicenseInfo {
+  tier: string
+  features?: string[]
+  expires_at?: string
+}
+
+// Module-level cache — survives re-renders, expires after 10 minutes
+let _licenseCache: { data: LicenseInfo | null; at: number } | null = null
+const LICENSE_CACHE_TTL_MS = 10 * 60 * 1000
+
+function daysUntil(isoDate: string): number {
+  const diff = new Date(isoDate).getTime() - Date.now()
+  return Math.max(0, Math.ceil(diff / (1000 * 60 * 60 * 24)))
+}
+
+function LicenseWidget() {
+  const [info, setInfo] = useState<LicenseInfo | null>(null)
+  const [fetchFailed, setFetchFailed] = useState(false)
+
+  useEffect(() => {
+    const now = Date.now()
+    if (_licenseCache && now - _licenseCache.at < LICENSE_CACHE_TTL_MS) {
+      if (_licenseCache.data) {
+        setInfo(_licenseCache.data)
+      } else {
+        setFetchFailed(true)
+      }
+      return
+    }
+
+    fetch('http://127.0.0.1:8001/license/info')
+      .then((res) => (res.ok ? (res.json() as Promise<LicenseInfo>) : Promise.reject()))
+      .then((data) => {
+        _licenseCache = { data, at: now }
+        setInfo(data)
+        setFetchFailed(false)
+      })
+      .catch(() => {
+        _licenseCache = { data: null, at: now }
+        setFetchFailed(true)
+      })
+  }, [])
+
+  const isOwner =
+    info?.tier === 'enterprise' && info?.features?.includes('all_plugins')
+  const isMax = !isOwner && info?.tier === 'enterprise'
+  const isPro = !isOwner && info?.tier === 'pro'
+
+  if (isOwner) {
+    return (
+      <div className="mt-4 border-t border-zinc-200 pt-3 dark:border-zinc-800">
+        <span className="inline-flex items-center rounded-full bg-emerald-100 px-2.5 py-1 text-xs font-medium text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400">
+          Owner — Unlimited
+        </span>
+      </div>
+    )
+  }
+
+  if (isMax && info?.expires_at) {
+    return (
+      <div className="mt-4 border-t border-zinc-200 pt-3 dark:border-zinc-800">
+        <span className="inline-flex items-center rounded-full bg-blue-100 px-2.5 py-1 text-xs font-medium text-blue-700 dark:bg-blue-900/30 dark:text-blue-400">
+          Max · expires in {daysUntil(info.expires_at)}d
+        </span>
+      </div>
+    )
+  }
+
+  if (isPro && info?.expires_at) {
+    return (
+      <div className="mt-4 border-t border-zinc-200 pt-3 dark:border-zinc-800">
+        <span className="inline-flex items-center rounded-full bg-indigo-100 px-2.5 py-1 text-xs font-medium text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-400">
+          Pro · expires in {daysUntil(info.expires_at)}d
+        </span>
+      </div>
+    )
+  }
+
+  if (!info || fetchFailed) {
+    return (
+      <div className="mt-4 flex items-center justify-between border-t border-zinc-200 pt-3 dark:border-zinc-800">
+        <span className="inline-flex items-center rounded-full bg-zinc-100 px-2.5 py-1 text-xs font-medium text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400">
+          No license
+        </span>
+        <Link
+          href="https://nself.org/pricing"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-xs text-zinc-400 underline-offset-2 hover:text-zinc-900 hover:underline dark:hover:text-white"
+        >
+          Buy
+        </Link>
+      </div>
+    )
+  }
+
+  // Tier exists but no expiry or unrecognised tier — show nothing
+  return null
+}
+
 function useInitialValue<T>(value: T, condition = true) {
   let initialValue = useRef(value).current
   return condition ? initialValue : value
@@ -315,6 +417,7 @@ export function Navigation(props: React.ComponentPropsWithoutRef<'nav'>) {
           />
         ))}
       </ul>
+      <LicenseWidget />
     </nav>
   )
 }

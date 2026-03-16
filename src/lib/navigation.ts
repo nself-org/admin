@@ -628,6 +628,32 @@ export const navigation: Array<NavGroup> = [
           { label: 'Inventory', href: '/plugins/shopify/inventory' },
         ],
       },
+      {
+        title: 'Notify',
+        href: '/notify',
+        icon: 'bell',
+        badge: { text: 'NEW', color: 'emerald' },
+        description: 'Multi-channel notifications',
+      },
+      {
+        title: 'Cron',
+        href: '/cron',
+        icon: 'clock',
+        badge: { text: 'NEW', color: 'emerald' },
+        description: 'Scheduled jobs',
+      },
+      {
+        title: 'Mux',
+        href: '/mux/rules',
+        icon: 'git-merge',
+        badge: { text: 'NEW', color: 'emerald' },
+        description: 'Email/webhook pipeline engine',
+        submenu: [
+          { label: 'Rules', href: '/mux/rules' },
+          { label: 'Recent Runs', href: '/mux/runs' },
+          { label: 'Dead Letter Queue', href: '/mux/dead-letter' },
+        ],
+      },
     ],
   },
   // ── Dev Tools ─────────────────────────────────────────────

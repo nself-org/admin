@@ -643,6 +643,21 @@ export const navigation: Array<NavGroup> = [
         description: 'Scheduled jobs',
       },
       {
+        title: 'ɳClaw',
+        href: '/nclaw',
+        icon: 'bot',
+        badge: { text: 'NEW', color: 'emerald' },
+        description: 'AI assistant plugin management',
+        submenu: [
+          { label: 'Overview', href: '/nclaw' },
+          { label: 'Connected Accounts', href: '/nclaw?section=accounts' },
+          { label: 'Companion Devices', href: '/nclaw?section=devices' },
+          { label: 'Security', href: '/nclaw?section=security' },
+          { label: 'Plugin Secrets', href: '/nclaw?section=secrets' },
+          { label: 'Logs', href: '/nclaw?section=logs' },
+        ],
+      },
+      {
         title: 'Mux',
         href: '/mux/rules',
         icon: 'git-merge',

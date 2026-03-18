@@ -406,7 +406,8 @@ function NavigationGroup({
 export function Navigation(props: React.ComponentPropsWithoutRef<'nav'>) {
   return (
     <nav {...props} aria-label="Main navigation">
-      <ul role="list">
+      {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-to-interactive-role */}
+      <ul>{/* children are <li> elements rendered by TopLevelNavItem and NavigationGroup */}
         <TopLevelNavItem href="/">Overview</TopLevelNavItem>
         <TopLevelNavItem href="/help">Documentation</TopLevelNavItem>
         {navigation.map((group, groupIndex) => (

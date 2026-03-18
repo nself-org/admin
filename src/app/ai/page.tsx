@@ -420,6 +420,7 @@ export default function AIProvidersPage() {
                 <select
                   value={selectedModel}
                   onChange={(e) => setSelectedModel(e.target.value)}
+                  aria-label="Default model"
                   className="w-full appearance-none rounded-lg border border-zinc-600/50 bg-zinc-800/50 px-3 py-2 pr-8 text-sm text-zinc-100 focus:border-indigo-500/50 focus:outline-none focus:ring-1 focus:ring-indigo-500/30"
                 >
                   {PROVIDER_MODELS[selectedProvider as Exclude<Provider, 'ollama'>].map((m) => (

@@ -406,7 +406,6 @@ function NavigationGroup({
 export function Navigation(props: React.ComponentPropsWithoutRef<'nav'>) {
   return (
     <nav {...props} aria-label="Main navigation">
-      {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-to-interactive-role */}
       <ul>
         <TopLevelNavItem href="/">Overview</TopLevelNavItem>
         <TopLevelNavItem href="/help">Documentation</TopLevelNavItem>

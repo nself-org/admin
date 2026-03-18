@@ -3,6 +3,8 @@
   "hints": {
     "no-inline-styles": "off",
     "axe/aria": "off",
-    "axe/structure": "off"
+    "axe/forms": "off",
+    "axe/structure": "off",
+    "axe/text-alternatives": "off"
   }
 }

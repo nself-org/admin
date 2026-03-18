@@ -738,8 +738,7 @@ export default function ClawChatPage() {
                 placeholder="Message ɳClaw… (Enter to send, Shift+Enter for newline)"
                 rows={1}
                 disabled={streaming}
-                className="flex-1 resize-none rounded-xl border border-zinc-600/50 bg-zinc-800/50 px-4 py-3 text-sm text-zinc-100 placeholder-zinc-500 focus:border-indigo-500/50 focus:outline-none focus:ring-1 focus:ring-indigo-500/30 disabled:opacity-50 max-h-36 overflow-y-auto"
-                style={{ lineHeight: '1.5' }}
+                className="flex-1 resize-none rounded-xl border border-zinc-600/50 bg-zinc-800/50 px-4 py-3 text-sm text-zinc-100 placeholder-zinc-500 focus:border-indigo-500/50 focus:outline-none focus:ring-1 focus:ring-indigo-500/30 disabled:opacity-50 max-h-36 overflow-y-auto leading-normal"
               />
               <button
                 type="button"

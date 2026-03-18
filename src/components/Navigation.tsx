@@ -315,7 +315,7 @@ function NavigationGroup({
     <li className={clsx('relative mt-6', className)}>
       <button
         onClick={toggleCollapsed}
-        aria-expanded={!isCollapsed}
+        aria-expanded={isCollapsed ? 'false' : 'true'}
         aria-label={`${isCollapsed ? 'Expand' : 'Collapse'} ${group.title} section`}
         className="flex w-full items-center justify-between text-sm font-semibold text-zinc-900 transition-colors hover:text-zinc-600 dark:text-zinc-100 dark:hover:text-zinc-300"
       >

@@ -104,7 +104,9 @@ export default function DeadLetterPage() {
 
   const fetchMessages = async () => {
     try {
-      const res = await fetch(`${MUX_API}/mux/dead-letter`, { cache: 'no-store' })
+      const res = await fetch(`${MUX_API}/mux/dead-letter`, {
+        cache: 'no-store',
+      })
       if (!res.ok) {
         setMessages([])
         return
@@ -149,9 +151,12 @@ export default function DeadLetterPage() {
   const handleRetry = async (id: string) => {
     setRetryingId(id)
     try {
-      await fetch(`${MUX_API}/mux/dead-letter/${encodeURIComponent(id)}/retry`, {
-        method: 'POST',
-      })
+      await fetch(
+        `${MUX_API}/mux/dead-letter/${encodeURIComponent(id)}/retry`,
+        {
+          method: 'POST',
+        },
+      )
       await fetchMessages()
     } catch {
       // network error — leave message in list
@@ -206,7 +211,9 @@ export default function DeadLetterPage() {
     return (
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
         <div className="mx-4 w-full max-w-md rounded-xl border border-zinc-700 bg-zinc-900 p-6 shadow-2xl">
-          <h2 className="text-base font-semibold text-white">Delete this message?</h2>
+          <h2 className="text-base font-semibold text-white">
+            Delete this message?
+          </h2>
           <p className="mt-2 text-sm text-zinc-400">It cannot be recovered.</p>
           <div className="mt-6 flex justify-end gap-3">
             <button
@@ -233,9 +240,12 @@ export default function DeadLetterPage() {
     return (
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
         <div className="mx-4 w-full max-w-md rounded-xl border border-zinc-700 bg-zinc-900 p-6 shadow-2xl">
-          <h2 className="text-base font-semibold text-white">Delete ALL failed messages?</h2>
+          <h2 className="text-base font-semibold text-white">
+            Delete ALL failed messages?
+          </h2>
           <p className="mt-2 text-sm text-zinc-400">
-            This cannot be undone. All {messages.length} messages will be permanently deleted.
+            This cannot be undone. All {messages.length} messages will be
+            permanently deleted.
           </p>
           <div className="mt-6 flex justify-end gap-3">
             <button
@@ -266,7 +276,9 @@ export default function DeadLetterPage() {
       <div className="flex items-center justify-between">
         <div>
           <div className="flex items-center gap-2">
-            <h1 className="text-2xl font-semibold text-white">Dead Letter Queue</h1>
+            <h1 className="text-2xl font-semibold text-white">
+              Dead Letter Queue
+            </h1>
             {messages.length > 0 && (
               <span className="rounded-full border border-red-500/30 bg-red-500/10 px-2 py-0.5 text-xs font-medium text-red-300">
                 {messages.length}
@@ -301,7 +313,9 @@ export default function DeadLetterPage() {
           <div className="flex items-start gap-3">
             <AlertCircle className="mt-0.5 h-5 w-5 shrink-0 text-yellow-400" />
             <div>
-              <p className="font-medium text-yellow-300">nself-mux is not running</p>
+              <p className="font-medium text-yellow-300">
+                nself-mux is not running
+              </p>
               <p className="mt-1 text-sm text-yellow-400/80">
                 The dead-letter queue is unavailable while nself-mux is offline.
               </p>
@@ -319,7 +333,7 @@ export default function DeadLetterPage() {
             value={filterRuleId}
             onChange={(e) => setFilterRuleId(e.target.value)}
             placeholder="Filter by rule_id…"
-            className="w-56 rounded-lg border border-zinc-600/50 bg-zinc-800/50 px-3 py-1.5 text-sm text-zinc-100 placeholder-zinc-500 focus:border-indigo-500/50 focus:outline-none focus:ring-1 focus:ring-indigo-500/30"
+            className="w-56 rounded-lg border border-zinc-600/50 bg-zinc-800/50 px-3 py-1.5 text-sm text-zinc-100 placeholder-zinc-500 focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/30 focus:outline-none"
           />
           {messages.length > 0 && (
             <button
@@ -341,21 +355,28 @@ export default function DeadLetterPage() {
         {loading ? (
           <div className="space-y-2 p-4">
             {[1, 2, 3].map((n) => (
-              <div key={n} className="h-14 animate-pulse rounded-lg bg-zinc-700/40" />
+              <div
+                key={n}
+                className="h-14 animate-pulse rounded-lg bg-zinc-700/40"
+              />
             ))}
           </div>
         ) : filtered.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-12 text-center">
             <CheckCircle2 className="mb-2 h-8 w-8 text-green-600" />
-            <p className="text-sm font-medium text-zinc-400">No failed messages</p>
+            <p className="text-sm font-medium text-zinc-400">
+              No failed messages
+            </p>
             <p className="mt-0.5 text-xs text-zinc-600">
-              {filterRuleId ? 'No messages match the filter' : 'Dead letter queue is empty'}
+              {filterRuleId
+                ? 'No messages match the filter'
+                : 'Dead letter queue is empty'}
             </p>
           </div>
         ) : (
           <div className="divide-y divide-zinc-700/50">
             {/* Header row */}
-            <div className="grid grid-cols-[1fr_1fr_80px_1fr_40px_160px] gap-3 px-5 py-2 text-xs font-medium uppercase tracking-wide text-zinc-500">
+            <div className="grid grid-cols-[1fr_1fr_80px_1fr_40px_160px] gap-3 px-5 py-2 text-xs font-medium tracking-wide text-zinc-500 uppercase">
               <span>Message ID</span>
               <span>Rule ID</span>
               <span>Retries</span>
@@ -370,10 +391,16 @@ export default function DeadLetterPage() {
                   <span className="truncate font-mono text-xs text-zinc-400">
                     {msg.message_id.slice(0, 12)}…
                   </span>
-                  <span className="truncate text-sm text-zinc-300">{msg.rule_id}</span>
-                  <span className="text-sm text-zinc-400">{msg.retry_count}</span>
+                  <span className="truncate text-sm text-zinc-300">
+                    {msg.rule_id}
+                  </span>
+                  <span className="text-sm text-zinc-400">
+                    {msg.retry_count}
+                  </span>
                   <div>
-                    <span className="text-sm text-zinc-300">{relativeTime(msg.failed_at)}</span>
+                    <span className="text-sm text-zinc-300">
+                      {relativeTime(msg.failed_at)}
+                    </span>
                     <p className="mt-0.5 truncate text-xs text-zinc-600">
                       {msg.reason.slice(0, 50)}
                     </p>
@@ -387,7 +414,7 @@ export default function DeadLetterPage() {
                         prev === msg.message_id ? null : msg.message_id,
                       )
                     }
-                    className="rounded p-1 text-zinc-500 hover:text-zinc-300 transition-colors"
+                    className="rounded p-1 text-zinc-500 transition-colors hover:text-zinc-300"
                     aria-label="Inspect payload"
                   >
                     {expandedId === msg.message_id ? (
@@ -433,13 +460,17 @@ export default function DeadLetterPage() {
                 {/* Expanded payload */}
                 {expandedId === msg.message_id && (
                   <div className="border-t border-zinc-700/30 bg-zinc-900/50 px-5 py-4">
-                    <p className="mb-2 text-xs font-medium uppercase tracking-wide text-zinc-500">
+                    <p className="mb-2 text-xs font-medium tracking-wide text-zinc-500 uppercase">
                       Full Payload
                     </p>
                     <pre className="overflow-x-auto rounded-lg bg-zinc-950 p-4 font-mono text-xs leading-relaxed text-zinc-300">
                       {(() => {
                         try {
-                          return JSON.stringify(JSON.parse(msg.payload), null, 2)
+                          return JSON.stringify(
+                            JSON.parse(msg.payload),
+                            null,
+                            2,
+                          )
                         } catch {
                           return msg.payload
                         }

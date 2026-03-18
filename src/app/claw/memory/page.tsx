@@ -115,7 +115,9 @@ export default function ClawMemoryPage() {
         setClawDown(true)
         return
       }
-      const data = (await res.json()) as { memories: ClawMemory[] } | ClawMemory[]
+      const data = (await res.json()) as
+        | { memories: ClawMemory[] }
+        | ClawMemory[]
       const list = Array.isArray(data) ? data : (data.memories ?? [])
       setMemories(list)
       setClawDown(false)
@@ -320,16 +322,16 @@ export default function ClawMemoryPage() {
 
       {/* Search bar */}
       <div className="relative">
-        <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-500" />
+        <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-zinc-500" />
         {searching && (
-          <Loader2 className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 animate-spin text-zinc-500" />
+          <Loader2 className="absolute top-1/2 right-3 h-4 w-4 -translate-y-1/2 animate-spin text-zinc-500" />
         )}
         <input
           type="text"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Search memories…"
-          className="w-full rounded-xl border border-zinc-700/50 bg-zinc-800/50 py-2.5 pl-10 pr-10 text-sm text-white placeholder-zinc-500 outline-none focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/30"
+          className="w-full rounded-xl border border-zinc-700/50 bg-zinc-800/50 py-2.5 pr-10 pl-10 text-sm text-white placeholder-zinc-500 outline-none focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/30"
         />
       </div>
 
@@ -350,7 +352,9 @@ export default function ClawMemoryPage() {
         <div className="flex flex-col items-center justify-center rounded-xl border border-zinc-700/50 bg-zinc-800/30 py-16">
           <Brain className="mb-3 h-10 w-10 text-zinc-600" />
           <p className="text-sm text-zinc-500">
-            {query ? 'No memories match your search.' : 'No memories stored yet.'}
+            {query
+              ? 'No memories match your search.'
+              : 'No memories stored yet.'}
           </p>
           {query && (
             <button
@@ -373,9 +377,7 @@ export default function ClawMemoryPage() {
               <div
                 key={memory.id}
                 className={`rounded-xl border bg-zinc-800/50 p-4 transition-colors ${
-                  isPinned
-                    ? 'border-indigo-500/40'
-                    : 'border-zinc-700/50'
+                  isPinned ? 'border-indigo-500/40' : 'border-zinc-700/50'
                 }`}
               >
                 <div className="flex items-start justify-between gap-3">
@@ -401,7 +403,9 @@ export default function ClawMemoryPage() {
                     <div className="flex flex-wrap items-center gap-3 text-xs text-zinc-600">
                       <span className="font-mono">{memory.entity_id}</span>
                       <span>·</span>
-                      <span>{new Date(memory.created_at).toLocaleString()}</span>
+                      <span>
+                        {new Date(memory.created_at).toLocaleString()}
+                      </span>
                     </div>
                   </div>
 

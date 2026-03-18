@@ -51,7 +51,9 @@ function LicenseWidget() {
     }
 
     fetch('http://127.0.0.1:8001/license/info')
-      .then((res) => (res.ok ? (res.json() as Promise<LicenseInfo>) : Promise.reject()))
+      .then((res) =>
+        res.ok ? (res.json() as Promise<LicenseInfo>) : Promise.reject(),
+      )
       .then((data) => {
         _licenseCache = { data, at: now }
         setInfo(data)

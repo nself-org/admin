@@ -49,12 +49,36 @@ const MOCK_TABLES: string[] = [
 // Minimal mock rows per table — real data comes from the API
 const MOCK_ROW_DATA: Record<string, Record<string, unknown>[]> = {
   np_plugin_registry: [
-    { id: 1, name: 'ai', version: '1.2.0', enabled: true, installed_at: '2026-01-15T10:00:00Z' },
-    { id: 2, name: 'mux', version: '1.0.5', enabled: true, installed_at: '2026-01-15T10:01:00Z' },
-    { id: 3, name: 'claw', version: '0.9.2', enabled: false, installed_at: '2026-02-01T09:00:00Z' },
+    {
+      id: 1,
+      name: 'ai',
+      version: '1.2.0',
+      enabled: true,
+      installed_at: '2026-01-15T10:00:00Z',
+    },
+    {
+      id: 2,
+      name: 'mux',
+      version: '1.0.5',
+      enabled: true,
+      installed_at: '2026-01-15T10:01:00Z',
+    },
+    {
+      id: 3,
+      name: 'claw',
+      version: '0.9.2',
+      enabled: false,
+      installed_at: '2026-02-01T09:00:00Z',
+    },
   ],
   np_license_keys: [
-    { id: '00000000-cafe', key_prefix: 'nself_pro_owner', tier: 'enterprise', active: true, expires_at: null },
+    {
+      id: '00000000-cafe',
+      key_prefix: 'nself_pro_owner',
+      tier: 'enterprise',
+      active: true,
+      expires_at: null,
+    },
   ],
 }
 
@@ -67,7 +91,11 @@ interface TableRowsResponse {
   limit: number
 }
 
-function exportCsv(columns: string[], rows: Record<string, unknown>[], tableName: string) {
+function exportCsv(
+  columns: string[],
+  rows: Record<string, unknown>[],
+  tableName: string,
+) {
   const header = columns.join(',')
   const body = rows
     .map((row) =>
@@ -137,38 +165,35 @@ function NpTablesContent() {
   }, [])
 
   // Fetch rows whenever selectedTable or page changes
-  const fetchRows = useCallback(
-    async (tableName: string, pageNum: number) => {
-      setRowsLoading(true)
-      setRowsError(null)
-      try {
-        const res = await fetch(
-          `/api/database/np-tables/${tableName}?page=${pageNum}&limit=${LIMIT}`,
-        )
-        if (res.ok) {
-          const data: TableRowsResponse = await res.json()
-          const fetchedRows = data.rows ?? []
-          setRows(fetchedRows)
-          setTotal(data.total ?? fetchedRows.length)
-          setColumns(fetchedRows.length > 0 ? Object.keys(fetchedRows[0]) : [])
-        } else {
-          // API not yet implemented — fall back to mock data
-          const mockRows = MOCK_ROW_DATA[tableName] ?? []
-          setRows(mockRows)
-          setTotal(mockRows.length)
-          setColumns(mockRows.length > 0 ? Object.keys(mockRows[0]) : [])
-        }
-      } catch {
+  const fetchRows = useCallback(async (tableName: string, pageNum: number) => {
+    setRowsLoading(true)
+    setRowsError(null)
+    try {
+      const res = await fetch(
+        `/api/database/np-tables/${tableName}?page=${pageNum}&limit=${LIMIT}`,
+      )
+      if (res.ok) {
+        const data: TableRowsResponse = await res.json()
+        const fetchedRows = data.rows ?? []
+        setRows(fetchedRows)
+        setTotal(data.total ?? fetchedRows.length)
+        setColumns(fetchedRows.length > 0 ? Object.keys(fetchedRows[0]) : [])
+      } else {
+        // API not yet implemented — fall back to mock data
         const mockRows = MOCK_ROW_DATA[tableName] ?? []
         setRows(mockRows)
         setTotal(mockRows.length)
         setColumns(mockRows.length > 0 ? Object.keys(mockRows[0]) : [])
-      } finally {
-        setRowsLoading(false)
       }
-    },
-    [],
-  )
+    } catch {
+      const mockRows = MOCK_ROW_DATA[tableName] ?? []
+      setRows(mockRows)
+      setTotal(mockRows.length)
+      setColumns(mockRows.length > 0 ? Object.keys(mockRows[0]) : [])
+    } finally {
+      setRowsLoading(false)
+    }
+  }, [])
 
   useEffect(() => {
     if (selectedTable) {
@@ -304,7 +329,7 @@ function NpTablesContent() {
                       value={search}
                       onChange={(e) => setSearch(e.target.value)}
                       placeholder="Filter rows..."
-                      className="w-44 rounded border border-zinc-700 bg-zinc-900 py-1.5 pl-7 pr-3 text-xs text-zinc-300 placeholder-zinc-600 focus:border-indigo-500 focus:outline-none"
+                      className="w-44 rounded border border-zinc-700 bg-zinc-900 py-1.5 pr-3 pl-7 text-xs text-zinc-300 placeholder-zinc-600 focus:border-indigo-500 focus:outline-none"
                       aria-label="Filter rows"
                     />
                   </div>
@@ -358,7 +383,9 @@ function NpTablesContent() {
                   <div className="flex flex-col items-center justify-center py-16">
                     <Database className="mb-3 h-10 w-10 text-zinc-700" />
                     <p className="text-sm text-zinc-400">
-                      {search ? 'No rows match your filter' : 'This table is empty'}
+                      {search
+                        ? 'No rows match your filter'
+                        : 'This table is empty'}
                     </p>
                   </div>
                 ) : (
@@ -368,7 +395,7 @@ function NpTablesContent() {
                         {columns.map((col) => (
                           <th
                             key={col}
-                            className="cursor-pointer select-none px-4 py-2.5 text-left text-xs font-medium text-zinc-500 uppercase tracking-wide hover:text-zinc-300"
+                            className="cursor-pointer px-4 py-2.5 text-left text-xs font-medium tracking-wide text-zinc-500 uppercase select-none hover:text-zinc-300"
                             onClick={() => handleSort(col)}
                             aria-sort={
                               sortCol === col
@@ -408,7 +435,7 @@ function NpTablesContent() {
                                 <span
                                   className={
                                     isNull
-                                      ? 'italic text-zinc-600'
+                                      ? 'text-zinc-600 italic'
                                       : typeof val === 'boolean'
                                         ? val
                                           ? 'text-emerald-400'

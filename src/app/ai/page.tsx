@@ -116,7 +116,9 @@ export default function AIProvidersPage() {
 
   useEffect(() => {
     try {
-      const stored = localStorage.getItem('ai_selected_provider') as Provider | null
+      const stored = localStorage.getItem(
+        'ai_selected_provider',
+      ) as Provider | null
       if (stored && stored in PROVIDER_LABELS) {
         setSelectedProvider(stored)
       }
@@ -157,7 +159,9 @@ export default function AIProvidersPage() {
 
   const fetchProviders = async () => {
     try {
-      const res = await fetch(`${AI_API}/admin/providers`, { cache: 'no-store' })
+      const res = await fetch(`${AI_API}/admin/providers`, {
+        cache: 'no-store',
+      })
       if (!res.ok) {
         setProviders([])
         return
@@ -236,7 +240,10 @@ export default function AIProvidersPage() {
         })
       }
     } catch {
-      setSaveResult({ ok: false, msg: 'Could not reach nself-ai. Is it running?' })
+      setSaveResult({
+        ok: false,
+        msg: 'Could not reach nself-ai. Is it running?',
+      })
     } finally {
       setSaving(false)
     }
@@ -282,7 +289,7 @@ export default function AIProvidersPage() {
     : apiKey.trim().length > 0 && selectedModel.length > 0
 
   return (
-    <div className="space-y-6 max-w-2xl">
+    <div className="max-w-2xl space-y-6">
       {/* Page header */}
       <div className="flex items-center justify-between">
         <div>
@@ -315,7 +322,9 @@ export default function AIProvidersPage() {
           <div className="flex items-start gap-3">
             <AlertCircle className="mt-0.5 h-5 w-5 shrink-0 text-yellow-400" />
             <div>
-              <p className="font-medium text-yellow-300">nself-ai is not running</p>
+              <p className="font-medium text-yellow-300">
+                nself-ai is not running
+              </p>
               <p className="mt-1 text-sm text-yellow-400/80">
                 Install and start the AI plugin to configure providers.
               </p>
@@ -330,7 +339,7 @@ export default function AIProvidersPage() {
       {/* Provider selector */}
       <div className="space-y-2">
         <p className="text-sm font-medium text-zinc-300">Provider</p>
-        <div className="flex flex-wrap gap-1 rounded-xl border border-zinc-700/50 bg-zinc-800/50 p-1 w-fit">
+        <div className="flex w-fit flex-wrap gap-1 rounded-xl border border-zinc-700/50 bg-zinc-800/50 p-1">
           {(Object.keys(PROVIDER_LABELS) as Provider[]).map((p) => (
             <button
               key={p}
@@ -349,7 +358,7 @@ export default function AIProvidersPage() {
       </div>
 
       {/* Config section */}
-      <div className="rounded-xl border border-zinc-700/50 bg-zinc-800/30 p-5 space-y-5">
+      <div className="space-y-5 rounded-xl border border-zinc-700/50 bg-zinc-800/30 p-5">
         <h2 className="text-base font-semibold text-white">
           {PROVIDER_LABELS[selectedProvider]} Settings
         </h2>
@@ -358,25 +367,29 @@ export default function AIProvidersPage() {
           <>
             {/* Ollama URL */}
             <div className="space-y-1.5">
-              <label className="text-sm font-medium text-zinc-300">Ollama URL</label>
+              <label className="text-sm font-medium text-zinc-300">
+                Ollama URL
+              </label>
               <input
                 type="text"
                 value={ollamaUrl}
                 onChange={(e) => setOllamaUrl(e.target.value)}
                 placeholder="http://localhost:11434"
-                className="w-full rounded-lg border border-zinc-600/50 bg-zinc-800/50 px-3 py-2 text-sm text-zinc-100 placeholder-zinc-500 focus:border-indigo-500/50 focus:outline-none focus:ring-1 focus:ring-indigo-500/30"
+                className="w-full rounded-lg border border-zinc-600/50 bg-zinc-800/50 px-3 py-2 text-sm text-zinc-100 placeholder-zinc-500 focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/30 focus:outline-none"
               />
             </div>
 
             {/* Ollama model */}
             <div className="space-y-1.5">
-              <label className="text-sm font-medium text-zinc-300">Model name</label>
+              <label className="text-sm font-medium text-zinc-300">
+                Model name
+              </label>
               <input
                 type="text"
                 value={ollamaModel}
                 onChange={(e) => setOllamaModel(e.target.value)}
                 placeholder="llama3.2, mistral, phi3, ..."
-                className="w-full rounded-lg border border-zinc-600/50 bg-zinc-800/50 px-3 py-2 text-sm text-zinc-100 placeholder-zinc-500 focus:border-indigo-500/50 focus:outline-none focus:ring-1 focus:ring-indigo-500/30"
+                className="w-full rounded-lg border border-zinc-600/50 bg-zinc-800/50 px-3 py-2 text-sm text-zinc-100 placeholder-zinc-500 focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/30 focus:outline-none"
               />
             </div>
           </>
@@ -384,7 +397,9 @@ export default function AIProvidersPage() {
           <>
             {/* API key */}
             <div className="space-y-1.5">
-              <label className="text-sm font-medium text-zinc-300">API Key</label>
+              <label className="text-sm font-medium text-zinc-300">
+                API Key
+              </label>
               <div className="relative">
                 <input
                   type={showKey ? 'text' : 'password'}
@@ -397,7 +412,7 @@ export default function AIProvidersPage() {
                         ? 'sk-ant-...'
                         : 'AIza...'
                   }
-                  className="w-full rounded-lg border border-zinc-600/50 bg-zinc-800/50 px-3 py-2 pr-10 text-sm text-zinc-100 placeholder-zinc-500 focus:border-indigo-500/50 focus:outline-none focus:ring-1 focus:ring-indigo-500/30"
+                  className="w-full rounded-lg border border-zinc-600/50 bg-zinc-800/50 px-3 py-2 pr-10 text-sm text-zinc-100 placeholder-zinc-500 focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/30 focus:outline-none"
                 />
                 <button
                   type="button"
@@ -405,25 +420,34 @@ export default function AIProvidersPage() {
                   className="absolute inset-y-0 right-2.5 flex items-center text-zinc-500 hover:text-zinc-300"
                   aria-label={showKey ? 'Hide key' : 'Show key'}
                 >
-                  {showKey ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  {showKey ? (
+                    <EyeOff className="h-4 w-4" />
+                  ) : (
+                    <Eye className="h-4 w-4" />
+                  )}
                 </button>
               </div>
               <p className="text-xs text-zinc-600">
-                Stored encrypted in the database. The key will not be displayed after saving.
+                Stored encrypted in the database. The key will not be displayed
+                after saving.
               </p>
             </div>
 
             {/* Model selector */}
             <div className="space-y-1.5">
-              <label className="text-sm font-medium text-zinc-300">Default Model</label>
+              <label className="text-sm font-medium text-zinc-300">
+                Default Model
+              </label>
               <div className="relative">
                 <select
                   value={selectedModel}
                   onChange={(e) => setSelectedModel(e.target.value)}
                   aria-label="Default model"
-                  className="w-full appearance-none rounded-lg border border-zinc-600/50 bg-zinc-800/50 px-3 py-2 pr-8 text-sm text-zinc-100 focus:border-indigo-500/50 focus:outline-none focus:ring-1 focus:ring-indigo-500/30"
+                  className="w-full appearance-none rounded-lg border border-zinc-600/50 bg-zinc-800/50 px-3 py-2 pr-8 text-sm text-zinc-100 focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/30 focus:outline-none"
                 >
-                  {PROVIDER_MODELS[selectedProvider as Exclude<Provider, 'ollama'>].map((m) => (
+                  {PROVIDER_MODELS[
+                    selectedProvider as Exclude<Provider, 'ollama'>
+                  ].map((m) => (
                     <option key={m} value={m}>
                       {m}
                     </option>
@@ -441,7 +465,7 @@ export default function AIProvidersPage() {
             type="button"
             onClick={handleSave}
             disabled={saving || !canSave}
-            className="flex items-center gap-2 rounded-lg bg-indigo-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex items-center gap-2 rounded-lg bg-indigo-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-indigo-500 disabled:cursor-not-allowed disabled:opacity-50"
           >
             {saving ? (
               <Loader2 className="h-4 w-4 animate-spin" />
@@ -455,7 +479,7 @@ export default function AIProvidersPage() {
             type="button"
             onClick={handleTest}
             disabled={testing || pluginStatus !== 'running'}
-            className="flex items-center gap-2 rounded-lg border border-zinc-600 bg-zinc-700/50 px-4 py-2.5 text-sm font-medium text-zinc-200 hover:bg-zinc-700 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex items-center gap-2 rounded-lg border border-zinc-600 bg-zinc-700/50 px-4 py-2.5 text-sm font-medium text-zinc-200 hover:bg-zinc-700 disabled:cursor-not-allowed disabled:opacity-50"
           >
             {testing ? (
               <Loader2 className="h-4 w-4 animate-spin" />
@@ -480,7 +504,9 @@ export default function AIProvidersPage() {
             ) : (
               <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-red-400" />
             )}
-            <p className={`text-sm ${saveResult.ok ? 'text-green-300' : 'text-red-300'}`}>
+            <p
+              className={`text-sm ${saveResult.ok ? 'text-green-300' : 'text-red-300'}`}
+            >
               {saveResult.msg}
             </p>
           </div>
@@ -500,7 +526,9 @@ export default function AIProvidersPage() {
             ) : (
               <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-red-400" />
             )}
-            <p className={`text-sm ${testResult.ok ? 'text-green-300' : 'text-red-300'}`}>
+            <p
+              className={`text-sm ${testResult.ok ? 'text-green-300' : 'text-red-300'}`}
+            >
               {testResult.ok
                 ? `Connection successful — ${testResult.latency}ms`
                 : `Test failed: ${testResult.error}`}
@@ -512,13 +540,18 @@ export default function AIProvidersPage() {
       {/* Configured providers list */}
       <div className="rounded-xl border border-zinc-700/50 bg-zinc-800/50">
         <div className="border-b border-zinc-700/50 px-5 py-4">
-          <h2 className="text-sm font-semibold text-white">Configured Providers</h2>
+          <h2 className="text-sm font-semibold text-white">
+            Configured Providers
+          </h2>
         </div>
 
         {providersLoading ? (
           <div className="space-y-2 p-4">
             {[1, 2].map((n) => (
-              <div key={n} className="h-12 animate-pulse rounded-lg bg-zinc-700/40" />
+              <div
+                key={n}
+                className="h-12 animate-pulse rounded-lg bg-zinc-700/40"
+              />
             ))}
           </div>
         ) : providers.length === 0 ? (
@@ -532,8 +565,11 @@ export default function AIProvidersPage() {
         ) : (
           <div className="divide-y divide-zinc-700/50">
             {providers.map((p) => (
-              <div key={p.provider} className="flex items-center gap-3 px-5 py-3.5">
-                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-indigo-500/10 border border-indigo-500/20">
+              <div
+                key={p.provider}
+                className="flex items-center gap-3 px-5 py-3.5"
+              >
+                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-indigo-500/20 bg-indigo-500/10">
                   <Sparkles className="h-4 w-4 text-indigo-400" />
                 </div>
                 <div className="min-w-0 flex-1">

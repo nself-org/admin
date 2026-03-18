@@ -13,7 +13,6 @@ import {
   Save,
   Trash2,
   UserPlus,
-  X,
   XCircle,
 } from 'lucide-react'
 import { useEffect, useState } from 'react'
@@ -298,8 +297,10 @@ function apiActionToForm(raw: Record<string, unknown>): ActionForm {
 function condToYaml(c: RuleConditions, indent: string): string {
   const lines: string[] = []
   if (c.from) lines.push(`${indent}from: "${c.from}"`)
-  if (c.subject_contains) lines.push(`${indent}subject_contains: "${c.subject_contains}"`)
-  if (c.body_contains) lines.push(`${indent}body_contains: "${c.body_contains}"`)
+  if (c.subject_contains)
+    lines.push(`${indent}subject_contains: "${c.subject_contains}"`)
+  if (c.body_contains)
+    lines.push(`${indent}body_contains: "${c.body_contains}"`)
   if (c.has_attachment !== undefined)
     lines.push(`${indent}has_attachment: ${c.has_attachment}`)
   if (c.has_words?.length)
@@ -307,9 +308,7 @@ function condToYaml(c: RuleConditions, indent: string): string {
       `${indent}has_words: [${c.has_words.map((w) => `"${w}"`).join(', ')}]`,
     )
   if (c.labels?.length)
-    lines.push(
-      `${indent}labels: [${c.labels.map((l) => `"${l}"`).join(', ')}]`,
-    )
+    lines.push(`${indent}labels: [${c.labels.map((l) => `"${l}"`).join(', ')}]`)
   if (c.silent_trash_orgs?.length)
     lines.push(
       `${indent}silent_trash_orgs: [${c.silent_trash_orgs.map((o) => `"${o}"`).join(', ')}]`,
@@ -356,8 +355,12 @@ function actionToYaml(a: ActionForm, indent: string): string {
     case 'silent_trash':
       return `${indent}silent_trash:\n${i2}delay_seconds: ${a.delay_seconds ?? 0}`
     case 'auto_reply': {
-      const lines = [`${indent}auto_reply:`, `${i2}template: "${a.template ?? ''}"`]
-      if (a.subject_prefix) lines.push(`${i2}subject_prefix: "${a.subject_prefix}"`)
+      const lines = [
+        `${indent}auto_reply:`,
+        `${i2}template: "${a.template ?? ''}"`,
+      ]
+      if (a.subject_prefix)
+        lines.push(`${i2}subject_prefix: "${a.subject_prefix}"`)
       if (a.delay_seconds) lines.push(`${i2}delay_seconds: ${a.delay_seconds}`)
       return lines.join('\n')
     }
@@ -379,7 +382,8 @@ function actionToYaml(a: ActionForm, indent: string): string {
         `${i2}auto_reply: ${a.auto_reply_flag ?? false}`,
       ]
       if (a.context_hint) lines.push(`${i2}context_hint: "${a.context_hint}"`)
-      if (a.reply_channel) lines.push(`${i2}reply_channel: "${a.reply_channel}"`)
+      if (a.reply_channel)
+        lines.push(`${i2}reply_channel: "${a.reply_channel}"`)
       if (a.tg_chat_id) lines.push(`${i2}tg_chat_id: "${a.tg_chat_id}"`)
       if (a.timeout_secs) lines.push(`${i2}timeout_secs: ${a.timeout_secs}`)
       return lines.join('\n')
@@ -458,7 +462,9 @@ function ActionConfig({
     case 'leave_inbox':
     case 'discard':
       return (
-        <p className="text-xs text-zinc-500 italic">No additional config needed.</p>
+        <p className="text-xs text-zinc-500 italic">
+          No additional config needed.
+        </p>
       )
     case 'forward_to':
     case 'webhook':
@@ -544,7 +550,10 @@ function ActionConfig({
             />
           </div>
           <div>
-            <Label>Columns CSV — vars: {'{from}'}, {'{subject}'}, {'{date}'}, {'{rule}'}</Label>
+            <Label>
+              Columns CSV — vars: {'{from}'}, {'{subject}'}, {'{date}'},{' '}
+              {'{rule}'}
+            </Label>
             <input
               className={INPUT}
               value={action.columns_csv ?? ''}
@@ -705,7 +714,7 @@ function ActionConfig({
             />
             <label
               htmlFor="auto-reply-flag"
-              className="text-sm text-zinc-300 cursor-pointer"
+              className="cursor-pointer text-sm text-zinc-300"
             >
               Auto-send reply via Gmail (otherwise sends draft to Telegram)
             </label>
@@ -813,7 +822,9 @@ function RuleForm({
               placeholder="100"
               className={INPUT}
               value={rule.priority}
-              onChange={(e) => up({ priority: parseInt(e.target.value) || 100 })}
+              onChange={(e) =>
+                up({ priority: parseInt(e.target.value) || 100 })
+              }
               min={1}
             />
           </div>
@@ -824,7 +835,9 @@ function RuleForm({
               type="number"
               className={INPUT}
               value={rule.cooldown_secs ?? ''}
-              onChange={(e) => up({ cooldown_secs: e.target.value || undefined })}
+              onChange={(e) =>
+                up({ cooldown_secs: e.target.value || undefined })
+              }
               placeholder="300"
               min={0}
             />
@@ -833,11 +846,13 @@ function RuleForm({
 
         {/* Conditions */}
         <div className="space-y-3 rounded-lg border border-zinc-700/50 p-4">
-          <p className="text-xs font-semibold uppercase tracking-wider text-zinc-500">
+          <p className="text-xs font-semibold tracking-wider text-zinc-500 uppercase">
             Conditions
           </p>
           <div>
-            <Label>From (regex pattern, e.g. &quot;noreply|billing&quot;)</Label>
+            <Label>
+              From (regex pattern, e.g. &quot;noreply|billing&quot;)
+            </Label>
             <input
               className={INPUT}
               value={rule.conditions.from ?? ''}
@@ -900,7 +915,9 @@ function RuleForm({
             </div>
           </div>
           <div>
-            <Label>Silent trash orgs (comma-separated, match in From field)</Label>
+            <Label>
+              Silent trash orgs (comma-separated, match in From field)
+            </Label>
             <input
               className={INPUT}
               value={rule.conditions.silent_trash_orgs?.join(', ') ?? ''}
@@ -928,7 +945,7 @@ function RuleForm({
             />
             <label
               htmlFor="has-attachment"
-              className="text-sm text-zinc-300 cursor-pointer"
+              className="cursor-pointer text-sm text-zinc-300"
             >
               Has attachment
             </label>
@@ -937,7 +954,7 @@ function RuleForm({
 
         {/* Action */}
         <div className="space-y-3 rounded-lg border border-zinc-700/50 p-4">
-          <p className="text-xs font-semibold uppercase tracking-wider text-zinc-500">
+          <p className="text-xs font-semibold tracking-wider text-zinc-500 uppercase">
             Action
           </p>
           <div>
@@ -995,7 +1012,7 @@ function RuleForm({
             />
             <label
               htmlFor="enabled"
-              className="text-sm text-zinc-300 cursor-pointer"
+              className="cursor-pointer text-sm text-zinc-300"
             >
               Enabled
             </label>
@@ -1027,10 +1044,10 @@ function RuleForm({
 
       {/* Right: YAML preview */}
       <div className="rounded-xl border border-zinc-700/50 bg-zinc-900/80 p-5">
-        <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-zinc-500">
+        <p className="mb-3 text-xs font-semibold tracking-wider text-zinc-500 uppercase">
           YAML preview
         </p>
-        <pre className="overflow-x-auto whitespace-pre text-xs leading-relaxed text-emerald-300 font-mono">
+        <pre className="overflow-x-auto font-mono text-xs leading-relaxed whitespace-pre text-emerald-300">
           {ruleToYaml(rule)}
         </pre>
       </div>
@@ -1049,7 +1066,11 @@ function AccountsSection({
 }) {
   const [expanded, setExpanded] = useState(false)
   const [adding, setAdding] = useState(false)
-  const [form, setForm] = useState({ gmail_address: '', refresh_token: '', tg_chat_id: '' })
+  const [form, setForm] = useState({
+    gmail_address: '',
+    refresh_token: '',
+    tg_chat_id: '',
+  })
   const [saving, setSaving] = useState(false)
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null)
 
@@ -1110,17 +1131,18 @@ function AccountsSection({
       </button>
 
       {expanded && (
-        <div className="border-t border-zinc-700/50 px-5 pb-5 pt-4 space-y-4">
+        <div className="space-y-4 border-t border-zinc-700/50 px-5 pt-4 pb-5">
           {accounts.length === 0 && !adding && (
             <p className="text-sm text-zinc-500">
-              No accounts connected. Add one below to enable Gmail Pub/Sub processing.
+              No accounts connected. Add one below to enable Gmail Pub/Sub
+              processing.
             </p>
           )}
 
           {accounts.length > 0 && (
             <div className="overflow-hidden rounded-lg border border-zinc-700/50">
               <table className="w-full">
-                <thead className="bg-zinc-900/50 border-b border-zinc-700/50">
+                <thead className="border-b border-zinc-700/50 bg-zinc-900/50">
                   <tr>
                     <th className="px-3 py-2 text-left text-xs font-medium text-zinc-500 uppercase">
                       Address
@@ -1210,15 +1232,22 @@ function AccountsSection({
           )}
 
           {adding ? (
-            <form onSubmit={handleAdd} className="space-y-3 rounded-lg border border-zinc-700/50 bg-zinc-900/50 p-4">
-              <p className="text-xs font-medium text-zinc-300">Add Gmail account</p>
+            <form
+              onSubmit={handleAdd}
+              className="space-y-3 rounded-lg border border-zinc-700/50 bg-zinc-900/50 p-4"
+            >
+              <p className="text-xs font-medium text-zinc-300">
+                Add Gmail account
+              </p>
               <div>
                 <Label>Gmail address</Label>
                 <input
                   required
                   className={INPUT}
                   value={form.gmail_address}
-                  onChange={(e) => setForm((f) => ({ ...f, gmail_address: e.target.value }))}
+                  onChange={(e) =>
+                    setForm((f) => ({ ...f, gmail_address: e.target.value }))
+                  }
                   placeholder="you@gmail.com"
                 />
               </div>
@@ -1229,7 +1258,9 @@ function AccountsSection({
                   type="password"
                   className={INPUT}
                   value={form.refresh_token}
-                  onChange={(e) => setForm((f) => ({ ...f, refresh_token: e.target.value }))}
+                  onChange={(e) =>
+                    setForm((f) => ({ ...f, refresh_token: e.target.value }))
+                  }
                   placeholder="1//0g…"
                 />
               </div>
@@ -1238,7 +1269,9 @@ function AccountsSection({
                 <input
                   className={INPUT}
                   value={form.tg_chat_id}
-                  onChange={(e) => setForm((f) => ({ ...f, tg_chat_id: e.target.value }))}
+                  onChange={(e) =>
+                    setForm((f) => ({ ...f, tg_chat_id: e.target.value }))
+                  }
                   placeholder="-100123456789"
                 />
               </div>
@@ -1248,7 +1281,11 @@ function AccountsSection({
                   disabled={saving}
                   className="flex items-center gap-2 rounded-lg bg-indigo-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-indigo-500 disabled:opacity-50"
                 >
-                  {saving ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Save className="h-3.5 w-3.5" />}
+                  {saving ? (
+                    <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                  ) : (
+                    <Save className="h-3.5 w-3.5" />
+                  )}
                   {saving ? 'Saving…' : 'Save Account'}
                 </button>
                 <button
@@ -1299,7 +1336,9 @@ export default function MuxRulesPage() {
         setMuxDown(true)
         return
       }
-      const rulesData = (await rulesRes.json()) as { rules: Array<Record<string, unknown>> }
+      const rulesData = (await rulesRes.json()) as {
+        rules: Array<Record<string, unknown>>
+      }
       const accountsData = accountsRes.ok
         ? ((await accountsRes.json()) as { accounts: GmailAccount[] })
         : { accounts: [] }
@@ -1349,7 +1388,10 @@ export default function MuxRulesPage() {
         await fetch(`${MUX_API}/mux/rules/${editingRule.id}`, {
           method: 'PATCH',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ name: payload.name, enabled: payload.enabled }),
+          body: JSON.stringify({
+            name: payload.name,
+            enabled: payload.enabled,
+          }),
         })
       } else {
         await fetch(`${MUX_API}/mux/rules`, {
@@ -1407,11 +1449,13 @@ export default function MuxRulesPage() {
           <div className="flex items-start gap-3">
             <AlertCircle className="mt-0.5 h-5 w-5 shrink-0 text-yellow-400" />
             <div>
-              <p className="font-medium text-yellow-300">nself-mux is not running</p>
+              <p className="font-medium text-yellow-300">
+                nself-mux is not running
+              </p>
               <p className="mt-1 text-sm text-yellow-400/80">
                 Install and start the mux plugin to use the rule editor.
               </p>
-              <pre className="mt-3 rounded-lg bg-zinc-900/80 px-4 py-3 text-sm font-mono text-zinc-300">
+              <pre className="mt-3 rounded-lg bg-zinc-900/80 px-4 py-3 font-mono text-sm text-zinc-300">
                 nself plugin install mux
               </pre>
             </div>
@@ -1467,10 +1511,7 @@ export default function MuxRulesPage() {
       {/* Form */}
       {showForm && (
         <RuleForm
-          initial={
-            editingRule ??
-            emptyRule()
-          }
+          initial={editingRule ?? emptyRule()}
           accounts={accounts}
           onSave={handleSave}
           onCancel={() => {
@@ -1485,7 +1526,10 @@ export default function MuxRulesPage() {
       {loading && (
         <div className="space-y-3">
           {[1, 2, 3].map((n) => (
-            <div key={n} className="h-14 animate-pulse rounded-xl bg-zinc-800/50" />
+            <div
+              key={n}
+              className="h-14 animate-pulse rounded-xl bg-zinc-800/50"
+            />
           ))}
         </div>
       )}
@@ -1514,22 +1558,22 @@ export default function MuxRulesPage() {
           <table className="w-full">
             <thead className="border-b border-zinc-700/50 bg-zinc-900/50">
               <tr>
-                <th className="px-4 py-3 text-left text-xs font-medium uppercase text-zinc-500">
+                <th className="px-4 py-3 text-left text-xs font-medium text-zinc-500 uppercase">
                   Name
                 </th>
-                <th className="px-4 py-3 text-left text-xs font-medium uppercase text-zinc-500">
+                <th className="px-4 py-3 text-left text-xs font-medium text-zinc-500 uppercase">
                   Priority
                 </th>
-                <th className="px-4 py-3 text-left text-xs font-medium uppercase text-zinc-500">
+                <th className="px-4 py-3 text-left text-xs font-medium text-zinc-500 uppercase">
                   Match
                 </th>
-                <th className="px-4 py-3 text-left text-xs font-medium uppercase text-zinc-500">
+                <th className="px-4 py-3 text-left text-xs font-medium text-zinc-500 uppercase">
                   Action
                 </th>
-                <th className="px-4 py-3 text-left text-xs font-medium uppercase text-zinc-500">
+                <th className="px-4 py-3 text-left text-xs font-medium text-zinc-500 uppercase">
                   Status
                 </th>
-                <th className="px-4 py-3 text-right text-xs font-medium uppercase text-zinc-500">
+                <th className="px-4 py-3 text-right text-xs font-medium text-zinc-500 uppercase">
                   Controls
                 </th>
               </tr>
@@ -1550,13 +1594,19 @@ export default function MuxRulesPage() {
                     className="border-b border-zinc-700/50 last:border-0 hover:bg-zinc-800/50"
                   >
                     <td className="px-4 py-3">
-                      <span className="font-medium text-white">{rule.name}</span>
+                      <span className="font-medium text-white">
+                        {rule.name}
+                      </span>
                     </td>
                     <td className="px-4 py-3 text-sm text-zinc-400">
                       {rule.priority}
                     </td>
-                    <td className="px-4 py-3 text-sm text-zinc-400 max-w-[200px] truncate">
-                      {condSummary || <span className="italic text-zinc-600">all messages</span>}
+                    <td className="max-w-[200px] truncate px-4 py-3 text-sm text-zinc-400">
+                      {condSummary || (
+                        <span className="text-zinc-600 italic">
+                          all messages
+                        </span>
+                      )}
                     </td>
                     <td className="px-4 py-3">
                       <span className="rounded-full bg-indigo-900/30 px-2 py-0.5 text-xs text-indigo-300">
@@ -1616,9 +1666,7 @@ export default function MuxRulesPage() {
                         ) : (
                           <button
                             type="button"
-                            onClick={() =>
-                              rule.id && setDeleteConfirm(rule.id)
-                            }
+                            onClick={() => rule.id && setDeleteConfirm(rule.id)}
                             className="rounded p-1.5 text-zinc-400 hover:bg-zinc-700/50 hover:text-red-400"
                             aria-label={`Delete ${rule.name}`}
                           >

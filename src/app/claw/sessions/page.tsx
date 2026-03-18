@@ -95,7 +95,10 @@ function SessionsTab({
     return (
       <div className="space-y-3 pt-2">
         {[1, 2, 3].map((n) => (
-          <div key={n} className="h-12 animate-pulse rounded-xl bg-zinc-800/50" />
+          <div
+            key={n}
+            className="h-12 animate-pulse rounded-xl bg-zinc-800/50"
+          />
         ))}
       </div>
     )
@@ -103,7 +106,7 @@ function SessionsTab({
 
   if (sessions.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center rounded-xl border border-zinc-700/50 bg-zinc-800/30 py-14 mt-2">
+      <div className="mt-2 flex flex-col items-center justify-center rounded-xl border border-zinc-700/50 bg-zinc-800/30 py-14">
         <Users className="mb-3 h-10 w-10 text-zinc-600" />
         <p className="text-sm text-zinc-500">No sessions found.</p>
       </div>
@@ -116,22 +119,22 @@ function SessionsTab({
         <table className="w-full">
           <thead className="border-b border-zinc-700/50 bg-zinc-900/50">
             <tr>
-              <th className="px-4 py-3 text-left text-xs font-medium uppercase text-zinc-500">
+              <th className="px-4 py-3 text-left text-xs font-medium text-zinc-500 uppercase">
                 ID
               </th>
-              <th className="px-4 py-3 text-left text-xs font-medium uppercase text-zinc-500">
+              <th className="px-4 py-3 text-left text-xs font-medium text-zinc-500 uppercase">
                 User
               </th>
-              <th className="px-4 py-3 text-left text-xs font-medium uppercase text-zinc-500">
+              <th className="px-4 py-3 text-left text-xs font-medium text-zinc-500 uppercase">
                 Name
               </th>
-              <th className="px-4 py-3 text-left text-xs font-medium uppercase text-zinc-500">
+              <th className="px-4 py-3 text-left text-xs font-medium text-zinc-500 uppercase">
                 Created
               </th>
-              <th className="px-4 py-3 text-left text-xs font-medium uppercase text-zinc-500">
+              <th className="px-4 py-3 text-left text-xs font-medium text-zinc-500 uppercase">
                 Updated
               </th>
-              <th className="px-4 py-3 text-left text-xs font-medium uppercase text-zinc-500">
+              <th className="px-4 py-3 text-left text-xs font-medium text-zinc-500 uppercase">
                 Mode
               </th>
               <th className="px-4 py-3" />
@@ -149,13 +152,13 @@ function SessionsTab({
                 <td className="px-4 py-3 text-sm text-zinc-400">{s.user_id}</td>
                 <td className="px-4 py-3 text-sm text-zinc-300">
                   {s.name ?? (
-                    <span className="italic text-zinc-600">Unnamed</span>
+                    <span className="text-zinc-600 italic">Unnamed</span>
                   )}
                 </td>
-                <td className="px-4 py-3 text-xs text-zinc-500 whitespace-nowrap">
+                <td className="px-4 py-3 text-xs whitespace-nowrap text-zinc-500">
                   {new Date(s.created_at).toLocaleString()}
                 </td>
-                <td className="px-4 py-3 text-xs text-zinc-500 whitespace-nowrap">
+                <td className="px-4 py-3 text-xs whitespace-nowrap text-zinc-500">
                   {new Date(s.updated_at).toLocaleString()}
                 </td>
                 <td className="px-4 py-3">
@@ -190,10 +193,16 @@ function IdentitiesTab({ clawDown }: { clawDown: boolean }) {
   const [identities, setIdentities] = useState<ClawIdentity[]>([])
   const [loading, setLoading] = useState(true)
   const [expandedId, setExpandedId] = useState<string | null>(null)
-  const [drafts, setDrafts] = useState<Record<string, Partial<ClawIdentity>>>({})
+  const [drafts, setDrafts] = useState<Record<string, Partial<ClawIdentity>>>(
+    {},
+  )
   const [saving, setSaving] = useState<string | null>(null)
   const [creatingNew, setCreatingNew] = useState(false)
-  const [newDraft, setNewDraft] = useState({ name: '', soul: '', user_profile: '' })
+  const [newDraft, setNewDraft] = useState({
+    name: '',
+    soul: '',
+    user_profile: '',
+  })
 
   const fetchIdentities = async () => {
     setLoading(true)
@@ -216,7 +225,11 @@ function IdentitiesTab({ clawDown }: { clawDown: boolean }) {
   const getDraft = (id: string, field: keyof ClawIdentity, fallback: string) =>
     (drafts[id]?.[field] as string | undefined) ?? fallback
 
-  const setDraftField = (id: string, field: keyof ClawIdentity, value: string) => {
+  const setDraftField = (
+    id: string,
+    field: keyof ClawIdentity,
+    value: string,
+  ) => {
     setDrafts((prev) => ({
       ...prev,
       [id]: { ...prev[id], [field]: value },
@@ -290,7 +303,10 @@ function IdentitiesTab({ clawDown }: { clawDown: boolean }) {
     return (
       <div className="space-y-3 pt-2">
         {[1, 2].map((n) => (
-          <div key={n} className="h-16 animate-pulse rounded-xl bg-zinc-800/50" />
+          <div
+            key={n}
+            className="h-16 animate-pulse rounded-xl bg-zinc-800/50"
+          />
         ))}
       </div>
     )
@@ -300,21 +316,25 @@ function IdentitiesTab({ clawDown }: { clawDown: boolean }) {
     <div className="mt-2 space-y-3">
       {/* New identity form */}
       {creatingNew ? (
-        <div className="rounded-xl border border-indigo-500/30 bg-zinc-800/50 p-4 space-y-3">
+        <div className="space-y-3 rounded-xl border border-indigo-500/30 bg-zinc-800/50 p-4">
           <p className="text-sm font-medium text-white">New Identity</p>
           <input
             type="text"
             placeholder="Name"
             value={newDraft.name}
-            onChange={(e) => setNewDraft((d) => ({ ...d, name: e.target.value }))}
+            onChange={(e) =>
+              setNewDraft((d) => ({ ...d, name: e.target.value }))
+            }
             className="w-full rounded-lg border border-zinc-700/50 bg-zinc-900/50 px-3 py-2 text-sm text-white placeholder-zinc-500 outline-none focus:border-indigo-500/50"
           />
           <textarea
             placeholder="Soul (agent personality / instructions)…"
             value={newDraft.soul}
-            onChange={(e) => setNewDraft((d) => ({ ...d, soul: e.target.value }))}
+            onChange={(e) =>
+              setNewDraft((d) => ({ ...d, soul: e.target.value }))
+            }
             rows={4}
-            className="w-full rounded-lg border border-zinc-700/50 bg-zinc-900/50 px-3 py-2 text-sm text-white placeholder-zinc-500 outline-none focus:border-indigo-500/50 resize-none"
+            className="w-full resize-none rounded-lg border border-zinc-700/50 bg-zinc-900/50 px-3 py-2 text-sm text-white placeholder-zinc-500 outline-none focus:border-indigo-500/50"
           />
           <textarea
             placeholder="User profile (optional)…"
@@ -323,7 +343,7 @@ function IdentitiesTab({ clawDown }: { clawDown: boolean }) {
               setNewDraft((d) => ({ ...d, user_profile: e.target.value }))
             }
             rows={2}
-            className="w-full rounded-lg border border-zinc-700/50 bg-zinc-900/50 px-3 py-2 text-sm text-white placeholder-zinc-500 outline-none focus:border-indigo-500/50 resize-none"
+            className="w-full resize-none rounded-lg border border-zinc-700/50 bg-zinc-900/50 px-3 py-2 text-sm text-white placeholder-zinc-500 outline-none focus:border-indigo-500/50"
           />
           <div className="flex gap-2">
             <button
@@ -380,7 +400,9 @@ function IdentitiesTab({ clawDown }: { clawDown: boolean }) {
           <div
             key={identity.id}
             className={`rounded-xl border bg-zinc-800/50 ${
-              identity.is_active ? 'border-emerald-500/30' : 'border-zinc-700/50'
+              identity.is_active
+                ? 'border-emerald-500/30'
+                : 'border-zinc-700/50'
             }`}
           >
             {/* Row header */}
@@ -416,7 +438,7 @@ function IdentitiesTab({ clawDown }: { clawDown: boolean }) {
 
             {/* Expanded editor */}
             {isExpanded && (
-              <div className="border-t border-zinc-700/50 px-4 pb-4 pt-3 space-y-3">
+              <div className="space-y-3 border-t border-zinc-700/50 px-4 pt-3 pb-4">
                 <div>
                   <label className="mb-1 block text-xs font-medium text-zinc-500">
                     Name
@@ -544,7 +566,10 @@ function ToolsTab({ clawDown }: { clawDown: boolean }) {
     return (
       <div className="space-y-3 pt-2">
         {[1, 2, 3].map((n) => (
-          <div key={n} className="h-12 animate-pulse rounded-xl bg-zinc-800/50" />
+          <div
+            key={n}
+            className="h-12 animate-pulse rounded-xl bg-zinc-800/50"
+          />
         ))}
       </div>
     )
@@ -579,16 +604,16 @@ function ToolsTab({ clawDown }: { clawDown: boolean }) {
             <table className="w-full">
               <thead className="border-b border-zinc-700/50 bg-zinc-900/50">
                 <tr>
-                  <th className="px-4 py-3 text-left text-xs font-medium uppercase text-zinc-500">
+                  <th className="px-4 py-3 text-left text-xs font-medium text-zinc-500 uppercase">
                     Slug
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium uppercase text-zinc-500">
+                  <th className="px-4 py-3 text-left text-xs font-medium text-zinc-500 uppercase">
                     Description
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium uppercase text-zinc-500">
+                  <th className="px-4 py-3 text-left text-xs font-medium text-zinc-500 uppercase">
                     Type
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium uppercase text-zinc-500">
+                  <th className="px-4 py-3 text-left text-xs font-medium text-zinc-500 uppercase">
                     Status
                   </th>
                 </tr>
@@ -602,9 +627,9 @@ function ToolsTab({ clawDown }: { clawDown: boolean }) {
                     <td className="px-4 py-3 font-mono text-sm text-zinc-200">
                       {tool.slug}
                     </td>
-                    <td className="px-4 py-3 text-sm text-zinc-400 max-w-[280px]">
+                    <td className="max-w-[280px] px-4 py-3 text-sm text-zinc-400">
                       {tool.description ?? (
-                        <span className="italic text-zinc-600">
+                        <span className="text-zinc-600 italic">
                           No description
                         </span>
                       )}
@@ -668,7 +693,11 @@ export default function ClawSessionsPage() {
 
   const tabs: { id: Tab; label: string; icon: React.ReactNode }[] = [
     { id: 'sessions', label: 'Sessions', icon: <Users className="h-4 w-4" /> },
-    { id: 'identities', label: 'Identities', icon: <Brain className="h-4 w-4" /> },
+    {
+      id: 'identities',
+      label: 'Identities',
+      icon: <Brain className="h-4 w-4" />,
+    },
     { id: 'tools', label: 'Tools', icon: <Wrench className="h-4 w-4" /> },
   ]
 
@@ -720,7 +749,7 @@ export default function ClawSessionsPage() {
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-1 rounded-xl border border-zinc-700/50 bg-zinc-800/30 p-1 w-fit">
+      <div className="flex w-fit gap-1 rounded-xl border border-zinc-700/50 bg-zinc-800/30 p-1">
         {tabs.map((tab) => (
           <button
             key={tab.id}

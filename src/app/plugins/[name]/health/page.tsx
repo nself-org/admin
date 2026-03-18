@@ -93,7 +93,7 @@ function MetricCard({
       aria-label={label}
     >
       <div className="flex items-center justify-between">
-        <p className="text-xs font-medium text-zinc-500 uppercase tracking-wide">
+        <p className="text-xs font-medium tracking-wide text-zinc-500 uppercase">
           {label}
         </p>
         <Icon className={`h-4 w-4 ${iconColorMap[color]}`} />
@@ -223,7 +223,8 @@ export default function PluginHealthPage() {
       setState((prev) => ({
         ...prev,
         loading: false,
-        error: err instanceof Error ? err.message : 'Failed to fetch health data',
+        error:
+          err instanceof Error ? err.message : 'Failed to fetch health data',
       }))
     }
   }, [pluginName])
@@ -246,10 +247,17 @@ export default function PluginHealthPage() {
     }
   }, [fetchHealth])
 
-  const { healthy, licenseTier, metrics, dockerStats, lastUpdated, loading, error } = state
+  const {
+    healthy,
+    licenseTier,
+    metrics,
+    dockerStats,
+    lastUpdated,
+    loading,
+    error,
+  } = state
 
-  const errorRateColor =
-    metrics && metrics.errorRate > 5 ? 'red' : 'green'
+  const errorRateColor = metrics && metrics.errorRate > 5 ? 'red' : 'green'
 
   return (
     <div className="flex min-h-screen flex-col bg-zinc-950">
@@ -366,7 +374,7 @@ export default function PluginHealthPage() {
         {/* Metrics cards */}
         {metrics && (
           <div>
-            <h2 className="mb-3 text-xs font-medium text-zinc-500 uppercase tracking-wide">
+            <h2 className="mb-3 text-xs font-medium tracking-wide text-zinc-500 uppercase">
               Request Metrics
             </h2>
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">

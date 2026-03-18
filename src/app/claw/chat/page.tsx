@@ -59,14 +59,14 @@ function CanvasRenderer({ frame }: { frame: CanvasFrame }) {
       const body = (frame.data.body as string) ?? ''
       return (
         <div className="mt-2 rounded-lg border border-indigo-500/30 bg-indigo-900/20 p-3">
-          <div className="flex items-center gap-1.5 mb-1">
+          <div className="mb-1 flex items-center gap-1.5">
             <Layout className="h-3.5 w-3.5 text-indigo-400" />
-            <span className="text-xs font-medium text-indigo-300 uppercase tracking-wide">
+            <span className="text-xs font-medium tracking-wide text-indigo-300 uppercase">
               Card
             </span>
           </div>
           {title && (
-            <p className="text-sm font-medium text-white mb-1">{title}</p>
+            <p className="mb-1 text-sm font-medium text-white">{title}</p>
           )}
           {body && <p className="text-sm text-zinc-300">{body}</p>}
         </div>
@@ -77,18 +77,18 @@ function CanvasRenderer({ frame }: { frame: CanvasFrame }) {
       const title = (frame.data.title as string) ?? ''
       return (
         <div className="mt-2 rounded-lg border border-indigo-500/30 bg-indigo-900/20 p-3">
-          <div className="flex items-center gap-1.5 mb-1">
+          <div className="mb-1 flex items-center gap-1.5">
             <Layout className="h-3.5 w-3.5 text-indigo-400" />
-            <span className="text-xs font-medium text-indigo-300 uppercase tracking-wide">
+            <span className="text-xs font-medium tracking-wide text-indigo-300 uppercase">
               List
             </span>
           </div>
           {title && (
-            <p className="text-sm font-medium text-white mb-1">{title}</p>
+            <p className="mb-1 text-sm font-medium text-white">{title}</p>
           )}
           <ul className="space-y-0.5 pl-3">
             {items.map((item, i) => (
-              <li key={i} className="text-sm text-zinc-300 list-disc">
+              <li key={i} className="list-disc text-sm text-zinc-300">
                 {item}
               </li>
             ))}
@@ -101,20 +101,20 @@ function CanvasRenderer({ frame }: { frame: CanvasFrame }) {
       const title = (frame.data.title as string) ?? ''
       return (
         <div className="mt-2 rounded-lg border border-indigo-500/30 bg-indigo-900/20 p-3">
-          <div className="flex items-center gap-1.5 mb-1">
+          <div className="mb-1 flex items-center gap-1.5">
             <Layout className="h-3.5 w-3.5 text-indigo-400" />
-            <span className="text-xs font-medium text-indigo-300 uppercase tracking-wide">
+            <span className="text-xs font-medium tracking-wide text-indigo-300 uppercase">
               Form
             </span>
           </div>
           {title && (
-            <p className="text-sm font-medium text-white mb-1">{title}</p>
+            <p className="mb-1 text-sm font-medium text-white">{title}</p>
           )}
           <div className="space-y-1">
             {fields.map((field, i) => (
               <div key={i} className="flex items-center gap-2">
                 <span className="text-xs text-zinc-500">{field.label}</span>
-                <div className="flex-1 h-6 rounded bg-zinc-700/50 border border-zinc-600/50" />
+                <div className="h-6 flex-1 rounded border border-zinc-600/50 bg-zinc-700/50" />
               </div>
             ))}
           </div>
@@ -128,9 +128,9 @@ function CanvasRenderer({ frame }: { frame: CanvasFrame }) {
         'Chart'
       return (
         <div className="mt-2 rounded-lg border border-indigo-500/30 bg-indigo-900/20 p-3">
-          <div className="flex items-center gap-1.5 mb-1">
+          <div className="mb-1 flex items-center gap-1.5">
             <Layout className="h-3.5 w-3.5 text-indigo-400" />
-            <span className="text-xs font-medium text-indigo-300 uppercase tracking-wide">
+            <span className="text-xs font-medium tracking-wide text-indigo-300 uppercase">
               Chart
             </span>
           </div>
@@ -141,13 +141,13 @@ function CanvasRenderer({ frame }: { frame: CanvasFrame }) {
     default:
       return (
         <div className="mt-2 rounded-lg border border-zinc-600/50 bg-zinc-800/50 p-3">
-          <div className="flex items-center gap-1.5 mb-1">
+          <div className="mb-1 flex items-center gap-1.5">
             <Layout className="h-3.5 w-3.5 text-zinc-500" />
-            <span className="text-xs font-medium text-zinc-400 uppercase tracking-wide">
+            <span className="text-xs font-medium tracking-wide text-zinc-400 uppercase">
               Canvas ({frame.kind})
             </span>
           </div>
-          <pre className="text-xs text-zinc-400 overflow-auto">
+          <pre className="overflow-auto text-xs text-zinc-400">
             {JSON.stringify(frame.data, null, 2)}
           </pre>
         </div>
@@ -163,32 +163,32 @@ function ToolCallAccordion({ toolCall }: { toolCall: ToolCall }) {
     <details
       open={open}
       onToggle={(e) => setOpen((e.target as HTMLDetailsElement).open)}
-      className="mt-2 rounded-lg border border-zinc-600/50 bg-zinc-900/50 overflow-hidden"
+      className="mt-2 overflow-hidden rounded-lg border border-zinc-600/50 bg-zinc-900/50"
     >
-      <summary className="flex cursor-pointer select-none items-center gap-2 px-3 py-2 text-xs font-medium text-zinc-300 hover:bg-zinc-800/50">
-        <Wrench className="h-3.5 w-3.5 text-zinc-500 shrink-0" />
+      <summary className="flex cursor-pointer items-center gap-2 px-3 py-2 text-xs font-medium text-zinc-300 select-none hover:bg-zinc-800/50">
+        <Wrench className="h-3.5 w-3.5 shrink-0 text-zinc-500" />
         <span className="flex-1">Tool: {toolCall.name}</span>
         {open ? (
-          <ChevronUp className="h-3.5 w-3.5 text-zinc-500 shrink-0" />
+          <ChevronUp className="h-3.5 w-3.5 shrink-0 text-zinc-500" />
         ) : (
-          <ChevronDown className="h-3.5 w-3.5 text-zinc-500 shrink-0" />
+          <ChevronDown className="h-3.5 w-3.5 shrink-0 text-zinc-500" />
         )}
       </summary>
-      <div className="border-t border-zinc-700/50 px-3 py-2 space-y-2">
+      <div className="space-y-2 border-t border-zinc-700/50 px-3 py-2">
         <div>
-          <p className="text-xs font-medium text-zinc-500 mb-1 uppercase tracking-wide">
+          <p className="mb-1 text-xs font-medium tracking-wide text-zinc-500 uppercase">
             Args
           </p>
-          <pre className="text-xs text-zinc-300 overflow-auto rounded bg-zinc-950/50 p-2">
+          <pre className="overflow-auto rounded bg-zinc-950/50 p-2 text-xs text-zinc-300">
             {JSON.stringify(toolCall.args, null, 2)}
           </pre>
         </div>
         {toolCall.result !== undefined && (
           <div>
-            <p className="text-xs font-medium text-zinc-500 mb-1 uppercase tracking-wide">
+            <p className="mb-1 text-xs font-medium tracking-wide text-zinc-500 uppercase">
               Result
             </p>
-            <pre className="text-xs text-zinc-300 overflow-auto rounded bg-zinc-950/50 p-2 whitespace-pre-wrap">
+            <pre className="overflow-auto rounded bg-zinc-950/50 p-2 text-xs whitespace-pre-wrap text-zinc-300">
               {toolCall.result}
             </pre>
           </div>
@@ -233,7 +233,7 @@ function MessageBubble({
     <div className={`flex gap-3 ${isUser ? 'flex-row-reverse' : 'flex-row'}`}>
       {/* Avatar */}
       <div
-        className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full mt-0.5 ${
+        className={`mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full ${
           isUser ? 'bg-indigo-600' : 'bg-zinc-700'
         }`}
       >
@@ -245,17 +245,24 @@ function MessageBubble({
       </div>
 
       {/* Bubble */}
-      <div className={`max-w-[75%] space-y-1 ${isUser ? 'items-end' : 'items-start'} flex flex-col`}>
+      <div
+        className={`max-w-[75%] space-y-1 ${isUser ? 'items-end' : 'items-start'} flex flex-col`}
+      >
         <div
           className={`rounded-2xl px-4 py-2.5 text-sm leading-relaxed ${
             isUser
-              ? 'bg-indigo-600 text-white rounded-tr-sm'
-              : 'bg-zinc-800 text-zinc-100 rounded-tl-sm border border-zinc-700/50'
+              ? 'rounded-tr-sm bg-indigo-600 text-white'
+              : 'rounded-tl-sm border border-zinc-700/50 bg-zinc-800 text-zinc-100'
           }`}
         >
-          {displayContent || (isStreaming ? null : <span className="italic text-zinc-500">(no text)</span>)}
+          {displayContent ||
+            (isStreaming ? null : (
+              <span className="text-zinc-500 italic">(no text)</span>
+            ))}
           {isStreaming && (
-            <span className="inline-block ml-0.5 animate-pulse text-indigo-400">▋</span>
+            <span className="ml-0.5 inline-block animate-pulse text-indigo-400">
+              ▋
+            </span>
           )}
         </div>
 
@@ -278,7 +285,8 @@ function MessageBubble({
         {/* Memory used badge */}
         {message.memories_used !== undefined && message.memories_used > 0 && (
           <span className="text-xs text-zinc-600">
-            {message.memories_used} memor{message.memories_used === 1 ? 'y' : 'ies'} recalled
+            {message.memories_used} memor
+            {message.memories_used === 1 ? 'y' : 'ies'} recalled
           </span>
         )}
 
@@ -337,10 +345,10 @@ function SessionSidebar({
             ))}
           </div>
         ) : sessions.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-8 px-4 text-center">
+          <div className="flex flex-col items-center justify-center px-4 py-8 text-center">
             <Bot className="mb-2 h-6 w-6 text-zinc-600" />
             <p className="text-xs text-zinc-500">No sessions yet</p>
-            <p className="text-xs text-zinc-600 mt-0.5">
+            <p className="mt-0.5 text-xs text-zinc-600">
               Start a new conversation
             </p>
           </div>
@@ -352,7 +360,7 @@ function SessionSidebar({
                 key={session.id}
                 className={`group mx-1 my-0.5 flex cursor-pointer items-start justify-between gap-2 rounded-lg px-3 py-2.5 transition-colors ${
                   isActive
-                    ? 'bg-indigo-600/20 border border-indigo-500/30'
+                    ? 'border border-indigo-500/30 bg-indigo-600/20'
                     : 'hover:bg-zinc-800/50'
                 }`}
                 onClick={() => onSelect(session.id)}
@@ -365,7 +373,7 @@ function SessionSidebar({
                   >
                     {session.name ?? `Session ${session.id.slice(0, 8)}`}
                   </p>
-                  <p className="text-xs text-zinc-600 mt-0.5">
+                  <p className="mt-0.5 text-xs text-zinc-600">
                     {new Date(session.updated_at).toLocaleDateString()}
                   </p>
                 </div>
@@ -375,7 +383,7 @@ function SessionSidebar({
                     e.stopPropagation()
                     onDelete(session.id)
                   }}
-                  className="shrink-0 rounded p-0.5 text-zinc-600 opacity-0 transition-opacity hover:text-red-400 group-hover:opacity-100"
+                  className="shrink-0 rounded p-0.5 text-zinc-600 opacity-0 transition-opacity group-hover:opacity-100 hover:text-red-400"
                   aria-label="Delete session"
                 >
                   <Trash2 className="h-3.5 w-3.5" />
@@ -678,10 +686,10 @@ export default function ClawChatPage() {
         {/* Chat area */}
         <div className="flex flex-1 flex-col overflow-hidden">
           {/* Messages */}
-          <div className="flex-1 overflow-y-auto px-6 py-4 space-y-4">
+          <div className="flex-1 space-y-4 overflow-y-auto px-6 py-4">
             {messages.length === 0 && !streaming ? (
               <div className="flex h-full flex-col items-center justify-center text-center">
-                <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-indigo-600/20 border border-indigo-500/30">
+                <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-full border border-indigo-500/30 bg-indigo-600/20">
                   <Bot className="h-7 w-7 text-indigo-400" />
                 </div>
                 <p className="text-base font-medium text-zinc-300">
@@ -713,7 +721,7 @@ export default function ClawChatPage() {
                 {/* Spinner while waiting for first token */}
                 {streaming && !streamingText && (
                   <div className="flex gap-3">
-                    <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-zinc-700 mt-0.5">
+                    <div className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-zinc-700">
                       <Bot className="h-3.5 w-3.5 text-zinc-300" />
                     </div>
                     <div className="flex items-center gap-2 rounded-2xl rounded-tl-sm border border-zinc-700/50 bg-zinc-800 px-4 py-2.5">
@@ -738,13 +746,13 @@ export default function ClawChatPage() {
                 placeholder="Message ɳClaw… (Enter to send, Shift+Enter for newline)"
                 rows={1}
                 disabled={streaming}
-                className="flex-1 resize-none rounded-xl border border-zinc-600/50 bg-zinc-800/50 px-4 py-3 text-sm text-zinc-100 placeholder-zinc-500 focus:border-indigo-500/50 focus:outline-none focus:ring-1 focus:ring-indigo-500/30 disabled:opacity-50 max-h-36 overflow-y-auto leading-normal"
+                className="max-h-36 flex-1 resize-none overflow-y-auto rounded-xl border border-zinc-600/50 bg-zinc-800/50 px-4 py-3 text-sm leading-normal text-zinc-100 placeholder-zinc-500 focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/30 focus:outline-none disabled:opacity-50"
               />
               <button
                 type="button"
                 onClick={handleSend}
                 disabled={!input.trim() || streaming}
-                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-indigo-600 text-white hover:bg-indigo-500 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-indigo-600 text-white transition-colors hover:bg-indigo-500 disabled:cursor-not-allowed disabled:opacity-40"
                 aria-label="Send message"
               >
                 {streaming ? (

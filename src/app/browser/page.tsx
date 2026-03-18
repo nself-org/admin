@@ -58,9 +58,9 @@ function StatCard({
 }) {
   return (
     <div className="rounded-xl border border-zinc-700/50 bg-zinc-800/50 p-4">
-      <div className="flex items-center gap-2 mb-2">
+      <div className="mb-2 flex items-center gap-2">
         <Icon className="h-4 w-4 text-zinc-500" />
-        <span className="text-xs font-medium text-zinc-500 uppercase tracking-wide">
+        <span className="text-xs font-medium tracking-wide text-zinc-500 uppercase">
           {label}
         </span>
       </div>
@@ -80,9 +80,9 @@ function ScreenshotCard({ screenshot }: { screenshot: Screenshot }) {
       href={imgSrc}
       target="_blank"
       rel="noopener noreferrer"
-      className="group block rounded-xl border border-zinc-700/50 bg-zinc-800/50 overflow-hidden hover:border-zinc-600/70 transition-colors"
+      className="group block overflow-hidden rounded-xl border border-zinc-700/50 bg-zinc-800/50 transition-colors hover:border-zinc-600/70"
     >
-      <div className="relative aspect-video bg-zinc-900 overflow-hidden">
+      <div className="relative aspect-video overflow-hidden bg-zinc-900">
         {imgError ? (
           <div className="flex h-full items-center justify-center">
             <Camera className="h-8 w-8 text-zinc-700" />
@@ -95,17 +95,17 @@ function ScreenshotCard({ screenshot }: { screenshot: Screenshot }) {
               onError={() => setImgError(true)}
               className="h-full w-full object-cover object-top transition-transform group-hover:scale-105"
             />
-            <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/40">
+            <div className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 transition-opacity group-hover:opacity-100">
               <ExternalLink className="h-6 w-6 text-white" />
             </div>
           </>
         )}
       </div>
       <div className="px-3 py-2">
-        <p className="text-xs font-medium text-zinc-300 truncate">
+        <p className="truncate text-xs font-medium text-zinc-300">
           {screenshot.site}
         </p>
-        <p className="text-xs text-zinc-600 mt-0.5 flex items-center gap-1">
+        <p className="mt-0.5 flex items-center gap-1 text-xs text-zinc-600">
           <Clock className="h-3 w-3 shrink-0" />
           {new Date(screenshot.created_at).toLocaleString()}
         </p>
@@ -329,9 +329,9 @@ export default function BrowserPage() {
               icon={Camera}
             />
             <div className="rounded-xl border border-zinc-700/50 bg-zinc-800/50 p-4">
-              <div className="flex items-center gap-2 mb-2">
+              <div className="mb-2 flex items-center gap-2">
                 <Monitor className="h-4 w-4 text-zinc-500" />
-                <span className="text-xs font-medium text-zinc-500 uppercase tracking-wide">
+                <span className="text-xs font-medium tracking-wide text-zinc-500 uppercase">
                   Plugin Status
                 </span>
               </div>
@@ -390,7 +390,7 @@ export default function BrowserPage() {
                     className="flex items-center gap-3 px-5 py-3.5"
                   >
                     {/* Site icon */}
-                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-zinc-700/50 border border-zinc-600/50">
+                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-zinc-600/50 bg-zinc-700/50">
                       <Globe className="h-4 w-4 text-zinc-400" />
                     </div>
 
@@ -399,7 +399,7 @@ export default function BrowserPage() {
                       <p className="truncate text-sm font-medium text-zinc-200">
                         {session.site}
                       </p>
-                      <p className="flex items-center gap-1 text-xs text-zinc-500 mt-0.5">
+                      <p className="mt-0.5 flex items-center gap-1 text-xs text-zinc-500">
                         <Clock className="h-3 w-3 shrink-0" />
                         Last used:{' '}
                         {new Date(session.last_used).toLocaleString()}
@@ -417,7 +417,7 @@ export default function BrowserPage() {
                       type="button"
                       onClick={() => void handleDeleteSession(session.id)}
                       disabled={deletingId === session.id}
-                      className="shrink-0 rounded-lg p-1.5 text-zinc-600 hover:text-red-400 hover:bg-red-500/10 disabled:opacity-50 transition-colors"
+                      className="shrink-0 rounded-lg p-1.5 text-zinc-600 transition-colors hover:bg-red-500/10 hover:text-red-400 disabled:opacity-50"
                       aria-label={`Delete session for ${session.site}`}
                     >
                       {deletingId === session.id ? (

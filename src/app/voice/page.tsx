@@ -67,7 +67,9 @@ function SpeedSlider({
     <div className="space-y-1.5">
       <div className="flex items-center justify-between">
         <label className="text-sm font-medium text-zinc-300">Speed</label>
-        <span className="text-sm font-medium text-indigo-300">{value.toFixed(1)}×</span>
+        <span className="text-sm font-medium text-indigo-300">
+          {value.toFixed(1)}×
+        </span>
       </div>
       <input
         type="range"
@@ -76,7 +78,7 @@ function SpeedSlider({
         step="0.1"
         value={value}
         onChange={(e) => onChange(parseFloat(e.target.value))}
-        className="w-full h-1.5 rounded-full appearance-none cursor-pointer bg-zinc-700 accent-indigo-500"
+        className="h-1.5 w-full cursor-pointer appearance-none rounded-full bg-zinc-700 accent-indigo-500"
       />
       <div className="flex justify-between text-xs text-zinc-600">
         <span>0.5×</span>
@@ -104,9 +106,9 @@ function AudioPlayer({ src }: { src: string }) {
 
   return (
     <div className="rounded-lg border border-indigo-500/30 bg-indigo-900/10 p-3">
-      <div className="flex items-center gap-2 mb-2">
+      <div className="mb-2 flex items-center gap-2">
         <Volume2 className="h-4 w-4 text-indigo-400" />
-        <span className="text-xs font-medium text-indigo-300 uppercase tracking-wide">
+        <span className="text-xs font-medium tracking-wide text-indigo-300 uppercase">
           Audio Output
         </span>
       </div>
@@ -114,7 +116,7 @@ function AudioPlayer({ src }: { src: string }) {
         ref={audioRef}
         src={src}
         controls
-        className="w-full h-8"
+        className="h-8 w-full"
         style={{ colorScheme: 'dark' }}
       />
     </div>
@@ -150,9 +152,12 @@ export default function VoiceConfigPage() {
 
   useEffect(() => {
     try {
-      const storedProvider = localStorage.getItem('voice_provider') as Provider | null
+      const storedProvider = localStorage.getItem(
+        'voice_provider',
+      ) as Provider | null
       const storedKey = localStorage.getItem('voice_elevenlabs_key') ?? ''
-      const storedVoiceId = localStorage.getItem('voice_elevenlabs_voice_id') ?? ''
+      const storedVoiceId =
+        localStorage.getItem('voice_elevenlabs_voice_id') ?? ''
 
       if (storedProvider === 'elevenlabs' || storedProvider === 'piper') {
         setProvider(storedProvider)
@@ -170,7 +175,9 @@ export default function VoiceConfigPage() {
     if (showRefreshing) setRefreshingStatus(true)
     else setPluginStatus('checking')
     try {
-      const res = await fetch(`${VOICE_API}/health`, { signal: AbortSignal.timeout(4000) })
+      const res = await fetch(`${VOICE_API}/health`, {
+        signal: AbortSignal.timeout(4000),
+      })
       setPluginStatus(res.ok ? 'running' : 'stopped')
     } catch {
       setPluginStatus('stopped')
@@ -223,7 +230,9 @@ export default function VoiceConfigPage() {
       })
       if (!res.ok) {
         const text = await res.text().catch(() => '')
-        setVoiceError(`ElevenLabs API error ${res.status}${text ? ': ' + text.slice(0, 120) : ''}`)
+        setVoiceError(
+          `ElevenLabs API error ${res.status}${text ? ': ' + text.slice(0, 120) : ''}`,
+        )
         return
       }
       const data = (await res.json()) as { voices: ElevenLabsVoice[] }
@@ -238,7 +247,9 @@ export default function VoiceConfigPage() {
         }
       }
     } catch {
-      setVoiceError('Failed to reach ElevenLabs API. Check your network connection.')
+      setVoiceError(
+        'Failed to reach ElevenLabs API. Check your network connection.',
+      )
     } finally {
       setFetchingVoices(false)
     }
@@ -279,14 +290,18 @@ export default function VoiceConfigPage() {
       })
       if (!res.ok) {
         const text = await res.text().catch(() => '')
-        setTestError(`Voice synthesis failed (HTTP ${res.status})${text ? ': ' + text.slice(0, 200) : ''}.`)
+        setTestError(
+          `Voice synthesis failed (HTTP ${res.status})${text ? ': ' + text.slice(0, 200) : ''}.`,
+        )
         return
       }
       const blob = await res.blob()
       const url = URL.createObjectURL(blob)
       setAudioSrc(url)
     } catch {
-      setTestError('Could not reach the voice plugin. Make sure nself-voice is running.')
+      setTestError(
+        'Could not reach the voice plugin. Make sure nself-voice is running.',
+      )
     } finally {
       setTesting(false)
     }
@@ -299,7 +314,7 @@ export default function VoiceConfigPage() {
   // ── Render ─────────────────────────────────────────────────────────────────
 
   return (
-    <div className="space-y-6 max-w-2xl">
+    <div className="max-w-2xl space-y-6">
       {/* Page header */}
       <div className="flex items-center justify-between">
         <div>
@@ -332,10 +347,12 @@ export default function VoiceConfigPage() {
           <div className="flex items-start gap-3">
             <AlertCircle className="mt-0.5 h-5 w-5 shrink-0 text-yellow-400" />
             <div>
-              <p className="font-medium text-yellow-300">nself-voice is not running</p>
+              <p className="font-medium text-yellow-300">
+                nself-voice is not running
+              </p>
               <p className="mt-1 text-sm text-yellow-400/80">
-                Install and start the voice plugin to test synthesis. You can still configure
-                settings below.
+                Install and start the voice plugin to test synthesis. You can
+                still configure settings below.
               </p>
             </div>
           </div>
@@ -345,7 +362,7 @@ export default function VoiceConfigPage() {
       {/* Provider toggle */}
       <div className="space-y-2">
         <p className="text-sm font-medium text-zinc-300">Provider</p>
-        <div className="flex rounded-lg border border-zinc-700/50 bg-zinc-800/50 p-1 w-fit gap-1">
+        <div className="flex w-fit gap-1 rounded-lg border border-zinc-700/50 bg-zinc-800/50 p-1">
           {(['elevenlabs', 'piper'] as Provider[]).map((p) => (
             <button
               key={p}
@@ -375,8 +392,10 @@ export default function VoiceConfigPage() {
 
       {/* ElevenLabs section */}
       {provider === 'elevenlabs' && (
-        <div className="rounded-xl border border-zinc-700/50 bg-zinc-800/30 p-5 space-y-5">
-          <h2 className="text-base font-semibold text-white">ElevenLabs Settings</h2>
+        <div className="space-y-5 rounded-xl border border-zinc-700/50 bg-zinc-800/30 p-5">
+          <h2 className="text-base font-semibold text-white">
+            ElevenLabs Settings
+          </h2>
 
           {/* API key */}
           <div className="space-y-1.5">
@@ -388,7 +407,7 @@ export default function VoiceConfigPage() {
                   value={elevenKey}
                   onChange={(e) => handleKeyChange(e.target.value)}
                   placeholder="sk-..."
-                  className="w-full rounded-lg border border-zinc-600/50 bg-zinc-800/50 px-3 py-2 pr-10 text-sm text-zinc-100 placeholder-zinc-500 focus:border-indigo-500/50 focus:outline-none focus:ring-1 focus:ring-indigo-500/30"
+                  className="w-full rounded-lg border border-zinc-600/50 bg-zinc-800/50 px-3 py-2 pr-10 text-sm text-zinc-100 placeholder-zinc-500 focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/30 focus:outline-none"
                 />
                 <button
                   type="button"
@@ -407,7 +426,7 @@ export default function VoiceConfigPage() {
                 type="button"
                 onClick={fetchVoices}
                 disabled={fetchingVoices || !elevenKey.trim()}
-                className="flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed shrink-0"
+                className="flex shrink-0 items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-500 disabled:cursor-not-allowed disabled:opacity-50"
               >
                 {fetchingVoices ? (
                   <Loader2 className="h-3.5 w-3.5 animate-spin" />
@@ -418,7 +437,7 @@ export default function VoiceConfigPage() {
               </button>
             </div>
             {voiceError && (
-              <p className="text-xs text-red-400 mt-1">{voiceError}</p>
+              <p className="mt-1 text-xs text-red-400">{voiceError}</p>
             )}
           </div>
 
@@ -430,7 +449,7 @@ export default function VoiceConfigPage() {
                 value={selectedVoiceId}
                 onChange={(e) => handleVoiceSelect(e.target.value)}
                 disabled={voices.length === 0}
-                className="w-full appearance-none rounded-lg border border-zinc-600/50 bg-zinc-800/50 px-3 py-2 pr-8 text-sm text-zinc-100 focus:border-indigo-500/50 focus:outline-none focus:ring-1 focus:ring-indigo-500/30 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full appearance-none rounded-lg border border-zinc-600/50 bg-zinc-800/50 px-3 py-2 pr-8 text-sm text-zinc-100 focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/30 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
               >
                 {voices.length === 0 ? (
                   <option value="">— Fetch voices first —</option>
@@ -445,18 +464,22 @@ export default function VoiceConfigPage() {
               <ChevronDown className="pointer-events-none absolute inset-y-0 right-2.5 my-auto h-4 w-4 text-zinc-500" />
             </div>
             {voices.length > 0 && (
-              <p className="text-xs text-zinc-600">{voices.length} voices loaded</p>
+              <p className="text-xs text-zinc-600">
+                {voices.length} voices loaded
+              </p>
             )}
           </div>
 
           {/* Sample text */}
           <div className="space-y-1.5">
-            <label className="text-sm font-medium text-zinc-300">Sample Text</label>
+            <label className="text-sm font-medium text-zinc-300">
+              Sample Text
+            </label>
             <textarea
               value={sampleText}
               onChange={(e) => setSampleText(e.target.value)}
               rows={3}
-              className="w-full resize-none rounded-lg border border-zinc-600/50 bg-zinc-800/50 px-3 py-2 text-sm text-zinc-100 placeholder-zinc-500 focus:border-indigo-500/50 focus:outline-none focus:ring-1 focus:ring-indigo-500/30"
+              className="w-full resize-none rounded-lg border border-zinc-600/50 bg-zinc-800/50 px-3 py-2 text-sm text-zinc-100 placeholder-zinc-500 focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/30 focus:outline-none"
             />
           </div>
 
@@ -468,7 +491,7 @@ export default function VoiceConfigPage() {
             type="button"
             onClick={handleTestVoice}
             disabled={testing || !sampleText.trim()}
-            className="flex items-center gap-2 rounded-lg bg-indigo-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex items-center gap-2 rounded-lg bg-indigo-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-indigo-500 disabled:cursor-not-allowed disabled:opacity-50"
           >
             {testing ? (
               <Loader2 className="h-4 w-4 animate-spin" />
@@ -491,32 +514,37 @@ export default function VoiceConfigPage() {
 
       {/* Piper section */}
       {provider === 'piper' && (
-        <div className="rounded-xl border border-zinc-700/50 bg-zinc-800/30 p-5 space-y-5">
+        <div className="space-y-5 rounded-xl border border-zinc-700/50 bg-zinc-800/30 p-5">
           <h2 className="text-base font-semibold text-white">Piper Settings</h2>
 
           {/* Model path */}
           <div className="space-y-1.5">
-            <label className="text-sm font-medium text-zinc-300">Model File Path</label>
+            <label className="text-sm font-medium text-zinc-300">
+              Model File Path
+            </label>
             <input
               type="text"
               value={piperModelPath}
               onChange={(e) => setPiperModelPath(e.target.value)}
               placeholder="/path/to/model.onnx"
-              className="w-full rounded-lg border border-zinc-600/50 bg-zinc-800/50 px-3 py-2 text-sm text-zinc-100 placeholder-zinc-500 focus:border-indigo-500/50 focus:outline-none focus:ring-1 focus:ring-indigo-500/30"
+              className="w-full rounded-lg border border-zinc-600/50 bg-zinc-800/50 px-3 py-2 text-sm text-zinc-100 placeholder-zinc-500 focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/30 focus:outline-none"
             />
             <p className="text-xs text-zinc-600">
-              Absolute path to the .onnx model file on the server running nself-voice.
+              Absolute path to the .onnx model file on the server running
+              nself-voice.
             </p>
           </div>
 
           {/* Sample text */}
           <div className="space-y-1.5">
-            <label className="text-sm font-medium text-zinc-300">Sample Text</label>
+            <label className="text-sm font-medium text-zinc-300">
+              Sample Text
+            </label>
             <textarea
               value={sampleText}
               onChange={(e) => setSampleText(e.target.value)}
               rows={3}
-              className="w-full resize-none rounded-lg border border-zinc-600/50 bg-zinc-800/50 px-3 py-2 text-sm text-zinc-100 placeholder-zinc-500 focus:border-indigo-500/50 focus:outline-none focus:ring-1 focus:ring-indigo-500/30"
+              className="w-full resize-none rounded-lg border border-zinc-600/50 bg-zinc-800/50 px-3 py-2 text-sm text-zinc-100 placeholder-zinc-500 focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/30 focus:outline-none"
             />
           </div>
 
@@ -528,7 +556,7 @@ export default function VoiceConfigPage() {
             type="button"
             onClick={handleTestVoice}
             disabled={testing || !sampleText.trim()}
-            className="flex items-center gap-2 rounded-lg bg-indigo-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex items-center gap-2 rounded-lg bg-indigo-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-indigo-500 disabled:cursor-not-allowed disabled:opacity-50"
           >
             {testing ? (
               <Loader2 className="h-4 w-4 animate-spin" />

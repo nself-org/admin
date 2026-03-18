@@ -52,11 +52,13 @@ function RoutingMap({ rules }: { rules: MuxRule[] }) {
   if (forwardRules.length === 0) {
     return (
       <div className="rounded-xl border border-zinc-700/50 bg-zinc-800/30 p-6">
-        <p className="text-sm font-medium text-white mb-1">Routing Map</p>
+        <p className="mb-1 text-sm font-medium text-white">Routing Map</p>
         <p className="text-sm text-zinc-500">
           No forwarding rules configured. Routing map shows rules with{' '}
           <span className="font-mono text-xs text-zinc-400">forward_to</span> or{' '}
-          <span className="font-mono text-xs text-zinc-400">forward_action</span>{' '}
+          <span className="font-mono text-xs text-zinc-400">
+            forward_action
+          </span>{' '}
           actions.
         </p>
       </div>
@@ -67,24 +69,24 @@ function RoutingMap({ rules }: { rules: MuxRule[] }) {
     <div className="rounded-xl border border-zinc-700/50 bg-zinc-800/30">
       <div className="border-b border-zinc-700/50 px-5 py-4">
         <p className="text-sm font-medium text-white">Routing Map</p>
-        <p className="text-xs text-zinc-500 mt-0.5">
+        <p className="mt-0.5 text-xs text-zinc-500">
           Sender patterns and their forwarding destinations
         </p>
       </div>
       <div className="overflow-hidden">
         <table className="w-full">
-          <thead className="bg-zinc-900/50 border-b border-zinc-700/50">
+          <thead className="border-b border-zinc-700/50 bg-zinc-900/50">
             <tr>
-              <th className="px-4 py-3 text-left text-xs font-medium uppercase text-zinc-500">
+              <th className="px-4 py-3 text-left text-xs font-medium text-zinc-500 uppercase">
                 Rule
               </th>
-              <th className="px-4 py-3 text-left text-xs font-medium uppercase text-zinc-500">
+              <th className="px-4 py-3 text-left text-xs font-medium text-zinc-500 uppercase">
                 Sender pattern
               </th>
-              <th className="px-4 py-3 text-left text-xs font-medium uppercase text-zinc-500">
+              <th className="px-4 py-3 text-left text-xs font-medium text-zinc-500 uppercase">
                 Subject filter
               </th>
-              <th className="px-4 py-3 text-left text-xs font-medium uppercase text-zinc-500">
+              <th className="px-4 py-3 text-left text-xs font-medium text-zinc-500 uppercase">
                 Destination
               </th>
             </tr>
@@ -109,20 +111,20 @@ function RoutingMap({ rules }: { rules: MuxRule[] }) {
                   <td className="px-4 py-3 text-sm font-medium text-white">
                     {rule.name}
                   </td>
-                  <td className="px-4 py-3 text-sm text-zinc-400 font-mono">
+                  <td className="px-4 py-3 font-mono text-sm text-zinc-400">
                     {rule.conditions.from ?? (
-                      <span className="italic text-zinc-600">any sender</span>
+                      <span className="text-zinc-600 italic">any sender</span>
                     )}
                   </td>
-                  <td className="px-4 py-3 text-sm text-zinc-400 font-mono">
+                  <td className="px-4 py-3 font-mono text-sm text-zinc-400">
                     {rule.conditions.subject_contains ?? (
-                      <span className="italic text-zinc-600">any subject</span>
+                      <span className="text-zinc-600 italic">any subject</span>
                     )}
                   </td>
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-1.5">
                       <Link className="h-3.5 w-3.5 shrink-0 text-indigo-400" />
-                      <span className="text-sm text-indigo-300 font-mono truncate max-w-[240px]">
+                      <span className="max-w-[240px] truncate font-mono text-sm text-indigo-300">
                         {dest ?? '—'}
                       </span>
                     </div>
@@ -164,9 +166,7 @@ function ResultBadge({ result, shadow }: { result: string; shadow: boolean }) {
         </span>
       )
     case 'skipped':
-      return (
-        <span className="text-xs text-zinc-500">skipped</span>
-      )
+      return <span className="text-xs text-zinc-500">skipped</span>
     default:
       return <span className="text-xs text-zinc-400">{result}</span>
   }
@@ -248,10 +248,7 @@ export default function MuxRunsPage() {
           runs
             .filter((r) => r.duration_ms != null)
             .reduce((sum, r) => sum + (r.duration_ms ?? 0), 0) /
-            Math.max(
-              runs.filter((r) => r.duration_ms != null).length,
-              1,
-            ),
+            Math.max(runs.filter((r) => r.duration_ms != null).length, 1),
         )
       : 0
 
@@ -318,10 +315,10 @@ export default function MuxRunsPage() {
       {/* Recent runs table */}
       {!loading && !muxDown && (
         <div className="rounded-xl border border-zinc-700/50 bg-zinc-800/50">
-          <div className="border-b border-zinc-700/50 px-5 py-4 flex items-center justify-between">
+          <div className="flex items-center justify-between border-b border-zinc-700/50 px-5 py-4">
             <div>
               <p className="text-sm font-medium text-white">Recent Runs</p>
-              <p className="text-xs text-zinc-500 mt-0.5">
+              <p className="mt-0.5 text-xs text-zinc-500">
                 Last {runs.length} rule executions
                 {avgDuration > 0 && ` · avg ${avgDuration}ms`}
               </p>
@@ -332,31 +329,31 @@ export default function MuxRunsPage() {
             <div className="flex flex-col items-center justify-center py-12">
               <AlertCircle className="mb-3 h-8 w-8 text-zinc-600" />
               <p className="text-sm text-zinc-500">No runs yet</p>
-              <p className="text-xs text-zinc-600 mt-1">
+              <p className="mt-1 text-xs text-zinc-600">
                 Rule executions will appear here once messages are processed.
               </p>
             </div>
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full">
-                <thead className="bg-zinc-900/50 border-b border-zinc-700/50">
+                <thead className="border-b border-zinc-700/50 bg-zinc-900/50">
                   <tr>
-                    <th className="px-4 py-3 text-left text-xs font-medium uppercase text-zinc-500">
+                    <th className="px-4 py-3 text-left text-xs font-medium text-zinc-500 uppercase">
                       Time
                     </th>
-                    <th className="px-4 py-3 text-left text-xs font-medium uppercase text-zinc-500">
+                    <th className="px-4 py-3 text-left text-xs font-medium text-zinc-500 uppercase">
                       Account
                     </th>
-                    <th className="px-4 py-3 text-left text-xs font-medium uppercase text-zinc-500">
+                    <th className="px-4 py-3 text-left text-xs font-medium text-zinc-500 uppercase">
                       Rule
                     </th>
-                    <th className="px-4 py-3 text-left text-xs font-medium uppercase text-zinc-500">
+                    <th className="px-4 py-3 text-left text-xs font-medium text-zinc-500 uppercase">
                       Handler
                     </th>
-                    <th className="px-4 py-3 text-left text-xs font-medium uppercase text-zinc-500">
+                    <th className="px-4 py-3 text-left text-xs font-medium text-zinc-500 uppercase">
                       Result
                     </th>
-                    <th className="px-4 py-3 text-right text-xs font-medium uppercase text-zinc-500">
+                    <th className="px-4 py-3 text-right text-xs font-medium text-zinc-500 uppercase">
                       Duration
                     </th>
                   </tr>
@@ -367,17 +364,17 @@ export default function MuxRunsPage() {
                       key={run.id}
                       className="border-b border-zinc-700/50 last:border-0 hover:bg-zinc-800/50"
                     >
-                      <td className="px-4 py-3 text-xs text-zinc-400 whitespace-nowrap">
+                      <td className="px-4 py-3 text-xs whitespace-nowrap text-zinc-400">
                         {new Date(run.created_at).toLocaleString()}
                       </td>
-                      <td className="px-4 py-3 text-xs text-zinc-400 max-w-[140px] truncate">
+                      <td className="max-w-[140px] truncate px-4 py-3 text-xs text-zinc-400">
                         {run.gmail_address ?? '—'}
                       </td>
                       <td className="px-4 py-3 text-sm text-zinc-200">
                         {run.rule_name}
                       </td>
                       <td className="px-4 py-3">
-                        <span className="rounded-full bg-zinc-700/50 px-2 py-0.5 text-xs text-zinc-300 font-mono">
+                        <span className="rounded-full bg-zinc-700/50 px-2 py-0.5 font-mono text-xs text-zinc-300">
                           {run.handler}
                         </span>
                       </td>
@@ -388,16 +385,14 @@ export default function MuxRunsPage() {
                             shadow={run.shadow_mode}
                           />
                           {run.error_msg && (
-                            <p className="text-xs text-red-400/80 max-w-[200px] truncate">
+                            <p className="max-w-[200px] truncate text-xs text-red-400/80">
                               {run.error_msg}
                             </p>
                           )}
                         </div>
                       </td>
                       <td className="px-4 py-3 text-right text-xs text-zinc-500">
-                        {run.duration_ms != null
-                          ? `${run.duration_ms}ms`
-                          : '—'}
+                        {run.duration_ms != null ? `${run.duration_ms}ms` : '—'}
                       </td>
                     </tr>
                   ))}

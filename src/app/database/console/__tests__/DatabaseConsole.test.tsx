@@ -19,6 +19,7 @@ jest.mock('@monaco-editor/react', () => ({
   }) => (
     <textarea
       data-testid="monaco-editor"
+      aria-label="SQL editor"
       value={value}
       onChange={(e) => onChange(e.target.value)}
     />

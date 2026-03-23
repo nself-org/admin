@@ -104,7 +104,7 @@ function LicenseWidget() {
     return (
       <div className="mt-4 flex items-center justify-between border-t border-zinc-200 pt-3 dark:border-zinc-800">
         <span className="inline-flex items-center rounded-full bg-zinc-100 px-2.5 py-1 text-xs font-medium text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400">
-          No license
+          No membership
         </span>
         <Link
           href="https://nself.org/pricing"

@@ -104,7 +104,7 @@ function PluginCard({
       ) : isLocked ? (
         <div className="flex items-center gap-2 rounded-lg bg-zinc-700/30 px-3 py-2 text-sm text-zinc-500">
           <Lock className="h-4 w-4" />
-          License required
+          Membership required
         </div>
       ) : (
         <button
@@ -310,17 +310,17 @@ export default function PluginInstallPage() {
             )
           })}
 
-        {/* License note */}
+        {/* Membership note */}
         <div className="mt-6 rounded-xl border border-zinc-800 bg-zinc-900/50 p-4 text-center text-sm text-zinc-500">
           <Lock className="mx-auto mb-1 h-4 w-4" />
-          Pro plugins require a license key.{' '}
+          Pro plugins require a membership key.{' '}
           <a
             href="https://nself.org/pricing"
             target="_blank"
             rel="noopener noreferrer"
             className="text-indigo-400 hover:underline"
           >
-            Get a license at nself.org/pricing
+            Get a membership at nself.org/pricing
           </a>
         </div>
       </div>

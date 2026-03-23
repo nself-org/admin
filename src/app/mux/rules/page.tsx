@@ -2,20 +2,26 @@
 
 import {
   AlertCircle,
+  ArrowDown,
+  ArrowRight,
   CheckCircle,
   ChevronDown,
   ChevronRight,
+  Clock,
   Edit2,
+  GripVertical,
   Loader2,
   Minus,
+  Play,
   Plus,
   RefreshCw,
   Save,
   Trash2,
   UserPlus,
+  X,
   XCircle,
 } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 
 // ── Constants ──────────────────────────────────────────────────────────────────
 
@@ -31,6 +37,8 @@ interface RuleConditions {
   has_words?: string[]
   labels?: string[]
   silent_trash_orgs?: string[]
+  date_after?: string
+  date_before?: string
 }
 
 type ActionType =
@@ -51,6 +59,8 @@ type ActionType =
   | 'claw_delegate'
   | 'calendar_sync'
   | 'donor_action'
+  | 'extract'
+  | 'mark_read'
 
 // Flat form representation for the action discriminated union
 interface ActionForm {
@@ -82,6 +92,22 @@ interface ActionForm {
   reply_channel?: string
   calendar_id?: string
   campaign_id?: string
+  // extract action fields
+  patterns?: ExtractPattern[]
+  // conditional when clause
+  when?: WhenClause
+}
+
+interface ExtractPattern {
+  name: string
+  regex: string
+  group?: number
+}
+
+interface WhenClause {
+  field: string
+  operator: 'contains' | 'equals' | 'matches' | 'gt' | 'lt' | 'exists'
+  value: string
 }
 
 interface MuxRule {
@@ -89,7 +115,7 @@ interface MuxRule {
   name: string
   priority: number
   conditions: RuleConditions
-  action: ActionForm
+  action: ActionForm | ActionForm[]
   enabled: boolean
   cooldown_secs?: string
   account_id?: string
@@ -105,24 +131,50 @@ interface GmailAccount {
   watch_renewal_due?: string
 }
 
+interface MuxRun {
+  id: string
+  message_id: string
+  gmail_address?: string
+  from_address?: string
+  subject?: string
+  rule_id?: string
+  rule_name: string
+  handler: string
+  result: string
+  duration_ms?: number
+  error_msg?: string
+  shadow_mode: boolean
+  created_at: string
+}
+
 // ── Action serialization ───────────────────────────────────────────────────────
 
 function actionFormToApi(a: ActionForm): Record<string, unknown> {
+  const base: Record<string, unknown> = {}
+
+  // Add conditional when clause
+  if (a.when && a.when.field && a.when.value) {
+    base._when = a.when
+  }
+
   switch (a.type) {
     case 'store_only':
-      return { store_only: {} }
+      return { ...base, store_only: {} }
     case 'leave_inbox':
-      return { leave_inbox: {} }
+      return { ...base, leave_inbox: {} }
     case 'discard':
-      return { discard: {} }
+      return { ...base, discard: {} }
+    case 'mark_read':
+      return { ...base, mark_read: {} }
     case 'forward_to':
-      return { forward_to: { url: a.url ?? '' } }
+      return { ...base, forward_to: { url: a.url ?? '' } }
     case 'webhook':
-      return { webhook: { url: a.url ?? '' } }
+      return { ...base, webhook: { url: a.url ?? '' } }
     case 'ai_classify':
-      return { ai_classify: { fallback_url: a.fallback_url || null } }
+      return { ...base, ai_classify: { fallback_url: a.fallback_url || null } }
     case 'ai_summarize':
       return {
+        ...base,
         ai_summarize: {
           prompt_template: a.prompt_template ?? '',
           extractor: a.extractor || null,
@@ -132,6 +184,7 @@ function actionFormToApi(a: ActionForm): Record<string, unknown> {
       }
     case 'telegram_notify':
       return {
+        ...base,
         telegram_notify: {
           chat_id: a.chat_id || null,
           template: a.template || null,
@@ -139,6 +192,7 @@ function actionFormToApi(a: ActionForm): Record<string, unknown> {
       }
     case 'sheets_log':
       return {
+        ...base,
         sheets_log: {
           spreadsheet_id: a.spreadsheet_id ?? '',
           sheet_name: a.sheet_name || null,
@@ -149,6 +203,7 @@ function actionFormToApi(a: ActionForm): Record<string, unknown> {
       }
     case 'forward_action':
       return {
+        ...base,
         forward_action: {
           to: a.to ?? '',
           also_notify: a.also_notify || null,
@@ -156,12 +211,14 @@ function actionFormToApi(a: ActionForm): Record<string, unknown> {
       }
     case 'silent_trash':
       return {
+        ...base,
         silent_trash: {
           delay_seconds: a.delay_seconds ? parseInt(a.delay_seconds) : 0,
         },
       }
     case 'auto_reply':
       return {
+        ...base,
         auto_reply: {
           template: a.template ?? '',
           subject_prefix: a.subject_prefix || null,
@@ -170,6 +227,7 @@ function actionFormToApi(a: ActionForm): Record<string, unknown> {
       }
     case 'companion_notify':
       return {
+        ...base,
         companion_notify: {
           card_type: a.card_type ?? 'email_summary',
           priority: a.card_priority || null,
@@ -180,6 +238,7 @@ function actionFormToApi(a: ActionForm): Record<string, unknown> {
       }
     case 'incident_response':
       return {
+        ...base,
         incident_response: {
           alert_text: a.alert_text || null,
           tg_chat_id: a.tg_chat_id || null,
@@ -188,6 +247,7 @@ function actionFormToApi(a: ActionForm): Record<string, unknown> {
       }
     case 'claw_delegate':
       return {
+        ...base,
         claw_delegate: {
           context_hint: a.context_hint || null,
           auto_reply: a.auto_reply_flag ?? false,
@@ -197,20 +257,37 @@ function actionFormToApi(a: ActionForm): Record<string, unknown> {
         },
       }
     case 'calendar_sync':
-      return { calendar_sync: { calendar_id: a.calendar_id || null } }
+      return { ...base, calendar_sync: { calendar_id: a.calendar_id || null } }
     case 'donor_action':
-      return { donor_action: { campaign_id: a.campaign_id || null } }
+      return { ...base, donor_action: { campaign_id: a.campaign_id || null } }
+    case 'extract':
+      return {
+        ...base,
+        extract: {
+          patterns: (a.patterns ?? []).map((p) => ({
+            name: p.name,
+            regex: p.regex,
+            group: p.group ?? 0,
+          })),
+        },
+      }
     default:
-      return { store_only: {} }
+      return { ...base, store_only: {} }
   }
 }
 
 function apiActionToForm(raw: Record<string, unknown>): ActionForm {
-  const entries = Object.entries(raw)
+  const entries = Object.entries(raw).filter(([k]) => k !== '_when')
   if (entries.length === 0) return { type: 'store_only' }
   const [type, cfg] = entries[0] as [string, Record<string, unknown>]
   const c = cfg ?? {}
-  const base = { type: type as ActionType }
+  const base: ActionForm = { type: type as ActionType }
+
+  // Parse when clause
+  if (raw._when) {
+    base.when = raw._when as WhenClause
+  }
+
   switch (type) {
     case 'forward_to':
     case 'webhook':
@@ -287,6 +364,19 @@ function apiActionToForm(raw: Record<string, unknown>): ActionForm {
       return { ...base, calendar_id: c.calendar_id as string }
     case 'donor_action':
       return { ...base, campaign_id: c.campaign_id as string }
+    case 'extract': {
+      return {
+        ...base,
+        patterns: Array.isArray(c.patterns)
+          ? (c.patterns as ExtractPattern[])
+          : [],
+      }
+    }
+    case 'mark_read':
+    case 'store_only':
+    case 'leave_inbox':
+    case 'discard':
+      return base
     default:
       return base
   }
@@ -313,47 +403,63 @@ function condToYaml(c: RuleConditions, indent: string): string {
     lines.push(
       `${indent}silent_trash_orgs: [${c.silent_trash_orgs.map((o) => `"${o}"`).join(', ')}]`,
     )
+  if (c.date_after) lines.push(`${indent}date_after: "${c.date_after}"`)
+  if (c.date_before) lines.push(`${indent}date_before: "${c.date_before}"`)
   return lines.join('\n')
 }
 
-function actionToYaml(a: ActionForm, indent: string): string {
+function singleActionToYaml(a: ActionForm, indent: string): string {
   const i2 = indent + '  '
+  let yaml = ''
   switch (a.type) {
     case 'store_only':
-      return `${indent}store_only: {}`
+      yaml = `${indent}store_only: {}`
+      break
     case 'leave_inbox':
-      return `${indent}leave_inbox: {}`
+      yaml = `${indent}leave_inbox: {}`
+      break
     case 'discard':
-      return `${indent}discard: {}`
+      yaml = `${indent}discard: {}`
+      break
+    case 'mark_read':
+      yaml = `${indent}mark_read: {}`
+      break
     case 'forward_to':
-      return `${indent}forward_to:\n${i2}url: "${a.url ?? ''}"`
+      yaml = `${indent}forward_to:\n${i2}url: "${a.url ?? ''}"`
+      break
     case 'webhook':
-      return `${indent}webhook:\n${i2}url: "${a.url ?? ''}"`
+      yaml = `${indent}webhook:\n${i2}url: "${a.url ?? ''}"`
+      break
     case 'ai_classify':
-      return a.fallback_url
+      yaml = a.fallback_url
         ? `${indent}ai_classify:\n${i2}fallback_url: "${a.fallback_url}"`
         : `${indent}ai_classify: {}`
+      break
     case 'ai_summarize': {
       const lines = [`${indent}ai_summarize:`]
       lines.push(`${i2}prompt_template: "${a.prompt_template ?? ''}"`)
       if (a.tg_chat_id) lines.push(`${i2}tg_chat_id: "${a.tg_chat_id}"`)
       if (a.extractor) lines.push(`${i2}extractor: "${a.extractor}"`)
       if (a.max_chars) lines.push(`${i2}max_chars: ${a.max_chars}`)
-      return lines.join('\n')
+      yaml = lines.join('\n')
+      break
     }
     case 'telegram_notify': {
       const lines = [`${indent}telegram_notify:`]
       if (a.chat_id) lines.push(`${i2}chat_id: "${a.chat_id}"`)
       if (a.template) lines.push(`${i2}template: "${a.template}"`)
-      return lines.join('\n')
+      yaml = lines.join('\n')
+      break
     }
     case 'forward_action': {
       const lines = [`${indent}forward_action:`, `${i2}to: "${a.to ?? ''}"`]
       if (a.also_notify) lines.push(`${i2}also_notify: "${a.also_notify}"`)
-      return lines.join('\n')
+      yaml = lines.join('\n')
+      break
     }
     case 'silent_trash':
-      return `${indent}silent_trash:\n${i2}delay_seconds: ${a.delay_seconds ?? 0}`
+      yaml = `${indent}silent_trash:\n${i2}delay_seconds: ${a.delay_seconds ?? 0}`
+      break
     case 'auto_reply': {
       const lines = [
         `${indent}auto_reply:`,
@@ -362,7 +468,8 @@ function actionToYaml(a: ActionForm, indent: string): string {
       if (a.subject_prefix)
         lines.push(`${i2}subject_prefix: "${a.subject_prefix}"`)
       if (a.delay_seconds) lines.push(`${i2}delay_seconds: ${a.delay_seconds}`)
-      return lines.join('\n')
+      yaml = lines.join('\n')
+      break
     }
     case 'sheets_log': {
       const cols = a.columns_csv
@@ -374,7 +481,20 @@ function actionToYaml(a: ActionForm, indent: string): string {
         `${i2}columns: [${cols.join(', ')}]`,
       ]
       if (a.sheet_name) lines.push(`${i2}sheet_name: "${a.sheet_name}"`)
-      return lines.join('\n')
+      yaml = lines.join('\n')
+      break
+    }
+    case 'companion_notify': {
+      const lines = [
+        `${indent}companion_notify:`,
+        `${i2}card_type: "${a.card_type ?? 'email_summary'}"`,
+      ]
+      if (a.title_template)
+        lines.push(`${i2}title_template: "${a.title_template}"`)
+      if (a.body_template)
+        lines.push(`${i2}body_template: "${a.body_template}"`)
+      yaml = lines.join('\n')
+      break
     }
     case 'claw_delegate': {
       const lines = [
@@ -386,19 +506,50 @@ function actionToYaml(a: ActionForm, indent: string): string {
         lines.push(`${i2}reply_channel: "${a.reply_channel}"`)
       if (a.tg_chat_id) lines.push(`${i2}tg_chat_id: "${a.tg_chat_id}"`)
       if (a.timeout_secs) lines.push(`${i2}timeout_secs: ${a.timeout_secs}`)
-      return lines.join('\n')
+      yaml = lines.join('\n')
+      break
+    }
+    case 'incident_response': {
+      const lines = [`${indent}incident_response:`]
+      if (a.alert_text) lines.push(`${i2}alert_text: "${a.alert_text}"`)
+      if (a.tg_chat_id) lines.push(`${i2}tg_chat_id: "${a.tg_chat_id}"`)
+      if (a.timeout_secs) lines.push(`${i2}timeout_secs: ${a.timeout_secs}`)
+      yaml = lines.join('\n')
+      break
     }
     case 'calendar_sync':
-      return a.calendar_id
+      yaml = a.calendar_id
         ? `${indent}calendar_sync:\n${i2}calendar_id: "${a.calendar_id}"`
         : `${indent}calendar_sync: {}`
+      break
     case 'donor_action':
-      return a.campaign_id
+      yaml = a.campaign_id
         ? `${indent}donor_action:\n${i2}campaign_id: "${a.campaign_id}"`
         : `${indent}donor_action: {}`
+      break
+    case 'extract': {
+      const lines = [`${indent}extract:`]
+      if (a.patterns && a.patterns.length > 0) {
+        lines.push(`${i2}patterns:`)
+        for (const p of a.patterns) {
+          lines.push(`${i2}  - name: "${p.name}"`)
+          lines.push(`${i2}    regex: "${p.regex}"`)
+          if (p.group) lines.push(`${i2}    group: ${p.group}`)
+        }
+      }
+      yaml = lines.join('\n')
+      break
+    }
     default:
-      return `${indent}${a.type}: {}`
+      yaml = `${indent}${a.type}: {}`
   }
+
+  // Append when clause if present
+  if (a.when && a.when.field && a.when.value) {
+    yaml += `\n${indent}_when:\n${indent}  field: "${a.when.field}"\n${indent}  operator: "${a.when.operator}"\n${indent}  value: "${a.when.value}"`
+  }
+
+  return yaml
 }
 
 function ruleToYaml(rule: MuxRule): string {
@@ -415,8 +566,23 @@ function ruleToYaml(rule: MuxRule): string {
     lines.push(condLines)
   }
 
-  lines.push(`  action:`)
-  lines.push(actionToYaml(rule.action, '    '))
+  const actions = Array.isArray(rule.action) ? rule.action : [rule.action]
+  if (actions.length === 1) {
+    lines.push(`  action:`)
+    lines.push(singleActionToYaml(actions[0], '    '))
+  } else {
+    lines.push(`  actions:`)
+    for (const a of actions) {
+      lines.push(`    - ${a.type}:`)
+      // Indent action content under the array item
+      const content = singleActionToYaml(a, '        ')
+      // Skip the first line since we already printed the type
+      const contentLines = content.split('\n')
+      if (contentLines.length > 1) {
+        lines.push(...contentLines.slice(1))
+      }
+    }
+  }
   return lines.join('\n')
 }
 
@@ -427,9 +593,14 @@ function emptyRule(): MuxRule {
     name: '',
     priority: 100,
     conditions: {},
-    action: { type: 'forward_to', url: '' },
+    action: [{ type: 'forward_to', url: '' }],
     enabled: true,
   }
+}
+
+function normalizeActions(action: ActionForm | ActionForm[]): ActionForm[] {
+  if (Array.isArray(action)) return action
+  return [action]
 }
 
 const INPUT =
@@ -443,6 +614,182 @@ function Label({ children }: { children: React.ReactNode }) {
     <label className="mb-1 block text-xs font-medium text-zinc-400">
       {children}
     </label>
+  )
+}
+
+// ── RegexPreview ──────────────────────────────────────────────────────────────
+
+function RegexPreview({
+  pattern,
+  testStrings,
+}: {
+  pattern: string
+  testStrings: string[]
+}) {
+  if (!pattern) return null
+
+  let regex: RegExp | null = null
+  let error: string | null = null
+  try {
+    regex = new RegExp(pattern, 'i')
+  } catch (e) {
+    error = e instanceof Error ? e.message : 'Invalid regex'
+  }
+
+  return (
+    <div className="mt-1.5 rounded-lg border border-zinc-700/50 bg-zinc-900/50 p-2">
+      <p className="mb-1 text-xs font-medium text-zinc-500">Regex preview</p>
+      {error ? (
+        <p className="text-xs text-red-400">{error}</p>
+      ) : (
+        <div className="space-y-0.5">
+          {testStrings.length === 0 ? (
+            <p className="text-xs text-zinc-600 italic">
+              No test data available
+            </p>
+          ) : (
+            testStrings.slice(0, 5).map((s, i) => {
+              const matches = regex ? regex.test(s) : false
+              return (
+                <div key={i} className="flex items-center gap-2 text-xs">
+                  {matches ? (
+                    <CheckCircle className="h-3 w-3 shrink-0 text-emerald-400" />
+                  ) : (
+                    <XCircle className="h-3 w-3 shrink-0 text-zinc-600" />
+                  )}
+                  <span
+                    className={
+                      matches ? 'text-emerald-300' : 'text-zinc-500'
+                    }
+                  >
+                    {s.length > 60 ? s.slice(0, 60) + '...' : s}
+                  </span>
+                </div>
+              )
+            })
+          )}
+        </div>
+      )}
+    </div>
+  )
+}
+
+// ── Label Multi-Select ────────────────────────────────────────────────────────
+
+const COMMON_LABELS = [
+  'INBOX',
+  'UNREAD',
+  'IMPORTANT',
+  'STARRED',
+  'CATEGORY_PERSONAL',
+  'CATEGORY_SOCIAL',
+  'CATEGORY_PROMOTIONS',
+  'CATEGORY_UPDATES',
+  'CATEGORY_FORUMS',
+  'SPAM',
+  'TRASH',
+  'SENT',
+  'DRAFT',
+]
+
+function LabelMultiSelect({
+  selected,
+  onChange,
+}: {
+  selected: string[]
+  onChange: (labels: string[]) => void
+}) {
+  const [open, setOpen] = useState(false)
+  const [custom, setCustom] = useState('')
+
+  const toggle = (label: string) => {
+    if (selected.includes(label)) {
+      onChange(selected.filter((l) => l !== label))
+    } else {
+      onChange([...selected, label])
+    }
+  }
+
+  const addCustom = () => {
+    const trimmed = custom.trim().toUpperCase()
+    if (trimmed && !selected.includes(trimmed)) {
+      onChange([...selected, trimmed])
+    }
+    setCustom('')
+  }
+
+  return (
+    <div className="relative">
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        className={`${INPUT} flex items-center justify-between text-left`}
+      >
+        <span className={selected.length === 0 ? 'text-zinc-500' : ''}>
+          {selected.length === 0
+            ? 'Select labels...'
+            : selected.join(', ')}
+        </span>
+        <ChevronDown className="h-3.5 w-3.5 text-zinc-400" />
+      </button>
+      {open && (
+        <div className="absolute z-20 mt-1 max-h-60 w-full overflow-y-auto rounded-lg border border-zinc-700 bg-zinc-900 p-2 shadow-xl">
+          <div className="mb-2 flex gap-1">
+            <input
+              className="flex-1 rounded border border-zinc-700 bg-zinc-800 px-2 py-1 text-xs text-white placeholder-zinc-500"
+              value={custom}
+              onChange={(e) => setCustom(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  e.preventDefault()
+                  addCustom()
+                }
+              }}
+              placeholder="Custom label..."
+            />
+            <button
+              type="button"
+              onClick={addCustom}
+              className="rounded bg-indigo-600 px-2 py-1 text-xs text-white hover:bg-indigo-500"
+            >
+              Add
+            </button>
+          </div>
+          {COMMON_LABELS.map((label) => (
+            <button
+              key={label}
+              type="button"
+              onClick={() => toggle(label)}
+              className={`flex w-full items-center gap-2 rounded px-2 py-1 text-left text-xs hover:bg-zinc-800 ${
+                selected.includes(label) ? 'text-indigo-300' : 'text-zinc-300'
+              }`}
+            >
+              <span
+                className={`flex h-3.5 w-3.5 items-center justify-center rounded border ${
+                  selected.includes(label)
+                    ? 'border-indigo-500 bg-indigo-600'
+                    : 'border-zinc-600'
+                }`}
+              >
+                {selected.includes(label) && (
+                  <CheckCircle className="h-2.5 w-2.5 text-white" />
+                )}
+              </span>
+              {label}
+            </button>
+          ))}
+          <div className="mt-2 border-t border-zinc-700/50 pt-2">
+            <button
+              type="button"
+              onClick={() => setOpen(false)}
+              className="w-full rounded px-2 py-1 text-center text-xs text-zinc-400 hover:text-white"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
   )
 }
 
@@ -461,6 +808,7 @@ function ActionConfig({
     case 'store_only':
     case 'leave_inbox':
     case 'discard':
+    case 'mark_read':
       return (
         <p className="text-xs text-zinc-500 italic">
           No additional config needed.
@@ -745,12 +1093,246 @@ function ActionConfig({
           />
         </div>
       )
+    case 'extract':
+      return <ExtractConfig action={action} onChange={onChange} />
     default:
       return null
   }
 }
 
-// ── RuleForm ──────────────────────────────────────────────────────────────────
+// ── Extract Config ────────────────────────────────────────────────────────────
+
+function ExtractConfig({
+  action,
+  onChange,
+}: {
+  action: ActionForm
+  onChange: (a: ActionForm) => void
+}) {
+  const patterns = action.patterns ?? []
+  const [testInput, setTestInput] = useState('')
+
+  const updatePattern = (
+    idx: number,
+    patch: Partial<ExtractPattern>,
+  ) => {
+    const updated = patterns.map((p, i) =>
+      i === idx ? { ...p, ...patch } : p,
+    )
+    onChange({ ...action, patterns: updated })
+  }
+
+  const addPattern = () => {
+    onChange({
+      ...action,
+      patterns: [...patterns, { name: '', regex: '', group: 0 }],
+    })
+  }
+
+  const removePattern = (idx: number) => {
+    onChange({
+      ...action,
+      patterns: patterns.filter((_, i) => i !== idx),
+    })
+  }
+
+  return (
+    <div className="space-y-3">
+      <div className="flex items-center justify-between">
+        <p className="text-xs font-medium text-zinc-400">
+          Named extract patterns
+        </p>
+        <button
+          type="button"
+          onClick={addPattern}
+          className="flex items-center gap-1 rounded px-2 py-1 text-xs text-indigo-400 hover:bg-indigo-900/20"
+        >
+          <Plus className="h-3 w-3" /> Add pattern
+        </button>
+      </div>
+
+      {patterns.map((p, idx) => {
+        let testResult: string | null = null
+        if (testInput && p.regex) {
+          try {
+            const re = new RegExp(p.regex)
+            const m = re.exec(testInput)
+            testResult = m ? (m[p.group ?? 0] ?? '(no capture)') : '(no match)'
+          } catch {
+            testResult = '(invalid regex)'
+          }
+        }
+
+        return (
+          <div
+            key={idx}
+            className="rounded-lg border border-zinc-700/30 bg-zinc-900/30 p-3 space-y-2"
+          >
+            <div className="flex items-center gap-2">
+              <div className="flex-1">
+                <Label>Name</Label>
+                <input
+                  className={INPUT}
+                  value={p.name}
+                  onChange={(e) =>
+                    updatePattern(idx, { name: e.target.value })
+                  }
+                  placeholder="amount"
+                />
+              </div>
+              <div className="flex-1">
+                <Label>Group #</Label>
+                <input
+                  type="number"
+                  title="Capture group number"
+                  className={INPUT}
+                  value={p.group ?? 0}
+                  onChange={(e) =>
+                    updatePattern(idx, {
+                      group: parseInt(e.target.value) || 0,
+                    })
+                  }
+                  min={0}
+                />
+              </div>
+              <button
+                type="button"
+                onClick={() => removePattern(idx)}
+                className="mt-4 rounded p-1 text-zinc-500 hover:text-red-400"
+                aria-label="Remove pattern"
+                title="Remove pattern"
+              >
+                <Trash2 className="h-3.5 w-3.5" />
+              </button>
+            </div>
+            <div>
+              <Label>Regex</Label>
+              <input
+                className={INPUT}
+                value={p.regex}
+                onChange={(e) =>
+                  updatePattern(idx, { regex: e.target.value })
+                }
+                placeholder="\$(\d+(?:\.\d{2})?)"
+              />
+            </div>
+            {testResult && (
+              <p className="text-xs text-zinc-400">
+                Test result:{' '}
+                <span className="font-mono text-emerald-300">
+                  {testResult}
+                </span>
+              </p>
+            )}
+          </div>
+        )
+      })}
+
+      {patterns.length > 0 && (
+        <div>
+          <Label>Test input (paste email body to test patterns)</Label>
+          <textarea
+            className={`${INPUT} h-16 resize-y`}
+            value={testInput}
+            onChange={(e) => setTestInput(e.target.value)}
+            placeholder="Your payment of $49.99 was processed..."
+          />
+        </div>
+      )}
+    </div>
+  )
+}
+
+// ── When Clause Builder ───────────────────────────────────────────────────────
+
+function WhenClauseBuilder({
+  when,
+  onChange,
+}: {
+  when?: WhenClause
+  onChange: (w: WhenClause | undefined) => void
+}) {
+  const [enabled, setEnabled] = useState(!!when)
+
+  if (!enabled) {
+    return (
+      <button
+        type="button"
+        onClick={() => {
+          setEnabled(true)
+          onChange({ field: 'subject', operator: 'contains', value: '' })
+        }}
+        className="flex items-center gap-1 text-xs text-zinc-500 hover:text-indigo-400"
+      >
+        <Plus className="h-3 w-3" /> Add conditional (when)
+      </button>
+    )
+  }
+
+  const w = when ?? { field: 'subject', operator: 'contains' as const, value: '' }
+
+  return (
+    <div className="rounded-lg border border-amber-700/30 bg-amber-900/10 p-3 space-y-2">
+      <div className="flex items-center justify-between">
+        <p className="text-xs font-medium text-amber-400">
+          Conditional: only run this step when...
+        </p>
+        <button
+          type="button"
+          onClick={() => {
+            setEnabled(false)
+            onChange(undefined)
+          }}
+          className="rounded p-1 text-zinc-500 hover:text-red-400"
+          aria-label="Remove condition"
+          title="Remove condition"
+        >
+          <X className="h-3 w-3" />
+        </button>
+      </div>
+      <div className="flex items-center gap-2">
+        <select
+          title="Condition field"
+          className={`${SELECT} w-32`}
+          value={w.field}
+          onChange={(e) => onChange({ ...w, field: e.target.value })}
+        >
+          <option value="subject">Subject</option>
+          <option value="from">From</option>
+          <option value="body">Body</option>
+          <option value="labels">Labels</option>
+          <option value="has_attachment">Has attachment</option>
+        </select>
+        <select
+          title="Operator"
+          className={`${SELECT} w-28`}
+          value={w.operator}
+          onChange={(e) =>
+            onChange({
+              ...w,
+              operator: e.target.value as WhenClause['operator'],
+            })
+          }
+        >
+          <option value="contains">contains</option>
+          <option value="equals">equals</option>
+          <option value="matches">matches (regex)</option>
+          <option value="gt">greater than</option>
+          <option value="lt">less than</option>
+          <option value="exists">exists</option>
+        </select>
+        <input
+          className={`${INPUT} flex-1`}
+          value={w.value}
+          onChange={(e) => onChange({ ...w, value: e.target.value })}
+          placeholder="value"
+        />
+      </div>
+    </div>
+  )
+}
+
+// ── Action Chain Builder (T-2168) ─────────────────────────────────────────────
 
 const ACTION_LABELS: { value: ActionType; label: string }[] = [
   { value: 'forward_to', label: 'Forward to URL' },
@@ -758,37 +1340,349 @@ const ACTION_LABELS: { value: ActionType; label: string }[] = [
   { value: 'store_only', label: 'Store only (no delivery)' },
   { value: 'leave_inbox', label: 'Leave in inbox (observe)' },
   { value: 'discard', label: 'Discard (Gmail trash)' },
+  { value: 'mark_read', label: 'Mark as read' },
   { value: 'telegram_notify', label: 'Telegram notify' },
-  { value: 'ai_summarize', label: 'AI summarize → Telegram' },
+  { value: 'ai_summarize', label: 'AI summarize' },
   { value: 'ai_classify', label: 'AI classify + route' },
+  { value: 'extract', label: 'Extract (named patterns + regex)' },
   { value: 'auto_reply', label: 'Auto-reply' },
   { value: 'forward_action', label: 'Forward email (via Google plugin)' },
   { value: 'silent_trash', label: 'Silent trash (delayed)' },
   { value: 'sheets_log', label: 'Log to Google Sheets' },
-  { value: 'companion_notify', label: 'Companion app notify (ɳClaw)' },
-  { value: 'claw_delegate', label: 'Delegate to ɳClaw AI' },
+  { value: 'companion_notify', label: 'Companion app notify' },
+  { value: 'claw_delegate', label: 'Delegate to AI' },
   { value: 'incident_response', label: 'Incident response playbook' },
   { value: 'calendar_sync', label: 'Calendar sync' },
   { value: 'donor_action', label: 'Donor action (Donorbox)' },
 ]
 
+function ActionChainBuilder({
+  actions,
+  onChange,
+}: {
+  actions: ActionForm[]
+  onChange: (actions: ActionForm[]) => void
+}) {
+  const updateStep = (idx: number, a: ActionForm) => {
+    const updated = actions.map((s, i) => (i === idx ? a : s))
+    onChange(updated)
+  }
+
+  const removeStep = (idx: number) => {
+    onChange(actions.filter((_, i) => i !== idx))
+  }
+
+  const addStep = () => {
+    onChange([...actions, { type: 'store_only' }])
+  }
+
+  const moveStep = (idx: number, dir: -1 | 1) => {
+    const newIdx = idx + dir
+    if (newIdx < 0 || newIdx >= actions.length) return
+    const updated = [...actions]
+    ;[updated[idx], updated[newIdx]] = [updated[newIdx], updated[idx]]
+    onChange(updated)
+  }
+
+  return (
+    <div className="space-y-3">
+      <div className="flex items-center justify-between">
+        <p className="text-xs font-semibold tracking-wider text-zinc-500 uppercase">
+          Action chain ({actions.length} step{actions.length !== 1 ? 's' : ''})
+        </p>
+        <button
+          type="button"
+          onClick={addStep}
+          className="flex items-center gap-1 rounded-lg border border-zinc-700 px-2.5 py-1 text-xs text-zinc-300 hover:border-indigo-500 hover:text-white"
+        >
+          <Plus className="h-3 w-3" /> Add step
+        </button>
+      </div>
+
+      {actions.map((action, idx) => (
+        <div key={idx}>
+          <div className="rounded-lg border border-zinc-700/50 bg-zinc-900/30 p-4 space-y-3">
+            <div className="flex items-center gap-2">
+              <div className="flex flex-col gap-0.5">
+                <button
+                  type="button"
+                  onClick={() => moveStep(idx, -1)}
+                  disabled={idx === 0}
+                  className="rounded p-0.5 text-zinc-500 hover:text-white disabled:opacity-20"
+                  title="Move up"
+                >
+                  <GripVertical className="h-3 w-3" />
+                </button>
+              </div>
+              <span className="flex h-5 w-5 items-center justify-center rounded-full bg-indigo-900/50 text-xs font-medium text-indigo-300">
+                {idx + 1}
+              </span>
+              <select
+                title="Action type"
+                className={`${SELECT} flex-1`}
+                value={action.type}
+                onChange={(e) =>
+                  updateStep(idx, { type: e.target.value as ActionType })
+                }
+              >
+                {ACTION_LABELS.map((a) => (
+                  <option key={a.value} value={a.value}>
+                    {a.label}
+                  </option>
+                ))}
+              </select>
+              {actions.length > 1 && (
+                <button
+                  type="button"
+                  onClick={() => removeStep(idx)}
+                  className="rounded p-1 text-zinc-500 hover:text-red-400"
+                  title="Remove step"
+                >
+                  <Trash2 className="h-3.5 w-3.5" />
+                </button>
+              )}
+            </div>
+
+            <ActionConfig
+              action={action}
+              onChange={(a) => updateStep(idx, a)}
+            />
+
+            <WhenClauseBuilder
+              when={action.when}
+              onChange={(w) => updateStep(idx, { ...action, when: w })}
+            />
+          </div>
+
+          {/* Flow arrow between steps */}
+          {idx < actions.length - 1 && (
+            <div className="flex justify-center py-1">
+              <ArrowDown className="h-4 w-4 text-zinc-600" />
+            </div>
+          )}
+        </div>
+      ))}
+
+      {/* Chain flow diagram preview */}
+      {actions.length > 1 && (
+        <div className="rounded-lg border border-zinc-700/30 bg-zinc-900/50 p-3">
+          <p className="mb-2 text-xs font-medium text-zinc-500">
+            Chain flow
+          </p>
+          <div className="flex flex-wrap items-center gap-1">
+            {actions.map((a, idx) => (
+              <div key={idx} className="flex items-center gap-1">
+                <span
+                  className={`rounded-md px-2 py-0.5 text-xs font-medium ${
+                    a.when
+                      ? 'border border-amber-700/30 bg-amber-900/20 text-amber-300'
+                      : 'bg-indigo-900/30 text-indigo-300'
+                  }`}
+                >
+                  {a.when ? '?' : ''}{' '}
+                  {ACTION_LABELS.find((l) => l.value === a.type)?.label ??
+                    a.type}
+                </span>
+                {idx < actions.length - 1 && (
+                  <ArrowRight className="h-3 w-3 text-zinc-600" />
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
+// ── Condition Builder (T-2167) ────────────────────────────────────────────────
+
+function ConditionBuilder({
+  conditions,
+  onChange,
+  recentFromAddresses,
+}: {
+  conditions: RuleConditions
+  onChange: (c: RuleConditions) => void
+  recentFromAddresses: string[]
+}) {
+  const upCond = (patch: Partial<RuleConditions>) =>
+    onChange({ ...conditions, ...patch })
+
+  return (
+    <div className="space-y-3 rounded-lg border border-zinc-700/50 p-4">
+      <p className="text-xs font-semibold tracking-wider text-zinc-500 uppercase">
+        Conditions
+      </p>
+
+      {/* From pattern with regex preview */}
+      <div>
+        <Label>From (regex pattern, e.g. &quot;noreply|billing&quot;)</Label>
+        <input
+          className={INPUT}
+          value={conditions.from ?? ''}
+          onChange={(e) => upCond({ from: e.target.value || undefined })}
+          placeholder="noreply@example\.com"
+        />
+        {conditions.from && (
+          <RegexPreview
+            pattern={conditions.from}
+            testStrings={recentFromAddresses}
+          />
+        )}
+      </div>
+
+      {/* Subject contains */}
+      <div>
+        <Label>Subject contains</Label>
+        <input
+          className={INPUT}
+          value={conditions.subject_contains ?? ''}
+          onChange={(e) =>
+            upCond({ subject_contains: e.target.value || undefined })
+          }
+          placeholder="invoice"
+        />
+      </div>
+
+      {/* Body contains */}
+      <div>
+        <Label>Body contains</Label>
+        <input
+          className={INPUT}
+          value={conditions.body_contains ?? ''}
+          onChange={(e) =>
+            upCond({ body_contains: e.target.value || undefined })
+          }
+          placeholder="unsubscribe"
+        />
+      </div>
+
+      <div className="grid grid-cols-2 gap-3">
+        {/* Has words */}
+        <div>
+          <Label>Has words (comma-separated, all required)</Label>
+          <input
+            className={INPUT}
+            value={conditions.has_words?.join(', ') ?? ''}
+            onChange={(e) =>
+              upCond({
+                has_words: e.target.value
+                  ? e.target.value.split(',').map((s) => s.trim())
+                  : undefined,
+              })
+            }
+            placeholder="tracking, package"
+          />
+        </div>
+
+        {/* Labels multi-select */}
+        <div>
+          <Label>Labels (Gmail labels to match)</Label>
+          <LabelMultiSelect
+            selected={conditions.labels ?? []}
+            onChange={(labels) =>
+              upCond({ labels: labels.length > 0 ? labels : undefined })
+            }
+          />
+        </div>
+      </div>
+
+      {/* Silent trash orgs */}
+      <div>
+        <Label>
+          Silent trash orgs (comma-separated, match in From field)
+        </Label>
+        <input
+          className={INPUT}
+          value={conditions.silent_trash_orgs?.join(', ') ?? ''}
+          onChange={(e) =>
+            upCond({
+              silent_trash_orgs: e.target.value
+                ? e.target.value.split(',').map((s) => s.trim())
+                : undefined,
+            })
+          }
+          placeholder="marketing-platform.io, mass-mailer.com"
+        />
+      </div>
+
+      {/* Has attachment checkbox */}
+      <div className="flex items-center gap-2">
+        <input
+          type="checkbox"
+          id="has-attachment"
+          checked={conditions.has_attachment ?? false}
+          onChange={(e) =>
+            upCond({
+              has_attachment: e.target.checked ? true : undefined,
+            })
+          }
+          className="h-4 w-4 rounded border-zinc-600 bg-zinc-800 text-indigo-500"
+        />
+        <label
+          htmlFor="has-attachment"
+          className="cursor-pointer text-sm text-zinc-300"
+        >
+          Has attachment
+        </label>
+      </div>
+
+      {/* Date range picker */}
+      <div className="grid grid-cols-2 gap-3">
+        <div>
+          <Label>Date after (only match emails after this date)</Label>
+          <input
+            type="date"
+            title="Date after filter"
+            className={INPUT}
+            value={conditions.date_after ?? ''}
+            onChange={(e) =>
+              upCond({ date_after: e.target.value || undefined })
+            }
+          />
+        </div>
+        <div>
+          <Label>Date before (only match emails before this date)</Label>
+          <input
+            type="date"
+            title="Date before filter"
+            className={INPUT}
+            value={conditions.date_before ?? ''}
+            onChange={(e) =>
+              upCond({ date_before: e.target.value || undefined })
+            }
+          />
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// ── RuleForm ──────────────────────────────────────────────────────────────────
+
 function RuleForm({
   initial,
   accounts,
+  recentFromAddresses,
   onSave,
   onCancel,
   saving,
 }: {
   initial: MuxRule
   accounts: GmailAccount[]
+  recentFromAddresses: string[]
   onSave: (rule: MuxRule) => Promise<void>
   onCancel: () => void
   saving: boolean
 }) {
-  const [rule, setRule] = useState<MuxRule>(initial)
+  const [rule, setRule] = useState<MuxRule>(() => ({
+    ...initial,
+    action: normalizeActions(initial.action),
+  }))
   const up = (patch: Partial<MuxRule>) => setRule((r) => ({ ...r, ...patch }))
-  const upCond = (patch: Partial<RuleConditions>) =>
-    setRule((r) => ({ ...r, conditions: { ...r.conditions, ...patch } }))
+
+  const actions = normalizeActions(rule.action)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -844,141 +1738,18 @@ function RuleForm({
           </div>
         </div>
 
-        {/* Conditions */}
-        <div className="space-y-3 rounded-lg border border-zinc-700/50 p-4">
-          <p className="text-xs font-semibold tracking-wider text-zinc-500 uppercase">
-            Conditions
-          </p>
-          <div>
-            <Label>
-              From (regex pattern, e.g. &quot;noreply|billing&quot;)
-            </Label>
-            <input
-              className={INPUT}
-              value={rule.conditions.from ?? ''}
-              onChange={(e) => upCond({ from: e.target.value || undefined })}
-              placeholder="noreply@example\.com"
-            />
-          </div>
-          <div>
-            <Label>Subject contains</Label>
-            <input
-              className={INPUT}
-              value={rule.conditions.subject_contains ?? ''}
-              onChange={(e) =>
-                upCond({ subject_contains: e.target.value || undefined })
-              }
-              placeholder="invoice"
-            />
-          </div>
-          <div>
-            <Label>Body contains</Label>
-            <input
-              className={INPUT}
-              value={rule.conditions.body_contains ?? ''}
-              onChange={(e) =>
-                upCond({ body_contains: e.target.value || undefined })
-              }
-              placeholder="unsubscribe"
-            />
-          </div>
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <Label>Has words (comma-separated, all required)</Label>
-              <input
-                className={INPUT}
-                value={rule.conditions.has_words?.join(', ') ?? ''}
-                onChange={(e) =>
-                  upCond({
-                    has_words: e.target.value
-                      ? e.target.value.split(',').map((s) => s.trim())
-                      : undefined,
-                  })
-                }
-                placeholder="tracking, package"
-              />
-            </div>
-            <div>
-              <Label>Labels (comma-separated, e.g. INBOX,UNREAD)</Label>
-              <input
-                className={INPUT}
-                value={rule.conditions.labels?.join(', ') ?? ''}
-                onChange={(e) =>
-                  upCond({
-                    labels: e.target.value
-                      ? e.target.value.split(',').map((s) => s.trim())
-                      : undefined,
-                  })
-                }
-                placeholder="INBOX, CATEGORY_PROMOTIONS"
-              />
-            </div>
-          </div>
-          <div>
-            <Label>
-              Silent trash orgs (comma-separated, match in From field)
-            </Label>
-            <input
-              className={INPUT}
-              value={rule.conditions.silent_trash_orgs?.join(', ') ?? ''}
-              onChange={(e) =>
-                upCond({
-                  silent_trash_orgs: e.target.value
-                    ? e.target.value.split(',').map((s) => s.trim())
-                    : undefined,
-                })
-              }
-              placeholder="marketing-platform.io, mass-mailer.com"
-            />
-          </div>
-          <div className="flex items-center gap-2">
-            <input
-              type="checkbox"
-              id="has-attachment"
-              checked={rule.conditions.has_attachment ?? false}
-              onChange={(e) =>
-                upCond({
-                  has_attachment: e.target.checked ? true : undefined,
-                })
-              }
-              className="h-4 w-4 rounded border-zinc-600 bg-zinc-800 text-indigo-500"
-            />
-            <label
-              htmlFor="has-attachment"
-              className="cursor-pointer text-sm text-zinc-300"
-            >
-              Has attachment
-            </label>
-          </div>
-        </div>
+        {/* Conditions (T-2167) */}
+        <ConditionBuilder
+          conditions={rule.conditions}
+          onChange={(conditions) => up({ conditions })}
+          recentFromAddresses={recentFromAddresses}
+        />
 
-        {/* Action */}
-        <div className="space-y-3 rounded-lg border border-zinc-700/50 p-4">
-          <p className="text-xs font-semibold tracking-wider text-zinc-500 uppercase">
-            Action
-          </p>
-          <div>
-            <Label>Action type</Label>
-            <select
-              title="Action type"
-              className={`${SELECT} w-full`}
-              value={rule.action.type}
-              onChange={(e) =>
-                up({ action: { type: e.target.value as ActionType } })
-              }
-            >
-              {ACTION_LABELS.map((a) => (
-                <option key={a.value} value={a.value}>
-                  {a.label}
-                </option>
-              ))}
-            </select>
-          </div>
-          <ActionConfig
-            action={rule.action}
-            onChange={(action) => up({ action })}
-          />
-        </div>
+        {/* Action chain (T-2168) */}
+        <ActionChainBuilder
+          actions={actions}
+          onChange={(a) => up({ action: a })}
+        />
 
         {/* Account scope + enabled */}
         <div className="grid grid-cols-2 gap-3">
@@ -1037,7 +1808,7 @@ function RuleForm({
             ) : (
               <Save className="h-4 w-4" />
             )}
-            {saving ? 'Saving…' : 'Save Rule'}
+            {saving ? 'Saving...' : 'Save Rule'}
           </button>
         </div>
       </form>
@@ -1051,6 +1822,233 @@ function RuleForm({
           {ruleToYaml(rule)}
         </pre>
       </div>
+    </div>
+  )
+}
+
+// ── Rule Test Preview (T-2169) ────────────────────────────────────────────────
+
+interface TestResult {
+  run: MuxRun
+  matches: boolean
+  actionPreview: string[]
+}
+
+function RuleTestPreview({
+  rule,
+  onClose,
+}: {
+  rule: MuxRule
+  onClose: () => void
+}) {
+  const [loading, setLoading] = useState(true)
+  const [results, setResults] = useState<TestResult[]>([])
+  const [error, setError] = useState<string | null>(null)
+
+  const actions = useMemo(
+    () => normalizeActions(rule.action),
+    [rule.action],
+  )
+
+  const testConditions = useCallback(
+    (run: MuxRun): boolean => {
+      const cond = rule.conditions
+      if (cond.from) {
+        try {
+          const re = new RegExp(cond.from, 'i')
+          if (!re.test(run.from_address ?? run.gmail_address ?? ''))
+            return false
+        } catch {
+          return false
+        }
+      }
+      if (cond.subject_contains) {
+        if (
+          !(run.subject ?? '')
+            .toLowerCase()
+            .includes(cond.subject_contains.toLowerCase())
+        )
+          return false
+      }
+      // We cannot test body_contains, has_attachment, labels, etc.
+      // from run history alone, so if those conditions exist, skip them
+      // (they would require full email data)
+      return true
+    },
+    [rule.conditions],
+  )
+
+  const describeActions = useCallback(
+    (run: MuxRun): string[] => {
+      return actions.map((a, idx) => {
+        const prefix = actions.length > 1 ? `Step ${idx + 1}: ` : ''
+        const label =
+          ACTION_LABELS.find((l) => l.value === a.type)?.label ?? a.type
+        let detail = `${prefix}${label}`
+        if (a.when) {
+          detail += ` (when ${a.when.field} ${a.when.operator} "${a.when.value}")`
+        }
+        switch (a.type) {
+          case 'forward_to':
+          case 'webhook':
+            detail += ` -> ${a.url ?? '(no url)'}`
+            break
+          case 'telegram_notify':
+            detail += ` to chat ${a.chat_id ?? '(default)'}`
+            break
+          case 'forward_action':
+            detail += ` to ${a.to ?? '(no email)'}`
+            break
+          case 'extract':
+            detail += `: ${(a.patterns ?? []).map((p) => p.name).join(', ') || '(no patterns)'}`
+            break
+          case 'ai_summarize':
+            detail += `: "${a.prompt_template?.slice(0, 40) ?? ''}..."`
+            break
+          default:
+            break
+        }
+        // Suppress unused variable lint
+        void run
+        return detail
+      })
+    },
+    [actions],
+  )
+
+  useEffect(() => {
+    const fetchRuns = async () => {
+      setLoading(true)
+      try {
+        const res = await fetch(`${MUX_API}/mux/runs`)
+        if (!res.ok) {
+          setError('Could not fetch mux history')
+          return
+        }
+        const data = (await res.json()) as { runs: MuxRun[] }
+        const runs = (data.runs ?? []).slice(0, 20)
+
+        const tested: TestResult[] = runs.map((run) => {
+          const matches = testConditions(run)
+          const actionPreview = matches ? describeActions(run) : []
+          return { run, matches, actionPreview }
+        })
+        setResults(tested)
+      } catch {
+        setError('Could not connect to mux')
+      } finally {
+        setLoading(false)
+      }
+    }
+    fetchRuns()
+  }, [testConditions, describeActions])
+
+  const matchCount = results.filter((r) => r.matches).length
+
+  return (
+    <div className="rounded-xl border border-zinc-700/50 bg-zinc-800/50 p-5">
+      <div className="flex items-center justify-between mb-4">
+        <div>
+          <h3 className="text-sm font-medium text-white">
+            Rule test: {rule.name}
+          </h3>
+          <p className="text-xs text-zinc-400 mt-0.5">
+            Testing against recent {results.length} emails
+          </p>
+        </div>
+        <div className="flex items-center gap-3">
+          {!loading && (
+            <span
+              className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${
+                matchCount > 0
+                  ? 'bg-emerald-900/30 text-emerald-300'
+                  : 'bg-zinc-700/50 text-zinc-400'
+              }`}
+            >
+              {matchCount} / {results.length} matched
+            </span>
+          )}
+          <button
+            type="button"
+            onClick={onClose}
+            className="rounded p-1 text-zinc-400 hover:text-white"
+            aria-label="Close test preview"
+            title="Close test preview"
+          >
+            <X className="h-4 w-4" />
+          </button>
+        </div>
+      </div>
+
+      {loading && (
+        <div className="flex items-center gap-2 py-8 justify-center text-zinc-400">
+          <Loader2 className="h-4 w-4 animate-spin" />
+          <span className="text-sm">Fetching recent emails...</span>
+        </div>
+      )}
+
+      {error && (
+        <div className="flex items-center gap-2 py-4 text-yellow-400">
+          <AlertCircle className="h-4 w-4" />
+          <span className="text-sm">{error}</span>
+        </div>
+      )}
+
+      {!loading && !error && results.length === 0 && (
+        <p className="py-4 text-center text-sm text-zinc-500">
+          No recent emails in mux history to test against.
+        </p>
+      )}
+
+      {!loading && !error && results.length > 0 && (
+        <div className="space-y-1 max-h-96 overflow-y-auto">
+          {results.map((r, idx) => (
+            <div
+              key={r.run.id ?? idx}
+              className={`rounded-lg border px-3 py-2 ${
+                r.matches
+                  ? 'border-emerald-700/30 bg-emerald-900/10'
+                  : 'border-zinc-700/20 bg-zinc-900/20'
+              }`}
+            >
+              <div className="flex items-center gap-2">
+                {r.matches ? (
+                  <CheckCircle className="h-3.5 w-3.5 shrink-0 text-emerald-400" />
+                ) : (
+                  <XCircle className="h-3.5 w-3.5 shrink-0 text-zinc-600" />
+                )}
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center gap-2">
+                    <span className="truncate text-xs font-medium text-zinc-200">
+                      {r.run.from_address ?? r.run.gmail_address ?? '(unknown)'}
+                    </span>
+                    <span className="text-xs text-zinc-500">
+                      {r.run.created_at
+                        ? new Date(r.run.created_at).toLocaleString()
+                        : ''}
+                    </span>
+                  </div>
+                  <p className="truncate text-xs text-zinc-400">
+                    {r.run.subject ?? r.run.rule_name ?? '(no subject)'}
+                  </p>
+                </div>
+              </div>
+
+              {/* Show action preview for matches */}
+              {r.matches && r.actionPreview.length > 0 && (
+                <div className="mt-1.5 ml-5 space-y-0.5">
+                  {r.actionPreview.map((desc, ai) => (
+                    <div key={ai} className="flex items-center gap-1.5 text-xs">
+                      <ArrowRight className="h-2.5 w-2.5 text-indigo-400" />
+                      <span className="text-indigo-300">{desc}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   )
 }
@@ -1168,7 +2166,7 @@ function AccountsSection({
                         {a.gmail_address}
                       </td>
                       <td className="px-3 py-2 text-sm text-zinc-400">
-                        {a.tg_chat_id ?? '—'}
+                        {a.tg_chat_id ?? '\u2014'}
                       </td>
                       <td className="px-3 py-2">
                         {a.enabled ? (
@@ -1261,7 +2259,7 @@ function AccountsSection({
                   onChange={(e) =>
                     setForm((f) => ({ ...f, refresh_token: e.target.value }))
                   }
-                  placeholder="1//0g…"
+                  placeholder="1//0g..."
                 />
               </div>
               <div>
@@ -1286,7 +2284,7 @@ function AccountsSection({
                   ) : (
                     <Save className="h-3.5 w-3.5" />
                   )}
-                  {saving ? 'Saving…' : 'Save Account'}
+                  {saving ? 'Saving...' : 'Save Account'}
                 </button>
                 <button
                   type="button"
@@ -1299,6 +2297,7 @@ function AccountsSection({
             </form>
           ) : (
             <button
+              type="button"
               onClick={() => setAdding(true)}
               className="flex items-center gap-2 rounded-lg border border-zinc-700 px-3 py-1.5 text-sm text-zinc-300 hover:border-zinc-500 hover:text-white"
             >
@@ -1325,12 +2324,15 @@ export default function MuxRulesPage() {
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null)
   const [reloading, setReloading] = useState(false)
   const [reloadMsg, setReloadMsg] = useState<string | null>(null)
+  const [testingRule, setTestingRule] = useState<MuxRule | null>(null)
+  const [recentFromAddresses, setRecentFromAddresses] = useState<string[]>([])
 
   const fetchAll = async () => {
     try {
-      const [rulesRes, accountsRes] = await Promise.all([
+      const [rulesRes, accountsRes, runsRes] = await Promise.all([
         fetch(`${MUX_API}/mux/rules`),
         fetch(`${MUX_API}/mux/accounts`),
+        fetch(`${MUX_API}/mux/runs`).catch(() => null),
       ])
       if (!rulesRes.ok) {
         setMuxDown(true)
@@ -1343,18 +2345,49 @@ export default function MuxRulesPage() {
         ? ((await accountsRes.json()) as { accounts: GmailAccount[] })
         : { accounts: [] }
 
+      // Extract recent from addresses for regex preview
+      if (runsRes && runsRes.ok) {
+        try {
+          const runsData = (await runsRes.json()) as { runs: MuxRun[] }
+          const fromAddrs = (runsData.runs ?? [])
+            .slice(0, 50)
+            .map((r) => r.from_address ?? r.gmail_address ?? '')
+            .filter((a) => a.length > 0)
+          // Deduplicate
+          setRecentFromAddresses([...new Set(fromAddrs)])
+        } catch {
+          // Non-critical, ignore
+        }
+      }
+
       setRules(
-        (rulesData.rules ?? []).map((r) => ({
-          id: r.id as string,
-          name: r.name as string,
-          priority: r.priority as number,
-          conditions: (r.conditions ?? {}) as RuleConditions,
-          action: apiActionToForm(r.action as Record<string, unknown>),
-          enabled: r.enabled as boolean,
-          cooldown_secs: r.cooldown_secs ? String(r.cooldown_secs) : undefined,
-          account_id: r.account_id as string | undefined,
-          created_at: r.created_at as string,
-        })),
+        (rulesData.rules ?? []).map((r) => {
+          // Handle both single action and action array
+          let action: ActionForm | ActionForm[]
+          if (Array.isArray(r.actions)) {
+            action = (r.actions as Record<string, unknown>[]).map(
+              apiActionToForm,
+            )
+          } else if (r.action) {
+            action = [apiActionToForm(r.action as Record<string, unknown>)]
+          } else {
+            action = [{ type: 'store_only' as const }]
+          }
+
+          return {
+            id: r.id as string,
+            name: r.name as string,
+            priority: r.priority as number,
+            conditions: (r.conditions ?? {}) as RuleConditions,
+            action,
+            enabled: r.enabled as boolean,
+            cooldown_secs: r.cooldown_secs
+              ? String(r.cooldown_secs)
+              : undefined,
+            account_id: r.account_id as string | undefined,
+            created_at: r.created_at as string,
+          }
+        }),
       )
       setAccounts(accountsData.accounts ?? [])
       setMuxDown(false)
@@ -1372,11 +2405,11 @@ export default function MuxRulesPage() {
   const handleSave = async (ruleData: MuxRule) => {
     setSaving(true)
     try {
-      const payload = {
+      const actions = normalizeActions(ruleData.action)
+      const payload: Record<string, unknown> = {
         name: ruleData.name,
         priority: ruleData.priority,
         conditions: ruleData.conditions,
-        action: actionFormToApi(ruleData.action),
         enabled: ruleData.enabled,
         cooldown_secs: ruleData.cooldown_secs
           ? parseInt(ruleData.cooldown_secs)
@@ -1384,14 +2417,18 @@ export default function MuxRulesPage() {
         account_id: ruleData.account_id || undefined,
       }
 
+      // Serialize actions: single action as "action", multiple as "actions"
+      if (actions.length === 1) {
+        payload.action = actionFormToApi(actions[0])
+      } else {
+        payload.actions = actions.map(actionFormToApi)
+      }
+
       if (editingRule?.id) {
         await fetch(`${MUX_API}/mux/rules/${editingRule.id}`, {
           method: 'PATCH',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            name: payload.name,
-            enabled: payload.enabled,
-          }),
+          body: JSON.stringify(payload),
         })
       } else {
         await fetch(`${MUX_API}/mux/rules`, {
@@ -1434,7 +2471,7 @@ export default function MuxRulesPage() {
         setReloadMsg('Reload failed.')
       }
     } catch (_err) {
-      setReloadMsg('Reload failed — mux unreachable.')
+      setReloadMsg('Reload failed -- mux unreachable.')
     } finally {
       setReloading(false)
       setTimeout(() => setReloadMsg(null), 4000)
@@ -1513,12 +2550,21 @@ export default function MuxRulesPage() {
         <RuleForm
           initial={editingRule ?? emptyRule()}
           accounts={accounts}
+          recentFromAddresses={recentFromAddresses}
           onSave={handleSave}
           onCancel={() => {
             setShowForm(false)
             setEditingRule(null)
           }}
           saving={saving}
+        />
+      )}
+
+      {/* Test preview (T-2169) */}
+      {testingRule && (
+        <RuleTestPreview
+          rule={testingRule}
+          onClose={() => setTestingRule(null)}
         />
       )}
 
@@ -1534,7 +2580,7 @@ export default function MuxRulesPage() {
         </div>
       )}
 
-      {/* Rules table */}
+      {/* Rules table (T-2166) */}
       {!loading && !muxDown && rules.length === 0 && !showForm && (
         <div className="flex flex-col items-center justify-center rounded-xl border border-zinc-700/50 bg-zinc-800/30 py-16">
           <AlertCircle className="mb-4 h-10 w-10 text-zinc-600" />
@@ -1565,13 +2611,16 @@ export default function MuxRulesPage() {
                   Priority
                 </th>
                 <th className="px-4 py-3 text-left text-xs font-medium text-zinc-500 uppercase">
-                  Match
+                  From pattern
                 </th>
                 <th className="px-4 py-3 text-left text-xs font-medium text-zinc-500 uppercase">
                   Action
                 </th>
                 <th className="px-4 py-3 text-left text-xs font-medium text-zinc-500 uppercase">
                   Status
+                </th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-zinc-500 uppercase">
+                  Cooldown
                 </th>
                 <th className="px-4 py-3 text-right text-xs font-medium text-zinc-500 uppercase">
                   Controls
@@ -1580,13 +2629,13 @@ export default function MuxRulesPage() {
             </thead>
             <tbody>
               {rules.map((rule) => {
-                const condSummary = [
-                  rule.conditions.from && `from: ${rule.conditions.from}`,
-                  rule.conditions.subject_contains &&
-                    `subject: ${rule.conditions.subject_contains}`,
-                ]
-                  .filter(Boolean)
-                  .join(', ')
+                const actions = normalizeActions(rule.action)
+                const actionLabel =
+                  actions.length === 1
+                    ? (ACTION_LABELS.find(
+                        (a) => a.value === actions[0].type,
+                      )?.label ?? actions[0].type)
+                    : `${actions.length} steps`
 
                 return (
                   <tr
@@ -1601,17 +2650,18 @@ export default function MuxRulesPage() {
                     <td className="px-4 py-3 text-sm text-zinc-400">
                       {rule.priority}
                     </td>
-                    <td className="max-w-[200px] truncate px-4 py-3 text-sm text-zinc-400">
-                      {condSummary || (
-                        <span className="text-zinc-600 italic">
-                          all messages
+                    <td className="max-w-[180px] truncate px-4 py-3 text-sm text-zinc-400">
+                      {rule.conditions.from ? (
+                        <span className="font-mono text-xs">
+                          {rule.conditions.from}
                         </span>
+                      ) : (
+                        <span className="text-zinc-600 italic">any</span>
                       )}
                     </td>
                     <td className="px-4 py-3">
                       <span className="rounded-full bg-indigo-900/30 px-2 py-0.5 text-xs text-indigo-300">
-                        {ACTION_LABELS.find((a) => a.value === rule.action.type)
-                          ?.label ?? rule.action.type}
+                        {actionLabel}
                       </span>
                     </td>
                     <td className="px-4 py-3">
@@ -1633,8 +2683,36 @@ export default function MuxRulesPage() {
                         )}
                       </button>
                     </td>
+                    <td className="px-4 py-3 text-sm text-zinc-400">
+                      {rule.cooldown_secs ? (
+                        <span className="flex items-center gap-1 text-xs">
+                          <Clock className="h-3 w-3" />
+                          {rule.cooldown_secs}s
+                        </span>
+                      ) : (
+                        <span className="text-zinc-600">&mdash;</span>
+                      )}
+                    </td>
                     <td className="px-4 py-3">
                       <div className="flex items-center justify-end gap-1">
+                        {/* Test button (T-2169) */}
+                        <button
+                          type="button"
+                          onClick={() =>
+                            setTestingRule(
+                              testingRule?.id === rule.id ? null : rule,
+                            )
+                          }
+                          className={`rounded p-1.5 transition-colors ${
+                            testingRule?.id === rule.id
+                              ? 'bg-indigo-900/30 text-indigo-300'
+                              : 'text-zinc-400 hover:bg-zinc-700/50 hover:text-white'
+                          }`}
+                          aria-label={`Test ${rule.name}`}
+                          title="Test rule against recent emails"
+                        >
+                          <Play className="h-4 w-4" />
+                        </button>
                         <button
                           type="button"
                           onClick={() => {

@@ -7,7 +7,6 @@
  * Requirements:
  *   - nAdmin must already be running: `nself admin start`
  *   - Set ADMIN_URL to override the default base URL
- *   - Tests skip gracefully when the app is not reachable
  *
  * Run:  ADMIN_URL=http://localhost:3021 pnpm test:e2e --project=e2e
  */
@@ -19,30 +18,37 @@ const BASE = process.env.ADMIN_URL || 'http://localhost:3021'
 
 test.use({ baseURL: BASE })
 
-// Skip the whole suite when the app is not running.
-// We check by attempting a HEAD request in beforeAll; if it throws, skip.
-let adminReachable = false
-
 test.beforeAll(async ({ playwright }) => {
-  try {
-    const ctx = await playwright.request.newContext({ baseURL: BASE })
-    const resp = await ctx.head('/', { timeout: 5000 })
-    adminReachable = resp.ok() || resp.status() < 500
-    await ctx.dispose()
-  } catch {
-    adminReachable = false
+  const maxAttempts = 6
+  const intervalMs = 5000
+
+  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+    try {
+      const ctx = await playwright.request.newContext({ baseURL: BASE })
+      const resp = await ctx.head('/', { timeout: 5000 })
+      await ctx.dispose()
+
+      if (resp.ok() || resp.status() < 500) {
+        return
+      }
+    } catch {
+      // Connection failed, will retry
+    }
+
+    if (attempt < maxAttempts) {
+      await new Promise((resolve) => setTimeout(resolve, intervalMs))
+    }
   }
+
+  throw new Error(
+    `nAdmin not reachable at ${BASE} after ${maxAttempts} attempts (${(maxAttempts * intervalMs) / 1000}s). Run \`nself admin start\` first.`,
+  )
 })
 
 // -------------------------------------------------------------------------
 // Scenario 1 — Dashboard loads without 500 or error boundary
 // -------------------------------------------------------------------------
 test('dashboard loads without crash', async ({ page }) => {
-  test.skip(
-    !adminReachable,
-    'nAdmin not reachable — run `nself admin start` first',
-  )
-
   const resp = await page.goto('/')
   expect(resp?.status()).toBeLessThan(500)
 
@@ -55,8 +61,6 @@ test('dashboard loads without crash', async ({ page }) => {
 // Scenario 2 — Plugin management tab shows plugin cards
 // -------------------------------------------------------------------------
 test('plugin management tab shows plugin cards', async ({ page }) => {
-  test.skip(!adminReachable, 'nAdmin not reachable')
-
   await page.goto('/plugins')
 
   // Page must not crash
@@ -75,8 +79,6 @@ test('plugin management tab shows plugin cards', async ({ page }) => {
 // Scenario 3 — DLQ view renders
 // -------------------------------------------------------------------------
 test('DLQ view renders without crash', async ({ page }) => {
-  test.skip(!adminReachable, 'nAdmin not reachable')
-
   // BullMQ DLQ panel lives under /plugins/claw or /services/bullmq
   // Try the BullMQ service page first; fall back to the claw plugin page
   let resp = await page.goto('/services/bullmq')
@@ -95,8 +97,6 @@ test('DLQ view renders without crash', async ({ page }) => {
 // Scenario 4 — Backup panel renders and has a trigger button
 // -------------------------------------------------------------------------
 test('backup panel renders with trigger button', async ({ page }) => {
-  test.skip(!adminReachable, 'nAdmin not reachable')
-
   const resp = await page.goto('/database')
   expect(resp?.status()).toBeLessThan(500)
 
@@ -123,8 +123,6 @@ test('backup panel renders with trigger button', async ({ page }) => {
 // Scenario 5 — axe-core: 0 critical violations on dashboard
 // -------------------------------------------------------------------------
 test('dashboard has no critical axe-core violations', async ({ page }) => {
-  test.skip(!adminReachable, 'nAdmin not reachable')
-
   await page.goto('/')
   await page.waitForLoadState('networkidle')
 

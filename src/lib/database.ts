@@ -26,8 +26,9 @@ declare global {
 const isDevelopment = process.env.NODE_ENV === 'development'
 const isCI = process.env.CI === 'true'
 const DB_NAME = 'nadmin.db'
-const DB_PATH = isDevelopment
-  ? path.join(process.cwd(), 'data', DB_NAME) // Local dev path
+const isBuildPhase = process.env.NEXT_PHASE === 'phase-production-build' || process.env.VERCEL === '1'
+const DB_PATH = isDevelopment || isBuildPhase
+  ? path.join(process.cwd(), 'data', DB_NAME) // Local dev path or build mock
   : isCI
     ? path.join(process.env.RUNNER_TEMP || '/tmp', DB_NAME) // CI runner
     : '/app/data/nadmin.db' // Container path

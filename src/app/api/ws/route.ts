@@ -81,15 +81,38 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
  */
 export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
+    // Reject oversized request bodies (64 KB limit)
+    const contentLength = request.headers.get('content-length')
+    if (contentLength && parseInt(contentLength, 10) > 65536) {
+      return NextResponse.json(
+        { success: false, error: 'Payload too large' },
+        { status: 413 },
+      )
+    }
+
     const body = await request.json()
     const { eventType, data, room } = body
 
-    if (!eventType) {
+    if (!eventType || typeof eventType !== 'string') {
       return NextResponse.json(
         {
           success: false,
-          error: 'Event type is required',
+          error: 'Event type is required and must be a string',
         },
+        { status: 400 },
+      )
+    }
+
+    if (room !== undefined && (typeof room !== 'string' || room.length > 128)) {
+      return NextResponse.json(
+        { success: false, error: 'Invalid room ID' },
+        { status: 400 },
+      )
+    }
+
+    if (data !== undefined && typeof data !== 'object') {
+      return NextResponse.json(
+        { success: false, error: 'Event data must be an object' },
         { status: 400 },
       )
     }

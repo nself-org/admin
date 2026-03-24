@@ -27,11 +27,22 @@ interface EventBatch {
   timer: NodeJS.Timeout | null
 }
 
+interface RateLimitEntry {
+  count: number
+  resetAt: number
+}
+
+// Security constants
+const MAX_MESSAGE_SIZE = 64 * 1024 // 64 KB max payload
+const RATE_LIMIT_WINDOW_MS = 1000 // 1 second window
+const RATE_LIMIT_MAX_MESSAGES = 30 // max messages per window per connection
+
 export class WebSocketServer {
   private io: SocketIOServer | null = null
   private presence: Map<string, PresenceInfo> = new Map()
   private eventBatches: Map<string, EventBatch> = new Map()
   private batchConfig: EventBatchConfig = DEFAULT_BATCH_CONFIG
+  private rateLimits: Map<string, RateLimitEntry> = new Map()
 
   /**
    * Initialize WebSocket server
@@ -40,12 +51,16 @@ export class WebSocketServer {
     this.io = new SocketIOServer(httpServer, {
       path: '/api/ws',
       cors: {
-        origin: '*', // In production, restrict this
+        // nAdmin runs at localhost:3021 only. CORS is low-risk since
+        // the service is never exposed to the internet. Kept permissive
+        // intentionally for Docker/port-forwarding flexibility.
+        origin: '*',
         methods: ['GET', 'POST'],
       },
       transports: ['websocket', 'polling'],
       pingInterval: HEARTBEAT_INTERVAL,
       pingTimeout: HEARTBEAT_TIMEOUT,
+      maxHttpBufferSize: MAX_MESSAGE_SIZE,
     })
 
     this.setupEventHandlers()
@@ -66,6 +81,26 @@ export class WebSocketServer {
       // Track presence (async, but we don't need to wait)
       void this.trackPresence(socket)
 
+      // Rate-limit middleware: wraps all incoming events
+      socket.use((packet, next) => {
+        if (this.isRateLimited(socket.id)) {
+          console.warn(`Rate limited: ${socket.id}`)
+          next(new Error('Rate limit exceeded'))
+          return
+        }
+        this.recordMessage(socket.id)
+
+        // Input validation: reject non-array packets or oversized serialized data
+        const serialized = JSON.stringify(packet)
+        if (serialized.length > MAX_MESSAGE_SIZE) {
+          console.warn(`Oversized payload rejected from ${socket.id}: ${serialized.length} bytes`)
+          next(new Error('Payload too large'))
+          return
+        }
+
+        next()
+      })
+
       // Heartbeat handler
       socket.on(EventType.HEARTBEAT, () => {
         this.updateLastSeen(socket.id)
@@ -76,6 +111,10 @@ export class WebSocketServer {
       socket.on(
         EventType.JOIN_ROOM,
         (message: WebSocketMessage<{ roomId: string }>) => {
+          if (!this.isValidRoomId(message?.data?.roomId)) {
+            socket.emit(EventType.ERROR, { error: 'Invalid room ID' })
+            return
+          }
           this.handleJoinRoom(socket, message.data.roomId)
         },
       )
@@ -83,6 +122,10 @@ export class WebSocketServer {
       socket.on(
         EventType.LEAVE_ROOM,
         (message: WebSocketMessage<{ roomId: string }>) => {
+          if (!this.isValidRoomId(message?.data?.roomId)) {
+            socket.emit(EventType.ERROR, { error: 'Invalid room ID' })
+            return
+          }
           this.handleLeaveRoom(socket, message.data.roomId)
         },
       )
@@ -91,6 +134,7 @@ export class WebSocketServer {
       socket.on('disconnect', (reason: string) => {
         console.log(`Client disconnected: ${socket.id}, reason: ${reason}`)
         this.removePresence(socket.id)
+        this.rateLimits.delete(socket.id)
       })
 
       // Error handling
@@ -367,6 +411,50 @@ export class WebSocketServer {
   }
 
   /**
+   * Check if a socket has exceeded the rate limit
+   */
+  private isRateLimited(socketId: string): boolean {
+    const entry = this.rateLimits.get(socketId)
+    if (!entry) return false
+
+    const now = Date.now()
+    if (now > entry.resetAt) {
+      // Window expired, reset
+      this.rateLimits.delete(socketId)
+      return false
+    }
+
+    return entry.count >= RATE_LIMIT_MAX_MESSAGES
+  }
+
+  /**
+   * Record an incoming message for rate limiting
+   */
+  private recordMessage(socketId: string): void {
+    const now = Date.now()
+    const entry = this.rateLimits.get(socketId)
+
+    if (!entry || now > entry.resetAt) {
+      this.rateLimits.set(socketId, {
+        count: 1,
+        resetAt: now + RATE_LIMIT_WINDOW_MS,
+      })
+    } else {
+      entry.count++
+    }
+  }
+
+  /**
+   * Validate room ID: must be a non-empty string of reasonable length
+   * containing only alphanumeric characters, hyphens, and underscores.
+   */
+  private isValidRoomId(roomId: unknown): roomId is string {
+    if (typeof roomId !== 'string') return false
+    if (roomId.length === 0 || roomId.length > 128) return false
+    return /^[a-zA-Z0-9_-]+$/.test(roomId)
+  }
+
+  /**
    * Get Socket.IO server instance
    */
   getIO(): SocketIOServer | null {
@@ -389,6 +477,7 @@ export class WebSocketServer {
 
     this.presence.clear()
     this.eventBatches.clear()
+    this.rateLimits.clear()
   }
 }
 

@@ -301,10 +301,24 @@ describe('WebSocket Client', () => {
 
 ## Security
 
-- TODO: Add session validation in `getUserIdFromSocket()`
-- TODO: Add rate limiting for event emission
-- TODO: Add input validation for event data
-- TODO: Add CORS restrictions for production
+**Session validation:** `getUserIdFromSocket()` extracts and validates the session token
+from the cookie header against the LokiJS auth database. Falls back to `'admin'` for
+single-user mode when no valid session is present.
+
+**Rate limiting:** Each connection is limited to 30 messages per second. Connections that
+exceed the limit receive an error and the message is dropped. Rate limit state is cleaned
+up on disconnect and server shutdown.
+
+**Input validation:** All incoming messages are checked against a 64 KB size limit at two
+levels: Socket.IO's `maxHttpBufferSize` rejects oversized payloads at the transport layer,
+and a middleware check rejects oversized serialized packets at the application layer. Room
+IDs are validated to contain only alphanumeric characters, hyphens, and underscores (max
+128 characters).
+
+**CORS:** nAdmin runs exclusively at `localhost:3021` and is never exposed to the internet.
+CORS is intentionally permissive (`origin: '*'`) to support Docker port-forwarding and
+various local network configurations. This is acceptable because the service has no public
+attack surface.
 
 ## Future Enhancements
 

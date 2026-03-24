@@ -10,7 +10,8 @@
  * the Socket.io-based client/server in src/lib/websocket/.
  */
 
-export { getWebSocketClient as getWebSocketService } from '@/lib/websocket/client'
-export { getWebSocketClient as default } from '@/lib/websocket/client'
-export type { ConnectionStatus } from '@/lib/websocket/events'
-export type { WebSocketMessage } from '@/lib/websocket/events'
+export {
+  getWebSocketClient as default,
+  getWebSocketClient as getWebSocketService,
+} from '@/lib/websocket/client'
+export type { ConnectionStatus, WebSocketMessage } from '@/lib/websocket/events'

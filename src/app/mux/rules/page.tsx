@@ -658,9 +658,7 @@ function RegexPreview({
                     <XCircle className="h-3 w-3 shrink-0 text-zinc-600" />
                   )}
                   <span
-                    className={
-                      matches ? 'text-emerald-300' : 'text-zinc-500'
-                    }
+                    className={matches ? 'text-emerald-300' : 'text-zinc-500'}
                   >
                     {s.length > 60 ? s.slice(0, 60) + '...' : s}
                   </span>
@@ -726,9 +724,7 @@ function LabelMultiSelect({
         className={`${INPUT} flex items-center justify-between text-left`}
       >
         <span className={selected.length === 0 ? 'text-zinc-500' : ''}>
-          {selected.length === 0
-            ? 'Select labels...'
-            : selected.join(', ')}
+          {selected.length === 0 ? 'Select labels...' : selected.join(', ')}
         </span>
         <ChevronDown className="h-3.5 w-3.5 text-zinc-400" />
       </button>
@@ -1112,13 +1108,8 @@ function ExtractConfig({
   const patterns = action.patterns ?? []
   const [testInput, setTestInput] = useState('')
 
-  const updatePattern = (
-    idx: number,
-    patch: Partial<ExtractPattern>,
-  ) => {
-    const updated = patterns.map((p, i) =>
-      i === idx ? { ...p, ...patch } : p,
-    )
+  const updatePattern = (idx: number, patch: Partial<ExtractPattern>) => {
+    const updated = patterns.map((p, i) => (i === idx ? { ...p, ...patch } : p))
     onChange({ ...action, patterns: updated })
   }
 
@@ -1166,7 +1157,7 @@ function ExtractConfig({
         return (
           <div
             key={idx}
-            className="rounded-lg border border-zinc-700/30 bg-zinc-900/30 p-3 space-y-2"
+            className="space-y-2 rounded-lg border border-zinc-700/30 bg-zinc-900/30 p-3"
           >
             <div className="flex items-center gap-2">
               <div className="flex-1">
@@ -1174,9 +1165,7 @@ function ExtractConfig({
                 <input
                   className={INPUT}
                   value={p.name}
-                  onChange={(e) =>
-                    updatePattern(idx, { name: e.target.value })
-                  }
+                  onChange={(e) => updatePattern(idx, { name: e.target.value })}
                   placeholder="amount"
                 />
               </div>
@@ -1210,18 +1199,14 @@ function ExtractConfig({
               <input
                 className={INPUT}
                 value={p.regex}
-                onChange={(e) =>
-                  updatePattern(idx, { regex: e.target.value })
-                }
+                onChange={(e) => updatePattern(idx, { regex: e.target.value })}
                 placeholder="\$(\d+(?:\.\d{2})?)"
               />
             </div>
             {testResult && (
               <p className="text-xs text-zinc-400">
                 Test result:{' '}
-                <span className="font-mono text-emerald-300">
-                  {testResult}
-                </span>
+                <span className="font-mono text-emerald-300">{testResult}</span>
               </p>
             )}
           </div>
@@ -1269,10 +1254,14 @@ function WhenClauseBuilder({
     )
   }
 
-  const w = when ?? { field: 'subject', operator: 'contains' as const, value: '' }
+  const w = when ?? {
+    field: 'subject',
+    operator: 'contains' as const,
+    value: '',
+  }
 
   return (
-    <div className="rounded-lg border border-amber-700/30 bg-amber-900/10 p-3 space-y-2">
+    <div className="space-y-2 rounded-lg border border-amber-700/30 bg-amber-900/10 p-3">
       <div className="flex items-center justify-between">
         <p className="text-xs font-medium text-amber-400">
           Conditional: only run this step when...
@@ -1401,7 +1390,7 @@ function ActionChainBuilder({
 
       {actions.map((action, idx) => (
         <div key={idx}>
-          <div className="rounded-lg border border-zinc-700/50 bg-zinc-900/30 p-4 space-y-3">
+          <div className="space-y-3 rounded-lg border border-zinc-700/50 bg-zinc-900/30 p-4">
             <div className="flex items-center gap-2">
               <div className="flex flex-col gap-0.5">
                 <button
@@ -1466,9 +1455,7 @@ function ActionChainBuilder({
       {/* Chain flow diagram preview */}
       {actions.length > 1 && (
         <div className="rounded-lg border border-zinc-700/30 bg-zinc-900/50 p-3">
-          <p className="mb-2 text-xs font-medium text-zinc-500">
-            Chain flow
-          </p>
+          <p className="mb-2 text-xs font-medium text-zinc-500">Chain flow</p>
           <div className="flex flex-wrap items-center gap-1">
             {actions.map((a, idx) => (
               <div key={idx} className="flex items-center gap-1">
@@ -1590,9 +1577,7 @@ function ConditionBuilder({
 
       {/* Silent trash orgs */}
       <div>
-        <Label>
-          Silent trash orgs (comma-separated, match in From field)
-        </Label>
+        <Label>Silent trash orgs (comma-separated, match in From field)</Label>
         <input
           className={INPUT}
           value={conditions.silent_trash_orgs?.join(', ') ?? ''}
@@ -1845,10 +1830,7 @@ function RuleTestPreview({
   const [results, setResults] = useState<TestResult[]>([])
   const [error, setError] = useState<string | null>(null)
 
-  const actions = useMemo(
-    () => normalizeActions(rule.action),
-    [rule.action],
-  )
+  const actions = useMemo(() => normalizeActions(rule.action), [rule.action])
 
   const testConditions = useCallback(
     (run: MuxRun): boolean => {
@@ -1947,12 +1929,12 @@ function RuleTestPreview({
 
   return (
     <div className="rounded-xl border border-zinc-700/50 bg-zinc-800/50 p-5">
-      <div className="flex items-center justify-between mb-4">
+      <div className="mb-4 flex items-center justify-between">
         <div>
           <h3 className="text-sm font-medium text-white">
             Rule test: {rule.name}
           </h3>
-          <p className="text-xs text-zinc-400 mt-0.5">
+          <p className="mt-0.5 text-xs text-zinc-400">
             Testing against recent {results.length} emails
           </p>
         </div>
@@ -1981,7 +1963,7 @@ function RuleTestPreview({
       </div>
 
       {loading && (
-        <div className="flex items-center gap-2 py-8 justify-center text-zinc-400">
+        <div className="flex items-center justify-center gap-2 py-8 text-zinc-400">
           <Loader2 className="h-4 w-4 animate-spin" />
           <span className="text-sm">Fetching recent emails...</span>
         </div>
@@ -2001,7 +1983,7 @@ function RuleTestPreview({
       )}
 
       {!loading && !error && results.length > 0 && (
-        <div className="space-y-1 max-h-96 overflow-y-auto">
+        <div className="max-h-96 space-y-1 overflow-y-auto">
           {results.map((r, idx) => (
             <div
               key={r.run.id ?? idx}
@@ -2632,9 +2614,8 @@ export default function MuxRulesPage() {
                 const actions = normalizeActions(rule.action)
                 const actionLabel =
                   actions.length === 1
-                    ? (ACTION_LABELS.find(
-                        (a) => a.value === actions[0].type,
-                      )?.label ?? actions[0].type)
+                    ? (ACTION_LABELS.find((a) => a.value === actions[0].type)
+                        ?.label ?? actions[0].type)
                     : `${actions.length} steps`
 
                 return (

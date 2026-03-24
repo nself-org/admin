@@ -17,7 +17,9 @@ test.beforeAll(async ({ playwright }) => {
 })
 
 test.describe('Settings UI', () => {
-  test('Settings page loads and displays configuration sections', async ({ page }) => {
+  test('Settings page loads and displays configuration sections', async ({
+    page,
+  }) => {
     test.skip(!adminReachable, 'nAdmin not reachable')
 
     const resp = await page.goto('/settings')
@@ -25,23 +27,30 @@ test.describe('Settings UI', () => {
 
     // Should have multiple tabs or sections for General, Environment, Security
     await expect(page.locator('main').first()).toBeVisible()
-    await expect(page.locator('text=/General|Environment|Security|API Keys/i').first()).toBeVisible()
+    await expect(
+      page.locator('text=/General|Environment|Security|API Keys/i').first(),
+    ).toBeVisible()
   })
 
   test('Environment variables form is visible', async ({ page }) => {
     test.skip(!adminReachable, 'nAdmin not reachable')
 
     await page.goto('/settings')
-    
+
     // Look for env var tab and click if needed
-    const envTab = page.locator('a, button').filter({ hasText: /Environment|Env Vars/i }).first()
+    const envTab = page
+      .locator('a, button')
+      .filter({ hasText: /Environment|Env Vars/i })
+      .first()
     if (await envTab.isVisible()) {
       await envTab.click()
     }
 
     // Form should contain inputs
-    await expect(page.locator('form input, [data-testid="env-input"]').first()).toBeVisible({ timeout: 5000 }).catch(() => {
-      // It's acceptable if the form is empty, as long as the page didn't crash
-    })
+    await expect(page.locator('form input, [data-testid="env-input"]').first())
+      .toBeVisible({ timeout: 5000 })
+      .catch(() => {
+        // It's acceptable if the form is empty, as long as the page didn't crash
+      })
   })
 })

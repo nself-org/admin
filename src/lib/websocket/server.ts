@@ -93,7 +93,9 @@ export class WebSocketServer {
         // Input validation: reject non-array packets or oversized serialized data
         const serialized = JSON.stringify(packet)
         if (serialized.length > MAX_MESSAGE_SIZE) {
-          console.warn(`Oversized payload rejected from ${socket.id}: ${serialized.length} bytes`)
+          console.warn(
+            `Oversized payload rejected from ${socket.id}: ${serialized.length} bytes`,
+          )
           next(new Error('Payload too large'))
           return
         }

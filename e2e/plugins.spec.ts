@@ -48,7 +48,9 @@ test.beforeAll(async ({ playwright }) => {
 })
 
 test.describe('Plugin Management UI', () => {
-  test('Plugins page loads and displays plugin tables/cards', async ({ page }) => {
+  test('Plugins page loads and displays plugin tables/cards', async ({
+    page,
+  }) => {
     // Mock the plugins API so assertions are deterministic
     await page.route('**/api/plugins**', (route) =>
       route.fulfill({
@@ -62,13 +64,24 @@ test.describe('Plugin Management UI', () => {
     expect(resp?.status()).toBeLessThan(500)
 
     // Verify header exists
-    await expect(page.locator('h1, h2').filter({ hasText: /Plugins|Ecosystem/i }).first()).toBeVisible()
+    await expect(
+      page
+        .locator('h1, h2')
+        .filter({ hasText: /Plugins|Ecosystem/i })
+        .first(),
+    ).toBeVisible()
 
     // Check for search input
-    await expect(page.locator('input[type="text"], [placeholder*="Search"]').first()).toBeVisible()
+    await expect(
+      page.locator('input[type="text"], [placeholder*="Search"]').first(),
+    ).toBeVisible()
 
     // Plugins list should render (mocked data guarantees entries)
-    const pluginList = page.locator('[data-testid="plugin-list"], table tbody tr, [data-testid="plugin-card"]').first()
+    const pluginList = page
+      .locator(
+        '[data-testid="plugin-list"], table tbody tr, [data-testid="plugin-card"]',
+      )
+      .first()
     await expect(pluginList).toBeVisible({ timeout: 10000 })
   })
 
@@ -84,14 +97,18 @@ test.describe('Plugin Management UI', () => {
 
     await page.goto('/plugins')
 
-    const pluginLink = page.locator('a[href^="/plugins/"], [data-testid="plugin-card"]').first()
+    const pluginLink = page
+      .locator('a[href^="/plugins/"], [data-testid="plugin-card"]')
+      .first()
 
     if (await pluginLink.isVisible()) {
       await pluginLink.click()
       await page.waitForLoadState('networkidle')
 
       // Should show install button or configuration state
-      await expect(page.locator('text=/Install|Uninstall|Configure|Active/i').first()).toBeVisible({ timeout: 5000 })
+      await expect(
+        page.locator('text=/Install|Uninstall|Configure|Active/i').first(),
+      ).toBeVisible({ timeout: 5000 })
     }
   })
 })

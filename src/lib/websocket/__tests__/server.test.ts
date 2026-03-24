@@ -3,7 +3,6 @@
  * Covers: rate limiting, room ID validation, message size limit, session validation
  */
 
-import { EventEmitter } from 'events'
 import { EventType } from '../events'
 import { WebSocketServer } from '../server'
 
@@ -26,9 +25,8 @@ function createMockSocket(
   middleware: Array<(packet: any, next: (err?: Error) => void) => void>
 } {
   const handlers = new Map<string, (...args: any[]) => void>()
-  const middleware: Array<
-    (packet: any, next: (err?: Error) => void) => void
-  > = []
+  const middleware: Array<(packet: any, next: (err?: Error) => void) => void> =
+    []
 
   const socket = {
     id,
@@ -44,11 +42,9 @@ function createMockSocket(
     emit: jest.fn(),
     join: jest.fn(),
     leave: jest.fn(),
-    use: jest.fn(
-      (fn: (packet: any, next: (err?: Error) => void) => void) => {
-        middleware.push(fn)
-      },
-    ),
+    use: jest.fn((fn: (packet: any, next: (err?: Error) => void) => void) => {
+      middleware.push(fn)
+    }),
     ...overrides,
   }
 
@@ -81,7 +77,12 @@ function createMockIO(): {
     close: jest.fn(),
   }
 
-  return { io, get connectionHandler() { return state.connectionHandler } }
+  return {
+    io,
+    get connectionHandler() {
+      return state.connectionHandler
+    },
+  }
 }
 
 /**

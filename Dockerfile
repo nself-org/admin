@@ -105,7 +105,7 @@ ENV NEXT_TELEMETRY_DISABLED=1
 ENV HOSTNAME="0.0.0.0"
 # Port 3021 is the reserved port for nself-admin (not 3100, which is for Loki)
 ENV PORT=3021
-ENV ADMIN_VERSION=0.5.0
+ENV ADMIN_VERSION=0.9.9
 
 # Environment variables that can be set at runtime:
 # NSELF_PROJECT_PATH - Path to mounted project (default: /workspace)
@@ -115,7 +115,7 @@ ENV ADMIN_VERSION=0.5.0
 # Add labels for container metadata
 LABEL org.opencontainers.image.title="nself-admin"
 LABEL org.opencontainers.image.description="Web-based administration interface for nself CLI"
-LABEL org.opencontainers.image.version="0.5.0"
+LABEL org.opencontainers.image.version="0.9.9"
 LABEL org.opencontainers.image.vendor="nself.org"
 LABEL org.opencontainers.image.source="https://github.com/acamarata/nself-admin"
 LABEL org.opencontainers.image.licenses="Proprietary - Free for personal use, Commercial license required"

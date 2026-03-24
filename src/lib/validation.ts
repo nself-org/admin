@@ -145,6 +145,26 @@ export function sanitizeHtml(input: string): string {
     .replace(/\//g, '&#x2F;')
 }
 
+export function sanitizeUrl(url: string): string {
+  const trimmed = url.trim()
+  // Only allow http, https, mailto, and relative URLs
+  if (
+    trimmed.startsWith('http://') ||
+    trimmed.startsWith('https://') ||
+    trimmed.startsWith('mailto:') ||
+    trimmed.startsWith('/') ||
+    trimmed.startsWith('#')
+  ) {
+    return trimmed
+  }
+  // Block javascript:, data:, vbscript:, and other dangerous schemes
+  if (/^[a-zA-Z][a-zA-Z0-9+.-]*:/.test(trimmed)) {
+    return '#'
+  }
+  // Relative URLs without scheme are safe
+  return trimmed
+}
+
 export function sanitizePath(path: string): string {
   // Normalize path first
   let sanitized = path.trim()

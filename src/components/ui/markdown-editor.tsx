@@ -1,6 +1,7 @@
 'use client'
 
 import { cn } from '@/lib/utils'
+import { sanitizeUrl } from '@/lib/validation'
 import { Code, Eye } from 'lucide-react'
 import * as React from 'react'
 import { Button } from './button'
@@ -190,8 +191,11 @@ function MarkdownPreview({ content }: { content: string }) {
         // Inline code
         line = line.replace(/`(.+?)`/g, '<code>$1</code>')
 
-        // Links
-        line = line.replace(/\[(.+?)\]\((.+?)\)/g, '<a href="$2">$1</a>')
+        // Links (sanitize URLs to prevent javascript: XSS)
+        line = line.replace(/\[(.+?)\]\((.+?)\)/g, (_match, text, url) => {
+          const safeUrl = sanitizeUrl(url)
+          return `<a href="${safeUrl}">${text}</a>`
+        })
 
         // Empty lines
         if (!line.trim()) return '<br />'

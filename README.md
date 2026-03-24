@@ -1,6 +1,6 @@
 # nself-admin (nAdmin)
 
-[![Version](https://img.shields.io/badge/version-0.9.0-blue.svg)](https://github.com/nself-org/admin/releases)
+[![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)](https://github.com/nself-org/admin/releases)
 [![Docker](https://img.shields.io/docker/v/nself/nself-admin?label=docker)](https://hub.docker.com/r/nself/nself-admin)
 [![Docker Pulls](https://img.shields.io/docker/pulls/nself/nself-admin)](https://hub.docker.com/r/nself/nself-admin)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
@@ -14,7 +14,7 @@
 
 **Production-ready web UI for the [nself CLI](https://github.com/nself-org/cli)** - Enterprise-grade management interface for your self-hosted backend stack.
 
-> **v0.9.0** is the current release featuring 198 fully functional pages, 60+ production-grade components, real-time updates, comprehensive error handling, and enterprise-level security.
+> **v1.0.0** is the current release featuring 198 fully functional pages, 60+ production-grade components, real-time updates, comprehensive error handling, and enterprise-level security.
 
 ---
 
@@ -302,7 +302,7 @@ _Visual deployment workflow with staging, production, and advanced strategies_
 | --------------- | ------------------------------------ | ------- |
 | `PORT`          | Server port                          | `3021`  |
 | `NODE_ENV`      | Environment (development/production) | -       |
-| `ADMIN_VERSION` | Version displayed in UI              | `0.9.0` |
+| `ADMIN_VERSION` | Version displayed in UI              | `1.0.0` |
 
 **Note**: Admin password is stored securely in the internal database (`nadmin.db`), not in environment variables.
 

@@ -70,10 +70,11 @@ function MonitorContent() {
   const [autoRefresh, setAutoRefresh] = useState(true)
   const [searchQuery, setSearchQuery] = useState('')
 
-  // Mock data - replace with real API calls
   const [metricsData, setMetricsData] = useState<MetricData[]>([])
   const [alerts, setAlerts] = useState<Alert[]>([])
   const [services, setServices] = useState<Service[]>([])
+  // Track metric history for time-series chart
+  const [_metricsHistory, setMetricsHistory] = useState<MetricData[]>([])
 
   useEffect(() => {
     fetchMonitoringData()
@@ -88,96 +89,101 @@ function MonitorContent() {
     setLoading(true)
 
     try {
-      // Generate mock time series data
-      const now = Date.now()
-      const points = 24
-
-      const mockMetrics = Array.from({ length: points }, (_, i) => ({
-        timestamp: new Date(now - (points - i) * 300000).toLocaleTimeString(),
-        cpu: Math.random() * 40 + 30,
-        memory: Math.random() * 20 + 60,
-        disk: Math.random() * 15 + 20,
-        network: Math.random() * 100 + 50,
-      }))
-
-      setMetricsData(mockMetrics)
-
-      // Mock alerts
-      setAlerts([
-        {
-          id: '1',
-          severity: 'warning',
-          title: 'High Memory Usage',
-          message: 'Memory usage exceeded 85% threshold on main server',
-          source: 'System Monitor',
-          timestamp: new Date().toISOString(),
-          acknowledged: false,
-        },
-        {
-          id: '2',
-          severity: 'critical',
-          title: 'Database Connection Pool Full',
-          message: 'PostgreSQL connection pool has reached maximum capacity',
-          source: 'PostgreSQL',
-          timestamp: new Date(Date.now() - 300000).toISOString(),
-          acknowledged: false,
-        },
-        {
-          id: '3',
-          severity: 'info',
-          title: 'Backup Completed Successfully',
-          message: 'Daily backup job completed without errors',
-          source: 'Backup Service',
-          timestamp: new Date(Date.now() - 600000).toISOString(),
-          acknowledged: true,
-        },
+      // Fetch real system metrics and service health in parallel
+      const [metricsRes, containersRes, alertsRes] = await Promise.allSettled([
+        fetch('/api/system/metrics'),
+        fetch('/api/docker/containers?stats=false'),
+        fetch('/api/monitor/alerts'),
       ])
 
-      // Mock service health
-      setServices([
-        {
-          name: 'PostgreSQL',
-          status: 'healthy',
-          uptime: '15d 6h',
-          responseTime: 2.3,
-          lastCheck: '30s ago',
-        },
-        {
-          name: 'Hasura GraphQL',
-          status: 'healthy',
-          uptime: '15d 6h',
-          responseTime: 45.2,
-          lastCheck: '30s ago',
-        },
-        {
-          name: 'Auth Service',
-          status: 'warning',
-          uptime: '2d 14h',
-          responseTime: 125.7,
-          lastCheck: '30s ago',
-        },
-        {
-          name: 'Redis Cache',
-          status: 'healthy',
-          uptime: '15d 6h',
-          responseTime: 1.8,
-          lastCheck: '30s ago',
-        },
-        {
-          name: 'MinIO Storage',
-          status: 'healthy',
-          uptime: '15d 6h',
-          responseTime: 23.4,
-          lastCheck: '30s ago',
-        },
-        {
-          name: 'Nginx Proxy',
-          status: 'healthy',
-          uptime: '15d 6h',
-          responseTime: 5.1,
-          lastCheck: '30s ago',
-        },
-      ])
+      // Process system metrics for the chart
+      if (metricsRes.status === 'fulfilled' && metricsRes.value.ok) {
+        const metricsJson = await metricsRes.value.json()
+        if (metricsJson.success && metricsJson.data) {
+          const sys = metricsJson.data.system || {}
+          const docker = metricsJson.data.docker || {}
+          const point: MetricData = {
+            timestamp: new Date().toLocaleTimeString(),
+            cpu: docker.cpu || sys.cpu || 0,
+            memory: sys.memory?.percentage || docker.memory?.percentage || 0,
+            disk: sys.disk?.percentage || 0,
+            network:
+              (sys.network?.rx || 0) + (sys.network?.tx || 0),
+          }
+
+          setMetricsHistory((prev) => {
+            const updated = [...prev, point]
+            // Keep last 24 data points
+            return updated.slice(-24)
+          })
+          setMetricsData((prev) => {
+            const updated = [...prev, point]
+            return updated.slice(-24)
+          })
+        }
+      }
+
+      // Build service health from container status
+      if (containersRes.status === 'fulfilled' && containersRes.value.ok) {
+        const containersJson = await containersRes.value.json()
+        if (containersJson.success && containersJson.data) {
+          const serviceList: Service[] = containersJson.data.map(
+            (c: {
+              name: string
+              state: string
+              health: string
+              status: string
+            }) => {
+              let status: 'healthy' | 'warning' | 'critical' = 'healthy'
+              if (c.state !== 'running') status = 'critical'
+              else if (c.health === 'unhealthy') status = 'critical'
+              else if (c.health === 'starting') status = 'warning'
+
+              // Extract uptime from status string (e.g., "Up 15 days")
+              const uptimeMatch = c.status?.match(/Up\s+(.+?)(\s|$)/)
+              const uptime = uptimeMatch ? uptimeMatch[1] : 'Unknown'
+
+              return {
+                name: c.name?.replace(/^nself_/, '') || 'Unknown',
+                status,
+                uptime,
+                responseTime: 0,
+                lastCheck: 'now',
+              }
+            },
+          )
+          setServices(serviceList)
+        }
+      }
+
+      // Fetch alerts if the endpoint exists
+      if (alertsRes.status === 'fulfilled' && alertsRes.value.ok) {
+        const alertsJson = await alertsRes.value.json()
+        if (alertsJson.success && alertsJson.data) {
+          setAlerts(
+            alertsJson.data.map(
+              (a: {
+                id: string
+                severity: string
+                title: string
+                message: string
+                source: string
+                timestamp: string
+                acknowledged: boolean
+              }) => ({
+                id: a.id,
+                severity: a.severity as Alert['severity'],
+                title: a.title,
+                message: a.message,
+                source: a.source,
+                timestamp: a.timestamp,
+                acknowledged: a.acknowledged,
+              }),
+            ),
+          )
+        }
+      }
+      // If alerts endpoint doesn't exist, alerts stay empty (no mock data)
     } catch (_error) {
       // Intentionally empty - monitoring data load failure handled silently
     } finally {

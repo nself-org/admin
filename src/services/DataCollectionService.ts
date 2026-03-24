@@ -514,73 +514,174 @@ export class DataCollectionService {
 
   // PostgreSQL metrics fetcher
   private async fetchPostgresMetrics() {
-    // Mock data for now - will be implemented with actual DB connection
-    const metrics: PostgresMetrics = {
-      status: 'healthy',
-      connections: {
-        active: 5,
-        idle: 10,
-        max: 100,
-      },
-      databaseSize: '125 MB',
-      tableCount: 42,
-      queryStats: {
-        totalQueries: 15234,
-        slowQueries: 3,
-        averageTime: 12.5,
-      },
+    const cached = this.cache.get('postgres-metrics')
+    if (cached) {
+      this.store.trackCacheHit()
+      return cached
     }
 
-    this.store.updatePostgres(metrics)
-    return metrics
+    this.store.trackCacheMiss()
+
+    return this.deduplicator.dedupe('postgres-metrics', async () => {
+      try {
+        if (!this.abortController) return
+
+        this.store.trackApiCall()
+
+        const response = await fetch('/api/services/postgres', {
+          signal: this.abortController.signal,
+        })
+
+        if (!response.ok) throw new Error('Failed to fetch PostgreSQL metrics')
+
+        const data = await response.json()
+
+        if (data.success && data.data) {
+          const pgData = data.data
+          const metrics: PostgresMetrics = {
+            status: pgData.status || 'healthy',
+            connections: {
+              active: pgData.connections?.active || 0,
+              idle: pgData.connections?.idle || 0,
+              max: pgData.connections?.max || 100,
+            },
+            databaseSize: pgData.databases?.totalSize || '0 MB',
+            tableCount: pgData.databases?.list?.[0]?.tableCount || 0,
+            queryStats: {
+              totalQueries: pgData.performance?.transactionsPerSecond || 0,
+              slowQueries: pgData.performance?.slowQueries || 0,
+              averageTime: pgData.performance?.cacheHitRatio || 0,
+            },
+          }
+
+          this.store.updatePostgres(metrics)
+          this.cache.set('postgres-metrics', metrics, CACHE_TTL.medium)
+
+          return metrics
+        }
+      } catch (error) {
+        if (error instanceof Error && error.name !== 'AbortError') {
+          // Intentionally empty - error handled silently
+        }
+      }
+    })
   }
 
   // Hasura metrics fetcher
   private async fetchHasuraMetrics() {
-    // Mock data for now
-    const metrics: HasuraMetrics = {
-      status: 'healthy',
-      metadata: {
-        tables: 28,
-        relationships: 45,
-        permissions: 120,
-        actions: 8,
-        eventTriggers: 5,
-      },
-      performance: {
-        requestRate: 250,
-        errorRate: 0.2,
-        p95ResponseTime: 45,
-        activeSubscriptions: 12,
-      },
-      inconsistentObjects: [],
+    const cached = this.cache.get('hasura-metrics')
+    if (cached) {
+      this.store.trackCacheHit()
+      return cached
     }
 
-    this.store.updateHasura(metrics)
-    return metrics
+    this.store.trackCacheMiss()
+
+    return this.deduplicator.dedupe('hasura-metrics', async () => {
+      try {
+        if (!this.abortController) return
+
+        this.store.trackApiCall()
+
+        const response = await fetch('/api/services/hasura', {
+          signal: this.abortController.signal,
+        })
+
+        if (!response.ok) throw new Error('Failed to fetch Hasura metrics')
+
+        const data = await response.json()
+
+        if (data.success && data.data) {
+          const hsData = data.data
+          const metrics: HasuraMetrics = {
+            status: hsData.status || 'healthy',
+            metadata: {
+              tables: hsData.metadata?.tables || 0,
+              relationships: hsData.metadata?.relationships || 0,
+              permissions: hsData.metadata?.permissions || 0,
+              actions: hsData.metadata?.actions || 0,
+              eventTriggers: hsData.metadata?.eventTriggers || 0,
+            },
+            performance: {
+              requestRate: hsData.performance?.queryRate || 0,
+              errorRate: 0,
+              p95ResponseTime: hsData.performance?.avgResponseTime || 0,
+              activeSubscriptions: hsData.performance?.activeSubscriptions || 0,
+            },
+            inconsistentObjects: hsData.health?.inconsistentObjects || [],
+          }
+
+          this.store.updateHasura(metrics)
+          this.cache.set('hasura-metrics', metrics, CACHE_TTL.medium)
+
+          return metrics
+        }
+      } catch (error) {
+        if (error instanceof Error && error.name !== 'AbortError') {
+          // Intentionally empty - error handled silently
+        }
+      }
+    })
   }
 
   // Redis metrics fetcher
   private async fetchRedisMetrics() {
-    // Mock data for now
-    const metrics: RedisMetrics = {
-      status: 'healthy',
-      memory: {
-        used: 256,
-        peak: 512,
-        fragmentation: 1.2,
-      },
-      clients: 8,
-      opsPerSecond: 1250,
-      hitRate: 92.5,
-      evictedKeys: 0,
-      keyspaceInfo: {
-        db0: { keys: 1523, expires: 234 },
-      },
+    const cached = this.cache.get('redis-metrics')
+    if (cached) {
+      this.store.trackCacheHit()
+      return cached
     }
 
-    this.store.updateRedis(metrics)
-    return metrics
+    this.store.trackCacheMiss()
+
+    return this.deduplicator.dedupe('redis-metrics', async () => {
+      try {
+        if (!this.abortController) return
+
+        this.store.trackApiCall()
+
+        const response = await fetch('/api/services/redis', {
+          signal: this.abortController.signal,
+        })
+
+        if (!response.ok) throw new Error('Failed to fetch Redis metrics')
+
+        const data = await response.json()
+
+        if (data.success && data.data) {
+          const rdData = data.data
+          // Parse memory string to number (e.g., "256.00MB" -> 256)
+          const parseMemory = (str: string): number => {
+            if (!str) return 0
+            const match = str.match(/([\d.]+)/)
+            return match ? parseFloat(match[1]) : 0
+          }
+
+          const metrics: RedisMetrics = {
+            status: rdData.status || 'healthy',
+            memory: {
+              used: parseMemory(rdData.memory?.used || '0'),
+              peak: parseMemory(rdData.memory?.peak || '0'),
+              fragmentation: 1.0,
+            },
+            clients: rdData.performance?.connectedClients || 0,
+            opsPerSecond: rdData.performance?.opsPerSecond || 0,
+            hitRate: rdData.performance?.hitRate || 0,
+            evictedKeys: rdData.memory?.evictedKeys || 0,
+            keyspaceInfo: rdData.databases || { db0: { keys: 0, expires: 0 } },
+          }
+
+          this.store.updateRedis(metrics)
+          this.cache.set('redis-metrics', metrics, CACHE_TTL.medium)
+
+          return metrics
+        }
+      } catch (error) {
+        if (error instanceof Error && error.name !== 'AbortError') {
+          // Intentionally empty - error handled silently
+        }
+      }
+    })
   }
 }
 

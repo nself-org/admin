@@ -29,93 +29,29 @@ function AlertsContent() {
 
   const fetchData = useCallback(async () => {
     try {
-      // Mock data - replace with real API
-      const mockAlerts: Alert[] = [
-        {
-          id: '1',
-          name: 'High Memory Usage',
-          severity: 'warning',
-          status: 'firing',
-          source: 'Hasura',
-          message: 'Memory usage exceeded 85% threshold',
-          startedAt: new Date(Date.now() - 3600000).toISOString(),
-          labels: { service: 'hasura', instance: 'hasura-1' },
-        },
-        {
-          id: '2',
-          name: 'Database Connection Pool Full',
-          severity: 'critical',
-          status: 'firing',
-          source: 'PostgreSQL',
-          message: 'Connection pool has reached maximum capacity',
-          startedAt: new Date(Date.now() - 1800000).toISOString(),
-          labels: { service: 'postgres', instance: 'postgres-1' },
-        },
-        {
-          id: '3',
-          name: 'High Error Rate',
-          severity: 'warning',
-          status: 'resolved',
-          source: 'Auth Service',
-          message: 'Error rate exceeded 1%',
-          startedAt: new Date(Date.now() - 7200000).toISOString(),
-          resolvedAt: new Date(Date.now() - 3600000).toISOString(),
-          labels: { service: 'auth' },
-        },
-      ]
+      // Fetch alerts and rules from real API endpoints
+      const [alertsRes, rulesRes] = await Promise.allSettled([
+        fetch('/api/monitor/alerts'),
+        fetch('/api/monitor/alerts/rules'),
+      ])
 
-      const mockRules: AlertRule[] = [
-        {
-          id: '1',
-          name: 'High CPU Usage',
-          enabled: true,
-          condition: 'cpu_usage > 80',
-          severity: 'warning',
-          duration: '5m',
-          message: 'CPU usage is above 80% for 5 minutes',
-        },
-        {
-          id: '2',
-          name: 'High Memory Usage',
-          enabled: true,
-          condition: 'memory_usage > 85',
-          severity: 'warning',
-          duration: '5m',
-          message: 'Memory usage is above 85%',
-        },
-        {
-          id: '3',
-          name: 'Database Connection Pool',
-          enabled: true,
-          condition: 'db_connections / db_max_connections > 0.9',
-          severity: 'critical',
-          duration: '1m',
-          message: 'Database connection pool is nearly full',
-        },
-        {
-          id: '4',
-          name: 'High Error Rate',
-          enabled: true,
-          condition: 'error_rate > 0.01',
-          severity: 'warning',
-          duration: '5m',
-          message: 'Error rate exceeds 1%',
-        },
-        {
-          id: '5',
-          name: 'Service Down',
-          enabled: true,
-          condition: 'up == 0',
-          severity: 'critical',
-          duration: '1m',
-          message: 'Service is down',
-        },
-      ]
+      if (alertsRes.status === 'fulfilled' && alertsRes.value.ok) {
+        const data = await alertsRes.value.json()
+        if (data.success && data.data) {
+          setAlerts(data.data)
+        }
+        // If no alerts endpoint or empty response, alerts stays []
+      }
 
-      setAlerts(mockAlerts)
-      setRules(mockRules)
+      if (rulesRes.status === 'fulfilled' && rulesRes.value.ok) {
+        const data = await rulesRes.value.json()
+        if (data.success && data.data) {
+          setRules(data.data)
+        }
+        // If no rules endpoint or empty response, rules stays []
+      }
     } catch (_error) {
-      // Handle error silently
+      // Handle error silently - empty state is shown
     } finally {
       setLoading(false)
     }

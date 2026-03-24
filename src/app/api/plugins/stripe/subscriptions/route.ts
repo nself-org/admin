@@ -1,105 +1,129 @@
 /**
  * Stripe Subscriptions API Route
- * GET: Fetch paginated list of Stripe subscriptions
+ * GET: Fetch paginated list of Stripe subscriptions from np_stripe_subscriptions via Hasura
  */
 
+import { hasuraQuery, stripePluginInstalled } from '@/lib/hasura-client'
 import { logger } from '@/lib/logger'
 import type { StripeSubscription } from '@/types/stripe'
 import { NextRequest, NextResponse } from 'next/server'
-
-// Mock subscription data generator
-function generateMockSubscriptions(count: number): StripeSubscription[] {
-  const subscriptions: StripeSubscription[] = []
-  const products = [
-    'Starter Plan',
-    'Professional Plan',
-    'Enterprise Plan',
-    'Basic Plan',
-  ]
-  const statuses: StripeSubscription['status'][] = [
-    'active',
-    'active',
-    'active',
-    'active',
-    'trialing',
-    'canceled',
-    'past_due',
-  ]
-  const intervals: StripeSubscription['interval'][] = [
-    'month',
-    'month',
-    'month',
-    'year',
-  ]
-
-  for (let i = 0; i < count; i++) {
-    const created = new Date(
-      Date.now() - Math.random() * 365 * 24 * 60 * 60 * 1000,
-    ).toISOString()
-    const currentPeriodStart = new Date(
-      Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000,
-    ).toISOString()
-    const interval = intervals[i % intervals.length]
-    const periodDays = interval === 'year' ? 365 : 30
-    const currentPeriodEnd = new Date(
-      new Date(currentPeriodStart).getTime() + periodDays * 24 * 60 * 60 * 1000,
-    ).toISOString()
-
-    subscriptions.push({
-      id: `sub_${Math.random().toString(36).substring(2, 15)}`,
-      customerId: `cus_${Math.random().toString(36).substring(2, 15)}`,
-      customerEmail: `customer${i}@example.com`,
-      status: statuses[i % statuses.length],
-      priceId: `price_${Math.random().toString(36).substring(2, 15)}`,
-      productName: products[i % products.length],
-      amount: interval === 'year' ? 99900 : 999, // $999/yr or $9.99/mo
-      currency: 'usd',
-      interval,
-      currentPeriodStart,
-      currentPeriodEnd,
-      cancelAtPeriodEnd: Math.random() > 0.9,
-      created,
-    })
-  }
-
-  return subscriptions.sort(
-    (a, b) => new Date(b.created).getTime() - new Date(a.created).getTime(),
-  )
-}
 
 export async function GET(request: NextRequest): Promise<NextResponse> {
   const startTime = Date.now()
 
   try {
+    const installed = await stripePluginInstalled()
+
+    if (!installed) {
+      return NextResponse.json({
+        success: true,
+        pluginInstalled: false,
+        message:
+          'Stripe plugin not installed. Run: nself plugin install stripe',
+        subscriptions: [],
+        total: 0,
+      })
+    }
+
     const { searchParams } = new URL(request.url)
     const page = parseInt(searchParams.get('page') || '1')
     const pageSize = parseInt(searchParams.get('pageSize') || '20')
     const search = searchParams.get('search') || ''
     const status = searchParams.get('status') || 'all'
+    const offset = (page - 1) * pageSize
 
-    // Generate mock data
-    const allSubscriptions = generateMockSubscriptions(24)
-
-    // Filter by search query and status
-    let filteredSubscriptions = allSubscriptions
-    if (search) {
-      const query = search.toLowerCase()
-      filteredSubscriptions = allSubscriptions.filter(
-        (sub) =>
-          sub.customerEmail.toLowerCase().includes(query) ||
-          sub.productName.toLowerCase().includes(query),
-      )
-    }
+    // Build where clause
+    const conditions: string[] = []
     if (status !== 'all') {
-      filteredSubscriptions = filteredSubscriptions.filter(
-        (sub) => sub.status === status,
+      conditions.push(`status: { _eq: "${status}" }`)
+    }
+    if (search) {
+      conditions.push(
+        `_or: [
+          { customer_email: { _ilike: "%${search}%" } },
+          { product_name: { _ilike: "%${search}%" } }
+        ]`,
       )
     }
+    const whereClause =
+      conditions.length > 0 ? `where: { ${conditions.join(', ')} }` : ''
 
-    const total = filteredSubscriptions.length
-    const start = (page - 1) * pageSize
-    const end = start + pageSize
-    const subscriptions = filteredSubscriptions.slice(start, end)
+    const result = await hasuraQuery<{
+      subscriptions: Array<{
+        id: string
+        customer_id: string
+        customer_email: string
+        status: string
+        price_id: string
+        product_name: string
+        amount: number
+        currency: string
+        interval: string
+        current_period_start: string
+        current_period_end: string
+        cancel_at_period_end: boolean
+        trial_end: string | null
+        created_at: string
+      }>
+      total: { aggregate: { count: number } }
+    }>(`query StripeSubscriptions {
+      subscriptions: np_stripe_subscriptions(
+        ${whereClause}
+        order_by: { created_at: desc }
+        limit: ${pageSize}
+        offset: ${offset}
+      ) {
+        id
+        customer_id
+        customer_email
+        status
+        price_id
+        product_name
+        amount
+        currency
+        interval
+        current_period_start
+        current_period_end
+        cancel_at_period_end
+        trial_end
+        created_at
+      }
+      total: np_stripe_subscriptions_aggregate(${whereClause}) {
+        aggregate { count }
+      }
+    }`)
+
+    if (result.errors) {
+      logger.warn('Stripe subscriptions query failed', {
+        errors: result.errors,
+      })
+      return NextResponse.json({
+        success: false,
+        error: 'Failed to query subscriptions',
+        details: result.errors[0]?.message,
+      })
+    }
+
+    const subscriptions: StripeSubscription[] = (
+      result.data?.subscriptions || []
+    ).map((s) => ({
+      id: s.id,
+      customerId: s.customer_id,
+      customerEmail: s.customer_email,
+      status: s.status as StripeSubscription['status'],
+      priceId: s.price_id,
+      productName: s.product_name,
+      amount: s.amount,
+      currency: s.currency,
+      interval: s.interval as StripeSubscription['interval'],
+      currentPeriodStart: s.current_period_start,
+      currentPeriodEnd: s.current_period_end,
+      cancelAtPeriodEnd: s.cancel_at_period_end,
+      trialEnd: s.trial_end || undefined,
+      created: s.created_at,
+    }))
+
+    const total = result.data?.total?.aggregate?.count || 0
 
     logger.api(
       'GET',
@@ -110,6 +134,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 
     return NextResponse.json({
       success: true,
+      pluginInstalled: true,
       subscriptions,
       total,
       page,

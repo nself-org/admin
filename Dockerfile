@@ -3,7 +3,7 @@
 # Multi-platform support: linux/amd64, linux/arm64
 
 # Stage 1: Dependencies
-FROM node:20-alpine AS deps
+FROM node:22-alpine AS deps
 RUN apk add --no-cache libc6-compat
 RUN corepack enable && corepack prepare pnpm@10.28.0 --activate
 WORKDIR /app
@@ -16,7 +16,7 @@ RUN --mount=type=cache,target=/root/.local/share/pnpm/store \
     pnpm install --frozen-lockfile
 
 # Stage 2: Builder
-FROM node:20-alpine AS builder
+FROM node:22-alpine AS builder
 RUN apk add --no-cache libc6-compat
 RUN corepack enable && corepack prepare pnpm@10.28.0 --activate
 WORKDIR /app
@@ -44,7 +44,7 @@ RUN pnpm run build
 RUN pnpm prune --prod
 
 # Stage 3: Runner (minimal image)
-FROM node:20-alpine AS runner
+FROM node:22-alpine AS runner
 WORKDIR /app
 
 # Install runtime dependencies including nself CLI requirements

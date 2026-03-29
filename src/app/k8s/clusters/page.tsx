@@ -86,7 +86,6 @@ function K8sClustersContent() {
       return
     }
     // Would call API
-    console.log(`Delete cluster: ${clusterName}`)
     await mutate()
   }
 

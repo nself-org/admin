@@ -1190,9 +1190,8 @@ function ApiExplorerContent() {
               {activeTab === 'collections' && (
                 <CollectionManager
                   collections={collections}
-                  onCollectionSelect={(collection) => {
+                  onCollectionSelect={(_collection) => {
                     // Handle collection selection
-                    console.log('Collection selected:', collection)
                   }}
                   onRequestSelect={handleRequestSelect}
                   requests={requestHistory}

@@ -120,7 +120,6 @@ function K8sNamespacesContent() {
       return
     }
     // Would call API
-    console.log(`Delete namespace: ${namespaceName}`)
     await mutate()
   }
 

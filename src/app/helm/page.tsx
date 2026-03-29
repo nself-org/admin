@@ -191,7 +191,6 @@ function HelmContent() {
       return
     }
     // Would call API
-    console.log(`Uninstall: ${releaseName} in ${namespace}`)
     await mutate()
   }
 

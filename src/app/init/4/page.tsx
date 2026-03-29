@@ -66,7 +66,6 @@ export default function InitStep4() {
         if (data.env) {
           // Load environment and domain
           const env = data.env.ENV || 'development'
-          console.log('Loaded environment from env file:', env)
           setEnvironment(env === 'dev' ? 'development' : env)
           setBaseDomain(data.env.BASE_DOMAIN || 'localhost')
 
@@ -101,12 +100,6 @@ export default function InitStep4() {
   // Auto-save configuration
   const saveConfig = useCallback(async () => {
     try {
-      console.log(
-        'Saving custom services:',
-        localServices,
-        'to environment:',
-        environment,
-      )
       // Save to env with explicit step for custom services
       await fetch('/api/wizard/update-env', {
         method: 'POST',

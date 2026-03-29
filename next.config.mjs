@@ -12,7 +12,7 @@ const nextConfig = {
     PROJECT_PATH: process.env.PROJECT_PATH || '.backend',
   },
   typescript: {
-    ignoreBuildErrors: true,
+    ignoreBuildErrors: false,
   },
   experimental: {
     optimizeCss: true,

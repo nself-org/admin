@@ -228,7 +228,6 @@ function K8sStatusContent() {
     name: string,
   ) => {
     // Would call API
-    console.log(`Action: ${action} on ${name}`)
     await mutate()
   }
 

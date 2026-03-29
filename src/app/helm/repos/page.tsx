@@ -174,7 +174,6 @@ function HelmReposContent() {
       return
     }
     // Would call API
-    console.log(`Delete repo: ${repoName}`)
     await mutate()
   }
 

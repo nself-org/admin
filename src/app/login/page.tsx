@@ -180,7 +180,6 @@ export default function LoginPage() {
           if (success) {
             // Use centralized routing logic
             const routingResult = await getCorrectRoute()
-            console.log('Post-setup routing:', routingResult.reason)
             router.push(routingResult.route)
           } else {
             setError('Password set but login failed. Please try again.')
@@ -218,7 +217,6 @@ export default function LoginPage() {
           await checkAuth()
           // Success - redirect
           const routingResult = await getCorrectRoute()
-          console.log('Post-login routing:', routingResult.reason)
           router.push(routingResult.route)
         } else if (response.status === 429) {
           // Rate limited

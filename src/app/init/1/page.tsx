@@ -223,7 +223,6 @@ export default function InitStep1() {
         )
       }
 
-      console.log('Auto-saved configuration successfully')
     } catch (error) {
       console.error('Failed to auto-save configuration:', error)
     }

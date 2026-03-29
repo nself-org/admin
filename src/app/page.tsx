@@ -222,7 +222,6 @@ function DashboardContent() {
 
   // Service action handlers
   const handleStartService = async (name: string) => {
-    console.log('Starting service:', name)
     const event: ActivityEvent = {
       id: Date.now().toString(),
       type: 'start',
@@ -234,7 +233,6 @@ function DashboardContent() {
   }
 
   const handleStopService = async (name: string) => {
-    console.log('Stopping service:', name)
     const event: ActivityEvent = {
       id: Date.now().toString(),
       type: 'stop',
@@ -246,7 +244,6 @@ function DashboardContent() {
   }
 
   const handleRestartService = async (name: string) => {
-    console.log('Restarting service:', name)
     const event: ActivityEvent = {
       id: Date.now().toString(),
       type: 'restart',

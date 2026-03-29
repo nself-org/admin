@@ -861,8 +861,12 @@ function executeTransformDataAction(config: Record<string, unknown>): {
       return { success: false, error: 'Input must be an array' }
     }
 
-    // SECURITY: Using Function constructor is safer than eval but still limited
-    // In production, use a proper sandboxed expression evaluator
+    // SECURITY: Block dangerous keywords before expression evaluation
+    const DANGEROUS_EXPR = /\b(require|import|process|global|globalThis|eval|Function|constructor|__proto__|prototype|module|exports|child_process|fs|net|http|os|Buffer|setTimeout|setInterval)\b/;
+    if (DANGEROUS_EXPR.test(expression)) {
+      return { success: false, error: 'Expression contains disallowed keyword' }
+    }
+
     const fn = new Function('item', `return ${expression}`) as (
       item: unknown,
     ) => unknown
@@ -896,8 +900,12 @@ function executeConditionAction(
       return { success: false, error: 'Expression is required' }
     }
 
-    // SECURITY: Using Function constructor for expression evaluation
-    // In production, use a proper sandboxed expression evaluator
+    // SECURITY: Block dangerous keywords before expression evaluation
+    const DANGEROUS_EXPR = /\b(require|import|process|global|globalThis|eval|Function|constructor|__proto__|prototype|module|exports|child_process|fs|net|http|os|Buffer|setTimeout|setInterval)\b/;
+    if (DANGEROUS_EXPR.test(expression)) {
+      return { success: false, error: 'Expression contains disallowed keyword' }
+    }
+
     const fn = new Function(`return ${expression}`)
     const result = fn()
 

@@ -1,7 +1,7 @@
 'use client'
 
 import { cn } from '@/lib/utils'
-import { sanitizeUrl } from '@/lib/validation'
+import { sanitizeHtml, sanitizeUrl } from '@/lib/validation'
 import { Code, Eye } from 'lucide-react'
 import * as React from 'react'
 import { Button } from './button'
@@ -177,6 +177,9 @@ function MarkdownPreview({ content }: { content: string }) {
     return content
       .split('\n')
       .map((line) => {
+        // Sanitize text content first to prevent XSS via dangerouslySetInnerHTML
+        line = sanitizeHtml(line)
+
         // Headers
         if (line.startsWith('### ')) return `<h3>${line.slice(4)}</h3>`
         if (line.startsWith('## ')) return `<h2>${line.slice(3)}</h2>`

@@ -1,10 +1,6 @@
 'use client'
 
-import {
-  Loader2,
-  Save,
-  Trash2,
-} from 'lucide-react'
+import { Loader2, Save, Trash2 } from 'lucide-react'
 import { useState } from 'react'
 
 // ── Types ─────────────────────────────────────────────────────────────────────
@@ -229,8 +225,7 @@ export function RuleBuilder({
     for (const row of conditions) {
       if (!row.value.trim()) continue
       if (row.field === 'from') conds.from = row.value
-      if (row.field === 'subject_contains')
-        conds.subject_contains = row.value
+      if (row.field === 'subject_contains') conds.subject_contains = row.value
       if (row.field === 'body_contains') conds.body_contains = row.value
     }
 

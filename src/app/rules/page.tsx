@@ -1,9 +1,9 @@
 'use client'
 
-import { AlertCircle, Loader2, Plus, RefreshCw } from 'lucide-react'
-import { useCallback, useEffect, useState } from 'react'
 import { RuleBuilder, type MuxRule } from '@/components/rules/RuleBuilder'
 import { RuleList } from '@/components/rules/RuleList'
+import { AlertCircle, Loader2, Plus, RefreshCw } from 'lucide-react'
+import { useCallback, useEffect, useState } from 'react'
 
 // ── API helpers ──────────────────────────────────────────────────────────────
 
@@ -37,9 +37,7 @@ function parseRule(raw: Record<string, unknown>): MuxRule {
     conditions: (raw.conditions ?? {}) as MuxRule['conditions'],
     action: actionType,
     enabled: raw.enabled as boolean,
-    cooldown_secs: raw.cooldown_secs
-      ? Number(raw.cooldown_secs)
-      : undefined,
+    cooldown_secs: raw.cooldown_secs ? Number(raw.cooldown_secs) : undefined,
     created_at: raw.created_at as string,
   }
 }

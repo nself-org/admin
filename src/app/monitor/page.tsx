@@ -107,8 +107,7 @@ function MonitorContent() {
             cpu: docker.cpu || sys.cpu || 0,
             memory: sys.memory?.percentage || docker.memory?.percentage || 0,
             disk: sys.disk?.percentage || 0,
-            network:
-              (sys.network?.rx || 0) + (sys.network?.tx || 0),
+            network: (sys.network?.rx || 0) + (sys.network?.tx || 0),
           }
 
           setMetricsHistory((prev) => {

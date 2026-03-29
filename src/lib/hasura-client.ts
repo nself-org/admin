@@ -55,9 +55,7 @@ export async function hasuraTableExists(tableName: string): Promise<boolean> {
   // Use introspection to check if the query root has this table
   const result = await hasuraQuery<{
     __type: { fields: Array<{ name: string }> } | null
-  }>(
-    `query { __type(name: "query_root") { fields { name } } }`,
-  )
+  }>(`query { __type(name: "query_root") { fields { name } } }`)
 
   if (!result.data?.__type?.fields) return false
 

@@ -1,2 +1,4 @@
+# nAdmin is a local administration tool (localhost:3021).
+# It is not a public website. All crawlers are blocked.
 User-agent: *
 Disallow: /

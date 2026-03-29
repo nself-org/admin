@@ -18,9 +18,7 @@ interface ValidationResult {
 /**
  * Validate DigitalOcean credentials by calling GET /v2/account
  */
-async function validateDigitalOcean(
-  token: string,
-): Promise<ValidationResult> {
+async function validateDigitalOcean(token: string): Promise<ValidationResult> {
   try {
     const response = await fetch('https://api.digitalocean.com/v2/account', {
       headers: { Authorization: `Bearer ${token}` },

@@ -10,7 +10,7 @@ import {
   XCircle,
 } from 'lucide-react'
 import { useState } from 'react'
-import type { MuxRule, ActionType } from './RuleBuilder'
+import type { ActionType, MuxRule } from './RuleBuilder'
 
 // ── Action label map ──────────────────────────────────────────────────────────
 
@@ -237,9 +237,7 @@ export function RuleList({
                     ) : (
                       <button
                         type="button"
-                        onClick={() =>
-                          rule.id && setDeleteConfirm(rule.id)
-                        }
+                        onClick={() => rule.id && setDeleteConfirm(rule.id)}
                         className="rounded p-1.5 text-zinc-400 hover:bg-zinc-700/50 hover:text-red-400"
                         aria-label={`Delete ${rule.name}`}
                       >

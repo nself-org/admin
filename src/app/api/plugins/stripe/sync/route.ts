@@ -20,16 +20,12 @@ export async function POST(_request: NextRequest): Promise<NextResponse> {
       return NextResponse.json({
         success: false,
         pluginInstalled: false,
-        error:
-          'Stripe plugin not installed. Run: nself plugin install stripe',
+        error: 'Stripe plugin not installed. Run: nself plugin install stripe',
       })
     }
 
     // Delegate sync to the nSelf CLI plugin system
-    const result = await executeNselfCommand('plugin', [
-      'stripe',
-      'sync',
-    ])
+    const result = await executeNselfCommand('plugin', ['stripe', 'sync'])
 
     if (!result.success) {
       logger.error('Stripe sync failed', { error: result.error })

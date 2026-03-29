@@ -53,10 +53,7 @@ export async function PATCH(request: NextRequest): Promise<NextResponse> {
     const body = await request.json()
     const ruleId = body?.id
     if (!ruleId) {
-      return NextResponse.json(
-        { error: 'Missing rule id' },
-        { status: 400 },
-      )
+      return NextResponse.json({ error: 'Missing rule id' }, { status: 400 })
     }
     const { id: _id, ...payload } = body
     const res = await fetch(`${muxBase()}/mux/rules/${ruleId}`, {

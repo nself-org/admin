@@ -103,8 +103,7 @@ export async function GET(_request: NextRequest): Promise<NextResponse> {
     const totalRevenue = data?.revenue?.aggregate?.sum?.amount || 0
     const activeSubscriptions =
       data?.active_subscriptions_aggregate?.aggregate?.count || 0
-    const totalCustomers =
-      data?.customers_aggregate?.aggregate?.count || 0
+    const totalCustomers = data?.customers_aggregate?.aggregate?.count || 0
 
     const stats: StripeStats = {
       mrr: Math.round(totalRevenue / 12),
@@ -120,8 +119,7 @@ export async function GET(_request: NextRequest): Promise<NextResponse> {
 
     const counts = {
       customers: totalCustomers,
-      subscriptions:
-        data?.subscriptions_aggregate?.aggregate?.count || 0,
+      subscriptions: data?.subscriptions_aggregate?.aggregate?.count || 0,
       invoices: data?.invoices_aggregate?.aggregate?.count || 0,
       products: data?.products_aggregate?.aggregate?.count || 0,
     }

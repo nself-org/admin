@@ -50,6 +50,7 @@ jobs:
             http://localhost:3021/login
             http://localhost:3021/services
             http://localhost:3021/database
+          configPath: './.lighthouserc.json'
           uploadArtifacts: false
           temporaryPublicStorage: true
           runs: 3

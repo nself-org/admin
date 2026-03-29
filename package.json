@@ -71,7 +71,9 @@
       "basic-ftp": ">=5.2.0",
       "minimatch": ">=9.0.7",
       "@eslint/eslintrc>minimatch": ">=9.0.7",
-      "serialize-javascript": ">=7.0.3"
+      "serialize-javascript": ">=7.0.3",
+      "dompurify": ">=3.3.2",
+      "webpack": ">=5.104.1"
     }
   },
   "dependencies": {

@@ -75,7 +75,6 @@ volumes/
 docker-compose.yml
 docker-compose.*.yml
 .env
-.env.example
 /ssl/
 /certs/
 /data/

@@ -71,17 +71,17 @@ nself-admin v0.5.0 has been optimized for production deployment with significant
 
 ```dockerfile
 # Stage 1: Dependencies (with pnpm cache)
-FROM node:20-alpine AS deps
+FROM node:22-alpine AS deps
 RUN --mount=type=cache,target=/root/.local/share/pnpm/store
 
 # Stage 2: Builder (optimized layer caching)
-FROM node:20-alpine AS builder
+FROM node:22-alpine AS builder
 COPY --from=deps /app/node_modules ./node_modules
 COPY src ./src  # Only copy necessary files
 RUN pnpm prune --prod  # Remove dev dependencies
 
 # Stage 3: Runner (minimal runtime)
-FROM node:20-alpine AS runner
+FROM node:22-alpine AS runner
 COPY --from=builder /app/.next/standalone ./
 ```
 
@@ -93,7 +93,7 @@ COPY --from=builder /app/.next/standalone ./
    - Source code copied separately for better invalidation
 
 2. **Size Reduction**
-   - Alpine base image (node:20-alpine)
+   - Alpine base image (node:22-alpine)
    - Production dependencies only
    - Dev dependencies pruned after build
    - Standalone Next.js build (no node_modules in final image)
@@ -106,7 +106,7 @@ COPY --from=builder /app/.next/standalone ./
 ### Image Size Breakdown
 
 ```
-Base Image (node:20-alpine):  ~50MB
+Base Image (node:22-alpine):  ~50MB
 nself CLI:                    ~5MB
 Runtime dependencies:         ~40MB
 Application (standalone):     ~181MB

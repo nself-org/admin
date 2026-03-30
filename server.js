@@ -39,7 +39,6 @@ app.prepare().then(() => {
 
   server.listen(port, hostname, (err) => {
     if (err) throw err
-    console.log(`> Ready on http://${hostname}:${port}`)
 
     // Initialize graceful shutdown handlers
     if (initializeGracefulShutdown) {
@@ -49,9 +48,7 @@ app.prepare().then(() => {
       const { onShutdown } = require('./src/lib/shutdown')
       onShutdown(() => {
         return new Promise((resolve) => {
-          console.log('Closing HTTP server...')
           server.close(() => {
-            console.log('HTTP server closed')
             resolve()
           })
         })

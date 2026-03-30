@@ -11,9 +11,6 @@ const nextConfig = {
   env: {
     PROJECT_PATH: process.env.PROJECT_PATH || '.backend',
   },
-  typescript: {
-    ignoreBuildErrors: false,
-  },
   experimental: {
     optimizeCss: true,
   },

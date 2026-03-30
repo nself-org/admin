@@ -160,25 +160,8 @@ export function checkRuntimeEnvironment() {
  * Initialize environment validation
  */
 export function initializeEnvironment() {
-  console.log('🔒 Initializing security configuration...')
-
   const config = validateEnv()
   const runtime = checkRuntimeEnvironment()
-
-  // Security checks summary
-  if (!config.ADMIN_PASSWORD && process.env.NODE_ENV !== 'production') {
-    console.log(
-      '⚠️  No admin password set - will generate secure password on first use',
-    )
-  }
-
-  if (runtime.dockerSocket) {
-    console.log('✅ Docker socket accessible')
-  }
-
-  if (runtime.nselfCli) {
-    console.log('✅ nself CLI available')
-  }
 
   return { config, runtime }
 }

@@ -8,10 +8,6 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       return NextResponse.json({ error: 'Message too long' }, { status: 400 })
     }
 
-    console.log(
-      `[CLIENT DEBUG] ${message}`,
-      data ? JSON.stringify(data, null, 2) : '',
-    )
     return NextResponse.json({ success: true })
   } catch (error) {
     console.error('Debug log API error:', error)

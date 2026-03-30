@@ -108,7 +108,7 @@ Content-Security-Policy: [strict policy]
 
 #### Current Implementation
 
-- **Base Image:** node:20-alpine (minimal attack surface)
+- **Base Image:** node:22-alpine (minimal attack surface)
 - **Multi-stage Build:** Separate deps, builder, runner stages
 - **Standalone Mode:** Only production files in final image
 

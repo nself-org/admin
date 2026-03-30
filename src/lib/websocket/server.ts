@@ -76,8 +76,6 @@ export class WebSocketServer {
     if (!this.io) return
 
     this.io.on('connection', (socket: Socket) => {
-      console.log(`Client connected: ${socket.id}`)
-
       // Track presence (async, but we don't need to wait)
       void this.trackPresence(socket)
 
@@ -134,7 +132,6 @@ export class WebSocketServer {
 
       // Disconnection
       socket.on('disconnect', (reason: string) => {
-        console.log(`Client disconnected: ${socket.id}, reason: ${reason}`)
         this.removePresence(socket.id)
         this.rateLimits.delete(socket.id)
       })
@@ -192,8 +189,6 @@ export class WebSocketServer {
       presenceInfo.rooms.add(roomId)
     }
 
-    console.log(`Socket ${socket.id} joined room: ${roomId}`)
-
     // Notify room members
     this.broadcastToRoom(roomId, EventType.CONNECT, {
       socketId: socket.id,
@@ -212,8 +207,6 @@ export class WebSocketServer {
     if (presenceInfo) {
       presenceInfo.rooms.delete(roomId)
     }
-
-    console.log(`Socket ${socket.id} left room: ${roomId}`)
 
     // Notify room members
     this.broadcastToRoom(roomId, EventType.DISCONNECT, {
@@ -370,7 +363,6 @@ export class WebSocketServer {
         ([socketId, presenceInfo]) => {
           const lastSeen = new Date(presenceInfo.lastSeen).getTime()
           if (now - lastSeen > staleThreshold) {
-            console.log(`Removing stale presence: ${socketId}`)
             this.presence.delete(socketId)
           }
         },

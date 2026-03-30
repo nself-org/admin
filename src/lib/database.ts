@@ -355,7 +355,6 @@ export async function initDatabase(): Promise<void> {
           global.__lokiDb = db
           initializationPromise = null // Clear the promise after successful init
           global.__lokiInitPromise = null
-          console.log('Database initialized at:', DB_PATH)
           resolve()
         } catch (error) {
           initializationPromise = null // Clear the promise on error to allow retry

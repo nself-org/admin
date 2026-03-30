@@ -34,7 +34,7 @@ docker build --build-arg NODE_VERSION=20 -t nself-admin:local .
 
 ```dockerfile
 # Multi-stage build for optimization
-FROM node:20-alpine AS builder
+FROM node:22-alpine AS builder
 
 WORKDIR /app
 
@@ -49,7 +49,7 @@ COPY . .
 RUN npm run build
 
 # Production stage
-FROM node:20-alpine
+FROM node:22-alpine
 
 WORKDIR /app
 

@@ -90,7 +90,6 @@ export async function ensureCorrectRoute(
 
   // Check if we're on the correct page
   if (normalizedCurrentPath === targetPath) {
-    console.log(`✅ Correct route: ${currentPath} (${result.reason})`)
     return false // No redirect needed
   }
 
@@ -101,20 +100,15 @@ export async function ensureCorrectRoute(
     normalizedCurrentPath !== '/build' &&
     normalizedCurrentPath !== '/start'
   ) {
-    console.log(`✅ Acceptable route: ${currentPath} (services running)`)
     return false // Allow all pages except setup pages when services are running
   }
 
   // Allow all /init/* wizard steps when target is /build (project not yet built)
   if (targetPath === '/build' && normalizedCurrentPath.startsWith('/init')) {
-    console.log(`✅ Acceptable route: ${currentPath} (wizard in progress)`)
     return false // Allow wizard pages during setup
   }
 
   // Redirect needed
-  console.log(
-    `🔄 Redirecting: ${currentPath} → ${targetPath} (${result.reason})`,
-  )
   navigate(targetPath)
   return true // Redirect happened
 }

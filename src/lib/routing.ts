@@ -17,7 +17,6 @@ export function safeNavigate(
 
   // Prevent duplicate navigation attempts
   if (isNavigating && !force) {
-    console.log('Navigation already in progress, skipping:', path)
     return false
   }
 
@@ -27,7 +26,6 @@ export function safeNavigate(
     now - lastNavigationTime < NAVIGATION_COOLDOWN &&
     !force
   ) {
-    console.log('Too soon to navigate to same path:', path)
     return false
   }
 
@@ -37,7 +35,6 @@ export function safeNavigate(
     window.location.pathname === path &&
     !force
   ) {
-    console.log('Already on path:', path)
     return false
   }
 

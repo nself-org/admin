@@ -236,7 +236,6 @@ export async function apiRequest(
 
       // Calculate exponential backoff delay: 1s, 2s, 4s
       const delay = DEFAULT_RETRY_DELAY * Math.pow(2, attempt)
-      console.log(`Retry attempt ${attempt + 1}/${maxRetries} after ${delay}ms`)
       await sleep(delay)
     }
   }

@@ -410,21 +410,10 @@ export async function writeEnvFile(config: EnvConfig): Promise<void> {
 
   // Write to environment-specific file
   await fs.writeFile(envPath, lines.join('\n'), 'utf-8')
-
-  console.log(`Updated ${envFileName} for environment: ${env}`)
-
-  // Debug: log what was written
-  console.log('Wrote config with PROJECT_NAME:', config.PROJECT_NAME)
 }
 
 // Update specific env variables
 export async function updateEnvFile(updates: EnvConfig): Promise<void> {
-  console.log('updateEnvFile called with updates:', {
-    PROJECT_NAME: updates.PROJECT_NAME,
-    ENV: updates.ENV,
-    POSTGRES_DB: updates.POSTGRES_DB,
-    BASE_DOMAIN: updates.BASE_DOMAIN,
-  })
   const existing = (await readEnvFile()) || {}
 
   // Merge updates with existing, but handle empty strings specially
@@ -453,18 +442,7 @@ export async function updateEnvFile(updates: EnvConfig): Promise<void> {
     const dbPass = merged.POSTGRES_PASSWORD || 'postgres'
     const dbName = merged.POSTGRES_DB || 'nself'
     merged.HASURA_METADATA_DATABASE_URL = `postgres://${dbUser}:${dbPass}@${dbHost}:${dbPort}/${dbName}`
-    console.log(
-      'Rebuilt HASURA_METADATA_DATABASE_URL:',
-      merged.HASURA_METADATA_DATABASE_URL,
-    )
   }
-
-  console.log('Merged config will have:', {
-    PROJECT_NAME: merged.PROJECT_NAME,
-    ENV: merged.ENV,
-    POSTGRES_DB: merged.POSTGRES_DB,
-    BASE_DOMAIN: merged.BASE_DOMAIN,
-  })
   await writeEnvFile(merged)
 }
 

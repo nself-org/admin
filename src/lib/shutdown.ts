@@ -27,12 +27,10 @@ export function isGracefulShutdown(): boolean {
  */
 async function gracefulShutdown(signal: string): Promise<void> {
   if (isShuttingDown) {
-    console.log('Shutdown already in progress...')
     return
   }
 
   isShuttingDown = true
-  console.log(`\n${signal} received - Starting graceful shutdown...`)
 
   const timeout = setTimeout(() => {
     console.error('Graceful shutdown timeout - forcing exit')
@@ -41,12 +39,10 @@ async function gracefulShutdown(signal: string): Promise<void> {
 
   try {
     // Run all registered shutdown handlers
-    console.log(`Running ${shutdownHandlers.length} shutdown handlers...`)
     await Promise.all(
       shutdownHandlers.map(async (handler, index) => {
         try {
           await handler()
-          console.log(`Shutdown handler ${index + 1} completed`)
         } catch (error) {
           console.error(`Shutdown handler ${index + 1} failed:`, error)
         }
@@ -63,14 +59,12 @@ async function gracefulShutdown(signal: string): Promise<void> {
             else resolve()
           })
         })
-        console.log('Database closed')
       }
     } catch (error) {
       console.error('Failed to close database:', error)
     }
 
     clearTimeout(timeout)
-    console.log('Graceful shutdown completed')
     process.exit(0)
   } catch (error) {
     clearTimeout(timeout)
@@ -102,6 +96,4 @@ export function initializeGracefulShutdown(): void {
     console.error('Unhandled rejection at:', promise, 'reason:', reason)
     gracefulShutdown('unhandledRejection').then(() => process.exit(1))
   })
-
-  console.log('Graceful shutdown handlers registered')
 }

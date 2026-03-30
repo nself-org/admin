@@ -117,6 +117,7 @@ describe('BuildPage', () => {
   })
 
   it('should start build and show build progress when button is clicked', async () => {
+    // Note: explicit 20s timeout — inner waitFor uses 10s and CI adds overhead
     const user = userEvent.setup()
     render(<BuildPage />)
 
@@ -146,7 +147,7 @@ describe('BuildPage', () => {
       },
       { timeout: 10000 },
     )
-  })
+  }, 20000)
 
   it('should display build logs during build', async () => {
     const user = userEvent.setup()

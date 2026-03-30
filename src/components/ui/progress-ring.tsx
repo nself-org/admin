@@ -18,8 +18,7 @@ import * as React from 'react'
  * ```
  */
 
-export interface ProgressRingProps
-  extends React.HTMLAttributes<HTMLDivElement> {
+export interface ProgressRingProps extends React.HTMLAttributes<HTMLDivElement> {
   /** Current value */
   value: number
   /** Maximum value */

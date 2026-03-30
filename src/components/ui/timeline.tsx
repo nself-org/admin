@@ -39,8 +39,7 @@ export function Timeline({ children, className, ...props }: TimelineProps) {
   )
 }
 
-export interface TimelineItemProps
-  extends React.HTMLAttributes<HTMLDivElement> {
+export interface TimelineItemProps extends React.HTMLAttributes<HTMLDivElement> {
   /** Item title */
   title: string
   /** Item description */

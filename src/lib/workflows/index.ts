@@ -862,7 +862,8 @@ function executeTransformDataAction(config: Record<string, unknown>): {
     }
 
     // SECURITY: Block dangerous keywords before expression evaluation
-    const DANGEROUS_EXPR = /\b(require|import|process|global|globalThis|eval|Function|constructor|__proto__|prototype|module|exports|child_process|fs|net|http|os|Buffer|setTimeout|setInterval)\b/;
+    const DANGEROUS_EXPR =
+      /\b(require|import|process|global|globalThis|eval|Function|constructor|__proto__|prototype|module|exports|child_process|fs|net|http|os|Buffer|setTimeout|setInterval)\b/
     if (DANGEROUS_EXPR.test(expression)) {
       return { success: false, error: 'Expression contains disallowed keyword' }
     }
@@ -901,7 +902,8 @@ function executeConditionAction(
     }
 
     // SECURITY: Block dangerous keywords before expression evaluation
-    const DANGEROUS_EXPR = /\b(require|import|process|global|globalThis|eval|Function|constructor|__proto__|prototype|module|exports|child_process|fs|net|http|os|Buffer|setTimeout|setInterval)\b/;
+    const DANGEROUS_EXPR =
+      /\b(require|import|process|global|globalThis|eval|Function|constructor|__proto__|prototype|module|exports|child_process|fs|net|http|os|Buffer|setTimeout|setInterval)\b/
     if (DANGEROUS_EXPR.test(expression)) {
       return { success: false, error: 'Expression contains disallowed keyword' }
     }

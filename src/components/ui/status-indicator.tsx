@@ -14,8 +14,7 @@ import * as React from 'react'
  * ```
  */
 
-export interface StatusIndicatorProps
-  extends React.HTMLAttributes<HTMLDivElement> {
+export interface StatusIndicatorProps extends React.HTMLAttributes<HTMLDivElement> {
   /** Status type */
   status: 'running' | 'stopped' | 'warning' | 'error' | 'idle'
   /** Label text */

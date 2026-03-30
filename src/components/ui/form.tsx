@@ -26,11 +26,10 @@ import { z } from 'zod'
  * ```
  */
 
-export interface FormProps<T extends z.ZodType>
-  extends Omit<
-    React.FormHTMLAttributes<HTMLFormElement>,
-    'onSubmit' | 'onError'
-  > {
+export interface FormProps<T extends z.ZodType> extends Omit<
+  React.FormHTMLAttributes<HTMLFormElement>,
+  'onSubmit' | 'onError'
+> {
   /** Zod schema for validation */
   schema?: T
   /** Submit handler receives validated data */

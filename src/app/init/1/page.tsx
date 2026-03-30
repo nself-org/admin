@@ -222,7 +222,6 @@ export default function InitStep1() {
           `Save failed: ${response.status} ${response.statusText}`,
         )
       }
-
     } catch (error) {
       console.error('Failed to auto-save configuration:', error)
     }

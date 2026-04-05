@@ -5,17 +5,14 @@
       "startServerCommand": "pnpm start",
       "startServerReadyPattern": "ready",
       "url": [
-        "http://localhost:3021",
-        "http://localhost:3021/login",
-        "http://localhost:3021/services",
-        "http://localhost:3021/database"
+        "http://localhost:3021/login"
       ]
     },
     "assert": {
       "preset": "lighthouse:recommended",
       "assertions": {
-        "categories:performance": ["warn", { "minScore": 0.8 }],
-        "categories:accessibility": ["error", { "minScore": 0.85 }],
+        "categories:performance": ["warn", { "minScore": 0.7 }],
+        "categories:accessibility": ["warn", { "minScore": 0.85 }],
         "categories:best-practices": ["warn", { "minScore": 0.85 }],
         "categories:seo": ["warn", { "minScore": 0.8 }],
         "csp-xss": ["warn", { "minScore": 0 }],

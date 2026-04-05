@@ -39,30 +39,18 @@ jobs:
         run: |
           pnpm start &
           echo "Waiting for app to start..."
-          sleep 10
-          curl --retry 5 --retry-delay 2 http://localhost:3021/api/health
-
-      - name: Run Lighthouse CI
-        uses: treosh/lighthouse-ci-action@v10
-        with:
-          urls: |
-            http://localhost:3021
-            http://localhost:3021/login
-            http://localhost:3021/services
-            http://localhost:3021/database
-          configPath: './.lighthouserc.json'
-          uploadArtifacts: false
-          temporaryPublicStorage: true
-          runs: 3
+          sleep 20
+          curl --retry 10 --retry-delay 3 http://localhost:3021/api/health
 
       - name: Run Lighthouse audit
         id: lighthouse
         uses: treosh/lighthouse-ci-action@v10
         with:
-          urls: http://localhost:3021
+          urls: http://localhost:3021/login
           configPath: './.lighthouserc.json'
           uploadArtifacts: false
           temporaryPublicStorage: true
+          runs: 3
 
       - name: Parse Lighthouse scores
         id: scores

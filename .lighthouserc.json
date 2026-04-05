@@ -4,9 +4,7 @@
       "numberOfRuns": 3,
       "startServerCommand": "pnpm start",
       "startServerReadyPattern": "ready",
-      "url": [
-        "http://localhost:3021/login"
-      ]
+      "url": ["http://localhost:3021/login"]
     },
     "assert": {
       "preset": "lighthouse:recommended",

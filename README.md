@@ -1,4 +1,4 @@
-# nself-admin (nAdmin)
+# ɳSelf Admin
 
 [![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)](https://github.com/nself-org/admin/releases)
 [![Docker](https://img.shields.io/docker/v/nself/nself-admin?label=docker)](https://hub.docker.com/r/nself/nself-admin)
@@ -14,7 +14,7 @@
 
 **Production-ready web UI for the [nself CLI](https://github.com/nself-org/cli)** - Enterprise-grade management interface for your self-hosted backend stack.
 
-> **v1.0.0** is the current release featuring 198 fully functional pages, 60+ production-grade components, real-time updates, comprehensive error handling, and enterprise-level security.
+> **v1.0.3** is the current release featuring 198 fully functional pages, 60+ production-grade components, real-time updates, comprehensive error handling, and enterprise-level security.
 
 ---
 
@@ -33,11 +33,11 @@
 
 ---
 
-## What is nself-admin?
+## What is ɳSelf Admin?
 
-nself-admin (nAdmin) is a **web-based administration interface** that wraps the powerful [nself CLI](https://github.com/nself-org/cli). Instead of running commands in your terminal, you get a beautiful, real-time dashboard to manage your entire self-hosted backend stack.
+ɳSelf Admin is a **web-based administration interface** that wraps the powerful [nself CLI](https://github.com/nself-org/cli). Instead of running commands in your terminal, you get a beautiful, real-time dashboard to manage your entire self-hosted backend stack.
 
-### Why nself-admin?
+### Why ɳSelf Admin?
 
 - **Visual Interface** - No need to memorize CLI commands
 - **Real-Time Updates** - WebSocket-powered live monitoring
@@ -46,7 +46,7 @@ nself-admin (nAdmin) is a **web-based administration interface** that wraps the 
 - **Mobile-Friendly** - Manage your stack from anywhere
 - **Zero Lock-In** - Pure UI wrapper, all data stays with nself CLI
 
-### Who Should Use nself-admin?
+### Who Should Use ɳSelf Admin?
 
 - **Developers** who prefer GUIs over command-line interfaces
 - **Teams** who need shared access to infrastructure management
@@ -410,6 +410,6 @@ Built by [nself](https://nself.org) · [GitHub](https://github.com/nself-org) ·
 
 ---
 
-**Star us on GitHub** if you find nself-admin useful!
+**Star us on GitHub** if you find ɳSelf Admin useful!
 
 [![GitHub stars](https://img.shields.io/github/stars/nself-org/admin?style=social)](https://github.com/nself-org/admin)

@@ -149,7 +149,7 @@ function AutoScalingContent() {
             <ArrowLeft className="h-4 w-4" />
             Back to Scaling
           </Link>
-          <h1 className="bg-gradient-to-r from-sky-500 to-blue-400 bg-clip-text text-4xl font-bold text-transparent dark:from-indigo-400 dark:to-violet-300">
+          <h1 className="bg-gradient-to-r from-sky-500 to-blue-400 bg-clip-text text-4xl font-bold text-transparent dark:from-sky-400 dark:to-blue-300">
             Autoscaling Configuration
           </h1>
           <p className="mt-3 text-lg text-zinc-600 dark:text-zinc-400">

@@ -393,11 +393,11 @@ function getLanguageColor(language: string): string {
     Go: 'bg-cyan-100 text-cyan-800 dark:bg-cyan-900/30 dark:text-cyan-400',
     Rust: 'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-400',
     Java: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400',
-    PHP: 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-400',
+    PHP: 'bg-sky-100 text-sky-800 dark:bg-sky-900/30 dark:text-sky-400',
     Ruby: 'bg-pink-100 text-pink-800 dark:bg-pink-900/30 dark:text-pink-400',
-    'C#': 'bg-violet-100 text-violet-800 dark:bg-violet-900/30 dark:text-violet-400',
+    'C#': 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400',
     Elixir:
-      'bg-indigo-100 text-indigo-800 dark:bg-indigo-900/30 dark:text-indigo-400',
+      'bg-sky-100 text-sky-800 dark:bg-sky-900/30 dark:text-sky-400',
   }
   return (
     colors[language] ||

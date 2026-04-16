@@ -54,7 +54,7 @@ const actionColors: Record<ActionType, string> = {
   http_request: 'bg-blue-500',
   email: 'bg-green-500',
   notification: 'bg-yellow-500',
-  slack: 'bg-purple-500',
+  slack: 'bg-sky-500',
   database_query: 'bg-orange-500',
   run_command: 'bg-zinc-500',
   transform_data: 'bg-cyan-500',
@@ -65,7 +65,7 @@ const actionColors: Record<ActionType, string> = {
   set_variable: 'bg-emerald-500',
   log: 'bg-slate-500',
   error: 'bg-red-500',
-  workflow: 'bg-violet-500',
+  workflow: 'bg-blue-500',
 }
 
 export function WorkflowNode({

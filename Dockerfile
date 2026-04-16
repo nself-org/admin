@@ -76,7 +76,7 @@ RUN ARCH=$(uname -m) && \
     chmod +x /usr/local/bin/mkcert
 
 # Install nself CLI pre-built binary
-ARG NSELF_VERSION=1.0.4
+ARG NSELF_VERSION=1.0.6
 RUN ARCH=$(uname -m) && \
     if [ "$ARCH" = "x86_64" ]; then NSELF_ARCH="amd64"; \
     elif [ "$ARCH" = "aarch64" ]; then NSELF_ARCH="arm64"; \

@@ -165,7 +165,7 @@ export default function EditDashboardPage() {
         />
         <PageContent>
           <div className="flex items-center justify-center py-20">
-            <div className="h-8 w-8 animate-spin rounded-full border-4 border-purple-500 border-t-transparent" />
+            <div className="h-8 w-8 animate-spin rounded-full border-4 border-sky-500 border-t-transparent" />
           </div>
         </PageContent>
       </>

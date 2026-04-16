@@ -67,7 +67,7 @@ function SpeedSlider({
     <div className="space-y-1.5">
       <div className="flex items-center justify-between">
         <label className="text-sm font-medium text-zinc-300">Speed</label>
-        <span className="text-sm font-medium text-indigo-300">
+        <span className="text-sm font-medium text-sky-300">
           {value.toFixed(1)}×
         </span>
       </div>
@@ -78,7 +78,7 @@ function SpeedSlider({
         step="0.1"
         value={value}
         onChange={(e) => onChange(parseFloat(e.target.value))}
-        className="h-1.5 w-full cursor-pointer appearance-none rounded-full bg-zinc-700 accent-indigo-500"
+        className="h-1.5 w-full cursor-pointer appearance-none rounded-full bg-zinc-700 accent-sky-500"
       />
       <div className="flex justify-between text-xs text-zinc-600">
         <span>0.5×</span>
@@ -105,10 +105,10 @@ function AudioPlayer({ src }: { src: string }) {
   }, [src])
 
   return (
-    <div className="rounded-lg border border-indigo-500/30 bg-indigo-900/10 p-3">
+    <div className="rounded-lg border border-sky-500/30 bg-sky-900/10 p-3">
       <div className="mb-2 flex items-center gap-2">
-        <Volume2 className="h-4 w-4 text-indigo-400" />
-        <span className="text-xs font-medium tracking-wide text-indigo-300 uppercase">
+        <Volume2 className="h-4 w-4 text-sky-400" />
+        <span className="text-xs font-medium tracking-wide text-sky-300 uppercase">
           Audio Output
         </span>
       </div>
@@ -370,7 +370,7 @@ export default function VoiceConfigPage() {
               onClick={() => handleProviderChange(p)}
               className={`flex items-center gap-2 rounded-md px-4 py-1.5 text-sm font-medium transition-colors ${
                 provider === p
-                  ? 'bg-indigo-600 text-white'
+                  ? 'bg-sky-500 text-white'
                   : 'text-zinc-400 hover:text-zinc-200'
               }`}
             >
@@ -407,7 +407,7 @@ export default function VoiceConfigPage() {
                   value={elevenKey}
                   onChange={(e) => handleKeyChange(e.target.value)}
                   placeholder="sk-..."
-                  className="w-full rounded-lg border border-zinc-600/50 bg-zinc-800/50 px-3 py-2 pr-10 text-sm text-zinc-100 placeholder-zinc-500 focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/30 focus:outline-none"
+                  className="w-full rounded-lg border border-zinc-600/50 bg-zinc-800/50 px-3 py-2 pr-10 text-sm text-zinc-100 placeholder-zinc-500 focus:border-sky-500/50 focus:ring-1 focus:ring-sky-500/30 focus:outline-none"
                 />
                 <button
                   type="button"
@@ -426,7 +426,7 @@ export default function VoiceConfigPage() {
                 type="button"
                 onClick={fetchVoices}
                 disabled={fetchingVoices || !elevenKey.trim()}
-                className="flex shrink-0 items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-500 disabled:cursor-not-allowed disabled:opacity-50"
+                className="flex shrink-0 items-center gap-2 rounded-lg bg-sky-500 px-4 py-2 text-sm font-medium text-white hover:bg-sky-400 disabled:cursor-not-allowed disabled:opacity-50"
               >
                 {fetchingVoices ? (
                   <Loader2 className="h-3.5 w-3.5 animate-spin" />
@@ -449,7 +449,7 @@ export default function VoiceConfigPage() {
                 value={selectedVoiceId}
                 onChange={(e) => handleVoiceSelect(e.target.value)}
                 disabled={voices.length === 0}
-                className="w-full appearance-none rounded-lg border border-zinc-600/50 bg-zinc-800/50 px-3 py-2 pr-8 text-sm text-zinc-100 focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/30 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+                className="w-full appearance-none rounded-lg border border-zinc-600/50 bg-zinc-800/50 px-3 py-2 pr-8 text-sm text-zinc-100 focus:border-sky-500/50 focus:ring-1 focus:ring-sky-500/30 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
               >
                 {voices.length === 0 ? (
                   <option value="">— Fetch voices first —</option>
@@ -479,7 +479,7 @@ export default function VoiceConfigPage() {
               value={sampleText}
               onChange={(e) => setSampleText(e.target.value)}
               rows={3}
-              className="w-full resize-none rounded-lg border border-zinc-600/50 bg-zinc-800/50 px-3 py-2 text-sm text-zinc-100 placeholder-zinc-500 focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/30 focus:outline-none"
+              className="w-full resize-none rounded-lg border border-zinc-600/50 bg-zinc-800/50 px-3 py-2 text-sm text-zinc-100 placeholder-zinc-500 focus:border-sky-500/50 focus:ring-1 focus:ring-sky-500/30 focus:outline-none"
             />
           </div>
 
@@ -491,7 +491,7 @@ export default function VoiceConfigPage() {
             type="button"
             onClick={handleTestVoice}
             disabled={testing || !sampleText.trim()}
-            className="flex items-center gap-2 rounded-lg bg-indigo-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-indigo-500 disabled:cursor-not-allowed disabled:opacity-50"
+            className="flex items-center gap-2 rounded-lg bg-sky-500 px-5 py-2.5 text-sm font-medium text-white hover:bg-sky-400 disabled:cursor-not-allowed disabled:opacity-50"
           >
             {testing ? (
               <Loader2 className="h-4 w-4 animate-spin" />
@@ -527,7 +527,7 @@ export default function VoiceConfigPage() {
               value={piperModelPath}
               onChange={(e) => setPiperModelPath(e.target.value)}
               placeholder="/path/to/model.onnx"
-              className="w-full rounded-lg border border-zinc-600/50 bg-zinc-800/50 px-3 py-2 text-sm text-zinc-100 placeholder-zinc-500 focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/30 focus:outline-none"
+              className="w-full rounded-lg border border-zinc-600/50 bg-zinc-800/50 px-3 py-2 text-sm text-zinc-100 placeholder-zinc-500 focus:border-sky-500/50 focus:ring-1 focus:ring-sky-500/30 focus:outline-none"
             />
             <p className="text-xs text-zinc-600">
               Absolute path to the .onnx model file on the server running
@@ -544,7 +544,7 @@ export default function VoiceConfigPage() {
               value={sampleText}
               onChange={(e) => setSampleText(e.target.value)}
               rows={3}
-              className="w-full resize-none rounded-lg border border-zinc-600/50 bg-zinc-800/50 px-3 py-2 text-sm text-zinc-100 placeholder-zinc-500 focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/30 focus:outline-none"
+              className="w-full resize-none rounded-lg border border-zinc-600/50 bg-zinc-800/50 px-3 py-2 text-sm text-zinc-100 placeholder-zinc-500 focus:border-sky-500/50 focus:ring-1 focus:ring-sky-500/30 focus:outline-none"
             />
           </div>
 
@@ -556,7 +556,7 @@ export default function VoiceConfigPage() {
             type="button"
             onClick={handleTestVoice}
             disabled={testing || !sampleText.trim()}
-            className="flex items-center gap-2 rounded-lg bg-indigo-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-indigo-500 disabled:cursor-not-allowed disabled:opacity-50"
+            className="flex items-center gap-2 rounded-lg bg-sky-500 px-5 py-2.5 text-sm font-medium text-white hover:bg-sky-400 disabled:cursor-not-allowed disabled:opacity-50"
           >
             {testing ? (
               <Loader2 className="h-4 w-4 animate-spin" />

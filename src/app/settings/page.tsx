@@ -940,8 +940,8 @@ function IntegrationSettingsSection() {
         <div className="rounded-lg border border-zinc-200 p-4 dark:border-zinc-700">
           <div className="mb-4 flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-purple-100 dark:bg-purple-900/20">
-                <MessageSquare className="h-4 w-4 text-purple-600" />
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-sky-100 dark:bg-sky-900/20">
+                <MessageSquare className="h-4 w-4 text-sky-500" />
               </div>
               <div>
                 <h4 className="font-medium">Slack</h4>
@@ -1007,8 +1007,8 @@ function IntegrationSettingsSection() {
         <div className="rounded-lg border border-zinc-200 p-4 dark:border-zinc-700">
           <div className="mb-4 flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-100 dark:bg-indigo-900/20">
-                <MessageSquare className="h-4 w-4 text-indigo-600" />
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-sky-100 dark:bg-sky-900/20">
+                <MessageSquare className="h-4 w-4 text-sky-500" />
               </div>
               <div>
                 <h4 className="font-medium">Discord</h4>

@@ -81,8 +81,8 @@ export default function WorkflowsPage() {
 
           <Card className="p-4">
             <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-purple-100 dark:bg-purple-900/30">
-                <Clock className="h-5 w-5 text-purple-600 dark:text-purple-400" />
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-sky-100 dark:bg-sky-900/30">
+                <Clock className="h-5 w-5 text-sky-500 dark:text-sky-400" />
               </div>
               <div>
                 <p className="text-muted-foreground text-sm">

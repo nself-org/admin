@@ -377,8 +377,8 @@ function StorageContent() {
           <Card>
             <CardContent className="pt-6">
               <div className="flex items-center gap-3">
-                <div className="rounded-lg bg-purple-100 p-2 dark:bg-purple-900/30">
-                  <FolderOpen className="h-5 w-5 text-purple-600 dark:text-purple-400" />
+                <div className="rounded-lg bg-sky-100 p-2 dark:bg-sky-900/30">
+                  <FolderOpen className="h-5 w-5 text-sky-500 dark:text-sky-400" />
                 </div>
                 <div>
                   <p className="text-sm text-zinc-500 dark:text-zinc-400">

@@ -58,7 +58,7 @@ const actionColors: Record<ActionType, string> = {
   database_query: 'bg-orange-500',
   run_command: 'bg-zinc-500',
   transform_data: 'bg-cyan-500',
-  condition: 'bg-indigo-500',
+  condition: 'bg-sky-500',
   loop: 'bg-pink-500',
   delay: 'bg-amber-500',
   parallel: 'bg-teal-500',

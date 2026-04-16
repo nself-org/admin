@@ -291,7 +291,7 @@ export default function LocalModelsPage() {
           <div className="flex items-center justify-center gap-3">
             <button
               onClick={() => { setShowInstallModal(true); startInstall() }}
-              className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-500 transition"
+              className="rounded-lg bg-sky-500 px-4 py-2 text-sm font-medium text-white hover:bg-sky-400 transition"
             >
               <Download className="mr-2 inline h-4 w-4" />
               Install Ollama
@@ -337,7 +337,7 @@ export default function LocalModelsPage() {
               {installDone && (
                 <button
                   onClick={() => { setShowInstallModal(false); fetchAll() }}
-                  className="mt-4 w-full rounded-lg bg-indigo-600 py-2 text-sm font-medium text-white hover:bg-indigo-500 transition"
+                  className="mt-4 w-full rounded-lg bg-sky-500 py-2 text-sm font-medium text-white hover:bg-sky-400 transition"
                 >
                   Continue to Settings
                 </button>
@@ -446,7 +446,7 @@ export default function LocalModelsPage() {
           <h2 className="text-lg font-medium text-zinc-200">Installed Models</h2>
           <button
             onClick={() => setShowAddModel(true)}
-            className="rounded-lg bg-indigo-600/20 px-3 py-1.5 text-xs text-indigo-300 hover:bg-indigo-600/30 transition"
+            className="rounded-lg bg-sky-500/20 px-3 py-1.5 text-xs text-sky-300 hover:bg-sky-500/30 transition"
           >
             <Plus className="mr-1 inline h-3 w-3" /> Add Model
           </button>
@@ -461,7 +461,7 @@ export default function LocalModelsPage() {
               className="flex-1 bg-transparent text-sm text-zinc-200 placeholder-zinc-600 outline-none"
               onKeyDown={(e) => { if (e.key === 'Enter') addModel() }}
             />
-            <button onClick={addModel} disabled={addingModel} className="rounded bg-indigo-600 px-3 py-1 text-xs text-white disabled:opacity-50">
+            <button onClick={addModel} disabled={addingModel} className="rounded bg-sky-500 px-3 py-1 text-xs text-white disabled:opacity-50">
               {addingModel ? <Loader2 className="h-3 w-3 animate-spin" /> : 'Pull'}
             </button>
             <button onClick={() => setShowAddModel(false)} className="text-zinc-500 hover:text-zinc-300">
@@ -502,7 +502,7 @@ export default function LocalModelsPage() {
                     </td>
                     <td className="py-3 pr-4 text-zinc-400">
                       {benchmarking === m.name ? (
-                        <Loader2 className="h-3 w-3 animate-spin text-indigo-400" />
+                        <Loader2 className="h-3 w-3 animate-spin text-sky-400" />
                       ) : (
                         m.tokens_per_sec?.toFixed(0) ?? '-'
                       )}
@@ -620,7 +620,7 @@ export default function LocalModelsPage() {
               <button
                 onClick={saveAdvanced}
                 disabled={savingAdvanced}
-                className="rounded-lg bg-indigo-600 px-4 py-2 text-sm text-white hover:bg-indigo-500 transition disabled:opacity-50"
+                className="rounded-lg bg-sky-500 px-4 py-2 text-sm text-white hover:bg-sky-400 transition disabled:opacity-50"
               >
                 {savingAdvanced ? 'Saving...' : 'Save'}
               </button>

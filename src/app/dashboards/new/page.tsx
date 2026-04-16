@@ -63,7 +63,7 @@ export default function NewDashboardPage() {
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Dashboard Icon */}
             <div className="flex justify-center">
-              <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-gradient-to-br from-purple-500 to-pink-500">
+              <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-gradient-to-br from-sky-500 to-blue-500">
                 <LayoutDashboard className="h-10 w-10 text-white" />
               </div>
             </div>
@@ -102,7 +102,7 @@ export default function NewDashboardPage() {
                 onChange={(e) => setDescription(e.target.value)}
                 placeholder="Describe what this dashboard is for (optional)"
                 rows={3}
-                className="w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm placeholder:text-zinc-400 focus:border-purple-500 focus:ring-1 focus:ring-purple-500 focus:outline-none dark:border-zinc-600 dark:bg-zinc-900 dark:text-white dark:placeholder:text-zinc-500 dark:focus:border-purple-500"
+                className="w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm placeholder:text-zinc-400 focus:border-sky-500 focus:ring-1 focus:ring-sky-500 focus:outline-none dark:border-zinc-600 dark:bg-zinc-900 dark:text-white dark:placeholder:text-zinc-500 dark:focus:border-sky-500"
               />
             </div>
 
@@ -118,7 +118,7 @@ export default function NewDashboardPage() {
                 id="columns"
                 value={columns}
                 onChange={(e) => setColumns(Number(e.target.value))}
-                className="w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm focus:border-purple-500 focus:ring-1 focus:ring-purple-500 focus:outline-none dark:border-zinc-600 dark:bg-zinc-900 dark:text-white dark:focus:border-purple-500"
+                className="w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm focus:border-sky-500 focus:ring-1 focus:ring-sky-500 focus:outline-none dark:border-zinc-600 dark:bg-zinc-900 dark:text-white dark:focus:border-sky-500"
               >
                 <option value={6}>6 columns (compact)</option>
                 <option value={12}>12 columns (standard)</option>
@@ -136,7 +136,7 @@ export default function NewDashboardPage() {
                   type="checkbox"
                   checked={isPublic}
                   onChange={(e) => setIsPublic(e.target.checked)}
-                  className="h-4 w-4 rounded border-zinc-300 text-purple-600 focus:ring-purple-500 dark:border-zinc-600"
+                  className="h-4 w-4 rounded border-zinc-300 text-sky-500 focus:ring-sky-500 dark:border-zinc-600"
                 />
                 <span className="text-sm text-zinc-700 dark:text-zinc-300">
                   Make this dashboard public

@@ -165,7 +165,7 @@ function RequestBuilder({
       case 'DELETE':
         return 'bg-red-500'
       case 'PATCH':
-        return 'bg-purple-500'
+        return 'bg-sky-500'
       default:
         return 'bg-gray-500'
     }
@@ -685,7 +685,7 @@ function CollectionManager({
       case 'DELETE':
         return 'text-red-600 dark:text-red-400'
       case 'PATCH':
-        return 'text-purple-600 dark:text-purple-400'
+        return 'text-sky-500 dark:text-sky-400'
       default:
         return 'text-zinc-600 dark:text-zinc-400'
     }
@@ -809,7 +809,7 @@ function RequestHistory({
       case 'DELETE':
         return 'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400'
       case 'PATCH':
-        return 'bg-purple-100 text-purple-800 dark:bg-purple-900/20 dark:text-purple-400'
+        return 'bg-sky-100 text-sky-800 dark:bg-sky-900/20 dark:text-sky-400'
       default:
         return 'bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-400'
     }

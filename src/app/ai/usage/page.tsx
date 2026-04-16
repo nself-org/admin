@@ -378,7 +378,7 @@ export default function AIUsagePage() {
                       ? 'bg-red-500'
                       : (budgetPct ?? 0) >= 70
                         ? 'bg-yellow-500'
-                        : 'bg-indigo-500'
+                        : 'bg-sky-500'
                   }`}
                   style={{ width: `${budgetPct ?? 0}%` }}
                 />
@@ -429,7 +429,7 @@ export default function AIUsagePage() {
                 type="checkbox"
                 checked={autoRefresh}
                 onChange={(e) => setAutoRefresh(e.target.checked)}
-                className="accent-indigo-500"
+                className="accent-sky-500"
               />
               Auto-refresh
             </label>
@@ -498,7 +498,7 @@ export default function AIUsagePage() {
                     <td className="px-5 py-3 text-sm text-zinc-300">
                       {fmtTokens(row.tokens_out)}
                     </td>
-                    <td className="px-5 py-3 text-sm font-medium text-indigo-300">
+                    <td className="px-5 py-3 text-sm font-medium text-sky-300">
                       {fmtCost(row.cost_usd)}
                     </td>
                   </tr>
@@ -517,7 +517,7 @@ export default function AIUsagePage() {
                   <td className="px-5 py-3 text-sm font-semibold text-white">
                     {fmtTokens(totalTokensOut)}
                   </td>
-                  <td className="px-5 py-3 text-sm font-semibold text-indigo-300">
+                  <td className="px-5 py-3 text-sm font-semibold text-sky-300">
                     {fmtCost(totalCost)}
                   </td>
                 </tr>

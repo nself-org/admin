@@ -1427,7 +1427,7 @@ function VideoTutorialsSection() {
         {tutorials.map((tutorial) => (
           <div key={tutorial.id} className="group cursor-pointer">
             <div className="relative mb-3 aspect-video overflow-hidden rounded-lg bg-zinc-200 dark:bg-zinc-700">
-              <div className="absolute inset-0 bg-gradient-to-br from-blue-500 to-purple-600 opacity-80" />
+              <div className="absolute inset-0 bg-gradient-to-br from-sky-500 to-blue-600 opacity-80" />
               <div className="absolute inset-0 flex items-center justify-center">
                 <Play className="h-12 w-12 text-white opacity-80 transition-opacity group-hover:opacity-100" />
               </div>
@@ -1809,7 +1809,7 @@ function SupportContactSection() {
           </div>
 
           <div className="flex items-center gap-3">
-            <Globe className="h-5 w-5 text-purple-500" />
+            <Globe className="h-5 w-5 text-sky-500" />
             <div>
               <div className="text-sm font-medium">Website</div>
               <div className="text-sm text-zinc-600 dark:text-zinc-400">

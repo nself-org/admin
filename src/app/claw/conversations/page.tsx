@@ -296,7 +296,7 @@ export default function ConversationsPage() {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search conversations…"
-              className="w-full rounded-lg border border-zinc-600/50 bg-zinc-800/50 px-3 py-1.5 text-sm text-zinc-100 placeholder-zinc-500 focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/30 focus:outline-none"
+              className="w-full rounded-lg border border-zinc-600/50 bg-zinc-800/50 px-3 py-1.5 text-sm text-zinc-100 placeholder-zinc-500 focus:border-sky-500/50 focus:ring-1 focus:ring-sky-500/30 focus:outline-none"
             />
           </div>
 
@@ -323,7 +323,7 @@ export default function ConversationsPage() {
                   key={c.session_id}
                   className={`cursor-pointer px-5 py-3.5 transition-colors hover:bg-zinc-700/30 ${
                     selectedId === c.session_id
-                      ? 'border-l-2 border-indigo-500 bg-zinc-700/40'
+                      ? 'border-l-2 border-sky-500 bg-zinc-700/40'
                       : ''
                   }`}
                   onClick={() => handleSelect(c.session_id)}

@@ -28,20 +28,20 @@ function MetricCard({
   value,
   description,
   icon: Icon,
-  color = 'purple',
+  color = 'sky',
 }: {
   title: string
   value: string | number
   description?: string
   icon: React.ComponentType<{ className?: string }>
-  color?: 'purple' | 'emerald' | 'amber' | 'blue'
+  color?: 'sky' | 'emerald' | 'amber' | 'blue'
 }) {
   const mouseX = useMotionValue(0)
   const mouseY = useMotionValue(0)
 
   const colorClasses = {
-    purple:
-      'from-purple-500/40 to-purple-400/30 bg-purple-500/20 text-purple-400',
+    sky:
+      'from-sky-500/40 to-sky-400/30 bg-sky-500/20 text-sky-400',
     emerald:
       'from-emerald-500/40 to-emerald-400/30 bg-emerald-500/20 text-emerald-400',
     amber: 'from-amber-500/40 to-amber-400/30 bg-amber-500/20 text-amber-400',
@@ -61,7 +61,7 @@ function MetricCard({
   return (
     <div
       onMouseMove={onMouseMove}
-      className="group relative rounded-2xl bg-zinc-50/90 p-6 transition-colors duration-300 hover:bg-purple-50/80 dark:bg-white/5 dark:hover:bg-purple-950/40"
+      className="group relative rounded-2xl bg-zinc-50/90 p-6 transition-colors duration-300 hover:bg-sky-50/80 dark:bg-white/5 dark:hover:bg-sky-950/40"
     >
       <motion.div
         className={`absolute inset-0 rounded-2xl bg-gradient-to-r ${colorClasses[color].split(' ').slice(0, 2).join(' ')} opacity-0 transition duration-300 group-hover:opacity-100`}
@@ -70,7 +70,7 @@ function MetricCard({
           WebkitMaskImage: useMotionTemplate`radial-gradient(250px at ${mouseX}px ${mouseY}px, white, transparent)`,
         }}
       />
-      <div className="absolute inset-0 rounded-2xl ring-1 ring-zinc-900/10 transition-colors duration-300 ring-inset group-hover:ring-purple-500/50 dark:ring-white/20 dark:group-hover:ring-purple-400/60" />
+      <div className="absolute inset-0 rounded-2xl ring-1 ring-zinc-900/10 transition-colors duration-300 ring-inset group-hover:ring-sky-500/50 dark:ring-white/20 dark:group-hover:ring-sky-400/60" />
       <div className="relative">
         <div className="flex items-center justify-between">
           <h3 className="text-sm font-semibold text-zinc-900 dark:text-white">
@@ -214,7 +214,7 @@ function HelmContent() {
     <div className="space-y-6">
       {/* Hero Section */}
       <div className="mt-12 mb-4">
-        <h1 className="bg-gradient-to-r from-purple-600 to-black bg-clip-text text-4xl/tight font-extrabold text-transparent sm:text-6xl/tight dark:from-purple-400 dark:to-white">
+        <h1 className="bg-gradient-to-r from-sky-500 to-black bg-clip-text text-4xl/tight font-extrabold text-transparent sm:text-6xl/tight dark:from-sky-400 dark:to-white">
           Helm
         </h1>
         <p className="mt-2 text-zinc-600 dark:text-zinc-400">
@@ -230,7 +230,7 @@ function HelmContent() {
             value={releases.length}
             description="Installed charts"
             icon={Package}
-            color="purple"
+            color="sky"
           />
 
           <MetricCard
@@ -263,10 +263,10 @@ function HelmContent() {
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Link
           href="/helm/init"
-          className="rounded-lg border border-zinc-700/50 bg-zinc-800/50 p-4 transition-colors hover:border-purple-500/50"
+          className="rounded-lg border border-zinc-700/50 bg-zinc-800/50 p-4 transition-colors hover:border-sky-500/50"
         >
-          <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-lg bg-purple-500/20">
-            <Plus className="h-5 w-5 text-purple-400" />
+          <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-lg bg-sky-500/20">
+            <Plus className="h-5 w-5 text-sky-400" />
           </div>
           <h3 className="mb-1 font-medium text-white">Initialize Chart</h3>
           <p className="text-sm text-zinc-400">Create a new Helm chart</p>
@@ -274,7 +274,7 @@ function HelmContent() {
 
         <Link
           href="/helm/install"
-          className="rounded-lg border border-zinc-700/50 bg-zinc-800/50 p-4 transition-colors hover:border-purple-500/50"
+          className="rounded-lg border border-zinc-700/50 bg-zinc-800/50 p-4 transition-colors hover:border-sky-500/50"
         >
           <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-lg bg-emerald-500/20">
             <Package className="h-5 w-5 text-emerald-400" />
@@ -285,7 +285,7 @@ function HelmContent() {
 
         <Link
           href="/helm/values"
-          className="rounded-lg border border-zinc-700/50 bg-zinc-800/50 p-4 transition-colors hover:border-purple-500/50"
+          className="rounded-lg border border-zinc-700/50 bg-zinc-800/50 p-4 transition-colors hover:border-sky-500/50"
         >
           <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-lg bg-blue-500/20">
             <Settings className="h-5 w-5 text-blue-400" />
@@ -296,7 +296,7 @@ function HelmContent() {
 
         <Link
           href="/helm/repos"
-          className="rounded-lg border border-zinc-700/50 bg-zinc-800/50 p-4 transition-colors hover:border-purple-500/50"
+          className="rounded-lg border border-zinc-700/50 bg-zinc-800/50 p-4 transition-colors hover:border-sky-500/50"
         >
           <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-lg bg-amber-500/20">
             <ExternalLink className="h-5 w-5 text-amber-400" />
@@ -315,7 +315,7 @@ function HelmContent() {
             placeholder="Search releases..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full rounded-lg border border-zinc-700 bg-zinc-800 py-2 pr-4 pl-10 text-white placeholder-zinc-500 focus:border-purple-500 focus:outline-none"
+            className="w-full rounded-lg border border-zinc-700 bg-zinc-800 py-2 pr-4 pl-10 text-white placeholder-zinc-500 focus:border-sky-500 focus:outline-none"
           />
         </div>
 
@@ -367,7 +367,7 @@ function HelmContent() {
               >
                 <td className="px-4 py-3">
                   <div className="flex items-center gap-3">
-                    <Package className="h-4 w-4 text-purple-400" />
+                    <Package className="h-4 w-4 text-sky-400" />
                     <span className="font-medium text-white">
                       {release.name}
                     </span>
@@ -461,7 +461,7 @@ function HelmContent() {
             {!searchQuery && (
               <Link
                 href="/helm/install"
-                className="mt-4 inline-flex items-center gap-2 rounded-lg bg-purple-600 px-4 py-2 text-sm text-white hover:bg-purple-500"
+                className="mt-4 inline-flex items-center gap-2 rounded-lg bg-sky-500 px-4 py-2 text-sm text-white hover:bg-sky-500"
               >
                 <Plus className="h-4 w-4" />
                 Install Chart

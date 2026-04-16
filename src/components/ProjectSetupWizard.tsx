@@ -1662,7 +1662,7 @@ nself start`}
               <div className="rounded-lg border border-zinc-200 p-4 dark:border-zinc-700">
                 <div className="flex items-start justify-between">
                   <div className="flex items-start space-x-3">
-                    <Globe className="mt-0.5 h-5 w-5 text-purple-500" />
+                    <Globe className="mt-0.5 h-5 w-5 text-sky-500" />
                     <div>
                       <h4 className="font-medium text-zinc-900 dark:text-white">
                         Nginx Proxy
@@ -1911,7 +1911,7 @@ nself start`}
                     <Mail
                       className={`mt-0.5 h-5 w-5 transition-colors ${
                         config.optionalServices.mail.enabled
-                          ? 'text-purple-500'
+                          ? 'text-sky-500'
                           : 'text-zinc-400 dark:text-zinc-600'
                       }`}
                     />
@@ -2369,7 +2369,7 @@ nself start`}
                     <BarChart
                       className={`mt-0.5 h-5 w-5 transition-colors ${
                         config.optionalServices.mlflow
-                          ? 'text-indigo-500'
+                          ? 'text-sky-500'
                           : 'text-zinc-400 dark:text-zinc-600'
                       }`}
                     />
@@ -3543,7 +3543,7 @@ nself start`}
             )}
 
             {/* Summary Stats */}
-            <div className="rounded-lg border border-blue-200 bg-gradient-to-r from-blue-50 to-indigo-50 p-4 dark:border-blue-800 dark:from-blue-900/20 dark:to-indigo-900/20">
+            <div className="rounded-lg border border-blue-200 bg-gradient-to-r from-blue-50 to-sky-50 p-4 dark:border-blue-800 dark:from-blue-900/20 dark:to-sky-900/20">
               <div className="flex items-center justify-between">
                 <div>
                   <h4 className="font-medium text-zinc-900 dark:text-white">

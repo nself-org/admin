@@ -236,7 +236,7 @@ function HelmReposContent() {
           </button>
           <button
             onClick={() => setShowAddModal(true)}
-            className="inline-flex items-center gap-2 rounded-lg bg-purple-600 px-4 py-2 text-sm text-white hover:bg-purple-500"
+            className="inline-flex items-center gap-2 rounded-lg bg-sky-500 px-4 py-2 text-sm text-white hover:bg-sky-500"
           >
             <Plus className="h-4 w-4" />
             Add Repository
@@ -252,7 +252,7 @@ function HelmReposContent() {
           placeholder="Search repositories..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="w-full rounded-lg border border-zinc-700 bg-zinc-800 py-2 pr-4 pl-10 text-white placeholder-zinc-500 focus:border-purple-500 focus:outline-none"
+          className="w-full rounded-lg border border-zinc-700 bg-zinc-800 py-2 pr-4 pl-10 text-white placeholder-zinc-500 focus:border-sky-500 focus:outline-none"
         />
       </div>
 
@@ -280,7 +280,7 @@ function HelmReposContent() {
               <tr key={repo.name} className="hover:bg-zinc-800/50">
                 <td className="px-4 py-3">
                   <div className="flex items-center gap-3">
-                    <Globe className="h-4 w-4 text-purple-400" />
+                    <Globe className="h-4 w-4 text-sky-400" />
                     <span className="font-medium text-white">{repo.name}</span>
                   </div>
                 </td>
@@ -289,7 +289,7 @@ function HelmReposContent() {
                     href={repo.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1 text-sm text-zinc-400 hover:text-purple-400"
+                    className="inline-flex items-center gap-1 text-sm text-zinc-400 hover:text-sky-400"
                   >
                     {repo.url}
                     <ExternalLink className="h-3 w-3" />
@@ -319,7 +319,7 @@ function HelmReposContent() {
                       title="Update repository"
                     >
                       {updating === repo.name ? (
-                        <div className="h-4 w-4 animate-spin rounded-full border-2 border-purple-500 border-t-transparent" />
+                        <div className="h-4 w-4 animate-spin rounded-full border-2 border-sky-500 border-t-transparent" />
                       ) : (
                         <RefreshCw className="h-4 w-4" />
                       )}
@@ -360,7 +360,7 @@ function HelmReposContent() {
               <button
                 key={repo.name}
                 onClick={() => handleAddPopular(repo)}
-                className="flex items-start justify-between rounded-lg border border-zinc-700/50 bg-zinc-900/50 p-3 text-left transition-all hover:border-purple-500/50"
+                className="flex items-start justify-between rounded-lg border border-zinc-700/50 bg-zinc-900/50 p-3 text-left transition-all hover:border-sky-500/50"
               >
                 <div>
                   <div className="font-medium text-white">{repo.name}</div>
@@ -368,7 +368,7 @@ function HelmReposContent() {
                     {repo.description}
                   </p>
                 </div>
-                <Plus className="h-4 w-4 text-purple-400" />
+                <Plus className="h-4 w-4 text-sky-400" />
               </button>
             ))}
         </div>
@@ -385,13 +385,13 @@ function HelmReposContent() {
       <div className="rounded-lg border border-zinc-700/50 bg-zinc-800/50 p-4">
         <h3 className="mb-2 text-sm font-medium text-zinc-400">CLI Commands</h3>
         <div className="space-y-2">
-          <code className="block rounded bg-zinc-900 p-3 text-sm text-purple-400">
+          <code className="block rounded bg-zinc-900 p-3 text-sm text-sky-400">
             helm repo add NAME URL
           </code>
-          <code className="block rounded bg-zinc-900 p-3 text-sm text-purple-400">
+          <code className="block rounded bg-zinc-900 p-3 text-sm text-sky-400">
             helm repo update
           </code>
-          <code className="block rounded bg-zinc-900 p-3 text-sm text-purple-400">
+          <code className="block rounded bg-zinc-900 p-3 text-sm text-sky-400">
             helm repo list
           </code>
         </div>
@@ -415,7 +415,7 @@ function HelmReposContent() {
                   value={newRepoName}
                   onChange={(e) => setNewRepoName(e.target.value)}
                   placeholder="e.g., bitnami"
-                  className="w-full rounded-lg border border-zinc-700 bg-zinc-900 px-4 py-2 text-white placeholder-zinc-500 focus:border-purple-500 focus:outline-none"
+                  className="w-full rounded-lg border border-zinc-700 bg-zinc-900 px-4 py-2 text-white placeholder-zinc-500 focus:border-sky-500 focus:outline-none"
                 />
               </div>
 
@@ -428,7 +428,7 @@ function HelmReposContent() {
                   value={newRepoUrl}
                   onChange={(e) => setNewRepoUrl(e.target.value)}
                   placeholder="https://charts.example.com"
-                  className="w-full rounded-lg border border-zinc-700 bg-zinc-900 px-4 py-2 text-white placeholder-zinc-500 focus:border-purple-500 focus:outline-none"
+                  className="w-full rounded-lg border border-zinc-700 bg-zinc-900 px-4 py-2 text-white placeholder-zinc-500 focus:border-sky-500 focus:outline-none"
                 />
               </div>
             </div>
@@ -447,7 +447,7 @@ function HelmReposContent() {
               <button
                 onClick={handleAdd}
                 disabled={!newRepoName || !newRepoUrl || adding}
-                className="inline-flex items-center gap-2 rounded-lg bg-purple-600 px-4 py-2 text-white hover:bg-purple-500 disabled:opacity-50"
+                className="inline-flex items-center gap-2 rounded-lg bg-sky-500 px-4 py-2 text-white hover:bg-sky-500 disabled:opacity-50"
               >
                 {adding ? (
                   <>

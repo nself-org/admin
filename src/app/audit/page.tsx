@@ -131,7 +131,7 @@ function ActionBadge({ action }: { action: string }) {
     login: 'bg-blue-50 text-blue-700 dark:bg-blue-900/20 dark:text-blue-400',
     logout: 'bg-zinc-100 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-400',
     'config.change':
-      'bg-purple-50 text-purple-700 dark:bg-purple-900/20 dark:text-purple-400',
+      'bg-sky-50 text-sky-600 dark:bg-sky-900/20 dark:text-sky-400',
     deploy:
       'bg-emerald-50 text-emerald-700 dark:bg-emerald-900/20 dark:text-emerald-400',
     'secret.access':

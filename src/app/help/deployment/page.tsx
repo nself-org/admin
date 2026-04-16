@@ -24,8 +24,8 @@ function DeploymentHelpContent() {
         <div className="space-y-6">
           <Card className="p-6">
             <div className="flex items-start gap-4">
-              <div className="rounded-lg bg-purple-100 p-3 dark:bg-purple-900/20">
-                <Rocket className="h-6 w-6 text-purple-600 dark:text-purple-400" />
+              <div className="rounded-lg bg-sky-100 p-3 dark:bg-sky-900/20">
+                <Rocket className="h-6 w-6 text-sky-500 dark:text-sky-400" />
               </div>
               <div className="flex-1">
                 <h2 className="mb-2 text-xl font-semibold">

@@ -31,7 +31,7 @@ function IssueRow({ issue }: { issue: GitHubIssue }) {
           {issue.state === 'open' ? (
             <Circle className="mt-1 h-4 w-4 text-emerald-400" />
           ) : (
-            <CheckCircle className="mt-1 h-4 w-4 text-purple-400" />
+            <CheckCircle className="mt-1 h-4 w-4 text-sky-400" />
           )}
           <div>
             <a
@@ -55,7 +55,7 @@ function IssueRow({ issue }: { issue: GitHubIssue }) {
           className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs ${
             issue.state === 'open'
               ? 'bg-emerald-500/20 text-emerald-400'
-              : 'bg-purple-500/20 text-purple-400'
+              : 'bg-sky-500/20 text-sky-400'
           }`}
         >
           {issue.state}

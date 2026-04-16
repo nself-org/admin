@@ -110,7 +110,7 @@ function EnvironmentsContent() {
       case 'production':
         return 'from-red-600 to-pink-400 dark:from-red-400 dark:to-pink-300'
       default:
-        return 'from-purple-600 to-violet-400 dark:from-purple-400 dark:to-violet-300'
+        return 'from-sky-500 to-blue-400 dark:from-sky-400 dark:to-blue-300'
     }
   }
 
@@ -120,7 +120,7 @@ function EnvironmentsContent() {
         <HeroPattern />
         <div className="relative mx-auto max-w-7xl">
           <div className="flex items-center justify-center py-20">
-            <div className="h-8 w-8 animate-spin rounded-full border-4 border-purple-500 border-t-transparent" />
+            <div className="h-8 w-8 animate-spin rounded-full border-4 border-sky-500 border-t-transparent" />
           </div>
         </div>
       </>
@@ -134,7 +134,7 @@ function EnvironmentsContent() {
         <div className="mb-10 border-b border-zinc-200 pb-8 dark:border-zinc-800">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="bg-gradient-to-r from-purple-600 to-pink-400 bg-clip-text text-4xl font-bold text-transparent dark:from-purple-400 dark:to-pink-300">
+              <h1 className="bg-gradient-to-r from-sky-500 to-blue-400 bg-clip-text text-4xl font-bold text-transparent dark:from-sky-400 dark:to-pink-300">
                 Environments
               </h1>
               <p className="mt-3 text-lg text-zinc-600 dark:text-zinc-400">
@@ -159,7 +159,7 @@ function EnvironmentsContent() {
             <Link
               key={env.name}
               href={`/environments/${env.name}`}
-              className="group rounded-xl border border-zinc-200 bg-white p-6 shadow-sm transition-all hover:border-purple-500 hover:shadow-md dark:border-zinc-700 dark:bg-zinc-800 dark:hover:border-purple-500"
+              className="group rounded-xl border border-zinc-200 bg-white p-6 shadow-sm transition-all hover:border-sky-500 hover:shadow-md dark:border-zinc-700 dark:bg-zinc-800 dark:hover:border-sky-500"
             >
               <div className="mb-4 flex items-start justify-between">
                 <div className="flex items-center gap-3">
@@ -196,7 +196,7 @@ function EnvironmentsContent() {
                     <span className="text-zinc-500 dark:text-zinc-400">
                       URL
                     </span>
-                    <span className="flex items-center gap-1 font-medium text-purple-600 dark:text-purple-400">
+                    <span className="flex items-center gap-1 font-medium text-sky-500 dark:text-sky-400">
                       {env.url.replace('https://', '')}
                       <ExternalLink className="h-3 w-3" />
                     </span>
@@ -240,7 +240,7 @@ function EnvironmentsContent() {
         <div className="mt-8 grid gap-4 md:grid-cols-3">
           <Link
             href="/deploy/preview"
-            className="flex items-center gap-3 rounded-xl border border-zinc-200 bg-white p-4 shadow-sm transition-colors hover:border-purple-500 hover:bg-purple-50 dark:border-zinc-700 dark:bg-zinc-800 dark:hover:border-purple-500 dark:hover:bg-purple-900/20"
+            className="flex items-center gap-3 rounded-xl border border-zinc-200 bg-white p-4 shadow-sm transition-colors hover:border-sky-500 hover:bg-sky-50 dark:border-zinc-700 dark:bg-zinc-800 dark:hover:border-sky-500 dark:hover:bg-sky-900/20"
           >
             <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-teal-100 dark:bg-teal-900/30">
               <Plus className="h-5 w-5 text-teal-600 dark:text-teal-400" />
@@ -255,7 +255,7 @@ function EnvironmentsContent() {
 
           <Link
             href="/deploy/canary"
-            className="flex items-center gap-3 rounded-xl border border-zinc-200 bg-white p-4 shadow-sm transition-colors hover:border-purple-500 hover:bg-purple-50 dark:border-zinc-700 dark:bg-zinc-800 dark:hover:border-purple-500 dark:hover:bg-purple-900/20"
+            className="flex items-center gap-3 rounded-xl border border-zinc-200 bg-white p-4 shadow-sm transition-colors hover:border-sky-500 hover:bg-sky-50 dark:border-zinc-700 dark:bg-zinc-800 dark:hover:border-sky-500 dark:hover:bg-sky-900/20"
           >
             <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-yellow-100 dark:bg-yellow-900/30">
               <ArrowRight className="h-5 w-5 text-yellow-600 dark:text-yellow-400" />
@@ -270,7 +270,7 @@ function EnvironmentsContent() {
 
           <Link
             href="/deploy/blue-green"
-            className="flex items-center gap-3 rounded-xl border border-zinc-200 bg-white p-4 shadow-sm transition-colors hover:border-purple-500 hover:bg-purple-50 dark:border-zinc-700 dark:bg-zinc-800 dark:hover:border-purple-500 dark:hover:bg-purple-900/20"
+            className="flex items-center gap-3 rounded-xl border border-zinc-200 bg-white p-4 shadow-sm transition-colors hover:border-sky-500 hover:bg-sky-50 dark:border-zinc-700 dark:bg-zinc-800 dark:hover:border-sky-500 dark:hover:bg-sky-900/20"
           >
             <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-100 dark:bg-blue-900/30">
               <Server className="h-5 w-5 text-blue-600 dark:text-blue-400" />
@@ -291,21 +291,21 @@ function EnvironmentsContent() {
           </h3>
           <div className="space-y-2 font-mono text-sm">
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-purple-500">nself env</span> - List
+              <span className="text-sky-500">nself env</span> - List
               environments
             </p>
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-purple-500">nself env staging</span> - Show
+              <span className="text-sky-500">nself env staging</span> - Show
               staging details
             </p>
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-purple-500">
+              <span className="text-sky-500">
                 nself env diff staging prod
               </span>{' '}
               - Compare environments
             </p>
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-purple-500">nself deploy staging</span> -
+              <span className="text-sky-500">nself deploy staging</span> -
               Deploy to staging
             </p>
           </div>

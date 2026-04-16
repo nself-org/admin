@@ -270,13 +270,13 @@ function PerformanceContent() {
                   {systemProfile?.disk.percentage.toFixed(1)}%
                 </p>
               </div>
-              <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-purple-100 dark:bg-purple-900/30">
-                <HardDrive className="h-6 w-6 text-purple-600 dark:text-purple-400" />
+              <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-sky-100 dark:bg-sky-900/30">
+                <HardDrive className="h-6 w-6 text-sky-500 dark:text-sky-400" />
               </div>
             </div>
             <div className="mt-4 h-2 rounded-full bg-zinc-200 dark:bg-zinc-700">
               <div
-                className="h-2 rounded-full bg-purple-500 transition-all"
+                className="h-2 rounded-full bg-sky-500 transition-all"
                 style={{
                   width: `${Math.min(systemProfile?.disk.percentage || 0, 100)}%`,
                 }}
@@ -498,8 +498,8 @@ function PerformanceContent() {
             href="/benchmark"
             className="flex items-center gap-3 rounded-xl border border-zinc-200 bg-white p-4 shadow-sm transition-colors hover:border-emerald-500 hover:bg-emerald-50 dark:border-zinc-700 dark:bg-zinc-800 dark:hover:border-emerald-500 dark:hover:bg-emerald-900/20"
           >
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-purple-100 dark:bg-purple-900/30">
-              <TrendingUp className="h-5 w-5 text-purple-600 dark:text-purple-400" />
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-sky-100 dark:bg-sky-900/30">
+              <TrendingUp className="h-5 w-5 text-sky-500 dark:text-sky-400" />
             </div>
             <div>
               <p className="font-medium text-zinc-900 dark:text-white">

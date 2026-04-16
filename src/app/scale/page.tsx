@@ -154,7 +154,7 @@ function ScaleContent() {
         <HeroPattern />
         <div className="relative mx-auto max-w-7xl">
           <div className="flex items-center justify-center py-20">
-            <div className="h-8 w-8 animate-spin rounded-full border-4 border-indigo-500 border-t-transparent" />
+            <div className="h-8 w-8 animate-spin rounded-full border-4 border-sky-500 border-t-transparent" />
           </div>
         </div>
       </>
@@ -168,7 +168,7 @@ function ScaleContent() {
         <div className="mb-10 border-b border-zinc-200 pb-8 dark:border-zinc-800">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="bg-gradient-to-r from-indigo-600 to-violet-400 bg-clip-text text-4xl font-bold text-transparent dark:from-indigo-400 dark:to-violet-300">
+              <h1 className="bg-gradient-to-r from-sky-500 to-blue-400 bg-clip-text text-4xl font-bold text-transparent dark:from-indigo-400 dark:to-violet-300">
                 Scaling
               </h1>
               <p className="mt-3 text-lg text-zinc-600 dark:text-zinc-400">
@@ -185,7 +185,7 @@ function ScaleContent() {
               </Link>
               <button
                 onClick={() => fetchServices()}
-                className="flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-indigo-700"
+                className="flex items-center gap-2 rounded-lg bg-sky-500 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-sky-600"
               >
                 <RefreshCw className="h-4 w-4" />
                 Refresh
@@ -198,8 +198,8 @@ function ScaleContent() {
         <div className="mb-8 grid gap-4 md:grid-cols-4">
           <div className="rounded-xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-zinc-700 dark:bg-zinc-800">
             <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-indigo-100 dark:bg-indigo-900/30">
-                <Server className="h-5 w-5 text-indigo-600 dark:text-indigo-400" />
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-sky-100 dark:bg-sky-900/30">
+                <Server className="h-5 w-5 text-sky-500 dark:text-sky-400" />
               </div>
               <div>
                 <p className="text-sm text-zinc-500 dark:text-zinc-400">
@@ -406,21 +406,21 @@ function ScaleContent() {
           </h3>
           <div className="space-y-2 font-mono text-sm">
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-indigo-500">nself scale</span> - Show
+              <span className="text-sky-500">nself scale</span> - Show
               scaling status
             </p>
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-indigo-500">
+              <span className="text-sky-500">
                 nself scale hasura --replicas=3
               </span>{' '}
               - Scale service
             </p>
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-indigo-500">nself scale auto --enable</span>{' '}
+              <span className="text-sky-500">nself scale auto --enable</span>{' '}
               - Enable autoscaling
             </p>
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-indigo-500">nself scale recommend</span> -
+              <span className="text-sky-500">nself scale recommend</span> -
               Get scaling recommendations
             </p>
           </div>

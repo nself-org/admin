@@ -805,7 +805,7 @@ export default function InitStep6() {
           <span>Core (Required)</span>
         </div>
         <div className="flex items-center gap-1">
-          <CheckCircle className="h-3 w-3 text-purple-600" />
+          <CheckCircle className="h-3 w-3 text-sky-500" />
           <span>Optional Services</span>
         </div>
         <div className="flex items-center gap-1">
@@ -909,7 +909,7 @@ export default function InitStep6() {
                       key={String(service)}
                       className="flex items-center space-x-2"
                     >
-                      <CheckCircle className="h-4 w-4 text-purple-600" />
+                      <CheckCircle className="h-4 w-4 text-sky-500" />
                       <span className="text-zinc-900 dark:text-white">
                         {service}
                       </span>

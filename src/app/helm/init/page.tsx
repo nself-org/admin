@@ -275,7 +275,7 @@ app.kubernetes.io/instance: {{ .Release.Name }}
                   value={chartName}
                   onChange={(e) => setChartName(e.target.value)}
                   placeholder="my-chart"
-                  className="w-full rounded-lg border border-zinc-700 bg-zinc-900 px-4 py-2 text-white placeholder-zinc-500 focus:border-purple-500 focus:outline-none"
+                  className="w-full rounded-lg border border-zinc-700 bg-zinc-900 px-4 py-2 text-white placeholder-zinc-500 focus:border-sky-500 focus:outline-none"
                 />
               </div>
 
@@ -288,7 +288,7 @@ app.kubernetes.io/instance: {{ .Release.Name }}
                   value={chartVersion}
                   onChange={(e) => setChartVersion(e.target.value)}
                   placeholder="0.1.0"
-                  className="w-full rounded-lg border border-zinc-700 bg-zinc-900 px-4 py-2 text-white placeholder-zinc-500 focus:border-purple-500 focus:outline-none"
+                  className="w-full rounded-lg border border-zinc-700 bg-zinc-900 px-4 py-2 text-white placeholder-zinc-500 focus:border-sky-500 focus:outline-none"
                 />
               </div>
 
@@ -301,7 +301,7 @@ app.kubernetes.io/instance: {{ .Release.Name }}
                   value={appVersion}
                   onChange={(e) => setAppVersion(e.target.value)}
                   placeholder="1.0.0"
-                  className="w-full rounded-lg border border-zinc-700 bg-zinc-900 px-4 py-2 text-white placeholder-zinc-500 focus:border-purple-500 focus:outline-none"
+                  className="w-full rounded-lg border border-zinc-700 bg-zinc-900 px-4 py-2 text-white placeholder-zinc-500 focus:border-sky-500 focus:outline-none"
                 />
               </div>
 
@@ -314,7 +314,7 @@ app.kubernetes.io/instance: {{ .Release.Name }}
                   onChange={(e) => setDescription(e.target.value)}
                   placeholder="A Helm chart for..."
                   rows={3}
-                  className="w-full rounded-lg border border-zinc-700 bg-zinc-900 px-4 py-2 text-white placeholder-zinc-500 focus:border-purple-500 focus:outline-none"
+                  className="w-full rounded-lg border border-zinc-700 bg-zinc-900 px-4 py-2 text-white placeholder-zinc-500 focus:border-sky-500 focus:outline-none"
                 />
               </div>
             </div>
@@ -322,7 +322,7 @@ app.kubernetes.io/instance: {{ .Release.Name }}
             <button
               onClick={handleGenerate}
               disabled={generating || !chartName}
-              className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-lg bg-purple-600 px-4 py-2 text-white hover:bg-purple-500 disabled:opacity-50"
+              className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-lg bg-sky-500 px-4 py-2 text-white hover:bg-sky-500 disabled:opacity-50"
             >
               {generating ? (
                 <>
@@ -343,7 +343,7 @@ app.kubernetes.io/instance: {{ .Release.Name }}
             <h3 className="mb-2 text-sm font-medium text-zinc-400">
               Or use CLI
             </h3>
-            <code className="block rounded bg-zinc-900 p-3 text-sm text-purple-400">
+            <code className="block rounded bg-zinc-900 p-3 text-sm text-sky-400">
               helm create {chartName || 'my-chart'}
             </code>
           </div>
@@ -372,12 +372,12 @@ app.kubernetes.io/instance: {{ .Release.Name }}
                   onClick={() => setSelectedFile(file)}
                   className={`flex w-full items-center justify-between rounded-lg border p-3 text-left transition-all ${
                     selectedFile?.path === file.path
-                      ? 'border-purple-500 bg-purple-900/20'
+                      ? 'border-sky-500 bg-sky-900/20'
                       : 'border-zinc-700/50 bg-zinc-800/50 hover:border-zinc-600'
                   }`}
                 >
                   <div className="flex items-center gap-3">
-                    <FileCode className="h-5 w-5 text-purple-400" />
+                    <FileCode className="h-5 w-5 text-sky-400" />
                     <div>
                       <div className="font-medium text-white">{file.name}</div>
                       <div className="text-sm text-zinc-500">{file.path}</div>

@@ -208,7 +208,7 @@ export default function RulesPage() {
           <button
             type="button"
             onClick={handleAdd}
-            className="flex items-center gap-2 rounded-lg bg-indigo-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-indigo-500"
+            className="flex items-center gap-2 rounded-lg bg-sky-500 px-3 py-1.5 text-sm font-medium text-white hover:bg-sky-400"
           >
             <Plus className="h-4 w-4" />
             Add Rule
@@ -240,7 +240,7 @@ export default function RulesPage() {
               value: Math.round(
                 rules.reduce((sum, r) => sum + r.priority, 0) / rules.length,
               ),
-              color: 'text-indigo-400',
+              color: 'text-sky-400',
             },
           ].map(({ label, value, color }) => (
             <div

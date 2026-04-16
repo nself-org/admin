@@ -220,7 +220,7 @@ function TracesContent() {
         <HeroPattern />
         <div className="relative mx-auto max-w-7xl">
           <div className="flex items-center justify-center py-20">
-            <div className="h-8 w-8 animate-spin rounded-full border-4 border-purple-500 border-t-transparent" />
+            <div className="h-8 w-8 animate-spin rounded-full border-4 border-sky-500 border-t-transparent" />
           </div>
         </div>
       </>
@@ -239,7 +239,7 @@ function TracesContent() {
             <ArrowLeft className="h-4 w-4" />
             Back to Monitor
           </Link>
-          <h1 className="bg-gradient-to-r from-purple-600 to-pink-400 bg-clip-text text-4xl font-bold text-transparent dark:from-purple-400 dark:to-pink-300">
+          <h1 className="bg-gradient-to-r from-sky-500 to-blue-400 bg-clip-text text-4xl font-bold text-transparent dark:from-sky-400 dark:to-pink-300">
             Distributed Tracing
           </h1>
           <p className="mt-3 text-lg text-zinc-600 dark:text-zinc-400">
@@ -256,7 +256,7 @@ function TracesContent() {
               placeholder="Search traces..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full rounded-lg border border-zinc-300 bg-white py-2 pr-4 pl-10 text-zinc-900 focus:border-purple-500 focus:outline-none dark:border-zinc-600 dark:bg-zinc-800 dark:text-white"
+              className="w-full rounded-lg border border-zinc-300 bg-white py-2 pr-4 pl-10 text-zinc-900 focus:border-sky-500 focus:outline-none dark:border-zinc-600 dark:bg-zinc-800 dark:text-white"
             />
           </div>
           <select
@@ -287,7 +287,7 @@ function TracesContent() {
                   onClick={() => setSelectedTrace(trace)}
                   className={`w-full rounded-lg border p-4 text-left transition-colors ${
                     selectedTrace?.id === trace.id
-                      ? 'border-purple-500 bg-purple-50 dark:border-purple-500 dark:bg-purple-900/20'
+                      ? 'border-sky-500 bg-sky-50 dark:border-sky-500 dark:bg-sky-900/20'
                       : 'border-zinc-200 hover:border-zinc-300 dark:border-zinc-700 dark:hover:border-zinc-600'
                   }`}
                 >
@@ -364,17 +364,17 @@ function TracesContent() {
           </h3>
           <div className="space-y-2 font-mono text-sm">
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-purple-500">nself traces</span> - List
+              <span className="text-sky-500">nself traces</span> - List
               recent traces
             </p>
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-purple-500">
+              <span className="text-sky-500">
                 nself traces --id=trace-id
               </span>{' '}
               - View trace details
             </p>
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-purple-500">
+              <span className="text-sky-500">
                 nself traces --service=hasura
               </span>{' '}
               - Filter by service

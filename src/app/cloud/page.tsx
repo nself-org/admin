@@ -273,8 +273,8 @@ function CloudContent() {
           href="/cloud/deploy"
           className="rounded-lg border border-zinc-700/50 bg-zinc-800/50 p-4 transition-colors hover:border-emerald-500/50"
         >
-          <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-lg bg-purple-500/20">
-            <Rocket className="h-5 w-5 text-purple-400" />
+          <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-lg bg-sky-500/20">
+            <Rocket className="h-5 w-5 text-sky-400" />
           </div>
           <h3 className="mb-1 font-medium text-white">Quick Deploy</h3>
           <p className="text-sm text-zinc-400">One-click deployment flow</p>

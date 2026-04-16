@@ -163,7 +163,7 @@ function SessionsTab({
                 </td>
                 <td className="px-4 py-3">
                   {s.is_admin_mode && (
-                    <span className="rounded-full bg-indigo-900/40 px-2 py-0.5 text-xs text-indigo-300">
+                    <span className="rounded-full bg-sky-900/40 px-2 py-0.5 text-xs text-sky-300">
                       admin
                     </span>
                   )}
@@ -316,7 +316,7 @@ function IdentitiesTab({ clawDown }: { clawDown: boolean }) {
     <div className="mt-2 space-y-3">
       {/* New identity form */}
       {creatingNew ? (
-        <div className="space-y-3 rounded-xl border border-indigo-500/30 bg-zinc-800/50 p-4">
+        <div className="space-y-3 rounded-xl border border-sky-500/30 bg-zinc-800/50 p-4">
           <p className="text-sm font-medium text-white">New Identity</p>
           <input
             type="text"
@@ -325,7 +325,7 @@ function IdentitiesTab({ clawDown }: { clawDown: boolean }) {
             onChange={(e) =>
               setNewDraft((d) => ({ ...d, name: e.target.value }))
             }
-            className="w-full rounded-lg border border-zinc-700/50 bg-zinc-900/50 px-3 py-2 text-sm text-white placeholder-zinc-500 outline-none focus:border-indigo-500/50"
+            className="w-full rounded-lg border border-zinc-700/50 bg-zinc-900/50 px-3 py-2 text-sm text-white placeholder-zinc-500 outline-none focus:border-sky-500/50"
           />
           <textarea
             placeholder="Soul (agent personality / instructions)…"
@@ -334,7 +334,7 @@ function IdentitiesTab({ clawDown }: { clawDown: boolean }) {
               setNewDraft((d) => ({ ...d, soul: e.target.value }))
             }
             rows={4}
-            className="w-full resize-none rounded-lg border border-zinc-700/50 bg-zinc-900/50 px-3 py-2 text-sm text-white placeholder-zinc-500 outline-none focus:border-indigo-500/50"
+            className="w-full resize-none rounded-lg border border-zinc-700/50 bg-zinc-900/50 px-3 py-2 text-sm text-white placeholder-zinc-500 outline-none focus:border-sky-500/50"
           />
           <textarea
             placeholder="User profile (optional)…"
@@ -343,14 +343,14 @@ function IdentitiesTab({ clawDown }: { clawDown: boolean }) {
               setNewDraft((d) => ({ ...d, user_profile: e.target.value }))
             }
             rows={2}
-            className="w-full resize-none rounded-lg border border-zinc-700/50 bg-zinc-900/50 px-3 py-2 text-sm text-white placeholder-zinc-500 outline-none focus:border-indigo-500/50"
+            className="w-full resize-none rounded-lg border border-zinc-700/50 bg-zinc-900/50 px-3 py-2 text-sm text-white placeholder-zinc-500 outline-none focus:border-sky-500/50"
           />
           <div className="flex gap-2">
             <button
               type="button"
               onClick={handleCreate}
               disabled={saving === 'new'}
-              className="flex items-center gap-2 rounded-lg bg-indigo-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-indigo-500 disabled:opacity-50"
+              className="flex items-center gap-2 rounded-lg bg-sky-500 px-3 py-1.5 text-sm font-medium text-white hover:bg-sky-400 disabled:opacity-50"
             >
               {saving === 'new' ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
@@ -450,7 +450,7 @@ function IdentitiesTab({ clawDown }: { clawDown: boolean }) {
                       setDraftField(identity.id, 'name', e.target.value)
                     }
                     aria-label="Identity name"
-                    className="w-full rounded-lg border border-zinc-700/50 bg-zinc-900/50 px-3 py-2 text-sm text-white outline-none focus:border-indigo-500/50"
+                    className="w-full rounded-lg border border-zinc-700/50 bg-zinc-900/50 px-3 py-2 text-sm text-white outline-none focus:border-sky-500/50"
                   />
                 </div>
                 <div>
@@ -464,7 +464,7 @@ function IdentitiesTab({ clawDown }: { clawDown: boolean }) {
                     }
                     rows={6}
                     aria-label="Identity soul"
-                    className="w-full resize-none rounded-lg border border-zinc-700/50 bg-zinc-900/50 px-3 py-2 text-sm text-white outline-none focus:border-indigo-500/50"
+                    className="w-full resize-none rounded-lg border border-zinc-700/50 bg-zinc-900/50 px-3 py-2 text-sm text-white outline-none focus:border-sky-500/50"
                   />
                 </div>
                 <div>
@@ -482,7 +482,7 @@ function IdentitiesTab({ clawDown }: { clawDown: boolean }) {
                     }
                     rows={3}
                     aria-label="User profile"
-                    className="w-full resize-none rounded-lg border border-zinc-700/50 bg-zinc-900/50 px-3 py-2 text-sm text-white outline-none focus:border-indigo-500/50"
+                    className="w-full resize-none rounded-lg border border-zinc-700/50 bg-zinc-900/50 px-3 py-2 text-sm text-white outline-none focus:border-sky-500/50"
                   />
                 </div>
                 <div className="flex flex-wrap gap-2 pt-1">
@@ -490,7 +490,7 @@ function IdentitiesTab({ clawDown }: { clawDown: boolean }) {
                     type="button"
                     onClick={() => handleSave(identity)}
                     disabled={saving === identity.id || !hasDraft}
-                    className="flex items-center gap-2 rounded-lg bg-indigo-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-indigo-500 disabled:opacity-50"
+                    className="flex items-center gap-2 rounded-lg bg-sky-500 px-3 py-1.5 text-sm font-medium text-white hover:bg-sky-400 disabled:opacity-50"
                   >
                     {saving === identity.id ? (
                       <Loader2 className="h-4 w-4 animate-spin" />
@@ -640,7 +640,7 @@ function ToolsTab({ clawDown }: { clawDown: boolean }) {
                           built-in
                         </span>
                       ) : (
-                        <span className="rounded-full bg-indigo-900/40 px-2 py-0.5 text-xs text-indigo-300">
+                        <span className="rounded-full bg-sky-900/40 px-2 py-0.5 text-xs text-sky-300">
                           dynamic
                         </span>
                       )}

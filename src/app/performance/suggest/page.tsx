@@ -177,7 +177,7 @@ function SuggestContent() {
       case 'network':
         return 'bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400'
       case 'config':
-        return 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400'
+        return 'bg-sky-100 text-sky-700 dark:bg-sky-900/30 dark:text-sky-400'
       default:
         return 'bg-zinc-100 text-zinc-700 dark:bg-zinc-700 dark:text-zinc-300'
     }

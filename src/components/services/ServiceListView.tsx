@@ -140,7 +140,7 @@ export function ServiceListView({
   ) => {
     const categoryIcons = {
       required: <Icons.Layers className="h-4 w-4 text-blue-500" />,
-      optional: <Icons.Shield className="h-4 w-4 text-purple-500" />,
+      optional: <Icons.Shield className="h-4 w-4 text-sky-500" />,
       user: <Icons.Box className="h-4 w-4 text-orange-500" />,
     }
 

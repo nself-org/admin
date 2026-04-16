@@ -47,7 +47,7 @@ const financialStatusConfig: Record<
   },
   refunded: {
     label: 'Refunded',
-    className: 'bg-purple-500/20 text-purple-400',
+    className: 'bg-sky-500/20 text-sky-400',
   },
   voided: { label: 'Voided', className: 'bg-zinc-500/20 text-zinc-400' },
 }

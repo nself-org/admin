@@ -293,7 +293,7 @@ function CacheManagementContent() {
           <Card>
             <CardContent className="pt-6">
               <div className="text-center">
-                <BarChart3 className="mx-auto mb-2 h-5 w-5 text-purple-500" />
+                <BarChart3 className="mx-auto mb-2 h-5 w-5 text-sky-500" />
                 <p className="text-xs text-zinc-500">Hit Rate</p>
                 <p className="mt-1 font-mono text-lg font-bold text-zinc-900 dark:text-white">
                   {stats?.hitRate || '--'}
@@ -315,7 +315,7 @@ function CacheManagementContent() {
           <Card>
             <CardContent className="pt-6">
               <div className="text-center">
-                <Database className="mx-auto mb-2 h-5 w-5 text-indigo-500" />
+                <Database className="mx-auto mb-2 h-5 w-5 text-sky-500" />
                 <p className="text-xs text-zinc-500">Clients</p>
                 <p className="mt-1 font-mono text-lg font-bold text-zinc-900 dark:text-white">
                   {stats?.connectedClients || '--'}

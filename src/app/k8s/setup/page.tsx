@@ -430,7 +430,7 @@ function K8sSetupContent() {
                 href="/k8s/status"
                 className="rounded-lg border border-zinc-700/50 bg-zinc-800/50 p-4 text-center transition-colors hover:border-blue-500/50"
               >
-                <Box className="mx-auto mb-2 h-8 w-8 text-purple-400" />
+                <Box className="mx-auto mb-2 h-8 w-8 text-sky-400" />
                 <h3 className="font-medium text-white">Status</h3>
                 <p className="text-sm text-zinc-400">View deployments</p>
               </Link>

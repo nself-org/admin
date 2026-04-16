@@ -284,7 +284,7 @@ function NpTablesContent() {
                     onClick={() => handleTableSelect(tableName)}
                     className={`w-full truncate px-4 py-2 text-left font-mono text-xs transition-colors ${
                       selectedTable === tableName
-                        ? 'bg-indigo-500/20 text-indigo-300'
+                        ? 'bg-sky-500/20 text-sky-300'
                         : 'text-zinc-400 hover:bg-zinc-800 hover:text-zinc-200'
                     }`}
                   >
@@ -329,7 +329,7 @@ function NpTablesContent() {
                       value={search}
                       onChange={(e) => setSearch(e.target.value)}
                       placeholder="Filter rows..."
-                      className="w-44 rounded border border-zinc-700 bg-zinc-900 py-1.5 pr-3 pl-7 text-xs text-zinc-300 placeholder-zinc-600 focus:border-indigo-500 focus:outline-none"
+                      className="w-44 rounded border border-zinc-700 bg-zinc-900 py-1.5 pr-3 pl-7 text-xs text-zinc-300 placeholder-zinc-600 focus:border-sky-500 focus:outline-none"
                       aria-label="Filter rows"
                     />
                   </div>

@@ -138,7 +138,7 @@ function HistoryContent() {
   const getTypeIcon = (type: string) => {
     switch (type) {
       case 'deployment':
-        return <Rocket className="h-5 w-5 text-purple-500" />
+        return <Rocket className="h-5 w-5 text-sky-500" />
       case 'config_change':
         return <Settings className="h-5 w-5 text-blue-500" />
       case 'database':
@@ -157,7 +157,7 @@ function HistoryContent() {
   const getTypeBadge = (type: string) => {
     switch (type) {
       case 'deployment':
-        return 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400'
+        return 'bg-sky-100 text-sky-700 dark:bg-sky-900/30 dark:text-sky-400'
       case 'config_change':
         return 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400'
       case 'database':
@@ -189,7 +189,7 @@ function HistoryContent() {
         <HeroPattern />
         <div className="relative mx-auto max-w-7xl">
           <div className="flex items-center justify-center py-20">
-            <div className="h-8 w-8 animate-spin rounded-full border-4 border-indigo-500 border-t-transparent" />
+            <div className="h-8 w-8 animate-spin rounded-full border-4 border-sky-500 border-t-transparent" />
           </div>
         </div>
       </>
@@ -203,7 +203,7 @@ function HistoryContent() {
         <div className="mb-10 border-b border-zinc-200 pb-8 dark:border-zinc-800">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="bg-gradient-to-r from-indigo-600 to-violet-400 bg-clip-text text-4xl font-bold text-transparent dark:from-indigo-400 dark:to-violet-300">
+              <h1 className="bg-gradient-to-r from-sky-500 to-blue-400 bg-clip-text text-4xl font-bold text-transparent dark:from-indigo-400 dark:to-violet-300">
                 Audit History
               </h1>
               <p className="mt-3 text-lg text-zinc-600 dark:text-zinc-400">
@@ -223,11 +223,11 @@ function HistoryContent() {
         <div className="mb-8 grid gap-4 md:grid-cols-3">
           <Link
             href="/history/deployments"
-            className="flex items-center justify-between rounded-xl border border-zinc-200 bg-white p-4 shadow-sm transition-all hover:border-purple-500 dark:border-zinc-700 dark:bg-zinc-800 dark:hover:border-purple-500"
+            className="flex items-center justify-between rounded-xl border border-zinc-200 bg-white p-4 shadow-sm transition-all hover:border-sky-500 dark:border-zinc-700 dark:bg-zinc-800 dark:hover:border-sky-500"
           >
             <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-purple-100 dark:bg-purple-900/30">
-                <Rocket className="h-5 w-5 text-purple-600 dark:text-purple-400" />
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-sky-100 dark:bg-sky-900/30">
+                <Rocket className="h-5 w-5 text-sky-500 dark:text-sky-400" />
               </div>
               <div>
                 <p className="font-medium text-zinc-900 dark:text-white">
@@ -288,7 +288,7 @@ function HistoryContent() {
             <select
               value={filterType}
               onChange={(e) => setFilterType(e.target.value)}
-              className="appearance-none rounded-lg border border-zinc-300 bg-white px-4 py-2 pr-10 text-sm text-zinc-900 capitalize focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none dark:border-zinc-600 dark:bg-zinc-800 dark:text-white"
+              className="appearance-none rounded-lg border border-zinc-300 bg-white px-4 py-2 pr-10 text-sm text-zinc-900 capitalize focus:border-sky-500 focus:ring-1 focus:ring-sky-500 focus:outline-none dark:border-zinc-600 dark:bg-zinc-800 dark:text-white"
             >
               {actionTypes.map((type) => (
                 <option key={type} value={type}>
@@ -306,7 +306,7 @@ function HistoryContent() {
             <select
               value={filterUser}
               onChange={(e) => setFilterUser(e.target.value)}
-              className="appearance-none rounded-lg border border-zinc-300 bg-white px-4 py-2 pr-10 text-sm text-zinc-900 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none dark:border-zinc-600 dark:bg-zinc-800 dark:text-white"
+              className="appearance-none rounded-lg border border-zinc-300 bg-white px-4 py-2 pr-10 text-sm text-zinc-900 focus:border-sky-500 focus:ring-1 focus:ring-sky-500 focus:outline-none dark:border-zinc-600 dark:bg-zinc-800 dark:text-white"
             >
               <option value="all">All Users</option>
               <option value="developer@example.com">
@@ -381,21 +381,21 @@ function HistoryContent() {
           </h3>
           <div className="space-y-2 font-mono text-sm">
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-indigo-500">nself history</span> - View
+              <span className="text-sky-500">nself history</span> - View
               audit history
             </p>
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-indigo-500">
+              <span className="text-sky-500">
                 nself history --type=deployment
               </span>{' '}
               - Filter by type
             </p>
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-indigo-500">nself history --since=7d</span>{' '}
+              <span className="text-sky-500">nself history --since=7d</span>{' '}
               - Show last 7 days
             </p>
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-indigo-500">
+              <span className="text-sky-500">
                 nself history --export=csv
               </span>{' '}
               - Export history

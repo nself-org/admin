@@ -44,8 +44,8 @@ interface InstallState {
 
 const TIER_COLORS: Record<string, string> = {
   free: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20',
-  pro: 'bg-indigo-500/10 text-indigo-400 border-indigo-500/20',
-  max: 'bg-purple-500/10 text-purple-400 border-purple-500/20',
+  pro: 'bg-sky-500/10 text-sky-400 border-sky-500/20',
+  max: 'bg-sky-500/10 text-sky-400 border-sky-500/20',
 }
 
 const TIER_LABELS: Record<string, string> = {
@@ -111,7 +111,7 @@ function PluginCard({
           type="button"
           onClick={() => onInstall(plugin.name)}
           disabled={isInstalling}
-          className="flex items-center justify-center gap-2 rounded-lg bg-indigo-600/80 px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-indigo-600 disabled:opacity-60"
+          className="flex items-center justify-center gap-2 rounded-lg bg-sky-500/80 px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-sky-500 disabled:opacity-60"
           aria-label={`Install ${plugin.name}`}
         >
           {isInstalling ? (
@@ -253,7 +253,7 @@ export default function PluginInstallPage() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search plugins..."
-            className="w-full rounded-xl border border-zinc-700 bg-zinc-800/50 py-2.5 pr-4 pl-10 text-sm text-white placeholder-zinc-500 focus:border-indigo-500 focus:outline-none"
+            className="w-full rounded-xl border border-zinc-700 bg-zinc-800/50 py-2.5 pr-4 pl-10 text-sm text-white placeholder-zinc-500 focus:border-sky-500 focus:outline-none"
             aria-label="Search plugins"
           />
         </div>
@@ -318,7 +318,7 @@ export default function PluginInstallPage() {
             href="https://nself.org/pricing"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-indigo-400 hover:underline"
+            className="text-sky-400 hover:underline"
           >
             Get a membership at nself.org/pricing
           </a>

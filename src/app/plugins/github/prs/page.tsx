@@ -39,7 +39,7 @@ const stateConfig = {
   merged: {
     label: 'Merged',
     icon: GitMerge,
-    className: 'bg-purple-500/20 text-purple-400',
+    className: 'bg-sky-500/20 text-sky-400',
   },
 }
 

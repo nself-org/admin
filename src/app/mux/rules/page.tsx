@@ -604,10 +604,10 @@ function normalizeActions(action: ActionForm | ActionForm[]): ActionForm[] {
 }
 
 const INPUT =
-  'w-full rounded-lg border border-zinc-700 bg-zinc-900 px-3 py-2 text-sm text-white placeholder-zinc-500 focus:border-indigo-500 focus:outline-none'
+  'w-full rounded-lg border border-zinc-700 bg-zinc-900 px-3 py-2 text-sm text-white placeholder-zinc-500 focus:border-sky-500 focus:outline-none'
 
 const SELECT =
-  'rounded-lg border border-zinc-700 bg-zinc-900 px-2 py-1.5 text-sm text-white focus:border-indigo-500 focus:outline-none'
+  'rounded-lg border border-zinc-700 bg-zinc-900 px-2 py-1.5 text-sm text-white focus:border-sky-500 focus:outline-none'
 
 function Label({ children }: { children: React.ReactNode }) {
   return (
@@ -746,7 +746,7 @@ function LabelMultiSelect({
             <button
               type="button"
               onClick={addCustom}
-              className="rounded bg-indigo-600 px-2 py-1 text-xs text-white hover:bg-indigo-500"
+              className="rounded bg-sky-500 px-2 py-1 text-xs text-white hover:bg-sky-400"
             >
               Add
             </button>
@@ -757,13 +757,13 @@ function LabelMultiSelect({
               type="button"
               onClick={() => toggle(label)}
               className={`flex w-full items-center gap-2 rounded px-2 py-1 text-left text-xs hover:bg-zinc-800 ${
-                selected.includes(label) ? 'text-indigo-300' : 'text-zinc-300'
+                selected.includes(label) ? 'text-sky-300' : 'text-zinc-300'
               }`}
             >
               <span
                 className={`flex h-3.5 w-3.5 items-center justify-center rounded border ${
                   selected.includes(label)
-                    ? 'border-indigo-500 bg-indigo-600'
+                    ? 'border-sky-500 bg-sky-500'
                     : 'border-zinc-600'
                 }`}
               >
@@ -1054,7 +1054,7 @@ function ActionConfig({
               id="auto-reply-flag"
               checked={action.auto_reply_flag ?? false}
               onChange={(e) => up({ auto_reply_flag: e.target.checked })}
-              className="h-4 w-4 rounded border-zinc-600 bg-zinc-800 text-indigo-500"
+              className="h-4 w-4 rounded border-zinc-600 bg-zinc-800 text-sky-500"
             />
             <label
               htmlFor="auto-reply-flag"
@@ -1136,7 +1136,7 @@ function ExtractConfig({
         <button
           type="button"
           onClick={addPattern}
-          className="flex items-center gap-1 rounded px-2 py-1 text-xs text-indigo-400 hover:bg-indigo-900/20"
+          className="flex items-center gap-1 rounded px-2 py-1 text-xs text-sky-400 hover:bg-sky-900/20"
         >
           <Plus className="h-3 w-3" /> Add pattern
         </button>
@@ -1247,7 +1247,7 @@ function WhenClauseBuilder({
           setEnabled(true)
           onChange({ field: 'subject', operator: 'contains', value: '' })
         }}
-        className="flex items-center gap-1 text-xs text-zinc-500 hover:text-indigo-400"
+        className="flex items-center gap-1 text-xs text-zinc-500 hover:text-sky-400"
       >
         <Plus className="h-3 w-3" /> Add conditional (when)
       </button>
@@ -1382,7 +1382,7 @@ function ActionChainBuilder({
         <button
           type="button"
           onClick={addStep}
-          className="flex items-center gap-1 rounded-lg border border-zinc-700 px-2.5 py-1 text-xs text-zinc-300 hover:border-indigo-500 hover:text-white"
+          className="flex items-center gap-1 rounded-lg border border-zinc-700 px-2.5 py-1 text-xs text-zinc-300 hover:border-sky-500 hover:text-white"
         >
           <Plus className="h-3 w-3" /> Add step
         </button>
@@ -1403,7 +1403,7 @@ function ActionChainBuilder({
                   <GripVertical className="h-3 w-3" />
                 </button>
               </div>
-              <span className="flex h-5 w-5 items-center justify-center rounded-full bg-indigo-900/50 text-xs font-medium text-indigo-300">
+              <span className="flex h-5 w-5 items-center justify-center rounded-full bg-sky-900/50 text-xs font-medium text-sky-300">
                 {idx + 1}
               </span>
               <select
@@ -1463,7 +1463,7 @@ function ActionChainBuilder({
                   className={`rounded-md px-2 py-0.5 text-xs font-medium ${
                     a.when
                       ? 'border border-amber-700/30 bg-amber-900/20 text-amber-300'
-                      : 'bg-indigo-900/30 text-indigo-300'
+                      : 'bg-sky-900/30 text-sky-300'
                   }`}
                 >
                   {a.when ? '?' : ''}{' '}
@@ -1603,7 +1603,7 @@ function ConditionBuilder({
               has_attachment: e.target.checked ? true : undefined,
             })
           }
-          className="h-4 w-4 rounded border-zinc-600 bg-zinc-800 text-indigo-500"
+          className="h-4 w-4 rounded border-zinc-600 bg-zinc-800 text-sky-500"
         />
         <label
           htmlFor="has-attachment"
@@ -1764,7 +1764,7 @@ function RuleForm({
               id="enabled"
               checked={rule.enabled}
               onChange={(e) => up({ enabled: e.target.checked })}
-              className="h-4 w-4 rounded border-zinc-600 bg-zinc-800 text-indigo-500"
+              className="h-4 w-4 rounded border-zinc-600 bg-zinc-800 text-sky-500"
             />
             <label
               htmlFor="enabled"
@@ -1786,7 +1786,7 @@ function RuleForm({
           <button
             type="submit"
             disabled={saving}
-            className="flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-1.5 text-sm font-medium text-white transition-colors hover:bg-indigo-500 disabled:opacity-50"
+            className="flex items-center gap-2 rounded-lg bg-sky-500 px-4 py-1.5 text-sm font-medium text-white transition-colors hover:bg-sky-400 disabled:opacity-50"
           >
             {saving ? (
               <Loader2 className="h-4 w-4 animate-spin" />
@@ -2021,8 +2021,8 @@ function RuleTestPreview({
                 <div className="mt-1.5 ml-5 space-y-0.5">
                   {r.actionPreview.map((desc, ai) => (
                     <div key={ai} className="flex items-center gap-1.5 text-xs">
-                      <ArrowRight className="h-2.5 w-2.5 text-indigo-400" />
-                      <span className="text-indigo-300">{desc}</span>
+                      <ArrowRight className="h-2.5 w-2.5 text-sky-400" />
+                      <span className="text-sky-300">{desc}</span>
                     </div>
                   ))}
                 </div>
@@ -2259,7 +2259,7 @@ function AccountsSection({
                 <button
                   type="submit"
                   disabled={saving}
-                  className="flex items-center gap-2 rounded-lg bg-indigo-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-indigo-500 disabled:opacity-50"
+                  className="flex items-center gap-2 rounded-lg bg-sky-500 px-3 py-1.5 text-sm font-medium text-white hover:bg-sky-400 disabled:opacity-50"
                 >
                   {saving ? (
                     <Loader2 className="h-3.5 w-3.5 animate-spin" />
@@ -2518,7 +2518,7 @@ export default function MuxRulesPage() {
                 setEditingRule(null)
                 setShowForm(true)
               }}
-              className="flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-indigo-500"
+              className="flex items-center gap-2 rounded-lg bg-sky-500 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-sky-400"
             >
               <Plus className="h-4 w-4" />
               New Rule
@@ -2573,7 +2573,7 @@ export default function MuxRulesPage() {
               setEditingRule(null)
               setShowForm(true)
             }}
-            className="mt-4 flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-500"
+            className="mt-4 flex items-center gap-2 rounded-lg bg-sky-500 px-4 py-2 text-sm font-medium text-white hover:bg-sky-400"
           >
             <Plus className="h-4 w-4" />
             Create your first rule
@@ -2641,7 +2641,7 @@ export default function MuxRulesPage() {
                       )}
                     </td>
                     <td className="px-4 py-3">
-                      <span className="rounded-full bg-indigo-900/30 px-2 py-0.5 text-xs text-indigo-300">
+                      <span className="rounded-full bg-sky-900/30 px-2 py-0.5 text-xs text-sky-300">
                         {actionLabel}
                       </span>
                     </td>
@@ -2686,7 +2686,7 @@ export default function MuxRulesPage() {
                           }
                           className={`rounded p-1.5 transition-colors ${
                             testingRule?.id === rule.id
-                              ? 'bg-indigo-900/30 text-indigo-300'
+                              ? 'bg-sky-900/30 text-sky-300'
                               : 'text-zinc-400 hover:bg-zinc-700/50 hover:text-white'
                           }`}
                           aria-label={`Test ${rule.name}`}

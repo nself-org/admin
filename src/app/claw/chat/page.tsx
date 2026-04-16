@@ -58,10 +58,10 @@ function CanvasRenderer({ frame }: { frame: CanvasFrame }) {
       const title = (frame.data.title as string) ?? ''
       const body = (frame.data.body as string) ?? ''
       return (
-        <div className="mt-2 rounded-lg border border-indigo-500/30 bg-indigo-900/20 p-3">
+        <div className="mt-2 rounded-lg border border-sky-500/30 bg-sky-900/20 p-3">
           <div className="mb-1 flex items-center gap-1.5">
-            <Layout className="h-3.5 w-3.5 text-indigo-400" />
-            <span className="text-xs font-medium tracking-wide text-indigo-300 uppercase">
+            <Layout className="h-3.5 w-3.5 text-sky-400" />
+            <span className="text-xs font-medium tracking-wide text-sky-300 uppercase">
               Card
             </span>
           </div>
@@ -76,10 +76,10 @@ function CanvasRenderer({ frame }: { frame: CanvasFrame }) {
       const items = (frame.data.items as string[]) ?? []
       const title = (frame.data.title as string) ?? ''
       return (
-        <div className="mt-2 rounded-lg border border-indigo-500/30 bg-indigo-900/20 p-3">
+        <div className="mt-2 rounded-lg border border-sky-500/30 bg-sky-900/20 p-3">
           <div className="mb-1 flex items-center gap-1.5">
-            <Layout className="h-3.5 w-3.5 text-indigo-400" />
-            <span className="text-xs font-medium tracking-wide text-indigo-300 uppercase">
+            <Layout className="h-3.5 w-3.5 text-sky-400" />
+            <span className="text-xs font-medium tracking-wide text-sky-300 uppercase">
               List
             </span>
           </div>
@@ -100,10 +100,10 @@ function CanvasRenderer({ frame }: { frame: CanvasFrame }) {
       const fields = (frame.data.fields as Array<{ label: string }>) ?? []
       const title = (frame.data.title as string) ?? ''
       return (
-        <div className="mt-2 rounded-lg border border-indigo-500/30 bg-indigo-900/20 p-3">
+        <div className="mt-2 rounded-lg border border-sky-500/30 bg-sky-900/20 p-3">
           <div className="mb-1 flex items-center gap-1.5">
-            <Layout className="h-3.5 w-3.5 text-indigo-400" />
-            <span className="text-xs font-medium tracking-wide text-indigo-300 uppercase">
+            <Layout className="h-3.5 w-3.5 text-sky-400" />
+            <span className="text-xs font-medium tracking-wide text-sky-300 uppercase">
               Form
             </span>
           </div>
@@ -127,10 +127,10 @@ function CanvasRenderer({ frame }: { frame: CanvasFrame }) {
         (frame.data.title as string) ??
         'Chart'
       return (
-        <div className="mt-2 rounded-lg border border-indigo-500/30 bg-indigo-900/20 p-3">
+        <div className="mt-2 rounded-lg border border-sky-500/30 bg-sky-900/20 p-3">
           <div className="mb-1 flex items-center gap-1.5">
-            <Layout className="h-3.5 w-3.5 text-indigo-400" />
-            <span className="text-xs font-medium tracking-wide text-indigo-300 uppercase">
+            <Layout className="h-3.5 w-3.5 text-sky-400" />
+            <span className="text-xs font-medium tracking-wide text-sky-300 uppercase">
               Chart
             </span>
           </div>
@@ -234,7 +234,7 @@ function MessageBubble({
       {/* Avatar */}
       <div
         className={`mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full ${
-          isUser ? 'bg-indigo-600' : 'bg-zinc-700'
+          isUser ? 'bg-sky-500' : 'bg-zinc-700'
         }`}
       >
         {isUser ? (
@@ -251,7 +251,7 @@ function MessageBubble({
         <div
           className={`rounded-2xl px-4 py-2.5 text-sm leading-relaxed ${
             isUser
-              ? 'rounded-tr-sm bg-indigo-600 text-white'
+              ? 'rounded-tr-sm bg-sky-500 text-white'
               : 'rounded-tl-sm border border-zinc-700/50 bg-zinc-800 text-zinc-100'
           }`}
         >
@@ -260,7 +260,7 @@ function MessageBubble({
               <span className="text-zinc-500 italic">(no text)</span>
             ))}
           {isStreaming && (
-            <span className="ml-0.5 inline-block animate-pulse text-indigo-400">
+            <span className="ml-0.5 inline-block animate-pulse text-sky-400">
               ▋
             </span>
           )}
@@ -326,7 +326,7 @@ function SessionSidebar({
         <button
           type="button"
           onClick={onNew}
-          className="flex items-center gap-1 rounded-lg bg-indigo-600 px-2 py-1 text-xs font-medium text-white hover:bg-indigo-500"
+          className="flex items-center gap-1 rounded-lg bg-sky-500 px-2 py-1 text-xs font-medium text-white hover:bg-sky-400"
         >
           <Plus className="h-3.5 w-3.5" />
           New
@@ -360,7 +360,7 @@ function SessionSidebar({
                 key={session.id}
                 className={`group mx-1 my-0.5 flex cursor-pointer items-start justify-between gap-2 rounded-lg px-3 py-2.5 transition-colors ${
                   isActive
-                    ? 'border border-indigo-500/30 bg-indigo-600/20'
+                    ? 'border border-sky-500/30 bg-sky-500/20'
                     : 'hover:bg-zinc-800/50'
                 }`}
                 onClick={() => onSelect(session.id)}
@@ -368,7 +368,7 @@ function SessionSidebar({
                 <div className="min-w-0 flex-1">
                   <p
                     className={`truncate text-xs font-medium ${
-                      isActive ? 'text-indigo-200' : 'text-zinc-300'
+                      isActive ? 'text-sky-200' : 'text-zinc-300'
                     }`}
                   >
                     {session.name ?? `Session ${session.id.slice(0, 8)}`}
@@ -650,7 +650,7 @@ export default function ClawChatPage() {
           {lastMemoriesUsed !== null && (
             <div className="flex items-center gap-1.5 rounded-lg border border-zinc-700/50 bg-zinc-800/50 px-3 py-1.5">
               <span className="text-xs text-zinc-500">Recall</span>
-              <span className="text-xs font-medium text-indigo-300">
+              <span className="text-xs font-medium text-sky-300">
                 {lastMemoriesUsed} memor{lastMemoriesUsed === 1 ? 'y' : 'ies'}
               </span>
             </div>
@@ -689,8 +689,8 @@ export default function ClawChatPage() {
           <div className="flex-1 space-y-4 overflow-y-auto px-6 py-4">
             {messages.length === 0 && !streaming ? (
               <div className="flex h-full flex-col items-center justify-center text-center">
-                <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-full border border-indigo-500/30 bg-indigo-600/20">
-                  <Bot className="h-7 w-7 text-indigo-400" />
+                <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-full border border-sky-500/30 bg-sky-500/20">
+                  <Bot className="h-7 w-7 text-sky-400" />
                 </div>
                 <p className="text-base font-medium text-zinc-300">
                   {currentSessionId
@@ -746,13 +746,13 @@ export default function ClawChatPage() {
                 placeholder="Message ɳClaw… (Enter to send, Shift+Enter for newline)"
                 rows={1}
                 disabled={streaming}
-                className="max-h-36 flex-1 resize-none overflow-y-auto rounded-xl border border-zinc-600/50 bg-zinc-800/50 px-4 py-3 text-sm leading-normal text-zinc-100 placeholder-zinc-500 focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/30 focus:outline-none disabled:opacity-50"
+                className="max-h-36 flex-1 resize-none overflow-y-auto rounded-xl border border-zinc-600/50 bg-zinc-800/50 px-4 py-3 text-sm leading-normal text-zinc-100 placeholder-zinc-500 focus:border-sky-500/50 focus:ring-1 focus:ring-sky-500/30 focus:outline-none disabled:opacity-50"
               />
               <button
                 type="button"
                 onClick={handleSend}
                 disabled={!input.trim() || streaming}
-                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-indigo-600 text-white transition-colors hover:bg-indigo-500 disabled:cursor-not-allowed disabled:opacity-40"
+                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-sky-500 text-white transition-colors hover:bg-sky-400 disabled:cursor-not-allowed disabled:opacity-40"
                 aria-label="Send message"
               >
                 {streaming ? (

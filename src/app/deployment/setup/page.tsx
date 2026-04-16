@@ -103,7 +103,7 @@ function DeploymentSetupContent() {
       <HeroPattern />
       <div className="relative mx-auto max-w-4xl">
         <div className="mb-10 border-b border-zinc-200 pb-8 dark:border-zinc-800">
-          <h1 className="bg-gradient-to-r from-blue-600 to-purple-400 bg-clip-text text-4xl font-bold text-transparent dark:from-blue-400 dark:to-purple-300">
+          <h1 className="bg-gradient-to-r from-sky-500 to-blue-400 bg-clip-text text-4xl font-bold text-transparent dark:from-sky-400 dark:to-blue-300">
             Deployment Setup Wizard
           </h1>
           <p className="mt-3 text-lg text-zinc-600 dark:text-zinc-400">
@@ -179,7 +179,7 @@ function DeploymentSetupContent() {
                           : 'border-zinc-200 hover:border-zinc-300 dark:border-zinc-700 dark:hover:border-zinc-600'
                       }`}
                     >
-                      <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-lg bg-gradient-to-br from-blue-500 to-purple-500">
+                      <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-lg bg-gradient-to-br from-blue-500 to-sky-500">
                         <Server className="h-6 w-6 text-white" />
                       </div>
                       <h3 className="mb-1 font-semibold text-zinc-900 capitalize dark:text-white">
@@ -442,7 +442,7 @@ function DeploymentSetupContent() {
                   <button
                     onClick={handleDeploy}
                     disabled={isDeploying}
-                    className="w-full rounded-lg bg-gradient-to-r from-blue-600 to-purple-600 px-6 py-3 font-semibold text-white transition-all hover:from-blue-700 hover:to-purple-700 disabled:opacity-50"
+                    className="w-full rounded-lg bg-gradient-to-r from-sky-500 to-blue-600 px-6 py-3 font-semibold text-white transition-all hover:from-sky-400 hover:to-blue-500 disabled:opacity-50"
                   >
                     {isDeploying ? (
                       <span className="flex items-center justify-center gap-2">

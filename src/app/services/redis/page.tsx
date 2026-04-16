@@ -87,7 +87,7 @@ const typeIcons = {
 const typeColors = {
   string: 'text-blue-500',
   hash: 'text-green-500',
-  list: 'text-purple-500',
+  list: 'text-sky-500',
   set: 'text-orange-500',
   zset: 'text-red-500',
   stream: 'text-teal-500',

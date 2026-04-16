@@ -37,7 +37,7 @@ function MetricCard({
   percentage?: number
   description?: string
   icon: React.ComponentType<{ className?: string }>
-  color?: 'blue' | 'emerald' | 'amber' | 'purple'
+  color?: 'blue' | 'emerald' | 'amber' | 'sky'
 }) {
   const mouseX = useMotionValue(0)
   const mouseY = useMotionValue(0)
@@ -48,8 +48,8 @@ function MetricCard({
       'from-emerald-500/40 to-emerald-400/30 ring-emerald-400/60 bg-emerald-500/20 text-emerald-400',
     amber:
       'from-amber-500/40 to-amber-400/30 ring-amber-400/60 bg-amber-500/20 text-amber-400',
-    purple:
-      'from-purple-500/40 to-purple-400/30 ring-purple-400/60 bg-purple-500/20 text-purple-400',
+    sky:
+      'from-sky-500/40 to-sky-400/30 ring-sky-400/60 bg-sky-500/20 text-sky-400',
   }
 
   function onMouseMove({
@@ -420,7 +420,7 @@ function K8sContent() {
                 percentage={(readyReplicas / totalReplicas) * 100}
                 description="Ready replicas"
                 icon={Scale}
-                color="purple"
+                color="sky"
               />
 
               <MetricCard
@@ -462,8 +462,8 @@ function K8sContent() {
               href="/k8s/deploy"
               className="rounded-lg border border-zinc-700/50 bg-zinc-800/50 p-4 transition-colors hover:border-blue-500/50"
             >
-              <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-lg bg-purple-500/20">
-                <Server className="h-5 w-5 text-purple-400" />
+              <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-lg bg-sky-500/20">
+                <Server className="h-5 w-5 text-sky-400" />
               </div>
               <h3 className="mb-1 font-medium text-white">Deploy</h3>
               <p className="text-sm text-zinc-400">Deploy to cluster</p>

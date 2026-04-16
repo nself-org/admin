@@ -68,7 +68,7 @@ const scopeConfig: Record<ApiKeyScope, { label: string; className: string }> = {
   admin: {
     label: 'Admin',
     className:
-      'bg-purple-100 text-purple-700 dark:bg-purple-900 dark:text-purple-300',
+      'bg-sky-100 text-sky-700 dark:bg-sky-900 dark:text-sky-300',
   },
   custom: {
     label: 'Custom',

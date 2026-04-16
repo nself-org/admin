@@ -308,7 +308,7 @@ function VaultContent() {
         {/* Initialize Vault */}
         <div className="rounded-xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-zinc-700 dark:bg-zinc-800">
           <h2 className="mb-4 flex items-center gap-2 text-lg font-semibold text-zinc-900 dark:text-white">
-            <Key className="h-5 w-5 text-purple-600 dark:text-purple-400" />
+            <Key className="h-5 w-5 text-sky-500 dark:text-sky-400" />
             Initialize Vault
           </h2>
 
@@ -322,7 +322,7 @@ function VaultContent() {
             <button
               onClick={handleInit}
               disabled={initializing || status?.initialized === true}
-              className="flex items-center gap-2 rounded-lg bg-purple-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-purple-700 disabled:cursor-not-allowed disabled:opacity-50"
+              className="flex items-center gap-2 rounded-lg bg-sky-500 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-sky-600 disabled:cursor-not-allowed disabled:opacity-50"
             >
               {initializing ? (
                 <>

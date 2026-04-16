@@ -64,10 +64,10 @@ const OPERATOR_OPTIONS = [
 ]
 
 const INPUT =
-  'w-full rounded-lg border border-zinc-700 bg-zinc-900 px-3 py-2 text-sm text-white placeholder-zinc-500 focus:border-indigo-500 focus:outline-none'
+  'w-full rounded-lg border border-zinc-700 bg-zinc-900 px-3 py-2 text-sm text-white placeholder-zinc-500 focus:border-sky-500 focus:outline-none'
 
 const SELECT =
-  'rounded-lg border border-zinc-700 bg-zinc-900 px-2 py-1.5 text-sm text-white focus:border-indigo-500 focus:outline-none'
+  'rounded-lg border border-zinc-700 bg-zinc-900 px-2 py-1.5 text-sm text-white focus:border-sky-500 focus:outline-none'
 
 function Label({ children }: { children: React.ReactNode }) {
   return (
@@ -301,7 +301,7 @@ export function RuleBuilder({
               type="button"
               className={`rounded px-2 py-0.5 ${
                 logicMode === 'AND'
-                  ? 'bg-indigo-600 text-white'
+                  ? 'bg-sky-500 text-white'
                   : 'text-zinc-400 hover:text-white'
               }`}
               onClick={() => setLogicMode('AND')}
@@ -312,7 +312,7 @@ export function RuleBuilder({
               type="button"
               className={`rounded px-2 py-0.5 ${
                 logicMode === 'OR'
-                  ? 'bg-indigo-600 text-white'
+                  ? 'bg-sky-500 text-white'
                   : 'text-zinc-400 hover:text-white'
               }`}
               onClick={() => setLogicMode('OR')}
@@ -326,7 +326,7 @@ export function RuleBuilder({
           {conditions.map((c, idx) => (
             <div key={idx}>
               {idx > 0 && (
-                <p className="mb-1 text-center text-xs font-medium text-indigo-400">
+                <p className="mb-1 text-center text-xs font-medium text-sky-400">
                   {logicMode}
                 </p>
               )}
@@ -342,7 +342,7 @@ export function RuleBuilder({
         <button
           type="button"
           onClick={addCondition}
-          className="flex items-center gap-1 text-xs text-indigo-400 hover:text-indigo-300"
+          className="flex items-center gap-1 text-xs text-sky-400 hover:text-sky-300"
         >
           <span className="text-lg leading-none">+</span> Add condition
         </button>
@@ -372,7 +372,7 @@ export function RuleBuilder({
           id="rule-enabled"
           checked={enabled}
           onChange={(e) => setEnabled(e.target.checked)}
-          className="h-4 w-4 rounded border-zinc-600 bg-zinc-800 text-indigo-500"
+          className="h-4 w-4 rounded border-zinc-600 bg-zinc-800 text-sky-500"
         />
         <label
           htmlFor="rule-enabled"
@@ -394,7 +394,7 @@ export function RuleBuilder({
         <button
           type="submit"
           disabled={saving}
-          className="flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-1.5 text-sm font-medium text-white transition-colors hover:bg-indigo-500 disabled:opacity-50"
+          className="flex items-center gap-2 rounded-lg bg-sky-500 px-4 py-1.5 text-sm font-medium text-white transition-colors hover:bg-sky-400 disabled:opacity-50"
         >
           {saving ? (
             <Loader2 className="h-4 w-4 animate-spin" />

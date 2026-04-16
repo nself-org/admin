@@ -49,7 +49,7 @@ const providerLogos: Record<string, string> = {
 
 const categoryColors: Record<CloudProviderCategory, string> = {
   enterprise:
-    'bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400 border-purple-200 dark:border-purple-800',
+    'bg-sky-100 dark:bg-sky-900/30 text-sky-600 dark:text-sky-400 border-sky-200 dark:border-sky-800',
   developer:
     'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 border-blue-200 dark:border-blue-800',
   budget:

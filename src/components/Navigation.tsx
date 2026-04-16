@@ -93,7 +93,7 @@ function LicenseWidget() {
   if (isPro && info?.expires_at) {
     return (
       <div className="mt-4 border-t border-zinc-200 pt-3 dark:border-zinc-800">
-        <span className="inline-flex items-center rounded-full bg-indigo-100 px-2.5 py-1 text-xs font-medium text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-400">
+        <span className="inline-flex items-center rounded-full bg-sky-100 px-2.5 py-1 text-xs font-medium text-sky-600 dark:bg-sky-900/30 dark:text-sky-400">
           Pro · expires in {daysUntil(info.expires_at)}d
         </span>
       </div>

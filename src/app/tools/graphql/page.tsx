@@ -391,7 +391,7 @@ function SchemaExplorer({
       case 'SCALAR':
         return 'text-green-600 dark:text-green-400'
       case 'ENUM':
-        return 'text-purple-600 dark:text-purple-400'
+        return 'text-sky-500 dark:text-sky-400'
       case 'INPUT_OBJECT':
         return 'text-orange-600 dark:text-orange-400'
       case 'INTERFACE':

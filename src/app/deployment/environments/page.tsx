@@ -205,7 +205,7 @@ function EnvironmentsContent() {
         <div className="mb-10 border-b border-zinc-200 pb-8 dark:border-zinc-800">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="bg-gradient-to-r from-purple-600 to-pink-400 bg-clip-text text-4xl font-bold text-transparent dark:from-purple-400 dark:to-pink-300">
+              <h1 className="bg-gradient-to-r from-sky-500 to-blue-400 bg-clip-text text-4xl font-bold text-transparent dark:from-sky-400 dark:to-pink-300">
                 Environments
               </h1>
               <p className="mt-3 text-lg text-zinc-600 dark:text-zinc-400">

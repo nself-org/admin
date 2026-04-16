@@ -162,7 +162,7 @@ function EnvironmentDetailContent() {
       case 'production':
         return 'from-red-600 to-pink-400 dark:from-red-400 dark:to-pink-300'
       default:
-        return 'from-purple-600 to-violet-400 dark:from-purple-400 dark:to-violet-300'
+        return 'from-sky-500 to-blue-400 dark:from-sky-400 dark:to-blue-300'
     }
   }
 
@@ -172,7 +172,7 @@ function EnvironmentDetailContent() {
         <HeroPattern />
         <div className="relative mx-auto max-w-7xl">
           <div className="flex items-center justify-center py-20">
-            <div className="h-8 w-8 animate-spin rounded-full border-4 border-purple-500 border-t-transparent" />
+            <div className="h-8 w-8 animate-spin rounded-full border-4 border-sky-500 border-t-transparent" />
           </div>
         </div>
       </>
@@ -224,7 +224,7 @@ function EnvironmentDetailContent() {
                 <button
                   onClick={deployToEnvironment}
                   disabled={actionLoading !== null}
-                  className="flex items-center gap-2 rounded-lg bg-purple-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-purple-700 disabled:opacity-50"
+                  className="flex items-center gap-2 rounded-lg bg-sky-500 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-sky-600 disabled:opacity-50"
                 >
                   {actionLoading === 'deploy' ? (
                     <RefreshCw className="h-4 w-4 animate-spin" />
@@ -272,7 +272,7 @@ function EnvironmentDetailContent() {
           </div>
           <div className="rounded-xl border border-zinc-200 bg-white p-4 shadow-sm dark:border-zinc-700 dark:bg-zinc-800">
             <div className="flex items-center gap-3">
-              <GitBranch className="h-8 w-8 text-purple-500" />
+              <GitBranch className="h-8 w-8 text-sky-500" />
               <div>
                 <p className="text-sm text-zinc-500 dark:text-zinc-400">
                   Branch
@@ -357,7 +357,7 @@ function EnvironmentDetailContent() {
               </h3>
               <Link
                 href={`/config?env=${envName}`}
-                className="flex items-center gap-2 text-sm text-purple-600 hover:underline dark:text-purple-400"
+                className="flex items-center gap-2 text-sm text-sky-500 hover:underline dark:text-sky-400"
               >
                 <Settings className="h-4 w-4" />
                 Edit Config
@@ -417,19 +417,19 @@ function EnvironmentDetailContent() {
           </h3>
           <div className="space-y-2 font-mono text-sm">
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-purple-500">nself env {envName}</span> -
+              <span className="text-sky-500">nself env {envName}</span> -
               Show environment details
             </p>
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-purple-500">nself deploy {envName}</span> -
+              <span className="text-sky-500">nself deploy {envName}</span> -
               Deploy to {envName}
             </p>
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-purple-500">nself logs {envName}</span> -
+              <span className="text-sky-500">nself logs {envName}</span> -
               View logs
             </p>
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-purple-500">
+              <span className="text-sky-500">
                 nself config {envName} --edit
               </span>{' '}
               - Edit configuration

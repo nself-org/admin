@@ -194,11 +194,11 @@ function StatsOverview({ stats }: { stats: AuthStats }) {
             <p className="text-sm text-zinc-600 dark:text-zinc-400">
               New Today
             </p>
-            <p className="text-2xl font-bold text-purple-600">
+            <p className="text-2xl font-bold text-sky-500">
               {stats.newRegistrations24h}
             </p>
           </div>
-          <TrendingUp className="h-6 w-6 text-purple-500" />
+          <TrendingUp className="h-6 w-6 text-sky-500" />
         </div>
       </div>
 
@@ -1982,7 +1982,7 @@ function AuthContent() {
                     {stats.avgSessionDuration}
                   </p>
                 </div>
-                <Clock className="h-6 w-6 text-purple-500" />
+                <Clock className="h-6 w-6 text-sky-500" />
               </div>
             </div>
 

@@ -130,7 +130,7 @@ function AutoScalingContent() {
         <HeroPattern />
         <div className="relative mx-auto max-w-7xl">
           <div className="flex items-center justify-center py-20">
-            <div className="h-8 w-8 animate-spin rounded-full border-4 border-indigo-500 border-t-transparent" />
+            <div className="h-8 w-8 animate-spin rounded-full border-4 border-sky-500 border-t-transparent" />
           </div>
         </div>
       </>
@@ -149,7 +149,7 @@ function AutoScalingContent() {
             <ArrowLeft className="h-4 w-4" />
             Back to Scaling
           </Link>
-          <h1 className="bg-gradient-to-r from-indigo-600 to-violet-400 bg-clip-text text-4xl font-bold text-transparent dark:from-indigo-400 dark:to-violet-300">
+          <h1 className="bg-gradient-to-r from-sky-500 to-blue-400 bg-clip-text text-4xl font-bold text-transparent dark:from-indigo-400 dark:to-violet-300">
             Autoscaling Configuration
           </h1>
           <p className="mt-3 text-lg text-zinc-600 dark:text-zinc-400">
@@ -161,8 +161,8 @@ function AutoScalingContent() {
         <div className="mb-8 grid gap-4 md:grid-cols-3">
           <div className="rounded-xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-zinc-700 dark:bg-zinc-800">
             <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-indigo-100 dark:bg-indigo-900/30">
-                <Server className="h-5 w-5 text-indigo-600 dark:text-indigo-400" />
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-sky-100 dark:bg-sky-900/30">
+                <Server className="h-5 w-5 text-sky-500 dark:text-sky-400" />
               </div>
               <div>
                 <p className="text-sm text-zinc-500 dark:text-zinc-400">
@@ -241,7 +241,7 @@ function AutoScalingContent() {
                           e.target.checked,
                         )
                       }
-                      className="h-4 w-4 rounded border-zinc-300 text-indigo-600 focus:ring-indigo-500"
+                      className="h-4 w-4 rounded border-zinc-300 text-sky-500 focus:ring-sky-500"
                     />
                     <span className="text-sm text-zinc-700 dark:text-zinc-300">
                       Enabled
@@ -251,7 +251,7 @@ function AutoScalingContent() {
                     <button
                       onClick={() => saveSetting(setting.service)}
                       disabled={saving === setting.service}
-                      className="flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-indigo-700 disabled:opacity-50"
+                      className="flex items-center gap-2 rounded-lg bg-sky-500 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-sky-600 disabled:opacity-50"
                     >
                       {saving === setting.service ? (
                         <RefreshCw className="h-4 w-4 animate-spin" />
@@ -294,7 +294,7 @@ function AutoScalingContent() {
                     disabled={editingService !== setting.service}
                     min={1}
                     max={setting.maxReplicas}
-                    className="w-full rounded-lg border border-zinc-300 bg-white px-4 py-2 text-zinc-900 focus:border-indigo-500 focus:outline-none disabled:opacity-50 dark:border-zinc-600 dark:bg-zinc-800 dark:text-white"
+                    className="w-full rounded-lg border border-zinc-300 bg-white px-4 py-2 text-zinc-900 focus:border-sky-500 focus:outline-none disabled:opacity-50 dark:border-zinc-600 dark:bg-zinc-800 dark:text-white"
                   />
                 </div>
                 <div>
@@ -314,7 +314,7 @@ function AutoScalingContent() {
                     disabled={editingService !== setting.service}
                     min={setting.minReplicas}
                     max={100}
-                    className="w-full rounded-lg border border-zinc-300 bg-white px-4 py-2 text-zinc-900 focus:border-indigo-500 focus:outline-none disabled:opacity-50 dark:border-zinc-600 dark:bg-zinc-800 dark:text-white"
+                    className="w-full rounded-lg border border-zinc-300 bg-white px-4 py-2 text-zinc-900 focus:border-sky-500 focus:outline-none disabled:opacity-50 dark:border-zinc-600 dark:bg-zinc-800 dark:text-white"
                   />
                 </div>
                 <div>
@@ -335,7 +335,7 @@ function AutoScalingContent() {
                     disabled={editingService !== setting.service}
                     min={10}
                     max={100}
-                    className="w-full rounded-lg border border-zinc-300 bg-white px-4 py-2 text-zinc-900 focus:border-indigo-500 focus:outline-none disabled:opacity-50 dark:border-zinc-600 dark:bg-zinc-800 dark:text-white"
+                    className="w-full rounded-lg border border-zinc-300 bg-white px-4 py-2 text-zinc-900 focus:border-sky-500 focus:outline-none disabled:opacity-50 dark:border-zinc-600 dark:bg-zinc-800 dark:text-white"
                   />
                 </div>
                 <div>
@@ -356,7 +356,7 @@ function AutoScalingContent() {
                     disabled={editingService !== setting.service}
                     min={10}
                     max={100}
-                    className="w-full rounded-lg border border-zinc-300 bg-white px-4 py-2 text-zinc-900 focus:border-indigo-500 focus:outline-none disabled:opacity-50 dark:border-zinc-600 dark:bg-zinc-800 dark:text-white"
+                    className="w-full rounded-lg border border-zinc-300 bg-white px-4 py-2 text-zinc-900 focus:border-sky-500 focus:outline-none disabled:opacity-50 dark:border-zinc-600 dark:bg-zinc-800 dark:text-white"
                   />
                 </div>
               </div>
@@ -379,7 +379,7 @@ function AutoScalingContent() {
                       }
                       min={0}
                       max={3600}
-                      className="w-full rounded-lg border border-zinc-300 bg-white px-4 py-2 text-zinc-900 focus:border-indigo-500 focus:outline-none dark:border-zinc-600 dark:bg-zinc-800 dark:text-white"
+                      className="w-full rounded-lg border border-zinc-300 bg-white px-4 py-2 text-zinc-900 focus:border-sky-500 focus:outline-none dark:border-zinc-600 dark:bg-zinc-800 dark:text-white"
                     />
                     <p className="mt-1 text-xs text-zinc-500">
                       Wait time before scaling up again
@@ -401,7 +401,7 @@ function AutoScalingContent() {
                       }
                       min={0}
                       max={3600}
-                      className="w-full rounded-lg border border-zinc-300 bg-white px-4 py-2 text-zinc-900 focus:border-indigo-500 focus:outline-none dark:border-zinc-600 dark:bg-zinc-800 dark:text-white"
+                      className="w-full rounded-lg border border-zinc-300 bg-white px-4 py-2 text-zinc-900 focus:border-sky-500 focus:outline-none dark:border-zinc-600 dark:bg-zinc-800 dark:text-white"
                     />
                     <p className="mt-1 text-xs text-zinc-500">
                       Wait time before scaling down again
@@ -420,23 +420,23 @@ function AutoScalingContent() {
           </h3>
           <div className="space-y-2 font-mono text-sm">
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-indigo-500">nself scale auto</span> - Show
+              <span className="text-sky-500">nself scale auto</span> - Show
               autoscaling status
             </p>
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-indigo-500">
+              <span className="text-sky-500">
                 nself scale auto hasura --enable
               </span>{' '}
               - Enable autoscaling
             </p>
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-indigo-500">
+              <span className="text-sky-500">
                 nself scale auto hasura --min=2 --max=5
               </span>{' '}
               - Set replica limits
             </p>
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-indigo-500">
+              <span className="text-sky-500">
                 nself scale auto hasura --cpu=70 --memory=80
               </span>{' '}
               - Set targets

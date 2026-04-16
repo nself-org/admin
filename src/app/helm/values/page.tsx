@@ -210,7 +210,7 @@ function HelmValuesContent() {
           <button
             onClick={handleSave}
             disabled={saving}
-            className="inline-flex items-center gap-2 rounded-lg bg-purple-600 px-4 py-2 text-sm text-white hover:bg-purple-500 disabled:opacity-50"
+            className="inline-flex items-center gap-2 rounded-lg bg-sky-500 px-4 py-2 text-sm text-white hover:bg-sky-500 disabled:opacity-50"
           >
             {saving ? (
               <>
@@ -260,7 +260,7 @@ function HelmValuesContent() {
                   onClick={() => setViewMode('edit')}
                   className={`inline-flex items-center gap-1 rounded px-3 py-1.5 text-sm ${
                     viewMode === 'edit'
-                      ? 'bg-purple-600 text-white'
+                      ? 'bg-sky-500 text-white'
                       : 'text-zinc-400 hover:text-white'
                   }`}
                 >
@@ -271,7 +271,7 @@ function HelmValuesContent() {
                   onClick={() => setViewMode('preview')}
                   className={`inline-flex items-center gap-1 rounded px-3 py-1.5 text-sm ${
                     viewMode === 'preview'
-                      ? 'bg-purple-600 text-white'
+                      ? 'bg-sky-500 text-white'
                       : 'text-zinc-400 hover:text-white'
                   }`}
                 >
@@ -392,15 +392,15 @@ function HelmValuesContent() {
             <h3 className="mb-3 font-medium text-white">Tips</h3>
             <ul className="space-y-2 text-sm text-zinc-400">
               <li className="flex items-start gap-2">
-                <FileCode className="mt-0.5 h-4 w-4 text-purple-400" />
+                <FileCode className="mt-0.5 h-4 w-4 text-sky-400" />
                 Use spaces, not tabs for indentation
               </li>
               <li className="flex items-start gap-2">
-                <Settings className="mt-0.5 h-4 w-4 text-purple-400" />
+                <Settings className="mt-0.5 h-4 w-4 text-sky-400" />
                 Values override chart defaults
               </li>
               <li className="flex items-start gap-2">
-                <CheckCircle className="mt-0.5 h-4 w-4 text-purple-400" />
+                <CheckCircle className="mt-0.5 h-4 w-4 text-sky-400" />
                 Comments start with #
               </li>
             </ul>
@@ -411,7 +411,7 @@ function HelmValuesContent() {
             <h3 className="mb-2 text-sm font-medium text-zinc-400">
               CLI Command
             </h3>
-            <code className="block rounded bg-zinc-900 p-3 text-sm text-purple-400">
+            <code className="block rounded bg-zinc-900 p-3 text-sm text-sky-400">
               helm install {releaseParam || 'RELEASE'}{' '}
               {repoParam ? `${repoParam}/${chartParam || 'CHART'}` : 'CHART'} -f
               values.yaml

@@ -577,8 +577,8 @@ function DatabaseSchemaContent() {
                     {formatNumber(totalRows)}
                   </p>
                 </div>
-                <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-purple-500/10">
-                  <Database className="h-6 w-6 text-purple-500" />
+                <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-sky-500/10">
+                  <Database className="h-6 w-6 text-sky-500" />
                 </div>
               </div>
             </CardContent>
@@ -686,7 +686,7 @@ function DatabaseSchemaContent() {
                           variant="outline"
                           className={
                             table.foreignKeys.length > 0
-                              ? 'bg-purple-500/10 text-purple-500'
+                              ? 'bg-sky-500/10 text-sky-500'
                               : ''
                           }
                         >
@@ -741,7 +741,7 @@ function DatabaseSchemaContent() {
                         <div className="flex items-center gap-2">
                           <Badge
                             variant="outline"
-                            className="bg-purple-500/10 text-purple-500"
+                            className="bg-sky-500/10 text-sky-500"
                           >
                             {fk.referencesTable}
                           </Badge>
@@ -798,7 +798,7 @@ function DatabaseSchemaContent() {
                                   <Key className="h-4 w-4 text-amber-500" />
                                 )}
                                 {col.isForeignKey && (
-                                  <ExternalLink className="h-4 w-4 text-purple-500" />
+                                  <ExternalLink className="h-4 w-4 text-sky-500" />
                                 )}
                                 <span className="font-medium">{col.name}</span>
                               </div>
@@ -834,7 +834,7 @@ function DatabaseSchemaContent() {
                               {col.references && (
                                 <Badge
                                   variant="outline"
-                                  className="bg-purple-500/10 text-purple-500"
+                                  className="bg-sky-500/10 text-sky-500"
                                 >
                                   FK: {col.references.table}.
                                   {col.references.column}
@@ -907,7 +907,7 @@ function DatabaseSchemaContent() {
                                 <ArrowRight className="h-4 w-4 text-zinc-400" />
                                 <Badge
                                   variant="outline"
-                                  className="bg-purple-500/10 text-purple-500"
+                                  className="bg-sky-500/10 text-sky-500"
                                 >
                                   {fk.referencesTable}.{fk.referencesColumn}
                                 </Badge>

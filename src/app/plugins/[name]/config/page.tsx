@@ -77,7 +77,7 @@ function SecretInput({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
-        className="w-full rounded-lg border border-zinc-700 bg-zinc-900 px-3 py-2 pr-10 font-mono text-sm text-white focus:border-indigo-500 focus:outline-none"
+        className="w-full rounded-lg border border-zinc-700 bg-zinc-900 px-3 py-2 pr-10 font-mono text-sm text-white focus:border-sky-500 focus:outline-none"
         aria-label={id}
       />
       <button
@@ -140,7 +140,7 @@ function ConfigField({
           value={entry.value}
           onChange={(e) => onChange(entry.key, e.target.value)}
           placeholder={`Enter ${entry.key}...`}
-          className="w-full rounded-lg border border-zinc-700 bg-zinc-900 px-3 py-2 font-mono text-sm text-white focus:border-indigo-500 focus:outline-none"
+          className="w-full rounded-lg border border-zinc-700 bg-zinc-900 px-3 py-2 font-mono text-sm text-white focus:border-sky-500 focus:outline-none"
           aria-label={entry.key}
         />
       )}
@@ -327,7 +327,7 @@ export default function PluginConfigPage() {
           <button
             type="button"
             onClick={handleAddField}
-            className="text-sm text-zinc-400 hover:text-indigo-400"
+            className="text-sm text-zinc-400 hover:text-sky-400"
           >
             + Add variable
           </button>
@@ -335,7 +335,7 @@ export default function PluginConfigPage() {
             type="button"
             onClick={handleSave}
             disabled={saving || configLoading}
-            className="flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-500 disabled:opacity-50"
+            className="flex items-center gap-2 rounded-lg bg-sky-500 px-4 py-2 text-sm font-medium text-white hover:bg-sky-400 disabled:opacity-50"
             aria-label="Save configuration"
           >
             <Save className="h-4 w-4" />

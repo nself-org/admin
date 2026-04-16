@@ -100,7 +100,7 @@ function EnvironmentDiffContent() {
         <HeroPattern />
         <div className="relative mx-auto max-w-7xl">
           <div className="flex items-center justify-center py-20">
-            <div className="h-8 w-8 animate-spin rounded-full border-4 border-purple-500 border-t-transparent" />
+            <div className="h-8 w-8 animate-spin rounded-full border-4 border-sky-500 border-t-transparent" />
           </div>
         </div>
       </>
@@ -119,7 +119,7 @@ function EnvironmentDiffContent() {
             <ArrowLeft className="h-4 w-4" />
             Back to Environments
           </Link>
-          <h1 className="bg-gradient-to-r from-purple-600 to-pink-400 bg-clip-text text-4xl font-bold text-transparent dark:from-purple-400 dark:to-pink-300">
+          <h1 className="bg-gradient-to-r from-sky-500 to-blue-400 bg-clip-text text-4xl font-bold text-transparent dark:from-sky-400 dark:to-pink-300">
             Environment Comparison
           </h1>
           <p className="mt-3 text-lg text-zinc-600 dark:text-zinc-400">
@@ -138,7 +138,7 @@ function EnvironmentDiffContent() {
                 <select
                   value={sourceEnv}
                   onChange={(e) => setSourceEnv(e.target.value as Environment)}
-                  className="w-full appearance-none rounded-lg border border-zinc-300 bg-white px-4 py-2.5 pr-10 text-zinc-900 capitalize focus:border-purple-500 focus:ring-1 focus:ring-purple-500 focus:outline-none dark:border-zinc-600 dark:bg-zinc-900 dark:text-white"
+                  className="w-full appearance-none rounded-lg border border-zinc-300 bg-white px-4 py-2.5 pr-10 text-zinc-900 capitalize focus:border-sky-500 focus:ring-1 focus:ring-sky-500 focus:outline-none dark:border-zinc-600 dark:bg-zinc-900 dark:text-white"
                 >
                   {environments
                     .filter((e) => e !== targetEnv)
@@ -168,7 +168,7 @@ function EnvironmentDiffContent() {
                 <select
                   value={targetEnv}
                   onChange={(e) => setTargetEnv(e.target.value as Environment)}
-                  className="w-full appearance-none rounded-lg border border-zinc-300 bg-white px-4 py-2.5 pr-10 text-zinc-900 capitalize focus:border-purple-500 focus:ring-1 focus:ring-purple-500 focus:outline-none dark:border-zinc-600 dark:bg-zinc-900 dark:text-white"
+                  className="w-full appearance-none rounded-lg border border-zinc-300 bg-white px-4 py-2.5 pr-10 text-zinc-900 capitalize focus:border-sky-500 focus:ring-1 focus:ring-sky-500 focus:outline-none dark:border-zinc-600 dark:bg-zinc-900 dark:text-white"
                 >
                   {environments
                     .filter((e) => e !== sourceEnv)
@@ -185,7 +185,7 @@ function EnvironmentDiffContent() {
             <button
               onClick={fetchDiff}
               disabled={comparing}
-              className="mt-6 flex items-center gap-2 rounded-lg bg-purple-600 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-purple-700 disabled:opacity-50"
+              className="mt-6 flex items-center gap-2 rounded-lg bg-sky-500 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-sky-600 disabled:opacity-50"
             >
               {comparing ? (
                 <RefreshCw className="h-4 w-4 animate-spin" />
@@ -437,17 +437,17 @@ function EnvironmentDiffContent() {
           </h3>
           <div className="space-y-2 font-mono text-sm">
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-purple-500">
+              <span className="text-sky-500">
                 nself env diff staging prod
               </span>{' '}
               - Compare staging to production
             </p>
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-purple-500">nself env diff --full</span> -
+              <span className="text-sky-500">nself env diff --full</span> -
               Show all differences including unchanged
             </p>
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-purple-500">
+              <span className="text-sky-500">
                 nself env sync staging prod
               </span>{' '}
               - Sync staging config to production

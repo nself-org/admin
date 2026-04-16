@@ -186,7 +186,7 @@ function DeploymentHistoryContent() {
         <HeroPattern />
         <div className="relative mx-auto max-w-7xl">
           <div className="flex items-center justify-center py-20">
-            <div className="h-8 w-8 animate-spin rounded-full border-4 border-purple-500 border-t-transparent" />
+            <div className="h-8 w-8 animate-spin rounded-full border-4 border-sky-500 border-t-transparent" />
           </div>
         </div>
       </>
@@ -207,7 +207,7 @@ function DeploymentHistoryContent() {
           </Link>
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="bg-gradient-to-r from-purple-600 to-pink-400 bg-clip-text text-4xl font-bold text-transparent dark:from-purple-400 dark:to-pink-300">
+              <h1 className="bg-gradient-to-r from-sky-500 to-blue-400 bg-clip-text text-4xl font-bold text-transparent dark:from-sky-400 dark:to-pink-300">
                 Deployment History
               </h1>
               <p className="mt-3 text-lg text-zinc-600 dark:text-zinc-400">
@@ -225,7 +225,7 @@ function DeploymentHistoryContent() {
         <div className="mb-8 grid gap-4 md:grid-cols-4">
           <div className="rounded-xl border border-zinc-200 bg-white p-4 shadow-sm dark:border-zinc-700 dark:bg-zinc-800">
             <div className="flex items-center gap-3">
-              <Rocket className="h-8 w-8 text-purple-500" />
+              <Rocket className="h-8 w-8 text-sky-500" />
               <div>
                 <p className="text-sm text-zinc-500 dark:text-zinc-400">
                   Total Deployments
@@ -295,7 +295,7 @@ function DeploymentHistoryContent() {
               onChange={(e) =>
                 setFilterEnv(e.target.value as Environment | 'all')
               }
-              className="appearance-none rounded-lg border border-zinc-300 bg-white px-4 py-2 pr-10 text-sm text-zinc-900 capitalize focus:border-purple-500 focus:ring-1 focus:ring-purple-500 focus:outline-none dark:border-zinc-600 dark:bg-zinc-800 dark:text-white"
+              className="appearance-none rounded-lg border border-zinc-300 bg-white px-4 py-2 pr-10 text-sm text-zinc-900 capitalize focus:border-sky-500 focus:ring-1 focus:ring-sky-500 focus:outline-none dark:border-zinc-600 dark:bg-zinc-800 dark:text-white"
             >
               {environments.map((env) => (
                 <option key={env} value={env}>
@@ -309,7 +309,7 @@ function DeploymentHistoryContent() {
             <select
               value={filterStatus}
               onChange={(e) => setFilterStatus(e.target.value)}
-              className="appearance-none rounded-lg border border-zinc-300 bg-white px-4 py-2 pr-10 text-sm text-zinc-900 capitalize focus:border-purple-500 focus:ring-1 focus:ring-purple-500 focus:outline-none dark:border-zinc-600 dark:bg-zinc-800 dark:text-white"
+              className="appearance-none rounded-lg border border-zinc-300 bg-white px-4 py-2 pr-10 text-sm text-zinc-900 capitalize focus:border-sky-500 focus:ring-1 focus:ring-sky-500 focus:outline-none dark:border-zinc-600 dark:bg-zinc-800 dark:text-white"
             >
               <option value="all">All Statuses</option>
               <option value="success">Success</option>
@@ -429,23 +429,23 @@ function DeploymentHistoryContent() {
           </h3>
           <div className="space-y-2 font-mono text-sm">
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-purple-500">nself deployments</span> - List
+              <span className="text-sky-500">nself deployments</span> - List
               deployment history
             </p>
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-purple-500">
+              <span className="text-sky-500">
                 nself deployments --env=production
               </span>{' '}
               - Filter by environment
             </p>
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-purple-500">
+              <span className="text-sky-500">
                 nself deploy show deploy-1
               </span>{' '}
               - Show deployment details
             </p>
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-purple-500">
+              <span className="text-sky-500">
                 nself rollback --to=v1.2.5
               </span>{' '}
               - Rollback to version

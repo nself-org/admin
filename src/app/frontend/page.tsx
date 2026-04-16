@@ -114,7 +114,7 @@ function FrontendContent() {
       case 'react':
         return <Activity className="h-5 w-5 text-blue-500" />
       case 'astro':
-        return <Globe className="h-5 w-5 text-purple-500" />
+        return <Globe className="h-5 w-5 text-sky-500" />
       default:
         return <Layers className="h-5 w-5 text-zinc-500" />
     }

@@ -213,7 +213,7 @@ export default function BackupRestorePage() {
                     <td className="px-5 py-3 text-right">
                       <a
                         href={`/api/admin/backups/${encodeURIComponent(b.filename)}/download`}
-                        className="flex items-center justify-end gap-1.5 text-xs font-medium text-indigo-400 hover:text-indigo-300"
+                        className="flex items-center justify-end gap-1.5 text-xs font-medium text-sky-400 hover:text-sky-300"
                         download
                       >
                         <Download className="h-3.5 w-3.5" />
@@ -242,7 +242,7 @@ export default function BackupRestorePage() {
             type="button"
             onClick={() => void handleCreateBackup()}
             disabled={backupState === 'running'}
-            className="flex items-center gap-2 rounded-lg bg-indigo-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-indigo-500 disabled:cursor-not-allowed disabled:opacity-50"
+            className="flex items-center gap-2 rounded-lg bg-sky-500 px-5 py-2.5 text-sm font-medium text-white hover:bg-sky-400 disabled:cursor-not-allowed disabled:opacity-50"
           >
             {backupState === 'running' ? (
               <Loader2 className="h-4 w-4 animate-spin" />
@@ -305,7 +305,7 @@ export default function BackupRestorePage() {
               value={selectedRestore}
               onChange={(e) => setSelectedRestore(e.target.value)}
               disabled={backups.length === 0}
-              className="w-full appearance-none rounded-lg border border-zinc-600/50 bg-zinc-800/50 px-3 py-2 text-sm text-zinc-100 focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/30 focus:outline-none disabled:opacity-50"
+              className="w-full appearance-none rounded-lg border border-zinc-600/50 bg-zinc-800/50 px-3 py-2 text-sm text-zinc-100 focus:border-sky-500/50 focus:ring-1 focus:ring-sky-500/30 focus:outline-none disabled:opacity-50"
             >
               {backups.length === 0 ? (
                 <option value="">— No backups available —</option>

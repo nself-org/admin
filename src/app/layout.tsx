@@ -23,7 +23,7 @@ export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
   maximumScale: 5,
-  themeColor: '#0066CC',
+  themeColor: '#030712',
 }
 
 export const metadata: Metadata = {
@@ -63,7 +63,7 @@ export default function RootLayout({
       className={`h-full ${inter.variable}`}
       suppressHydrationWarning
     >
-      <body className="flex min-h-full bg-gradient-to-b from-slate-50 via-white to-slate-100 bg-fixed font-sans antialiased dark:from-zinc-900 dark:via-zinc-900 dark:to-zinc-800">
+      <body className="flex min-h-full bg-gradient-to-b from-slate-50 via-white to-slate-100 bg-fixed font-sans antialiased dark:from-gray-950 dark:via-gray-950 dark:to-gray-950">
         <ErrorSuppressor />
         <PWARegister />
         <PWAInstallPrompt />

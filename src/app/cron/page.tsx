@@ -174,7 +174,7 @@ function JobForm({
           value={form.name}
           onChange={(e) => setForm({ ...form, name: e.target.value })}
           placeholder="e.g. daily-cleanup"
-          className="w-full rounded-lg border border-zinc-700 bg-zinc-900 px-3 py-2 text-sm text-white placeholder-zinc-500 focus:border-indigo-500 focus:outline-none"
+          className="w-full rounded-lg border border-zinc-700 bg-zinc-900 px-3 py-2 text-sm text-white placeholder-zinc-500 focus:border-sky-500 focus:outline-none"
         />
       </div>
 
@@ -191,7 +191,7 @@ function JobForm({
               value={form.schedule}
               onChange={(e) => setForm({ ...form, schedule: e.target.value })}
               placeholder="0 * * * *"
-              className="min-w-0 flex-1 rounded-lg border border-zinc-700 bg-zinc-900 px-3 py-2 font-mono text-sm text-white placeholder-zinc-500 focus:border-indigo-500 focus:outline-none"
+              className="min-w-0 flex-1 rounded-lg border border-zinc-700 bg-zinc-900 px-3 py-2 font-mono text-sm text-white placeholder-zinc-500 focus:border-sky-500 focus:outline-none"
             />
             <select
               value=""
@@ -199,7 +199,7 @@ function JobForm({
                 if (e.target.value)
                   setForm({ ...form, schedule: e.target.value })
               }}
-              className="rounded-lg border border-zinc-700 bg-zinc-900 px-2 py-2 text-xs text-zinc-400 focus:border-indigo-500 focus:outline-none"
+              className="rounded-lg border border-zinc-700 bg-zinc-900 px-2 py-2 text-xs text-zinc-400 focus:border-sky-500 focus:outline-none"
             >
               <option value="">Preset...</option>
               {CRON_PRESETS.map((p) => (
@@ -220,7 +220,7 @@ function JobForm({
             value={form.timezone}
             onChange={(e) => setForm({ ...form, timezone: e.target.value })}
             placeholder="UTC"
-            className="w-full rounded-lg border border-zinc-700 bg-zinc-900 px-3 py-2 text-sm text-white placeholder-zinc-500 focus:border-indigo-500 focus:outline-none"
+            className="w-full rounded-lg border border-zinc-700 bg-zinc-900 px-3 py-2 text-sm text-white placeholder-zinc-500 focus:border-sky-500 focus:outline-none"
           />
           <p className="mt-1 text-xs text-zinc-500">
             IANA name, e.g. America/New_York
@@ -239,7 +239,7 @@ function JobForm({
             onChange={(e) =>
               setForm({ ...form, delivery: e.target.value as JobDelivery })
             }
-            className="w-full rounded-lg border border-zinc-700 bg-zinc-900 px-3 py-2 text-sm text-white focus:border-indigo-500 focus:outline-none"
+            className="w-full rounded-lg border border-zinc-700 bg-zinc-900 px-3 py-2 text-sm text-white focus:border-sky-500 focus:outline-none"
           >
             {DELIVERY_TYPES.map((d) => (
               <option key={d.value} value={d.value}>
@@ -262,7 +262,7 @@ function JobForm({
                 setForm({ ...form, webhook_url: e.target.value })
               }
               placeholder="https://example.com/hook"
-              className="w-full rounded-lg border border-zinc-700 bg-zinc-900 px-3 py-2 text-sm text-white placeholder-zinc-500 focus:border-indigo-500 focus:outline-none"
+              className="w-full rounded-lg border border-zinc-700 bg-zinc-900 px-3 py-2 text-sm text-white placeholder-zinc-500 focus:border-sky-500 focus:outline-none"
             />
           </div>
         )}
@@ -277,7 +277,7 @@ function JobForm({
           value={form.payload}
           onChange={(e) => setForm({ ...form, payload: e.target.value })}
           rows={3}
-          className="w-full rounded-lg border border-zinc-700 bg-zinc-900 px-3 py-2 font-mono text-sm text-white placeholder-zinc-500 focus:border-indigo-500 focus:outline-none"
+          className="w-full rounded-lg border border-zinc-700 bg-zinc-900 px-3 py-2 font-mono text-sm text-white placeholder-zinc-500 focus:border-sky-500 focus:outline-none"
         />
         {payloadError && (
           <p className="mt-1 text-xs text-red-400">{payloadError}</p>
@@ -291,7 +291,7 @@ function JobForm({
             type="checkbox"
             checked={form.enabled}
             onChange={(e) => setForm({ ...form, enabled: e.target.checked })}
-            className="h-4 w-4 rounded border-zinc-700 bg-zinc-900 accent-indigo-500"
+            className="h-4 w-4 rounded border-zinc-700 bg-zinc-900 accent-sky-500"
           />
           <label htmlFor="job-enabled" className="text-sm text-zinc-300">
             Enabled
@@ -306,7 +306,7 @@ function JobForm({
             max={5}
             value={form.max_attempts}
             onChange={(e) => setForm({ ...form, max_attempts: e.target.value })}
-            className="w-16 rounded-lg border border-zinc-700 bg-zinc-900 px-2 py-1.5 text-sm text-white focus:border-indigo-500 focus:outline-none"
+            className="w-16 rounded-lg border border-zinc-700 bg-zinc-900 px-2 py-1.5 text-sm text-white focus:border-sky-500 focus:outline-none"
           />
         </div>
       </div>
@@ -323,7 +323,7 @@ function JobForm({
         <button
           type="submit"
           disabled={saving}
-          className="flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-1.5 text-sm font-medium text-white transition-colors hover:bg-indigo-500 disabled:opacity-50"
+          className="flex items-center gap-2 rounded-lg bg-sky-500 px-4 py-1.5 text-sm font-medium text-white transition-colors hover:bg-sky-400 disabled:opacity-50"
         >
           {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
           {saving ? 'Saving...' : 'Save Job'}
@@ -480,7 +480,7 @@ export default function CronJobsPage() {
               setEditingJob(null)
               setShowForm(true)
             }}
-            className="flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-indigo-500"
+            className="flex items-center gap-2 rounded-lg bg-sky-500 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-sky-400"
           >
             <Plus className="h-4 w-4" />
             Add Job
@@ -520,7 +520,7 @@ export default function CronJobsPage() {
           <p className="text-sm text-zinc-400">No cron jobs yet</p>
           <button
             onClick={() => setShowForm(true)}
-            className="mt-4 flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-indigo-500"
+            className="mt-4 flex items-center gap-2 rounded-lg bg-sky-500 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-sky-400"
           >
             <Plus className="h-4 w-4" />
             Create your first job

@@ -959,7 +959,7 @@ export default function StartPage() {
                           0) > 0 && (
                           <div>
                             <div className="mb-2 flex items-center space-x-2">
-                              <span className="text-sm font-semibold text-purple-600 dark:text-purple-400">
+                              <span className="text-sm font-semibold text-sky-500 dark:text-sky-400">
                                 Optional (
                                 {projectInfo.servicesByCategory?.optional
                                   ?.length ?? 0}
@@ -992,7 +992,7 @@ export default function StartPage() {
                                       key={service}
                                       className="flex items-center space-x-2 text-sm"
                                     >
-                                      <div className="h-1.5 w-1.5 rounded-full bg-purple-500"></div>
+                                      <div className="h-1.5 w-1.5 rounded-full bg-sky-500"></div>
                                       <span className="text-zinc-700 dark:text-zinc-300">
                                         {getServiceDisplayName(service)}
                                       </span>
@@ -1118,7 +1118,7 @@ export default function StartPage() {
                           projectInfo.frontendApps.length > 0 && (
                             <div>
                               <div className="mb-2 flex items-center space-x-2">
-                                <span className="text-sm font-semibold text-indigo-600 dark:text-indigo-400">
+                                <span className="text-sm font-semibold text-sky-500 dark:text-sky-400">
                                   Frontend Apps (
                                   {projectInfo.frontendApps.length})
                                 </span>
@@ -1129,7 +1129,7 @@ export default function StartPage() {
                                     key={app.name}
                                     className="flex items-center space-x-2 text-sm"
                                   >
-                                    <div className="h-1.5 w-1.5 rounded-full bg-indigo-500"></div>
+                                    <div className="h-1.5 w-1.5 rounded-full bg-sky-500"></div>
                                     <span className="text-zinc-700 dark:text-zinc-300">
                                       {app.label} (port {app.port})
                                     </span>

@@ -207,15 +207,15 @@ export default function GeminiPoolPage() {
     return (
       <div className="mx-auto max-w-3xl p-6">
         <h1 className="mb-6 text-2xl font-semibold text-zinc-100">Gemini Pool</h1>
-        <div className="rounded-xl border border-indigo-500/20 bg-indigo-500/5 p-8 text-center">
-          <Key className="mx-auto mb-4 h-12 w-12 text-indigo-400/50" />
+        <div className="rounded-xl border border-sky-500/20 bg-sky-500/5 p-8 text-center">
+          <Key className="mx-auto mb-4 h-12 w-12 text-sky-400/50" />
           <h2 className="mb-2 text-lg font-medium text-zinc-200">No Google Accounts Connected</h2>
           <p className="mb-6 text-sm text-zinc-400">
             Connect your first Google account for 20 free requests per day. No credit card, no paid tier.
           </p>
           <button
             onClick={() => { setShowAddModal(true); startOAuth() }}
-            className="rounded-lg bg-indigo-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-indigo-500 transition"
+            className="rounded-lg bg-sky-500 px-5 py-2.5 text-sm font-medium text-white hover:bg-sky-400 transition"
           >
             <Plus className="mr-2 inline h-4 w-4" />
             Connect Google Account
@@ -291,7 +291,7 @@ export default function GeminiPoolPage() {
                     {completed ? (
                       <CheckCircle2 className="h-3 w-3 flex-shrink-0 text-green-400" />
                     ) : current ? (
-                      <Loader2 className="h-3 w-3 flex-shrink-0 animate-spin text-indigo-400" />
+                      <Loader2 className="h-3 w-3 flex-shrink-0 animate-spin text-sky-400" />
                     ) : (
                       <span className="h-3 w-3 flex-shrink-0 rounded-full border border-zinc-700" />
                     )}
@@ -304,7 +304,7 @@ export default function GeminiPoolPage() {
           {provisionDone && (
             <button
               onClick={() => { setShowAddModal(false); fetchAll() }}
-              className="w-full rounded-lg bg-indigo-600 py-2 text-sm font-medium text-white hover:bg-indigo-500 transition"
+              className="w-full rounded-lg bg-sky-500 py-2 text-sm font-medium text-white hover:bg-sky-400 transition"
             >
               Done
             </button>
@@ -357,7 +357,7 @@ export default function GeminiPoolPage() {
           </div>
           <div className="h-3 overflow-hidden rounded-full bg-zinc-800">
             <div
-              className="h-full rounded-full bg-indigo-500 transition-all"
+              className="h-full rounded-full bg-sky-500 transition-all"
               style={{ width: `${Math.min(usedPct, 100)}%` }}
             />
           </div>
@@ -389,7 +389,7 @@ export default function GeminiPoolPage() {
           <h2 className="text-lg font-medium text-zinc-200">Connected Accounts</h2>
           <button
             onClick={() => { setShowAddModal(true); startOAuth() }}
-            className="rounded-lg bg-indigo-600/20 px-3 py-1.5 text-xs text-indigo-300 hover:bg-indigo-600/30 transition"
+            className="rounded-lg bg-sky-500/20 px-3 py-1.5 text-xs text-sky-300 hover:bg-sky-500/30 transition"
           >
             <Plus className="mr-1 inline h-3 w-3" /> Add Account
           </button>
@@ -452,7 +452,7 @@ export default function GeminiPoolPage() {
       <section className="rounded-xl border border-zinc-700/50 bg-zinc-800/50 p-5">
         <div className="flex items-center justify-between">
           <h2 className="text-lg font-medium text-zinc-200">Audit Log</h2>
-          <button onClick={fetchAudit} className="text-xs text-indigo-400 hover:text-indigo-300">
+          <button onClick={fetchAudit} className="text-xs text-sky-400 hover:text-sky-300">
             View Full Log
           </button>
         </div>

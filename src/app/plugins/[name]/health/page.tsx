@@ -279,7 +279,7 @@ export default function PluginHealthPage() {
                 {pluginName} health
               </h1>
               {isOwnerTier(licenseTier) && (
-                <span className="rounded-full bg-indigo-500/20 px-2 py-0.5 text-xs font-medium text-indigo-400">
+                <span className="rounded-full bg-sky-500/20 px-2 py-0.5 text-xs font-medium text-sky-400">
                   Owner
                 </span>
               )}

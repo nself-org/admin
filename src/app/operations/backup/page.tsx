@@ -256,7 +256,7 @@ function BackupCard({
     differential: {
       label: 'Differential',
       color:
-        'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300',
+        'bg-sky-100 text-sky-800 dark:bg-sky-900/30 dark:text-sky-300',
     },
   }
 
@@ -654,7 +654,7 @@ function BackupsContent() {
                     {formatSize(stats.totalSize)}
                   </p>
                 </div>
-                <HardDrive className="h-8 w-8 text-purple-500" />
+                <HardDrive className="h-8 w-8 text-sky-500" />
               </div>
             </div>
 

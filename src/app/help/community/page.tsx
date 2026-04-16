@@ -30,8 +30,8 @@ function CommunityContent() {
             <div className="grid gap-4 md:grid-cols-2">
               <Card className="p-6">
                 <div className="mb-4 flex items-start gap-4">
-                  <div className="rounded-lg bg-indigo-100 p-3 dark:bg-indigo-900/20">
-                    <MessageCircle className="h-6 w-6 text-indigo-600 dark:text-indigo-400" />
+                  <div className="rounded-lg bg-sky-100 p-3 dark:bg-sky-900/20">
+                    <MessageCircle className="h-6 w-6 text-sky-500 dark:text-sky-400" />
                   </div>
                   <div className="flex-1">
                     <h3 className="mb-2 text-lg font-semibold">
@@ -121,8 +121,8 @@ function CommunityContent() {
               </Card>
 
               <Card className="p-6">
-                <div className="mb-3 w-fit rounded-lg bg-purple-100 p-3 dark:bg-purple-900/20">
-                  <Mail className="h-5 w-5 text-purple-600 dark:text-purple-400" />
+                <div className="mb-3 w-fit rounded-lg bg-sky-100 p-3 dark:bg-sky-900/20">
+                  <Mail className="h-5 w-5 text-sky-500 dark:text-sky-400" />
                 </div>
                 <h3 className="mb-2 font-semibold">Newsletter</h3>
                 <p className="mb-3 text-sm text-zinc-600 dark:text-zinc-400">

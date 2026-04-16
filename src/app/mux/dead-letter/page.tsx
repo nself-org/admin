@@ -333,7 +333,7 @@ export default function DeadLetterPage() {
             value={filterRuleId}
             onChange={(e) => setFilterRuleId(e.target.value)}
             placeholder="Filter by rule_id…"
-            className="w-56 rounded-lg border border-zinc-600/50 bg-zinc-800/50 px-3 py-1.5 text-sm text-zinc-100 placeholder-zinc-500 focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/30 focus:outline-none"
+            className="w-56 rounded-lg border border-zinc-600/50 bg-zinc-800/50 px-3 py-1.5 text-sm text-zinc-100 placeholder-zinc-500 focus:border-sky-500/50 focus:ring-1 focus:ring-sky-500/30 focus:outline-none"
           />
           {messages.length > 0 && (
             <button
@@ -430,7 +430,7 @@ export default function DeadLetterPage() {
                       type="button"
                       onClick={() => void handleRetry(msg.message_id)}
                       disabled={retryingId === msg.message_id}
-                      className="flex items-center gap-1.5 rounded-lg border border-indigo-500/30 bg-indigo-600/20 px-2.5 py-1.5 text-xs font-medium text-indigo-300 hover:bg-indigo-600/30 disabled:opacity-50"
+                      className="flex items-center gap-1.5 rounded-lg border border-sky-500/30 bg-sky-500/20 px-2.5 py-1.5 text-xs font-medium text-sky-300 hover:bg-sky-500/30 disabled:opacity-50"
                       aria-label="Retry message"
                     >
                       {retryingId === msg.message_id ? (

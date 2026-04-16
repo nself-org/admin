@@ -360,8 +360,8 @@ function DatabaseMockContent() {
                     {Math.round(progress)}%
                   </p>
                 </div>
-                <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-purple-500/10">
-                  <Sparkles className="h-6 w-6 text-purple-500" />
+                <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-sky-500/10">
+                  <Sparkles className="h-6 w-6 text-sky-500" />
                 </div>
               </div>
             </CardContent>

@@ -286,7 +286,7 @@ function BlueGreenDeployContent() {
                   </p>
                 </div>
                 <div className="rounded-lg bg-zinc-50 p-4 dark:bg-zinc-900">
-                  <div className="mb-2 flex h-8 w-8 items-center justify-center rounded-full bg-purple-100 text-purple-600 dark:bg-purple-900/50">
+                  <div className="mb-2 flex h-8 w-8 items-center justify-center rounded-full bg-sky-100 text-sky-500 dark:bg-sky-900/50">
                     3
                   </div>
                   <h4 className="mb-1 font-medium text-zinc-900 dark:text-white">

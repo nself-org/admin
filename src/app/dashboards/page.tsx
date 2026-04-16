@@ -60,7 +60,7 @@ export default function DashboardsPage() {
         />
         <PageContent>
           <div className="flex items-center justify-center py-20">
-            <div className="h-8 w-8 animate-spin rounded-full border-4 border-purple-500 border-t-transparent" />
+            <div className="h-8 w-8 animate-spin rounded-full border-4 border-sky-500 border-t-transparent" />
           </div>
         </PageContent>
       </>
@@ -87,8 +87,8 @@ export default function DashboardsPage() {
           <div className="mb-6 grid gap-4 md:grid-cols-3">
             <Card className="p-4">
               <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-purple-100 dark:bg-purple-900/30">
-                  <LayoutDashboard className="h-5 w-5 text-purple-600 dark:text-purple-400" />
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-sky-100 dark:bg-sky-900/30">
+                  <LayoutDashboard className="h-5 w-5 text-sky-500 dark:text-sky-400" />
                 </div>
                 <div>
                   <p className="text-sm text-zinc-500 dark:text-zinc-400">
@@ -154,9 +154,9 @@ export default function DashboardsPage() {
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {dashboards.map((dashboard) => (
               <Link key={dashboard.id} href={`/dashboards/${dashboard.id}`}>
-                <Card className="group relative cursor-pointer p-4 transition-all hover:border-purple-500 hover:shadow-md">
+                <Card className="group relative cursor-pointer p-4 transition-all hover:border-sky-500 hover:shadow-md">
                   <div className="mb-3 flex items-start justify-between">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-gradient-to-br from-purple-500 to-pink-500">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-gradient-to-br from-sky-500 to-blue-500">
                       <LayoutDashboard className="h-6 w-6 text-white" />
                     </div>
                     <div className="relative">
@@ -209,7 +209,7 @@ export default function DashboardsPage() {
                     </span>
                   </div>
                   {dashboard.isDefault && (
-                    <span className="absolute top-4 right-4 rounded-full bg-purple-100 px-2 py-0.5 text-xs font-medium text-purple-700 dark:bg-purple-900/30 dark:text-purple-400">
+                    <span className="absolute top-4 right-4 rounded-full bg-sky-100 px-2 py-0.5 text-xs font-medium text-sky-600 dark:bg-sky-900/30 dark:text-sky-400">
                       Default
                     </span>
                   )}

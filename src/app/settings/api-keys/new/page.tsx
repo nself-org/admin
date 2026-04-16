@@ -176,7 +176,7 @@ export default function NewApiKeyPage() {
                   </p>
                 </div>
                 <div>
-                  <span className="inline-block rounded bg-purple-100 px-2 py-0.5 text-xs font-medium text-purple-700 dark:bg-purple-900 dark:text-purple-300">
+                  <span className="inline-block rounded bg-sky-100 px-2 py-0.5 text-xs font-medium text-sky-600 dark:bg-sky-900 dark:text-sky-300">
                     Admin
                   </span>
                   <p className="mt-1 text-zinc-600 dark:text-zinc-400">

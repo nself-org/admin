@@ -269,7 +269,7 @@ function OverviewSection({ pluginDown }: { pluginDown: boolean }) {
             <div
               className={`rounded-lg p-2 ${
                 s.ok
-                  ? 'border border-indigo-500/20 bg-indigo-500/10 text-indigo-400'
+                  ? 'border border-sky-500/20 bg-sky-500/10 text-sky-400'
                   : 'border border-zinc-700/50 bg-zinc-700/30 text-zinc-600'
               }`}
             >
@@ -399,7 +399,7 @@ function ConnectedAccountsSection({ pluginDown }: { pluginDown: boolean }) {
           type="button"
           onClick={handleAddAccount}
           disabled={addingOAuth || pluginDown}
-          className="flex items-center gap-2 rounded-lg bg-indigo-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-indigo-500 disabled:opacity-50"
+          className="flex items-center gap-2 rounded-lg bg-sky-500 px-3 py-1.5 text-sm font-medium text-white hover:bg-sky-400 disabled:opacity-50"
         >
           {addingOAuth ? (
             <Loader2 className="h-4 w-4 animate-spin" />
@@ -425,8 +425,8 @@ function ConnectedAccountsSection({ pluginDown }: { pluginDown: boolean }) {
               key={account.id}
               className="flex items-center gap-4 px-4 py-3.5"
             >
-              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-indigo-500/20 bg-indigo-500/10">
-                <Mail className="h-4 w-4 text-indigo-400" />
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-sky-500/20 bg-sky-500/10">
+                <Mail className="h-4 w-4 text-sky-400" />
               </div>
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-2">
@@ -618,12 +618,12 @@ function CompanionDevicesSection({ pluginDown }: { pluginDown: boolean }) {
                       }
                     }}
                     autoFocus
-                    className="flex-1 rounded-lg border border-zinc-600/50 bg-zinc-900/50 px-3 py-1.5 text-sm text-zinc-100 outline-none focus:border-indigo-500/50"
+                    className="flex-1 rounded-lg border border-zinc-600/50 bg-zinc-900/50 px-3 py-1.5 text-sm text-zinc-100 outline-none focus:border-sky-500/50"
                   />
                   <button
                     type="button"
                     onClick={() => void handleRename(device.id)}
-                    className="rounded-lg bg-indigo-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-indigo-500"
+                    className="rounded-lg bg-sky-500 px-3 py-1.5 text-xs font-medium text-white hover:bg-sky-400"
                   >
                     Save
                   </button>
@@ -759,7 +759,7 @@ function SecuritySection({ pluginDown }: { pluginDown: boolean }) {
         <div className="flex items-start justify-between gap-4">
           <div>
             <div className="flex items-center gap-2">
-              <KeyRound className="h-4 w-4 text-indigo-400" />
+              <KeyRound className="h-4 w-4 text-sky-400" />
               <h3 className="text-sm font-semibold text-white">
                 Passkey enrollment
               </h3>
@@ -788,7 +788,7 @@ function SecuritySection({ pluginDown }: { pluginDown: boolean }) {
                 // ignore
               }
             }}
-            className="flex shrink-0 items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-500 disabled:opacity-50"
+            className="flex shrink-0 items-center gap-2 rounded-lg bg-sky-500 px-4 py-2 text-sm font-medium text-white hover:bg-sky-400 disabled:opacity-50"
           >
             <Shield className="h-4 w-4" />
             Enroll passkey
@@ -799,7 +799,7 @@ function SecuritySection({ pluginDown }: { pluginDown: boolean }) {
       {/* Session timeout */}
       <div className="rounded-xl border border-zinc-700/50 bg-zinc-800/30 p-5">
         <div className="mb-3 flex items-center gap-2">
-          <Clock className="h-4 w-4 text-indigo-400" />
+          <Clock className="h-4 w-4 text-sky-400" />
           <h3 className="text-sm font-semibold text-white">Session timeout</h3>
         </div>
         <p className="mb-4 text-sm text-zinc-400">
@@ -814,7 +814,7 @@ function SecuritySection({ pluginDown }: { pluginDown: boolean }) {
               onChange={(e) => setTimeoutValue(e.target.value)}
               min="300"
               max="86400"
-              className="w-32 rounded-lg border border-zinc-600/50 bg-zinc-900/50 px-3 py-2 text-sm text-zinc-100 outline-none focus:border-indigo-500/50"
+              className="w-32 rounded-lg border border-zinc-600/50 bg-zinc-900/50 px-3 py-2 text-sm text-zinc-100 outline-none focus:border-sky-500/50"
             />
             <span className="absolute inset-y-0 right-3 flex items-center text-xs text-zinc-500">
               sec
@@ -824,7 +824,7 @@ function SecuritySection({ pluginDown }: { pluginDown: boolean }) {
             type="button"
             onClick={handleSaveTimeout}
             disabled={savingTimeout || pluginDown}
-            className="flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-500 disabled:opacity-50"
+            className="flex items-center gap-2 rounded-lg bg-sky-500 px-4 py-2 text-sm font-medium text-white hover:bg-sky-400 disabled:opacity-50"
           >
             {savingTimeout ? (
               <Loader2 className="h-4 w-4 animate-spin" />
@@ -846,7 +846,7 @@ function SecuritySection({ pluginDown }: { pluginDown: boolean }) {
       {/* Secret rotation */}
       <div className="rounded-xl border border-zinc-700/50 bg-zinc-800/30 p-5">
         <div className="mb-1 flex items-center gap-2">
-          <RotateCcw className="h-4 w-4 text-indigo-400" />
+          <RotateCcw className="h-4 w-4 text-sky-400" />
           <h3 className="text-sm font-semibold text-white">Secret rotation</h3>
         </div>
         <p className="mb-4 text-sm text-zinc-400">

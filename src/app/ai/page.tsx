@@ -50,8 +50,8 @@ const PROVIDER_MODELS: Record<Exclude<Provider, 'ollama'>, string[]> = {
 
 const TIER_COLORS: Record<string, string> = {
   Free: 'border-zinc-600/50 bg-zinc-700/40 text-zinc-400',
-  Pro: 'border-indigo-500/30 bg-indigo-500/10 text-indigo-300',
-  Max: 'border-purple-500/30 bg-purple-500/10 text-purple-300',
+  Pro: 'border-sky-500/30 bg-sky-500/10 text-sky-300',
+  Max: 'border-sky-500/30 bg-sky-500/10 text-sky-300',
 }
 
 // ── Status badge ──────────────────────────────────────────────────────────────
@@ -347,7 +347,7 @@ export default function AIProvidersPage() {
               onClick={() => handleProviderChange(p)}
               className={`rounded-md px-4 py-1.5 text-sm font-medium transition-colors ${
                 selectedProvider === p
-                  ? 'bg-indigo-600 text-white'
+                  ? 'bg-sky-500 text-white'
                   : 'text-zinc-400 hover:text-zinc-200'
               }`}
             >
@@ -375,7 +375,7 @@ export default function AIProvidersPage() {
                 value={ollamaUrl}
                 onChange={(e) => setOllamaUrl(e.target.value)}
                 placeholder="http://localhost:11434"
-                className="w-full rounded-lg border border-zinc-600/50 bg-zinc-800/50 px-3 py-2 text-sm text-zinc-100 placeholder-zinc-500 focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/30 focus:outline-none"
+                className="w-full rounded-lg border border-zinc-600/50 bg-zinc-800/50 px-3 py-2 text-sm text-zinc-100 placeholder-zinc-500 focus:border-sky-500/50 focus:ring-1 focus:ring-sky-500/30 focus:outline-none"
               />
             </div>
 
@@ -389,7 +389,7 @@ export default function AIProvidersPage() {
                 value={ollamaModel}
                 onChange={(e) => setOllamaModel(e.target.value)}
                 placeholder="llama3.2, mistral, phi3, ..."
-                className="w-full rounded-lg border border-zinc-600/50 bg-zinc-800/50 px-3 py-2 text-sm text-zinc-100 placeholder-zinc-500 focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/30 focus:outline-none"
+                className="w-full rounded-lg border border-zinc-600/50 bg-zinc-800/50 px-3 py-2 text-sm text-zinc-100 placeholder-zinc-500 focus:border-sky-500/50 focus:ring-1 focus:ring-sky-500/30 focus:outline-none"
               />
             </div>
           </>
@@ -412,7 +412,7 @@ export default function AIProvidersPage() {
                         ? 'sk-ant-...'
                         : 'AIza...'
                   }
-                  className="w-full rounded-lg border border-zinc-600/50 bg-zinc-800/50 px-3 py-2 pr-10 text-sm text-zinc-100 placeholder-zinc-500 focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/30 focus:outline-none"
+                  className="w-full rounded-lg border border-zinc-600/50 bg-zinc-800/50 px-3 py-2 pr-10 text-sm text-zinc-100 placeholder-zinc-500 focus:border-sky-500/50 focus:ring-1 focus:ring-sky-500/30 focus:outline-none"
                 />
                 <button
                   type="button"
@@ -443,7 +443,7 @@ export default function AIProvidersPage() {
                   value={selectedModel}
                   onChange={(e) => setSelectedModel(e.target.value)}
                   aria-label="Default model"
-                  className="w-full appearance-none rounded-lg border border-zinc-600/50 bg-zinc-800/50 px-3 py-2 pr-8 text-sm text-zinc-100 focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/30 focus:outline-none"
+                  className="w-full appearance-none rounded-lg border border-zinc-600/50 bg-zinc-800/50 px-3 py-2 pr-8 text-sm text-zinc-100 focus:border-sky-500/50 focus:ring-1 focus:ring-sky-500/30 focus:outline-none"
                 >
                   {PROVIDER_MODELS[
                     selectedProvider as Exclude<Provider, 'ollama'>
@@ -465,7 +465,7 @@ export default function AIProvidersPage() {
             type="button"
             onClick={handleSave}
             disabled={saving || !canSave}
-            className="flex items-center gap-2 rounded-lg bg-indigo-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-indigo-500 disabled:cursor-not-allowed disabled:opacity-50"
+            className="flex items-center gap-2 rounded-lg bg-sky-500 px-5 py-2.5 text-sm font-medium text-white hover:bg-sky-400 disabled:cursor-not-allowed disabled:opacity-50"
           >
             {saving ? (
               <Loader2 className="h-4 w-4 animate-spin" />
@@ -569,8 +569,8 @@ export default function AIProvidersPage() {
                 key={p.provider}
                 className="flex items-center gap-3 px-5 py-3.5"
               >
-                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-indigo-500/20 bg-indigo-500/10">
-                  <Sparkles className="h-4 w-4 text-indigo-400" />
+                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-sky-500/20 bg-sky-500/10">
+                  <Sparkles className="h-4 w-4 text-sky-400" />
                 </div>
                 <div className="min-w-0 flex-1">
                   <p className="text-sm font-medium text-zinc-200">

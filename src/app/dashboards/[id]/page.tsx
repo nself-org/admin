@@ -54,7 +54,7 @@ export default function ViewDashboardPage() {
         />
         <PageContent>
           <div className="flex items-center justify-center py-20">
-            <div className="h-8 w-8 animate-spin rounded-full border-4 border-purple-500 border-t-transparent" />
+            <div className="h-8 w-8 animate-spin rounded-full border-4 border-sky-500 border-t-transparent" />
           </div>
         </PageContent>
       </>
@@ -152,7 +152,7 @@ export default function ViewDashboardPage() {
             </div>
           )}
           {dashboard.isDefault && (
-            <span className="rounded-full bg-purple-100 px-2 py-0.5 text-xs font-medium text-purple-700 dark:bg-purple-900/30 dark:text-purple-400">
+            <span className="rounded-full bg-sky-100 px-2 py-0.5 text-xs font-medium text-sky-600 dark:bg-sky-900/30 dark:text-sky-400">
               Default Dashboard
             </span>
           )}

@@ -41,7 +41,7 @@ const frameworks = [
   },
   { id: 'react', name: 'React', icon: Layers, color: 'text-blue-500' },
   { id: 'vue', name: 'Vue.js', icon: Layers, color: 'text-green-500' },
-  { id: 'astro', name: 'Astro', icon: Globe, color: 'text-purple-500' },
+  { id: 'astro', name: 'Astro', icon: Globe, color: 'text-sky-500' },
   { id: 'svelte', name: 'Svelte', icon: Zap, color: 'text-orange-500' },
   { id: 'static', name: 'Static HTML', icon: Globe, color: 'text-zinc-500' },
 ]

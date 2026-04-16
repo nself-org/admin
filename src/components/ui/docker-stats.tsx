@@ -103,7 +103,7 @@ export function DockerStats({
           <div className="rounded-lg bg-zinc-50 p-3 dark:bg-zinc-800/50">
             <div className="mb-2 flex items-center gap-2">
               <MemoryStick
-                className="h-4 w-4 text-purple-600 dark:text-purple-400"
+                className="h-4 w-4 text-sky-500 dark:text-sky-400"
                 aria-hidden="true"
               />
               <span className="text-xs font-medium text-zinc-700 dark:text-zinc-300">

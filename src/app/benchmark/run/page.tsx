@@ -127,7 +127,7 @@ function RunBenchmarkContent() {
             <ArrowLeft className="h-4 w-4" />
             Back to Benchmarks
           </Link>
-          <h1 className="bg-gradient-to-r from-purple-600 to-pink-400 bg-clip-text text-4xl font-bold text-transparent dark:from-purple-400 dark:to-pink-300">
+          <h1 className="bg-gradient-to-r from-sky-500 to-blue-400 bg-clip-text text-4xl font-bold text-transparent dark:from-sky-400 dark:to-pink-300">
             Run Benchmark
           </h1>
           <p className="mt-3 text-lg text-zinc-600 dark:text-zinc-400">
@@ -160,14 +160,14 @@ function RunBenchmarkContent() {
                       disabled={isRunning}
                       className={`flex items-center gap-3 rounded-lg border p-4 transition-all ${
                         config.target === target
-                          ? 'border-purple-500 bg-purple-50 dark:border-purple-500 dark:bg-purple-900/20'
+                          ? 'border-sky-500 bg-sky-50 dark:border-sky-500 dark:bg-sky-900/20'
                           : 'border-zinc-200 hover:border-zinc-300 dark:border-zinc-700 dark:hover:border-zinc-600'
                       }`}
                     >
                       <Icon
                         className={`h-5 w-5 ${
                           config.target === target
-                            ? 'text-purple-600 dark:text-purple-400'
+                            ? 'text-sky-500 dark:text-sky-400'
                             : 'text-zinc-400'
                         }`}
                       />
@@ -175,7 +175,7 @@ function RunBenchmarkContent() {
                         <p
                           className={`font-medium capitalize ${
                             config.target === target
-                              ? 'text-purple-700 dark:text-purple-300'
+                              ? 'text-sky-600 dark:text-sky-300'
                               : 'text-zinc-900 dark:text-white'
                           }`}
                         >
@@ -218,7 +218,7 @@ function RunBenchmarkContent() {
                 disabled={isRunning}
                 min={10}
                 max={300}
-                className="w-full rounded-lg border border-zinc-300 bg-white px-4 py-2 text-zinc-900 focus:border-purple-500 focus:outline-none disabled:opacity-50 dark:border-zinc-600 dark:bg-zinc-800 dark:text-white"
+                className="w-full rounded-lg border border-zinc-300 bg-white px-4 py-2 text-zinc-900 focus:border-sky-500 focus:outline-none disabled:opacity-50 dark:border-zinc-600 dark:bg-zinc-800 dark:text-white"
               />
             </div>
             <div>
@@ -237,7 +237,7 @@ function RunBenchmarkContent() {
                 disabled={isRunning}
                 min={1}
                 max={100}
-                className="w-full rounded-lg border border-zinc-300 bg-white px-4 py-2 text-zinc-900 focus:border-purple-500 focus:outline-none disabled:opacity-50 dark:border-zinc-600 dark:bg-zinc-800 dark:text-white"
+                className="w-full rounded-lg border border-zinc-300 bg-white px-4 py-2 text-zinc-900 focus:border-sky-500 focus:outline-none disabled:opacity-50 dark:border-zinc-600 dark:bg-zinc-800 dark:text-white"
               />
             </div>
             <div>
@@ -256,7 +256,7 @@ function RunBenchmarkContent() {
                 disabled={isRunning}
                 min={0}
                 max={30}
-                className="w-full rounded-lg border border-zinc-300 bg-white px-4 py-2 text-zinc-900 focus:border-purple-500 focus:outline-none disabled:opacity-50 dark:border-zinc-600 dark:bg-zinc-800 dark:text-white"
+                className="w-full rounded-lg border border-zinc-300 bg-white px-4 py-2 text-zinc-900 focus:border-sky-500 focus:outline-none disabled:opacity-50 dark:border-zinc-600 dark:bg-zinc-800 dark:text-white"
               />
             </div>
           </div>
@@ -274,7 +274,7 @@ function RunBenchmarkContent() {
                 }
                 disabled={isRunning}
                 placeholder="/api/graphql"
-                className="w-full rounded-lg border border-zinc-300 bg-white px-4 py-2 text-zinc-900 focus:border-purple-500 focus:outline-none disabled:opacity-50 dark:border-zinc-600 dark:bg-zinc-800 dark:text-white"
+                className="w-full rounded-lg border border-zinc-300 bg-white px-4 py-2 text-zinc-900 focus:border-sky-500 focus:outline-none disabled:opacity-50 dark:border-zinc-600 dark:bg-zinc-800 dark:text-white"
               />
             </div>
           )}
@@ -285,7 +285,7 @@ function RunBenchmarkContent() {
           <div className="mb-8 rounded-xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-zinc-700 dark:bg-zinc-800">
             <div className="mb-4 flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <RefreshCw className="h-5 w-5 animate-spin text-purple-500" />
+                <RefreshCw className="h-5 w-5 animate-spin text-sky-500" />
                 <span className="font-medium text-zinc-900 dark:text-white">
                   {phase === 'warmup'
                     ? 'Warming up...'
@@ -298,7 +298,7 @@ function RunBenchmarkContent() {
             </div>
             <div className="h-3 rounded-full bg-zinc-200 dark:bg-zinc-700">
               <div
-                className="h-3 rounded-full bg-purple-500 transition-all"
+                className="h-3 rounded-full bg-sky-500 transition-all"
                 style={{ width: `${progress}%` }}
               />
             </div>
@@ -382,7 +382,7 @@ function RunBenchmarkContent() {
           <button
             onClick={runBenchmark}
             disabled={isRunning}
-            className="flex items-center gap-3 rounded-xl bg-purple-600 px-8 py-4 text-lg font-medium text-white transition-colors hover:bg-purple-700 disabled:opacity-50"
+            className="flex items-center gap-3 rounded-xl bg-sky-500 px-8 py-4 text-lg font-medium text-white transition-colors hover:bg-sky-600 disabled:opacity-50"
           >
             {isRunning ? (
               <>
@@ -405,19 +405,19 @@ function RunBenchmarkContent() {
           </h3>
           <div className="space-y-2 font-mono text-sm">
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-purple-500">
+              <span className="text-sky-500">
                 nself bench --target={config.target}
               </span>{' '}
               - Run {config.target} benchmark
             </p>
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-purple-500">
+              <span className="text-sky-500">
                 nself bench --duration={config.duration}
               </span>{' '}
               - Set duration
             </p>
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-purple-500">
+              <span className="text-sky-500">
                 nself bench --concurrency={config.concurrency}
               </span>{' '}
               - Set concurrency

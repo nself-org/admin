@@ -95,8 +95,8 @@ const LOG_LEVELS = {
     icon: XCircle,
   },
   critical: {
-    color: 'text-purple-600 dark:text-purple-400',
-    bg: 'bg-purple-100 dark:bg-purple-900/20',
+    color: 'text-sky-500 dark:text-sky-400',
+    bg: 'bg-sky-100 dark:bg-sky-900/20',
     icon: AlertCircle,
   },
 }

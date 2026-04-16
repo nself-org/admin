@@ -39,7 +39,7 @@ export function ActivityFeed({ events, maxEvents = 10 }: ActivityFeedProps) {
         return <RotateCw className="h-4 w-4 text-blue-600 dark:text-blue-400" />
       case 'deploy':
         return (
-          <Terminal className="h-4 w-4 text-purple-600 dark:text-purple-400" />
+          <Terminal className="h-4 w-4 text-sky-500 dark:text-sky-400" />
         )
       case 'error':
         return <XCircle className="h-4 w-4 text-red-600 dark:text-red-400" />

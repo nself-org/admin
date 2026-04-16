@@ -388,7 +388,7 @@ function DatabaseDataContent() {
   const getPIITypeBadge = (type: PIIField['type']) => {
     const colors: Record<PIIField['type'], string> = {
       email: 'bg-blue-500/10 text-blue-500',
-      name: 'bg-purple-500/10 text-purple-500',
+      name: 'bg-sky-500/10 text-sky-500',
       phone: 'bg-green-500/10 text-green-500',
       address: 'bg-orange-500/10 text-orange-500',
       ssn: 'bg-red-500/10 text-red-500',
@@ -811,7 +811,7 @@ function DatabaseDataContent() {
                 <Card>
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2">
-                      <Shield className="h-5 w-5 text-purple-600" />
+                      <Shield className="h-5 w-5 text-sky-500" />
                       PII Detection
                     </CardTitle>
                     <CardDescription>
@@ -933,7 +933,7 @@ function DatabaseDataContent() {
                         piiFields.filter((f) => f.selected).length === 0 ||
                         isAnonymizing
                       }
-                      className="w-full bg-purple-600 hover:bg-purple-700"
+                      className="w-full bg-sky-500 hover:bg-sky-600"
                       size="lg"
                     >
                       {isAnonymizing ? (
@@ -1014,7 +1014,7 @@ function DatabaseDataContent() {
                       </p>
                     </div>
                     <div className="rounded-lg border p-3 dark:border-zinc-700">
-                      <Badge className="mb-2 bg-purple-500/10 text-purple-500">
+                      <Badge className="mb-2 bg-sky-500/10 text-sky-500">
                         name
                       </Badge>
                       <p className="text-xs text-zinc-500">

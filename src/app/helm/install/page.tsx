@@ -205,7 +205,7 @@ function HelmInstallContent() {
                   }}
                   className={`rounded-lg border px-4 py-2 text-sm transition-all ${
                     selectedRepo === repo.name
-                      ? 'border-purple-500 bg-purple-900/20 text-white'
+                      ? 'border-sky-500 bg-sky-900/20 text-white'
                       : 'border-zinc-700 text-zinc-400 hover:border-zinc-600 hover:text-white'
                   }`}
                 >
@@ -218,7 +218,7 @@ function HelmInstallContent() {
                 No repositories configured.{' '}
                 <Link
                   href="/helm/repos"
-                  className="text-purple-400 hover:text-purple-300"
+                  className="text-sky-400 hover:text-sky-300"
                 >
                   Add one first
                 </Link>
@@ -238,7 +238,7 @@ function HelmInstallContent() {
                     placeholder="Search charts..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-64 rounded-lg border border-zinc-700 bg-zinc-900 py-2 pr-4 pl-10 text-sm text-white placeholder-zinc-500 focus:border-purple-500 focus:outline-none"
+                    className="w-64 rounded-lg border border-zinc-700 bg-zinc-900 py-2 pr-4 pl-10 text-sm text-white placeholder-zinc-500 focus:border-sky-500 focus:outline-none"
                   />
                 </div>
               </div>
@@ -253,7 +253,7 @@ function HelmInstallContent() {
                     }}
                     className={`rounded-lg border p-3 text-left transition-all ${
                       selectedChart?.name === chart.name
-                        ? 'border-purple-500 bg-purple-900/20'
+                        ? 'border-sky-500 bg-sky-900/20'
                         : 'border-zinc-700/50 bg-zinc-900/50 hover:border-zinc-600'
                     }`}
                   >
@@ -266,7 +266,7 @@ function HelmInstallContent() {
                           v{chart.version}
                         </div>
                       </div>
-                      <Package className="h-4 w-4 text-purple-400" />
+                      <Package className="h-4 w-4 text-sky-400" />
                     </div>
                     <p className="mt-2 text-sm text-zinc-400">
                       {chart.description}
@@ -287,7 +287,7 @@ function HelmInstallContent() {
           {installSteps.length > 0 && (
             <div className="rounded-lg border border-zinc-700/50 bg-zinc-800/50 p-4">
               <div className="mb-4 flex items-center gap-2">
-                <Terminal className="h-5 w-5 text-purple-400" />
+                <Terminal className="h-5 w-5 text-sky-400" />
                 <h2 className="font-semibold text-white">
                   Installation Progress
                 </h2>
@@ -304,7 +304,7 @@ function HelmInstallContent() {
                         <div className="h-5 w-5 rounded-full border-2 border-zinc-600" />
                       )}
                       {step.status === 'running' && (
-                        <div className="h-5 w-5 animate-spin rounded-full border-2 border-purple-500 border-t-transparent" />
+                        <div className="h-5 w-5 animate-spin rounded-full border-2 border-sky-500 border-t-transparent" />
                       )}
                       {step.status === 'success' && (
                         <CheckCircle className="h-5 w-5 text-emerald-400" />
@@ -335,20 +335,20 @@ function HelmInstallContent() {
                 <div
                   className={`mt-4 rounded-lg p-4 ${
                     dryRun
-                      ? 'border border-purple-800/50 bg-purple-900/20'
+                      ? 'border border-sky-800/50 bg-sky-900/20'
                       : 'border border-emerald-800/50 bg-emerald-900/20'
                   }`}
                 >
                   <div className="flex items-start gap-3">
                     <CheckCircle
                       className={`h-5 w-5 ${
-                        dryRun ? 'text-purple-400' : 'text-emerald-400'
+                        dryRun ? 'text-sky-400' : 'text-emerald-400'
                       }`}
                     />
                     <div>
                       <h3
                         className={`font-medium ${
-                          dryRun ? 'text-purple-400' : 'text-emerald-400'
+                          dryRun ? 'text-sky-400' : 'text-emerald-400'
                         }`}
                       >
                         {dryRun
@@ -385,7 +385,7 @@ function HelmInstallContent() {
                   value={releaseName}
                   onChange={(e) => setReleaseName(e.target.value)}
                   placeholder="my-release"
-                  className="w-full rounded-lg border border-zinc-700 bg-zinc-900 px-4 py-2 text-white placeholder-zinc-500 focus:border-purple-500 focus:outline-none"
+                  className="w-full rounded-lg border border-zinc-700 bg-zinc-900 px-4 py-2 text-white placeholder-zinc-500 focus:border-sky-500 focus:outline-none"
                 />
               </div>
 
@@ -398,7 +398,7 @@ function HelmInstallContent() {
                   value={namespace}
                   onChange={(e) => setNamespace(e.target.value)}
                   placeholder="default"
-                  className="w-full rounded-lg border border-zinc-700 bg-zinc-900 px-4 py-2 text-white placeholder-zinc-500 focus:border-purple-500 focus:outline-none"
+                  className="w-full rounded-lg border border-zinc-700 bg-zinc-900 px-4 py-2 text-white placeholder-zinc-500 focus:border-sky-500 focus:outline-none"
                 />
               </div>
 
@@ -412,7 +412,7 @@ function HelmInstallContent() {
                 <button
                   onClick={() => setDryRun(!dryRun)}
                   className={`relative h-6 w-11 rounded-full transition-colors ${
-                    dryRun ? 'bg-purple-600' : 'bg-zinc-700'
+                    dryRun ? 'bg-sky-500' : 'bg-zinc-700'
                   }`}
                 >
                   <div
@@ -427,7 +427,7 @@ function HelmInstallContent() {
             <button
               onClick={handleInstall}
               disabled={!selectedChart || !releaseName || installing}
-              className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-lg bg-purple-600 px-4 py-2 text-white hover:bg-purple-500 disabled:opacity-50"
+              className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-lg bg-sky-500 px-4 py-2 text-white hover:bg-sky-500 disabled:opacity-50"
             >
               {installing ? (
                 <>
@@ -463,7 +463,7 @@ function HelmInstallContent() {
               </div>
               <Link
                 href={`/helm/values?chart=${selectedChart.name}&repo=${selectedRepo}`}
-                className="mt-3 flex items-center gap-2 text-sm text-purple-400 hover:text-purple-300"
+                className="mt-3 flex items-center gap-2 text-sm text-sky-400 hover:text-sky-300"
               >
                 <Settings className="h-4 w-4" />
                 Customize values
@@ -476,7 +476,7 @@ function HelmInstallContent() {
             <h3 className="mb-2 text-sm font-medium text-zinc-400">
               CLI Command
             </h3>
-            <code className="block rounded bg-zinc-900 p-3 text-sm text-purple-400">
+            <code className="block rounded bg-zinc-900 p-3 text-sm text-sky-400">
               helm install {releaseName || 'RELEASE_NAME'}{' '}
               {selectedRepo
                 ? `${selectedRepo}/${selectedChart?.name || 'CHART'}`

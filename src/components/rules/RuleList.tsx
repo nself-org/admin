@@ -163,7 +163,7 @@ export function RuleList({
 
                 {/* Action */}
                 <td className="px-4 py-3">
-                  <span className="rounded-full bg-indigo-900/30 px-2 py-0.5 text-xs font-medium text-indigo-300">
+                  <span className="rounded-full bg-sky-900/30 px-2 py-0.5 text-xs font-medium text-sky-300">
                     {ACTION_LABELS[rule.action] ?? rule.action}
                   </span>
                 </td>

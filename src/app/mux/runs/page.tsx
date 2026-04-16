@@ -123,8 +123,8 @@ function RoutingMap({ rules }: { rules: MuxRule[] }) {
                   </td>
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-1.5">
-                      <Link className="h-3.5 w-3.5 shrink-0 text-indigo-400" />
-                      <span className="max-w-[240px] truncate font-mono text-sm text-indigo-300">
+                      <Link className="h-3.5 w-3.5 shrink-0 text-sky-400" />
+                      <span className="max-w-[240px] truncate font-mono text-sm text-sky-300">
                         {dest ?? '—'}
                       </span>
                     </div>

@@ -138,7 +138,7 @@ function BenchmarkContent() {
         <HeroPattern />
         <div className="relative mx-auto max-w-7xl">
           <div className="flex items-center justify-center py-20">
-            <div className="h-8 w-8 animate-spin rounded-full border-4 border-purple-500 border-t-transparent" />
+            <div className="h-8 w-8 animate-spin rounded-full border-4 border-sky-500 border-t-transparent" />
           </div>
         </div>
       </>
@@ -152,7 +152,7 @@ function BenchmarkContent() {
         <div className="mb-10 border-b border-zinc-200 pb-8 dark:border-zinc-800">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="bg-gradient-to-r from-purple-600 to-pink-400 bg-clip-text text-4xl font-bold text-transparent dark:from-purple-400 dark:to-pink-300">
+              <h1 className="bg-gradient-to-r from-sky-500 to-blue-400 bg-clip-text text-4xl font-bold text-transparent dark:from-sky-400 dark:to-pink-300">
                 Benchmarks
               </h1>
               <p className="mt-3 text-lg text-zinc-600 dark:text-zinc-400">
@@ -169,7 +169,7 @@ function BenchmarkContent() {
               </Link>
               <Link
                 href="/benchmark/run"
-                className="flex items-center gap-2 rounded-lg bg-purple-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-purple-700"
+                className="flex items-center gap-2 rounded-lg bg-sky-500 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-sky-600"
               >
                 <Play className="h-4 w-4" />
                 Run Benchmark
@@ -182,8 +182,8 @@ function BenchmarkContent() {
         <div className="mb-8 grid gap-4 md:grid-cols-4">
           <div className="rounded-xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-zinc-700 dark:bg-zinc-800">
             <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-purple-100 dark:bg-purple-900/30">
-                <Activity className="h-5 w-5 text-purple-600 dark:text-purple-400" />
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-sky-100 dark:bg-sky-900/30">
+                <Activity className="h-5 w-5 text-sky-500 dark:text-sky-400" />
               </div>
               <div>
                 <p className="text-sm text-zinc-500 dark:text-zinc-400">
@@ -342,7 +342,7 @@ function BenchmarkContent() {
                             ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400'
                             : result.type === 'database'
                               ? 'bg-cyan-100 text-cyan-700 dark:bg-cyan-900/30 dark:text-cyan-400'
-                              : 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400'
+                              : 'bg-sky-100 text-sky-700 dark:bg-sky-900/30 dark:text-sky-400'
                         }`}
                       >
                         {result.type}
@@ -379,7 +379,7 @@ function BenchmarkContent() {
             </h3>
             <Link
               href="/benchmark/compare"
-              className="flex items-center gap-2 text-sm text-purple-600 hover:underline dark:text-purple-400"
+              className="flex items-center gap-2 text-sm text-sky-500 hover:underline dark:text-sky-400"
             >
               <GitCompare className="h-4 w-4" />
               Compare Baselines
@@ -411,10 +411,10 @@ function BenchmarkContent() {
         <div className="grid gap-4 md:grid-cols-3">
           <Link
             href="/benchmark/run"
-            className="flex items-center gap-3 rounded-xl border border-zinc-200 bg-white p-4 shadow-sm transition-colors hover:border-purple-500 hover:bg-purple-50 dark:border-zinc-700 dark:bg-zinc-800 dark:hover:border-purple-500 dark:hover:bg-purple-900/20"
+            className="flex items-center gap-3 rounded-xl border border-zinc-200 bg-white p-4 shadow-sm transition-colors hover:border-sky-500 hover:bg-sky-50 dark:border-zinc-700 dark:bg-zinc-800 dark:hover:border-sky-500 dark:hover:bg-sky-900/20"
           >
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-purple-100 dark:bg-purple-900/30">
-              <Play className="h-5 w-5 text-purple-600 dark:text-purple-400" />
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-sky-100 dark:bg-sky-900/30">
+              <Play className="h-5 w-5 text-sky-500 dark:text-sky-400" />
             </div>
             <div>
               <p className="font-medium text-zinc-900 dark:text-white">
@@ -426,7 +426,7 @@ function BenchmarkContent() {
 
           <Link
             href="/benchmark/baseline"
-            className="flex items-center gap-3 rounded-xl border border-zinc-200 bg-white p-4 shadow-sm transition-colors hover:border-purple-500 hover:bg-purple-50 dark:border-zinc-700 dark:bg-zinc-800 dark:hover:border-purple-500 dark:hover:bg-purple-900/20"
+            className="flex items-center gap-3 rounded-xl border border-zinc-200 bg-white p-4 shadow-sm transition-colors hover:border-sky-500 hover:bg-sky-50 dark:border-zinc-700 dark:bg-zinc-800 dark:hover:border-sky-500 dark:hover:bg-sky-900/20"
           >
             <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-100 dark:bg-blue-900/30">
               <Save className="h-5 w-5 text-blue-600 dark:text-blue-400" />
@@ -443,7 +443,7 @@ function BenchmarkContent() {
 
           <Link
             href="/benchmark/compare"
-            className="flex items-center gap-3 rounded-xl border border-zinc-200 bg-white p-4 shadow-sm transition-colors hover:border-purple-500 hover:bg-purple-50 dark:border-zinc-700 dark:bg-zinc-800 dark:hover:border-purple-500 dark:hover:bg-purple-900/20"
+            className="flex items-center gap-3 rounded-xl border border-zinc-200 bg-white p-4 shadow-sm transition-colors hover:border-sky-500 hover:bg-sky-50 dark:border-zinc-700 dark:bg-zinc-800 dark:hover:border-sky-500 dark:hover:bg-sky-900/20"
           >
             <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-green-100 dark:bg-green-900/30">
               <GitCompare className="h-5 w-5 text-green-600 dark:text-green-400" />
@@ -466,19 +466,19 @@ function BenchmarkContent() {
           </h3>
           <div className="space-y-2 font-mono text-sm">
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-purple-500">nself bench</span> - Run default
+              <span className="text-sky-500">nself bench</span> - Run default
               benchmark suite
             </p>
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-purple-500">nself bench --target=api</span>{' '}
+              <span className="text-sky-500">nself bench --target=api</span>{' '}
               - Benchmark specific target
             </p>
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-purple-500">nself bench --save=name</span> -
+              <span className="text-sky-500">nself bench --save=name</span> -
               Save as baseline
             </p>
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-purple-500">
+              <span className="text-sky-500">
                 nself bench --compare=baseline
               </span>{' '}
               - Compare with baseline

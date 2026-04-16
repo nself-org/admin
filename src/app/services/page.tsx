@@ -83,12 +83,12 @@ function getCategoryColors(category: 'required' | 'optional' | 'user') {
     case 'optional':
       return {
         badge:
-          'bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400 border-purple-200 dark:border-purple-800/50',
-        dot: 'bg-purple-500',
-        icon: 'text-purple-600 dark:text-purple-400',
-        bg: 'bg-purple-50 dark:bg-purple-900/10',
+          'bg-sky-100 dark:bg-sky-900/30 text-sky-600 dark:text-sky-400 border-sky-200 dark:border-sky-800/50',
+        dot: 'bg-sky-500',
+        icon: 'text-sky-500 dark:text-sky-400',
+        bg: 'bg-sky-50 dark:bg-sky-900/10',
         label: 'Optional',
-        color: 'purple',
+        color: 'sky',
       }
     case 'user':
       return {
@@ -710,9 +710,9 @@ function EnhancedListView({
               <tr>
                 <td
                   colSpan={7}
-                  className="bg-purple-50/50 px-4 py-2 dark:bg-purple-900/10"
+                  className="bg-sky-50/50 px-4 py-2 dark:bg-sky-900/10"
                 >
-                  <span className="text-xs font-medium text-purple-700 dark:text-purple-400">
+                  <span className="text-xs font-medium text-sky-600 dark:text-sky-400">
                     Optional Services
                   </span>
                 </td>
@@ -981,8 +981,8 @@ function TreeView({
 
       {optionalServices.length > 0 && (
         <div className="border-b border-zinc-200 dark:border-zinc-700">
-          <div className="bg-purple-50/50 px-4 py-3 dark:bg-purple-900/10">
-            <span className="text-sm font-medium text-purple-700 dark:text-purple-400">
+          <div className="bg-sky-50/50 px-4 py-3 dark:bg-sky-900/10">
+            <span className="text-sm font-medium text-sky-600 dark:text-sky-400">
               Optional Services
             </span>
           </div>

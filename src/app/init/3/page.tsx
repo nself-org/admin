@@ -356,7 +356,7 @@ export default function InitStep3() {
               key={service.key}
               className={`relative rounded-lg border-2 p-5 transition-all ${
                 service.enabled
-                  ? 'border-purple-500/40 bg-purple-50/40 dark:bg-purple-900/10'
+                  ? 'border-sky-500/40 bg-sky-50/40 dark:bg-sky-900/10'
                   : 'border-zinc-200 bg-zinc-50/50 dark:border-zinc-700 dark:bg-zinc-800/30'
               }`}
             >
@@ -372,15 +372,15 @@ export default function InitStep3() {
                   <div
                     className={`rounded-lg border p-2 ${
                       service.enabled
-                        ? 'border-purple-300 bg-white dark:border-purple-800 dark:bg-zinc-800'
-                        : 'border-zinc-200 bg-white hover:border-purple-200 dark:border-zinc-700 dark:bg-zinc-800 dark:hover:border-purple-800'
+                        ? 'border-sky-300 bg-white dark:border-sky-800 dark:bg-zinc-800'
+                        : 'border-zinc-200 bg-white hover:border-sky-200 dark:border-zinc-700 dark:bg-zinc-800 dark:hover:border-sky-800'
                     }`}
                   >
                     <Icon
                       className={`h-6 w-6 ${
                         service.enabled
-                          ? 'text-purple-600 dark:text-purple-400'
-                          : 'text-zinc-600 hover:text-purple-500 dark:text-zinc-400'
+                          ? 'text-sky-500 dark:text-sky-400'
+                          : 'text-zinc-600 hover:text-sky-500 dark:text-zinc-400'
                       }`}
                     />
                   </div>
@@ -388,8 +388,8 @@ export default function InitStep3() {
                     <h3
                       className={`mb-1 font-medium ${
                         service.enabled
-                          ? 'text-purple-900 dark:text-purple-100'
-                          : 'text-zinc-900 hover:text-purple-700 dark:text-white dark:hover:text-purple-300'
+                          ? 'text-sky-900 dark:text-sky-100'
+                          : 'text-zinc-900 hover:text-sky-600 dark:text-white dark:hover:text-sky-300'
                       }`}
                     >
                       {service.name}
@@ -417,8 +417,8 @@ export default function InitStep3() {
                       disabled={service.required}
                       className={`h-5 w-5 rounded border-2 focus:ring-2 ${
                         service.enabled
-                          ? 'text-purple-600 focus:ring-purple-400'
-                          : 'border-zinc-300 text-purple-600 hover:border-purple-400 dark:border-zinc-600 dark:hover:border-purple-500'
+                          ? 'text-sky-500 focus:ring-sky-400'
+                          : 'border-zinc-300 text-sky-500 hover:border-sky-400 dark:border-zinc-600 dark:hover:border-sky-500'
                       } ${service.required ? 'cursor-not-allowed opacity-50' : ''}`}
                       style={{
                         accentColor: service.enabled ? '#9333ea' : undefined,
@@ -438,7 +438,7 @@ export default function InitStep3() {
                       className={`inline-flex items-center gap-1 text-xs transition-colors ${
                         service.hasConfiguration === false
                           ? 'cursor-not-allowed text-zinc-400 dark:text-zinc-600'
-                          : 'cursor-pointer text-purple-600 hover:text-purple-700 dark:text-purple-400 dark:hover:text-purple-300'
+                          : 'cursor-pointer text-sky-500 hover:text-sky-600 dark:text-sky-400 dark:hover:text-sky-300'
                       }`}
                       title={
                         service.hasConfiguration === false

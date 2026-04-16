@@ -48,7 +48,7 @@ const TIER_LABELS: Record<string, string> = {
 const TIER_COLORS: Record<string, string> = {
   local: 'bg-green-500/20 text-green-300 border-green-500/30',
   gemini_free: 'bg-blue-500/20 text-blue-300 border-blue-500/30',
-  gemini_paid: 'bg-purple-500/20 text-purple-300 border-purple-500/30',
+  gemini_paid: 'bg-sky-500/20 text-sky-300 border-sky-500/30',
   openai: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30',
   anthropic: 'bg-orange-500/20 text-orange-300 border-orange-500/30',
   fallback: 'bg-zinc-500/20 text-zinc-300 border-zinc-500/30',
@@ -234,7 +234,7 @@ export default function RoutingPage() {
           <div className="w-full max-w-lg rounded-xl border border-zinc-700 bg-zinc-900 p-6">
             <div className="mb-4 flex items-center justify-between">
               <h3 className="text-lg font-medium text-zinc-100">
-                Edit: <span className="text-indigo-400">{editForm.task_class}</span>
+                Edit: <span className="text-sky-400">{editForm.task_class}</span>
               </h3>
               <button onClick={cancelEdit} className="text-zinc-500 hover:text-zinc-300">
                 <X className="h-5 w-5" />
@@ -266,7 +266,7 @@ export default function RoutingPage() {
                   <button
                     key={tier}
                     onClick={() => addTier(tier)}
-                    className="rounded border border-zinc-700 px-2 py-0.5 text-xs text-zinc-500 hover:border-indigo-500/30 hover:text-indigo-300"
+                    className="rounded border border-zinc-700 px-2 py-0.5 text-xs text-zinc-500 hover:border-sky-500/30 hover:text-sky-300"
                   >
                     + {TIER_LABELS[tier] ?? tier}
                   </button>
@@ -309,7 +309,7 @@ export default function RoutingPage() {
 
             <div className="flex justify-end gap-2">
               <button onClick={cancelEdit} className="rounded-lg px-4 py-2 text-sm text-zinc-400 hover:text-zinc-200">Cancel</button>
-              <button onClick={saveTask} disabled={saving} className="rounded-lg bg-indigo-600 px-4 py-2 text-sm text-white hover:bg-indigo-500 disabled:opacity-50">
+              <button onClick={saveTask} disabled={saving} className="rounded-lg bg-sky-500 px-4 py-2 text-sm text-white hover:bg-sky-400 disabled:opacity-50">
                 {saving ? <Loader2 className="inline h-4 w-4 animate-spin" /> : 'Save'}
               </button>
             </div>

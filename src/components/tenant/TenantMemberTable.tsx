@@ -13,7 +13,7 @@ interface TenantMemberTableProps {
 }
 
 const roleColors: Record<TenantRole, string> = {
-  owner: 'bg-purple-500/20 text-purple-400',
+  owner: 'bg-sky-500/20 text-sky-400',
   admin: 'bg-blue-500/20 text-blue-400',
   member: 'bg-zinc-500/20 text-zinc-400',
   viewer: 'bg-zinc-600/20 text-zinc-500',

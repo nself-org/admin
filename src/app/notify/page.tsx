@@ -161,7 +161,7 @@ function ChannelForm({
             value={form.name}
             onChange={(e) => setForm({ ...form, name: e.target.value })}
             placeholder="e.g. alerts-telegram"
-            className="w-full rounded-lg border border-zinc-700 bg-zinc-900 px-3 py-2 text-sm text-white placeholder-zinc-500 focus:border-indigo-500 focus:outline-none"
+            className="w-full rounded-lg border border-zinc-700 bg-zinc-900 px-3 py-2 text-sm text-white placeholder-zinc-500 focus:border-sky-500 focus:outline-none"
           />
         </div>
 
@@ -175,7 +175,7 @@ function ChannelForm({
             onChange={(e) =>
               setForm({ ...form, channel_type: e.target.value as ChannelType })
             }
-            className="w-full rounded-lg border border-zinc-700 bg-zinc-900 px-3 py-2 text-sm text-white focus:border-indigo-500 focus:outline-none"
+            className="w-full rounded-lg border border-zinc-700 bg-zinc-900 px-3 py-2 text-sm text-white focus:border-sky-500 focus:outline-none"
           >
             {CHANNEL_TYPES.map((t) => (
               <option key={t.value} value={t.value}>
@@ -199,7 +199,7 @@ function ChannelForm({
           value={form.config}
           onChange={(e) => setForm({ ...form, config: e.target.value })}
           rows={4}
-          className="w-full rounded-lg border border-zinc-700 bg-zinc-900 px-3 py-2 font-mono text-sm text-white placeholder-zinc-500 focus:border-indigo-500 focus:outline-none"
+          className="w-full rounded-lg border border-zinc-700 bg-zinc-900 px-3 py-2 font-mono text-sm text-white placeholder-zinc-500 focus:border-sky-500 focus:outline-none"
         />
         {configError && (
           <p className="mt-1 text-xs text-red-400">{configError}</p>
@@ -214,7 +214,7 @@ function ChannelForm({
             type="checkbox"
             checked={form.active}
             onChange={(e) => setForm({ ...form, active: e.target.checked })}
-            className="h-4 w-4 rounded border-zinc-700 bg-zinc-900 accent-indigo-500"
+            className="h-4 w-4 rounded border-zinc-700 bg-zinc-900 accent-sky-500"
           />
           <label htmlFor="ch-active" className="text-sm text-zinc-300">
             Active
@@ -234,7 +234,7 @@ function ChannelForm({
               setForm({ ...form, rate_limit_per_minute: e.target.value })
             }
             placeholder="Unlimited"
-            className="w-full rounded-lg border border-zinc-700 bg-zinc-900 px-3 py-2 text-sm text-white placeholder-zinc-500 focus:border-indigo-500 focus:outline-none"
+            className="w-full rounded-lg border border-zinc-700 bg-zinc-900 px-3 py-2 text-sm text-white placeholder-zinc-500 focus:border-sky-500 focus:outline-none"
           />
         </div>
 
@@ -252,7 +252,7 @@ function ChannelForm({
                 setForm({ ...form, auto_delete_minutes: e.target.value })
               }
               placeholder="Never"
-              className="w-full rounded-lg border border-zinc-700 bg-zinc-900 px-3 py-2 text-sm text-white placeholder-zinc-500 focus:border-indigo-500 focus:outline-none"
+              className="w-full rounded-lg border border-zinc-700 bg-zinc-900 px-3 py-2 text-sm text-white placeholder-zinc-500 focus:border-sky-500 focus:outline-none"
             />
           </div>
         )}
@@ -270,7 +270,7 @@ function ChannelForm({
         <button
           type="submit"
           disabled={saving}
-          className="flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-1.5 text-sm font-medium text-white transition-colors hover:bg-indigo-500 disabled:opacity-50"
+          className="flex items-center gap-2 rounded-lg bg-sky-500 px-4 py-1.5 text-sm font-medium text-white transition-colors hover:bg-sky-400 disabled:opacity-50"
         >
           {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
           {saving ? 'Saving...' : 'Save Channel'}
@@ -438,7 +438,7 @@ export default function NotifyChannelsPage() {
               setEditingChannel(null)
               setShowForm(true)
             }}
-            className="flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-indigo-500"
+            className="flex items-center gap-2 rounded-lg bg-sky-500 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-sky-400"
           >
             <Plus className="h-4 w-4" />
             Add Channel
@@ -480,7 +480,7 @@ export default function NotifyChannelsPage() {
           <p className="text-sm text-zinc-400">No channels configured yet</p>
           <button
             onClick={() => setShowForm(true)}
-            className="mt-4 flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-indigo-500"
+            className="mt-4 flex items-center gap-2 rounded-lg bg-sky-500 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-sky-400"
           >
             <Plus className="h-4 w-4" />
             Add your first channel
@@ -557,7 +557,7 @@ export default function NotifyChannelsPage() {
                       <button
                         onClick={() => handleTest(ch)}
                         disabled={testingChannel === ch.id}
-                        className="rounded p-1.5 text-zinc-400 hover:bg-zinc-700/50 hover:text-indigo-400 disabled:opacity-50"
+                        className="rounded p-1.5 text-zinc-400 hover:bg-zinc-700/50 hover:text-sky-400 disabled:opacity-50"
                         aria-label={`Test ${ch.name}`}
                         title="Send test message"
                       >

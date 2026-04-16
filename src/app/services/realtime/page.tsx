@@ -75,8 +75,8 @@ const CHANNEL_TYPES = [
     type: 'direct' as const,
     label: 'Direct',
     icon: User,
-    color: 'text-purple-600 dark:text-purple-400',
-    bg: 'bg-purple-50 dark:bg-purple-900/20',
+    color: 'text-sky-500 dark:text-sky-400',
+    bg: 'bg-sky-50 dark:bg-sky-900/20',
     description: 'Private one-to-one messaging channels',
   },
 ]

@@ -255,8 +255,7 @@ function BackupCard({
     },
     differential: {
       label: 'Differential',
-      color:
-        'bg-sky-100 text-sky-800 dark:bg-sky-900/30 dark:text-sky-300',
+      color: 'bg-sky-100 text-sky-800 dark:bg-sky-900/30 dark:text-sky-300',
     },
   }
 

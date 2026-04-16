@@ -381,8 +381,8 @@ function HistoryContent() {
           </h3>
           <div className="space-y-2 font-mono text-sm">
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-sky-500">nself history</span> - View
-              audit history
+              <span className="text-sky-500">nself history</span> - View audit
+              history
             </p>
             <p className="text-zinc-600 dark:text-zinc-400">
               <span className="text-sky-500">
@@ -391,14 +391,12 @@ function HistoryContent() {
               - Filter by type
             </p>
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-sky-500">nself history --since=7d</span>{' '}
-              - Show last 7 days
+              <span className="text-sky-500">nself history --since=7d</span> -
+              Show last 7 days
             </p>
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-sky-500">
-                nself history --export=csv
-              </span>{' '}
-              - Export history
+              <span className="text-sky-500">nself history --export=csv</span> -
+              Export history
             </p>
           </div>
         </div>

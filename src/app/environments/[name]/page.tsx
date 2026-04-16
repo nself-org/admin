@@ -417,16 +417,16 @@ function EnvironmentDetailContent() {
           </h3>
           <div className="space-y-2 font-mono text-sm">
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-sky-500">nself env {envName}</span> -
-              Show environment details
+              <span className="text-sky-500">nself env {envName}</span> - Show
+              environment details
             </p>
             <p className="text-zinc-600 dark:text-zinc-400">
               <span className="text-sky-500">nself deploy {envName}</span> -
               Deploy to {envName}
             </p>
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-sky-500">nself logs {envName}</span> -
-              View logs
+              <span className="text-sky-500">nself logs {envName}</span> - View
+              logs
             </p>
             <p className="text-zinc-600 dark:text-zinc-400">
               <span className="text-sky-500">

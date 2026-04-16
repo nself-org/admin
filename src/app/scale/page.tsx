@@ -406,8 +406,8 @@ function ScaleContent() {
           </h3>
           <div className="space-y-2 font-mono text-sm">
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-sky-500">nself scale</span> - Show
-              scaling status
+              <span className="text-sky-500">nself scale</span> - Show scaling
+              status
             </p>
             <p className="text-zinc-600 dark:text-zinc-400">
               <span className="text-sky-500">
@@ -416,12 +416,12 @@ function ScaleContent() {
               - Scale service
             </p>
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-sky-500">nself scale auto --enable</span>{' '}
-              - Enable autoscaling
+              <span className="text-sky-500">nself scale auto --enable</span> -
+              Enable autoscaling
             </p>
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-sky-500">nself scale recommend</span> -
-              Get scaling recommendations
+              <span className="text-sky-500">nself scale recommend</span> - Get
+              scaling recommendations
             </p>
           </div>
         </div>

@@ -439,16 +439,12 @@ function DeploymentHistoryContent() {
               - Filter by environment
             </p>
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-sky-500">
-                nself deploy show deploy-1
-              </span>{' '}
-              - Show deployment details
+              <span className="text-sky-500">nself deploy show deploy-1</span> -
+              Show deployment details
             </p>
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-sky-500">
-                nself rollback --to=v1.2.5
-              </span>{' '}
-              - Rollback to version
+              <span className="text-sky-500">nself rollback --to=v1.2.5</span> -
+              Rollback to version
             </p>
           </div>
         </div>

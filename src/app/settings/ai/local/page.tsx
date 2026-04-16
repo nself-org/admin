@@ -6,13 +6,10 @@ import {
   ChevronDown,
   Cpu,
   Download,
-  HardDrive,
   Loader2,
   MoreVertical,
-  Play,
   Plus,
   RefreshCw,
-  Server,
   Trash2,
   X,
   Zap,
@@ -112,19 +109,23 @@ export default function LocalModelsPage() {
         throw new Error(`Status: HTTP ${sRes.status}`)
       }
       setStatus(await sRes.json())
-      setModels(mRes.ok ? (await mRes.json()).models ?? [] : [])
-      setAssignments(aRes.ok ? (await aRes.json()).assignments ?? [] : [])
-      setRecommended(rRes.ok ? (await rRes.json()).recommended ?? [] : [])
+      setModels(mRes.ok ? ((await mRes.json()).models ?? []) : [])
+      setAssignments(aRes.ok ? ((await aRes.json()).assignments ?? []) : [])
+      setRecommended(rRes.ok ? ((await rRes.json()).recommended ?? []) : [])
       setPageState('ready')
     } catch (e) {
-      setError(e instanceof Error ? e.message : 'Failed to load local AI status.')
+      setError(
+        e instanceof Error ? e.message : 'Failed to load local AI status.',
+      )
       setPageState('error')
     }
   }, [])
 
   useEffect(() => {
     fetchAll()
-    return () => { eventSourceRef.current?.close() }
+    return () => {
+      eventSourceRef.current?.close()
+    }
   }, [fetchAll])
 
   async function startInstall() {
@@ -135,7 +136,9 @@ export default function LocalModelsPage() {
       if (!res.ok) throw new Error(`HTTP ${res.status}`)
       const data: InstallJob = await res.json()
       setInstallJobId(data.id)
-      const es = new EventSource(`${AI_API}/ai/local/install/jobs/${data.id}/events`)
+      const es = new EventSource(
+        `${AI_API}/ai/local/install/jobs/${data.id}/events`,
+      )
       eventSourceRef.current = es
       es.onmessage = (ev) => {
         const msg = JSON.parse(ev.data)
@@ -179,7 +182,9 @@ export default function LocalModelsPage() {
 
   async function removeModel(name: string) {
     try {
-      await fetch(`${AI_API}/ai/local/models/${encodeURIComponent(name)}`, { method: 'DELETE' })
+      await fetch(`${AI_API}/ai/local/models/${encodeURIComponent(name)}`, {
+        method: 'DELETE',
+      })
       setMenuOpen(null)
       await fetchAll()
     } catch {
@@ -227,7 +232,9 @@ export default function LocalModelsPage() {
       })
       if (!res.ok) throw new Error(`HTTP ${res.status}`)
       const job = await res.json()
-      const es = new EventSource(`${AI_API}/ai/local/benchmark/jobs/${job.id}/events`)
+      const es = new EventSource(
+        `${AI_API}/ai/local/benchmark/jobs/${job.id}/events`,
+      )
       es.onmessage = (ev) => {
         const msg = JSON.parse(ev.data)
         if (msg.type === 'done' || msg.type === 'error') {
@@ -236,7 +243,10 @@ export default function LocalModelsPage() {
           fetchAll()
         }
       }
-      es.onerror = () => { es.close(); setBenchmarking(null) }
+      es.onerror = () => {
+        es.close()
+        setBenchmarking(null)
+      }
     } catch {
       setError('Benchmark failed.')
       setBenchmarking(null)
@@ -281,24 +291,32 @@ export default function LocalModelsPage() {
   if (pageState === 'not-installed') {
     return (
       <div className="mx-auto max-w-3xl p-6">
-        <h1 className="mb-6 text-2xl font-semibold text-zinc-100">Local Models</h1>
+        <h1 className="mb-6 text-2xl font-semibold text-zinc-100">
+          Local Models
+        </h1>
         <div className="rounded-xl border border-zinc-700/50 bg-zinc-800/50 p-8 text-center">
           <Cpu className="mx-auto mb-4 h-12 w-12 text-zinc-500" />
-          <h2 className="mb-2 text-lg font-medium text-zinc-200">Ollama Not Installed</h2>
+          <h2 className="mb-2 text-lg font-medium text-zinc-200">
+            Ollama Not Installed
+          </h2>
           <p className="mb-6 text-sm text-zinc-400">
-            Install Ollama to run AI models locally on your machine. No API keys needed, completely private.
+            Install Ollama to run AI models locally on your machine. No API keys
+            needed, completely private.
           </p>
           <div className="flex items-center justify-center gap-3">
             <button
-              onClick={() => { setShowInstallModal(true); startInstall() }}
-              className="rounded-lg bg-sky-500 px-4 py-2 text-sm font-medium text-white hover:bg-sky-400 transition"
+              onClick={() => {
+                setShowInstallModal(true)
+                startInstall()
+              }}
+              className="rounded-lg bg-sky-500 px-4 py-2 text-sm font-medium text-white transition hover:bg-sky-400"
             >
               <Download className="mr-2 inline h-4 w-4" />
               Install Ollama
             </button>
             <button
               onClick={() => window.history.back()}
-              className="rounded-lg border border-zinc-700 px-4 py-2 text-sm text-zinc-400 hover:text-zinc-200 transition"
+              className="rounded-lg border border-zinc-700 px-4 py-2 text-sm text-zinc-400 transition hover:text-zinc-200"
             >
               Skip &mdash; Use Cloud Only
             </button>
@@ -309,9 +327,17 @@ export default function LocalModelsPage() {
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
             <div className="w-full max-w-lg rounded-xl border border-zinc-700 bg-zinc-900 p-6">
               <div className="mb-4 flex items-center justify-between">
-                <h3 className="text-lg font-medium text-zinc-100">Installing Ollama</h3>
+                <h3 className="text-lg font-medium text-zinc-100">
+                  Installing Ollama
+                </h3>
                 {installDone && (
-                  <button onClick={() => { setShowInstallModal(false); fetchAll() }} className="text-zinc-500 hover:text-zinc-300">
+                  <button
+                    onClick={() => {
+                      setShowInstallModal(false)
+                      fetchAll()
+                    }}
+                    className="text-zinc-500 hover:text-zinc-300"
+                  >
                     <X className="h-5 w-5" />
                   </button>
                 )}
@@ -319,7 +345,8 @@ export default function LocalModelsPage() {
               <div className="max-h-64 overflow-y-auto rounded-lg bg-black/40 p-3 font-mono text-xs text-zinc-300">
                 {installLogs.length === 0 ? (
                   <div className="flex items-center gap-2 text-zinc-500">
-                    <Loader2 className="h-3 w-3 animate-spin" /> Starting install...
+                    <Loader2 className="h-3 w-3 animate-spin" /> Starting
+                    install...
                   </div>
                 ) : (
                   installLogs.map((line, i) => (
@@ -327,7 +354,9 @@ export default function LocalModelsPage() {
                       {installDone && i === installLogs.length - 1 ? (
                         <CheckCircle2 className="mt-0.5 h-3 w-3 flex-shrink-0 text-green-400" />
                       ) : (
-                        <span className="mt-0.5 h-3 w-3 flex-shrink-0 text-zinc-600">&bull;</span>
+                        <span className="mt-0.5 h-3 w-3 flex-shrink-0 text-zinc-600">
+                          &bull;
+                        </span>
                       )}
                       <span>{line}</span>
                     </div>
@@ -336,8 +365,11 @@ export default function LocalModelsPage() {
               </div>
               {installDone && (
                 <button
-                  onClick={() => { setShowInstallModal(false); fetchAll() }}
-                  className="mt-4 w-full rounded-lg bg-sky-500 py-2 text-sm font-medium text-white hover:bg-sky-400 transition"
+                  onClick={() => {
+                    setShowInstallModal(false)
+                    fetchAll()
+                  }}
+                  className="mt-4 w-full rounded-lg bg-sky-500 py-2 text-sm font-medium text-white transition hover:bg-sky-400"
                 >
                   Continue to Settings
                 </button>
@@ -354,10 +386,15 @@ export default function LocalModelsPage() {
   if (pageState === 'loading') {
     return (
       <div className="mx-auto max-w-3xl p-6">
-        <h1 className="mb-6 text-2xl font-semibold text-zinc-100">Local Models</h1>
+        <h1 className="mb-6 text-2xl font-semibold text-zinc-100">
+          Local Models
+        </h1>
         <div className="space-y-4">
           {[1, 2, 3].map((n) => (
-            <div key={n} className="h-16 animate-pulse rounded-xl bg-zinc-800/50" />
+            <div
+              key={n}
+              className="h-16 animate-pulse rounded-xl bg-zinc-800/50"
+            />
           ))}
         </div>
       </div>
@@ -369,11 +406,16 @@ export default function LocalModelsPage() {
   if (pageState === 'error') {
     return (
       <div className="mx-auto max-w-3xl p-6">
-        <h1 className="mb-6 text-2xl font-semibold text-zinc-100">Local Models</h1>
+        <h1 className="mb-6 text-2xl font-semibold text-zinc-100">
+          Local Models
+        </h1>
         <div className="rounded-xl border border-red-500/30 bg-red-500/5 p-6 text-center">
           <AlertCircle className="mx-auto mb-3 h-8 w-8 text-red-400" />
           <p className="mb-4 text-sm text-red-300">{error}</p>
-          <button onClick={fetchAll} className="rounded-lg bg-red-500/20 px-4 py-2 text-sm text-red-200 hover:bg-red-500/30 transition">
+          <button
+            onClick={fetchAll}
+            className="rounded-lg bg-red-500/20 px-4 py-2 text-sm text-red-200 transition hover:bg-red-500/30"
+          >
             Retry
           </button>
         </div>
@@ -420,12 +462,16 @@ export default function LocalModelsPage() {
           </div>
           <div>
             <span className="text-zinc-500">Uptime</span>
-            <p className="text-zinc-200">{status ? formatUptime(status.uptime_seconds) : '-'}</p>
+            <p className="text-zinc-200">
+              {status ? formatUptime(status.uptime_seconds) : '-'}
+            </p>
           </div>
           <div>
             <span className="text-zinc-500">RAM</span>
             <p className="text-zinc-200">
-              {status ? `${status.ram_used_gb.toFixed(1)} / ${status.ram_total_gb.toFixed(1)} GB` : '-'}
+              {status
+                ? `${status.ram_used_gb.toFixed(1)} / ${status.ram_total_gb.toFixed(1)} GB`
+                : '-'}
             </p>
           </div>
           <div>
@@ -434,7 +480,10 @@ export default function LocalModelsPage() {
           </div>
         </div>
         <div className="mt-4 flex gap-2">
-          <button onClick={restartOllama} className="rounded-lg border border-zinc-700 px-3 py-1.5 text-xs text-zinc-400 hover:text-zinc-200 transition">
+          <button
+            onClick={restartOllama}
+            className="rounded-lg border border-zinc-700 px-3 py-1.5 text-xs text-zinc-400 transition hover:text-zinc-200"
+          >
             <RefreshCw className="mr-1 inline h-3 w-3" /> Restart Ollama
           </button>
         </div>
@@ -443,10 +492,12 @@ export default function LocalModelsPage() {
       {/* ── Installed Models ──────────────────────────────────────────────── */}
       <section className="rounded-xl border border-zinc-700/50 bg-zinc-800/50 p-5">
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-lg font-medium text-zinc-200">Installed Models</h2>
+          <h2 className="text-lg font-medium text-zinc-200">
+            Installed Models
+          </h2>
           <button
             onClick={() => setShowAddModel(true)}
-            className="rounded-lg bg-sky-500/20 px-3 py-1.5 text-xs text-sky-300 hover:bg-sky-500/30 transition"
+            className="rounded-lg bg-sky-500/20 px-3 py-1.5 text-xs text-sky-300 transition hover:bg-sky-500/30"
           >
             <Plus className="mr-1 inline h-3 w-3" /> Add Model
           </button>
@@ -459,71 +510,111 @@ export default function LocalModelsPage() {
               onChange={(e) => setAddModelName(e.target.value)}
               placeholder="e.g. gemma2:2b, llama3.1:8b"
               className="flex-1 bg-transparent text-sm text-zinc-200 placeholder-zinc-600 outline-none"
-              onKeyDown={(e) => { if (e.key === 'Enter') addModel() }}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') addModel()
+              }}
             />
-            <button onClick={addModel} disabled={addingModel} className="rounded bg-sky-500 px-3 py-1 text-xs text-white disabled:opacity-50">
-              {addingModel ? <Loader2 className="h-3 w-3 animate-spin" /> : 'Pull'}
+            <button
+              onClick={addModel}
+              disabled={addingModel}
+              className="rounded bg-sky-500 px-3 py-1 text-xs text-white disabled:opacity-50"
+            >
+              {addingModel ? (
+                <Loader2 className="h-3 w-3 animate-spin" />
+              ) : (
+                'Pull'
+              )}
             </button>
-            <button onClick={() => setShowAddModel(false)} className="text-zinc-500 hover:text-zinc-300">
+            <button
+              onClick={() => setShowAddModel(false)}
+              className="text-zinc-500 hover:text-zinc-300"
+            >
               <X className="h-4 w-4" />
             </button>
           </div>
         )}
 
         {models.length === 0 ? (
-          <p className="py-8 text-center text-sm text-zinc-500">No models installed. Pull a model to get started.</p>
+          <p className="py-8 text-center text-sm text-zinc-500">
+            No models installed. Pull a model to get started.
+          </p>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-zinc-700/50 text-left text-xs text-zinc-500">
-                  <th className="pb-2 pr-4">Name</th>
-                  <th className="pb-2 pr-4">Size</th>
-                  <th className="pb-2 pr-4">Tasks</th>
-                  <th className="pb-2 pr-4">Default</th>
-                  <th className="pb-2 pr-4">tok/s</th>
-                  <th className="pb-2 w-8"></th>
+                  <th className="pr-4 pb-2">Name</th>
+                  <th className="pr-4 pb-2">Size</th>
+                  <th className="pr-4 pb-2">Tasks</th>
+                  <th className="pr-4 pb-2">Default</th>
+                  <th className="pr-4 pb-2">tok/s</th>
+                  <th className="w-8 pb-2"></th>
                 </tr>
               </thead>
               <tbody>
                 {models.map((m) => (
                   <tr key={m.name} className="border-b border-zinc-800/50">
                     <td className="py-3 pr-4 text-zinc-200">{m.name}</td>
-                    <td className="py-3 pr-4 text-zinc-400">{m.size_gb.toFixed(1)} GB</td>
+                    <td className="py-3 pr-4 text-zinc-400">
+                      {m.size_gb.toFixed(1)} GB
+                    </td>
                     <td className="py-3 pr-4">
                       <div className="flex flex-wrap gap-1">
                         {m.tasks.map((t) => (
-                          <span key={t} className="rounded bg-zinc-700/50 px-1.5 py-0.5 text-xs text-zinc-400">{t}</span>
+                          <span
+                            key={t}
+                            className="rounded bg-zinc-700/50 px-1.5 py-0.5 text-xs text-zinc-400"
+                          >
+                            {t}
+                          </span>
                         ))}
                       </div>
                     </td>
                     <td className="py-3 pr-4">
-                      {m.is_default && <CheckCircle2 className="h-4 w-4 text-green-400" />}
+                      {m.is_default && (
+                        <CheckCircle2 className="h-4 w-4 text-green-400" />
+                      )}
                     </td>
                     <td className="py-3 pr-4 text-zinc-400">
                       {benchmarking === m.name ? (
                         <Loader2 className="h-3 w-3 animate-spin text-sky-400" />
                       ) : (
-                        m.tokens_per_sec?.toFixed(0) ?? '-'
+                        (m.tokens_per_sec?.toFixed(0) ?? '-')
                       )}
                     </td>
                     <td className="relative py-3">
-                      <button onClick={() => setMenuOpen(menuOpen === m.name ? null : m.name)} className="text-zinc-500 hover:text-zinc-300">
+                      <button
+                        onClick={() =>
+                          setMenuOpen(menuOpen === m.name ? null : m.name)
+                        }
+                        className="text-zinc-500 hover:text-zinc-300"
+                      >
                         <MoreVertical className="h-4 w-4" />
                       </button>
                       {menuOpen === m.name && (
-                        <div className="absolute right-0 top-10 z-10 w-48 rounded-lg border border-zinc-700 bg-zinc-900 py-1 shadow-xl">
+                        <div className="absolute top-10 right-0 z-10 w-48 rounded-lg border border-zinc-700 bg-zinc-900 py-1 shadow-xl">
                           {TASK_CLASSES.map((task) => (
-                            <button key={task} onClick={() => setDefaultFor(m.name, task)} className="w-full px-3 py-1.5 text-left text-xs text-zinc-400 hover:bg-zinc-800 hover:text-zinc-200">
+                            <button
+                              key={task}
+                              onClick={() => setDefaultFor(m.name, task)}
+                              className="w-full px-3 py-1.5 text-left text-xs text-zinc-400 hover:bg-zinc-800 hover:text-zinc-200"
+                            >
                               Set default for {task}
                             </button>
                           ))}
                           <hr className="my-1 border-zinc-800" />
-                          <button onClick={() => benchmarkModel(m.name)} className="w-full px-3 py-1.5 text-left text-xs text-zinc-400 hover:bg-zinc-800 hover:text-zinc-200">
-                            <Zap className="mr-1.5 inline h-3 w-3" /> Run benchmark
+                          <button
+                            onClick={() => benchmarkModel(m.name)}
+                            className="w-full px-3 py-1.5 text-left text-xs text-zinc-400 hover:bg-zinc-800 hover:text-zinc-200"
+                          >
+                            <Zap className="mr-1.5 inline h-3 w-3" /> Run
+                            benchmark
                           </button>
                           <hr className="my-1 border-zinc-800" />
-                          <button onClick={() => removeModel(m.name)} className="w-full px-3 py-1.5 text-left text-xs text-red-400 hover:bg-zinc-800">
+                          <button
+                            onClick={() => removeModel(m.name)}
+                            className="w-full px-3 py-1.5 text-left text-xs text-red-400 hover:bg-zinc-800"
+                          >
                             <Trash2 className="mr-1.5 inline h-3 w-3" /> Remove
                           </button>
                         </div>
@@ -539,20 +630,31 @@ export default function LocalModelsPage() {
 
       {/* ── Task Assignment ───────────────────────────────────────────────── */}
       <section className="rounded-xl border border-zinc-700/50 bg-zinc-800/50 p-5">
-        <h2 className="mb-4 text-lg font-medium text-zinc-200">Task Assignment</h2>
+        <h2 className="mb-4 text-lg font-medium text-zinc-200">
+          Task Assignment
+        </h2>
         <div className="grid gap-3 sm:grid-cols-2">
           {TASK_CLASSES.map((task) => {
             const a = assignments.find((x) => x.task === task)
             return (
-              <div key={task} className="rounded-lg border border-zinc-700/50 bg-zinc-900/50 p-3">
+              <div
+                key={task}
+                className="rounded-lg border border-zinc-700/50 bg-zinc-900/50 p-3"
+              >
                 <div className="mb-2 flex items-center justify-between">
-                  <span className="text-sm font-medium capitalize text-zinc-200">{task}</span>
+                  <span className="text-sm font-medium text-zinc-200 capitalize">
+                    {task}
+                  </span>
                   <button
                     onClick={() => testTask(task)}
                     disabled={testing === task}
                     className="rounded bg-zinc-700/50 px-2 py-0.5 text-xs text-zinc-400 hover:text-zinc-200 disabled:opacity-50"
                   >
-                    {testing === task ? <Loader2 className="h-3 w-3 animate-spin" /> : 'Test'}
+                    {testing === task ? (
+                      <Loader2 className="h-3 w-3 animate-spin" />
+                    ) : (
+                      'Test'
+                    )}
                   </button>
                 </div>
                 <select
@@ -562,11 +664,15 @@ export default function LocalModelsPage() {
                 >
                   <option value="">Auto</option>
                   {models.map((m) => (
-                    <option key={m.name} value={m.name}>{m.name}</option>
+                    <option key={m.name} value={m.name}>
+                      {m.name}
+                    </option>
                   ))}
                 </select>
                 {a?.latency_ms != null && (
-                  <p className="mt-1 text-xs text-zinc-500">Last test: {a.latency_ms}ms</p>
+                  <p className="mt-1 text-xs text-zinc-500">
+                    Last test: {a.latency_ms}ms
+                  </p>
                 )}
               </div>
             )
@@ -577,16 +683,25 @@ export default function LocalModelsPage() {
       {/* ── Recommended Models ────────────────────────────────────────────── */}
       {recommended.length > 0 && (
         <section className="rounded-xl border border-zinc-700/50 bg-zinc-800/50 p-5">
-          <h2 className="mb-4 text-lg font-medium text-zinc-200">Recommended for Your Hardware</h2>
+          <h2 className="mb-4 text-lg font-medium text-zinc-200">
+            Recommended for Your Hardware
+          </h2>
           <div className="grid gap-3 sm:grid-cols-2">
             {recommended.map((r) => (
-              <div key={r.name} className="rounded-lg border border-zinc-700/50 bg-zinc-900/50 p-3">
+              <div
+                key={r.name}
+                className="rounded-lg border border-zinc-700/50 bg-zinc-900/50 p-3"
+              >
                 <div className="mb-1 flex items-center justify-between">
-                  <span className="text-sm font-medium text-zinc-200">{r.name}</span>
+                  <span className="text-sm font-medium text-zinc-200">
+                    {r.name}
+                  </span>
                   <span className="text-xs text-zinc-500">{r.size_gb} GB</span>
                 </div>
                 <p className="mb-2 text-xs text-zinc-400">{r.description}</p>
-                <p className="text-xs text-zinc-500">Requires {r.min_ram_gb} GB RAM</p>
+                <p className="text-xs text-zinc-500">
+                  Requires {r.min_ram_gb} GB RAM
+                </p>
               </div>
             ))}
           </div>
@@ -597,30 +712,47 @@ export default function LocalModelsPage() {
       <section className="rounded-xl border border-zinc-700/50 bg-zinc-800/50 p-5">
         <button
           onClick={() => setAdvancedOpen(!advancedOpen)}
-          className="flex w-full items-center justify-between text-sm text-zinc-400 hover:text-zinc-200 transition"
+          className="flex w-full items-center justify-between text-sm text-zinc-400 transition hover:text-zinc-200"
         >
           <span>Advanced Settings</span>
-          <ChevronDown className={`h-4 w-4 transition-transform ${advancedOpen ? 'rotate-180' : ''}`} />
+          <ChevronDown
+            className={`h-4 w-4 transition-transform ${advancedOpen ? 'rotate-180' : ''}`}
+          />
         </button>
         {advancedOpen && (
           <div className="mt-4 space-y-3">
             <label className="flex items-center gap-3 text-sm text-zinc-300">
-              <input type="checkbox" checked={bgOnlyLocal} onChange={(e) => setBgOnlyLocal(e.target.checked)} className="h-4 w-4" />
+              <input
+                type="checkbox"
+                checked={bgOnlyLocal}
+                onChange={(e) => setBgOnlyLocal(e.target.checked)}
+                className="h-4 w-4"
+              />
               Background-only local (never block on local inference)
             </label>
             <label className="flex items-center gap-3 text-sm text-zinc-300">
-              <input type="checkbox" checked={oomAutoSwap} onChange={(e) => setOomAutoSwap(e.target.checked)} className="h-4 w-4" />
+              <input
+                type="checkbox"
+                checked={oomAutoSwap}
+                onChange={(e) => setOomAutoSwap(e.target.checked)}
+                className="h-4 w-4"
+              />
               Auto-swap model on OOM
             </label>
             <label className="flex items-center gap-3 text-sm text-zinc-300">
-              <input type="checkbox" checked={autoBenchmark} onChange={(e) => setAutoBenchmark(e.target.checked)} className="h-4 w-4" />
+              <input
+                type="checkbox"
+                checked={autoBenchmark}
+                onChange={(e) => setAutoBenchmark(e.target.checked)}
+                className="h-4 w-4"
+              />
               Auto-benchmark new models
             </label>
             <div className="pt-2">
               <button
                 onClick={saveAdvanced}
                 disabled={savingAdvanced}
-                className="rounded-lg bg-sky-500 px-4 py-2 text-sm text-white hover:bg-sky-400 transition disabled:opacity-50"
+                className="rounded-lg bg-sky-500 px-4 py-2 text-sm text-white transition hover:bg-sky-400 disabled:opacity-50"
               >
                 {savingAdvanced ? 'Saving...' : 'Save'}
               </button>

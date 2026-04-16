@@ -470,8 +470,8 @@ function BenchmarkContent() {
               benchmark suite
             </p>
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-sky-500">nself bench --target=api</span>{' '}
-              - Benchmark specific target
+              <span className="text-sky-500">nself bench --target=api</span> -
+              Benchmark specific target
             </p>
             <p className="text-zinc-600 dark:text-zinc-400">
               <span className="text-sky-500">nself bench --save=name</span> -

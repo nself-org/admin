@@ -437,19 +437,15 @@ function EnvironmentDiffContent() {
           </h3>
           <div className="space-y-2 font-mono text-sm">
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-sky-500">
-                nself env diff staging prod
-              </span>{' '}
+              <span className="text-sky-500">nself env diff staging prod</span>{' '}
               - Compare staging to production
             </p>
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-sky-500">nself env diff --full</span> -
-              Show all differences including unchanged
+              <span className="text-sky-500">nself env diff --full</span> - Show
+              all differences including unchanged
             </p>
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-sky-500">
-                nself env sync staging prod
-              </span>{' '}
+              <span className="text-sky-500">nself env sync staging prod</span>{' '}
               - Sync staging config to production
             </p>
           </div>

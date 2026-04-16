@@ -40,8 +40,7 @@ function MetricCard({
   const mouseY = useMotionValue(0)
 
   const colorClasses = {
-    sky:
-      'from-sky-500/40 to-sky-400/30 bg-sky-500/20 text-sky-400',
+    sky: 'from-sky-500/40 to-sky-400/30 bg-sky-500/20 text-sky-400',
     emerald:
       'from-emerald-500/40 to-emerald-400/30 bg-emerald-500/20 text-emerald-400',
     amber: 'from-amber-500/40 to-amber-400/30 bg-amber-500/20 text-amber-400',

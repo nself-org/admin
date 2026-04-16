@@ -48,8 +48,7 @@ function MetricCard({
       'from-emerald-500/40 to-emerald-400/30 ring-emerald-400/60 bg-emerald-500/20 text-emerald-400',
     amber:
       'from-amber-500/40 to-amber-400/30 ring-amber-400/60 bg-amber-500/20 text-amber-400',
-    sky:
-      'from-sky-500/40 to-sky-400/30 ring-sky-400/60 bg-sky-500/20 text-sky-400',
+    sky: 'from-sky-500/40 to-sky-400/30 ring-sky-400/60 bg-sky-500/20 text-sky-400',
   }
 
   function onMouseMove({

@@ -364,14 +364,12 @@ function TracesContent() {
           </h3>
           <div className="space-y-2 font-mono text-sm">
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-sky-500">nself traces</span> - List
-              recent traces
+              <span className="text-sky-500">nself traces</span> - List recent
+              traces
             </p>
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-sky-500">
-                nself traces --id=trace-id
-              </span>{' '}
-              - View trace details
+              <span className="text-sky-500">nself traces --id=trace-id</span> -
+              View trace details
             </p>
             <p className="text-zinc-600 dark:text-zinc-400">
               <span className="text-sky-500">

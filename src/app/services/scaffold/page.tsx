@@ -396,8 +396,7 @@ function getLanguageColor(language: string): string {
     PHP: 'bg-sky-100 text-sky-800 dark:bg-sky-900/30 dark:text-sky-400',
     Ruby: 'bg-pink-100 text-pink-800 dark:bg-pink-900/30 dark:text-pink-400',
     'C#': 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400',
-    Elixir:
-      'bg-sky-100 text-sky-800 dark:bg-sky-900/30 dark:text-sky-400',
+    Elixir: 'bg-sky-100 text-sky-800 dark:bg-sky-900/30 dark:text-sky-400',
   }
   return (
     colors[language] ||

@@ -408,8 +408,7 @@ function SecurityScanPanel({
   }, [])
 
   const severityColors = {
-    critical:
-      'bg-sky-100 text-sky-800 dark:bg-sky-900/20 dark:text-sky-400',
+    critical: 'bg-sky-100 text-sky-800 dark:bg-sky-900/20 dark:text-sky-400',
     high: 'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400',
     medium:
       'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400',

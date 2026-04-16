@@ -75,13 +75,18 @@ RUN ARCH=$(uname -m) && \
     -o /usr/local/bin/mkcert && \
     chmod +x /usr/local/bin/mkcert
 
-# Install nself CLI (can be overridden by mounting local source at /opt/nself)
-ARG NSELF_VERSION=1.0.0
-RUN mkdir -p /opt/nself \
-    && curl -fsSL "https://github.com/nself-org/cli/archive/refs/tags/v${NSELF_VERSION}.tar.gz" \
-       | tar -xz -C /opt/nself --strip-components=1 \
-    && ln -s /opt/nself/bin/nself /usr/local/bin/nself \
-    && chmod +x /opt/nself/bin/nself
+# Install nself CLI pre-built binary
+ARG NSELF_VERSION=1.0.4
+RUN ARCH=$(uname -m) && \
+    if [ "$ARCH" = "x86_64" ]; then NSELF_ARCH="amd64"; \
+    elif [ "$ARCH" = "aarch64" ]; then NSELF_ARCH="arm64"; \
+    else NSELF_ARCH="amd64"; fi && \
+    mkdir -p /tmp/nself-install && \
+    curl -fsSL "https://github.com/nself-org/cli/releases/download/v${NSELF_VERSION}/nself-${NSELF_VERSION}-linux-${NSELF_ARCH}.tar.gz" \
+       | tar -xz -C /tmp/nself-install --strip-components=1 && \
+    mv /tmp/nself-install/nself /usr/local/bin/nself && \
+    chmod +x /usr/local/bin/nself && \
+    rm -rf /tmp/nself-install
 
 # Note: For development, mount your local nself source at /opt/nself to override
 # The symlink at /usr/local/bin/nself will work with either installed or mounted source

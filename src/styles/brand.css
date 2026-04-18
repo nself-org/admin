@@ -1,0 +1,188 @@
+/* nSelf Brand Utilities
+ * Glass card aesthetic with indigo gradient - matches nSelf brand guide.
+ * Uses CSS custom properties defined in tailwind.css @theme block.
+ */
+
+/* Glass card effect - semi-transparent surface with backdrop blur and indigo border */
+.glass-card {
+  background-color: rgba(26, 26, 46, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--color-nself-border);
+  border-radius: 0.75rem;
+}
+
+/* Glass card with glow - adds indigo glow ring on hover/active states */
+.glass-card-glow {
+  background-color: rgba(26, 26, 46, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--color-nself-border);
+  border-radius: 0.75rem;
+  box-shadow: 0 0 0 1px var(--color-nself-border), 0 0 16px var(--color-nself-glow);
+}
+
+/* Elevated glass card - slightly lighter surface for nested cards */
+.glass-card-elevated {
+  background-color: rgba(22, 33, 62, 0.8);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--color-nself-border);
+  border-radius: 0.75rem;
+}
+
+/* Indigo-to-purple gradient - primary brand gradient for headers and banners */
+.nself-gradient {
+  background: linear-gradient(135deg, var(--color-nself-primary-dark) 0%, var(--color-nself-primary) 50%, #7C3AED 100%);
+}
+
+/* Indigo gradient text */
+.nself-gradient-text {
+  background: linear-gradient(135deg, var(--color-nself-primary-light) 0%, #A78BFA 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+/* Glow effect - indigo outer glow, used for highlights and focused elements */
+.nself-glow {
+  box-shadow: 0 0 20px var(--color-nself-glow), 0 0 40px rgba(99, 102, 241, 0.2);
+}
+
+/* Subtle glow for borders */
+.nself-glow-border {
+  border: 1px solid var(--color-nself-primary);
+  box-shadow: 0 0 8px var(--color-nself-glow);
+}
+
+/* Dark surface - deep-black background for primary layout areas */
+.nself-surface {
+  background-color: var(--color-nself-bg);
+  color: var(--color-nself-text);
+}
+
+/* Card surface - slightly lighter than bg for card backgrounds */
+.nself-surface-card {
+  background-color: var(--color-nself-bg-card);
+  color: var(--color-nself-text);
+}
+
+/* Elevated surface - for modals, popovers, and elevated UI layers */
+.nself-surface-elevated {
+  background-color: var(--color-nself-bg-elevated);
+  color: var(--color-nself-text);
+}
+
+/* Muted text utility */
+.nself-text-muted {
+  color: var(--color-nself-text-muted);
+}
+
+/* Primary button base */
+.nself-btn-primary {
+  background-color: var(--color-nself-primary);
+  color: #ffffff;
+  border: none;
+  border-radius: 0.5rem;
+  padding: 0.5rem 1rem;
+  font-weight: 600;
+  transition: background-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.nself-btn-primary:hover {
+  background-color: var(--color-nself-primary-dark);
+  box-shadow: 0 0 12px var(--color-nself-glow);
+}
+
+/* Indigo border divider */
+.nself-divider {
+  border-color: var(--color-nself-border);
+}
+
+/* Small pill badge for environment tags and labels */
+.nself-tag {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 9999px;
+  border: 1px solid var(--color-nself-border);
+  background-color: rgba(99, 102, 241, 0.1);
+  padding: 0.125rem 0.625rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--color-nself-primary-light);
+}
+
+/* Indigo filled badge */
+.nself-badge-primary {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 9999px;
+  border: 1px solid rgba(99, 102, 241, 0.4);
+  background-color: rgba(99, 102, 241, 0.2);
+  padding: 0.125rem 0.625rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #818CF8;
+}
+
+/* Amber warning badge */
+.nself-badge-warning {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 9999px;
+  border: 1px solid rgba(245, 158, 11, 0.4);
+  background-color: rgba(245, 158, 11, 0.15);
+  padding: 0.125rem 0.625rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #FCD34D;
+}
+
+/* Red danger badge */
+.nself-badge-danger {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 9999px;
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  background-color: rgba(239, 68, 68, 0.15);
+  padding: 0.125rem 0.625rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #FCA5A5;
+}
+
+/* Green success badge */
+.nself-badge-success {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 9999px;
+  border: 1px solid rgba(34, 197, 94, 0.4);
+  background-color: rgba(34, 197, 94, 0.15);
+  padding: 0.125rem 0.625rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #86EFAC;
+}
+
+/* Standard input matching brand aesthetics */
+.nself-input {
+  width: 100%;
+  border-radius: 0.5rem;
+  border: 1px solid var(--color-nself-border);
+  background-color: var(--color-nself-bg);
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+  color: var(--color-nself-text);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.nself-input::placeholder {
+  color: var(--color-nself-text-muted);
+}
+
+.nself-input:focus {
+  border-color: var(--color-nself-primary);
+  outline: none;
+  box-shadow: 0 0 0 1px var(--color-nself-primary);
+}

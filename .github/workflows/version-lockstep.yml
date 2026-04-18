@@ -1,0 +1,47 @@
+name: Version Lockstep
+
+on:
+  push:
+    branches: ['**']
+  pull_request:
+    branches: ['**']
+
+jobs:
+  check-version-lockstep:
+    name: Verify admin version == CLI version
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout admin
+        uses: actions/checkout@v4
+
+      - name: Read admin package.json version
+        id: admin_version
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
+          echo "Admin version: ${VERSION}"
+
+      - name: Read cli-version.ts expected CLI version
+        id: cli_version_ts
+        run: |
+          # Extract the CLI_VERSION string from src/lib/cli-version.ts
+          VERSION=$(grep -E "^export const CLI_VERSION" src/lib/cli-version.ts \
+            | sed "s/export const CLI_VERSION = '//;s/'.*//")
+          echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
+          echo "cli-version.ts CLI_VERSION: ${VERSION}"
+
+      - name: Assert package.json == cli-version.ts
+        run: |
+          ADMIN="${{ steps.admin_version.outputs.version }}"
+          CLI_TS="${{ steps.cli_version_ts.outputs.version }}"
+
+          if [ "${ADMIN}" != "${CLI_TS}" ]; then
+            echo "::error::Version lockstep violation:"
+            echo "::error::  admin/package.json version  = ${ADMIN}"
+            echo "::error::  src/lib/cli-version.ts CLI_VERSION = ${CLI_TS}"
+            echo "::error::These must be identical. Update both files atomically when bumping the version."
+            exit 1
+          fi
+
+          echo "Version lockstep OK: admin == CLI == ${ADMIN}"

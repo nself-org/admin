@@ -77,6 +77,8 @@ export async function executeNselfCommand(
       // Audit & history
       'history',
       'audit',
+      // User management
+      'user',
       // Info & utility
       'update',
       'version',

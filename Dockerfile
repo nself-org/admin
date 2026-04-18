@@ -1,6 +1,7 @@
 # Multi-stage production Dockerfile for nself-admin
 # Optimized for minimal size with standalone Next.js build
 # Multi-platform support: linux/amd64, linux/arm64
+# Build: docker build -t nself/nself-admin:v1.0.9 -t nself/nself-admin:latest .
 
 # Stage 1: Dependencies
 FROM node:22-alpine AS deps
@@ -110,7 +111,7 @@ ENV NEXT_TELEMETRY_DISABLED=1
 ENV HOSTNAME="0.0.0.0"
 # Port 3021 is the reserved port for nself-admin (not 3100, which is for Loki)
 ENV PORT=3021
-ENV ADMIN_VERSION=1.0.0
+ENV ADMIN_VERSION=1.0.9
 
 # Environment variables that can be set at runtime:
 # NSELF_PROJECT_PATH - Path to mounted project (default: /workspace)
@@ -120,11 +121,11 @@ ENV ADMIN_VERSION=1.0.0
 # Add labels for container metadata
 LABEL org.opencontainers.image.title="nself-admin"
 LABEL org.opencontainers.image.description="Web-based administration interface for nself CLI"
-LABEL org.opencontainers.image.version="1.0.0"
+LABEL org.opencontainers.image.version="1.0.9"
 LABEL org.opencontainers.image.vendor="nself.org"
-LABEL org.opencontainers.image.source="https://github.com/acamarata/nself-admin"
+LABEL org.opencontainers.image.source="https://github.com/nself-org/admin"
 LABEL org.opencontainers.image.licenses="Proprietary - Free for personal use, Commercial license required"
-LABEL org.opencontainers.image.documentation="https://github.com/acamarata/nself-admin/wiki"
+LABEL org.opencontainers.image.documentation="https://github.com/nself-org/admin/wiki"
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \

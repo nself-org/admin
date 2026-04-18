@@ -1,0 +1,71 @@
+{
+  "nav": {
+    "dashboard": "Dashboard",
+    "services": "Services",
+    "plugins": "Plugins",
+    "settings": "Settings",
+    "logs": "Logs",
+    "projects": "Projects",
+    "remote": "Remote",
+    "deploy": "Deploy",
+    "promotion": "Promotion",
+    "cost": "Cost",
+    "uptime": "Uptime",
+    "observability": "Observability",
+    "audit": "Audit",
+    "docker": "Docker"
+  },
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "confirm": "Confirm",
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "success": "Success",
+    "refresh": "Refresh",
+    "edit": "Edit",
+    "add": "Add",
+    "remove": "Remove",
+    "close": "Close",
+    "warning": "Warning",
+    "retry": "Retry"
+  },
+  "services": {
+    "start": "Start",
+    "stop": "Stop",
+    "restart": "Restart",
+    "status": {
+      "running": "Running",
+      "stopped": "Stopped",
+      "error": "Error"
+    }
+  },
+  "projects": {
+    "title": "Projects Dashboard",
+    "subtitle": "Cross-project health and resource snapshot",
+    "empty": "No projects registered yet. Use the project picker to add one.",
+    "healthy": "Healthy",
+    "degraded": "Degraded",
+    "down": "Down",
+    "unknown": "Unknown",
+    "servicesCount": "{running}/{total} services",
+    "noStack": "No stack built"
+  },
+  "plugins": {
+    "title": "Plugin Management",
+    "subtitle": "Install, configure, update, and revoke nSelf plugins",
+    "install": "Install",
+    "uninstall": "Uninstall",
+    "configure": "Configure",
+    "update": "Update",
+    "revoke": "Revoke",
+    "licenseTier": "License tier",
+    "licenseValid": "valid",
+    "licenseInvalid": "inactive",
+    "notInstalled": "Not installed",
+    "active": "Active",
+    "dormant": "Dormant",
+    "revoked": "Revoked"
+  }
+}

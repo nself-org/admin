@@ -57,4 +57,34 @@
   [inert] ::-webkit-scrollbar {
     display: none;
   }
+
+  /* WCAG 2.2 AA — 2.4.11 Focus Appearance */
+  :focus-visible {
+    outline: 2px solid #6366F1;
+    outline-offset: 2px;
+  }
+
+  /* WCAG 2.2 AA — 2.3.3 Animation from Interactions */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+
+  /* RTL support — Tailwind v4 uses logical properties (margin-inline, padding-inline)
+   * natively, so most layout flips happen automatically. The utilities below handle
+   * the remaining cases that need explicit mirroring. */
+
+  /* Flip directional icons (arrows, chevrons) in RTL layouts */
+  [dir="rtl"] .flip-rtl {
+    transform: scaleX(-1);
+  }
+
+  /* UTF-8 charset is the Next.js default; declared here as documentation. */
+  /* All HTML files in this app use UTF-8 encoding. */
 }

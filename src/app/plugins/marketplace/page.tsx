@@ -6,15 +6,15 @@ import {
   AlertCircle,
   ArrowLeft,
   Check,
-  CreditCard,
+  ChevronDown,
+  ChevronUp,
   Download,
   Filter,
-  Github,
+  Lock,
   Loader2,
-  Plug,
   Search,
-  ShoppingCart,
   Star,
+  Trash2,
 } from 'lucide-react'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
@@ -23,23 +23,36 @@ import useSWR from 'swr'
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json())
 
-// Plugin icon mapping
-const pluginIcons: Record<
-  string,
-  React.ComponentType<{ className?: string }>
-> = {
-  stripe: CreditCard,
-  shopify: ShoppingCart,
-  github: Github,
-  default: Plug,
+// Category-based emoji icons (T02)
+const categoryEmoji: Record<string, string> = {
+  ai: '🤖',
+  media: '🎬',
+  messaging: '💬',
+  auth: '🔐',
+  storage: '🗄️',
+  search: '🔍',
+  notify: '🔔',
+  payments: '💳',
+  social: '👥',
+  data: '📊',
+  dev: '🛠️',
+  cron: '⏰',
+  browser: '🌐',
+  billing: '💳',
+  ecommerce: '🛒',
+  devops: '🛠️',
+  productivity: '📊',
+  communication: '💬',
+  finance: '💰',
+  default: '🔌',
 }
 
-function getPluginIcon(name: string) {
-  const lowerName = name.toLowerCase()
-  for (const [key, Icon] of Object.entries(pluginIcons)) {
-    if (lowerName.includes(key)) return Icon
+function getPluginEmoji(plugin: MarketplacePlugin): string {
+  // Use icon from registry if it looks like an emoji (starts with non-ASCII or is short)
+  if (plugin.icon && plugin.icon.length <= 4) {
+    return plugin.icon
   }
-  return pluginIcons.default
+  return categoryEmoji[plugin.category] ?? categoryEmoji.default
 }
 
 const categoryColors: Record<PluginCategory, string> = {
@@ -61,39 +74,202 @@ const categories: { value: PluginCategory | 'all'; label: string }[] = [
   { value: 'finance', label: 'Finance' },
 ]
 
+// Bundle display names (T07 + T08)
+const bundleLabels: Record<string, string> = {
+  nclaw: 'ɳClaw Bundle',
+  clawde: 'ClawDE+',
+  nmedia: 'nMedia',
+  nfamily: 'nFamily',
+  nchat: 'nChat',
+}
+
+const bundlePrice: Record<string, string> = {
+  nclaw: '$0.99/mo',
+  clawde: '$1.99/mo',
+  nmedia: '$0.99/mo',
+  nfamily: '$0.99/mo',
+  nchat: '$0.99/mo',
+}
+
+function bundleLabel(bundle: string): string {
+  return bundleLabels[bundle.toLowerCase()] ?? bundle
+}
+
+function bundlePriceLabel(bundle: string): string {
+  return bundlePrice[bundle.toLowerCase()] ?? '$0.99/mo'
+}
+
+// Inline review section component (T04)
+function ReviewSection({ pluginName }: { pluginName: string }) {
+  const [open, setOpen] = useState(false)
+  const [stars, setStars] = useState(0)
+  const [hoveredStar, setHoveredStar] = useState(0)
+  const [comment, setComment] = useState('')
+  const [submitting, setSubmitting] = useState(false)
+  const [toast, setToast] = useState<{ type: 'success' | 'error'; msg: string } | null>(null)
+
+  const handleSubmit = async () => {
+    if (stars === 0) return
+    setSubmitting(true)
+    try {
+      const res = await fetch('/api/plugins/ratings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          plugin: pluginName,
+          stars,
+          review: comment.trim() || undefined,
+        }),
+      })
+      if (res.ok) {
+        setToast({ type: 'success', msg: 'Review submitted' })
+        setStars(0)
+        setComment('')
+        setTimeout(() => setToast(null), 3000)
+      } else {
+        setToast({ type: 'error', msg: 'Submission failed. Try again.' })
+        setTimeout(() => setToast(null), 4000)
+      }
+    } catch {
+      setToast({ type: 'error', msg: 'Submission failed. Try again.' })
+      setTimeout(() => setToast(null), 4000)
+    } finally {
+      setSubmitting(false)
+    }
+  }
+
+  return (
+    <div className="mt-3 border-t border-zinc-700/50 pt-3">
+      <button
+        onClick={() => setOpen((v) => !v)}
+        className="flex items-center gap-1 text-xs text-zinc-500 hover:text-zinc-300 transition-colors"
+      >
+        {open ? <ChevronUp className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />}
+        Write a review
+      </button>
+
+      {open && (
+        <div className="mt-3 space-y-2">
+          {/* Star selector */}
+          <div className="flex items-center gap-1">
+            {[1, 2, 3, 4, 5].map((n) => (
+              <button
+                key={n}
+                onClick={() => setStars(n)}
+                onMouseEnter={() => setHoveredStar(n)}
+                onMouseLeave={() => setHoveredStar(0)}
+                className="transition-colors"
+                aria-label={`Rate ${n} star${n !== 1 ? 's' : ''}`}
+              >
+                <Star
+                  className={`h-5 w-5 ${
+                    n <= (hoveredStar || stars)
+                      ? 'text-yellow-400 fill-yellow-400'
+                      : 'text-zinc-600'
+                  }`}
+                />
+              </button>
+            ))}
+          </div>
+
+          {/* Comment */}
+          <textarea
+            value={comment}
+            onChange={(e) => setComment(e.target.value.slice(0, 500))}
+            placeholder="Optional comment (max 500 chars)"
+            rows={3}
+            className="w-full rounded-lg border border-zinc-700 bg-zinc-900 px-3 py-2 text-xs text-zinc-300 placeholder-zinc-600 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 focus:outline-none resize-none"
+          />
+          <div className="flex items-center justify-between">
+            <span className="text-xs text-zinc-600">{comment.length}/500</span>
+            <button
+              onClick={handleSubmit}
+              disabled={stars === 0 || submitting}
+              className="flex items-center gap-1.5 rounded-lg bg-zinc-700 px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-zinc-600 disabled:opacity-40"
+            >
+              {submitting ? (
+                <>
+                  <Loader2 className="h-3 w-3 animate-spin" />
+                  Submitting...
+                </>
+              ) : (
+                'Submit'
+              )}
+            </button>
+          </div>
+          {toast && (
+            <p
+              className={`text-xs ${toast.type === 'success' ? 'text-emerald-400' : 'text-red-400'}`}
+            >
+              {toast.msg}
+            </p>
+          )}
+        </div>
+      )}
+    </div>
+  )
+}
+
 function MarketplaceCard({
   plugin,
   isInstalled,
   onInstall,
+  onUninstall,
   installing,
+  uninstalling,
 }: {
   plugin: MarketplacePlugin
   isInstalled: boolean
   onInstall: (name: string) => void
+  onUninstall: (name: string) => void
   installing: string | null
+  uninstalling: string | null
 }) {
-  const Icon = getPluginIcon(plugin.name)
+  const emoji = getPluginEmoji(plugin)
   const isInstalling = installing === plugin.name
+  const isUninstalling = uninstalling === plugin.name
+  const isPro = plugin.tier === 'pro' || plugin.licenseRequired === true
+  const hasBundle = Boolean(plugin.bundle)
 
   return (
     <div className="group flex flex-col rounded-xl border border-zinc-700/50 bg-zinc-800/50 p-5 transition-all hover:border-emerald-500/50 hover:bg-zinc-800">
+      {/* Header */}
       <div className="mb-4 flex items-start justify-between">
         <div className="flex items-center gap-3">
-          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-zinc-700/50">
-            <Icon className="h-6 w-6 text-zinc-300" />
+          {/* T02: emoji icon */}
+          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-zinc-700/50 text-2xl select-none">
+            {emoji}
           </div>
           <div>
-            <h3 className="font-medium text-white capitalize">{plugin.name}</h3>
+            <div className="flex items-center gap-2">
+              <h3 className="font-medium text-white capitalize">{plugin.name}</h3>
+              {/* T08: bundle badge */}
+              {hasBundle && (
+                <span className="rounded-full border border-indigo-500/30 bg-indigo-500/20 px-2 py-0.5 text-xs text-indigo-400">
+                  {bundleLabel(plugin.bundle!)}
+                </span>
+              )}
+            </div>
             <p className="text-xs text-zinc-500">by {plugin.author}</p>
           </div>
         </div>
-        <span
-          className={`rounded-full border px-2 py-0.5 text-xs ${categoryColors[plugin.category]}`}
-        >
-          {plugin.category}
-        </span>
+        <div className="flex flex-col items-end gap-1">
+          <span
+            className={`rounded-full border px-2 py-0.5 text-xs ${categoryColors[plugin.category]}`}
+          >
+            {plugin.category}
+          </span>
+          {/* T03: pro badge */}
+          {isPro && (
+            <span className="flex items-center gap-1 rounded-full border border-amber-500/30 bg-amber-500/15 px-2 py-0.5 text-xs text-amber-400">
+              <Lock className="h-3 w-3" />
+              Pro
+            </span>
+          )}
+        </div>
       </div>
 
+      {/* T02: truncated description */}
       <p className="mb-4 line-clamp-2 flex-1 text-sm text-zinc-400">
         {plugin.description}
       </p>
@@ -109,6 +285,7 @@ function MarketplaceCard({
         ))}
       </div>
 
+      {/* Stats bar */}
       <div className="mb-4 flex items-center justify-between border-t border-zinc-700/50 pt-4">
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-1">
@@ -127,11 +304,26 @@ function MarketplaceCard({
         <span className="text-xs text-zinc-500">v{plugin.version}</span>
       </div>
 
+      {/* T03: install / uninstall buttons */}
       {isInstalled ? (
-        <div className="flex items-center justify-center gap-2 rounded-lg bg-emerald-500/20 px-4 py-2 text-sm text-emerald-400">
-          <Check className="h-4 w-4" />
-          Installed
-        </div>
+        <button
+          onClick={() => onUninstall(plugin.name)}
+          disabled={isUninstalling}
+          className="flex items-center justify-center gap-2 rounded-lg border border-zinc-600 bg-zinc-700/50 px-4 py-2 text-sm font-medium text-zinc-300 transition-colors hover:border-red-500/50 hover:bg-red-900/20 hover:text-red-400 disabled:opacity-50"
+        >
+          {isUninstalling ? (
+            <>
+              <Loader2 className="h-4 w-4 animate-spin" />
+              Removing...
+            </>
+          ) : (
+            <>
+              <Check className="h-4 w-4 text-emerald-400" />
+              <span>Installed</span>
+              <Trash2 className="ml-auto h-4 w-4 opacity-0 group-hover:opacity-100 transition-opacity" />
+            </>
+          )}
+        </button>
       ) : (
         <button
           onClick={() => onInstall(plugin.name)}
@@ -143,6 +335,11 @@ function MarketplaceCard({
               <Loader2 className="h-4 w-4 animate-spin" />
               Installing...
             </>
+          ) : isPro ? (
+            <>
+              <Lock className="h-4 w-4" />
+              Install (license required)
+            </>
           ) : (
             <>
               <Download className="h-4 w-4" />
@@ -151,6 +348,27 @@ function MarketplaceCard({
           )}
         </button>
       )}
+
+      {/* T08: bundle upsell prompt */}
+      {hasBundle && !isInstalled && (
+        <p className="mt-2 text-xs text-zinc-500">
+          Get the full bundle:{' '}
+          <Link
+            href="https://nself.org/pricing"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-indigo-400 hover:text-indigo-300 underline"
+          >
+            {bundleLabel(plugin.bundle!)} {bundlePriceLabel(plugin.bundle!)}
+          </Link>
+          {plugin.related && plugin.related.length > 0 && (
+            <> — includes {plugin.related.slice(0, 3).join(', ')}</>
+          )}
+        </p>
+      )}
+
+      {/* T04: inline review section */}
+      <ReviewSection pluginName={plugin.name} />
     </div>
   )
 }
@@ -163,8 +381,12 @@ function MarketplaceContent() {
   const [selectedCategory, setSelectedCategory] = useState<
     PluginCategory | 'all'
   >('all')
+  // T07: tier + bundle filters
+  const [selectedTier, setSelectedTier] = useState<'all' | 'free' | 'pro'>('all')
+  const [selectedBundle, setSelectedBundle] = useState<string>('all')
   const [sortBy, setSortBy] = useState<'popular' | 'recent' | 'name'>('popular')
   const [installing, setInstalling] = useState<string | null>(null)
+  const [uninstalling, setUninstalling] = useState<string | null>(null)
 
   const {
     data: marketplaceData,
@@ -178,15 +400,14 @@ function MarketplaceContent() {
     plugins: { name: string }[]
   }>('/api/plugins', fetcher)
 
+  // T03: fix — use correct route /api/plugins/{name}/install
   const handleInstall = async (pluginName: string) => {
     setInstalling(pluginName)
     try {
-      const response = await fetch('/api/plugins/install', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: pluginName }),
-      })
-
+      const response = await fetch(
+        `/api/plugins/${encodeURIComponent(pluginName)}/install`,
+        { method: 'POST' },
+      )
       if (response.ok) {
         mutateInstalled()
       }
@@ -195,13 +416,29 @@ function MarketplaceContent() {
     }
   }
 
+  // T03: uninstall via DELETE /api/plugins/{name}/install
+  const handleUninstall = async (pluginName: string) => {
+    setUninstalling(pluginName)
+    try {
+      const response = await fetch(
+        `/api/plugins/${encodeURIComponent(pluginName)}/install`,
+        { method: 'DELETE' },
+      )
+      if (response.ok) {
+        mutateInstalled()
+      }
+    } finally {
+      setUninstalling(null)
+    }
+  }
+
   // Auto-install if install param is provided
   if (installParam && !installing && marketplaceData) {
     const plugin = marketplaceData.plugins.find((p) => p.name === installParam)
-    const isInstalled = installedData?.plugins.some(
+    const isAlreadyInstalled = installedData?.plugins.some(
       (p) => p.name === installParam,
     )
-    if (plugin && !isInstalled) {
+    if (plugin && !isAlreadyInstalled) {
       handleInstall(installParam)
     }
   }
@@ -218,7 +455,15 @@ function MarketplaceContent() {
         )
       const matchesCategory =
         selectedCategory === 'all' || plugin.category === selectedCategory
-      return matchesSearch && matchesCategory
+      // T07: tier filter (default free when tier absent)
+      const effectiveTier = plugin.tier ?? 'free'
+      const matchesTier =
+        selectedTier === 'all' || effectiveTier === selectedTier
+      // T07: bundle filter
+      const matchesBundle =
+        selectedBundle === 'all' ||
+        (plugin.bundle?.toLowerCase() === selectedBundle)
+      return matchesSearch && matchesCategory && matchesTier && matchesBundle
     }) || []
 
   // Apply sorting
@@ -319,8 +564,8 @@ function MarketplaceContent() {
       </div>
 
       {/* Search and Filters */}
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
-        <div className="relative flex-1">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:flex-wrap">
+        <div className="relative flex-1 min-w-48">
           <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-zinc-500" />
           <input
             type="text"
@@ -331,8 +576,10 @@ function MarketplaceContent() {
           />
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-wrap">
           <Filter className="h-4 w-4 text-zinc-500" />
+
+          {/* Category filter */}
           <select
             value={selectedCategory}
             onChange={(e) =>
@@ -345,6 +592,33 @@ function MarketplaceContent() {
                 {category.label}
               </option>
             ))}
+          </select>
+
+          {/* T07: Tier filter */}
+          <select
+            value={selectedTier}
+            onChange={(e) =>
+              setSelectedTier(e.target.value as 'all' | 'free' | 'pro')
+            }
+            className="rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2 text-sm text-white focus:border-emerald-500 focus:outline-none"
+          >
+            <option value="all">All Tiers</option>
+            <option value="free">Free</option>
+            <option value="pro">Pro</option>
+          </select>
+
+          {/* T07: Bundle filter */}
+          <select
+            value={selectedBundle}
+            onChange={(e) => setSelectedBundle(e.target.value)}
+            className="rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2 text-sm text-white focus:border-emerald-500 focus:outline-none"
+          >
+            <option value="all">All Bundles</option>
+            <option value="nclaw">ɳClaw Bundle</option>
+            <option value="clawde">ClawDE+</option>
+            <option value="nmedia">nMedia</option>
+            <option value="nfamily">nFamily</option>
+            <option value="nchat">nChat</option>
           </select>
 
           <select
@@ -366,6 +640,8 @@ function MarketplaceContent() {
         Showing {filteredPlugins.length} plugin
         {filteredPlugins.length !== 1 ? 's' : ''}
         {selectedCategory !== 'all' && ` in ${selectedCategory}`}
+        {selectedTier !== 'all' && ` — ${selectedTier} tier`}
+        {selectedBundle !== 'all' && ` — ${bundleLabel(selectedBundle)}`}
       </div>
 
       {/* Plugin Grid */}
@@ -377,7 +653,9 @@ function MarketplaceContent() {
               plugin={plugin}
               isInstalled={installedPluginNames.includes(plugin.name)}
               onInstall={handleInstall}
+              onUninstall={handleUninstall}
               installing={installing}
+              uninstalling={uninstalling}
             />
           ))}
         </div>

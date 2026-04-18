@@ -6,6 +6,7 @@ import { motion, useMotionTemplate, useMotionValue } from 'framer-motion'
 import {
   Activity,
   AlertCircle,
+  ArrowUpCircle,
   CheckCircle,
   Clock,
   CreditCard,
@@ -19,6 +20,7 @@ import {
   Zap,
 } from 'lucide-react'
 import Link from 'next/link'
+import { useSearchParams } from 'next/navigation'
 import { Suspense, useState } from 'react'
 import useSWR from 'swr'
 
@@ -267,9 +269,14 @@ function PluginCard({
 }
 
 function PluginsContent() {
+  const searchParams = useSearchParams()
+  const urlFilter = searchParams.get('filter')
+
   const [_syncing, setSyncing] = useState<string | null>(null)
   const [searchQuery, setSearchQuery] = useState('')
-  const [filterActive, setFilterActive] = useState<'all' | 'active'>('all')
+  const [filterActive, setFilterActive] = useState<'all' | 'active' | 'updates'>(
+    urlFilter === 'updates' ? 'updates' : 'all',
+  )
   const [sortBy, setSortBy] = useState<'name' | 'date'>('date')
 
   const { data, error, isLoading, mutate } = useSWR<{
@@ -321,6 +328,10 @@ function PluginsContent() {
 
   if (filterActive === 'active') {
     plugins = plugins.filter((p) => p.status === 'installed')
+  }
+
+  if (filterActive === 'updates') {
+    plugins = plugins.filter((p) => p.status === 'update_available')
   }
 
   // Apply sorting
@@ -428,12 +439,13 @@ function PluginsContent() {
             <select
               value={filterActive}
               onChange={(e) =>
-                setFilterActive(e.target.value as 'all' | 'active')
+                setFilterActive(e.target.value as 'all' | 'active' | 'updates')
               }
               className="rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2 text-sm text-white focus:border-emerald-500 focus:outline-none"
             >
               <option value="all">All Plugins</option>
               <option value="active">Active Only</option>
+              <option value="updates">Updates Available</option>
             </select>
 
             <select
@@ -484,6 +496,20 @@ function PluginsContent() {
         />
       </div>
 
+      {/* Updates filter active notice */}
+      {filterActive === 'updates' && (
+        <div className="flex items-center gap-3 rounded-lg border border-yellow-500/30 bg-yellow-900/20 px-4 py-3 text-sm text-yellow-300">
+          <ArrowUpCircle className="h-4 w-4 shrink-0" />
+          <span>Showing plugins with updates available. Run <code className="rounded bg-yellow-900/40 px-1 font-mono">nself plugin update</code> to update all at once.</span>
+          <button
+            onClick={() => setFilterActive('all')}
+            className="ml-auto shrink-0 text-yellow-400 underline underline-offset-2 hover:text-yellow-200"
+          >
+            Show all
+          </button>
+        </div>
+      )}
+
       {/* Plugin Grid */}
       {plugins.length > 0 ? (
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -502,19 +528,39 @@ function PluginsContent() {
         </div>
       ) : (
         <div className="flex flex-col items-center justify-center rounded-xl border border-zinc-700/50 bg-zinc-800/30 py-16">
-          <Zap className="mb-4 h-12 w-12 text-zinc-600" />
-          <h3 className="mb-2 text-lg font-medium text-white">
-            No plugins installed
-          </h3>
-          <p className="mb-4 text-sm text-zinc-400">
-            Get started by installing plugins from the marketplace
-          </p>
-          <Link
-            href="/plugins/marketplace"
-            className="inline-flex items-center gap-2 rounded-lg bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-500"
-          >
-            <Plus className="h-4 w-4" /> Browse Marketplace
-          </Link>
+          {filterActive === 'updates' ? (
+            <>
+              <CheckCircle className="mb-4 h-12 w-12 text-emerald-600" />
+              <h3 className="mb-2 text-lg font-medium text-white">
+                All plugins are up to date
+              </h3>
+              <p className="mb-4 text-sm text-zinc-400">
+                No updates available for your installed plugins
+              </p>
+              <button
+                onClick={() => setFilterActive('all')}
+                className="inline-flex items-center gap-2 rounded-lg bg-zinc-700 px-4 py-2 text-sm font-medium text-white hover:bg-zinc-600"
+              >
+                View all plugins
+              </button>
+            </>
+          ) : (
+            <>
+              <Zap className="mb-4 h-12 w-12 text-zinc-600" />
+              <h3 className="mb-2 text-lg font-medium text-white">
+                No plugins installed
+              </h3>
+              <p className="mb-4 text-sm text-zinc-400">
+                Get started by installing plugins from the marketplace
+              </p>
+              <Link
+                href="/plugins/marketplace"
+                className="inline-flex items-center gap-2 rounded-lg bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-500"
+              >
+                <Plus className="h-4 w-4" /> Browse Marketplace
+              </Link>
+            </>
+          )}
         </div>
       )}
     </div>

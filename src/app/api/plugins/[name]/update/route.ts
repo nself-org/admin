@@ -48,7 +48,12 @@ export async function POST(
     )
 
     logger.cli(`plugin update ${name}`, true, Date.now() - startTime)
-    logger.api('POST', `/api/plugins/${name}/update`, 200, Date.now() - startTime)
+    logger.api(
+      'POST',
+      `/api/plugins/${name}/update`,
+      200,
+      Date.now() - startTime,
+    )
 
     return NextResponse.json({
       success: true,

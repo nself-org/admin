@@ -39,14 +39,10 @@ type ConfirmState =
 
 function RoleBadge({ role }: { role: User['role'] }) {
   const colours: Record<User['role'], string> = {
-    owner:
-      'border-violet-500/40 bg-violet-500/10 text-violet-400',
-    admin:
-      'border-sky-500/40 bg-sky-500/10 text-sky-400',
-    member:
-      'border-indigo-500/40 bg-indigo-500/10 text-indigo-400',
-    viewer:
-      'border-zinc-500/40 bg-zinc-500/10 text-zinc-400',
+    owner: 'border-violet-500/40 bg-violet-500/10 text-violet-400',
+    admin: 'border-sky-500/40 bg-sky-500/10 text-sky-400',
+    member: 'border-indigo-500/40 bg-indigo-500/10 text-indigo-400',
+    viewer: 'border-zinc-500/40 bg-zinc-500/10 text-zinc-400',
   }
   const labels: Record<User['role'], string> = {
     owner: 'Owner',
@@ -65,12 +61,9 @@ function RoleBadge({ role }: { role: User['role'] }) {
 
 function StatusBadge({ status }: { status: User['status'] }) {
   const colours: Record<User['status'], string> = {
-    active:
-      'border-green-500/40 bg-green-500/10 text-green-400',
-    invited:
-      'border-amber-500/40 bg-amber-500/10 text-amber-400',
-    suspended:
-      'border-red-500/40 bg-red-500/10 text-red-400',
+    active: 'border-green-500/40 bg-green-500/10 text-green-400',
+    invited: 'border-amber-500/40 bg-amber-500/10 text-amber-400',
+    suspended: 'border-red-500/40 bg-red-500/10 text-red-400',
   }
   const labels: Record<User['status'], string> = {
     active: 'Active',
@@ -172,7 +165,10 @@ export default function UsersPage() {
       })
       const json = (await res.json()) as { success: boolean; error?: string }
       if (res.ok && json.success) {
-        setInviteMsg({ type: 'success', text: `Invite sent to ${inviteEmail.trim()}.` })
+        setInviteMsg({
+          type: 'success',
+          text: `Invite sent to ${inviteEmail.trim()}.`,
+        })
         setInviteEmail('')
         setInviteRole('member')
         await fetchUsers()
@@ -213,7 +209,11 @@ export default function UsersPage() {
         })
       }
     } catch {
-      setRowMsg({ email, type: 'error', text: 'Could not reach the admin API.' })
+      setRowMsg({
+        email,
+        type: 'error',
+        text: 'Could not reach the admin API.',
+      })
     } finally {
       setActionInProgress(null)
     }
@@ -243,7 +243,11 @@ export default function UsersPage() {
         })
       }
     } catch {
-      setRowMsg({ email, type: 'error', text: 'Could not reach the admin API.' })
+      setRowMsg({
+        email,
+        type: 'error',
+        text: 'Could not reach the admin API.',
+      })
     } finally {
       setActionInProgress(null)
     }
@@ -277,7 +281,11 @@ export default function UsersPage() {
         })
       }
     } catch {
-      setRowMsg({ email, type: 'error', text: 'Could not reach the admin API.' })
+      setRowMsg({
+        email,
+        type: 'error',
+        text: 'Could not reach the admin API.',
+      })
     } finally {
       setActionInProgress(null)
     }
@@ -305,7 +313,11 @@ export default function UsersPage() {
         })
       }
     } catch {
-      setRowMsg({ email, type: 'error', text: 'Could not reach the admin API.' })
+      setRowMsg({
+        email,
+        type: 'error',
+        text: 'Could not reach the admin API.',
+      })
     } finally {
       setActionInProgress(null)
     }
@@ -371,9 +383,7 @@ export default function UsersPage() {
             <label className="text-sm font-medium text-zinc-300">Role</label>
             <select
               value={inviteRole}
-              onChange={(e) =>
-                setInviteRole(e.target.value as User['role'])
-              }
+              onChange={(e) => setInviteRole(e.target.value as User['role'])}
               aria-label="Invite role"
               className="nself-input appearance-none"
             >
@@ -440,7 +450,9 @@ export default function UsersPage() {
             disabled={loading}
             className="flex items-center gap-1.5 rounded-lg border border-zinc-600 bg-zinc-700/50 px-3 py-1.5 text-xs font-medium text-zinc-300 hover:bg-zinc-700 disabled:opacity-50"
           >
-            <RefreshCw className={`h-3.5 w-3.5 ${loading ? 'animate-spin' : ''}`} />
+            <RefreshCw
+              className={`h-3.5 w-3.5 ${loading ? 'animate-spin' : ''}`}
+            />
             Refresh
           </button>
         </div>
@@ -603,8 +615,7 @@ export default function UsersPage() {
                               disabled={busy}
                               className="flex items-center gap-1 rounded border border-amber-500/40 bg-amber-500/10 px-2 py-1 text-xs font-medium text-amber-400 hover:bg-amber-500/20 disabled:opacity-50"
                             >
-                              {busy &&
-                              actionInProgress?.type === 'resend' ? (
+                              {busy && actionInProgress?.type === 'resend' ? (
                                 <Loader2 className="h-3 w-3 animate-spin" />
                               ) : (
                                 <Mail className="h-3 w-3" />
@@ -683,8 +694,7 @@ export default function UsersPage() {
                                 disabled={busy}
                                 className="rounded bg-red-600 px-2 py-0.5 text-xs font-medium text-white hover:bg-red-500 disabled:opacity-50"
                               >
-                                {busy &&
-                                actionInProgress?.type === 'remove' ? (
+                                {busy && actionInProgress?.type === 'remove' ? (
                                   <Loader2 className="h-3 w-3 animate-spin" />
                                 ) : (
                                   'Confirm'

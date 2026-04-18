@@ -13,14 +13,22 @@ export async function POST(
     const result = await executeNselfCommand('plugin', ['disable', name])
     if (!result.success) {
       return NextResponse.json(
-        { success: false, error: 'Failed to revoke plugin', details: result.error || result.stderr || 'Unknown error' },
+        {
+          success: false,
+          error: 'Failed to revoke plugin',
+          details: result.error || result.stderr || 'Unknown error',
+        },
         { status: 500 },
       )
     }
     return NextResponse.json({ success: true, plugin: name, action: 'revoke' })
   } catch (error) {
     return NextResponse.json(
-      { success: false, error: 'Failed to revoke plugin', details: error instanceof Error ? error.message : 'Unknown error' },
+      {
+        success: false,
+        error: 'Failed to revoke plugin',
+        details: error instanceof Error ? error.message : 'Unknown error',
+      },
       { status: 500 },
     )
   }

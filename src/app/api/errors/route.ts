@@ -564,7 +564,10 @@ export async function GET(
   request: NextRequest,
 ): Promise<
   NextResponse<
-    SuccessAllResponse | SuccessOneResponse | SuccessManyResponse | ErrorResponse
+    | SuccessAllResponse
+    | SuccessOneResponse
+    | SuccessManyResponse
+    | ErrorResponse
   >
 > {
   const { searchParams } = new URL(request.url)

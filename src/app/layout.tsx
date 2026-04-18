@@ -12,9 +12,9 @@ import { ToastProvider } from '@/components/Toast'
 import { AuthProvider } from '@/contexts/AuthContext'
 import '@/styles/tailwind.css'
 import { type Metadata, type Viewport } from 'next'
-import { Inter } from 'next/font/google'
 import { NextIntlClientProvider } from 'next-intl'
 import { getMessages } from 'next-intl/server'
+import { Inter } from 'next/font/google'
 const inter = Inter({
   subsets: ['latin'],
   display: 'swap',

@@ -111,7 +111,10 @@ function EnvEditorContent() {
   const [showSchemaValidation, setShowSchemaValidation] = useState(false)
 
   const schemaErrors = useMemo(
-    () => validateEnvVars(variables.map(({ key, value }) => ({ key, value: value ?? '' }))),
+    () =>
+      validateEnvVars(
+        variables.map(({ key, value }) => ({ key, value: value ?? '' })),
+      ),
     [variables],
   )
 
@@ -928,13 +931,19 @@ function EnvEditorContent() {
           </button>
 
           {showSchemaValidation && schemaErrors.length > 0 && (
-            <div className="mt-1 rounded-b-xl rounded-t border border-t-0 border-zinc-200 bg-white dark:border-zinc-700 dark:bg-zinc-900/50">
+            <div className="mt-1 rounded-t rounded-b-xl border border-t-0 border-zinc-200 bg-white dark:border-zinc-700 dark:bg-zinc-900/50">
               <table className="w-full text-xs">
                 <thead>
                   <tr className="border-b border-zinc-100 dark:border-zinc-800">
-                    <th className="px-4 py-2 text-left font-medium text-zinc-500">Variable</th>
-                    <th className="px-4 py-2 text-left font-medium text-zinc-500">Issue</th>
-                    <th className="w-20 px-4 py-2 text-left font-medium text-zinc-500">Severity</th>
+                    <th className="px-4 py-2 text-left font-medium text-zinc-500">
+                      Variable
+                    </th>
+                    <th className="px-4 py-2 text-left font-medium text-zinc-500">
+                      Issue
+                    </th>
+                    <th className="w-20 px-4 py-2 text-left font-medium text-zinc-500">
+                      Severity
+                    </th>
                   </tr>
                 </thead>
                 <tbody>

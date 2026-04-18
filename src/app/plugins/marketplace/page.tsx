@@ -10,8 +10,8 @@ import {
   ChevronUp,
   Download,
   Filter,
-  Lock,
   Loader2,
+  Lock,
   Search,
   Star,
   Trash2,
@@ -106,7 +106,10 @@ function ReviewSection({ pluginName }: { pluginName: string }) {
   const [hoveredStar, setHoveredStar] = useState(0)
   const [comment, setComment] = useState('')
   const [submitting, setSubmitting] = useState(false)
-  const [toast, setToast] = useState<{ type: 'success' | 'error'; msg: string } | null>(null)
+  const [toast, setToast] = useState<{
+    type: 'success' | 'error'
+    msg: string
+  } | null>(null)
 
   const handleSubmit = async () => {
     if (stars === 0) return
@@ -142,9 +145,13 @@ function ReviewSection({ pluginName }: { pluginName: string }) {
     <div className="mt-3 border-t border-zinc-700/50 pt-3">
       <button
         onClick={() => setOpen((v) => !v)}
-        className="flex items-center gap-1 text-xs text-zinc-500 hover:text-zinc-300 transition-colors"
+        className="flex items-center gap-1 text-xs text-zinc-500 transition-colors hover:text-zinc-300"
       >
-        {open ? <ChevronUp className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />}
+        {open ? (
+          <ChevronUp className="h-3 w-3" />
+        ) : (
+          <ChevronDown className="h-3 w-3" />
+        )}
         Write a review
       </button>
 
@@ -164,7 +171,7 @@ function ReviewSection({ pluginName }: { pluginName: string }) {
                 <Star
                   className={`h-5 w-5 ${
                     n <= (hoveredStar || stars)
-                      ? 'text-yellow-400 fill-yellow-400'
+                      ? 'fill-yellow-400 text-yellow-400'
                       : 'text-zinc-600'
                   }`}
                 />
@@ -178,7 +185,7 @@ function ReviewSection({ pluginName }: { pluginName: string }) {
             onChange={(e) => setComment(e.target.value.slice(0, 500))}
             placeholder="Optional comment (max 500 chars)"
             rows={3}
-            className="w-full rounded-lg border border-zinc-700 bg-zinc-900 px-3 py-2 text-xs text-zinc-300 placeholder-zinc-600 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 focus:outline-none resize-none"
+            className="w-full resize-none rounded-lg border border-zinc-700 bg-zinc-900 px-3 py-2 text-xs text-zinc-300 placeholder-zinc-600 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 focus:outline-none"
           />
           <div className="flex items-center justify-between">
             <span className="text-xs text-zinc-600">{comment.length}/500</span>
@@ -242,7 +249,9 @@ function MarketplaceCard({
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h3 className="font-medium text-white capitalize">{plugin.name}</h3>
+              <h3 className="font-medium text-white capitalize">
+                {plugin.name}
+              </h3>
               {/* T08: bundle badge */}
               {hasBundle && (
                 <span className="rounded-full border border-indigo-500/30 bg-indigo-500/20 px-2 py-0.5 text-xs text-indigo-400">
@@ -320,7 +329,7 @@ function MarketplaceCard({
             <>
               <Check className="h-4 w-4 text-emerald-400" />
               <span>Installed</span>
-              <Trash2 className="ml-auto h-4 w-4 opacity-0 group-hover:opacity-100 transition-opacity" />
+              <Trash2 className="ml-auto h-4 w-4 opacity-0 transition-opacity group-hover:opacity-100" />
             </>
           )}
         </button>
@@ -357,7 +366,7 @@ function MarketplaceCard({
             href="https://nself.org/pricing"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-indigo-400 hover:text-indigo-300 underline"
+            className="text-indigo-400 underline hover:text-indigo-300"
           >
             {bundleLabel(plugin.bundle!)} {bundlePriceLabel(plugin.bundle!)}
           </Link>
@@ -382,7 +391,9 @@ function MarketplaceContent() {
     PluginCategory | 'all'
   >('all')
   // T07: tier + bundle filters
-  const [selectedTier, setSelectedTier] = useState<'all' | 'free' | 'pro'>('all')
+  const [selectedTier, setSelectedTier] = useState<'all' | 'free' | 'pro'>(
+    'all',
+  )
   const [selectedBundle, setSelectedBundle] = useState<string>('all')
   const [sortBy, setSortBy] = useState<'popular' | 'recent' | 'name'>('popular')
   const [installing, setInstalling] = useState<string | null>(null)
@@ -462,7 +473,7 @@ function MarketplaceContent() {
       // T07: bundle filter
       const matchesBundle =
         selectedBundle === 'all' ||
-        (plugin.bundle?.toLowerCase() === selectedBundle)
+        plugin.bundle?.toLowerCase() === selectedBundle
       return matchesSearch && matchesCategory && matchesTier && matchesBundle
     }) || []
 
@@ -564,8 +575,8 @@ function MarketplaceContent() {
       </div>
 
       {/* Search and Filters */}
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:flex-wrap">
-        <div className="relative flex-1 min-w-48">
+      <div className="flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-center">
+        <div className="relative min-w-48 flex-1">
           <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-zinc-500" />
           <input
             type="text"
@@ -576,7 +587,7 @@ function MarketplaceContent() {
           />
         </div>
 
-        <div className="flex items-center gap-2 flex-wrap">
+        <div className="flex flex-wrap items-center gap-2">
           <Filter className="h-4 w-4 text-zinc-500" />
 
           {/* Category filter */}

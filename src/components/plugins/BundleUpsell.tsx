@@ -54,9 +54,8 @@ export function BundleUpsell({
         <p className="mb-4 text-sm text-zinc-400">
           You have{' '}
           <span className="font-medium text-indigo-300">{installedCount}</span>{' '}
-          of{' '}
-          <span className="font-medium text-white">{totalCount}</span> plugins
-          in this bundle
+          of <span className="font-medium text-white">{totalCount}</span>{' '}
+          plugins in this bundle
         </p>
       )}
 

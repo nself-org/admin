@@ -13,14 +13,26 @@ export async function POST(
     const result = await executeNselfCommand('plugin', ['uninstall', name])
     if (!result.success) {
       return NextResponse.json(
-        { success: false, error: 'Failed to uninstall plugin', details: result.error || result.stderr || 'Unknown error' },
+        {
+          success: false,
+          error: 'Failed to uninstall plugin',
+          details: result.error || result.stderr || 'Unknown error',
+        },
         { status: 500 },
       )
     }
-    return NextResponse.json({ success: true, plugin: name, action: 'uninstall' })
+    return NextResponse.json({
+      success: true,
+      plugin: name,
+      action: 'uninstall',
+    })
   } catch (error) {
     return NextResponse.json(
-      { success: false, error: 'Failed to uninstall plugin', details: error instanceof Error ? error.message : 'Unknown error' },
+      {
+        success: false,
+        error: 'Failed to uninstall plugin',
+        details: error instanceof Error ? error.message : 'Unknown error',
+      },
       { status: 500 },
     )
   }

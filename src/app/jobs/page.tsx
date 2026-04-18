@@ -7,13 +7,7 @@
 // (cron) and job queue (jobs) without context switching. Lists queues,
 // current jobs by status, and the DLQ with a revive button.
 
-import {
-  AlertCircle,
-  Loader2,
-  Play,
-  RefreshCw,
-  Trash2,
-} from 'lucide-react'
+import { AlertCircle, Loader2, Play, RefreshCw, Trash2 } from 'lucide-react'
 import Link from 'next/link'
 import { useCallback, useEffect, useState } from 'react'
 
@@ -151,7 +145,9 @@ export default function JobsPage() {
     <div className="space-y-6 p-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-semibold text-white">Jobs &amp; Queue</h1>
+          <h1 className="text-2xl font-semibold text-white">
+            Jobs &amp; Queue
+          </h1>
           <p className="mt-1 text-sm text-zinc-400">
             Background job queue with retries, DLQ, and HMAC-signed HTTP
             callbacks.{' '}
@@ -178,7 +174,7 @@ export default function JobsPage() {
 
       {/* Queue stats */}
       <section>
-        <h2 className="mb-3 text-sm font-medium uppercase tracking-wide text-zinc-500">
+        <h2 className="mb-3 text-sm font-medium tracking-wide text-zinc-500 uppercase">
           Queues
         </h2>
         {queues.length === 0 ? (
@@ -196,10 +192,19 @@ export default function JobsPage() {
                   {q.name}
                 </div>
                 <div className="mt-2 grid grid-cols-2 gap-2 text-xs text-zinc-400">
-                  <div>Pending: <span className="text-amber-400">{q.pending}</span></div>
-                  <div>Active: <span className="text-sky-400">{q.active}</span></div>
-                  <div>Done: <span className="text-emerald-400">{q.completed}</span></div>
-                  <div>Failed: <span className="text-rose-400">{q.failed}</span></div>
+                  <div>
+                    Pending: <span className="text-amber-400">{q.pending}</span>
+                  </div>
+                  <div>
+                    Active: <span className="text-sky-400">{q.active}</span>
+                  </div>
+                  <div>
+                    Done:{' '}
+                    <span className="text-emerald-400">{q.completed}</span>
+                  </div>
+                  <div>
+                    Failed: <span className="text-rose-400">{q.failed}</span>
+                  </div>
                 </div>
               </div>
             ))}
@@ -232,7 +237,7 @@ export default function JobsPage() {
 
       {/* Jobs table */}
       <section>
-        <h2 className="mb-3 text-sm font-medium uppercase tracking-wide text-zinc-500">
+        <h2 className="mb-3 text-sm font-medium tracking-wide text-zinc-500 uppercase">
           Jobs ({jobs.length})
         </h2>
         {loading ? (
@@ -247,7 +252,7 @@ export default function JobsPage() {
         ) : (
           <div className="overflow-x-auto rounded-xl border border-zinc-800">
             <table className="w-full text-sm">
-              <thead className="bg-zinc-900/80 text-left text-xs uppercase tracking-wide text-zinc-500">
+              <thead className="bg-zinc-900/80 text-left text-xs tracking-wide text-zinc-500 uppercase">
                 <tr>
                   <th className="px-3 py-2">Queue</th>
                   <th className="px-3 py-2">Status</th>
@@ -276,7 +281,7 @@ export default function JobsPage() {
                     <td className="px-3 py-2 text-zinc-400">
                       {formatRelative(j.updated_at)}
                     </td>
-                    <td className="px-3 py-2 text-zinc-400 max-w-xs truncate">
+                    <td className="max-w-xs truncate px-3 py-2 text-zinc-400">
                       {j.error ?? '—'}
                     </td>
                     <td className="px-3 py-2">
@@ -309,7 +314,7 @@ export default function JobsPage() {
 
       {/* DLQ */}
       <section>
-        <h2 className="mb-3 text-sm font-medium uppercase tracking-wide text-zinc-500">
+        <h2 className="mb-3 text-sm font-medium tracking-wide text-zinc-500 uppercase">
           Dead Letter Queue ({dlq.length})
         </h2>
         {dlq.length === 0 ? (
@@ -319,7 +324,7 @@ export default function JobsPage() {
         ) : (
           <div className="overflow-x-auto rounded-xl border border-rose-500/30 bg-rose-500/5">
             <table className="w-full text-sm">
-              <thead className="bg-rose-500/10 text-left text-xs uppercase tracking-wide text-rose-300">
+              <thead className="bg-rose-500/10 text-left text-xs tracking-wide text-rose-300 uppercase">
                 <tr>
                   <th className="px-3 py-2">Queue</th>
                   <th className="px-3 py-2">Attempts</th>
@@ -331,11 +336,13 @@ export default function JobsPage() {
               <tbody className="divide-y divide-rose-500/10">
                 {dlq.map((j) => (
                   <tr key={j.id}>
-                    <td className="px-3 py-2 font-medium text-white">{j.queue}</td>
+                    <td className="px-3 py-2 font-medium text-white">
+                      {j.queue}
+                    </td>
                     <td className="px-3 py-2 text-zinc-400">
                       {j.attempts}/{j.max_attempts}
                     </td>
-                    <td className="px-3 py-2 text-zinc-400 max-w-md truncate">
+                    <td className="max-w-md truncate px-3 py-2 text-zinc-400">
                       {j.error ?? '—'}
                     </td>
                     <td className="px-3 py-2 text-zinc-400">

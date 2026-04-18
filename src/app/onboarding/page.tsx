@@ -172,7 +172,9 @@ function StepVerify({
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-xl font-semibold text-white">Connection verified</h2>
+        <h2 className="text-xl font-semibold text-white">
+          Connection verified
+        </h2>
         <p className="mt-1 text-sm text-gray-400">
           Admin is connected to your nSelf backend.
         </p>
@@ -315,7 +317,11 @@ export default function OnboardingPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ url: backendUrl, apiKey }),
       })
-      const data = (await res.json()) as { success: boolean; version?: string; error?: string }
+      const data = (await res.json()) as {
+        success: boolean
+        version?: string
+        error?: string
+      }
       if (data.success) {
         setConnectedVersion(data.version ?? '')
         await fetch('/api/onboarding', {
@@ -328,7 +334,9 @@ export default function OnboardingPage() {
         setConnectError(data.error ?? 'Connection failed.')
       }
     } catch {
-      setConnectError('Could not reach the server. Check the URL and try again.')
+      setConnectError(
+        'Could not reach the server. Check the URL and try again.',
+      )
     } finally {
       setConnecting(false)
     }
@@ -346,7 +354,9 @@ export default function OnboardingPage() {
         setDemoError(data.error ?? 'Demo creation failed.')
       }
     } catch {
-      setDemoError('Request failed. You can skip this step and create a project later.')
+      setDemoError(
+        'Request failed. You can skip this step and create a project later.',
+      )
     } finally {
       setCreatingDemo(false)
     }
@@ -365,9 +375,7 @@ export default function OnboardingPage() {
     <div className="w-full max-w-md rounded-2xl border border-gray-800 bg-gray-900 p-8 shadow-xl">
       <ProgressDots current={currentStep} />
 
-      {currentStep === 0 && (
-        <StepWelcome onNext={() => setCurrentStep(1)} />
-      )}
+      {currentStep === 0 && <StepWelcome onNext={() => setCurrentStep(1)} />}
 
       {currentStep === 1 && (
         <StepConnect

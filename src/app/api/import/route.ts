@@ -1,10 +1,10 @@
-import { getEnhancedPath, findNselfPathSync } from '@/lib/nself-path'
-import { NextRequest, NextResponse } from 'next/server'
+import { findNselfPathSync, getEnhancedPath } from '@/lib/nself-path'
 import { exec } from 'child_process'
-import { promisify } from 'util'
 import fs from 'fs'
+import { NextRequest, NextResponse } from 'next/server'
 import os from 'os'
 import path from 'path'
+import { promisify } from 'util'
 
 const execAsync = promisify(exec)
 
@@ -36,7 +36,10 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
     if (source !== 'chatgpt' && source !== 'claude') {
       return NextResponse.json(
-        { success: false, error: 'Invalid source: must be "chatgpt" or "claude"' },
+        {
+          success: false,
+          error: 'Invalid source: must be "chatgpt" or "claude"',
+        },
         { status: 400 },
       )
     }
@@ -73,11 +76,19 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       output: stdout || stderr || 'Import completed successfully',
     })
   } catch (err) {
-    const execErr = err as { message?: string; stdout?: string; stderr?: string }
+    const execErr = err as {
+      message?: string
+      stdout?: string
+      stderr?: string
+    }
     return NextResponse.json(
       {
         success: false,
-        error: execErr.stdout || execErr.stderr || execErr.message || 'Import failed',
+        error:
+          execErr.stdout ||
+          execErr.stderr ||
+          execErr.message ||
+          'Import failed',
       },
       { status: 500 },
     )

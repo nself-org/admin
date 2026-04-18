@@ -60,7 +60,7 @@
 
   /* WCAG 2.2 AA — 2.4.11 Focus Appearance */
   :focus-visible {
-    outline: 2px solid #6366F1;
+    outline: 2px solid #6366f1;
     outline-offset: 2px;
   }
 
@@ -81,7 +81,7 @@
    * the remaining cases that need explicit mirroring. */
 
   /* Flip directional icons (arrows, chevrons) in RTL layouts */
-  [dir="rtl"] .flip-rtl {
+  [dir='rtl'] .flip-rtl {
     transform: scaleX(-1);
   }
 

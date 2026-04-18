@@ -64,7 +64,12 @@ export async function GET(
     clearTimeout(timeoutId)
 
     const body = await response.json().catch(() => ({}))
-    logger.api('GET', `/api/plugins/${name}/ratings`, response.status, Date.now() - startTime)
+    logger.api(
+      'GET',
+      `/api/plugins/${name}/ratings`,
+      response.status,
+      Date.now() - startTime,
+    )
 
     if (!response.ok) {
       return NextResponse.json(
@@ -78,7 +83,8 @@ export async function GET(
         success: true,
         name: body.name ?? name,
         rating: typeof body.rating === 'number' ? body.rating : 0,
-        reviewCount: typeof body.reviewCount === 'number' ? body.reviewCount : 0,
+        reviewCount:
+          typeof body.reviewCount === 'number' ? body.reviewCount : 0,
         reviews: Array.isArray(body.reviews) ? body.reviews : [],
       },
       {
@@ -123,7 +129,10 @@ export async function POST(
 
   const payload = body as { rating?: unknown; comment?: unknown }
 
-  if (typeof payload?.rating !== 'number' || !Number.isInteger(payload.rating)) {
+  if (
+    typeof payload?.rating !== 'number' ||
+    !Number.isInteger(payload.rating)
+  ) {
     return NextResponse.json(
       { success: false, error: 'rating must be an integer' },
       { status: 400 },
@@ -161,7 +170,12 @@ export async function POST(
     clearTimeout(timeoutId)
 
     const result = await response.json().catch(() => ({}))
-    logger.api('POST', `/api/plugins/${name}/ratings`, response.status, Date.now() - startTime)
+    logger.api(
+      'POST',
+      `/api/plugins/${name}/ratings`,
+      response.status,
+      Date.now() - startTime,
+    )
 
     return NextResponse.json(
       {

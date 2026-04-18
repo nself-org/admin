@@ -38,7 +38,8 @@ const KNOWN_SCHEMAS: Record<string, EnvVarSchemaEntry> = {
         severity: 'error',
       },
       {
-        test: (v) => !/^(password|changeme|admin|postgres|default|secret)$/i.test(v),
+        test: (v) =>
+          !/^(password|changeme|admin|postgres|default|secret)$/i.test(v),
         message: 'Must not use a common default password',
         severity: 'error',
       },
@@ -85,7 +86,9 @@ const KNOWN_SCHEMAS: Record<string, EnvVarSchemaEntry> = {
         test: (v) => {
           try {
             const parsed = JSON.parse(v)
-            return typeof parsed === 'object' && parsed !== null && 'key' in parsed
+            return (
+              typeof parsed === 'object' && parsed !== null && 'key' in parsed
+            )
           } catch {
             return false
           }
@@ -213,9 +216,7 @@ export function validateEnvVar(
  * Check if a required env var is missing from the provided set.
  * Returns missing required var keys.
  */
-export function getMissingRequired(
-  variableKeys: string[],
-): string[] {
+export function getMissingRequired(variableKeys: string[]): string[] {
   const keySet = new Set(variableKeys)
   return Object.entries(KNOWN_SCHEMAS)
     .filter(([key, schema]) => schema.required && !keySet.has(key))

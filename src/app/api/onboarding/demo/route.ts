@@ -1,8 +1,12 @@
+import { getEnhancedPath } from '@/lib/nself-path'
 import { spawn } from 'child_process'
 import { NextResponse } from 'next/server'
-import { getEnhancedPath } from '@/lib/nself-path'
 
-function runNselfDemo(): Promise<{ success: boolean; output: string; error?: string }> {
+function runNselfDemo(): Promise<{
+  success: boolean
+  output: string
+  error?: string
+}> {
   return new Promise((resolve) => {
     const child = spawn('nself', ['init', '--demo'], {
       env: { ...process.env, PATH: getEnhancedPath() },
@@ -35,7 +39,10 @@ function runNselfDemo(): Promise<{ success: boolean; output: string; error?: str
       if (code === 0) {
         resolve({ success: true, output })
       } else {
-        const errText = stderrChunks.join('').trim() || output.trim() || `Process exited with code ${code}`
+        const errText =
+          stderrChunks.join('').trim() ||
+          output.trim() ||
+          `Process exited with code ${code}`
         resolve({ success: false, output, error: errText })
       }
     })
@@ -48,7 +55,10 @@ export async function POST() {
     if (result.success) {
       return NextResponse.json({ success: true, output: result.output })
     }
-    return NextResponse.json({ success: false, error: result.error ?? 'Demo creation failed.' })
+    return NextResponse.json({
+      success: false,
+      error: result.error ?? 'Demo creation failed.',
+    })
   } catch (error) {
     return NextResponse.json(
       {

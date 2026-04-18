@@ -274,9 +274,9 @@ function PluginsContent() {
 
   const [_syncing, setSyncing] = useState<string | null>(null)
   const [searchQuery, setSearchQuery] = useState('')
-  const [filterActive, setFilterActive] = useState<'all' | 'active' | 'updates'>(
-    urlFilter === 'updates' ? 'updates' : 'all',
-  )
+  const [filterActive, setFilterActive] = useState<
+    'all' | 'active' | 'updates'
+  >(urlFilter === 'updates' ? 'updates' : 'all')
   const [sortBy, setSortBy] = useState<'name' | 'date'>('date')
 
   const { data, error, isLoading, mutate } = useSWR<{
@@ -500,7 +500,13 @@ function PluginsContent() {
       {filterActive === 'updates' && (
         <div className="flex items-center gap-3 rounded-lg border border-yellow-500/30 bg-yellow-900/20 px-4 py-3 text-sm text-yellow-300">
           <ArrowUpCircle className="h-4 w-4 shrink-0" />
-          <span>Showing plugins with updates available. Run <code className="rounded bg-yellow-900/40 px-1 font-mono">nself plugin update</code> to update all at once.</span>
+          <span>
+            Showing plugins with updates available. Run{' '}
+            <code className="rounded bg-yellow-900/40 px-1 font-mono">
+              nself plugin update
+            </code>{' '}
+            to update all at once.
+          </span>
           <button
             onClick={() => setFilterActive('all')}
             className="ml-auto shrink-0 text-yellow-400 underline underline-offset-2 hover:text-yellow-200"

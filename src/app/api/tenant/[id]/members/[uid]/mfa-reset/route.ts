@@ -27,7 +27,10 @@ export async function POST(
         { status: 500 },
       )
     }
-    return NextResponse.json({ success: true, data: { userId: uid, mfaReset: true } })
+    return NextResponse.json({
+      success: true,
+      data: { userId: uid, mfaReset: true },
+    })
   } catch (error) {
     return NextResponse.json(
       {

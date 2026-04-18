@@ -44,7 +44,7 @@ function RelatedPluginMiniCard({ plugin }: { plugin: MarketplacePlugin }) {
         <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-zinc-700/50 text-xl">
           {plugin.icon || '🔌'}
         </div>
-        <span className="line-clamp-2 text-xs font-medium leading-tight text-white">
+        <span className="line-clamp-2 text-xs leading-tight font-medium text-white">
           {displayName}
         </span>
       </div>
@@ -73,9 +73,7 @@ export function RelatedPlugins({
   if (relatedPlugins.length === 0) return null
 
   const heading =
-    bundle && bundleName
-      ? `More plugins in ${bundleName}`
-      : 'Related plugins'
+    bundle && bundleName ? `More plugins in ${bundleName}` : 'Related plugins'
 
   return (
     <div className="space-y-3">

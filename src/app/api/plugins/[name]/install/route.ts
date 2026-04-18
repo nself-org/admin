@@ -100,7 +100,9 @@ export async function POST(
 
       const isValid = await validateLicenseKey(licenseKey)
       if (!isValid) {
-        logger.warn('Pro plugin install blocked — license key invalid', { name })
+        logger.warn('Pro plugin install blocked — license key invalid', {
+          name,
+        })
         return NextResponse.json(
           {
             success: false,

@@ -1,7 +1,13 @@
 'use client'
 
 import { AnimatePresence, motion } from 'framer-motion'
-import { AlertCircle, AlertTriangle, CheckCircle, Loader2, X } from 'lucide-react'
+import {
+  AlertCircle,
+  AlertTriangle,
+  CheckCircle,
+  Loader2,
+  X,
+} from 'lucide-react'
 import { useState } from 'react'
 
 export interface UninstallDialogProps {
@@ -95,7 +101,9 @@ export function UninstallDialog({
           <div className="space-y-3 p-5">
             <p className="text-sm text-zinc-400">
               This will uninstall{' '}
-              <span className="font-medium text-white">{plugin.displayName}</span>{' '}
+              <span className="font-medium text-white">
+                {plugin.displayName}
+              </span>{' '}
               from your nself stack. This action cannot be undone without
               reinstalling.
             </p>
@@ -106,7 +114,9 @@ export function UninstallDialog({
                 <p className="text-sm text-amber-300">
                   Warning:{' '}
                   <span className="font-medium">{dependents.length}</span> other{' '}
-                  {dependents.length === 1 ? 'plugin depends' : 'plugins depend'}{' '}
+                  {dependents.length === 1
+                    ? 'plugin depends'
+                    : 'plugins depend'}{' '}
                   on this plugin.
                 </p>
               </div>

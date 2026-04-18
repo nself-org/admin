@@ -21,16 +21,20 @@ function isValidEmail(email: unknown): email is string {
   return typeof email === 'string' && EMAIL_RE.test(email)
 }
 
-function isValidRole(
-  role: unknown,
-): role is (typeof VALID_ROLES)[number] {
-  return typeof role === 'string' && (VALID_ROLES as readonly string[]).includes(role)
+function isValidRole(role: unknown): role is (typeof VALID_ROLES)[number] {
+  return (
+    typeof role === 'string' &&
+    (VALID_ROLES as readonly string[]).includes(role)
+  )
 }
 
 function isValidAction(
   action: unknown,
 ): action is (typeof VALID_ACTIONS)[number] {
-  return typeof action === 'string' && (VALID_ACTIONS as readonly string[]).includes(action)
+  return (
+    typeof action === 'string' &&
+    (VALID_ACTIONS as readonly string[]).includes(action)
+  )
 }
 
 // ── GET — list users ───────────────────────────────────────────────────────────
@@ -43,7 +47,8 @@ export async function GET(_request: NextRequest): Promise<NextResponse> {
       return NextResponse.json({
         success: true,
         data: [] as User[],
-        message: 'No user data available — nself user command may not be configured.',
+        message:
+          'No user data available — nself user command may not be configured.',
       })
     }
 
@@ -265,11 +270,7 @@ export async function DELETE(request: NextRequest): Promise<NextResponse> {
     )
   }
 
-  const result = await executeNselfCommand('user', [
-    'remove',
-    '--email',
-    email,
-  ])
+  const result = await executeNselfCommand('user', ['remove', '--email', email])
 
   if (!result.success) {
     return NextResponse.json(

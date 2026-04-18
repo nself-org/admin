@@ -27,7 +27,11 @@ interface LicenseStatus {
   pluginsAllowed: string[] | null
 }
 
-export function InstallModal({ plugin, onClose, onInstalled }: InstallModalProps) {
+export function InstallModal({
+  plugin,
+  onClose,
+  onInstalled,
+}: InstallModalProps) {
   const isPro = plugin.tier === 'pro' || plugin.licenseRequired
 
   const [licenseState, setLicenseState] = useState<LicenseState>(
@@ -67,7 +71,8 @@ export function InstallModal({ plugin, onClose, onInstalled }: InstallModalProps
     return () => clearTimeout(timer)
   }, [installState, plugin.name, onInstalled, onClose])
 
-  const licenseReady = licenseState === 'not-required' || licenseState === 'valid'
+  const licenseReady =
+    licenseState === 'not-required' || licenseState === 'valid'
   const canInstall = installState === 'idle' && licenseReady
 
   async function handleInstall() {
@@ -175,8 +180,8 @@ export function InstallModal({ plugin, onClose, onInstalled }: InstallModalProps
                   licenseState === 'checking'
                     ? 'bg-zinc-800/60'
                     : licenseState === 'valid'
-                      ? 'bg-emerald-900/30 border border-emerald-500/30'
-                      : 'bg-amber-900/20 border border-amber-500/30'
+                      ? 'border border-emerald-500/30 bg-emerald-900/30'
+                      : 'border border-amber-500/30 bg-amber-900/20'
                 }`}
               >
                 {licenseState === 'checking' && (

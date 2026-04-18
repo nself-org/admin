@@ -19,7 +19,9 @@
   -webkit-backdrop-filter: blur(12px);
   border: 1px solid var(--color-nself-border);
   border-radius: 0.75rem;
-  box-shadow: 0 0 0 1px var(--color-nself-border), 0 0 16px var(--color-nself-glow);
+  box-shadow:
+    0 0 0 1px var(--color-nself-border),
+    0 0 16px var(--color-nself-glow);
 }
 
 /* Elevated glass card - slightly lighter surface for nested cards */
@@ -33,12 +35,21 @@
 
 /* Indigo-to-purple gradient - primary brand gradient for headers and banners */
 .nself-gradient {
-  background: linear-gradient(135deg, var(--color-nself-primary-dark) 0%, var(--color-nself-primary) 50%, #7C3AED 100%);
+  background: linear-gradient(
+    135deg,
+    var(--color-nself-primary-dark) 0%,
+    var(--color-nself-primary) 50%,
+    #7c3aed 100%
+  );
 }
 
 /* Indigo gradient text */
 .nself-gradient-text {
-  background: linear-gradient(135deg, var(--color-nself-primary-light) 0%, #A78BFA 100%);
+  background: linear-gradient(
+    135deg,
+    var(--color-nself-primary-light) 0%,
+    #a78bfa 100%
+  );
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -47,7 +58,9 @@
 
 /* Glow effect - indigo outer glow, used for highlights and focused elements */
 .nself-glow {
-  box-shadow: 0 0 20px var(--color-nself-glow), 0 0 40px rgba(99, 102, 241, 0.2);
+  box-shadow:
+    0 0 20px var(--color-nself-glow),
+    0 0 40px rgba(99, 102, 241, 0.2);
 }
 
 /* Subtle glow for borders */
@@ -87,7 +100,9 @@
   border-radius: 0.5rem;
   padding: 0.5rem 1rem;
   font-weight: 600;
-  transition: background-color 0.15s ease, box-shadow 0.15s ease;
+  transition:
+    background-color 0.15s ease,
+    box-shadow 0.15s ease;
 }
 
 .nself-btn-primary:hover {
@@ -123,7 +138,7 @@
   padding: 0.125rem 0.625rem;
   font-size: 0.75rem;
   font-weight: 600;
-  color: #818CF8;
+  color: #818cf8;
 }
 
 /* Amber warning badge */
@@ -136,7 +151,7 @@
   padding: 0.125rem 0.625rem;
   font-size: 0.75rem;
   font-weight: 600;
-  color: #FCD34D;
+  color: #fcd34d;
 }
 
 /* Red danger badge */
@@ -149,7 +164,7 @@
   padding: 0.125rem 0.625rem;
   font-size: 0.75rem;
   font-weight: 600;
-  color: #FCA5A5;
+  color: #fca5a5;
 }
 
 /* Green success badge */
@@ -162,7 +177,7 @@
   padding: 0.125rem 0.625rem;
   font-size: 0.75rem;
   font-weight: 600;
-  color: #86EFAC;
+  color: #86efac;
 }
 
 /* Standard input matching brand aesthetics */
@@ -174,7 +189,9 @@
   padding: 0.5rem 0.75rem;
   font-size: 0.875rem;
   color: var(--color-nself-text);
-  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
 }
 
 .nself-input::placeholder {

@@ -72,8 +72,10 @@
       "minimatch": ">=9.0.7",
       "@eslint/eslintrc>minimatch": ">=9.0.7",
       "serialize-javascript": ">=7.0.3",
-      "dompurify": ">=3.3.2",
-      "webpack": ">=5.104.1"
+      "dompurify": ">=3.4.0",
+      "webpack": ">=5.104.1",
+      "protobufjs": ">=7.5.5",
+      "lodash": ">=4.18.1"
     }
   },
   "dependencies": {
@@ -120,13 +122,13 @@
     "framer-motion": "^12.38.0",
     "js-yaml": "^4.1.1",
     "lightningcss": "^1.32.0",
-    "lodash": "^4.17.23",
+    "lodash": "^4.18.1",
     "lokijs": "^1.5.12",
     "lucide-react": "^0.539.0",
     "mdast-util-to-string": "^4.0.0",
     "mdx-annotations": "^0.1.4",
     "minio": "^8.0.7",
-    "next": "^16.2.1",
+    "next": "^16.2.4",
     "next-intl": "^4.9.1",
     "next-themes": "^0.4.6",
     "pg": "^8.20.0",

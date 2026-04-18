@@ -471,7 +471,10 @@ export default function CronJobsPage() {
         <div>
           <h1 className="text-2xl font-semibold text-white">Cron Jobs</h1>
           <p className="mt-1 text-sm text-zinc-400">
-            Schedule and manage recurring tasks with the nself-cron plugin
+            Schedule and manage recurring tasks with the nself-cron plugin.{' '}
+            <a href="/jobs" className="text-sky-400 hover:underline">
+              Looking for one-off background jobs? Open Jobs &amp; Queue →
+            </a>
           </p>
         </div>
         {!showForm && (

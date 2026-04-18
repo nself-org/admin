@@ -1,8 +1,11 @@
 import withBundleAnalyzer from '@next/bundle-analyzer'
+import createNextIntlPlugin from 'next-intl/plugin'
 
 const bundleAnalyzer = withBundleAnalyzer({
   enabled: process.env.ANALYZE === 'true',
 })
+
+const withNextIntl = createNextIntlPlugin('./src/i18n.ts')
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -93,4 +96,4 @@ const nextConfig = {
   serverExternalPackages: ['ssh2', 'dockerode', 'cpu-features'],
 }
 
-export default bundleAnalyzer(nextConfig)
+export default bundleAnalyzer(withNextIntl(nextConfig))

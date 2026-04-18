@@ -13,6 +13,8 @@ import { AuthProvider } from '@/contexts/AuthContext'
 import '@/styles/tailwind.css'
 import { type Metadata, type Viewport } from 'next'
 import { Inter } from 'next/font/google'
+import { NextIntlClientProvider } from 'next-intl'
+import { getMessages } from 'next-intl/server'
 const inter = Inter({
   subsets: ['latin'],
   display: 'swap',
@@ -49,17 +51,20 @@ export const metadata: Metadata = {
   },
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
   // Empty sections for now since we're not using MDX
   const allSections = {}
+  const messages = await getMessages()
 
   return (
+    // For RTL languages, set dir="rtl" on the html element. Currently English-only (ltr).
     <html
       lang="en"
+      dir="ltr"
       className={`h-full ${inter.variable}`}
       suppressHydrationWarning
     >
@@ -72,14 +77,16 @@ export default function RootLayout({
             <ToastProvider>
               <ConfirmProvider>
                 <Providers>
-                  <ProjectStateWrapper>
-                    <GlobalDataProvider>
-                      <GlobalCommandPalette />
-                      <div className="w-full">
-                        <Layout allSections={allSections}>{children}</Layout>
-                      </div>
-                    </GlobalDataProvider>
-                  </ProjectStateWrapper>
+                  <NextIntlClientProvider messages={messages}>
+                    <ProjectStateWrapper>
+                      <GlobalDataProvider>
+                        <GlobalCommandPalette />
+                        <div className="w-full">
+                          <Layout allSections={allSections}>{children}</Layout>
+                        </div>
+                      </GlobalDataProvider>
+                    </ProjectStateWrapper>
+                  </NextIntlClientProvider>
                 </Providers>
               </ConfirmProvider>
             </ToastProvider>

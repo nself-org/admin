@@ -12,8 +12,9 @@ import {
 import { PageShell } from '@/components/PageShell'
 import { FormSkeleton } from '@/components/skeletons/FormSkeleton'
 import { useAsyncData } from '@/hooks/useAsyncData'
+import { validateEnvVars, type EnvValidationResult } from '@/lib/env-schema'
 import * as Icons from '@/lib/icons'
-import { Suspense, useCallback, useEffect, useState } from 'react'
+import { Suspense, useCallback, useEffect, useMemo, useState } from 'react'
 
 // ---------------------------------------------------------------------------
 // Constants
@@ -107,6 +108,12 @@ function EnvEditorContent() {
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc')
   const [groupBy, setGroupBy] = useState<'category' | 'none'>('category')
   const [rebuildRequired, setRebuildRequired] = useState(false)
+  const [showSchemaValidation, setShowSchemaValidation] = useState(false)
+
+  const schemaErrors = useMemo(
+    () => validateEnvVars(variables.map(({ key, value }) => ({ key, value: value ?? '' }))),
+    [variables],
+  )
 
   // Role-based access (in a real app this would come from auth context)
   // Default to lead_dev in development for full access
@@ -887,6 +894,78 @@ function EnvEditorContent() {
             Variable names can contain letters, numbers, and underscores. Press
             Enter to add, Escape to cancel.
           </p>
+        </div>
+      )}
+
+      {/* Schema Validation Panel */}
+      {variables.length > 0 && (
+        <div className="mb-4">
+          <button
+            onClick={() => setShowSchemaValidation((v) => !v)}
+            className={`flex w-full items-center gap-2 rounded-xl px-4 py-2.5 text-xs font-medium transition-colors ${
+              schemaErrors.length === 0
+                ? 'bg-green-50 text-green-700 ring-1 ring-green-200 dark:bg-green-950/20 dark:text-green-400 dark:ring-green-800'
+                : schemaErrors.some((e) => e.severity === 'error')
+                  ? 'bg-red-50 text-red-700 ring-1 ring-red-200 dark:bg-red-950/20 dark:text-red-400 dark:ring-red-800'
+                  : 'bg-amber-50 text-amber-700 ring-1 ring-amber-200 dark:bg-amber-950/20 dark:text-amber-400 dark:ring-amber-800'
+            }`}
+          >
+            {schemaErrors.length === 0 ? (
+              <Icons.CheckCircle className="h-3.5 w-3.5 flex-shrink-0" />
+            ) : schemaErrors.some((e) => e.severity === 'error') ? (
+              <Icons.XCircle className="h-3.5 w-3.5 flex-shrink-0" />
+            ) : (
+              <Icons.AlertCircle className="h-3.5 w-3.5 flex-shrink-0" />
+            )}
+            <span className="flex-1 text-left">
+              {schemaErrors.length === 0
+                ? 'Schema validation passed'
+                : `${schemaErrors.filter((e) => e.severity === 'error').length} error${schemaErrors.filter((e) => e.severity === 'error').length !== 1 ? 's' : ''}, ${schemaErrors.filter((e) => e.severity === 'warn').length} warning${schemaErrors.filter((e) => e.severity === 'warn').length !== 1 ? 's' : ''}`}
+            </span>
+            <Icons.ChevronDown
+              className={`h-3.5 w-3.5 transition-transform ${showSchemaValidation ? 'rotate-180' : ''}`}
+            />
+          </button>
+
+          {showSchemaValidation && schemaErrors.length > 0 && (
+            <div className="mt-1 rounded-b-xl rounded-t border border-t-0 border-zinc-200 bg-white dark:border-zinc-700 dark:bg-zinc-900/50">
+              <table className="w-full text-xs">
+                <thead>
+                  <tr className="border-b border-zinc-100 dark:border-zinc-800">
+                    <th className="px-4 py-2 text-left font-medium text-zinc-500">Variable</th>
+                    <th className="px-4 py-2 text-left font-medium text-zinc-500">Issue</th>
+                    <th className="w-20 px-4 py-2 text-left font-medium text-zinc-500">Severity</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {schemaErrors.map((err: EnvValidationResult, i: number) => (
+                    <tr
+                      key={`${err.key}-${i}`}
+                      className="border-b border-zinc-50 last:border-0 dark:border-zinc-800/50"
+                    >
+                      <td className="px-4 py-2 font-mono text-zinc-700 dark:text-zinc-300">
+                        {err.key}
+                      </td>
+                      <td className="px-4 py-2 text-zinc-600 dark:text-zinc-400">
+                        {err.message}
+                      </td>
+                      <td className="px-4 py-2">
+                        <span
+                          className={`rounded-full px-2 py-0.5 text-[10px] font-medium ${
+                            err.severity === 'error'
+                              ? 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400'
+                              : 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400'
+                          }`}
+                        >
+                          {err.severity}
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
         </div>
       )}
 

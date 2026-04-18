@@ -15,7 +15,7 @@
 
 ## Welcome to nself Admin
 
-**nself Admin (nAdmin)** is a web-based UI wrapper for the [nself CLI](https://github.com/nself-org/cli) that makes setting up and managing modern development stacks effortless. With an intuitive wizard interface, real-time monitoring, and comprehensive service management, nAdmin transforms complex Docker orchestration into a simple point-and-click experience.
+**nself Admin (nAdmin)** is a web-based UI wrapper for the [nself CLI](https://github.com/nself-org/cli) that makes setting up and managing modern development stacks effortless. With an intuitive wizard interface, real-time monitoring, and full service management, nAdmin transforms complex Docker orchestration into a simple point-and-click experience.
 
 ### Why nself Admin?
 
@@ -71,7 +71,7 @@
 - **[FAQ](FAQ)** - Frequently asked questions
 - **[Troubleshooting](TROUBLESHOOTING)** - Common issues and solutions
 - **[Security](SECURITY)** - Security best practices
-- **[Security Audit](SECURITY_AUDIT)** - Comprehensive security audit report
+- **[Security Audit](SECURITY_AUDIT)** - Full security audit report
 
 ---
 

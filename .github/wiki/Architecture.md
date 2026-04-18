@@ -1,6 +1,6 @@
 # nself-admin Architecture
 
-Comprehensive technical architecture documentation for nself-admin v0.5.0.
+Technical architecture documentation for nself-admin v1.0.0.
 
 ## Table of Contents
 

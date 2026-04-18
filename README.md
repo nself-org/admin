@@ -14,7 +14,7 @@
 
 **Production-ready web UI for the [nself CLI](https://github.com/nself-org/cli)** - Enterprise-grade management interface for your self-hosted backend stack.
 
-> **v1.0.3** is the current release featuring 198 fully functional pages, 60+ production-grade components, real-time updates, comprehensive error handling, and enterprise-level security.
+> **v1.0.0** is the current release featuring 198 fully functional pages, 60+ production-grade components, real-time updates, error handling, and security hardening.
 
 ---
 
@@ -35,7 +35,7 @@
 
 ## What is ɳSelf Admin?
 
-ɳSelf Admin is a **web-based administration interface** that wraps the powerful [nself CLI](https://github.com/nself-org/cli). Instead of running commands in your terminal, you get a beautiful, real-time dashboard to manage your entire self-hosted backend stack.
+ɳSelf Admin is a **web-based administration interface** that wraps the [nself CLI](https://github.com/nself-org/cli). Instead of running commands in your terminal, you get a real-time dashboard to manage your self-hosted backend stack.
 
 ### Why ɳSelf Admin?
 
@@ -178,25 +178,7 @@ That's it! You're ready to go.
 
 ## Screenshots
 
-### Dashboard
-
-![Dashboard](docs/screenshots/dashboard.png)
-_Real-time service monitoring with live metrics and health status_
-
-### Service Management
-
-![Services](docs/screenshots/services.png)
-_Complete control over all services with detailed configuration_
-
-### Database Console
-
-![Database](docs/screenshots/database.png)
-_Full-featured SQL console with query history and execution plans_
-
-### Deployment Pipeline
-
-![Deploy](docs/screenshots/deploy.png)
-_Visual deployment workflow with staging, production, and advanced strategies_
+Screenshots are coming in a future release. For a live tour, run `nself admin start` and open `http://localhost:3021`.
 
 ---
 
@@ -204,22 +186,22 @@ _Visual deployment workflow with staging, production, and advanced strategies_
 
 ### Getting Started
 
-- [User Guide](docs/USER_GUIDE.md) - Step-by-step tutorials for common tasks
-- [Deployment Guide](docs/DEPLOYMENT.md) - Production deployment instructions
-- [Development Guide](docs/DEVELOPMENT.md) - Local development setup
+- [User Guide](https://github.com/nself-org/admin/wiki/USER_GUIDE) - Step-by-step tutorials for common tasks
+- [Deployment Guide](https://github.com/nself-org/admin/wiki/DEPLOYMENT) - Production deployment instructions
+- [Development Guide](https://github.com/nself-org/admin/wiki/DEVELOPMENT) - Local development setup
 
 ### Technical Documentation
 
-- [Architecture](docs/ARCHITECTURE.md) - System architecture and design
-- [API Reference](docs/API.md) - Complete API documentation
-- [Migration Guide](docs/MIGRATION.md) - Upgrading between versions
+- [Architecture](https://github.com/nself-org/admin/wiki/ARCHITECTURE) - System architecture and design
+- [API Reference](https://github.com/nself-org/admin/wiki/API) - API documentation
+- [Migration Guide](https://github.com/nself-org/admin/wiki/MIGRATION) - Upgrading between versions
 
 ### Additional Resources
 
-- [Changelog](docs/CHANGELOG.md) - Release history
-- [Roadmap](docs/ROADMAP.md) - Upcoming features
-- [Security](docs/SECURITY.md) - Security policies
-- [Troubleshooting](docs/TROUBLESHOOTING.md) - Common issues and solutions
+- [Changelog](https://github.com/nself-org/admin/wiki/CHANGELOG) - Release history
+- [Roadmap](https://github.com/nself-org/admin/wiki/ROADMAP) - Upcoming features
+- [Security](https://github.com/nself-org/admin/wiki/SECURITY) - Security policies
+- [Troubleshooting](https://github.com/nself-org/admin/wiki/TROUBLESHOOTING) - Common issues and solutions
 
 ---
 
@@ -361,7 +343,7 @@ All code must pass:
 6. Push to the branch (`git push origin feature/amazing-feature`)
 7. Open a Pull Request
 
-See [CONTRIBUTING.md](docs/contributing/CONTRIBUTING.md) for detailed guidelines.
+See [Contributing](https://github.com/nself-org/admin/wiki/Contributing) for detailed guidelines.
 
 ---
 
@@ -369,14 +351,14 @@ See [CONTRIBUTING.md](docs/contributing/CONTRIBUTING.md) for detailed guidelines
 
 - **Issues**: [GitHub Issues](https://github.com/nself-org/admin/issues)
 - **Discussions**: [GitHub Discussions](https://github.com/nself-org/admin/discussions)
-- **Security**: See [SECURITY.md](docs/SECURITY.md) for reporting vulnerabilities
-- **Documentation**: [Full Documentation](docs/)
+- **Security**: See [Security](https://github.com/nself-org/admin/wiki/SECURITY) for reporting vulnerabilities
+- **Documentation**: [Full Documentation](https://github.com/nself-org/admin/wiki)
 
 ---
 
 ## Roadmap
 
-### Upcoming in v1.0.0
+### Upcoming
 
 - Multi-tenant support
 - Advanced RBAC (role-based access control)
@@ -385,7 +367,7 @@ See [CONTRIBUTING.md](docs/contributing/CONTRIBUTING.md) for detailed guidelines
 - AI-powered troubleshooting
 - Enhanced mobile app experience
 
-See [ROADMAP.md](docs/ROADMAP.md) for the complete roadmap.
+See [Roadmap](https://github.com/nself-org/admin/wiki/ROADMAP) for the full roadmap.
 
 ---
 

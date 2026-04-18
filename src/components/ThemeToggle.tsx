@@ -51,7 +51,7 @@ export function ThemeToggle() {
     return (
       <button
         type="button"
-        className="rounded-lg p-2 transition-colors hover:bg-zinc-100 dark:hover:bg-zinc-800"
+        className="rounded-lg p-2 transition-colors hover:bg-zinc-100 focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 focus-visible:outline-none dark:hover:bg-zinc-800"
         aria-label="Toggle theme"
       >
         <div className="h-5 w-5" />
@@ -64,7 +64,7 @@ export function ThemeToggle() {
   return (
     <button
       type="button"
-      className="rounded-lg p-2 transition-colors hover:bg-zinc-100 dark:hover:bg-zinc-800"
+      className="rounded-lg p-2 transition-colors hover:bg-zinc-100 focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 focus-visible:outline-none dark:hover:bg-zinc-800"
       onClick={() => setTheme(otherTheme)}
       aria-label={`Switch to ${otherTheme} theme`}
     >

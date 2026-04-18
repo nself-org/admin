@@ -91,7 +91,7 @@ export function aggregateItems(items: CostLineItem[]): CostSnapshot {
 
 /**
  * Build a provider comparison using coarse-grained markup ratios.
- * These ratios are placeholders — callers that care about pricing detail
+ * These ratios are coarse estimates — callers that care about pricing detail
  * should consult MASTER-VERSIONS.md / SPORT / provider-stack.md.
  */
 export function buildComparison(

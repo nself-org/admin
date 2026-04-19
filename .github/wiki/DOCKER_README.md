@@ -175,7 +175,7 @@ scrape_configs:
 
 - [GitHub Issues](https://github.com/nself-org/admin/issues)
 - [Discussions](https://github.com/nself-org/admin/discussions)
-- [Security](https://github.com/nself-org/admin/blob/main/docs/SECURITY.md)
+- [Security](https://github.com/nself-org/admin/blob/main/.github/SECURITY.md)
 
 ## License
 

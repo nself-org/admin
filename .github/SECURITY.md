@@ -2,45 +2,44 @@
 
 ## Supported Versions
 
-We actively support security updates for the following versions:
-
-| Version     | Supported          |
-| ----------- | ------------------ |
-| 0.0.4-alpha | :white_check_mark: |
-| 0.0.3       | :white_check_mark: |
-| < 0.0.3     | :x:                |
+| Version     | Supported |
+| ----------- | --------- |
+| 1.0.x (LTS) | :white_check_mark: |
+| < 1.0.0     | :x:        |
 
 ## Reporting a Vulnerability
 
-We take the security of nself Admin seriously. If you discover a security vulnerability, please follow these steps:
+**Do not open a public GitHub issue for security vulnerabilities.**
 
-### 1. **Do NOT** create a public issue
+Email **security@nself.org** with:
 
-Please do not report security vulnerabilities through public GitHub issues, discussions, or pull requests.
+- Description of the vulnerability
+- Steps to reproduce
+- Potential impact
+- Suggested fix (optional)
 
-### 2. Send a private report
+We will acknowledge receipt within 48 hours and provide a status update within 5 business days. Critical vulnerabilities are patched on a priority basis.
 
-Instead, please send an email to: **security@nself.org**
-
-Include the following information:
+For richer reports, please also include where helpful:
 
 - Type of issue (e.g. buffer overflow, SQL injection, cross-site scripting, etc.)
 - Full paths of source file(s) related to the manifestation of the issue
 - The location of the affected source code (tag/branch/commit or direct URL)
 - Any special configuration required to reproduce the issue
-- Step-by-step instructions to reproduce the issue
 - Proof-of-concept or exploit code (if possible)
-- Impact of the issue, including how an attacker might exploit the issue
+- How an attacker might exploit the issue
 
-### 3. Response Timeline
+## Scope
 
-We aim to respond to security reports within:
+In scope: nself CLI, plugins, backend services, authentication, API endpoints, web apps
 
-- **24 hours**: Initial acknowledgment
-- **72 hours**: Initial assessment and severity classification
-- **7 days**: Detailed response with planned fix timeline
+Out of scope: Third-party dependencies (report upstream), our hosted infrastructure (contact support@nself.org)
 
-### 4. Disclosure Process
+## Disclosure Policy
+
+We follow coordinated disclosure. Please give us 90 days to patch before public disclosure.
+
+### Disclosure Process
 
 1. We'll work with you to understand and validate the issue
 2. We'll develop a fix and create a timeline for release
@@ -54,7 +53,7 @@ We aim to respond to security reports within:
 - **Use strong passwords**: Minimum 12 characters with mixed case, numbers, and symbols
 - **Enable HTTPS**: Always use SSL/TLS in production environments
 - **Keep updated**: Use the latest version of nself Admin
-- **Secure your environment**: Follow our [Production Deployment Guide](../docs/Production-Deployment.md)
+- **Secure your environment**: Follow our [Production Deployment Guide](wiki/Production-Deployment.md)
 - **Regular backups**: Maintain secure, tested backups
 - **Network security**: Use firewalls and VPNs where appropriate
 

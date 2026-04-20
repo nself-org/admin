@@ -113,6 +113,40 @@ jobs:
           cache-from: type=registry,ref=${{ env.DOCKER_IMAGE }}:buildcache
           cache-to: type=registry,ref=${{ env.DOCKER_IMAGE }}:buildcache,mode=max
 
+      # S49-T06: Verify the pushed image manifest contains BOTH linux/amd64 AND linux/arm64.
+      # Uses `docker buildx imagetools inspect` (not grep on stdout) per CR-A checklist.
+      # A single-arch push triggers a non-zero exit here and blocks the workflow.
+      - name: Verify multi-arch manifest (S49-T06)
+        run: |
+          IMAGE="${{ env.DOCKER_IMAGE }}:${{ steps.version.outputs.version }}"
+          echo "Inspecting manifest: $IMAGE"
+
+          PLATFORMS=$(docker buildx imagetools inspect "$IMAGE" \
+            --format '{{range .Manifest.Manifests}}{{.Platform.OS}}/{{.Platform.Architecture}} {{end}}' \
+            2>/dev/null || echo "")
+          echo "Platforms in manifest: $PLATFORMS"
+
+          if [ -z "$PLATFORMS" ]; then
+            echo "FAIL: Could not inspect manifest for $IMAGE"
+            echo "Ensure the image was pushed successfully before this step."
+            exit 1
+          fi
+
+          # Assert linux/amd64 is present
+          if ! echo "$PLATFORMS" | grep -q "linux/amd64"; then
+            echo "FAIL: manifest missing linux/amd64 — got: $PLATFORMS"
+            exit 1
+          fi
+
+          # Assert linux/arm64 is present
+          if ! echo "$PLATFORMS" | grep -q "linux/arm64"; then
+            echo "FAIL: manifest missing linux/arm64 — got: $PLATFORMS"
+            echo "Single-arch image detected. Ensure build-push-action --platform includes arm64."
+            exit 1
+          fi
+
+          echo "PASS: $IMAGE manifest contains linux/amd64 + linux/arm64"
+
       - name: Update Docker Hub description
         uses: peter-evans/dockerhub-description@v3
         continue-on-error: true

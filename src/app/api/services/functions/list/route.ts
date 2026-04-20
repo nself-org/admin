@@ -3,11 +3,11 @@ import { NextResponse } from 'next/server'
 
 /**
  * GET /api/services/functions/list
- * Lists all functions via nself service functions list
+ * Lists all deployed functions via `nself functions list --json`
  */
 export async function GET(): Promise<NextResponse> {
   try {
-    const result = await executeNselfCommand('service', ['functions', 'list'])
+    const result = await executeNselfCommand('functions', ['list', '--json'])
 
     if (!result.success) {
       return NextResponse.json(
@@ -20,9 +20,18 @@ export async function GET(): Promise<NextResponse> {
       )
     }
 
+    // Parse JSON output from `nself functions list --json`.
+    let functions: unknown[] = []
+    try {
+      functions = JSON.parse(result.stdout?.trim() ?? '[]') as unknown[]
+    } catch {
+      // If the command returned no JSON (e.g. "No functions found"), return empty.
+      functions = []
+    }
+
     return NextResponse.json({
       success: true,
-      data: { output: result.stdout?.trim() },
+      data: { functions, output: result.stdout?.trim() },
     })
   } catch (error) {
     return NextResponse.json(

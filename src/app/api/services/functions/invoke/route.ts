@@ -34,13 +34,13 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       )
     }
 
-    const args = ['functions', 'invoke', `--name=${name}`]
+    const args: string[] = [name]
 
     if (payload && typeof payload === 'string') {
       args.push(`--payload=${payload}`)
     }
 
-    const result = await executeNselfCommand('service', args)
+    const result = await executeNselfCommand('functions', ['invoke', ...args])
 
     if (!result.success) {
       return NextResponse.json(

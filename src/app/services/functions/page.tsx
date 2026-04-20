@@ -109,7 +109,7 @@ function FunctionsContent() {
   const [selectedTemplate, setSelectedTemplate] =
     useState<FunctionTemplate | null>(null)
 
-  // Mock templates data
+  // Static quick-start templates (not fetched from backend — these are UI scaffolding).
   const templates: FunctionTemplate[] = [
     {
       id: 'http-api',
@@ -153,27 +153,17 @@ function FunctionsContent() {
       const json = await res.json()
       if (json.success) {
         setCliOutput(json.data.output)
-        // Mock data for display
-        setFunctions([
-          {
-            name: 'api-handler',
-            runtime: 'Node.js 18',
-            status: 'active',
-            lastDeployed: '2 hours ago',
-            invocations: 1243,
-            avgDuration: 45,
-            errorRate: 1.2,
-          },
-          {
-            name: 'webhook-processor',
-            runtime: 'Python 3.11',
-            status: 'active',
-            lastDeployed: '1 day ago',
-            invocations: 567,
-            avgDuration: 120,
-            errorRate: 0.5,
-          },
-        ])
+        // Map real CLI output (FunctionInfo: {name, status, url, dir}) to FunctionEntry.
+        const rawFns = Array.isArray(json.data.functions)
+          ? (json.data.functions as Array<{ name?: string; status?: string; url?: string }>)
+          : []
+        setFunctions(
+          rawFns.map((f) => ({
+            name: f.name ?? '',
+            runtime: 'node',
+            status: f.status ?? 'unknown',
+          })),
+        )
       } else {
         setError(json.error || 'Failed to list functions')
         setCliOutput(json.details || json.error)

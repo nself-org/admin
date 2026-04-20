@@ -116,6 +116,7 @@ node_modules/
 dist/
 build/
 logs/
+!/src/app/**/logs/
 .cache/
 *.tmp
 *.temp

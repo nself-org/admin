@@ -124,17 +124,46 @@ class ErrorLoggingService {
   }
 
   /**
-   * Send error to external logging service (e.g., Sentry)
-   * This is a placeholder for future integration
+   * Send error to Sentry when SENTRY_DSN is configured.
+   * Sentry SDK is loaded lazily so it has zero import side-effects when DSN is absent.
+   * If Sentry init itself throws (e.g. bad DSN format), the error is caught and logged
+   * to console only — never re-thrown.
    */
-  private async sendToExternalService(_report: ErrorReport): Promise<boolean> {
-    // External logging service placeholder - configure SENTRY_DSN to enable
-    if (process.env.SENTRY_DSN) {
-      logger.debug('Sentry integration not yet implemented', {
-        dsn: process.env.SENTRY_DSN?.substring(0, 20),
-      })
+  private async sendToExternalService(report: ErrorReport): Promise<boolean> {
+    if (!process.env.SENTRY_DSN) {
+      return false
     }
-    return false
+
+    try {
+      // Lazy import — Sentry SDK is not bundled when DSN is absent.
+      const Sentry = await import('@sentry/nextjs')
+
+      // Init is idempotent in @sentry/nextjs — safe to call on every error.
+      Sentry.init({
+        dsn: process.env.SENTRY_DSN,
+        environment: process.env.NODE_ENV,
+        // Only report errors, not transactions, to keep usage low.
+        tracesSampleRate: 0,
+      })
+
+      Sentry.captureException(new Error(report.message), {
+        extra: {
+          stack: report.stack,
+          componentStack: report.componentStack,
+          url: report.url,
+          userAgent: report.userAgent,
+          timestamp: report.timestamp,
+        },
+      })
+
+      return true
+    } catch (err) {
+      // Sentry init/capture failure must never surface to the user.
+      logger.warn('Sentry error capture failed', {
+        error: err instanceof Error ? err.message : 'Unknown error',
+      })
+      return false
+    }
   }
 
   /**

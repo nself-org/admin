@@ -224,7 +224,11 @@ export async function getDockerStatus(): Promise<{
   }
 }
 
-// Build project (placeholder for nself build)
+/**
+ * Build the nself project by invoking `nself build` in the project directory.
+ * The CLI regenerates docker-compose.yml + nginx config from the current .env file.
+ * Follows the nSelf-First Doctrine — never runs docker-compose directly.
+ */
 export async function buildProject(): Promise<{
   success: boolean
   error?: string

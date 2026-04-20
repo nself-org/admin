@@ -6,6 +6,22 @@ const HASURA_ENDPOINT =
 // SECURITY: No fallback secret - must be configured via environment
 const HASURA_ADMIN_SECRET = process.env.HASURA_GRAPHQL_ADMIN_SECRET
 
+// SECURITY GUARD: Refuse to run in production with a dev-stub secret.
+// Per the Security-Always-Free Doctrine, this check is always free and cannot be disabled.
+// Covers the known dev-stub values used in env-handler.ts defaults.
+if (
+  process.env.NODE_ENV === 'production' &&
+  HASURA_ADMIN_SECRET &&
+  (HASURA_ADMIN_SECRET.includes('dummy') ||
+    HASURA_ADMIN_SECRET === 'hasura-admin-secret-dev' ||
+    HASURA_ADMIN_SECRET === 'changeme')
+) {
+  throw new Error(
+    'FATAL: dev-stub HASURA_GRAPHQL_ADMIN_SECRET detected in production. ' +
+      'Set a secure secret in your .env.secrets file before starting in production.'
+  )
+}
+
 // Allowlist of safe query operations (read-only)
 const ALLOWED_QUERY_PATTERNS = [
   /^\s*query\s+/i, // Only allow query operations

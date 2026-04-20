@@ -371,6 +371,12 @@ See [Roadmap](https://github.com/nself-org/admin/wiki/ROADMAP) for the full road
 
 ---
 
+## Access Control
+
+Admin is single-operator in v1.x. One password authenticates one operator with full access. There are no roles, no per-user MFA enrollment, and no multi-tenant user separation in the Admin UI. Hasura roles continue to govern data-layer permissions for end-users of your nSelf-powered apps. Multi-user Admin (role-based operator access) is planned for v1.2.0. See [Admin Single-Operator Posture](https://docs.nself.org/admin/single-user-posture) for details.
+
+---
+
 ## License
 
 MIT - See [LICENSE](LICENSE) for details.

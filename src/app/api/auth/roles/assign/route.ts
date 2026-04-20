@@ -1,63 +1,18 @@
-import { executeNselfCommand } from '@/lib/nselfCLI'
-import { NextRequest, NextResponse } from 'next/server'
+// Multi-user Roles API — NOT available in v1.0.9.
+// See /api/auth/roles/route.ts for full explanation.
 
-export async function POST(request: NextRequest): Promise<NextResponse> {
-  try {
-    const body = await request.json()
-    const { role, userId } = body
+import { NextResponse } from 'next/server'
 
-    if (!role || typeof role !== 'string') {
-      return NextResponse.json(
-        {
-          success: false,
-          error: 'Invalid role',
-          details: 'A role name is required',
-        },
-        { status: 400 },
-      )
-    }
+const NOT_AVAILABLE = NextResponse.json(
+  {
+    error: 'not_available',
+    message:
+      'Multi-user mode disabled. Set NSELF_ADMIN_MULTIUSER=true to enable.',
+    docs: 'https://docs.nself.org/admin/single-user-posture',
+  },
+  { status: 404 },
+)
 
-    if (!userId || typeof userId !== 'string') {
-      return NextResponse.json(
-        {
-          success: false,
-          error: 'Invalid user ID',
-          details: 'A user ID is required',
-        },
-        { status: 400 },
-      )
-    }
-
-    const result = await executeNselfCommand('auth', [
-      'roles',
-      'assign',
-      `--role=${role}`,
-      `--user=${userId}`,
-    ])
-
-    if (!result.success) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: 'Failed to assign role',
-          details: result.error || result.stderr || 'Unknown error',
-        },
-        { status: 500 },
-      )
-    }
-
-    return NextResponse.json({
-      success: true,
-      data: { output: result.stdout?.trim(), role, userId },
-    })
-  } catch (error) {
-    return NextResponse.json(
-      {
-        success: false,
-        error: 'Failed to assign role',
-        details: error instanceof Error ? error.message : 'Unknown error',
-      },
-      { status: 500 },
-    )
-  }
+export async function POST(): Promise<NextResponse> {
+  return NOT_AVAILABLE
 }

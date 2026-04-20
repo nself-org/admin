@@ -1,3 +1,13 @@
+// SCAFFOLDING for v1.2.0 multi-user Admin (target Q3 2026).
+// NOT WIRED in v1.0.9/v1.1.0 — all multi-user UI hidden behind
+// NSELF_ADMIN_MULTIUSER feature flag (default false).
+// See: web/docs/admin/single-user-posture.mdx + STORM-RBAC § Section 4.
+//
+// This component is import-safe at build time but never rendered in the
+// default configuration. It is wired to fixture/mock data — no live API call.
+// When v1.2.0 backend CLI commands land, remove this header and wire to
+// the /api/users endpoint.
+
 'use client'
 
 import type { TenantMember, TenantRole } from '@/types/tenant'

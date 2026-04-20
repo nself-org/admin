@@ -1,3 +1,8 @@
+// Navigation is built server-side where process.env is available.
+// When NSELF_ADMIN_MULTIUSER is false (the default), multi-user items
+// (Roles, Multi-Tenancy group) are filtered out of the exported nav array.
+// See: https://docs.nself.org/admin/single-user-posture
+
 export interface NavLink {
   title: string
   href: string
@@ -23,7 +28,28 @@ export interface NavGroup {
   links: Array<NavLink>
 }
 
-export const navigation: Array<NavGroup> = [
+/** Nav items that are hidden when multi-user mode is off (default). */
+const MULTIUSER_NAV_ITEMS = new Set([
+  '/auth/roles',
+  '/tenant',
+  '/tenant/create',
+  '/org',
+  '/org/create',
+])
+
+/** Nav group titles that are entirely hidden when multi-user mode is off. */
+const MULTIUSER_NAV_GROUPS = new Set(['Multi-Tenancy'])
+
+function isMultiUserEnabled(): boolean {
+  // Works in server components and middleware (process.env access).
+  // Client components receive this via props from a Server Component wrapper.
+  if (typeof process !== 'undefined') {
+    return process.env.NSELF_ADMIN_MULTIUSER === 'true'
+  }
+  return false
+}
+
+const _allNavigation: Array<NavGroup> = [
   // ── Overview ──────────────────────────────────────────────
   {
     title: 'Overview',
@@ -801,6 +827,25 @@ export const navigation: Array<NavGroup> = [
     ],
   },
 ]
+
+/**
+ * The exported `navigation` array filters out multi-user items when
+ * NSELF_ADMIN_MULTIUSER is false (the default in v1.0.9/v1.1.0).
+ *
+ * When the flag is true, items appear in the sidebar but the pages render
+ * a "v1.2 preview — not yet wired" banner because the backend CLI commands
+ * (`nself auth roles list`, `nself user list`, etc.) do not exist yet.
+ */
+export const navigation: Array<NavGroup> = isMultiUserEnabled()
+  ? _allNavigation
+  : _allNavigation
+      .filter((group) => !MULTIUSER_NAV_GROUPS.has(group.title))
+      .map((group) => ({
+        ...group,
+        links: group.links.filter(
+          (link) => !MULTIUSER_NAV_ITEMS.has(link.href),
+        ),
+      }))
 
 export const flatNavigation = navigation.flatMap((group) =>
   group.links.flatMap((link) => [

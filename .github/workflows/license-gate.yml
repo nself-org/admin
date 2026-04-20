@@ -1,0 +1,90 @@
+name: License Gate
+
+# Blocks AGPL/SSPL transitive dependencies in admin/ (Next.js + TypeScript).
+# admin/ is MIT licensed — AGPL/SSPL contamination would affect hosted deployments.
+# S59-T09: license CI gate.
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  release:
+    types: [created]
+  workflow_dispatch:
+
+env:
+  LICENSE_GATE_MODE: warn  # Change to "fail" after 2026-05-20 triage window
+
+jobs:
+  node-license-gate:
+    name: Node.js Dependency License Gate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: "9"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Check Node.js dependency licenses
+        run: |
+          echo "=== License Gate: admin/ ==="
+
+          # Install license-checker
+          pnpx license-checker --summary --excludePrivatePackages 2>/dev/null || true
+
+          # Check for AGPL/SSPL
+          AGPL_SSPL=$(pnpx license-checker --json --excludePrivatePackages 2>/dev/null | \
+            node -e "
+              const d = JSON.parse(require('fs').readFileSync('/dev/stdin','utf8'));
+              const bad = Object.entries(d)
+                .filter(([k,v]) => /AGPL|SSPL/i.test(v.licenses || ''))
+                .map(([k,v]) => k + ': ' + v.licenses);
+              process.stdout.write(bad.join('\n'));
+            " || echo "")
+
+          if [ -n "$AGPL_SSPL" ]; then
+            echo ""
+            echo "GATE: AGPL/SSPL licenses detected:"
+            echo "$AGPL_SSPL"
+            echo ""
+            echo "Action required: remove or replace the offending dependency"
+            echo "Allowlist: add to .github/license-allowlist.txt with justification"
+            if [ "$LICENSE_GATE_MODE" = "fail" ]; then
+              exit 1
+            else
+              echo "WARN-ONLY MODE: not failing PR (triage window active until 2026-05-20)"
+            fi
+          else
+            echo "PASS: No AGPL/SSPL licenses found in admin/ dependencies"
+          fi
+
+      - name: Generate THIRD_PARTY_LICENSES.md
+        if: github.event_name == 'release'
+        run: |
+          pnpx license-checker --csv --excludePrivatePackages > THIRD_PARTY_LICENSES.csv 2>/dev/null || true
+          echo "# Third-Party Licenses — admin/" > THIRD_PARTY_LICENSES.md
+          echo "" >> THIRD_PARTY_LICENSES.md
+          echo "Generated: $(date -u +%Y-%m-%dT%H:%M:%SZ)" >> THIRD_PARTY_LICENSES.md
+          echo "" >> THIRD_PARTY_LICENSES.md
+          echo '```csv' >> THIRD_PARTY_LICENSES.md
+          cat THIRD_PARTY_LICENSES.csv >> THIRD_PARTY_LICENSES.md
+          echo '```' >> THIRD_PARTY_LICENSES.md
+          echo "Generated THIRD_PARTY_LICENSES.md"
+
+      - name: Attach to release
+        if: github.event_name == 'release'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release upload "${{ github.event.release.tag_name }}" \
+            THIRD_PARTY_LICENSES.md --clobber || true

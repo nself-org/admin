@@ -65,6 +65,43 @@ jobs:
             type=raw,value=${{ steps.version.outputs.major }}
             type=raw,value=latest
 
+      - name: Build Docker image (local, for scanning)
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: false
+          load: true
+          tags: ${{ env.DOCKER_IMAGE }}:scan-${{ github.sha }}
+          labels: ${{ steps.meta.outputs.labels }}
+          platforms: linux/amd64
+          cache-from: type=registry,ref=${{ env.DOCKER_IMAGE }}:buildcache
+          cache-to: type=registry,ref=${{ env.DOCKER_IMAGE }}:buildcache,mode=max
+
+      # S44.T01: Trivy container scan — CRITICAL fails the build, HIGH triggers warning
+      - name: Trivy scan — SARIF upload (all severities)
+        uses: aquasecurity/trivy-action@0.28.0
+        with:
+          image-ref: ${{ env.DOCKER_IMAGE }}:scan-${{ github.sha }}
+          format: sarif
+          output: trivy-results.sarif
+          severity: CRITICAL,HIGH
+          exit-code: "0"
+
+      - name: Upload SARIF to GitHub Security tab
+        if: always()
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: trivy-results.sarif
+        continue-on-error: true
+
+      - name: Trivy scan — CRITICAL gate (blocks push)
+        uses: aquasecurity/trivy-action@0.28.0
+        with:
+          image-ref: ${{ env.DOCKER_IMAGE }}:scan-${{ github.sha }}
+          format: table
+          severity: CRITICAL
+          exit-code: "1"
+
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:

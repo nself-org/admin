@@ -1,0 +1,16 @@
+# .trivyignore — accepted-risk CVEs for nself-admin
+#
+# Format: one CVE-ID per line, with a comment explaining the rationale,
+# the accepted-risk owner, and the review-by date.
+#
+# Policy: CRITICAL CVEs must be fixed or have an explicit security team sign-off.
+# HIGH CVEs are documented here with a review date not exceeding 90 days.
+# Reviewers: security@nself.org
+#
+# --- Example (uncomment and fill in when a real CVE is accepted-risk) ---
+# CVE-YYYY-NNNNN  # package: <name>  severity: HIGH
+#                 # rationale: not reachable from admin network surface (localhost-only)
+#                 # owner: security@nself.org  review-by: YYYY-MM-DD
+#
+# No accepted-risk CVEs at time of S44 authoring (2026-04-20).
+# All CRITICAL findings must be fixed before push.

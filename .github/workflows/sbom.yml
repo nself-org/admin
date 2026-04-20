@@ -1,0 +1,81 @@
+name: SBOM — Generate and Sign
+
+# S44-T07: Generate CycloneDX SBOM on every release tag.
+# Signed with cosign keyless (Sigstore). Attached to GitHub Release as asset.
+#
+# Depends on: release.yml (same trigger: push to v*)
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version tag (without v prefix)'
+        required: true
+        type: string
+
+permissions:
+  contents: write       # attach SBOM to GitHub Release
+  id-token: write       # needed for cosign keyless signing
+
+jobs:
+  sbom:
+    name: Generate + Sign CycloneDX SBOM
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Resolve version
+        id: version
+        run: |
+          if [ -n "${{ github.event.inputs.version }}" ]; then
+            echo "tag=v${{ github.event.inputs.version }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "tag=${GITHUB_REF#refs/tags/}" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Install Syft (CycloneDX generator)
+        run: |
+          curl -sSfL https://raw.githubusercontent.com/anchore/syft/main/install.sh \
+            | sh -s -- -b /usr/local/bin
+
+      - name: Install cosign
+        uses: sigstore/cosign-installer@v3
+        with:
+          cosign-release: 'v2.4.1'
+
+      - name: Generate CycloneDX SBOM
+        run: |
+          syft . -o cyclonedx-json > sbom.cyclonedx.json
+          echo "SBOM generated:"
+          wc -l sbom.cyclonedx.json
+
+      - name: Sign SBOM with cosign (keyless)
+        run: |
+          cosign sign-blob --yes \
+            --bundle sbom.cyclonedx.json.bundle \
+            sbom.cyclonedx.json
+          echo "Signed SBOM bundle:"
+          ls -lh sbom.cyclonedx.json sbom.cyclonedx.json.bundle
+
+      - name: Attach SBOM to GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release upload "${{ steps.version.outputs.tag }}" \
+            sbom.cyclonedx.json \
+            sbom.cyclonedx.json.bundle \
+            --clobber
+
+      - name: Summary
+        run: |
+          echo "### SBOM published" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- Format: CycloneDX JSON" >> $GITHUB_STEP_SUMMARY
+          echo "- Release: \`${{ steps.version.outputs.tag }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "- Signed with: cosign keyless (Sigstore)" >> $GITHUB_STEP_SUMMARY
+          echo "- Assets: \`sbom.cyclonedx.json\` + \`sbom.cyclonedx.json.bundle\`" >> $GITHUB_STEP_SUMMARY

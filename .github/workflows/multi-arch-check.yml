@@ -1,0 +1,40 @@
+name: Multi-Arch Check
+
+# Asserts multi-architecture build compatibility.
+# Repo type: Next.js app distributed as Docker image (nself/nself-admin)
+# Authority: S30-T05, STORM-CROSS-PLATFORM
+# Template: .claude/docs/doctrines/multi-arch-check.workflow.yml
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  docker-platform:
+    name: Docker multi-platform check
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Verify multi-platform Docker build
+        run: |
+          docker buildx build \
+            --platform linux/amd64,linux/arm64 \
+            --file Dockerfile \
+            --output type=cacheonly \
+            . || {
+            echo "FAIL: Docker multi-arch build failed"
+            exit 1
+          }
+          echo "PASS: Docker linux/amd64 + linux/arm64 build succeeded"
+

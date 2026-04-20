@@ -22,6 +22,7 @@ import {
   RefreshCw,
   Save,
   Settings,
+  Shield,
   ShoppingCart,
   Trash2,
   Webhook,
@@ -74,6 +75,51 @@ const pluginQuickLinks: Record<string, { label: string; href: string }[]> = {
     { label: 'Customers', href: '/plugins/shopify/customers' },
     { label: 'Inventory', href: '/plugins/shopify/inventory' },
   ],
+}
+
+// S71-T03: permission badge colour classification.
+// green  = low-risk / scoped  (db:read, network:plugin:*)
+// yellow = moderate risk      (network:internet, fs:write:*, ai:provider:*, secrets:env:*)
+// red    = high risk           (system:exec)
+function permissionBadgeClass(perm: string): string {
+  if (perm === 'system:exec') {
+    return 'bg-red-500/20 text-red-400 border border-red-500/30'
+  }
+  if (
+    perm === 'network:internet' ||
+    perm.startsWith('fs:write:') ||
+    perm.startsWith('ai:provider:') ||
+    perm.startsWith('secrets:env:')
+  ) {
+    return 'bg-yellow-500/20 text-yellow-400 border border-yellow-500/30'
+  }
+  return 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
+}
+
+function PermissionList({ permissions }: { permissions: string[] }) {
+  if (permissions.length === 0) {
+    return (
+      <p className="text-sm text-zinc-500">No special permissions declared.</p>
+    )
+  }
+  return (
+    <div className="space-y-2">
+      <div className="flex flex-wrap gap-2">
+        {permissions.map((perm) => (
+          <span
+            key={perm}
+            title={`Permission: ${perm} — v1.0.9: informational only; v1.1.0 will require explicit confirmation`}
+            className={`rounded-full px-2.5 py-0.5 font-mono text-xs ${permissionBadgeClass(perm)}`}
+          >
+            {perm}
+          </span>
+        ))}
+      </div>
+      <p className="text-xs text-zinc-600">
+        v1.0.9: informational only. v1.1.0 will require explicit confirmation before install.
+      </p>
+    </div>
+  )
 }
 
 function WebhookEventRow({ event }: { event: WebhookEvent }) {
@@ -428,6 +474,15 @@ function PluginDetailContent() {
                 </div>
               )}
             </dl>
+          </div>
+
+          {/* Permissions (S71-T03) */}
+          <div className="rounded-xl border border-zinc-700/50 bg-zinc-800/50 p-5">
+            <div className="mb-4 flex items-center gap-2">
+              <Shield className="h-4 w-4 text-zinc-400" />
+              <h3 className="font-medium text-white">Permissions</h3>
+            </div>
+            <PermissionList permissions={plugin.permissions ?? []} />
           </div>
 
           {/* Required Environment Variables */}

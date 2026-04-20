@@ -48,6 +48,9 @@ next-env.d.ts
 
 # Database files
 /data/
+
+# package-lock.json — pnpm-only project; npm lock file must not be tracked
+package-lock.json
 *.db
 nadmin.db
 

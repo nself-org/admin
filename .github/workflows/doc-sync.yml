@@ -49,7 +49,7 @@ jobs:
 
           # Env vars
           if matches '(^|/)\.env\.example$|^cli/internal/env/'; then
-            if ! matches '(\.claude/docs/sport/F09-ENV-VAR-INVENTORY\.md|cli/\.wiki/reference/env-vars\.md|web/docs/content/reference/env-vars)'; then
+            if ! matches '(\.claude/docs/sport/F09-ENV-VAR-INVENTORY\.md|cli/\.wiki/reference/env-vars\.md|web/docs/content/reference/env-vars|\.github/wiki/reference/env-vars\.md)'; then
               rows="${rows}- env vars changed without F09-ENV-VAR-INVENTORY.md or env-vars reference update\n"
               missing=1
             fi

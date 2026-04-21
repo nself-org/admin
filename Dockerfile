@@ -29,6 +29,7 @@ COPY package.json pnpm-lock.yaml ./
 # Copy only necessary source files (improves cache invalidation)
 COPY src ./src
 COPY public ./public
+COPY messages ./messages
 COPY next.config.mjs ./
 COPY tsconfig.json ./
 COPY postcss.config.js ./

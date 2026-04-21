@@ -16,11 +16,11 @@ Include: what happened, when, who was involved, any links or evidence. Anonymous
 
 Enforcement is proportional to the severity and pattern of behaviour.
 
-| Action | When used |
-|---|---|
-| **Warning (1st offence)** | Minor violation. Private message explaining what was wrong and what behaviour is expected. |
-| **Temporary ban** | Repeated minor violations or a single serious violation. Temporary removal from community spaces (GitHub issues, Discussions, Discord). Duration specified in the action. |
-| **Permanent ban** | Sustained or severe violations. Harassment, hate speech, threats. Permanent removal from all project spaces. |
+| Action                    | When used                                                                                                                                                                 |
+| ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Warning (1st offence)** | Minor violation. Private message explaining what was wrong and what behaviour is expected.                                                                                |
+| **Temporary ban**         | Repeated minor violations or a single serious violation. Temporary removal from community spaces (GitHub issues, Discussions, Discord). Duration specified in the action. |
+| **Permanent ban**         | Sustained or severe violations. Harassment, hate speech, threats. Permanent removal from all project spaces.                                                              |
 
 ## Appeal Process
 
@@ -35,6 +35,7 @@ If a report involves the project founder, the secondary contact handles the inve
 ## Scope
 
 This enforcement policy applies to:
+
 - GitHub repositories under nself-org
 - GitHub Discussions, issues, and pull requests
 - Discord server

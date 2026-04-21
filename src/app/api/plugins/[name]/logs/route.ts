@@ -98,7 +98,15 @@ async function streamLogs(
     start(controller) {
       const child = spawn(
         nselfPath,
-        ['plugin', 'logs', name, '--lines', String(lines), '--follow', '--no-color'],
+        [
+          'plugin',
+          'logs',
+          name,
+          '--lines',
+          String(lines),
+          '--follow',
+          '--no-color',
+        ],
         {
           cwd: projectPath,
           env: { ...process.env, PATH: getEnhancedPath() },
@@ -135,7 +143,9 @@ async function streamLogs(
       })
 
       child.on('close', () => {
-        controller.enqueue(encoder.encode(`data: ${JSON.stringify({ done: true })}\n\n`))
+        controller.enqueue(
+          encoder.encode(`data: ${JSON.stringify({ done: true })}\n\n`),
+        )
         controller.close()
       })
 

@@ -116,7 +116,8 @@ function PermissionList({ permissions }: { permissions: string[] }) {
         ))}
       </div>
       <p className="text-xs text-zinc-600">
-        v1.0.9: informational only. v1.1.0 will require explicit confirmation before install.
+        v1.0.9: informational only. v1.1.0 will require explicit confirmation
+        before install.
       </p>
     </div>
   )
@@ -333,11 +334,17 @@ function PluginDetailContent() {
       {pluginName.toLowerCase() === 'livekit' && (
         <div className="rounded-xl border border-yellow-500/30 bg-yellow-900/20 p-4">
           <div className="flex items-start gap-3">
-            <AlertCircle className="h-5 w-5 mt-0.5 shrink-0 text-yellow-400" />
+            <AlertCircle className="mt-0.5 h-5 w-5 shrink-0 text-yellow-400" />
             <div>
-              <p className="text-sm font-medium text-yellow-300">AV E2EE not enabled in v1.0.9</p>
+              <p className="text-sm font-medium text-yellow-300">
+                AV E2EE not enabled in v1.0.9
+              </p>
               <p className="mt-1 text-sm text-yellow-400/80">
-                Voice and video call streams are TLS-encrypted in transit but pass through LiveKit Server in cleartext at v1.0.9 — not end-to-end encrypted. nChat <strong>chat messages</strong> are separately E2EE via post-quantum Kyber. SFrame-based AV E2EE is planned for v1.1.0.{' '}
+                Voice and video call streams are TLS-encrypted in transit but
+                pass through LiveKit Server in cleartext at v1.0.9 — not
+                end-to-end encrypted. nChat <strong>chat messages</strong> are
+                separately E2EE via post-quantum Kyber. SFrame-based AV E2EE is
+                planned for v1.1.0.{' '}
                 <a
                   href="https://docs.nself.org/docs/chat/encryption-scope"
                   target="_blank"

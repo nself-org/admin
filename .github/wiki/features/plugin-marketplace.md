@@ -14,14 +14,14 @@ Go to **Plugins → Marketplace** (Zone Z06) in the Admin sidebar.
 
 The PluginInstallMatrix is the main view. It shows all available plugins in a grid:
 
-| Column | Description |
-|--------|-------------|
-| Name | Plugin display name (ɳ-prefixed for paid) |
-| Category | One of the 13 official categories |
-| Status | Installed / Not installed / Upgrade available |
-| Tier | Free / Basic / Pro / Elite / Business / Business+ / Enterprise |
-| Price | $0 (free) or bundle price |
-| Action | Install / Upgrade / Uninstall button |
+| Column   | Description                                                    |
+| -------- | -------------------------------------------------------------- |
+| Name     | Plugin display name (ɳ-prefixed for paid)                      |
+| Category | One of the 13 official categories                              |
+| Status   | Installed / Not installed / Upgrade available                  |
+| Tier     | Free / Basic / Pro / Elite / Business / Business+ / Enterprise |
+| Price    | $0 (free) or bundle price                                      |
+| Action   | Install / Upgrade / Uninstall button                           |
 
 ---
 

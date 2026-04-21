@@ -18,7 +18,7 @@ if (
 ) {
   throw new Error(
     'FATAL: dev-stub HASURA_GRAPHQL_ADMIN_SECRET detected in production. ' +
-      'Set a secure secret in your .env.secrets file before starting in production.'
+      'Set a secure secret in your .env.secrets file before starting in production.',
   )
 }
 

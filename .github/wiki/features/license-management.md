@@ -14,13 +14,13 @@ Go to **License** (Zone Z07) in the Admin sidebar.
 
 The LicensePanel shows:
 
-| Field | Description |
-|-------|-------------|
-| License key | Truncated key (`nself_pro_xxxxx...****`) |
-| Tier | Free / Basic / Pro / Elite / Business / Business+ / Enterprise |
-| Status | Active / Expired / Revoked |
-| Expiry | Date (for annual subscriptions) or "Monthly — renews MM/DD/YYYY" |
-| Installed plugins | Count of pro plugins currently installed |
+| Field             | Description                                                      |
+| ----------------- | ---------------------------------------------------------------- |
+| License key       | Truncated key (`nself_pro_xxxxx...****`)                         |
+| Tier              | Free / Basic / Pro / Elite / Business / Business+ / Enterprise   |
+| Status            | Active / Expired / Revoked                                       |
+| Expiry            | Date (for annual subscriptions) or "Monthly — renews MM/DD/YYYY" |
+| Installed plugins | Count of pro plugins currently installed                         |
 
 ---
 
@@ -35,15 +35,15 @@ The LicensePanel shows:
 
 ## License Tiers
 
-| Tier | Monthly | Annual | Plugins included |
-|------|---------|--------|-----------------|
-| Free | $0 | $0 | 25 free plugins only |
-| Basic | $0.99/mo | $9.99/yr | 55 standard pro plugins |
-| Pro | $1.99/mo | $19.99/yr | Basic + AI suite |
-| Elite | $4.99/mo | $49.99/yr | Pro + email support |
-| Business | $9.99/mo | $99.99/yr | Elite + 24h support |
-| Business+ | $49.99/mo | $499.99/yr | Business + dedicated channel |
-| Enterprise | $99.99/mo | $999.99/yr | Business+ + managed DevOps |
+| Tier       | Monthly   | Annual     | Plugins included             |
+| ---------- | --------- | ---------- | ---------------------------- |
+| Free       | $0        | $0         | 25 free plugins only         |
+| Basic      | $0.99/mo  | $9.99/yr   | 55 standard pro plugins      |
+| Pro        | $1.99/mo  | $19.99/yr  | Basic + AI suite             |
+| Elite      | $4.99/mo  | $49.99/yr  | Pro + email support          |
+| Business   | $9.99/mo  | $99.99/yr  | Elite + 24h support          |
+| Business+  | $49.99/mo | $499.99/yr | Business + dedicated channel |
+| Enterprise | $99.99/mo | $999.99/yr | Business+ + managed DevOps   |
 
 ---
 

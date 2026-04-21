@@ -14,7 +14,10 @@ interface RouteParams {
  *
  * Action types: created, updated, activated, deactivated, revoked, used, rate_limited
  */
-export async function GET(request: NextRequest, { params }: RouteParams): Promise<NextResponse> {
+export async function GET(
+  request: NextRequest,
+  { params }: RouteParams,
+): Promise<NextResponse> {
   try {
     const { id } = await params
     const searchParams = request.nextUrl.searchParams

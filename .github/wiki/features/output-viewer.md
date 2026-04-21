@@ -43,11 +43,11 @@ Content-Type: text/event-stream
 Each SSE event is a JSON payload:
 
 ```json
-{"line": "...", "stream": "stdout|stderr", "exitCode": null}
+{ "line": "...", "stream": "stdout|stderr", "exitCode": null }
 ```
 
 Final event when command exits:
 
 ```json
-{"line": null, "stream": null, "exitCode": 0, "elapsed": 1234}
+{ "line": null, "stream": null, "exitCode": 0, "elapsed": 1234 }
 ```

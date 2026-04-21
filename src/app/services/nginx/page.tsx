@@ -211,11 +211,7 @@ function NginxContent() {
             />
             {refreshing ? 'Refreshing...' : 'Refresh'}
           </Button>
-          <Button
-            variant="ghost"
-            size="sm"
-            aria-label="Nginx settings"
-          >
+          <Button variant="ghost" size="sm" aria-label="Nginx settings">
             <Settings className="h-4 w-4" aria-hidden="true" />
           </Button>
         </div>
@@ -228,7 +224,7 @@ function NginxContent() {
       )}
 
       {uiState === 'empty' && (
-        <Card className="border-dashed bg-[#0F0F1A] border-gray-700">
+        <Card className="border-dashed border-gray-700 bg-[#0F0F1A]">
           <CardContent className="flex flex-col items-center justify-center py-12">
             <Globe
               className="mb-4 h-12 w-12 text-gray-500"
@@ -236,9 +232,8 @@ function NginxContent() {
             />
             <p className="text-gray-400">No routes configured yet.</p>
             <p className="mt-1 text-sm text-gray-500">
-              Add routes via{' '}
-              <code className="text-indigo-400">nself urls</code> or edit{' '}
-              <code className="text-indigo-400">nginx/conf.d/</code>.
+              Add routes via <code className="text-indigo-400">nself urls</code>{' '}
+              or edit <code className="text-indigo-400">nginx/conf.d/</code>.
             </p>
           </CardContent>
         </Card>
@@ -249,7 +244,9 @@ function NginxContent() {
           <CardContent className="flex items-center gap-3 py-6">
             <XCircle className="h-6 w-6 text-red-400" aria-hidden="true" />
             <div>
-              <p className="font-medium text-red-300">Failed to load Nginx data</p>
+              <p className="font-medium text-red-300">
+                Failed to load Nginx data
+              </p>
               <p className="text-sm text-gray-400">{error}</p>
             </div>
             <Button
@@ -283,10 +280,7 @@ function NginxContent() {
       {uiState === 'permission-denied' && (
         <Card className="border-yellow-800 bg-[#0F0F1A]">
           <CardContent className="flex items-center gap-3 py-6">
-            <ShieldOff
-              className="h-6 w-6 text-yellow-400"
-              aria-hidden="true"
-            />
+            <ShieldOff className="h-6 w-6 text-yellow-400" aria-hidden="true" />
             <p className="text-yellow-300">
               Permission denied. Check your nSelf Admin session.
             </p>
@@ -301,7 +295,9 @@ function NginxContent() {
               className="h-6 w-6 text-orange-400"
               aria-hidden="true"
             />
-            <p className="text-orange-300">Rate limited. Please wait and retry.</p>
+            <p className="text-orange-300">
+              Rate limited. Please wait and retry.
+            </p>
           </CardContent>
         </Card>
       )}
@@ -309,7 +305,7 @@ function NginxContent() {
       {uiState === 'populated' && data && (
         <>
           {/* Active Routes */}
-          <Card className="bg-[#0F0F1A] border-gray-700">
+          <Card className="border-gray-700 bg-[#0F0F1A]">
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-white">
                 <Globe className="h-5 w-5 text-indigo-400" aria-hidden="true" />
@@ -359,7 +355,7 @@ function NginxContent() {
           </Card>
 
           {/* SSL Certificates */}
-          <Card className="bg-[#0F0F1A] border-gray-700">
+          <Card className="border-gray-700 bg-[#0F0F1A]">
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-white">
                 <Lock className="h-5 w-5 text-indigo-400" aria-hidden="true" />
@@ -368,7 +364,9 @@ function NginxContent() {
             </CardHeader>
             <CardContent>
               {data.sslCerts.length === 0 ? (
-                <p className="text-sm text-gray-500">No SSL certificates found.</p>
+                <p className="text-sm text-gray-500">
+                  No SSL certificates found.
+                </p>
               ) : (
                 <Table aria-label="SSL certificates">
                   <TableHeader>
@@ -411,7 +409,7 @@ function NginxContent() {
           </Card>
 
           {/* conf.d fragments */}
-          <Card className="bg-[#0F0F1A] border-gray-700">
+          <Card className="border-gray-700 bg-[#0F0F1A]">
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-white">
                 <FileText
@@ -426,7 +424,9 @@ function NginxContent() {
             </CardHeader>
             <CardContent>
               {data.confDFiles.length === 0 ? (
-                <p className="text-sm text-gray-500">No conf.d fragments found.</p>
+                <p className="text-sm text-gray-500">
+                  No conf.d fragments found.
+                </p>
               ) : (
                 <ul className="space-y-1" aria-label="conf.d file list">
                   {data.confDFiles.map((f) => (

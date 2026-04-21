@@ -45,7 +45,7 @@ export async function GET(): Promise<NextResponse> {
     if (urlsRaw.status === 'fulfilled') {
       try {
         const parsed = JSON.parse(urlsRaw.value)
-        const entries = Array.isArray(parsed) ? parsed : parsed?.urls ?? []
+        const entries = Array.isArray(parsed) ? parsed : (parsed?.urls ?? [])
         routes = entries.map(
           (e: { domain?: string; upstream?: string; ssl?: boolean }) => ({
             server: e.domain ?? '',
@@ -62,7 +62,7 @@ export async function GET(): Promise<NextResponse> {
     if (sslRaw.status === 'fulfilled') {
       try {
         const parsed = JSON.parse(sslRaw.value)
-        const certs = Array.isArray(parsed) ? parsed : parsed?.certs ?? []
+        const certs = Array.isArray(parsed) ? parsed : (parsed?.certs ?? [])
         sslCerts = certs.map(
           (c: {
             domain?: string

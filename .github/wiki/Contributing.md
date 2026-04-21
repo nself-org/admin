@@ -67,13 +67,13 @@ nself admin start   # uses the installed image; swap for local image to test
 
 ## Branching Model
 
-| Branch | Purpose |
-|---|---|
-| `main` | Latest stable |
-| `feat/xxx` | New features |
-| `fix/xxx` | Bug fixes |
-| `chore/xxx` | Maintenance |
-| `docs/xxx` | Documentation only |
+| Branch      | Purpose            |
+| ----------- | ------------------ |
+| `main`      | Latest stable      |
+| `feat/xxx`  | New features       |
+| `fix/xxx`   | Bug fixes          |
+| `chore/xxx` | Maintenance        |
+| `docs/xxx`  | Documentation only |
 
 Always branch from `main`. Target `main` in your PR.
 
@@ -146,4 +146,5 @@ Internationalisation strategy for Admin is under review. Translation contributio
 - [nSelf CLI repo](https://github.com/nself-org/cli) — backend CLI that Admin delegates to
 
 ---
+
 ← [[Home]] | [[_Sidebar]]

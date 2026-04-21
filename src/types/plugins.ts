@@ -38,6 +38,8 @@ export interface Plugin {
   actions: Record<string, string>
   installedAt?: string
   lastSync?: string
+  /** Declared permissions from plugin manifest (S71-T03). */
+  permissions?: string[]
 }
 
 export interface PluginConfig {

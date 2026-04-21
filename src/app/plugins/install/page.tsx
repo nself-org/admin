@@ -29,6 +29,8 @@ interface AvailablePlugin {
   category?: string
   tier: 'free' | 'pro' | 'max'
   installed?: boolean
+  /** Declared permissions from plugin manifest (S71-T03). */
+  permissions?: string[]
 }
 
 interface RegistryResponse {
@@ -40,6 +42,19 @@ interface InstallState {
   plugin: string
   status: 'idle' | 'installing' | 'done' | 'error'
   message?: string
+}
+
+// S71-T03: permission badge colour — mirrors [name]/page.tsx classification.
+function permBadgeClass(perm: string): string {
+  if (perm === 'system:exec') return 'bg-red-500/20 text-red-400'
+  if (
+    perm === 'network:internet' ||
+    perm.startsWith('fs:write:') ||
+    perm.startsWith('ai:provider:') ||
+    perm.startsWith('secrets:env:')
+  )
+    return 'bg-yellow-500/20 text-yellow-400'
+  return 'bg-emerald-500/20 text-emerald-400'
 }
 
 const TIER_COLORS: Record<string, string> = {
@@ -91,9 +106,24 @@ function PluginCard({
         </p>
       )}
 
-      <p className="mb-4 line-clamp-2 flex-1 text-sm text-zinc-400">
+      <p className="mb-3 line-clamp-2 flex-1 text-sm text-zinc-400">
         {plugin.description}
       </p>
+
+      {/* S71-T03: Permission badges shown before install confirmation */}
+      {plugin.permissions && plugin.permissions.length > 0 && (
+        <div className="mb-3 flex flex-wrap gap-1">
+          {plugin.permissions.map((perm) => (
+            <span
+              key={perm}
+              title={`Permission: ${perm}`}
+              className={`rounded-full px-2 py-0.5 font-mono text-xs ${permBadgeClass(perm)}`}
+            >
+              {perm}
+            </span>
+          ))}
+        </div>
+      )}
 
       {/* Install button */}
       {isDone ? (

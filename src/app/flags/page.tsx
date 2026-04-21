@@ -37,16 +37,28 @@ interface FeatureFlag {
 const FLAGS_API = 'http://127.0.0.1:3305/v1'
 
 const TYPE_META: Record<FlagType, { label: string; color: string }> = {
-  release: { label: 'Release', color: 'text-sky-400 bg-sky-900/30 border-sky-700/50' },
-  ops: { label: 'Ops', color: 'text-amber-400 bg-amber-900/30 border-amber-700/50' },
-  experiment: { label: 'Experiment', color: 'text-violet-400 bg-violet-900/30 border-violet-700/50' },
-  kill_switch: { label: 'Kill Switch', color: 'text-red-400 bg-red-900/30 border-red-700/50' },
+  release: {
+    label: 'Release',
+    color: 'text-sky-400 bg-sky-900/30 border-sky-700/50',
+  },
+  ops: {
+    label: 'Ops',
+    color: 'text-amber-400 bg-amber-900/30 border-amber-700/50',
+  },
+  experiment: {
+    label: 'Experiment',
+    color: 'text-violet-400 bg-violet-900/30 border-violet-700/50',
+  },
+  kill_switch: {
+    label: 'Kill Switch',
+    color: 'text-red-400 bg-red-900/30 border-red-700/50',
+  },
 }
 
 // ---- Helpers ----------------------------------------------------------------
 
 function TypeBadge({ type }: { type: FlagType | null }) {
-  if (!type) return <span className="text-zinc-500 text-xs">—</span>
+  if (!type) return <span className="text-xs text-zinc-500">—</span>
   const meta = TYPE_META[type]
   return (
     <span
@@ -58,7 +70,7 @@ function TypeBadge({ type }: { type: FlagType | null }) {
 }
 
 function RolloutBar({ pct }: { pct: number | null }) {
-  if (pct === null) return <span className="text-zinc-500 text-xs">—</span>
+  if (pct === null) return <span className="text-xs text-zinc-500">—</span>
   return (
     <div className="flex items-center gap-2">
       <div className="h-1.5 w-20 rounded-full bg-zinc-700">
@@ -124,7 +136,9 @@ export default function FlagsPage() {
     setToggling(flag.key)
     try {
       const action = flag.enabled ? 'disable' : 'enable'
-      await fetch(`${FLAGS_API}/flags/${flag.key}/${action}`, { method: 'POST' })
+      await fetch(`${FLAGS_API}/flags/${flag.key}/${action}`, {
+        method: 'POST',
+      })
       await fetchFlags()
     } finally {
       setToggling(null)
@@ -181,13 +195,17 @@ export default function FlagsPage() {
       <div className="space-y-6">
         <Header />
         <div className="rounded-xl border border-orange-500/30 bg-orange-900/20 p-6">
-          <p className="font-medium text-orange-300">Rate limited — please wait a moment.</p>
+          <p className="font-medium text-orange-300">
+            Rate limited — please wait a moment.
+          </p>
         </div>
       </div>
     )
   }
 
-  const filtered = typeFilter ? flags.filter((f) => f.type === typeFilter) : flags
+  const filtered = typeFilter
+    ? flags.filter((f) => f.type === typeFilter)
+    : flags
 
   return (
     <div className="space-y-6">
@@ -196,26 +214,31 @@ export default function FlagsPage() {
       {/* Filters */}
       <div className="flex items-center gap-3">
         <span className="text-sm text-zinc-400">Filter:</span>
-        {(['', 'release', 'ops', 'experiment', 'kill_switch'] as const).map((t) => (
-          <button
-            key={t}
-            onClick={() => setTypeFilter(t)}
-            className={`rounded-lg px-3 py-1.5 text-xs font-medium transition-colors ${
-              typeFilter === t
-                ? 'bg-sky-500 text-white'
-                : 'bg-zinc-800 text-zinc-400 hover:bg-zinc-700 hover:text-white'
-            }`}
-          >
-            {t === '' ? 'All' : TYPE_META[t].label}
-          </button>
-        ))}
+        {(['', 'release', 'ops', 'experiment', 'kill_switch'] as const).map(
+          (t) => (
+            <button
+              key={t}
+              onClick={() => setTypeFilter(t)}
+              className={`rounded-lg px-3 py-1.5 text-xs font-medium transition-colors ${
+                typeFilter === t
+                  ? 'bg-sky-500 text-white'
+                  : 'bg-zinc-800 text-zinc-400 hover:bg-zinc-700 hover:text-white'
+              }`}
+            >
+              {t === '' ? 'All' : TYPE_META[t].label}
+            </button>
+          ),
+        )}
       </div>
 
       {/* Loading skeleton */}
       {loading && (
         <div className="space-y-3">
           {[1, 2, 3].map((n) => (
-            <div key={n} className="h-14 animate-pulse rounded-xl bg-zinc-800/50" />
+            <div
+              key={n}
+              className="h-14 animate-pulse rounded-xl bg-zinc-800/50"
+            />
           ))}
         </div>
       )}
@@ -226,7 +249,8 @@ export default function FlagsPage() {
           <Flag className="mb-4 h-12 w-12 text-zinc-600" />
           <p className="text-sm text-zinc-400">No feature flags found.</p>
           <p className="mt-1 text-xs text-zinc-500">
-            Create flags via the REST API or nself CLI: <code className="font-mono">nself flag</code>
+            Create flags via the REST API or nself CLI:{' '}
+            <code className="font-mono">nself flag</code>
           </p>
         </div>
       )}
@@ -237,19 +261,19 @@ export default function FlagsPage() {
           <table className="w-full">
             <thead className="border-b border-zinc-700/50 bg-zinc-900/50">
               <tr>
-                <th className="px-4 py-3 text-left text-xs font-medium uppercase text-zinc-500">
+                <th className="px-4 py-3 text-left text-xs font-medium text-zinc-500 uppercase">
                   Key
                 </th>
-                <th className="px-4 py-3 text-left text-xs font-medium uppercase text-zinc-500">
+                <th className="px-4 py-3 text-left text-xs font-medium text-zinc-500 uppercase">
                   Type
                 </th>
-                <th className="px-4 py-3 text-left text-xs font-medium uppercase text-zinc-500">
+                <th className="px-4 py-3 text-left text-xs font-medium text-zinc-500 uppercase">
                   Rollout
                 </th>
-                <th className="px-4 py-3 text-left text-xs font-medium uppercase text-zinc-500">
+                <th className="px-4 py-3 text-left text-xs font-medium text-zinc-500 uppercase">
                   Enabled
                 </th>
-                <th className="px-4 py-3 text-right text-xs font-medium uppercase text-zinc-500">
+                <th className="px-4 py-3 text-right text-xs font-medium text-zinc-500 uppercase">
                   Actions
                 </th>
               </tr>
@@ -268,7 +292,9 @@ export default function FlagsPage() {
                       {flag.key}
                     </Link>
                     {flag.name && (
-                      <div className="mt-0.5 text-xs text-zinc-500">{flag.name}</div>
+                      <div className="mt-0.5 text-xs text-zinc-500">
+                        {flag.name}
+                      </div>
                     )}
                   </td>
                   <td className="px-4 py-3">
@@ -296,7 +322,9 @@ export default function FlagsPage() {
                       {/* Toggle button */}
                       <button
                         onClick={() => handleToggle(flag)}
-                        disabled={toggling === flag.key || flag.type === 'kill_switch'}
+                        disabled={
+                          toggling === flag.key || flag.type === 'kill_switch'
+                        }
                         title={
                           flag.type === 'kill_switch'
                             ? 'Kill switches cannot be toggled from UI — use nself flag kill'
@@ -339,8 +367,8 @@ function Header() {
     <div>
       <h1 className="text-2xl font-semibold text-white">Feature Flags</h1>
       <p className="mt-1 text-sm text-zinc-400">
-        Manage feature flags via the nself feature-flags plugin. Toggle flags, adjust rollout
-        percentages, and review audit logs.
+        Manage feature flags via the nself feature-flags plugin. Toggle flags,
+        adjust rollout percentages, and review audit logs.
       </p>
     </div>
   )

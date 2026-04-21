@@ -8,13 +8,7 @@
  *   - Line count selector
  */
 
-import {
-  ArrowLeft,
-  Pause,
-  Play,
-  RefreshCw,
-  Terminal,
-} from 'lucide-react'
+import { ArrowLeft, Pause, Play, RefreshCw, Terminal } from 'lucide-react'
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
 import { useCallback, useEffect, useRef, useState } from 'react'
@@ -26,13 +20,13 @@ interface LogLine {
 }
 
 const LEVEL_COLORS: Record<string, string> = {
-  ERROR:  'text-red-400',
-  FATAL:  'text-red-500',
-  CRIT:   'text-red-500',
-  WARN:   'text-yellow-400',
-  WARNING:'text-yellow-400',
-  INFO:   'text-cyan-400',
-  DEBUG:  'text-zinc-400',
+  ERROR: 'text-red-400',
+  FATAL: 'text-red-500',
+  CRIT: 'text-red-500',
+  WARN: 'text-yellow-400',
+  WARNING: 'text-yellow-400',
+  INFO: 'text-cyan-400',
+  DEBUG: 'text-zinc-400',
 }
 
 function getLineColor(text: string): string {
@@ -296,9 +290,7 @@ export default function PluginLogsPage() {
             </span>
           ) : (
             lastRefresh && (
-              <span>
-                Last updated: {lastRefresh.toLocaleTimeString()}
-              </span>
+              <span>Last updated: {lastRefresh.toLocaleTimeString()}</span>
             )
           )}
           <span>{lines.length} lines</span>

@@ -155,7 +155,11 @@ function FunctionsContent() {
         setCliOutput(json.data.output)
         // Map real CLI output (FunctionInfo: {name, status, url, dir}) to FunctionEntry.
         const rawFns = Array.isArray(json.data.functions)
-          ? (json.data.functions as Array<{ name?: string; status?: string; url?: string }>)
+          ? (json.data.functions as Array<{
+              name?: string
+              status?: string
+              url?: string
+            }>)
           : []
         setFunctions(
           rawFns.map((f) => ({

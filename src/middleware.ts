@@ -1,5 +1,25 @@
 import { NextRequest, NextResponse } from 'next/server'
 
+// ── Feature flag helpers ────────────────────────────────────────────────────
+// Inline read (not imported from feature-flags.ts) because middleware runs
+// in the Edge runtime where module resolution works differently.
+function isMultiUserEnabled(): boolean {
+  return process.env.NSELF_ADMIN_MULTIUSER === 'true'
+}
+
+/**
+ * Route prefixes that are part of the multi-user feature (disabled by default).
+ * When NSELF_ADMIN_MULTIUSER is false, page routes return Next.js 404 and
+ * API routes are blocked before session validation.
+ *
+ * Note: /api/users/* and /api/auth/roles/* already return 404 from their
+ * own handlers. This middleware layer adds defence-in-depth so the block
+ * applies even if a handler is accidentally replaced with a real implementation
+ * before the CLI commands exist.
+ */
+const MULTIUSER_PAGE_PREFIXES = ['/users', '/tenant', '/auth/roles']
+const MULTIUSER_API_PREFIXES = ['/api/users', '/api/auth/roles']
+
 // Define public routes that don't require authentication
 const PUBLIC_ROUTES = [
   '/login',
@@ -21,6 +41,27 @@ const PUBLIC_ROUTES = [
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
+
+  // ── Multi-user feature flag gate ─────────────────────────────────────────
+  // Block all multi-user page and API routes when NSELF_ADMIN_MULTIUSER is
+  // off (default). This fires BEFORE session checks so unauthenticated
+  // requests also get blocked — no information leak about the feature.
+  if (!isMultiUserEnabled()) {
+    if (MULTIUSER_API_PREFIXES.some((p) => pathname.startsWith(p))) {
+      return NextResponse.json(
+        {
+          error: 'not_available',
+          message:
+            'Multi-user mode disabled. Set NSELF_ADMIN_MULTIUSER=true to enable.',
+          docs: 'https://docs.nself.org/admin/single-user-posture',
+        },
+        { status: 404 },
+      )
+    }
+    if (MULTIUSER_PAGE_PREFIXES.some((p) => pathname.startsWith(p))) {
+      return NextResponse.rewrite(new URL('/404', request.url))
+    }
+  }
 
   // Allow public routes
   if (PUBLIC_ROUTES.some((route) => pathname.startsWith(route))) {

@@ -1,3 +1,13 @@
+// SCAFFOLDING for v1.2.0 multi-user Admin (target Q3 2026).
+// NOT WIRED in v1.0.9/v1.1.0 — all multi-user UI hidden behind
+// NSELF_ADMIN_MULTIUSER feature flag (default false).
+// See: web/docs/admin/single-user-posture.mdx + STORM-RBAC § Section 4.
+//
+// Do NOT delete this file — it preserves the type design for direct
+// re-activation when the CLI commands (`nself auth roles *`, `nself user *`)
+// are implemented in v1.2.0. The design was authored at v0.0.8 and is
+// intentionally kept current.
+
 /**
  * Multi-Tenancy & Organization Types for nself-admin v0.0.8
  *

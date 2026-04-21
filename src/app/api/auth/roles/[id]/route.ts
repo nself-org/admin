@@ -1,98 +1,22 @@
-import { executeNselfCommand } from '@/lib/nselfCLI'
-import { NextRequest, NextResponse } from 'next/server'
+// Multi-user Roles API — NOT available in v1.0.9.
+// See /api/auth/roles/route.ts for full explanation.
 
-const ID_PATTERN = /^[a-zA-Z0-9_-]+$/
+import { NextResponse } from 'next/server'
 
-export async function GET(
-  _request: NextRequest,
-  { params }: { params: Promise<{ id: string }> },
-): Promise<NextResponse> {
-  try {
-    const { id } = await params
+const NOT_AVAILABLE = NextResponse.json(
+  {
+    error: 'not_available',
+    message:
+      'Multi-user mode disabled. Set NSELF_ADMIN_MULTIUSER=true to enable.',
+    docs: 'https://docs.nself.org/admin/single-user-posture',
+  },
+  { status: 404 },
+)
 
-    if (!ID_PATTERN.test(id)) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: 'Invalid role ID',
-          details: 'Role ID contains invalid characters',
-        },
-        { status: 400 },
-      )
-    }
-
-    const result = await executeNselfCommand('auth', ['roles', 'show', id])
-
-    if (!result.success) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: 'Failed to get role details',
-          details: result.error || result.stderr || 'Unknown error',
-        },
-        { status: 500 },
-      )
-    }
-
-    return NextResponse.json({
-      success: true,
-      data: { output: result.stdout?.trim(), id },
-    })
-  } catch (error) {
-    return NextResponse.json(
-      {
-        success: false,
-        error: 'Failed to get role details',
-        details: error instanceof Error ? error.message : 'Unknown error',
-      },
-      { status: 500 },
-    )
-  }
+export async function GET(): Promise<NextResponse> {
+  return NOT_AVAILABLE
 }
 
-export async function DELETE(
-  _request: NextRequest,
-  { params }: { params: Promise<{ id: string }> },
-): Promise<NextResponse> {
-  try {
-    const { id } = await params
-
-    if (!ID_PATTERN.test(id)) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: 'Invalid role ID',
-          details: 'Role ID contains invalid characters',
-        },
-        { status: 400 },
-      )
-    }
-
-    const result = await executeNselfCommand('auth', ['roles', 'remove', id])
-
-    if (!result.success) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: 'Failed to remove role',
-          details: result.error || result.stderr || 'Unknown error',
-        },
-        { status: 500 },
-      )
-    }
-
-    return NextResponse.json({
-      success: true,
-      data: { output: result.stdout?.trim(), id },
-    })
-  } catch (error) {
-    return NextResponse.json(
-      {
-        success: false,
-        error: 'Failed to remove role',
-        details: error instanceof Error ? error.message : 'Unknown error',
-      },
-      { status: 500 },
-    )
-  }
+export async function DELETE(): Promise<NextResponse> {
+  return NOT_AVAILABLE
 }

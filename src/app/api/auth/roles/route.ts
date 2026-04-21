@@ -1,103 +1,31 @@
-import { executeNselfCommand } from '@/lib/nselfCLI'
-import { NextRequest, NextResponse } from 'next/server'
+// Multi-user Roles API — NOT available in v1.0.9.
+// Multi-user Admin (including role management) is planned for v1.2.0 (Q3 2026 target).
+// This route returns HTTP 404 with a structured error so callers get a clear
+// machine-parseable signal instead of a 500 from a non-existent CLI command.
+//
+// When NSELF_ADMIN_MULTIUSER=true, the middleware still routes here — the
+// 404 response is intentional: the feature is not wired at the API layer
+// in v1.0.9 / v1.1.0 regardless of the flag. The flag only controls UI visibility.
+//
+// CLI commands `nself auth roles list` and `nself auth roles create` do NOT exist
+// in v1.0.9. Do NOT revert to executeNselfCommand() calls here until they do.
+
+import { NextResponse } from 'next/server'
+
+const NOT_AVAILABLE = NextResponse.json(
+  {
+    error: 'not_available',
+    message:
+      'Multi-user mode disabled. Set NSELF_ADMIN_MULTIUSER=true to enable.',
+    docs: 'https://docs.nself.org/admin/single-user-posture',
+  },
+  { status: 404 },
+)
 
 export async function GET(): Promise<NextResponse> {
-  try {
-    const result = await executeNselfCommand('auth', ['roles', 'list'])
-
-    if (!result.success) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: 'Failed to list roles',
-          details: result.error || result.stderr || 'Unknown error',
-        },
-        { status: 500 },
-      )
-    }
-
-    return NextResponse.json({
-      success: true,
-      data: { output: result.stdout?.trim() },
-    })
-  } catch (error) {
-    return NextResponse.json(
-      {
-        success: false,
-        error: 'Failed to list roles',
-        details: error instanceof Error ? error.message : 'Unknown error',
-      },
-      { status: 500 },
-    )
-  }
+  return NOT_AVAILABLE
 }
 
-export async function POST(request: NextRequest): Promise<NextResponse> {
-  try {
-    const body = await request.json()
-    const { name, description, permissions } = body
-
-    if (!name || typeof name !== 'string') {
-      return NextResponse.json(
-        {
-          success: false,
-          error: 'Invalid role name',
-          details: 'A role name is required',
-        },
-        { status: 400 },
-      )
-    }
-
-    if (
-      !permissions ||
-      !Array.isArray(permissions) ||
-      permissions.length === 0
-    ) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: 'Invalid permissions',
-          details: 'At least one permission is required',
-        },
-        { status: 400 },
-      )
-    }
-
-    const args = [
-      'roles',
-      'create',
-      `--name=${name}`,
-      `--permissions=${permissions.join(',')}`,
-    ]
-    if (description) {
-      args.push(`--description=${description}`)
-    }
-
-    const result = await executeNselfCommand('auth', args)
-
-    if (!result.success) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: 'Failed to create role',
-          details: result.error || result.stderr || 'Unknown error',
-        },
-        { status: 500 },
-      )
-    }
-
-    return NextResponse.json({
-      success: true,
-      data: { output: result.stdout?.trim(), name },
-    })
-  } catch (error) {
-    return NextResponse.json(
-      {
-        success: false,
-        error: 'Failed to create role',
-        details: error instanceof Error ? error.message : 'Unknown error',
-      },
-      { status: 500 },
-    )
-  }
+export async function POST(): Promise<NextResponse> {
+  return NOT_AVAILABLE
 }

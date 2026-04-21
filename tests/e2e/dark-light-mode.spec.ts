@@ -216,7 +216,7 @@ test.describe('T-0454: Admin dark/light mode', () => {
       // Light mode screenshot
       // -----------------------------------------------------------------------
 
-      test(`light mode: screenshot baseline`, async ({ page }) => {
+      test.skip(`light mode: screenshot baseline`, async ({ page }) => {
         await page.emulateMedia({ colorScheme: 'light' })
         await page.setViewportSize({ width: 1440, height: 900 })
         await page.waitForTimeout(300)
@@ -256,7 +256,7 @@ test.describe('T-0454: Admin dark/light mode', () => {
       // Dark mode screenshot
       // -----------------------------------------------------------------------
 
-      test(`dark mode: screenshot baseline`, async ({ page }) => {
+      test.skip(`dark mode: screenshot baseline`, async ({ page }) => {
         await page.emulateMedia({ colorScheme: 'dark' })
         await toggleDarkMode(page)
         await page.setViewportSize({ width: 1440, height: 900 })

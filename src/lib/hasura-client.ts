@@ -8,6 +8,49 @@ const HASURA_ENDPOINT =
   process.env.HASURA_GRAPHQL_ENDPOINT || 'http://localhost:8080/v1/graphql'
 const HASURA_ADMIN_SECRET = process.env.HASURA_GRAPHQL_ADMIN_SECRET
 
+// ── Startup guard ───────────────────────────────────────────────────────────
+// Known dev-stub values that must never reach a real Hasura instance.
+// Checked at module load so the process fails immediately on misconfiguration
+// rather than returning opaque auth errors at query time.
+const KNOWN_BAD_HASURA_SECRETS = [
+  'hasura-admin-secret-dev',
+  'dummy-admin-secret',
+  'changeme',
+  'changeme123',
+  'secret',
+  'admin',
+]
+
+function _isKnownBadSecret(s: string): boolean {
+  const lower = s.toLowerCase()
+  return (
+    KNOWN_BAD_HASURA_SECRETS.includes(lower) ||
+    lower.startsWith('dummy') ||
+    lower.startsWith('test')
+  )
+}
+
+if (process.env.NODE_ENV === 'production') {
+  if (!HASURA_ADMIN_SECRET) {
+    throw new Error(
+      'FATAL: HASURA_GRAPHQL_ADMIN_SECRET is not set. ' +
+        'Generate with: openssl rand -hex 32',
+    )
+  }
+  if (_isKnownBadSecret(HASURA_ADMIN_SECRET)) {
+    throw new Error(
+      'FATAL: HASURA_GRAPHQL_ADMIN_SECRET is set to a known insecure dev-stub value. ' +
+        'Set a real secret in your .env.secrets file. Generate with: openssl rand -hex 32',
+    )
+  }
+  if (HASURA_ADMIN_SECRET.length < 32) {
+    throw new Error(
+      'FATAL: HASURA_GRAPHQL_ADMIN_SECRET must be at least 32 characters in production.',
+    )
+  }
+}
+// ── End startup guard ────────────────────────────────────────────────────────
+
 export interface HasuraQueryResult<T = unknown> {
   data: T | null
   errors?: Array<{ message: string; extensions?: Record<string, unknown> }>

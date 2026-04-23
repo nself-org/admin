@@ -514,8 +514,9 @@ export function wizardConfigToEnv(config: any): EnvConfig {
   }
 
   // Hasura Configuration - per spec v1.0 use HASURA_JWT_KEY not full JWT_SECRET
-  env.HASURA_GRAPHQL_ADMIN_SECRET =
-    config.hasuraAdminSecret || 'hasura-admin-secret-dev'
+  // No fallback: HASURA_GRAPHQL_ADMIN_SECRET must be set explicitly.
+  // The startup guard in hasura-client.ts blocks known dev-stub values in production.
+  env.HASURA_GRAPHQL_ADMIN_SECRET = config.hasuraAdminSecret || ''
   env.HASURA_JWT_KEY =
     config.jwtSecret || 'development-secret-key-minimum-32-characters-long'
   env.HASURA_JWT_TYPE = 'HS256' // Default per spec
@@ -700,7 +701,7 @@ export function envToWizardConfig(env: EnvConfig): any {
     databasePassword: env.POSTGRES_PASSWORD || 'nself-dev-password',
     postgresUser: env.POSTGRES_USER || 'postgres', // Add this field
     hasuraAdminSecret:
-      env.HASURA_GRAPHQL_ADMIN_SECRET || 'hasura-admin-secret-dev',
+      env.HASURA_GRAPHQL_ADMIN_SECRET || '',
     jwtSecret:
       env.HASURA_JWT_KEY ||
       (() => {

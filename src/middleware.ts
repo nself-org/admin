@@ -17,8 +17,8 @@ function isMultiUserEnabled(): boolean {
  * applies even if a handler is accidentally replaced with a real implementation
  * before the CLI commands exist.
  */
-const MULTIUSER_PAGE_PREFIXES = ['/users', '/tenant', '/auth/roles']
-const MULTIUSER_API_PREFIXES = ['/api/users', '/api/auth/roles']
+const MULTIUSER_PAGE_PREFIXES = ['/users', '/tenant', '/auth/roles', '/team']
+const MULTIUSER_API_PREFIXES = ['/api/users', '/api/auth/roles', '/api/account/team']
 
 // Define public routes that don't require authentication
 const PUBLIC_ROUTES = [
@@ -28,6 +28,7 @@ const PUBLIC_ROUTES = [
   '/api/auth/init',
   '/api/auth/csrf', // CSRF token must be fetchable before login (no session yet)
   '/api/auth/check', // Allow checking auth status
+  '/api/auth/sso', // SSO header auto-login endpoint
   '/api/auth/validate-session', // Allow session validation from middleware
   '/api/health',
   '/api/project/status', // Allow checking project status without auth
@@ -66,6 +67,27 @@ export async function middleware(request: NextRequest) {
   // Allow public routes
   if (PUBLIC_ROUTES.some((route) => pathname.startsWith(route))) {
     return NextResponse.next()
+  }
+
+  // ── SSO header auto-login ────────────────────────────────────────────────────
+  // When NSELF_ADMIN_SSO_HEADER_ENABLED=true, check for the configured SSO
+  // header (default: CF-Access-Authenticated-User-Email). If the header is
+  // present and no session cookie exists, redirect through /api/auth/sso to
+  // create a session and issue the cookie. This supports Cloudflare Access,
+  // nginx auth_request, and similar header-based SSO patterns.
+  if (process.env.NSELF_ADMIN_SSO_HEADER_ENABLED === 'true') {
+    const ssoHeaderName =
+      process.env.NSELF_ADMIN_SSO_HEADER_NAME ||
+      'CF-Access-Authenticated-User-Email'
+    const ssoEmail = request.headers.get(ssoHeaderName)
+    const existingSession = request.cookies.get('nself-session')?.value
+
+    if (ssoEmail && !existingSession && !pathname.startsWith('/api/')) {
+      // Redirect to SSO endpoint which will create a session and bounce back
+      const ssoUrl = new URL('/api/auth/sso', request.url)
+      ssoUrl.searchParams.set('redirect', pathname)
+      return NextResponse.redirect(ssoUrl)
+    }
   }
 
   // Check for session cookie

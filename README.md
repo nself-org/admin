@@ -1,6 +1,6 @@
 # ɳSelf Admin
 
-[![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)](https://github.com/nself-org/admin/releases)
+[![Version](https://img.shields.io/github/v/release/nself-org/admin?label=version)](https://github.com/nself-org/admin/releases)
 [![Docker](https://img.shields.io/docker/v/nself/nself-admin?label=docker)](https://hub.docker.com/r/nself/nself-admin)
 [![Docker Pulls](https://img.shields.io/docker/pulls/nself/nself-admin)](https://hub.docker.com/r/nself/nself-admin)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)

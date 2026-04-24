@@ -1,7 +1,7 @@
 # Multi-stage production Dockerfile for nself-admin
 # Optimized for minimal size with standalone Next.js build
 # Multi-platform support: linux/amd64, linux/arm64
-# Build: docker build -t nself/nself-admin:v1.0.9 -t nself/nself-admin:latest .
+# Build: docker build -t nself/nself-admin:v1.0.10 -t nself/nself-admin:latest .
 
 # Stage 1: Dependencies
 FROM node:22-alpine AS deps
@@ -11,6 +11,11 @@ WORKDIR /app
 
 # Copy package files first for better layer caching
 COPY package.json pnpm-lock.yaml ./
+
+# Disable hardlinks: pnpm defaults to hardlink import which fails under QEMU (arm64
+# emulation) because the cache mount and the workdir are on different virtual
+# filesystems — pnpm exits 254.  Copy mode works on all platforms.
+RUN pnpm config set package-import-method copy
 
 # Install all dependencies (needed for build)
 RUN --mount=type=cache,target=/root/.local/share/pnpm/store \
@@ -78,7 +83,7 @@ RUN ARCH=$(uname -m) && \
     chmod +x /usr/local/bin/mkcert
 
 # Install nself CLI pre-built binary
-ARG NSELF_VERSION=1.0.9
+ARG NSELF_VERSION=1.0.10
 RUN ARCH=$(uname -m) && \
     if [ "$ARCH" = "x86_64" ]; then NSELF_ARCH="amd64"; \
     elif [ "$ARCH" = "aarch64" ]; then NSELF_ARCH="arm64"; \
@@ -112,7 +117,7 @@ ENV NEXT_TELEMETRY_DISABLED=1
 ENV HOSTNAME="0.0.0.0"
 # Port 3021 is the reserved port for nself-admin (not 3100, which is for Loki)
 ENV PORT=3021
-ENV ADMIN_VERSION=1.0.9
+ENV ADMIN_VERSION=1.0.10
 
 # Environment variables that can be set at runtime:
 # NSELF_PROJECT_PATH - Path to mounted project (default: /workspace)
@@ -122,7 +127,7 @@ ENV ADMIN_VERSION=1.0.9
 # Add labels for container metadata
 LABEL org.opencontainers.image.title="nself-admin"
 LABEL org.opencontainers.image.description="Web-based administration interface for nself CLI"
-LABEL org.opencontainers.image.version="1.0.9"
+LABEL org.opencontainers.image.version="1.0.10"
 LABEL org.opencontainers.image.vendor="nself.org"
 LABEL org.opencontainers.image.source="https://github.com/nself-org/admin"
 LABEL org.opencontainers.image.licenses="Proprietary - Free for personal use, Commercial license required"

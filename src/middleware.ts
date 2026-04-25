@@ -1,4 +1,3 @@
-import crypto from 'crypto'
 import { NextRequest, NextResponse } from 'next/server'
 
 // ── Feature flag helpers ────────────────────────────────────────────────────
@@ -48,7 +47,9 @@ const PUBLIC_ROUTES = [
 // ── Security headers ────────────────────────────────────────────────────────
 
 function generateNonce(): string {
-  return crypto.randomBytes(16).toString('base64')
+  const buffer = new Uint8Array(16)
+  globalThis.crypto.getRandomValues(buffer)
+  return btoa(Array.from(buffer).map(b => String.fromCharCode(b)).join(''))
 }
 
 function buildCsp(nonce: string): string {

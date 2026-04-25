@@ -19,7 +19,7 @@ The PluginInstallMatrix is the main view. It shows all available plugins in a gr
 | Name     | Plugin display name (ɳ-prefixed for paid)                      |
 | Category | One of the 13 official categories                              |
 | Status   | Installed / Not installed / Upgrade available                  |
-| Tier     | Free / Basic / Pro / Elite / Business / Business+ / Enterprise |
+| Tier     | Free / Any bundle ($0.99/mo) / ɳSelf+ ($3.99/mo or $39.99/yr) |
 | Price    | $0 (free) or bundle price                                      |
 | Action   | Install / Upgrade / Uninstall button                           |
 

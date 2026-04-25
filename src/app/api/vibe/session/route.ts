@@ -13,11 +13,6 @@ import { z } from 'zod'
 const VIBE_ENABLED = process.env.NSELF_VIBE_ENABLED === 'true'
 const VIBE_API_PORT = process.env.NSELF_VIBE_PORT ?? '8003'
 const VIBE_API_BASE = `http://127.0.0.1:${VIBE_API_PORT}`
-const MAX_SESSIONS_PER_USER = parseInt(
-  process.env.NSELF_VIBE_MAX_SESSIONS_PER_USER ?? '3',
-  10,
-)
-
 const CreateSessionSchema = z.object({
   target_env: z.enum(['local', 'staging', 'prod']).default('local'),
 })
@@ -121,5 +116,3 @@ export async function GET(_request: NextRequest): Promise<NextResponse> {
     })
   }
 }
-
-export const maxSessionsPerUser = MAX_SESSIONS_PER_USER

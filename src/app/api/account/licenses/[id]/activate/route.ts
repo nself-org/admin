@@ -6,10 +6,10 @@
  */
 
 import { validateSessionToken } from '@/lib/auth-db'
-import { NextRequest, NextResponse } from 'next/server'
 import fs from 'fs'
-import path from 'path'
+import { NextRequest, NextResponse } from 'next/server'
 import os from 'os'
+import path from 'path'
 
 const AUTH_URL = process.env.NSELF_AUTH_URL || ''
 
@@ -31,7 +31,10 @@ export async function POST(
 ): Promise<NextResponse> {
   const token = request.cookies.get('nself-session')?.value
   if (!token || !(await validateSessionToken(token))) {
-    return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 })
+    return NextResponse.json(
+      { success: false, error: 'Unauthorized' },
+      { status: 401 },
+    )
   }
 
   const { id } = await params
@@ -45,14 +48,17 @@ export async function POST(
   }
 
   try {
-    const upstream = await fetch(`${AUTH_URL}/account/licenses/${id}/activate`, {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json',
+    const upstream = await fetch(
+      `${AUTH_URL}/account/licenses/${id}/activate`,
+      {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ deviceId }),
       },
-      body: JSON.stringify({ deviceId }),
-    })
+    )
 
     if (!upstream.ok) {
       const body = await upstream.json().catch(() => ({}))

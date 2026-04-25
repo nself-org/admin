@@ -3,6 +3,7 @@
 import { Button } from '@/components/Button'
 import { HeroPattern } from '@/components/HeroPattern'
 import { ListSkeleton } from '@/components/skeletons'
+import { useUrlState } from '@/hooks/useUrlState'
 import {
   Activity,
   Bell,
@@ -850,9 +851,7 @@ function WebhooksContent() {
   >()
   const [filter, setFilter] = useState('all')
   const [searchQuery, setSearchQuery] = useState('')
-  const [activeTab, setActiveTab] = useState<
-    'webhooks' | 'deliveries' | 'templates'
-  >('webhooks')
+  const [activeTab, setActiveTab] = useUrlState<string>('tab', 'webhooks')
 
   const filteredWebhooks = webhooks.filter((webhook) => {
     if (filter === 'enabled' && !webhook.enabled) return false

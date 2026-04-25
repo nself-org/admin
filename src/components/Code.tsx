@@ -2,6 +2,7 @@
 
 import { Tab, TabGroup, TabList, TabPanel, TabPanels } from '@headlessui/react'
 import clsx from 'clsx'
+import DOMPurify from 'dompurify'
 import {
   Children,
   createContext,
@@ -367,7 +368,16 @@ export function Code({
         '`Code` children must be a string when nested inside a `CodeGroup`.',
       )
     }
-    return <code {...props} dangerouslySetInnerHTML={{ __html: children }} />
+    // children is a syntax-highlighted HTML string produced by the highlighter library.
+    // Sanitize with DOMPurify before rendering to guard against any upstream injection.
+    const safeHtml =
+      typeof window !== 'undefined'
+        ? DOMPurify.sanitize(String(children), {
+            ALLOWED_TAGS: ['span', 'b', 'i', 'em', 'strong'],
+            ALLOWED_ATTR: ['class', 'style'],
+          })
+        : String(children).replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    return <code {...props} dangerouslySetInnerHTML={{ __html: safeHtml }} />
   }
 
   return <code {...props}>{children}</code>

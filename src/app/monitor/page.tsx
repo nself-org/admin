@@ -3,6 +3,7 @@
 import { Button } from '@/components/Button'
 import { HeroPattern } from '@/components/HeroPattern'
 import { ChartSkeleton } from '@/components/skeletons'
+import { useUrlState } from '@/hooks/useUrlState'
 import {
   Activity,
   AlertCircle,
@@ -63,10 +64,8 @@ interface Service {
 
 function MonitorContent() {
   const [_loading, setLoading] = useState(false)
-  const [activeTab, setActiveTab] = useState<
-    'overview' | 'metrics' | 'alerts' | 'health'
-  >('overview')
-  const [timeRange, setTimeRange] = useState('1h')
+  const [activeTab, setActiveTab] = useUrlState<string>('tab', 'overview')
+  const [timeRange, setTimeRange] = useUrlState<string>('since', '1h')
   const [autoRefresh, setAutoRefresh] = useState(true)
   const [searchQuery, setSearchQuery] = useState('')
 

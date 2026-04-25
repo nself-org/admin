@@ -185,7 +185,7 @@ function HelmContent() {
   const deployedCount = releases.filter((r) => r.status === 'deployed').length
   const namespaces = [...new Set(releases.map((r) => r.namespace))]
 
-  const handleUninstall = async (releaseName: string, namespace: string) => {
+  const handleUninstall = async (releaseName: string, _namespace: string) => {
     if (!confirm(`Are you sure you want to uninstall "${releaseName}"?`)) {
       return
     }

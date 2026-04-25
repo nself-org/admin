@@ -3,6 +3,7 @@
 import { Button } from '@/components/Button'
 import { HeroPattern } from '@/components/HeroPattern'
 import { ServiceDetailSkeleton } from '@/components/skeletons'
+import { useUrlState } from '@/hooks/useUrlState'
 import {
   Activity,
   AlertCircle,
@@ -1547,7 +1548,7 @@ function SecuritySettings({ settings }: { settings: SecuritySetting[] }) {
 }
 
 function AuthContent() {
-  const [activeTab, setActiveTab] = useState('users')
+  const [activeTab, setActiveTab] = useUrlState<string>('tab', 'users')
 
   // Mock data
   const [stats] = useState<AuthStats>({

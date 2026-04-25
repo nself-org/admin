@@ -68,9 +68,6 @@ function canAccessTab(userRole: AccessRole, tabMinRole: AccessRole): boolean {
   return ROLE_HIERARCHY[userRole] >= ROLE_HIERARCHY[tabMinRole]
 }
 
-// LocalStorage keys for auto-save drafts
-const STORAGE_PREFIX = 'nself_env_draft_'
-
 // ---------------------------------------------------------------------------
 // Main Page Component
 // ---------------------------------------------------------------------------
@@ -163,42 +160,17 @@ function EnvEditorContent() {
     },
   )
 
-  // Sync fetched data to local state
+  // Sync fetched data to local state (no localStorage — secrets must not persist client-side)
   useEffect(() => {
     if (data) {
-      // Check for draft in localStorage
-      const draftKey = `${STORAGE_PREFIX}${environment}`
-      const draft = localStorage.getItem(draftKey)
-
-      if (draft) {
-        try {
-          const draftVars = JSON.parse(draft)
-          setVariables(draftVars)
-          setHasChanges(true)
-        } catch {
-          setVariables(data)
-          setOriginalVariables(data)
-          setHasChanges(false)
-        }
-      } else {
-        setVariables(data)
-        setOriginalVariables(data)
-        setHasChanges(false)
-      }
-
+      setVariables(data)
+      setOriginalVariables(data)
+      setHasChanges(false)
       setEditingKey(null)
       setDeleteConfirm(null)
       setRebuildRequired(false)
     }
   }, [data, environment])
-
-  // Auto-save draft to localStorage
-  useEffect(() => {
-    if (hasChanges) {
-      const draftKey = `${STORAGE_PREFIX}${environment}`
-      localStorage.setItem(draftKey, JSON.stringify(variables))
-    }
-  }, [variables, hasChanges, environment])
 
   // Clear save message after 4 seconds
   useEffect(() => {
@@ -330,10 +302,6 @@ function EnvEditorContent() {
         setHasChanges(false)
         setOriginalVariables([...variables])
 
-        // Clear draft from localStorage
-        const draftKey = `${STORAGE_PREFIX}${environment}`
-        localStorage.removeItem(draftKey)
-
         const buildNote = json.buildSuccess
           ? ' Build completed successfully.'
           : json.buildTriggered
@@ -371,10 +339,6 @@ function EnvEditorContent() {
     setHasChanges(false)
     setEditingKey(null)
     setRebuildRequired(false)
-
-    // Clear draft from localStorage
-    const draftKey = `${STORAGE_PREFIX}${environment}`
-    localStorage.removeItem(draftKey)
   }, [originalVariables, environment])
 
   const toggleSection = useCallback((section: string) => {

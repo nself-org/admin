@@ -9,39 +9,36 @@ export async function GET(_request: NextRequest): Promise<NextResponse> {
     const result = await executeNselfCommand('backup', ['list', '--json'])
 
     if (!result.success) {
-      // If list command not available, try to read from default backup directory
+      // `nself backup list` not available — return empty list with an error flag.
+      // Never fall back to shell exec with ls; use fs.readdir if a fallback is needed.
       const backupDir = '/backups'
       const backups = []
 
       try {
-        const { exec } = await import('child_process')
-        const { promisify } = await import('util')
-        const execAsync = promisify(exec)
-
-        const { stdout } = await execAsync(
-          `ls -la ${backupDir}/*.sql* 2>/dev/null || echo ""`,
+        const fs = await import('fs/promises')
+        const path = await import('path')
+        const entries = await fs.readdir(backupDir)
+        const sqlFiles = entries.filter((f) =>
+          /\.(sql|sql\.gz|tar\.gz|backup)$/i.test(f),
         )
-        const files = stdout.split('\n').filter((line) => line.includes('.sql'))
-
-        for (const file of files) {
-          const parts = file.split(/\s+/)
-          if (parts.length >= 9) {
-            const filename = parts[parts.length - 1]
-            const size = parseInt(parts[4])
-            const date = `${parts[5]} ${parts[6]} ${parts[7]}`
-
+        for (const filename of sqlFiles) {
+          const fullPath = path.join(backupDir, filename)
+          try {
+            const stat = await fs.stat(fullPath)
             backups.push({
               id: filename,
               name: filename,
-              path: `${backupDir}/${filename}`,
-              size,
-              created: date,
+              path: fullPath,
+              size: stat.size,
+              created: stat.mtime.toISOString(),
               type: filename.includes('.gz') ? 'compressed' : 'plain',
             })
+          } catch {
+            // Skip files that can't be stat'd
           }
         }
       } catch {
-        // Backup directory listing failed - return empty list
+        // Backup directory not accessible — return empty list
       }
 
       return NextResponse.json({

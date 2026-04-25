@@ -148,24 +148,26 @@ export default function VoiceConfigPage() {
   const [testError, setTestError] = useState('')
   const [audioSrc, setAudioSrc] = useState('')
 
-  // ── Load from localStorage on mount ──────────────────────────────────────────
+  // ── Load from sessionStorage on mount ────────────────────────────────────────
+  // NOTE: The ElevenLabs API key is NOT persisted across sessions.
+  // It lives in the ElevenLabs key field for this session only and must be
+  // committed via "Save to env" (which calls `nself env set ELEVENLABS_API_KEY=...`)
+  // to persist it server-side. Never store API keys in localStorage.
 
   useEffect(() => {
     try {
-      const storedProvider = localStorage.getItem(
+      const storedProvider = sessionStorage.getItem(
         'voice_provider',
       ) as Provider | null
-      const storedKey = localStorage.getItem('voice_elevenlabs_key') ?? ''
       const storedVoiceId =
-        localStorage.getItem('voice_elevenlabs_voice_id') ?? ''
+        sessionStorage.getItem('voice_elevenlabs_voice_id') ?? ''
 
       if (storedProvider === 'elevenlabs' || storedProvider === 'piper') {
         setProvider(storedProvider)
       }
-      if (storedKey) setElevenKey(storedKey)
       if (storedVoiceId) setSelectedVoiceId(storedVoiceId)
     } catch {
-      // localStorage unavailable
+      // sessionStorage unavailable
     }
   }, [])
 
@@ -190,28 +192,26 @@ export default function VoiceConfigPage() {
     checkPluginHealth()
   }, [])
 
-  // ── Persist provider preference ────────────────────────────────────────────
+  // ── Persist provider preference (session only) ────────────────────────────
 
   const handleProviderChange = (p: Provider) => {
     setProvider(p)
     setAudioSrc('')
     setTestError('')
     try {
-      localStorage.setItem('voice_provider', p)
+      sessionStorage.setItem('voice_provider', p)
     } catch {
       // ignore
     }
   }
 
-  // ── Persist ElevenLabs key ─────────────────────────────────────────────────
+  // ── ElevenLabs key — in-memory only, never persisted ──────────────────────
+  // The key is held in component state for this session. To persist it, use the
+  // "Save to env" action which calls `nself env set ELEVENLABS_API_KEY=...`
+  // so the key lives in the server-side env file, not in browser storage.
 
   const handleKeyChange = (value: string) => {
     setElevenKey(value)
-    try {
-      localStorage.setItem('voice_elevenlabs_key', value)
-    } catch {
-      // ignore
-    }
   }
 
   // ── Fetch ElevenLabs voices ────────────────────────────────────────────────
@@ -241,7 +241,7 @@ export default function VoiceConfigPage() {
       if (list.length > 0 && !selectedVoiceId) {
         setSelectedVoiceId(list[0].voice_id)
         try {
-          localStorage.setItem('voice_elevenlabs_voice_id', list[0].voice_id)
+          sessionStorage.setItem('voice_elevenlabs_voice_id', list[0].voice_id)
         } catch {
           // ignore
         }
@@ -260,7 +260,7 @@ export default function VoiceConfigPage() {
   const handleVoiceSelect = (voiceId: string) => {
     setSelectedVoiceId(voiceId)
     try {
-      localStorage.setItem('voice_elevenlabs_voice_id', voiceId)
+      sessionStorage.setItem('voice_elevenlabs_voice_id', voiceId)
     } catch {
       // ignore
     }

@@ -16,7 +16,10 @@ export async function POST(
 ): Promise<NextResponse> {
   const token = request.cookies.get('nself-session')?.value
   if (!token || !(await validateSessionToken(token))) {
-    return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 })
+    return NextResponse.json(
+      { success: false, error: 'Unauthorized' },
+      { status: 401 },
+    )
   }
 
   const { id } = await params
@@ -29,13 +32,16 @@ export async function POST(
   }
 
   try {
-    const upstream = await fetch(`${AUTH_URL}/account/licenses/${id}/deactivate`, {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json',
+    const upstream = await fetch(
+      `${AUTH_URL}/account/licenses/${id}/deactivate`,
+      {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
       },
-    })
+    )
 
     if (!upstream.ok) {
       const body = await upstream.json().catch(() => ({}))

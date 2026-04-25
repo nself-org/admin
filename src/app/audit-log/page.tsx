@@ -12,7 +12,10 @@
  */
 
 import { AdminPagination } from '@/components/admin-account/AdminPagination'
-import { AuditEventRow, type AuditEvent } from '@/components/admin-account/AuditEventRow'
+import {
+  AuditEventRow,
+  type AuditEvent,
+} from '@/components/admin-account/AuditEventRow'
 import { ExportCSVButton } from '@/components/admin-account/ExportCSVButton'
 import { HeroPattern } from '@/components/HeroPattern'
 import {
@@ -59,7 +62,9 @@ function AuditLogContent() {
   const [offline, setOffline] = useState(false)
   const [nextCursor, setNextCursor] = useState<string | null>(null)
   const [prevCursors, setPrevCursors] = useState<string[]>([])
-  const [currentCursor, setCurrentCursor] = useState<string | undefined>(undefined)
+  const [currentCursor, setCurrentCursor] = useState<string | undefined>(
+    undefined,
+  )
   const [total, setTotal] = useState<number | null>(null)
 
   // Filters
@@ -162,10 +167,7 @@ function AuditLogContent() {
     // Build CSV from current events if server doesn't return csv key
     const headers = 'timestamp,actor,type,ip\n'
     const rows = events
-      .map(
-        (e) =>
-          `"${e.timestamp}","${e.actorEmail}","${e.type}","${e.ip}"`,
-      )
+      .map((e) => `"${e.timestamp}","${e.actorEmail}","${e.type}","${e.ip}"`)
       .join('\n')
     return headers + rows
   }
@@ -392,31 +394,31 @@ function AuditLogContent() {
                   <tr className="border-b border-zinc-100 bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-800/80">
                     <th
                       scope="col"
-                      className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400"
+                      className="px-4 py-3 text-left text-xs font-semibold tracking-wider text-zinc-500 uppercase dark:text-zinc-400"
                     >
                       Timestamp
                     </th>
                     <th
                       scope="col"
-                      className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400"
+                      className="px-4 py-3 text-left text-xs font-semibold tracking-wider text-zinc-500 uppercase dark:text-zinc-400"
                     >
                       Actor
                     </th>
                     <th
                       scope="col"
-                      className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400"
+                      className="px-4 py-3 text-left text-xs font-semibold tracking-wider text-zinc-500 uppercase dark:text-zinc-400"
                     >
                       Event type
                     </th>
                     <th
                       scope="col"
-                      className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400"
+                      className="px-4 py-3 text-left text-xs font-semibold tracking-wider text-zinc-500 uppercase dark:text-zinc-400"
                     >
                       IP
                     </th>
                     <th
                       scope="col"
-                      className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400"
+                      className="px-4 py-3 text-right text-xs font-semibold tracking-wider text-zinc-500 uppercase dark:text-zinc-400"
                     >
                       Details
                     </th>

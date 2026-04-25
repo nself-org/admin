@@ -3,6 +3,7 @@
 import { Button } from '@/components/Button'
 import { HeroPattern } from '@/components/HeroPattern'
 import { ServiceDetailSkeleton } from '@/components/skeletons'
+import { useUrlState } from '@/hooks/useUrlState'
 import {
   Activity,
   AlertCircle,
@@ -1099,7 +1100,7 @@ function QueryMetrics({ metrics }: { metrics: QueryMetric[] }) {
 }
 
 function HasuraContent() {
-  const [activeTab, setActiveTab] = useState('console')
+  const [activeTab, setActiveTab] = useUrlState<string>('tab', 'console')
 
   // Mock data
   const [stats] = useState<HasuraStats>({

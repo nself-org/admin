@@ -52,7 +52,9 @@ describe('SSO header detection', () => {
 
     it('returns null for invalid email (no @)', () => {
       process.env.NSELF_ADMIN_SSO_HEADER_ENABLED = 'true'
-      const req = makeRequest({ 'CF-Access-Authenticated-User-Email': 'notanemail' })
+      const req = makeRequest({
+        'CF-Access-Authenticated-User-Email': 'notanemail',
+      })
       expect(getSSOEmail(req)).toBeNull()
     })
 

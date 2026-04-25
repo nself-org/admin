@@ -157,7 +157,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         { status: 400 },
       )
     }
-    const detailed = params.detailed === 'true'
+    const _detailed = params.detailed === 'true'
     const withStats = params.stats === 'true'
 
     // Get container list using docker ps safely
@@ -344,7 +344,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     )
 
     // Debug summary
-    const healthCounts = formattedContainers.reduce(
+    const _healthCounts = formattedContainers.reduce(
       (acc, c) => {
         acc[c.health] = (acc[c.health] || 0) + 1
         return acc

@@ -684,6 +684,23 @@ const _allNavigation: Array<NavGroup> = [
         ],
       },
       {
+        title: 'Claw Data',
+        href: '/claw',
+        icon: 'brain',
+        badge: { text: 'NEW', color: 'emerald' },
+        description: 'ɳClaw memory, topics, entities, BIOS',
+        submenu: [
+          { label: 'Dashboard', href: '/claw' },
+          { label: 'Conversations', href: '/claw/conversations' },
+          { label: 'Topics', href: '/claw/topics' },
+          { label: 'Entities', href: '/claw/entities' },
+          { label: 'Memory', href: '/claw/memory' },
+          { label: 'Sessions', href: '/claw/sessions' },
+          { separator: true },
+          { label: 'BIOS', href: '/claw/bios' },
+        ],
+      },
+      {
         title: 'Mux',
         href: '/mux/rules',
         icon: 'git-merge',
@@ -694,6 +711,20 @@ const _allNavigation: Array<NavGroup> = [
           { label: 'Recent Runs', href: '/mux/runs' },
           { label: 'Dead Letter Queue', href: '/mux/dead-letter' },
         ],
+      },
+    ],
+  },
+  // ── Vibe-Code ─────────────────────────────────────────────
+  {
+    title: 'Vibe-Code',
+    links: [
+      {
+        title: 'Vibe-Code IDE',
+        href: '/vibe',
+        icon: 'sparkles',
+        badge: { text: 'NEW', color: 'emerald' },
+        description:
+          'AI-powered full-stack code generation (migration + permissions + UI)',
       },
     ],
   },

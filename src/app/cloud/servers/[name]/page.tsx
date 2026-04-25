@@ -1,6 +1,7 @@
 'use client'
 
 import { ServiceDetailSkeleton } from '@/components/skeletons'
+import { useUrlState } from '@/hooks/useUrlState'
 import type { CloudServer, ServerMetrics } from '@/types/cloud'
 import { motion, useMotionTemplate, useMotionValue } from 'framer-motion'
 import {
@@ -147,9 +148,7 @@ function ServerDetailContent({ name }: { name: string }) {
   const serverName = name
 
   const [actionLoading, setActionLoading] = useState<string | null>(null)
-  const [activeTab, setActiveTab] = useState<
-    'overview' | 'metrics' | 'logs' | 'console'
-  >('overview')
+  const [activeTab, setActiveTab] = useUrlState<string>('tab', 'overview')
 
   const {
     data: serverData,

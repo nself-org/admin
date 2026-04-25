@@ -18,7 +18,11 @@ function isMultiUserEnabled(): boolean {
  * before the CLI commands exist.
  */
 const MULTIUSER_PAGE_PREFIXES = ['/users', '/tenant', '/auth/roles', '/team']
-const MULTIUSER_API_PREFIXES = ['/api/users', '/api/auth/roles', '/api/account/team']
+const MULTIUSER_API_PREFIXES = [
+  '/api/users',
+  '/api/auth/roles',
+  '/api/account/team',
+]
 
 // Define public routes that don't require authentication
 const PUBLIC_ROUTES = [

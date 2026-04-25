@@ -131,7 +131,7 @@ export class WebSocketServer {
       )
 
       // Disconnection
-      socket.on('disconnect', (reason: string) => {
+      socket.on('disconnect', (_reason: string) => {
         this.removePresence(socket.id)
         this.rateLimits.delete(socket.id)
       })

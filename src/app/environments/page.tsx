@@ -20,61 +20,22 @@ function EnvironmentsContent() {
   const [loading, setLoading] = useState(true)
   const [environments, setEnvironments] = useState<EnvironmentInfo[]>([])
 
+  const [error, setError] = useState<string | null>(null)
+
   const fetchEnvironments = useCallback(async () => {
     try {
-      // Mock data - replace with real API
-      const mockEnvironments: EnvironmentInfo[] = [
-        {
-          name: 'local',
-          status: 'active',
-          version: 'v1.3.0-dev',
-          healthy: true,
-          servicesRunning: 8,
-          servicesTotal: 8,
-        },
-        {
-          name: 'development',
-          status: 'active',
-          url: 'https://dev.example.com',
-          version: 'v1.3.0-beta.2',
-          lastDeployed: new Date(Date.now() - 3600000).toISOString(),
-          deployedBy: 'developer@example.com',
-          commit: 'a1b2c3d',
-          branch: 'develop',
-          healthy: true,
-          servicesRunning: 8,
-          servicesTotal: 8,
-        },
-        {
-          name: 'staging',
-          status: 'active',
-          url: 'https://staging.example.com',
-          version: 'v1.2.5',
-          lastDeployed: new Date(Date.now() - 86400000).toISOString(),
-          deployedBy: 'developer@example.com',
-          commit: 'e4f5g6h',
-          branch: 'main',
-          healthy: true,
-          servicesRunning: 7,
-          servicesTotal: 8,
-        },
-        {
-          name: 'production',
-          status: 'active',
-          url: 'https://example.com',
-          version: 'v1.2.4',
-          lastDeployed: new Date(Date.now() - 86400000 * 3).toISOString(),
-          deployedBy: 'admin@example.com',
-          commit: 'i7j8k9l',
-          branch: 'main',
-          healthy: true,
-          servicesRunning: 8,
-          servicesTotal: 8,
-        },
-      ]
-      setEnvironments(mockEnvironments)
-    } catch (_error) {
-      // Handle error silently
+      setError(null)
+      const response = await fetch('/api/environments')
+      const data = await response.json()
+
+      if (!response.ok || !data.success) {
+        setError(data.error ?? 'Failed to load environments')
+        return
+      }
+
+      setEnvironments(data.environments ?? [])
+    } catch (_err) {
+      setError('Could not reach the environments API. Is nself running?')
     } finally {
       setLoading(false)
     }
@@ -152,6 +113,16 @@ function EnvironmentsContent() {
             </div>
           </div>
         </div>
+
+        {/* Error state */}
+        {error && (
+          <div className="mb-6 rounded-xl border border-red-200 bg-red-50 p-4 dark:border-red-800 dark:bg-red-900/20">
+            <div className="flex items-center gap-3">
+              <XCircle className="h-5 w-5 shrink-0 text-red-500" />
+              <p className="text-sm text-red-700 dark:text-red-400">{error}</p>
+            </div>
+          </div>
+        )}
 
         {/* Environment Cards */}
         <div className="grid gap-6 md:grid-cols-2">

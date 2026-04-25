@@ -1,6 +1,7 @@
 'use client'
 
 import { ServiceDetailSkeleton } from '@/components/skeletons'
+import { useUrlState } from '@/hooks/useUrlState'
 import type {
   Plugin,
   PluginConfig,
@@ -183,9 +184,7 @@ function PluginDetailContent() {
   const params = useParams()
   const pluginName = params.name as string
 
-  const [activeTab, setActiveTab] = useState<
-    'overview' | 'config' | 'webhooks' | 'tables'
-  >('overview')
+  const [activeTab, setActiveTab] = useUrlState<string>('tab', 'overview')
   const [syncing, setSyncing] = useState(false)
   const [saving, setSaving] = useState(false)
   const [configValues, setConfigValues] = useState<Record<string, string>>({})

@@ -40,6 +40,7 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { useUrlState } from '@/hooks/useUrlState'
 import {
   AlertTriangle,
   CheckCircle,
@@ -184,7 +185,7 @@ const SAMPLE_PII_FIELDS: PIIField[] = [
 ]
 
 function DatabaseDataContent() {
-  const [activeTab, setActiveTab] = useState('export')
+  const [activeTab, setActiveTab] = useUrlState<string>('tab', 'export')
 
   // Export state
   const [selectedExportTable, setSelectedExportTable] = useState<string>('')

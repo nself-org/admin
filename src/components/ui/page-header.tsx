@@ -1,8 +1,13 @@
+import { CopyLinkButton } from '@/components/ui/copy-link-button'
 import { cn } from '@/lib/utils'
 import { ReactNode } from 'react'
 
 /**
- * PageHeader - Component for page title, breadcrumbs, and actions
+ * PageHeader - Component for page title, breadcrumbs, and actions.
+ *
+ * Includes a CopyLinkButton by default so every admin page is deep-linkable.
+ * Set `showCopyLink={false}` to suppress it on pages where it's not useful
+ * (e.g. modal-only pages, login, build wizard).
  *
  * @example
  * ```tsx
@@ -31,6 +36,8 @@ export interface PageHeaderProps {
   actions?: ReactNode
   /** Additional CSS classes */
   className?: string
+  /** Show copy-link button (default: true) */
+  showCopyLink?: boolean
 }
 
 export function PageHeader({
@@ -39,6 +46,7 @@ export function PageHeader({
   breadcrumbs,
   actions,
   className,
+  showCopyLink = true,
 }: PageHeaderProps) {
   return (
     <div
@@ -97,9 +105,10 @@ export function PageHeader({
           )}
         </div>
 
-        {actions && (
-          <div className="ml-4 flex items-center gap-3">{actions}</div>
-        )}
+        <div className="ml-4 flex items-center gap-3">
+          {showCopyLink && <CopyLinkButton />}
+          {actions}
+        </div>
       </div>
     </div>
   )

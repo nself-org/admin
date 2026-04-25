@@ -17,6 +17,7 @@ import {
   useReportSchedules,
   useReportTemplate,
 } from '@/hooks/useReports'
+import { useUrlState } from '@/hooks/useUrlState'
 import {
   AlertCircle,
   ArrowLeft,
@@ -28,7 +29,7 @@ import {
 } from 'lucide-react'
 import Link from 'next/link'
 import { useParams, useRouter } from 'next/navigation'
-import { useState } from 'react'
+import { Suspense, useState } from 'react'
 
 type ViewMode = 'build' | 'execution' | 'schedule'
 
@@ -51,7 +52,7 @@ function ReportDetailContent() {
   const [activeExecutionId, setActiveExecutionId] = useState<string | null>(
     null,
   )
-  const [activeTab, setActiveTab] = useState('generate')
+  const [activeTab, setActiveTab] = useUrlState<string>('tab', 'generate')
 
   const handleGenerated = (executionId: string) => {
     setActiveExecutionId(executionId)
@@ -442,5 +443,9 @@ function ReportDetailContent() {
 }
 
 export default function ReportDetailPage() {
-  return <ReportDetailContent />
+  return (
+    <Suspense>
+      <ReportDetailContent />
+    </Suspense>
+  )
 }

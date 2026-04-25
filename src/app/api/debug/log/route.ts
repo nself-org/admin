@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
-    const { message, data } = await request.json()
+    const { message, data: _data } = await request.json()
 
     if (message && message.length > 1000) {
       return NextResponse.json({ error: 'Message too long' }, { status: 400 })

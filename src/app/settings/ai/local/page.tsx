@@ -75,7 +75,7 @@ export default function LocalModelsPage() {
   const [recommended, setRecommended] = useState<RecommendedModel[]>([])
   const [showInstallModal, setShowInstallModal] = useState(false)
   const [installLogs, setInstallLogs] = useState<string[]>([])
-  const [installJobId, setInstallJobId] = useState<string | null>(null)
+  const [_installJobId, setInstallJobId] = useState<string | null>(null)
   const [installDone, setInstallDone] = useState(false)
   const [showAddModel, setShowAddModel] = useState(false)
   const [addModelName, setAddModelName] = useState('')

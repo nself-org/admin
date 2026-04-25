@@ -2,6 +2,7 @@
 
 import { HeroPattern } from '@/components/HeroPattern'
 import { ChartSkeleton } from '@/components/skeletons'
+import { useUrlState } from '@/hooks/useUrlState'
 import type { Alert, AlertRule } from '@/types/performance'
 import {
   AlertCircle,
@@ -23,7 +24,7 @@ function AlertsContent() {
   const [loading, setLoading] = useState(true)
   const [alerts, setAlerts] = useState<Alert[]>([])
   const [rules, setRules] = useState<AlertRule[]>([])
-  const [activeTab, setActiveTab] = useState<'active' | 'rules'>('active')
+  const [activeTab, setActiveTab] = useUrlState<string>('tab', 'active')
   const [filterSeverity, setFilterSeverity] = useState<string>('all')
   const [searchQuery, setSearchQuery] = useState('')
 

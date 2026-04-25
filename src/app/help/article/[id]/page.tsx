@@ -12,6 +12,7 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import * as React from 'react'
 import { Suspense } from 'react'
+import ReactMarkdown from 'react-markdown'
 
 function HelpArticleContent({ id }: { id: string }) {
   const [feedbackGiven, setFeedbackGiven] = React.useState(false)
@@ -37,63 +38,52 @@ function HelpArticleContent({ id }: { id: string }) {
     }
   }
 
-  // Parse content to extract code blocks
+  // Render article content using react-markdown — no dangerouslySetInnerHTML, no manual escaping needed.
+  // Code blocks are rendered by CodeEditor for syntax highlighting.
   const renderContent = (content: string) => {
-    const parts = content.split('```')
-    return parts.map((part, index) => {
-      if (index % 2 === 0) {
-        // Regular text
-        return (
-          <div
-            key={index}
-            className="prose-zinc prose max-w-none dark:prose-invert"
-            dangerouslySetInnerHTML={{
-              __html: part
-                .split('\n')
-                .map((line) => {
-                  // Convert markdown headings
-                  if (line.startsWith('# ')) return `<h1>${line.slice(2)}</h1>`
-                  if (line.startsWith('## ')) return `<h2>${line.slice(3)}</h2>`
-                  if (line.startsWith('### '))
-                    return `<h3>${line.slice(4)}</h3>`
-                  // Convert inline code
-                  line = line.replace(/`([^`]+)`/g, '<code>$1</code>')
-                  return line ? `<p>${line}</p>` : ''
-                })
-                .join(''),
-            }}
-          />
-        )
-      } else {
-        // Code block
-        const lines = part.split('\n')
-        const language = lines[0].trim() || 'bash'
-        const code = lines.slice(1).join('\n')
-        return (
-          <div key={index} className="my-4">
-            <CodeEditor
-              value={code}
-              language={
-                language as
-                  | 'javascript'
-                  | 'typescript'
-                  | 'json'
-                  | 'html'
-                  | 'css'
-                  | 'python'
-                  | 'sql'
-                  | 'yaml'
-                  | 'markdown'
-                  | 'bash'
-              }
-              readOnly
-              height="auto"
-              showLineNumbers={false}
-            />
-          </div>
-        )
-      }
-    })
+    return (
+      <ReactMarkdown
+        className="prose-zinc prose max-w-none dark:prose-invert"
+        components={{
+          code({ className, children, ...rest }) {
+            const match = /language-(\w+)/.exec(className || '')
+            const isBlock = match !== null
+            if (isBlock) {
+              return (
+                <div className="my-4">
+                  <CodeEditor
+                    value={String(children).replace(/\n$/, '')}
+                    language={
+                      (match[1] || 'bash') as
+                        | 'javascript'
+                        | 'typescript'
+                        | 'json'
+                        | 'html'
+                        | 'css'
+                        | 'python'
+                        | 'sql'
+                        | 'yaml'
+                        | 'markdown'
+                        | 'bash'
+                    }
+                    readOnly
+                    height="auto"
+                    showLineNumbers={false}
+                  />
+                </div>
+              )
+            }
+            return (
+              <code className={className} {...rest}>
+                {children}
+              </code>
+            )
+          },
+        }}
+      >
+        {content}
+      </ReactMarkdown>
+    )
   }
 
   // Get related articles

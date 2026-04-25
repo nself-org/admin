@@ -43,7 +43,11 @@ function StatusBadge({ status }: { status: License['status'] }) {
   )
 }
 
-export function LicenseRow({ license, onActivate, onDeactivate }: LicenseRowProps) {
+export function LicenseRow({
+  license,
+  onActivate,
+  onDeactivate,
+}: LicenseRowProps) {
   return (
     <tr className="transition-colors hover:bg-zinc-50 dark:hover:bg-zinc-700/30">
       <td className="px-4 py-3 font-mono text-sm text-zinc-900 dark:text-white">
@@ -63,7 +67,7 @@ export function LicenseRow({ license, onActivate, onDeactivate }: LicenseRowProp
           ? new Date(license.expiresAt).toLocaleDateString()
           : 'Never'}
       </td>
-      <td className="px-4 py-3 whitespace-nowrap text-right">
+      <td className="px-4 py-3 text-right whitespace-nowrap">
         <LicenseActivateButton
           licenseId={license.id}
           keyPrefix={license.keyPrefix}

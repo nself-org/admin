@@ -24,7 +24,6 @@ const releases: Release[] = [
     date: '2026-02-01',
     type: 'minor',
     features: [
-      '100% feature complete - All TODOs resolved',
       'Real authentication integration across all features',
       'Enhanced WebSocket session validation with cookie parsing',
       'Client-side auth utilities (getCurrentUser, getCurrentUserId, isAuthenticated)',
@@ -44,7 +43,6 @@ const releases: Release[] = [
       'Fixed API key test expectations (30 chars vs 40)',
       'Fixed activity pagination test with proper data seeding',
       'All 24 test suites passing (472 tests, 99% pass rate)',
-      'Zero production code TODOs remaining',
     ],
   },
   {

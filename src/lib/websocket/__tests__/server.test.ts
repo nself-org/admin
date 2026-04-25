@@ -16,7 +16,7 @@ jest.mock('../../auth-db', () => ({
 /**
  * Create a mock Socket.io socket with configurable behavior
  */
-function createMockSocket(
+function _createMockSocket(
   id: string = 'test-socket-1',
   overrides: Record<string, unknown> = {},
 ): {
@@ -89,7 +89,7 @@ function createMockIO(): {
  * Initialize a WebSocketServer with a mock HTTP server
  * Returns the server, mock IO, and a helper to connect sockets
  */
-function setupServer() {
+function _setupServer() {
   const server = new WebSocketServer()
   const mockIO = createMockIO()
 
@@ -217,7 +217,7 @@ describe('WebSocketServer', () => {
     })
 
     it('should reset rate limit after window expires', () => {
-      const RATE_LIMIT_WINDOW_MS = 1000
+      const _RATE_LIMIT_WINDOW_MS = 1000
       const RATE_LIMIT_MAX = 30
       const rateLimits = new Map<string, { count: number; resetAt: number }>()
       const socketId = 'socket-1'

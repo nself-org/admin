@@ -25,7 +25,7 @@ export function isGracefulShutdown(): boolean {
 /**
  * Execute graceful shutdown
  */
-async function gracefulShutdown(signal: string): Promise<void> {
+async function gracefulShutdown(_signal: string): Promise<void> {
   if (isShuttingDown) {
     return
   }

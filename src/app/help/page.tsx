@@ -3,6 +3,7 @@
 import { Button } from '@/components/Button'
 import { HeroPattern } from '@/components/HeroPattern'
 import { CardGridSkeleton } from '@/components/skeletons'
+import { useUrlState } from '@/hooks/useUrlState'
 import {
   Activity,
   AlertCircle,
@@ -2261,9 +2262,7 @@ function CLIReferenceSection() {
 // ─── Main Page ──────────────────────────────────────────────────────────────
 
 function HelpContent() {
-  const [activeTab, setActiveTab] = useState<
-    'overview' | 'cli' | 'docs' | 'faq' | 'contact'
-  >('overview')
+  const [activeTab, setActiveTab] = useUrlState<string>('tab', 'overview')
 
   return (
     <>

@@ -7,6 +7,7 @@
 import { logger } from '@/lib/logger'
 import { findNselfPath, getEnhancedPath } from '@/lib/nself-path'
 import { getProjectPath } from '@/lib/paths'
+import { requireAuth } from '@/lib/require-auth'
 import type { Plugin } from '@/types/plugins'
 import { exec } from 'child_process'
 import { NextRequest, NextResponse } from 'next/server'
@@ -14,7 +15,10 @@ import { promisify } from 'util'
 
 const execAsync = promisify(exec)
 
-export async function GET(_request: NextRequest): Promise<NextResponse> {
+export async function GET(request: NextRequest): Promise<NextResponse> {
+  const authError = await requireAuth(request)
+  if (authError) return authError
+
   const startTime = Date.now()
 
   try {
@@ -66,6 +70,9 @@ export async function GET(_request: NextRequest): Promise<NextResponse> {
 }
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
+  const authError = await requireAuth(request)
+  if (authError) return authError
+
   const startTime = Date.now()
 
   try {
@@ -83,6 +90,17 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     if (!/^[a-zA-Z0-9_-]+$/.test(name)) {
       return NextResponse.json(
         { success: false, error: 'Invalid plugin name format' },
+        { status: 400 },
+      )
+    }
+
+    // Validate version format before shell interpolation
+    if (
+      version !== undefined &&
+      (typeof version !== 'string' || !/^[a-zA-Z0-9._-]+$/.test(version))
+    ) {
+      return NextResponse.json(
+        { success: false, error: 'Invalid version format' },
         { status: 400 },
       )
     }

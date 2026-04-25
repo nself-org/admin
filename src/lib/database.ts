@@ -753,6 +753,18 @@ export function getDatabase(): Loki | null {
   return db
 }
 
+/**
+ * Alias for getDatabase() used by schema-job routes (SP-13.B20).
+ * Returns the shared Loki instance; callers must ensure initDatabase() has
+ * been awaited before calling this in production code paths.
+ */
+export function getDb(): Loki {
+  if (!db) {
+    throw new Error('Database not initialised — call initDatabase() first')
+  }
+  return db
+}
+
 // =============================================================================
 // Tenant Operations
 // =============================================================================

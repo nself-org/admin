@@ -40,14 +40,17 @@ export async function GET(_request: NextRequest): Promise<NextResponse> {
     const nselfPath = await findNselfPath()
 
     // Run nself init --full to create all env files
-    const { stdout, stderr } = await execAsync(`${nselfPath} init --full`, {
-      cwd: projectPath,
-      env: {
-        ...process.env,
-        PATH: getEnhancedPath(),
+    const { stdout: _stdout, stderr } = await execAsync(
+      `${nselfPath} init --full`,
+      {
+        cwd: projectPath,
+        env: {
+          ...process.env,
+          PATH: getEnhancedPath(),
+        },
+        timeout: 30000,
       },
-      timeout: 30000,
-    })
+    )
 
     if (stderr && !stderr.includes('warning')) {
       console.error('nself init stderr:', stderr)

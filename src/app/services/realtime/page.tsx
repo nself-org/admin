@@ -12,6 +12,7 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { ScrollArea } from '@/components/ui/scroll-area'
+import { useUrlState } from '@/hooks/useUrlState'
 import {
   Activity,
   Circle,
@@ -184,9 +185,7 @@ function RealtimeContent() {
   )
   const [channelsOutput, setChannelsOutput] = useState<string | null>(null)
   const [eventsOutput, setEventsOutput] = useState<string | null>(null)
-  const [activeTab, setActiveTab] = useState<
-    'channels' | 'events' | 'presence' | 'test'
-  >('channels')
+  const [activeTab, setActiveTab] = useUrlState<string>('tab', 'channels')
 
   // Test message form state
   const [testChannel, setTestChannel] = useState('general')

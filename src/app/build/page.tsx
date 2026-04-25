@@ -43,10 +43,10 @@ function BuildContent() {
   const { connected, reconnecting } = useWebSocket()
   const {
     progress: wsProgress,
-    isBuilding,
-    isComplete,
-    isFailed,
-    reset: resetProgress,
+    isBuilding: _isBuilding,
+    isComplete: _isComplete,
+    isFailed: _isFailed,
+    reset: _resetProgress,
   } = useBuildProgress()
 
   // Build state

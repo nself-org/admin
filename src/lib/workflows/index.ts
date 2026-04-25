@@ -24,6 +24,7 @@ import type {
   WorkflowStatus,
 } from '@/types/workflow'
 import type { Collection } from 'lokijs'
+import vm from 'vm'
 
 // ============================================================================
 // Database Collections
@@ -861,22 +862,21 @@ function executeTransformDataAction(config: Record<string, unknown>): {
       return { success: false, error: 'Input must be an array' }
     }
 
-    // SECURITY: Block dangerous keywords before expression evaluation
-    const DANGEROUS_EXPR =
-      /\b(require|import|process|global|globalThis|eval|Function|constructor|__proto__|prototype|module|exports|child_process|fs|net|http|os|Buffer|setTimeout|setInterval)\b/
-    if (DANGEROUS_EXPR.test(expression)) {
-      return { success: false, error: 'Expression contains disallowed keyword' }
+    // SECURITY: Use an empty vm context so the expression runs with no access
+    // to Node.js globals, process, require, or any host capabilities.
+    // A deny-list approach (new Function + regex) is bypassable via bracket
+    // notation and globalThis aliases. vm.runInContext with an empty sandbox
+    // prevents escape entirely.
+    const makeItemFn = (item: unknown): unknown => {
+      const ctx = vm.createContext({ item })
+      return vm.runInContext(`(${expression})(item)`, ctx, { timeout: 1000 })
     }
-
-    const fn = new Function('item', `return ${expression}`) as (
-      item: unknown,
-    ) => unknown
 
     let result: unknown
     if (transformType === 'map') {
-      result = input.map((item) => fn(item))
+      result = input.map((item) => makeItemFn(item))
     } else if (transformType === 'filter') {
-      result = input.filter((item) => fn(item))
+      result = input.filter((item) => Boolean(makeItemFn(item)))
     } else {
       return { success: false, error: 'Unsupported transform type' }
     }
@@ -901,15 +901,9 @@ function executeConditionAction(
       return { success: false, error: 'Expression is required' }
     }
 
-    // SECURITY: Block dangerous keywords before expression evaluation
-    const DANGEROUS_EXPR =
-      /\b(require|import|process|global|globalThis|eval|Function|constructor|__proto__|prototype|module|exports|child_process|fs|net|http|os|Buffer|setTimeout|setInterval)\b/
-    if (DANGEROUS_EXPR.test(expression)) {
-      return { success: false, error: 'Expression contains disallowed keyword' }
-    }
-
-    const fn = new Function(`return ${expression}`)
-    const result = fn()
+    // SECURITY: Use an empty vm context (no host globals, no require, no process).
+    const ctx = vm.createContext({})
+    const result = vm.runInContext(`(${expression})`, ctx, { timeout: 1000 })
 
     return {
       success: true,

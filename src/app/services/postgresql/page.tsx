@@ -21,6 +21,7 @@ import {
 } from '@/components/ui/select'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Textarea } from '@/components/ui/textarea'
+import { useUrlState } from '@/hooks/useUrlState'
 import {
   Activity,
   AlertCircle,
@@ -39,7 +40,7 @@ import {
   TrendingUp,
   Zap,
 } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { Suspense, useEffect, useState } from 'react'
 
 // ---------------------------------------------------------------------------
 // Types
@@ -93,14 +94,14 @@ interface BackupEntry {
 // Main Component
 // ---------------------------------------------------------------------------
 
-export default function PostgreSQLPage() {
+function PostgreSQLContent() {
   const [stats, setStats] = useState<DatabaseStats | null>(null)
   const [query, setQuery] = useState('')
   const [queryResult, setQueryResult] = useState<QueryResult | null>(null)
   const [executing, setExecuting] = useState(false)
   const [selectedDatabase, setSelectedDatabase] = useState('postgres')
   const [tables, setTables] = useState<TableInfo[]>([])
-  const [activeTab, setActiveTab] = useState('overview')
+  const [activeTab, setActiveTab] = useUrlState<string>('tab', 'overview')
   const [loading, setLoading] = useState(true)
   const [slowQueries, setSlowQueries] = useState<any[]>([])
   const [backups, setBackups] = useState<BackupEntry[]>([])
@@ -192,7 +193,7 @@ export default function PostgreSQLPage() {
         rowCount: 2,
         executionTime: 0.023,
       })
-    } catch (error) {
+    } catch (_error) {
       setQueryResult({
         columns: [],
         rows: [],
@@ -647,5 +648,13 @@ work_mem = 4MB`}</pre>
         </TabsContent>
       </Tabs>
     </PageShell>
+  )
+}
+
+export default function PostgreSQLPage() {
+  return (
+    <Suspense>
+      <PostgreSQLContent />
+    </Suspense>
   )
 }

@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from 'next/server'
 
 export async function POST(_request: NextRequest): Promise<NextResponse> {
   try {
-    const projectPath = getProjectPath()
+    const _projectPath = getProjectPath()
 
     // Run nself start using secure CLI wrapper
     const result = await nselfStart()

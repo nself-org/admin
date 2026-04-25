@@ -5,8 +5,8 @@
  * Returns 404 when NSELF_ADMIN_MULTIUSER=false.
  */
 
-import { isMultiUserEnabled } from '@/lib/feature-flags'
 import { validateSessionToken } from '@/lib/auth-db'
+import { isMultiUserEnabled } from '@/lib/feature-flags'
 import { NextRequest, NextResponse } from 'next/server'
 
 const AUTH_URL = process.env.NSELF_AUTH_URL || ''
@@ -19,7 +19,8 @@ export async function DELETE(
     return NextResponse.json(
       {
         error: 'not_available',
-        message: 'Multi-user mode disabled. Set NSELF_ADMIN_MULTIUSER=true to enable.',
+        message:
+          'Multi-user mode disabled. Set NSELF_ADMIN_MULTIUSER=true to enable.',
       },
       { status: 404 },
     )
@@ -27,7 +28,10 @@ export async function DELETE(
 
   const token = request.cookies.get('nself-session')?.value
   if (!token || !(await validateSessionToken(token))) {
-    return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 })
+    return NextResponse.json(
+      { success: false, error: 'Unauthorized' },
+      { status: 401 },
+    )
   }
 
   const { userId } = await params

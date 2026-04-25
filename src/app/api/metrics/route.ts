@@ -26,7 +26,7 @@ interface Metric {
 
 // In-memory metrics storage (in production, use a proper metrics library like prom-client)
 // This is a simplified version for demonstration
-const metrics = new Map<string, Metric>()
+const _metrics = new Map<string, Metric>()
 
 function formatMetric(metric: Metric): string {
   const labelStr = metric.labels

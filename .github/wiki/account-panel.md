@@ -19,14 +19,14 @@ Handles 7 UI states: loading skeleton, populated data, empty (no licenses), erro
 
 Sortable table of license keys:
 
-| Column | Sortable |
-|--------|---------|
-| Key prefix | Yes |
-| Tier | Yes |
-| Status | Yes |
-| Machine-bound | No |
-| Expires | No |
-| Action | No |
+| Column        | Sortable |
+| ------------- | -------- |
+| Key prefix    | Yes      |
+| Tier          | Yes      |
+| Status        | Yes      |
+| Machine-bound | No       |
+| Expires       | No       |
+| Action        | No       |
 
 Activate binds the license to the instance device-id (read from `~/.config/nself/device-id`). Deactivate releases the binding.
 
@@ -42,25 +42,25 @@ Cursor-paginated table of account-scoped security events from the auth service. 
 
 ## Environment Variables
 
-| Variable | Default | Purpose |
-|----------|---------|---------|
+| Variable         | Default | Purpose                                                                                   |
+| ---------------- | ------- | ----------------------------------------------------------------------------------------- |
 | `NSELF_AUTH_URL` | (empty) | Base URL of the O04 auth service. When empty, all account pages return stub/offline data. |
 
 When `NSELF_AUTH_URL` is not set, all account pages render with `offline: true` — they show stub data or empty lists rather than errors, so standalone installs (no cloud auth service) still work.
 
 ## API Routes
 
-| Route | Method | Purpose |
-|-------|--------|---------|
-| `/api/account/me` | GET | Operator email, tier, license count, last login |
-| `/api/account/licenses` | GET | License list |
-| `/api/account/licenses/[id]/activate` | POST | Bind license to device |
-| `/api/account/licenses/[id]/deactivate` | POST | Release license binding |
-| `/api/account/team` | GET | Team seats (requires NSELF_ADMIN_MULTIUSER=true) |
-| `/api/account/team/invite` | POST | Invite a team member |
-| `/api/account/team/[userId]` | DELETE | Revoke a seat |
-| `/api/account/team/[userId]` | PATCH | Change seat role |
-| `/api/account/audit` | GET | Cursor-paginated audit events |
+| Route                                   | Method | Purpose                                          |
+| --------------------------------------- | ------ | ------------------------------------------------ |
+| `/api/account/me`                       | GET    | Operator email, tier, license count, last login  |
+| `/api/account/licenses`                 | GET    | License list                                     |
+| `/api/account/licenses/[id]/activate`   | POST   | Bind license to device                           |
+| `/api/account/licenses/[id]/deactivate` | POST   | Release license binding                          |
+| `/api/account/team`                     | GET    | Team seats (requires NSELF_ADMIN_MULTIUSER=true) |
+| `/api/account/team/invite`              | POST   | Invite a team member                             |
+| `/api/account/team/[userId]`            | DELETE | Revoke a seat                                    |
+| `/api/account/team/[userId]`            | PATCH  | Change seat role                                 |
+| `/api/account/audit`                    | GET    | Cursor-paginated audit events                    |
 
 ## Accessibility
 

@@ -1,6 +1,7 @@
 'use client'
 
 import { ChartSkeleton } from '@/components/skeletons'
+import { useUrlState } from '@/hooks/useUrlState'
 import type { K8sDeployment, K8sPod } from '@/types/k8s'
 import {
   AlertCircle,
@@ -194,9 +195,7 @@ const statusColors: Record<string, string> = {
 }
 
 function K8sStatusContent() {
-  const [activeTab, setActiveTab] = useState<'deployments' | 'pods'>(
-    'deployments',
-  )
+  const [activeTab, setActiveTab] = useUrlState<string>('tab', 'deployments')
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedDeployment, setSelectedDeployment] = useState<string | null>(
     null,
@@ -224,8 +223,8 @@ function K8sStatusContent() {
       )
 
   const handleAction = async (
-    action: 'restart' | 'scale' | 'delete',
-    name: string,
+    _action: 'restart' | 'scale' | 'delete',
+    _name: string,
   ) => {
     // Would call API
     await mutate()

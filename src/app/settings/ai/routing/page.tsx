@@ -71,7 +71,7 @@ export default function RoutingPage() {
   const [editForm, setEditForm] = useState<RoutingTask | null>(null)
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState<string | null>(null)
-  const [dragIndex, setDragIndex] = useState<number | null>(null)
+  const [_dragIndex, _setDragIndex] = useState<number | null>(null)
 
   const fetchAll = useCallback(async () => {
     setPageState('loading')

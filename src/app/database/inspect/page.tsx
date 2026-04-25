@@ -15,6 +15,7 @@ import {
 import { Progress } from '@/components/ui/progress'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { useUrlState } from '@/hooks/useUrlState'
 import {
   Activity,
   AlertTriangle,
@@ -90,7 +91,7 @@ interface DatabaseOverview {
 function DatabaseInspectContent() {
   const [isLoading, setIsLoading] = useState(true)
   const [isRefreshing, setIsRefreshing] = useState(false)
-  const [activeTab, setActiveTab] = useState('overview')
+  const [activeTab, setActiveTab] = useUrlState<string>('tab', 'overview')
   const [overview, setOverview] = useState<DatabaseOverview | null>(null)
   const [tableSizes, setTableSizes] = useState<TableSize[]>([])
   const [cacheStats, setCacheStats] = useState<CacheStats | null>(null)

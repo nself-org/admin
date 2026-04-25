@@ -719,3 +719,11 @@ See [MIGRATION_v0.4_to_v0.5.md](MIGRATION_v0.4_to_v0.5.md) for detailed upgrade 
 - Basic admin interface
 - Authentication system
 - Project management features
+
+## [1.0.10] - 2026-04-23 (Wave 5)
+
+### Added
+
+- **Admin panel unified auth** (O07) — Admin now uses unified auth flow (FF_UNIFIED_AUTH). Session management via np_sessions v2. License management and device management pages wired to `nself account` CLI.
+- **Audit log live tail** (Q02) — Admin shows live stream of np_audit_log entries via Hasura subscription panel.
+- **Ollama status panel** (B38) — Admin displays Ollama service health and installed models.

@@ -38,6 +38,10 @@ const envSchema = z.object({
   ADMIN_PASSWORD: passwordValidator.optional(), // Made optional, will generate if not provided
 
   // Optional with defaults
+  // Intentional fail-secure default: environments that omit NODE_ENV inherit
+  // production-level constraints (12-char password, strong regex). This is
+  // deliberate — a missing NODE_ENV in Docker/CI must never silently relax
+  // security. Developer setups must explicitly set NODE_ENV=development.
   NODE_ENV: z.enum(['development', 'production', 'test']).default('production'),
   PORT: z.string().regex(/^\d+$/, 'Port must be a number').default('3021'),
   PROJECT_PATH: z.string().default('/project'),

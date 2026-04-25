@@ -13,7 +13,7 @@ function SystemMaintenanceContent() {
   )
   const [scheduledStart, setScheduledStart] = useState('')
   const [scheduledEnd, setScheduledEnd] = useState('')
-  const [allowedIPs, setAllowedIPs] = useState<string[]>([])
+  const [_allowedIPs, _setAllowedIPs] = useState<string[]>([])
   const [saving, setSaving] = useState(false)
 
   const toggleMaintenanceMode = async () => {

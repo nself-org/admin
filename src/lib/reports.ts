@@ -186,7 +186,7 @@ async function processReportGeneration(
     await new Promise((resolve) => setTimeout(resolve, 1000))
 
     // Generate mock file info
-    const filename = `report-${executionId}.${input.format}`
+    const _filename = `report-${executionId}.${input.format}`
     const fileUrl = `/api/reports/executions/${executionId}/download`
 
     // Update execution with results

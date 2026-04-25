@@ -3,6 +3,7 @@
 import { Button } from '@/components/Button'
 import { HeroPattern } from '@/components/HeroPattern'
 import { ListSkeleton } from '@/components/skeletons'
+import { useUrlState } from '@/hooks/useUrlState'
 import {
   Archive,
   CheckCircle,
@@ -509,9 +510,7 @@ function BackupsContent() {
   const [backups, _setBackups] = useState<Backup[]>(mockBackups)
   const [jobs, setJobs] = useState<BackupJob[]>(mockJobs)
   const [loading, setLoading] = useState(false)
-  const [activeTab, setActiveTab] = useState<'backups' | 'jobs' | 'settings'>(
-    'backups',
-  )
+  const [activeTab, setActiveTab] = useUrlState<string>('tab', 'backups')
   const [filter, setFilter] = useState<string>('all')
   const [searchQuery, setSearchQuery] = useState('')
 

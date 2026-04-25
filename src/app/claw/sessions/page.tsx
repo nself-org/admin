@@ -1,5 +1,6 @@
 'use client'
 
+import { useUrlState } from '@/hooks/useUrlState'
 import {
   AlertCircle,
   Brain,
@@ -15,7 +16,7 @@ import {
   Wrench,
   X,
 } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { Suspense, useEffect, useState } from 'react'
 
 const CLAW_API = 'http://127.0.0.1:3710'
 
@@ -671,8 +672,8 @@ function ToolsTab({ clawDown }: { clawDown: boolean }) {
 
 // ── Main page ──────────────────────────────────────────────────────────────────
 
-export default function ClawSessionsPage() {
-  const [activeTab, setActiveTab] = useState<Tab>('sessions')
+function ClawSessionsContent() {
+  const [activeTab, setActiveTab] = useUrlState<string>('tab', 'sessions')
   const [clawDown, setClawDown] = useState(false)
   const [checking, setChecking] = useState(true)
 
@@ -774,5 +775,13 @@ export default function ClawSessionsPage() {
       {activeTab === 'identities' && <IdentitiesTab clawDown={clawDown} />}
       {activeTab === 'tools' && <ToolsTab clawDown={clawDown} />}
     </div>
+  )
+}
+
+export default function ClawSessionsPage() {
+  return (
+    <Suspense>
+      <ClawSessionsContent />
+    </Suspense>
   )
 }

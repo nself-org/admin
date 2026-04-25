@@ -3,6 +3,7 @@
 import { Button } from '@/components/Button'
 import { HeroPattern } from '@/components/HeroPattern'
 import { ServiceDetailSkeleton } from '@/components/skeletons'
+import { useUrlState } from '@/hooks/useUrlState'
 import {
   Activity,
   AlertCircle,
@@ -726,7 +727,7 @@ function ConfigurationEditor() {
 }
 
 function RedisContent() {
-  const [activeTab, setActiveTab] = useState('overview')
+  const [activeTab, setActiveTab] = useUrlState<string>('tab', 'overview')
   const [selectedKey, setSelectedKey] = useState<RedisKey | null>(null)
   const [_loading, _setLoading] = useState(false)
 

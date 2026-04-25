@@ -128,7 +128,7 @@ export async function GET(_request: NextRequest): Promise<NextResponse> {
         projectInfo.customServiceCount = customServiceCount
 
         // Debug logging
-        const monitoringEnabled =
+        const _monitoringEnabled =
           monitoringEnabledMatch && monitoringEnabledMatch[1].trim() === 'true'
         // Parse frontend apps
         if (frontendAppsMatch) {

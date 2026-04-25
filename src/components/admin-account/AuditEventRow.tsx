@@ -23,9 +23,11 @@ const EVENT_TYPE_COLORS: Record<string, string> = {
     'bg-emerald-50 text-emerald-700 dark:bg-emerald-900/20 dark:text-emerald-400',
   'license.deactivate':
     'bg-amber-50 text-amber-700 dark:bg-amber-900/20 dark:text-amber-400',
-  'team.invite': 'bg-purple-50 text-purple-700 dark:bg-purple-900/20 dark:text-purple-400',
+  'team.invite':
+    'bg-purple-50 text-purple-700 dark:bg-purple-900/20 dark:text-purple-400',
   'team.revoke': 'bg-red-50 text-red-700 dark:bg-red-900/20 dark:text-red-400',
-  'settings.change': 'bg-sky-50 text-sky-700 dark:bg-sky-900/20 dark:text-sky-400',
+  'settings.change':
+    'bg-sky-50 text-sky-700 dark:bg-sky-900/20 dark:text-sky-400',
 }
 
 export function AuditEventRow({ event }: AuditEventRowProps) {
@@ -45,7 +47,9 @@ export function AuditEventRow({ event }: AuditEventRowProps) {
           {event.actorEmail}
         </td>
         <td className="px-4 py-3 whitespace-nowrap">
-          <span className={`inline-flex rounded-full px-2.5 py-0.5 text-xs font-medium ${colorClass}`}>
+          <span
+            className={`inline-flex rounded-full px-2.5 py-0.5 text-xs font-medium ${colorClass}`}
+          >
             {event.type}
           </span>
         </td>
@@ -71,10 +75,7 @@ export function AuditEventRow({ event }: AuditEventRowProps) {
 
       {expanded && (
         <tr>
-          <td
-            colSpan={5}
-            className="bg-zinc-50 px-4 py-3 dark:bg-zinc-800/50"
-          >
+          <td colSpan={5} className="bg-zinc-50 px-4 py-3 dark:bg-zinc-800/50">
             <pre className="overflow-x-auto rounded-lg bg-zinc-900 p-3 font-mono text-xs text-zinc-300">
               {JSON.stringify(event.details, null, 2)}
             </pre>

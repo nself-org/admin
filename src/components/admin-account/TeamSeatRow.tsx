@@ -82,7 +82,9 @@ export function TeamSeatRow({
                 </span>
               )}
             </p>
-            <p className="text-xs text-zinc-500 dark:text-zinc-400">{seat.email}</p>
+            <p className="text-xs text-zinc-500 dark:text-zinc-400">
+              {seat.email}
+            </p>
           </div>
         </div>
       </td>

@@ -41,7 +41,7 @@ async function postFetcher<T>(
   return data.data
 }
 
-async function putFetcher<T>(
+async function _putFetcher<T>(
   url: string,
   { arg }: { arg: T },
 ): Promise<unknown> {

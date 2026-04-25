@@ -12,14 +12,12 @@
 
 import { HeroPattern } from '@/components/HeroPattern'
 import { InviteForm } from '@/components/admin-account/InviteForm'
-import { TeamSeatRow, type TeamRole, type TeamSeat } from '@/components/admin-account/TeamSeatRow'
 import {
-  AlertCircle,
-  Lock,
-  RefreshCw,
-  Users,
-  WifiOff,
-} from 'lucide-react'
+  TeamSeatRow,
+  type TeamRole,
+  type TeamSeat,
+} from '@/components/admin-account/TeamSeatRow'
+import { AlertCircle, Lock, RefreshCw, Users, WifiOff } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { Suspense, useCallback, useEffect, useRef, useState } from 'react'
 
@@ -42,7 +40,10 @@ function MultiUserDisabledPage() {
       <HeroPattern />
       <main id="main-content" className="relative mx-auto max-w-3xl">
         <div className="rounded-xl border border-zinc-200 bg-white p-12 text-center shadow-sm dark:border-zinc-700 dark:bg-zinc-800">
-          <Lock className="mx-auto mb-4 h-12 w-12 text-zinc-400" aria-hidden="true" />
+          <Lock
+            className="mx-auto mb-4 h-12 w-12 text-zinc-400"
+            aria-hidden="true"
+          />
           <h1 className="text-xl font-bold text-zinc-900 dark:text-white">
             Multi-user admin is disabled
           </h1>
@@ -164,7 +165,10 @@ function TeamContent() {
           <div className="flex items-start justify-between">
             <div className="flex items-center gap-3">
               <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-100 dark:bg-blue-900/30">
-                <Users className="h-5 w-5 text-blue-600 dark:text-blue-400" aria-hidden="true" />
+                <Users
+                  className="h-5 w-5 text-blue-600 dark:text-blue-400"
+                  aria-hidden="true"
+                />
               </div>
               <div>
                 <h1
@@ -185,7 +189,10 @@ function TeamContent() {
               aria-label="Refresh team list"
               className="inline-flex items-center gap-2 rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm font-medium text-zinc-700 transition-colors hover:bg-zinc-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500 disabled:opacity-50 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-300"
             >
-              <RefreshCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} aria-hidden="true" />
+              <RefreshCw
+                className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`}
+                aria-hidden="true"
+              />
               Refresh
             </button>
           </div>
@@ -213,7 +220,10 @@ function TeamContent() {
             aria-live="assertive"
             className="flex items-start gap-3 rounded-xl border border-red-200 bg-red-50 p-4 dark:border-red-800 dark:bg-red-900/20"
           >
-            <AlertCircle className="h-5 w-5 flex-shrink-0 text-red-500" aria-hidden="true" />
+            <AlertCircle
+              className="h-5 w-5 flex-shrink-0 text-red-500"
+              aria-hidden="true"
+            />
             <p className="text-sm text-red-700 dark:text-red-400">{error}</p>
           </div>
         )}
@@ -224,7 +234,10 @@ function TeamContent() {
         {/* Empty state */}
         {!loading && !error && seats.length === 0 && (
           <div className="rounded-xl border border-dashed border-zinc-300 bg-zinc-50 p-12 text-center dark:border-zinc-700 dark:bg-zinc-800/50">
-            <Users className="mx-auto mb-3 h-10 w-10 text-zinc-400" aria-hidden="true" />
+            <Users
+              className="mx-auto mb-3 h-10 w-10 text-zinc-400"
+              aria-hidden="true"
+            />
             <h2 className="text-lg font-semibold text-zinc-900 dark:text-white">
               No team members
             </h2>
@@ -241,16 +254,28 @@ function TeamContent() {
               <table className="w-full text-left text-sm">
                 <thead>
                   <tr className="border-b border-zinc-100 bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-800/80">
-                    <th scope="col" className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
+                    <th
+                      scope="col"
+                      className="px-4 py-3 text-left text-xs font-semibold tracking-wider text-zinc-500 uppercase dark:text-zinc-400"
+                    >
                       Member
                     </th>
-                    <th scope="col" className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
+                    <th
+                      scope="col"
+                      className="px-4 py-3 text-left text-xs font-semibold tracking-wider text-zinc-500 uppercase dark:text-zinc-400"
+                    >
                       Joined
                     </th>
-                    <th scope="col" className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
+                    <th
+                      scope="col"
+                      className="px-4 py-3 text-left text-xs font-semibold tracking-wider text-zinc-500 uppercase dark:text-zinc-400"
+                    >
                       Role
                     </th>
-                    <th scope="col" className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
+                    <th
+                      scope="col"
+                      className="px-4 py-3 text-right text-xs font-semibold tracking-wider text-zinc-500 uppercase dark:text-zinc-400"
+                    >
                       Action
                     </th>
                   </tr>

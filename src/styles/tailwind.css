@@ -88,3 +88,64 @@
   /* UTF-8 charset is the Next.js default; declared here as documentation. */
   /* All HTML files in this app use UTF-8 encoding. */
 }
+
+/* =====================================================================
+   Print styles — hide chrome, expand content, A4/Letter-safe layout
+   ===================================================================== */
+@media print {
+  /* Hide sidebar, topbar, nav, action buttons, tooltips */
+  [role='banner'],
+  nav,
+  header,
+  footer,
+  .print\:hidden,
+  [data-radix-popper-content-wrapper],
+  [data-radix-tooltip-content],
+  [aria-label='Breadcrumb'] {
+    display: none !important;
+  }
+
+  /* Expand main content to full width (removes sidebar margin) */
+  .lg\:ml-72,
+  .xl\:ml-80 {
+    margin-left: 0 !important;
+  }
+
+  #main-content {
+    width: 100% !important;
+    padding: 0 !important;
+  }
+
+  /* Typography */
+  body {
+    font-size: 11pt;
+    color: #000;
+    background: #fff;
+  }
+
+  /* Page breaks before major section headings */
+  h2,
+  h3 {
+    break-before: auto;
+    page-break-before: auto;
+  }
+
+  /* Avoid breaking inside cards / rows */
+  .card,
+  tr,
+  li {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  /* Ensure full-width tables */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  /* No overflow-hidden clipping in print */
+  * {
+    overflow: visible !important;
+  }
+}

@@ -156,7 +156,7 @@ export default function ApiKeysPage() {
                 router.push(`/settings/api-keys/${id}`)
               }
             }}
-            onDeleteClick={(id) => {
+            onDeleteClick={(_id) => {
               if (
                 confirm(
                   'Are you sure you want to delete this API key? This action cannot be undone.',

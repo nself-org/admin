@@ -23,6 +23,7 @@ import {
 } from '@/components/ui/select'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Textarea } from '@/components/ui/textarea'
+import { useUrlState } from '@/hooks/useUrlState'
 import {
   Activity,
   Clock,
@@ -100,10 +101,10 @@ function FunctionsContent() {
   const [invokeResult, setInvokeResult] = useState<string | null>(null)
 
   // Enhanced features state
-  const [activeTab, setActiveTab] = useState('overview')
-  const [deploymentStatus, setDeploymentStatus] = useState<DeploymentStatus[]>(
-    [],
-  )
+  const [activeTab, setActiveTab] = useUrlState<string>('tab', 'overview')
+  const [_deploymentStatus, _setDeploymentStatus] = useState<
+    DeploymentStatus[]
+  >([])
   const [logLevel, setLogLevel] = useState('all')
   const [filteredLogs, setFilteredLogs] = useState<string | null>(null)
   const [selectedTemplate, setSelectedTemplate] =

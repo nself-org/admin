@@ -8,6 +8,7 @@ import { PageHeader } from '@/components/ui/page-header'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useReportStats, useReportTemplates } from '@/hooks/useReports'
+import { useUrlState } from '@/hooks/useUrlState'
 import {
   BarChart3,
   Calendar,
@@ -19,7 +20,7 @@ import {
   Shield,
 } from 'lucide-react'
 import Link from 'next/link'
-import { useState } from 'react'
+import { Suspense } from 'react'
 
 const CATEGORIES = [
   { value: 'all', label: 'All', icon: FileText },
@@ -60,7 +61,7 @@ function StatsCard({
 }
 
 function ReportsContent() {
-  const [category, setCategory] = useState<string>('all')
+  const [category, setCategory] = useUrlState<string>('tab', 'all')
   const { templates: _templates, isLoading: isLoadingTemplates } =
     useReportTemplates(category === 'all' ? undefined : category)
   const { stats, isLoading: isLoadingStats } = useReportStats()
@@ -232,5 +233,9 @@ function ReportsContent() {
 }
 
 export default function ReportsPage() {
-  return <ReportsContent />
+  return (
+    <Suspense>
+      <ReportsContent />
+    </Suspense>
+  )
 }

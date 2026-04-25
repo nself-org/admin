@@ -71,9 +71,7 @@ describe('hasura-client production startup guard', () => {
   describe('too-short secret', () => {
     it('throws FATAL when secret is fewer than 32 characters in production', () => {
       process.env.HASURA_GRAPHQL_ADMIN_SECRET = 'tooshort'
-      expect(() => freshModule()).toThrow(
-        /must be at least 32 characters/,
-      )
+      expect(() => freshModule()).toThrow(/must be at least 32 characters/)
     })
   })
 

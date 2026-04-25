@@ -190,7 +190,7 @@ export function ReportScheduleForm({
   }
 
   const getNextRunDescription = (): string => {
-    const now = new Date()
+    const _now = new Date()
 
     switch (frequency) {
       case 'once':

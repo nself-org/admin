@@ -1,5 +1,6 @@
 import { findNselfPath, getEnhancedPath } from '@/lib/nself-path'
 import { getProjectPath } from '@/lib/paths'
+import { requireAuth } from '@/lib/require-auth'
 import { execFile } from 'child_process'
 import { promises as fs } from 'fs'
 import { NextRequest, NextResponse } from 'next/server'
@@ -112,6 +113,9 @@ export async function GET(): Promise<NextResponse> {
  * happens when services are started with SSL_MODE=letsencrypt
  */
 export async function POST(request: NextRequest): Promise<NextResponse> {
+  const authError = await requireAuth(request)
+  if (authError) return authError
+
   try {
     const body = await request.json()
     const validation = letsEncryptSchema.safeParse(body)

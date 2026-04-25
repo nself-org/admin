@@ -1,6 +1,7 @@
 'use client'
 
 import { CardGridSkeleton } from '@/components/skeletons'
+import { useUrlState } from '@/hooks/useUrlState'
 import type { Plugin, PluginSyncStatus } from '@/types/plugins'
 import { motion, useMotionTemplate, useMotionValue } from 'framer-motion'
 import {
@@ -20,7 +21,6 @@ import {
   Zap,
 } from 'lucide-react'
 import Link from 'next/link'
-import { useSearchParams } from 'next/navigation'
 import { Suspense, useState } from 'react'
 import useSWR from 'swr'
 
@@ -269,14 +269,14 @@ function PluginCard({
 }
 
 function PluginsContent() {
-  const searchParams = useSearchParams()
-  const urlFilter = searchParams.get('filter')
-
   const [_syncing, setSyncing] = useState<string | null>(null)
-  const [searchQuery, setSearchQuery] = useState('')
-  const [filterActive, setFilterActive] = useState<
-    'all' | 'active' | 'updates'
-  >(urlFilter === 'updates' ? 'updates' : 'all')
+  const [searchQuery, setSearchQuery] = useUrlState<string>('q', '', {
+    debounce: 300,
+  })
+  const [filterActive, setFilterActive] = useUrlState<string>(
+    'filter.status',
+    'all',
+  )
   const [sortBy, setSortBy] = useState<'name' | 'date'>('date')
 
   const { data, error, isLoading, mutate } = useSWR<{

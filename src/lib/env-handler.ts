@@ -700,8 +700,7 @@ export function envToWizardConfig(env: EnvConfig): any {
     databaseName: env.POSTGRES_DB || 'nself',
     databasePassword: env.POSTGRES_PASSWORD || 'nself-dev-password',
     postgresUser: env.POSTGRES_USER || 'postgres', // Add this field
-    hasuraAdminSecret:
-      env.HASURA_GRAPHQL_ADMIN_SECRET || '',
+    hasuraAdminSecret: env.HASURA_GRAPHQL_ADMIN_SECRET || '',
     jwtSecret:
       env.HASURA_JWT_KEY ||
       (() => {

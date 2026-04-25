@@ -91,7 +91,7 @@ export async function GET() {
               pidsLimit: (hostConfig.PidsLimit as number | undefined) ?? null,
             },
           }
-        } catch (err) {
+        } catch (_err) {
           return {
             id: c.Id.slice(0, 12),
             name: (c.Names[0] ?? '').replace(/^\//, ''),

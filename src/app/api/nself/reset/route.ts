@@ -32,7 +32,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         if (env) {
           savedConfig = envToWizardConfig(env)
         }
-      } catch (err) {}
+      } catch (_err) {}
     }
 
     // Run nself reset with --force to stop and clean
@@ -117,7 +117,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
             config,
           })
         }
-      } catch (err) {
+      } catch (_err) {
         return NextResponse.json({
           success: true,
           message: 'Project reset',

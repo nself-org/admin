@@ -10,6 +10,7 @@ jobs:
   lint:
     name: Lint
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
 
@@ -36,7 +37,7 @@ jobs:
   type-check:
     name: TypeScript Type Check
     runs-on: ubuntu-latest
-    continue-on-error: true # Allow workflow to proceed even if type-check fails
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
 
@@ -60,7 +61,7 @@ jobs:
   unit-test:
     name: Unit Tests
     runs-on: ubuntu-latest
-    continue-on-error: true # Don't fail pipeline on flaky tests
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
 
@@ -79,7 +80,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Run Jest tests
-        run: pnpm test -- --coverage --ci --passWithNoTests || echo "Tests completed - check report for details"
+        run: pnpm test -- --coverage --ci --passWithNoTests
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v4
@@ -92,7 +93,7 @@ jobs:
   e2e-test:
     name: E2E Tests
     runs-on: ubuntu-latest
-    continue-on-error: true # E2E tests can be flaky in CI environments
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
 
@@ -114,7 +115,7 @@ jobs:
         run: pnpm exec playwright install --with-deps
 
       - name: Run Playwright tests
-        run: pnpm exec playwright test --retries=2 || echo "E2E tests completed - check report for details"
+        run: pnpm exec playwright test --retries=2
 
       - name: Upload test results
         uses: actions/upload-artifact@v4
@@ -135,6 +136,7 @@ jobs:
   build:
     name: Production Build
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     needs: [lint, type-check]
     steps:
       - uses: actions/checkout@v4

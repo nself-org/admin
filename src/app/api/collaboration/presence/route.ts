@@ -11,11 +11,12 @@ import {
 } from '@/lib/database'
 import { emitUserPresence } from '@/lib/websocket/emitters'
 import { NextRequest, NextResponse } from 'next/server'
+import { requireAuth } from '@/lib/require-auth'
 
 /**
  * GET /api/collaboration/presence - Get online users
  */
-export async function GET(_request: NextRequest): Promise<NextResponse> {
+export async function GET(request: NextRequest): Promise<NextResponse> {
   try {
     const onlineUsers = await getOnlineUsers()
 
@@ -39,6 +40,9 @@ export async function GET(_request: NextRequest): Promise<NextResponse> {
  * POST /api/collaboration/presence - Update user presence
  */
 export async function POST(request: NextRequest): Promise<NextResponse> {
+  const authError = await requireAuth(request)
+  if (authError) return authError
+
   try {
     const body = await request.json()
     const { userId, userName, status, currentPage, currentDocument, metadata } =
@@ -97,6 +101,9 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
  * DELETE /api/collaboration/presence - Remove user presence
  */
 export async function DELETE(request: NextRequest): Promise<NextResponse> {
+  const authError = await requireAuth(request)
+  if (authError) return authError
+
   try {
     const body = await request.json()
     const { userId, userName } = body

@@ -12,6 +12,7 @@
 
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
+import { requireAuth } from '@/lib/require-auth'
 
 const VIBE_ENABLED = process.env.NSELF_VIBE_ENABLED === 'true'
 const VIBE_API_PORT = process.env.NSELF_VIBE_PORT ?? '8003'
@@ -28,6 +29,9 @@ const lastApplyTimes = new Map<string, number>()
 const RATE_LIMIT_MS = 30_000
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
+  const authError = await requireAuth(request)
+  if (authError) return authError
+
   if (!VIBE_ENABLED) {
     return NextResponse.json(
       { error: 'Vibe-Code is disabled.' },

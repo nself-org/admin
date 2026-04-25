@@ -1,6 +1,7 @@
 import fs from 'fs'
-import { NextResponse } from 'next/server'
+import { NextResponse, NextRequest } from 'next/server'
 import path from 'path'
+import { requireAuth } from '@/lib/require-auth'
 
 interface OnboardingState {
   completed: boolean
@@ -29,7 +30,10 @@ export async function GET() {
   return NextResponse.json({ success: true, ...state })
 }
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
+  const authError = await requireAuth(request)
+  if (authError) return authError
+
   try {
     const body = (await request.json()) as { step?: number }
     const step = typeof body.step === 'number' ? body.step : 0

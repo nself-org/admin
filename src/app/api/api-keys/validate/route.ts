@@ -1,5 +1,6 @@
 import * as apiKeysApi from '@/lib/api-keys'
 import { NextRequest, NextResponse } from 'next/server'
+import { requireAuth } from '@/lib/require-auth'
 
 /**
  * POST /api/api-keys/validate - Validate an API key
@@ -12,6 +13,9 @@ import { NextRequest, NextResponse } from 'next/server'
  *   - error?: string (if invalid, returns the reason)
  */
 export async function POST(request: NextRequest): Promise<NextResponse> {
+  const authError = await requireAuth(request)
+  if (authError) return authError
+
   try {
     const body = await request.json()
 

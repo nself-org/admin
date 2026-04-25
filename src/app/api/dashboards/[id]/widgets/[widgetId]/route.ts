@@ -1,5 +1,6 @@
 import * as dashboardsApi from '@/lib/dashboards'
 import { NextRequest, NextResponse } from 'next/server'
+import { requireAuth } from '@/lib/require-auth'
 
 interface RouteParams {
   params: Promise<{ id: string; widgetId: string }>
@@ -9,6 +10,9 @@ export async function PATCH(
   request: NextRequest,
   { params }: RouteParams,
 ): Promise<NextResponse> {
+  const authError = await requireAuth(request)
+  if (authError) return authError
+
   try {
     const { id, widgetId } = await params
 
@@ -62,9 +66,12 @@ export async function PATCH(
 }
 
 export async function DELETE(
-  _request: NextRequest,
+  request: NextRequest,
   { params }: RouteParams,
 ): Promise<NextResponse> {
+  const authError = await requireAuth(request)
+  if (authError) return authError
+
   try {
     const { id, widgetId } = await params
 

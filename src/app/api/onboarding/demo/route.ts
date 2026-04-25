@@ -1,6 +1,7 @@
 import { getEnhancedPath } from '@/lib/nself-path'
 import { spawn } from 'child_process'
-import { NextResponse } from 'next/server'
+import { NextResponse, NextRequest } from 'next/server'
+import { requireAuth } from '@/lib/require-auth'
 
 function runNselfDemo(): Promise<{
   success: boolean
@@ -49,7 +50,10 @@ function runNselfDemo(): Promise<{
   })
 }
 
-export async function POST() {
+export async function POST(request: NextRequest) {
+  const authError = await requireAuth(request)
+  if (authError) return authError
+
   try {
     const result = await runNselfDemo()
     if (result.success) {

@@ -3,6 +3,7 @@ import { getProjectPath } from '@/lib/paths'
 import { execFile } from 'child_process'
 import { NextRequest, NextResponse } from 'next/server'
 import { promisify } from 'util'
+import { requireAuth } from '@/lib/require-auth'
 
 const execFileAsync = promisify(execFile)
 
@@ -81,6 +82,9 @@ export async function GET(): Promise<NextResponse> {
 
 // POST /api/deploy/staging - Execute staging commands
 export async function POST(request: NextRequest): Promise<NextResponse> {
+  const authError = await requireAuth(request)
+  if (authError) return authError
+
   try {
     const body = await request.json()
     const { action, options = {} } = body

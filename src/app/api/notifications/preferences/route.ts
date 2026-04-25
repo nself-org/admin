@@ -2,6 +2,7 @@ import { auth } from '@/lib/auth-db'
 import { logger } from '@/lib/logger'
 import * as notificationsApi from '@/lib/notifications'
 import { NextRequest, NextResponse } from 'next/server'
+import { requireAuth } from '@/lib/require-auth'
 
 /**
  * GET /api/notifications/preferences - Get notification preferences
@@ -62,6 +63,9 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
  *   - quietHoursEnd: string HH:MM (optional)
  */
 export async function PUT(request: NextRequest): Promise<NextResponse> {
+  const authError = await requireAuth(request)
+  if (authError) return authError
+
   const startTime = Date.now()
 
   try {

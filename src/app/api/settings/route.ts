@@ -11,6 +11,7 @@ import { loadSettings, saveSettings } from '@/features/settings/settings'
 import type { AdminSettings } from '@/features/settings/types'
 import { getProjectPath } from '@/lib/paths'
 import { NextRequest, NextResponse } from 'next/server'
+import { requireAuth } from '@/lib/require-auth'
 
 // ---------------------------------------------------------------------------
 // GET /api/settings
@@ -33,6 +34,9 @@ export async function GET(): Promise<NextResponse> {
 // ---------------------------------------------------------------------------
 
 export async function PUT(request: NextRequest): Promise<NextResponse> {
+  const authError = await requireAuth(request)
+  if (authError) return authError
+
   let body: unknown
   try {
     body = await request.json()

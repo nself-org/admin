@@ -1,6 +1,7 @@
 import * as apiKeysApi from '@/lib/api-keys'
 import { auth } from '@/lib/auth-db'
 import { NextRequest, NextResponse } from 'next/server'
+import { requireAuth } from '@/lib/require-auth'
 
 /**
  * GET /api/api-keys - List all API keys
@@ -45,6 +46,9 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
  * Returns the key AND the secret (one-time only)
  */
 export async function POST(request: NextRequest): Promise<NextResponse> {
+  const authError = await requireAuth(request)
+  if (authError) return authError
+
   try {
     // Validate session
     const token = request.cookies.get('session')?.value

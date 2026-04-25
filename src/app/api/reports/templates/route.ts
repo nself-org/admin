@@ -1,5 +1,6 @@
 import * as reports from '@/lib/reports'
 import { NextRequest, NextResponse } from 'next/server'
+import { requireAuth } from '@/lib/require-auth'
 
 // GET /api/reports/templates - List all report templates
 export async function GET(request: NextRequest): Promise<NextResponse> {
@@ -27,6 +28,9 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 
 // POST /api/reports/templates - Create a new report template
 export async function POST(request: NextRequest): Promise<NextResponse> {
+  const authError = await requireAuth(request)
+  if (authError) return authError
+
   try {
     const body = await request.json()
 

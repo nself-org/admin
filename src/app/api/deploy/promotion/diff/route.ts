@@ -1,14 +1,18 @@
 import { getActiveProject } from '@/features/project-picker/project-picker'
 import fs from 'fs/promises'
-import { NextResponse } from 'next/server'
+import { NextResponse, NextRequest } from 'next/server'
 import path from 'path'
+import { requireAuth } from '@/lib/require-auth'
 
 /**
  * Compute a lightweight staging-to-prod diff for the active project.
  * Compares .env.staging and .env.prod at the top level. Services/images
  * are inferred from docker-compose.yml service keys.
  */
-export async function POST() {
+export async function POST(request: NextRequest) {
+  const authError = await requireAuth(request)
+  if (authError) return authError
+
   try {
     const project = await getActiveProject()
     if (project === null) {

@@ -1,10 +1,14 @@
 import { executeNselfCommand } from '@/lib/nselfCLI'
 import { NextRequest, NextResponse } from 'next/server'
+import { requireAuth } from '@/lib/require-auth'
 
 export async function POST(
-  _req: NextRequest,
+  request: NextRequest,
   context: { params: Promise<{ name: string }> },
 ) {
+  const authError = await requireAuth(request)
+  if (authError) return authError
+
   const { name } = await context.params
   if (!/^[a-z0-9-]+$/.test(name)) {
     return NextResponse.json({ error: 'Invalid plugin name.' }, { status: 400 })

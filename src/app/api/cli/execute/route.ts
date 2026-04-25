@@ -4,6 +4,7 @@ import { execFile } from 'child_process'
 import { NextRequest, NextResponse } from 'next/server'
 import { promisify } from 'util'
 import { z } from 'zod'
+import { requireAuth } from '@/lib/require-auth'
 
 const execFileAsync = promisify(execFile)
 
@@ -94,6 +95,9 @@ const commandSchema = z.object({
 })
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
+  const authError = await requireAuth(request)
+  if (authError) return authError
+
   try {
     const body = await request.json()
 

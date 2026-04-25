@@ -1,12 +1,16 @@
 import { logger } from '@/lib/logger'
 import { executeNselfCommand } from '@/lib/nselfCLI'
 import { NextRequest, NextResponse } from 'next/server'
+import { requireAuth } from '@/lib/require-auth'
 
 // Valid stress test targets
 const VALID_TARGETS = ['api', 'database', 'full', 'graphql', 'auth', 'storage']
 
 // POST /api/benchmark/stress - Run stress test
 export async function POST(request: NextRequest): Promise<NextResponse> {
+  const authError = await requireAuth(request)
+  if (authError) return authError
+
   const startTime = Date.now()
 
   try {

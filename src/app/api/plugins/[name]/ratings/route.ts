@@ -16,6 +16,7 @@ import { logger } from '@/lib/logger'
 import crypto from 'crypto'
 import { NextRequest, NextResponse } from 'next/server'
 import os from 'os'
+import { requireAuth } from '@/lib/require-auth'
 
 const MARKETPLACE_BASE =
   process.env.NSELF_MARKETPLACE_URL?.replace(/\/marketplace\/?$/, '') ??
@@ -40,7 +41,7 @@ function buildUserHash(): string {
 }
 
 export async function GET(
-  _request: NextRequest,
+  request: NextRequest,
   context: RouteContext,
 ): Promise<NextResponse> {
   const startTime = Date.now()
@@ -107,6 +108,9 @@ export async function POST(
   request: NextRequest,
   context: RouteContext,
 ): Promise<NextResponse> {
+  const authError = await requireAuth(request)
+  if (authError) return authError
+
   const startTime = Date.now()
   const { name } = await context.params
 

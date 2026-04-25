@@ -2,6 +2,7 @@ import { executeNselfCommand } from '@/lib/nselfCLI'
 import { mkdir, writeFile } from 'fs/promises'
 import { NextRequest, NextResponse } from 'next/server'
 import path from 'path'
+import { requireAuth } from '@/lib/require-auth'
 
 interface RouteParams {
   params: Promise<{ id: string }>
@@ -11,6 +12,9 @@ export async function PUT(
   request: NextRequest,
   { params }: RouteParams,
 ): Promise<NextResponse> {
+  const authError = await requireAuth(request)
+  if (authError) return authError
+
   try {
     const { id } = await params
     const formData = await request.formData()

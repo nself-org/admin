@@ -12,6 +12,7 @@ import {
 } from '@/features/settings/settings'
 import { getProjectPath } from '@/lib/paths'
 import { NextRequest, NextResponse } from 'next/server'
+import { requireAuth } from '@/lib/require-auth'
 
 /** Regex for valid env var key names. Must match settings.ts assertValidKey. */
 const ENV_KEY_RE = /^[A-Z_][A-Z0-9_]{0,127}$/
@@ -26,6 +27,9 @@ function isValidKey(key: unknown): key is string {
 // ---------------------------------------------------------------------------
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
+  const authError = await requireAuth(request)
+  if (authError) return authError
+
   let body: unknown
   try {
     body = await request.json()
@@ -91,6 +95,9 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 // ---------------------------------------------------------------------------
 
 export async function DELETE(request: NextRequest): Promise<NextResponse> {
+  const authError = await requireAuth(request)
+  if (authError) return authError
+
   let body: unknown
   try {
     body = await request.json()

@@ -7,11 +7,15 @@ import { getSession, lockDocument, unlockDocument } from '@/lib/database'
 import { emitDocumentLock } from '@/lib/websocket/emitters'
 import { cookies } from 'next/headers'
 import { NextRequest, NextResponse } from 'next/server'
+import { requireAuth } from '@/lib/require-auth'
 
 /**
  * POST /api/collaboration/lock - Lock or unlock document
  */
 export async function POST(request: NextRequest): Promise<NextResponse> {
+  const authError = await requireAuth(request)
+  if (authError) return authError
+
   try {
     // Get user from session
     const cookieStore = await cookies()

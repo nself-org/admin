@@ -1,5 +1,6 @@
 import { executeNselfCommand } from '@/lib/nselfCLI'
 import { NextRequest, NextResponse } from 'next/server'
+import { requireAuth } from '@/lib/require-auth'
 
 const VALID_ID_PATTERN = /^[a-zA-Z0-9_-]+$/
 
@@ -8,7 +9,7 @@ const VALID_ID_PATTERN = /^[a-zA-Z0-9_-]+$/
  * Shows details for a specific webhook via nself auth webhooks show <id>
  */
 export async function GET(
-  _request: NextRequest,
+  request: NextRequest,
   { params }: { params: Promise<{ id: string }> },
 ): Promise<NextResponse> {
   try {
@@ -55,9 +56,12 @@ export async function GET(
  * Deletes a webhook via nself auth webhooks delete <id>
  */
 export async function DELETE(
-  _request: NextRequest,
+  request: NextRequest,
   { params }: { params: Promise<{ id: string }> },
 ): Promise<NextResponse> {
+  const authError = await requireAuth(request)
+  if (authError) return authError
+
   try {
     const { id } = await params
 

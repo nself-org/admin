@@ -4,8 +4,12 @@ import { spawn } from 'child_process'
 import fs from 'fs'
 import { NextRequest } from 'next/server'
 import path from 'path'
+import { requireAuth } from '@/lib/require-auth'
 
-export async function POST(_request: NextRequest): Promise<Response> {
+export async function POST(request: NextRequest): Promise<Response> {
+  const authError = await requireAuth(request)
+  if (authError) return authError
+
   const encoder = new TextEncoder()
   const projectPath = getProjectPath()
 

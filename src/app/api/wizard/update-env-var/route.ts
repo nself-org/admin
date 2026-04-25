@@ -2,8 +2,14 @@ import { getProjectPath } from '@/lib/paths'
 import fs from 'fs/promises'
 import { NextRequest, NextResponse } from 'next/server'
 import path from 'path'
+import { requireAuthPreSetup, requireWizardNotComplete } from '@/lib/require-auth'
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
+  const authError = await requireAuthPreSetup(req)
+  if (authError) return authError
+  const wizardError = await requireWizardNotComplete(req)
+  if (wizardError) return wizardError
+
   try {
     const { key, value, remove = false, environment } = await req.json()
 
@@ -91,6 +97,11 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
 // Batch update multiple variables
 export async function PUT(req: NextRequest): Promise<NextResponse> {
+  const authError = await requireAuthPreSetup(req)
+  if (authError) return authError
+  const wizardError = await requireWizardNotComplete(req)
+  if (wizardError) return wizardError
+
   try {
     const { variables, environment } = await req.json()
 

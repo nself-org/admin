@@ -10,6 +10,7 @@ import fs from 'fs/promises'
 import { NextRequest, NextResponse } from 'next/server'
 import os from 'os'
 import path from 'path'
+import { requireAuth } from '@/lib/require-auth'
 
 interface RouteContext {
   params: Promise<{ name: string }>
@@ -21,7 +22,7 @@ function getPluginConfigPath(pluginName: string): string {
 }
 
 export async function GET(
-  _request: NextRequest,
+  request: NextRequest,
   context: RouteContext,
 ): Promise<NextResponse> {
   const startTime = Date.now()
@@ -91,6 +92,9 @@ export async function PUT(
   request: NextRequest,
   context: RouteContext,
 ): Promise<NextResponse> {
+  const authError = await requireAuth(request)
+  if (authError) return authError
+
   const startTime = Date.now()
   const { name } = await context.params
 

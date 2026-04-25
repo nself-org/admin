@@ -1,10 +1,14 @@
 import { loadConnections, testConnection } from '@/features/remote/remote'
-import { NextResponse } from 'next/server'
+import { NextResponse, NextRequest } from 'next/server'
+import { requireAuth } from '@/lib/require-auth'
 
 export async function POST(
-  _req: Request,
+  request: NextRequest,
   context: { params: Promise<{ id: string }> },
 ) {
+  const authError = await requireAuth(request)
+  if (authError) return authError
+
   const { id } = await context.params
   try {
     const store = await loadConnections()

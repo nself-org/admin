@@ -1,8 +1,12 @@
 import { getTenant } from '@/lib/database'
 import { switchTenant } from '@/lib/tenant/tenant-context'
 import { NextRequest, NextResponse } from 'next/server'
+import { requireAuth } from '@/lib/require-auth'
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
+  const authError = await requireAuth(request)
+  if (authError) return authError
+
   try {
     const body = await request.json()
     const { tenantId } = body

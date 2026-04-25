@@ -1,11 +1,12 @@
 import { executeNselfCommand } from '@/lib/nselfCLI'
 import { NextRequest, NextResponse } from 'next/server'
+import { requireAuth } from '@/lib/require-auth'
 
 /**
  * GET /api/config/sync
  * Returns the current sync status between environments
  */
-export async function GET(_request: NextRequest): Promise<NextResponse> {
+export async function GET(request: NextRequest): Promise<NextResponse> {
   try {
     const result = await executeNselfCommand('config', ['sync', '--status'], {
       timeout: 15000,
@@ -38,6 +39,9 @@ export async function GET(_request: NextRequest): Promise<NextResponse> {
  * Body: { source: string, target: string }
  */
 export async function POST(request: NextRequest): Promise<NextResponse> {
+  const authError = await requireAuth(request)
+  if (authError) return authError
+
   try {
     const body = await request.json()
     const { source, target } = body

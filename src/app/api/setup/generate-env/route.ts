@@ -4,6 +4,7 @@ import crypto from 'crypto'
 import fs from 'fs/promises'
 import { NextRequest, NextResponse } from 'next/server'
 import path from 'path'
+import { requireAuth } from '@/lib/require-auth'
 
 interface SetupData {
   adminPassword?: string
@@ -144,6 +145,9 @@ async function hashPassword(password: string): Promise<string> {
 }
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
+  const authError = await requireAuth(request)
+  if (authError) return authError
+
   try {
     const setupData: SetupData = await request.json()
 

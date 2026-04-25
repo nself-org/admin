@@ -4,6 +4,7 @@ import { getProjectPath } from '@/lib/paths'
 import { exec } from 'child_process'
 import { NextRequest, NextResponse } from 'next/server'
 import { promisify } from 'util'
+import { requireAuth } from '@/lib/require-auth'
 
 const execAsync = promisify(exec)
 
@@ -12,7 +13,7 @@ interface RouteParams {
 }
 
 export async function GET(
-  _request: NextRequest,
+  request: NextRequest,
   { params }: RouteParams,
 ): Promise<NextResponse> {
   const startTime = Date.now()
@@ -60,6 +61,9 @@ export async function POST(
   request: NextRequest,
   { params }: RouteParams,
 ): Promise<NextResponse> {
+  const authError = await requireAuth(request)
+  if (authError) return authError
+
   const startTime = Date.now()
   try {
     const { service } = await params

@@ -3,6 +3,7 @@ import { getProjectPath } from '@/lib/paths'
 import { promises as fs } from 'fs'
 import { NextRequest, NextResponse } from 'next/server'
 import path from 'path'
+import { requireAuth } from '@/lib/require-auth'
 
 /**
  * POST /api/config/import
@@ -10,6 +11,9 @@ import path from 'path'
  * Body: { environment: string, content: string, format: 'json' | 'yaml', preview?: boolean }
  */
 export async function POST(request: NextRequest): Promise<NextResponse> {
+  const authError = await requireAuth(request)
+  if (authError) return authError
+
   try {
     const body = await request.json()
     const { environment, content, format, preview } = body

@@ -7,6 +7,7 @@ import { getDb } from '@/lib/database'
 import { exec } from 'child_process'
 import { NextRequest, NextResponse } from 'next/server'
 import { promisify } from 'util'
+import { requireAuth } from '@/lib/require-auth'
 
 const execPromise = promisify(exec)
 
@@ -19,9 +20,12 @@ function getJobsCollection() {
 }
 
 export async function POST(
-  _request: NextRequest,
+  request: NextRequest,
   { params }: { params: Promise<{ id: string }> },
 ): Promise<NextResponse> {
+  const authError = await requireAuth(request)
+  if (authError) return authError
+
   const { id } = await params
 
   try {

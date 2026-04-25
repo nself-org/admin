@@ -1,7 +1,8 @@
 import { getProjectPath } from '@/lib/paths'
 import { exec } from 'child_process'
-import { NextResponse } from 'next/server'
+import { NextResponse, NextRequest } from 'next/server'
 import { promisify } from 'util'
+import { requireAuth } from '@/lib/require-auth'
 
 const execAsync = promisify(exec)
 
@@ -32,7 +33,10 @@ export async function GET(): Promise<NextResponse> {
   }
 }
 
-export async function POST(request: Request): Promise<NextResponse> {
+export async function POST(request: NextRequest): Promise<NextResponse> {
+  const authError = await requireAuth(request)
+  if (authError) return authError
+
   try {
     const body = await request.json()
     const { action, environment, options = {} } = body

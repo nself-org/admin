@@ -9,6 +9,7 @@ import { validateSessionToken } from '@/lib/auth-db'
 import { isMultiUserEnabled } from '@/lib/feature-flags'
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
+import { requireAuth } from '@/lib/require-auth'
 
 const AUTH_URL = process.env.NSELF_AUTH_URL || ''
 
@@ -18,6 +19,9 @@ const inviteSchema = z.object({
 })
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
+  const authError = await requireAuth(request)
+  if (authError) return authError
+
   if (!isMultiUserEnabled()) {
     return NextResponse.json(
       {

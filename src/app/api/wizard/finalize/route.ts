@@ -1,7 +1,13 @@
 import { readEnvFile, writeEnvFile } from '@/lib/env-handler'
 import { NextRequest, NextResponse } from 'next/server'
+import { requireAuthPreSetup, requireWizardNotComplete } from '@/lib/require-auth'
 
-export async function POST(_request: NextRequest): Promise<NextResponse> {
+export async function POST(request: NextRequest): Promise<NextResponse> {
+  const authError = await requireAuthPreSetup(request)
+  if (authError) return authError
+  const wizardError = await requireWizardNotComplete(request)
+  if (wizardError) return wizardError
+
   try {
     // Read the current env file
     const currentEnv = await readEnvFile()

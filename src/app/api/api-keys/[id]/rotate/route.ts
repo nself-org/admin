@@ -1,5 +1,6 @@
 import * as apiKeysApi from '@/lib/api-keys'
 import { NextRequest, NextResponse } from 'next/server'
+import { requireAuth } from '@/lib/require-auth'
 
 interface RouteParams {
   params: Promise<{ id: string }>
@@ -11,9 +12,12 @@ interface RouteParams {
  * Returns the new secret key (one-time only)
  */
 export async function POST(
-  _request: NextRequest,
+  request: NextRequest,
   { params }: RouteParams,
 ): Promise<NextResponse> {
+  const authError = await requireAuth(request)
+  if (authError) return authError
+
   try {
     const { id } = await params
     const result = await apiKeysApi.rotateApiKey(id)

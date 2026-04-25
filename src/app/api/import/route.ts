@@ -5,6 +5,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import os from 'os'
 import path from 'path'
 import { promisify } from 'util'
+import { requireAuth } from '@/lib/require-auth'
 
 const execAsync = promisify(exec)
 
@@ -19,6 +20,9 @@ const execAsync = promisify(exec)
  * then returns the result and cleans up the temp file.
  */
 export async function POST(request: NextRequest): Promise<NextResponse> {
+  const authError = await requireAuth(request)
+  if (authError) return authError
+
   let tmpPath: string | null = null
 
   try {

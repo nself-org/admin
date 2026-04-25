@@ -9,6 +9,7 @@
 
 import { getDb } from '@/lib/database'
 import { NextRequest, NextResponse } from 'next/server'
+import { requireAuth } from '@/lib/require-auth'
 
 function getJobsCollection() {
   const db = getDb()
@@ -20,7 +21,7 @@ function getJobsCollection() {
   )
 }
 
-export async function GET(_request: NextRequest): Promise<NextResponse> {
+export async function GET(request: NextRequest): Promise<NextResponse> {
   try {
     const col = getJobsCollection()
     const jobs = col
@@ -52,6 +53,9 @@ export async function GET(_request: NextRequest): Promise<NextResponse> {
 }
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
+  const authError = await requireAuth(request)
+  if (authError) return authError
+
   try {
     const body = (await request.json()) as {
       name?: string

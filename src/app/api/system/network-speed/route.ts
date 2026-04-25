@@ -1,8 +1,9 @@
 import { exec } from 'child_process'
 import fs from 'fs/promises'
-import { NextResponse } from 'next/server'
+import { NextResponse, NextRequest } from 'next/server'
 import path from 'path'
 import { promisify } from 'util'
+import { requireAuth } from '@/lib/require-auth'
 
 const execAsync = promisify(exec)
 
@@ -212,7 +213,10 @@ export async function GET(): Promise<NextResponse> {
 }
 
 // POST endpoint to save ISP speed from actual speed tests
-export async function POST(request: Request): Promise<NextResponse> {
+export async function POST(request: NextRequest): Promise<NextResponse> {
+  const authError = await requireAuth(request)
+  if (authError) return authError
+
   try {
     const data = await request.json()
     const { ispSpeed } = data

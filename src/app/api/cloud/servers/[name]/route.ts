@@ -5,6 +5,7 @@ import type { CloudServer } from '@/types/cloud'
 import { execFile } from 'child_process'
 import { NextRequest, NextResponse } from 'next/server'
 import { promisify } from 'util'
+import { requireAuth } from '@/lib/require-auth'
 
 const execFileAsync = promisify(execFile)
 
@@ -24,7 +25,7 @@ interface RouteParams {
  * Executes: nself cloud server status {name} --json
  */
 export async function GET(
-  _request: NextRequest,
+  request: NextRequest,
   { params }: RouteParams,
 ): Promise<NextResponse> {
   const startTime = Date.now()
@@ -108,9 +109,12 @@ export async function GET(
  * Executes: nself cloud server destroy {name}
  */
 export async function DELETE(
-  _request: NextRequest,
+  request: NextRequest,
   { params }: RouteParams,
 ): Promise<NextResponse> {
+  const authError = await requireAuth(request)
+  if (authError) return authError
+
   const startTime = Date.now()
   const { name } = await params
 

@@ -5,15 +5,19 @@
 import { removeProject } from '@/features/project-picker/project-picker'
 import type { ProjectPickerError } from '@/features/project-picker/types'
 import { NextRequest, NextResponse } from 'next/server'
+import { requireAuth } from '@/lib/require-auth'
 
 interface RouteParams {
   params: Promise<{ id: string }>
 }
 
 export async function DELETE(
-  _request: NextRequest,
+  request: NextRequest,
   { params }: RouteParams,
 ): Promise<NextResponse> {
+  const authError = await requireAuth(request)
+  if (authError) return authError
+
   const { id } = await params
 
   if (typeof id !== 'string' || id.trim().length === 0) {

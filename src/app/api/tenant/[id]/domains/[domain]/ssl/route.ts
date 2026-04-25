@@ -1,6 +1,7 @@
 import { provisionSSLCertificate } from '@/lib/tenant/ssl-automation'
 import { enforceTenantContext } from '@/lib/tenant/tenant-middleware'
 import { NextRequest, NextResponse } from 'next/server'
+import { requireAuth } from '@/lib/require-auth'
 
 interface RouteParams {
   params: Promise<{ id: string; domain: string }>
@@ -10,6 +11,9 @@ export async function POST(
   request: NextRequest,
   { params }: RouteParams,
 ): Promise<NextResponse> {
+  const authError = await requireAuth(request)
+  if (authError) return authError
+
   try {
     const { id, domain } = await params
     const decodedDomain = decodeURIComponent(domain)

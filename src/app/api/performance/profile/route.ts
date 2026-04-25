@@ -2,9 +2,10 @@ import { logger } from '@/lib/logger'
 import { executeNselfCommand } from '@/lib/nselfCLI'
 import type { PerformanceProfile } from '@/types/performance'
 import { NextRequest, NextResponse } from 'next/server'
+import { requireAuth } from '@/lib/require-auth'
 
 // GET /api/performance/profile - Get system-wide performance profile
-export async function GET(_request: NextRequest): Promise<NextResponse> {
+export async function GET(request: NextRequest): Promise<NextResponse> {
   const startTime = Date.now()
 
   try {
@@ -60,6 +61,9 @@ export async function GET(_request: NextRequest): Promise<NextResponse> {
 
 // POST /api/performance/profile - Profile specific service
 export async function POST(request: NextRequest): Promise<NextResponse> {
+  const authError = await requireAuth(request)
+  if (authError) return authError
+
   const startTime = Date.now()
 
   try {

@@ -10,7 +10,8 @@
 // All handlers return HTTP 404 with a structured error body so callers get a
 // machine-parseable signal instead of a 500 from a non-existent CLI command.
 
-import { NextResponse } from 'next/server'
+import { NextResponse, NextRequest } from 'next/server'
+import { requireAuth } from '@/lib/require-auth'
 
 const NOT_AVAILABLE = NextResponse.json(
   {
@@ -26,14 +27,23 @@ export async function GET(): Promise<NextResponse> {
   return NOT_AVAILABLE
 }
 
-export async function POST(): Promise<NextResponse> {
+export async function POST(request: NextRequest): Promise<NextResponse> {
+  const authError = await requireAuth(request)
+  if (authError) return authError
+
   return NOT_AVAILABLE
 }
 
-export async function PATCH(): Promise<NextResponse> {
+export async function PATCH(request: NextRequest): Promise<NextResponse> {
+  const authError = await requireAuth(request)
+  if (authError) return authError
+
   return NOT_AVAILABLE
 }
 
-export async function DELETE(): Promise<NextResponse> {
+export async function DELETE(request: NextRequest): Promise<NextResponse> {
+  const authError = await requireAuth(request)
+  if (authError) return authError
+
   return NOT_AVAILABLE
 }

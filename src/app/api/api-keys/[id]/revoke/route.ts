@@ -1,5 +1,6 @@
 import * as apiKeysApi from '@/lib/api-keys'
 import { NextRequest, NextResponse } from 'next/server'
+import { requireAuth } from '@/lib/require-auth'
 
 interface RouteParams {
   params: Promise<{ id: string }>
@@ -10,9 +11,12 @@ interface RouteParams {
  * This sets the key status to 'revoked', making it permanently unusable.
  */
 export async function POST(
-  _request: NextRequest,
+  request: NextRequest,
   { params }: RouteParams,
 ): Promise<NextResponse> {
+  const authError = await requireAuth(request)
+  if (authError) return authError
+
   try {
     const { id } = await params
     const revoked = await apiKeysApi.revokeApiKey(id)

@@ -1,5 +1,6 @@
 import { autoUpdater } from '@/lib/updater'
-import { NextResponse } from 'next/server'
+import { NextResponse, NextRequest } from 'next/server'
+import { requireAuth } from '@/lib/require-auth'
 
 export async function GET(): Promise<NextResponse> {
   try {
@@ -25,7 +26,10 @@ export async function GET(): Promise<NextResponse> {
   }
 }
 
-export async function POST(request: Request): Promise<NextResponse> {
+export async function POST(request: NextRequest): Promise<NextResponse> {
+  const authError = await requireAuth(request)
+  if (authError) return authError
+
   try {
     const body = await request.json()
     const { version, autoCheck } = body

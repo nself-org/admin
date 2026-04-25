@@ -3,6 +3,7 @@ import { getProjectPath } from '@/lib/paths'
 import { existsSync } from 'fs'
 import { NextRequest, NextResponse } from 'next/server'
 import { join } from 'path'
+import { requireAuthPreSetup, requireWizardNotComplete } from '@/lib/require-auth'
 
 interface ValidationIssue {
   field: string
@@ -11,6 +12,11 @@ interface ValidationIssue {
 }
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
+  const authError = await requireAuthPreSetup(request)
+  if (authError) return authError
+  const wizardError = await requireWizardNotComplete(request)
+  if (wizardError) return wizardError
+
   try {
     const { config: _config } = await request.json()
     const issues: ValidationIssue[] = []

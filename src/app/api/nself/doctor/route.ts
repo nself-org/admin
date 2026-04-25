@@ -3,13 +3,17 @@ import { getProjectPath } from '@/lib/paths'
 import { execFile } from 'child_process'
 import { NextRequest, NextResponse } from 'next/server'
 import { promisify } from 'util'
+import { requireAuth } from '@/lib/require-auth'
 
 const execFileAsync = promisify(execFile)
 
-export async function POST(_request: NextRequest): Promise<NextResponse> {
+export async function POST(request: NextRequest): Promise<NextResponse> {
+  const authError = await requireAuth(request)
+  if (authError) return authError
+
   try {
     const projectPath = getProjectPath()
-    const body = await _request.json().catch(() => ({}))
+    const body = await request.json().catch(() => ({}))
     const shouldFix = body.fix === true
 
     // Run nself doctor command using secure CLI wrapper

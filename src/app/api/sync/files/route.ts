@@ -4,10 +4,14 @@ import { getProjectPath } from '@/lib/paths'
 import { exec } from 'child_process'
 import { NextRequest, NextResponse } from 'next/server'
 import { promisify } from 'util'
+import { requireAuth } from '@/lib/require-auth'
 
 const execAsync = promisify(exec)
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
+  const authError = await requireAuth(request)
+  if (authError) return authError
+
   const startTime = Date.now()
   try {
     const projectPath = getProjectPath()

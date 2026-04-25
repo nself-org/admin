@@ -1,11 +1,15 @@
 import { executeNselfCommand } from '@/lib/nselfCLI'
 import { NextRequest, NextResponse } from 'next/server'
+import { requireAuth } from '@/lib/require-auth'
 
 /**
  * DELETE /api/services/functions/delete?name=<fn>
  * Deletes a deployed function via `nself functions delete <name> --confirm`
  */
 export async function DELETE(request: NextRequest): Promise<NextResponse> {
+  const authError = await requireAuth(request)
+  if (authError) return authError
+
   try {
     const { searchParams } = new URL(request.url)
     const name = searchParams.get('name') ?? ''

@@ -1,5 +1,6 @@
 import { executeNselfCommand } from '@/lib/nselfCLI'
 import { NextRequest, NextResponse } from 'next/server'
+import { requireAuth } from '@/lib/require-auth'
 
 const VALID_ID_PATTERN = /^[a-zA-Z0-9_-]+$/
 
@@ -9,6 +10,9 @@ const VALID_ID_PATTERN = /^[a-zA-Z0-9_-]+$/
  * Body: { id: string }
  */
 export async function POST(request: NextRequest): Promise<NextResponse> {
+  const authError = await requireAuth(request)
+  if (authError) return authError
+
   try {
     const body = await request.json()
     const { id } = body as { id?: string }

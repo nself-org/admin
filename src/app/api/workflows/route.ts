@@ -1,6 +1,7 @@
 import * as workflowsApi from '@/lib/workflows'
 import type { WorkflowStatus } from '@/types/workflow'
 import { NextRequest, NextResponse } from 'next/server'
+import { requireAuth } from '@/lib/require-auth'
 
 /**
  * GET /api/workflows
@@ -43,6 +44,9 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
  * Create a new workflow
  */
 export async function POST(request: NextRequest): Promise<NextResponse> {
+  const authError = await requireAuth(request)
+  if (authError) return authError
+
   try {
     const body = await request.json()
 

@@ -2,9 +2,10 @@ import { findNselfPath } from '@/lib/nself-path'
 import { getProjectPath } from '@/lib/paths'
 import { execFile, spawn } from 'child_process'
 import { promises as fs } from 'fs'
-import { NextResponse } from 'next/server'
+import { NextResponse, NextRequest } from 'next/server'
 import path from 'path'
 import { promisify } from 'util'
+import { requireAuth } from '@/lib/require-auth'
 
 const execFileAsync = promisify(execFile)
 
@@ -14,7 +15,10 @@ const execFileAsync = promisify(execFile)
  *
  * Delegates to: nself ssl bootstrap (if available) or runs mkcert directly
  */
-export async function POST(): Promise<Response | NextResponse> {
+export async function POST(request: NextRequest): Promise<Response | NextResponse> {
+  const authError = await requireAuth(request)
+  if (authError) return authError
+
   try {
     const projectPath = getProjectPath()
 

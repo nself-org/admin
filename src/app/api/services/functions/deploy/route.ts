@@ -1,5 +1,6 @@
 import { executeNselfCommand } from '@/lib/nselfCLI'
 import { NextRequest, NextResponse } from 'next/server'
+import { requireAuth } from '@/lib/require-auth'
 
 interface DeployBody {
   /** Path to the function file or directory (relative to project root). */
@@ -16,6 +17,9 @@ interface DeployBody {
  * Deploys a function via `nself functions deploy <path> [--name] [--runtime]`
  */
 export async function POST(request: NextRequest): Promise<NextResponse> {
+  const authError = await requireAuth(request)
+  if (authError) return authError
+
   try {
     const body = (await request.json().catch(() => ({}))) as Partial<DeployBody>
     const { path, name, runtime } = body

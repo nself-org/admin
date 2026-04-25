@@ -5,10 +5,16 @@ import { promises as fs } from 'fs'
 import { NextRequest, NextResponse } from 'next/server'
 import path from 'path'
 import { promisify } from 'util'
+import { requireAuthPreSetup, requireWizardNotComplete } from '@/lib/require-auth'
 
 const execAsync = promisify(exec)
 
-export async function POST(_req: NextRequest): Promise<NextResponse> {
+export async function POST(req: NextRequest): Promise<NextResponse> {
+  const authError = await requireAuthPreSetup(req)
+  if (authError) return authError
+  const wizardError = await requireWizardNotComplete(req)
+  if (wizardError) return wizardError
+
   try {
     // Get project path using centralized resolution
     const absoluteProjectPath = getProjectPath()

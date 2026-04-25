@@ -11,13 +11,14 @@
 
 import { logger } from '@/lib/logger'
 import { NextRequest, NextResponse } from 'next/server'
+import { requireAuth } from '@/lib/require-auth'
 
 const MARKETPLACE_BASE =
   process.env.NSELF_MARKETPLACE_URL?.replace(/\/marketplace\/?$/, '') ||
   'https://plugins.nself.org'
 const RATINGS_URL = `${MARKETPLACE_BASE}/ratings`
 
-export async function GET(_request: NextRequest): Promise<NextResponse> {
+export async function GET(request: NextRequest): Promise<NextResponse> {
   const startTime = Date.now()
   try {
     const controller = new AbortController()
@@ -52,6 +53,9 @@ export async function GET(_request: NextRequest): Promise<NextResponse> {
 }
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
+  const authError = await requireAuth(request)
+  if (authError) return authError
+
   const startTime = Date.now()
   let body: unknown
   try {

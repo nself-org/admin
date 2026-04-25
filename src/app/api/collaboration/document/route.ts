@@ -10,6 +10,7 @@ import {
 } from '@/lib/database'
 import { emitDocumentEdit } from '@/lib/websocket/emitters'
 import { NextRequest, NextResponse } from 'next/server'
+import { requireAuth } from '@/lib/require-auth'
 
 /**
  * GET /api/collaboration/document - Get document state
@@ -56,6 +57,9 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
  * POST /api/collaboration/document - Apply operation to document
  */
 export async function POST(request: NextRequest): Promise<NextResponse> {
+  const authError = await requireAuth(request)
+  if (authError) return authError
+
   try {
     const body = await request.json()
     const {

@@ -1,7 +1,8 @@
 // Multi-user Roles API — NOT available in v1.0.9.
 // See /api/auth/roles/route.ts for full explanation.
 
-import { NextResponse } from 'next/server'
+import { NextResponse, NextRequest } from 'next/server'
+import { requireAuth } from '@/lib/require-auth'
 
 const NOT_AVAILABLE = NextResponse.json(
   {
@@ -13,6 +14,9 @@ const NOT_AVAILABLE = NextResponse.json(
   { status: 404 },
 )
 
-export async function POST(): Promise<NextResponse> {
+export async function POST(request: NextRequest): Promise<NextResponse> {
+  const authError = await requireAuth(request)
+  if (authError) return authError
+
   return NOT_AVAILABLE
 }

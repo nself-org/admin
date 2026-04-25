@@ -1,5 +1,6 @@
 import { getActiveProject } from '@/features/project-picker/project-picker'
-import { NextResponse } from 'next/server'
+import { NextResponse, NextRequest } from 'next/server'
+import { requireAuth } from '@/lib/require-auth'
 
 interface PromotionStepResult {
   stage: 'diff' | 'preflight' | 'deploy' | 'verify' | 'done'
@@ -16,7 +17,10 @@ interface PromotionStepResult {
  * CLI; this route just orchestrates the step lifecycle and returns structured
  * progress for the UI.
  */
-export async function POST() {
+export async function POST(request: NextRequest) {
+  const authError = await requireAuth(request)
+  if (authError) return authError
+
   try {
     const project = await getActiveProject()
     if (project === null) {

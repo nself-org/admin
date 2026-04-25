@@ -4,8 +4,12 @@ import { emitBuildProgress } from '@/lib/websocket/emitters'
 import fs from 'fs/promises'
 import { NextRequest, NextResponse } from 'next/server'
 import path from 'path'
+import { requireAuth } from '@/lib/require-auth'
 
-export async function POST(_request: NextRequest): Promise<NextResponse> {
+export async function POST(request: NextRequest): Promise<NextResponse> {
+  const authError = await requireAuth(request)
+  if (authError) return authError
+
   try {
     // Get the actual backend project path where we want to build
     const backendProjectPath = getProjectPath()

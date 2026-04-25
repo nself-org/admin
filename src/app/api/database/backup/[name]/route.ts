@@ -1,13 +1,14 @@
 import { logger } from '@/lib/logger'
 import { NextRequest, NextResponse } from 'next/server'
 import path from 'path'
+import { requireAuth } from '@/lib/require-auth'
 
 /**
  * GET /api/database/backup/[name] - Download a backup file
  * Streams the backup file for download
  */
 export async function GET(
-  _request: Request,
+  request: NextRequest,
   { params }: { params: Promise<{ name: string }> },
 ): Promise<NextResponse> {
   const startTime = Date.now()
@@ -122,9 +123,12 @@ export async function GET(
  * DELETE /api/database/backup/[name] - Delete a backup file
  */
 export async function DELETE(
-  _request: NextRequest,
+  request: NextRequest,
   { params }: { params: Promise<{ name: string }> },
 ): Promise<NextResponse> {
+  const authError = await requireAuth(request)
+  if (authError) return authError
+
   const startTime = Date.now()
 
   try {

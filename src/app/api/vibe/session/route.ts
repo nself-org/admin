@@ -9,6 +9,7 @@
 
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
+import { requireAuth } from '@/lib/require-auth'
 
 const VIBE_ENABLED = process.env.NSELF_VIBE_ENABLED === 'true'
 const VIBE_API_PORT = process.env.NSELF_VIBE_PORT ?? '8003'
@@ -18,6 +19,9 @@ const CreateSessionSchema = z.object({
 })
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
+  const authError = await requireAuth(request)
+  if (authError) return authError
+
   if (!VIBE_ENABLED) {
     return NextResponse.json(
       { error: 'Vibe-Code is disabled. Set NSELF_VIBE_ENABLED=true.' },
@@ -92,7 +96,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   }
 }
 
-export async function GET(_request: NextRequest): Promise<NextResponse> {
+export async function GET(request: NextRequest): Promise<NextResponse> {
   if (!VIBE_ENABLED) {
     return NextResponse.json({ sessions: [], total: 0 })
   }

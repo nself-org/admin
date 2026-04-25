@@ -1,5 +1,6 @@
 import { executeNselfCommand } from '@/lib/nselfCLI'
 import { NextRequest, NextResponse } from 'next/server'
+import { requireAuth } from '@/lib/require-auth'
 
 /**
  * GET /api/config/secrets
@@ -65,6 +66,9 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
  * Set a secret by wrapping `nself config secrets set [key] [value]`
  */
 export async function POST(request: NextRequest): Promise<NextResponse> {
+  const authError = await requireAuth(request)
+  if (authError) return authError
+
   try {
     const body = await request.json()
     const { key, value, env } = body as {

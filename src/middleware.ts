@@ -36,8 +36,7 @@ const PUBLIC_ROUTES = [
   '/api/auth/validate-session', // Allow session validation from middleware
   '/api/health',
   '/api/project/status', // Allow checking project status without auth
-  '/api/wizard', // Allow all wizard endpoints
-  '/api/env/read', // Allow reading env during wizard
+  '/api/wizard', // Allow all wizard endpoints (pre-setup; route handlers enforce requireAuthPreSetup)
   '/_next',
   '/favicon.ico',
   '/site.webmanifest',

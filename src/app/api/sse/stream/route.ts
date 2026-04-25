@@ -5,6 +5,7 @@
 
 import { getSSEManager } from '@/services/SSEManager'
 import { NextRequest } from 'next/server'
+import { requireAuth } from '@/lib/require-auth'
 
 // Initialize SSE manager on module load
 const sseManager = getSSEManager()
@@ -17,7 +18,7 @@ async function ensureInitialized() {
   await initPromise
 }
 
-export async function GET(_request: NextRequest): Promise<Response> {
+export async function GET(request: NextRequest): Promise<Response> {
   // Ensure SSE manager is initialized
   await ensureInitialized()
 
@@ -39,7 +40,10 @@ export async function GET(_request: NextRequest): Promise<Response> {
 }
 
 // Handle POST for manual refresh
-export async function POST(): Promise<Response> {
+export async function POST(request: NextRequest): Promise<Response> {
+  const authError = await requireAuth(request)
+  if (authError) return authError
+
   await ensureInitialized()
   await sseManager.refresh()
 

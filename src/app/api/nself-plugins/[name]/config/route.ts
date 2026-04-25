@@ -1,4 +1,5 @@
-import { NextResponse } from 'next/server'
+import { NextResponse, NextRequest } from 'next/server'
+import { requireAuth } from '@/lib/require-auth'
 
 /**
  * Read/write plugin-scoped env vars. In a future sprint this will call
@@ -7,7 +8,7 @@ import { NextResponse } from 'next/server'
  */
 
 export async function GET(
-  _req: Request,
+  request: NextRequest,
   context: { params: Promise<{ name: string }> },
 ) {
   const { name } = await context.params
@@ -32,15 +33,18 @@ export async function GET(
 }
 
 export async function PUT(
-  req: Request,
+  request: NextRequest,
   context: { params: Promise<{ name: string }> },
 ) {
+  const authError = await requireAuth(request)
+  if (authError) return authError
+
   const { name } = await context.params
   if (!/^[a-z0-9-]+$/.test(name)) {
     return NextResponse.json({ error: 'Invalid plugin name.' }, { status: 400 })
   }
   try {
-    const body = (await req.json()) as { env: Record<string, string> }
+    const body = (await request.json()) as { env: Record<string, string> }
     if (typeof body.env !== 'object' || body.env === null) {
       return NextResponse.json(
         { error: 'env must be an object.' },

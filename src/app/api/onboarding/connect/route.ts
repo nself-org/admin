@@ -1,4 +1,5 @@
-import { NextResponse } from 'next/server'
+import { NextResponse, NextRequest } from 'next/server'
+import { requireAuth } from '@/lib/require-auth'
 
 interface ConnectBody {
   url: string
@@ -10,7 +11,10 @@ interface HealthResponse {
   [key: string]: unknown
 }
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
+  const authError = await requireAuth(request)
+  if (authError) return authError
+
   try {
     const body = (await request.json()) as ConnectBody
     const { url, apiKey } = body

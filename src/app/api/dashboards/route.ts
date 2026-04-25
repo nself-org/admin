@@ -1,5 +1,6 @@
 import * as dashboardsApi from '@/lib/dashboards'
 import { NextRequest, NextResponse } from 'next/server'
+import { requireAuth } from '@/lib/require-auth'
 
 export async function GET(request: NextRequest): Promise<NextResponse> {
   try {
@@ -25,6 +26,9 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 }
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
+  const authError = await requireAuth(request)
+  if (authError) return authError
+
   try {
     const body = await request.json()
 

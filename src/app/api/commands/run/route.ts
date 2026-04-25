@@ -3,6 +3,7 @@ import { getProjectPath } from '@/lib/paths'
 import { execFile } from 'child_process'
 import { NextRequest, NextResponse } from 'next/server'
 import { promisify } from 'util'
+import { requireAuth } from '@/lib/require-auth'
 
 import type {
   RunCommandRequest,
@@ -104,6 +105,9 @@ function buildFlagArgs(flags: Record<string, string | boolean>): string[] {
 // ---------------------------------------------------------------------------
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
+  const authError = await requireAuth(request)
+  if (authError) return authError
+
   let body: RunCommandRequest
   try {
     body = (await request.json()) as RunCommandRequest

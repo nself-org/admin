@@ -1,5 +1,6 @@
 import * as reports from '@/lib/reports'
 import { NextRequest, NextResponse } from 'next/server'
+import { requireAuth } from '@/lib/require-auth'
 
 // GET /api/reports/schedules - List all report schedules
 export async function GET(request: NextRequest): Promise<NextResponse> {
@@ -34,6 +35,9 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 
 // POST /api/reports/schedules - Create a new schedule
 export async function POST(request: NextRequest): Promise<NextResponse> {
+  const authError = await requireAuth(request)
+  if (authError) return authError
+
   try {
     const body = await request.json()
 

@@ -1,5 +1,6 @@
 import * as reports from '@/lib/reports'
 import { NextRequest, NextResponse } from 'next/server'
+import { requireAuth } from '@/lib/require-auth'
 
 interface RouteContext {
   params: Promise<{ id: string }>
@@ -7,7 +8,7 @@ interface RouteContext {
 
 // GET /api/reports/schedules/[id] - Get a single schedule
 export async function GET(
-  _request: NextRequest,
+  request: NextRequest,
   context: RouteContext,
 ): Promise<NextResponse> {
   try {
@@ -43,6 +44,9 @@ export async function PATCH(
   request: NextRequest,
   context: RouteContext,
 ): Promise<NextResponse> {
+  const authError = await requireAuth(request)
+  if (authError) return authError
+
   try {
     const { id } = await context.params
     const body = await request.json()
@@ -106,9 +110,12 @@ export async function PATCH(
 
 // DELETE /api/reports/schedules/[id] - Delete a schedule
 export async function DELETE(
-  _request: NextRequest,
+  request: NextRequest,
   context: RouteContext,
 ): Promise<NextResponse> {
+  const authError = await requireAuth(request)
+  if (authError) return authError
+
   try {
     const { id } = await context.params
 

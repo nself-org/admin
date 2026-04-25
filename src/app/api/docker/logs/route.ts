@@ -1,6 +1,7 @@
 import { execFile, spawn } from 'child_process'
 import { NextRequest, NextResponse } from 'next/server'
 import { promisify } from 'util'
+import { requireAuth } from '@/lib/require-auth'
 
 const execFileAsync = promisify(execFile)
 
@@ -147,6 +148,9 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 
 // Clear logs (requires write access to Docker)
 export async function DELETE(request: NextRequest): Promise<NextResponse> {
+  const authError = await requireAuth(request)
+  if (authError) return authError
+
   try {
     const searchParams = request.nextUrl.searchParams
     const containerIdRaw = searchParams.get('container')

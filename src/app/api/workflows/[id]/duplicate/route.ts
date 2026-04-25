@@ -1,5 +1,6 @@
 import * as workflowsApi from '@/lib/workflows'
 import { NextRequest, NextResponse } from 'next/server'
+import { requireAuth } from '@/lib/require-auth'
 
 interface RouteParams {
   params: Promise<{ id: string }>
@@ -13,6 +14,9 @@ export async function POST(
   request: NextRequest,
   { params }: RouteParams,
 ): Promise<NextResponse> {
+  const authError = await requireAuth(request)
+  if (authError) return authError
+
   try {
     const { id } = await params
     const body = await request.json().catch(() => ({}))

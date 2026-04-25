@@ -9,6 +9,7 @@ import {
 } from '@/features/project-picker/project-picker'
 import type { ProjectPickerError } from '@/features/project-picker/types'
 import { NextRequest, NextResponse } from 'next/server'
+import { requireAuth } from '@/lib/require-auth'
 
 // Name: 1–63 chars, letters / digits / hyphens / underscores
 const SAFE_NAME_RE = /^[a-zA-Z0-9_-]{1,63}$/
@@ -41,6 +42,9 @@ export async function GET(): Promise<NextResponse> {
 // ---------------------------------------------------------------------------
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
+  const authError = await requireAuth(request)
+  if (authError) return authError
+
   let body: unknown
   try {
     body = await request.json()

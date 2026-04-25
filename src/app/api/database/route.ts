@@ -2,6 +2,7 @@
 // Direct pg.Client connections are forbidden per nSelf Hard Rule (App -> Hasura -> Postgres).
 import { executeNselfCommand } from '@/lib/nselfCLI'
 import { NextRequest, NextResponse } from 'next/server'
+import { requireAuth } from '@/lib/require-auth'
 
 // Valid PostgreSQL identifier pattern (table/schema names)
 const VALID_IDENTIFIER = /^[a-zA-Z_][a-zA-Z0-9_]*$/
@@ -158,6 +159,9 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 }
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
+  const authError = await requireAuth(request)
+  if (authError) return authError
+
   const body = await request.json()
   const { query, allowDangerous } = body
 

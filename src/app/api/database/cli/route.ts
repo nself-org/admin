@@ -8,12 +8,16 @@ import {
   nselfDbSync,
 } from '@/lib/nselfCLI'
 import { NextRequest, NextResponse } from 'next/server'
+import { requireAuth } from '@/lib/require-auth'
 
 /**
  * Database CLI operations - wraps nself db commands
  * All database management operations should go through nself CLI
  */
 export async function POST(request: NextRequest): Promise<NextResponse> {
+  const authError = await requireAuth(request)
+  if (authError) return authError
+
   try {
     const body = await request.json()
     const { action, options } = body

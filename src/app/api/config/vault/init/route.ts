@@ -1,11 +1,15 @@
 import { executeNselfCommand } from '@/lib/nselfCLI'
-import { NextResponse } from 'next/server'
+import { NextResponse, NextRequest } from 'next/server'
+import { requireAuth } from '@/lib/require-auth'
 
 /**
  * POST /api/config/vault/init
  * Initialize HashiCorp Vault by wrapping `nself config vault init`
  */
-export async function POST(): Promise<NextResponse> {
+export async function POST(request: NextRequest): Promise<NextResponse> {
+  const authError = await requireAuth(request)
+  if (authError) return authError
+
   try {
     const result = await executeNselfCommand('config', ['vault', 'init'], {
       timeout: 120000,

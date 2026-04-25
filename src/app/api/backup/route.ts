@@ -2,9 +2,10 @@ import { executeNselfCommand, nselfBackup, nselfRestore } from '@/lib/nselfCLI'
 import { isRateLimited } from '@/lib/rateLimiter'
 import { backupSchema, restoreSchema, validateRequest } from '@/lib/validation'
 import { NextRequest, NextResponse } from 'next/server'
+import { requireAuth } from '@/lib/require-auth'
 
 // List backups
-export async function GET(_request: NextRequest): Promise<NextResponse> {
+export async function GET(request: NextRequest): Promise<NextResponse> {
   try {
     const result = await executeNselfCommand('backup', ['list', '--json'])
 
@@ -66,6 +67,9 @@ export async function GET(_request: NextRequest): Promise<NextResponse> {
 
 // Create backup
 export async function POST(request: NextRequest): Promise<NextResponse> {
+  const authError = await requireAuth(request)
+  if (authError) return authError
+
   // Rate limiting for heavy operations
   if (isRateLimited(request, 'heavy')) {
     return NextResponse.json(
@@ -261,6 +265,9 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
 // Delete backup
 export async function DELETE(request: NextRequest): Promise<NextResponse> {
+  const authError = await requireAuth(request)
+  if (authError) return authError
+
   try {
     const { backupFile } = await request.json()
 

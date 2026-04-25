@@ -1,10 +1,14 @@
-import { NextResponse } from 'next/server'
+import { NextResponse, NextRequest } from 'next/server'
+import { requireAuth } from '@/lib/require-auth'
 
 /**
  * POST /api/plugins/github/sync
  * Triggers a sync of GitHub data (repos, issues, PRs, etc.)
  */
-export async function POST(): Promise<NextResponse> {
+export async function POST(request: NextRequest): Promise<NextResponse> {
+  const authError = await requireAuth(request)
+  if (authError) return authError
+
   try {
     // Mock sync - will be replaced with real GitHub API integration
     // This would:

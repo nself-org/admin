@@ -10,6 +10,7 @@ import fs from 'fs'
 import { NextRequest, NextResponse } from 'next/server'
 import os from 'os'
 import path from 'path'
+import { requireAuth } from '@/lib/require-auth'
 
 const AUTH_URL = process.env.NSELF_AUTH_URL || ''
 
@@ -29,6 +30,9 @@ export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> },
 ): Promise<NextResponse> {
+  const authError = await requireAuth(request)
+  if (authError) return authError
+
   const token = request.cookies.get('nself-session')?.value
   if (!token || !(await validateSessionToken(token))) {
     return NextResponse.json(

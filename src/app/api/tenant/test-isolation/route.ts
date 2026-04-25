@@ -8,12 +8,16 @@ import {
   cleanupTestData,
   generateTestTenantHierarchy,
 } from '@/lib/tenant/tenant-test-data'
-import { NextResponse } from 'next/server'
+import { NextResponse, NextRequest } from 'next/server'
+import { requireAuth } from '@/lib/require-auth'
 
 /**
  * Generate test data for tenant isolation testing
  */
-export async function POST(): Promise<NextResponse> {
+export async function POST(request: NextRequest): Promise<NextResponse> {
+  const authError = await requireAuth(request)
+  if (authError) return authError
+
   try {
     // Clean up any existing test data first
     await cleanupTestData()
@@ -128,7 +132,10 @@ export async function GET(): Promise<NextResponse> {
 /**
  * Clean up test data
  */
-export async function DELETE(): Promise<NextResponse> {
+export async function DELETE(request: NextRequest): Promise<NextResponse> {
+  const authError = await requireAuth(request)
+  if (authError) return authError
+
   try {
     await cleanupTestData()
 

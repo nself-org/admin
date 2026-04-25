@@ -1,6 +1,7 @@
 import { addConnection, loadConnections } from '@/features/remote/remote'
 import type { RemoteConnection, RemoteError } from '@/features/remote/types'
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
+import { requireAuth } from '@/lib/require-auth'
 
 export async function GET() {
   try {
@@ -12,9 +13,12 @@ export async function GET() {
   }
 }
 
-export async function POST(req: Request) {
+export async function POST(request: NextRequest) {
+  const authError = await requireAuth(request)
+  if (authError) return authError
+
   try {
-    const body = (await req.json()) as Omit<RemoteConnection, 'id'>
+    const body = (await request.json()) as Omit<RemoteConnection, 'id'>
     if (typeof body.name !== 'string' || body.name.trim().length === 0) {
       return NextResponse.json({ error: 'Name is required.' }, { status: 400 })
     }

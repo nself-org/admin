@@ -2,6 +2,7 @@ import { auth } from '@/lib/auth-db'
 import { logger } from '@/lib/logger'
 import * as notificationsApi from '@/lib/notifications'
 import { NextRequest, NextResponse } from 'next/server'
+import { requireAuth } from '@/lib/require-auth'
 
 /**
  * GET /api/notifications - Get notifications list
@@ -87,6 +88,9 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
  *   - actionLabel: string (optional)
  */
 export async function POST(request: NextRequest): Promise<NextResponse> {
+  const authError = await requireAuth(request)
+  if (authError) return authError
+
   const startTime = Date.now()
 
   try {
@@ -174,6 +178,9 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
  * DELETE /api/notifications - Delete all notifications
  */
 export async function DELETE(request: NextRequest): Promise<NextResponse> {
+  const authError = await requireAuth(request)
+  if (authError) return authError
+
   const startTime = Date.now()
 
   try {

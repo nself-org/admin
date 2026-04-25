@@ -2,6 +2,7 @@ import { ErrorCode } from '@/lib/errors/codes'
 import { executeDbQuery } from '@/lib/nselfCLI'
 import type { TableInfo } from '@/types/database'
 import { NextRequest, NextResponse } from 'next/server'
+import { requireAuth } from '@/lib/require-auth'
 
 export async function GET(request: NextRequest): Promise<NextResponse> {
   try {
@@ -119,6 +120,9 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 
 // Export schema as SQL
 export async function POST(request: NextRequest): Promise<NextResponse> {
+  const authError = await requireAuth(request)
+  if (authError) return authError
+
   try {
     const { table, format = 'sql' } = await request.json()
 

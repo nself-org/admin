@@ -1,5 +1,6 @@
 import { executeNselfCommand } from '@/lib/nselfCLI'
 import { NextRequest, NextResponse } from 'next/server'
+import { requireAuth } from '@/lib/require-auth'
 
 /**
  * POST /api/services/functions/invoke
@@ -7,6 +8,9 @@ import { NextRequest, NextResponse } from 'next/server'
  * Body: { name: string, payload?: string }
  */
 export async function POST(request: NextRequest): Promise<NextResponse> {
+  const authError = await requireAuth(request)
+  if (authError) return authError
+
   try {
     const body = await request.json()
     const { name, payload } = body as {

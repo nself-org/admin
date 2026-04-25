@@ -1,6 +1,7 @@
 import * as activityApi from '@/lib/activity'
 import type { ActivityFilter } from '@/types/activity'
 import { NextRequest, NextResponse } from 'next/server'
+import { requireAuth } from '@/lib/require-auth'
 
 /**
  * POST /api/activity/export - Export activities
@@ -18,6 +19,9 @@ import { NextRequest, NextResponse } from 'next/server'
  *   - search: Search query string
  */
 export async function POST(request: NextRequest): Promise<NextResponse> {
+  const authError = await requireAuth(request)
+  if (authError) return authError
+
   try {
     const body = await request.json()
     const format = body.format === 'csv' ? 'csv' : 'json'

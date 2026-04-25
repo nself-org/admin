@@ -3,6 +3,7 @@ import { getProjectPath } from '@/lib/paths'
 import fs from 'fs/promises'
 import { NextRequest, NextResponse } from 'next/server'
 import path from 'path'
+import { requireAuth } from '@/lib/require-auth'
 
 // Generate a basic docker-compose.yml based on env settings
 async function generateDockerCompose(config: any): Promise<string> {
@@ -198,7 +199,10 @@ ${volumes.map((v) => `  ${v}:`).join('\n')}
   return dockerCompose
 }
 
-export async function POST(_request: NextRequest): Promise<NextResponse> {
+export async function POST(request: NextRequest): Promise<NextResponse> {
+  const authError = await requireAuth(request)
+  if (authError) return authError
+
   try {
     // Get project path - use the same as other APIs
     const projectPath = getProjectPath()

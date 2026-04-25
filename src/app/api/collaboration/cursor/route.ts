@@ -11,6 +11,7 @@ import {
 } from '@/lib/database'
 import { emitCursorPosition, emitTextSelection } from '@/lib/websocket/emitters'
 import { NextRequest, NextResponse } from 'next/server'
+import { requireAuth } from '@/lib/require-auth'
 
 /**
  * GET /api/collaboration/cursor - Get cursors for document
@@ -52,6 +53,9 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
  * POST /api/collaboration/cursor - Update cursor position
  */
 export async function POST(request: NextRequest): Promise<NextResponse> {
+  const authError = await requireAuth(request)
+  if (authError) return authError
+
   try {
     const body = await request.json()
     const { userId, userName, documentId, position, selection, color } = body
@@ -126,6 +130,9 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
  * DELETE /api/collaboration/cursor - Remove cursor
  */
 export async function DELETE(request: NextRequest): Promise<NextResponse> {
+  const authError = await requireAuth(request)
+  if (authError) return authError
+
   try {
     const body = await request.json()
     const { userId, documentId } = body

@@ -5,13 +5,17 @@
  * Triggers the anti-sharing key detection cron on demand.
  */
 
-import { NextResponse } from 'next/server'
+import { NextResponse, NextRequest } from 'next/server'
+import { requireAuth } from '@/lib/require-auth'
 
 const PING_API_URL =
   process.env.NEXT_PUBLIC_PING_API_URL?.replace(/\/$/, '') ??
   'https://ping.nself.org'
 
-export async function POST(): Promise<NextResponse> {
+export async function POST(request: NextRequest): Promise<NextResponse> {
+  const authError = await requireAuth(request)
+  if (authError) return authError
+
   const adminSecret =
     process.env.HASURA_GRAPHQL_ADMIN_SECRET ?? process.env.ADMIN_SECRET ?? ''
 

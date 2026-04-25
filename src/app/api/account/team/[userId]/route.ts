@@ -8,6 +8,7 @@
 import { validateSessionToken } from '@/lib/auth-db'
 import { isMultiUserEnabled } from '@/lib/feature-flags'
 import { NextRequest, NextResponse } from 'next/server'
+import { requireAuth } from '@/lib/require-auth'
 
 const AUTH_URL = process.env.NSELF_AUTH_URL || ''
 
@@ -15,6 +16,9 @@ export async function DELETE(
   request: NextRequest,
   { params }: { params: Promise<{ userId: string }> },
 ): Promise<NextResponse> {
+  const authError = await requireAuth(request)
+  if (authError) return authError
+
   if (!isMultiUserEnabled()) {
     return NextResponse.json(
       {

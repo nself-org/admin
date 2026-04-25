@@ -7,6 +7,7 @@ import { EventType } from '@/lib/websocket/events'
 import { getWebSocketServer } from '@/lib/websocket/server'
 import { Server as HTTPServer } from 'http'
 import { NextRequest, NextResponse } from 'next/server'
+import { requireAuth } from '@/lib/require-auth'
 
 // Store the HTTP server instance
 let httpServer: HTTPServer | null = null
@@ -80,6 +81,9 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
  * POST endpoint - Emit event to connected clients
  */
 export async function POST(request: NextRequest): Promise<NextResponse> {
+  const authError = await requireAuth(request)
+  if (authError) return authError
+
   try {
     // Reject oversized request bodies (64 KB limit)
     const contentLength = request.headers.get('content-length')

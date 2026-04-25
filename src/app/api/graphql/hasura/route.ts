@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { requireAuth } from '@/lib/require-auth'
 
 const HASURA_ENDPOINT =
   process.env.HASURA_GRAPHQL_ENDPOINT || 'http://localhost:8080/v1/graphql'
@@ -109,6 +110,9 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 }
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
+  const authError = await requireAuth(request)
+  if (authError) return authError
+
   try {
     const body = await request.json()
     const { query, variables, action } = body

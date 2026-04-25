@@ -5,6 +5,7 @@ import type { Migration } from '@/types/database'
 import fs from 'fs/promises'
 import { NextRequest, NextResponse } from 'next/server'
 import path from 'path'
+import { requireAuth } from '@/lib/require-auth'
 
 export async function GET(): Promise<NextResponse> {
   try {
@@ -59,6 +60,9 @@ export async function GET(): Promise<NextResponse> {
 }
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
+  const authError = await requireAuth(request)
+  if (authError) return authError
+
   try {
     const { action, target } = await request.json()
 

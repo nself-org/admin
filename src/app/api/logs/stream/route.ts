@@ -2,6 +2,7 @@ import { streamNselfCommand } from '@/lib/nselfCLI'
 import { EventType, LogStreamEvent } from '@/lib/websocket/events'
 import { getWebSocketServer } from '@/lib/websocket/server'
 import { NextRequest, NextResponse } from 'next/server'
+import { requireAuth } from '@/lib/require-auth'
 
 /**
  * Parse log line to detect level
@@ -101,6 +102,9 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 
 // Get log history (non-streaming)
 export async function POST(request: NextRequest): Promise<NextResponse> {
+  const authError = await requireAuth(request)
+  if (authError) return authError
+
   try {
     const { service, lines = 100, since, until, grep } = await request.json()
 

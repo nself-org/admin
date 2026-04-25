@@ -1,5 +1,6 @@
 import * as workflowsApi from '@/lib/workflows'
 import { NextRequest, NextResponse } from 'next/server'
+import { requireAuth } from '@/lib/require-auth'
 
 interface RouteParams {
   params: Promise<{ id: string }>
@@ -10,9 +11,12 @@ interface RouteParams {
  * Cancel a running or pending workflow execution
  */
 export async function POST(
-  _request: NextRequest,
+  request: NextRequest,
   { params }: RouteParams,
 ): Promise<NextResponse> {
+  const authError = await requireAuth(request)
+  if (authError) return authError
+
   try {
     const { id } = await params
 

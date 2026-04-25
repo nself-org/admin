@@ -1,8 +1,9 @@
 import { execFile } from 'child_process'
 import { promises as fs } from 'fs'
-import { NextResponse } from 'next/server'
+import { NextResponse, NextRequest } from 'next/server'
 import path from 'path'
 import { promisify } from 'util'
+import { requireAuth } from '@/lib/require-auth'
 
 const execFileAsync = promisify(execFile)
 
@@ -90,7 +91,10 @@ export async function GET(): Promise<NextResponse> {
  *
  * Note: This requires elevated permissions and may prompt for password
  */
-export async function POST(): Promise<NextResponse> {
+export async function POST(request: NextRequest): Promise<NextResponse> {
+  const authError = await requireAuth(request)
+  if (authError) return authError
+
   try {
     // Check if mkcert is installed
     try {

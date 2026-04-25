@@ -2,8 +2,12 @@ import { executeNselfCommand } from '@/lib/nselfCLI'
 import { getRateLimitInfo, isRateLimited } from '@/lib/rateLimiter'
 import { databaseQuerySchema, validateRequest } from '@/lib/validation'
 import { NextRequest, NextResponse } from 'next/server'
+import { requireAuth } from '@/lib/require-auth'
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
+  const authError = await requireAuth(request)
+  if (authError) return authError
+
   // Rate limiting for heavy operations
   if (isRateLimited(request, 'heavy')) {
     const info = getRateLimitInfo(request, 'heavy')
@@ -92,7 +96,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 }
 
 // Get database list
-export async function GET(_request: NextRequest): Promise<NextResponse> {
+export async function GET(request: NextRequest): Promise<NextResponse> {
   try {
     // Get list of databases
     const result = await executeNselfCommand('db', ['list', '--json'])

@@ -1,6 +1,7 @@
 import js from '@eslint/js'
 import typescript from '@typescript-eslint/eslint-plugin'
 import typescriptParser from '@typescript-eslint/parser'
+import reactHooks from 'eslint-plugin-react-hooks'
 import security from 'eslint-plugin-security'
 
 export default [
@@ -61,6 +62,7 @@ export default [
     },
     plugins: {
       '@typescript-eslint': typescript,
+      'react-hooks': reactHooks,
       security: security,
     },
     rules: {
@@ -87,9 +89,9 @@ export default [
       'no-useless-escape': 'warn',
       'no-useless-catch': 'warn',
 
-      // Disable missing react-hooks rules (not configured in flat config)
-      'react-hooks/exhaustive-deps': 'off',
-      'react-hooks/rules-of-hooks': 'off',
+      // React Hooks rules
+      'react-hooks/rules-of-hooks': 'error',
+      'react-hooks/exhaustive-deps': 'warn',
 
       // Security rules
       'security/detect-object-injection': 'warn', // Too many false positives in TypeScript

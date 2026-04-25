@@ -243,6 +243,30 @@ export function ActivityTimeline({
     includeChanges: true,
   })
 
+  // Group activities by date if enabled
+  // Must be declared before early returns to satisfy rules-of-hooks
+  const groupedActivities = React.useMemo(() => {
+    if (!groupByDate) {
+      return [{ date: null, activities }]
+    }
+
+    const groups: { date: Date; activities: Activity[] }[] = []
+    let currentGroup: { date: Date; activities: Activity[] } | null = null
+
+    for (const activity of activities) {
+      const activityDate = new Date(activity.timestamp)
+
+      if (!currentGroup || !isSameDay(currentGroup.date, activityDate)) {
+        currentGroup = { date: activityDate, activities: [] }
+        groups.push(currentGroup)
+      }
+
+      currentGroup.activities.push(activity)
+    }
+
+    return groups
+  }, [activities, groupByDate])
+
   if (isLoading) {
     return <TimelineSkeleton />
   }
@@ -265,29 +289,6 @@ export function ActivityTimeline({
       </div>
     )
   }
-
-  // Group activities by date if enabled
-  const groupedActivities = React.useMemo(() => {
-    if (!groupByDate) {
-      return [{ date: null, activities }]
-    }
-
-    const groups: { date: Date; activities: Activity[] }[] = []
-    let currentGroup: { date: Date; activities: Activity[] } | null = null
-
-    for (const activity of activities) {
-      const activityDate = new Date(activity.timestamp)
-
-      if (!currentGroup || !isSameDay(currentGroup.date, activityDate)) {
-        currentGroup = { date: activityDate, activities: [] }
-        groups.push(currentGroup)
-      }
-
-      currentGroup.activities.push(activity)
-    }
-
-    return groups
-  }, [activities, groupByDate])
 
   return (
     <div className={cn('space-y-2', className)}>

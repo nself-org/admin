@@ -22,7 +22,9 @@ describe('hasura-client production startup guard', () => {
 
   beforeEach(() => {
     process.env = { ...originalEnv }
-    process.env.NODE_ENV = 'production'
+    // NODE_ENV is readonly in TypeScript's NodeJS.ProcessEnv definition.
+    // Cast to a mutable type for test setup — Jest relaxes this at runtime.
+    ;(process.env as { NODE_ENV: string }).NODE_ENV = 'production'
   })
 
   afterEach(() => {
@@ -89,7 +91,7 @@ describe('hasura-client production startup guard', () => {
 
   describe('development mode — guard is not enforced', () => {
     it('does not throw on empty secret in development', () => {
-      process.env.NODE_ENV = 'development'
+      ;(process.env as { NODE_ENV: string }).NODE_ENV = 'development'
       delete process.env.HASURA_GRAPHQL_ADMIN_SECRET
       // Guard only runs in production — development allows missing secret
       // so the dev environment can boot without full config.
@@ -97,7 +99,7 @@ describe('hasura-client production startup guard', () => {
     })
 
     it('does not throw on dev-stub value in development', () => {
-      process.env.NODE_ENV = 'development'
+      ;(process.env as { NODE_ENV: string }).NODE_ENV = 'development'
       process.env.HASURA_GRAPHQL_ADMIN_SECRET = 'hasura-admin-secret-dev'
       expect(() => freshModule()).not.toThrow()
     })

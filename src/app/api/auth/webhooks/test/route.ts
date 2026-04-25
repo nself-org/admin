@@ -1,6 +1,6 @@
 import { executeNselfCommand } from '@/lib/nselfCLI'
-import { NextRequest, NextResponse } from 'next/server'
 import { requireAuth } from '@/lib/require-auth'
+import { NextRequest, NextResponse } from 'next/server'
 
 const VALID_ID_PATTERN = /^[a-zA-Z0-9_-]+$/
 

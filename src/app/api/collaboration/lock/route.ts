@@ -4,10 +4,10 @@
  */
 
 import { getSession, lockDocument, unlockDocument } from '@/lib/database'
+import { requireAuth } from '@/lib/require-auth'
 import { emitDocumentLock } from '@/lib/websocket/emitters'
 import { cookies } from 'next/headers'
 import { NextRequest, NextResponse } from 'next/server'
-import { requireAuth } from '@/lib/require-auth'
 
 /**
  * POST /api/collaboration/lock - Lock or unlock document

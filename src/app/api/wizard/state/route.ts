@@ -1,6 +1,9 @@
 import { getDatabase } from '@/lib/database'
+import {
+  requireAuthPreSetup,
+  requireWizardNotComplete,
+} from '@/lib/require-auth'
 import { NextRequest, NextResponse } from 'next/server'
-import { requireAuthPreSetup, requireWizardNotComplete } from '@/lib/require-auth'
 
 // GET wizard state
 export async function GET(request: NextRequest): Promise<NextResponse> {

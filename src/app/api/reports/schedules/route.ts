@@ -1,6 +1,6 @@
 import * as reports from '@/lib/reports'
-import { NextRequest, NextResponse } from 'next/server'
 import { requireAuth } from '@/lib/require-auth'
+import { NextRequest, NextResponse } from 'next/server'
 
 // GET /api/reports/schedules - List all report schedules
 export async function GET(request: NextRequest): Promise<NextResponse> {

@@ -62,9 +62,7 @@ const customJestConfig = {
     '^@/(.*)$': '<rootDir>/src/$1',
   },
   // Allow next/jest SWC to transpile ESM-only unified/rehype packages
-  transformIgnorePatterns: [
-    `/node_modules/(?!(${esmPackages.join('|')})/)`,
-  ],
+  transformIgnorePatterns: [`/node_modules/(?!(${esmPackages.join('|')})/)`],
   testMatch: ['**/__tests__/**/*.test.ts?(x)', '**/*.test.ts?(x)'],
   collectCoverageFrom: [
     'src/**/*.{ts,tsx}',

@@ -10,8 +10,8 @@
  */
 
 import { logger } from '@/lib/logger'
-import { NextRequest, NextResponse } from 'next/server'
 import { requireAuth } from '@/lib/require-auth'
+import { NextRequest, NextResponse } from 'next/server'
 
 const MARKETPLACE_BASE =
   process.env.NSELF_MARKETPLACE_URL?.replace(/\/marketplace\/?$/, '') ||

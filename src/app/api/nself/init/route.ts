@@ -1,7 +1,7 @@
 import { nselfInit } from '@/lib/nselfCLI'
 import { getProjectPath } from '@/lib/paths'
-import { NextRequest, NextResponse } from 'next/server'
 import { requireAuth } from '@/lib/require-auth'
+import { NextRequest, NextResponse } from 'next/server'
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
   const authError = await requireAuth(request)

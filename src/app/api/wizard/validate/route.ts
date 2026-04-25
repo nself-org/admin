@@ -1,9 +1,12 @@
 import { readEnvFile } from '@/lib/env-handler'
 import { getProjectPath } from '@/lib/paths'
+import {
+  requireAuthPreSetup,
+  requireWizardNotComplete,
+} from '@/lib/require-auth'
 import { existsSync } from 'fs'
 import { NextRequest, NextResponse } from 'next/server'
 import { join } from 'path'
-import { requireAuthPreSetup, requireWizardNotComplete } from '@/lib/require-auth'
 
 interface ValidationIssue {
   field: string

@@ -10,8 +10,8 @@
 // CLI commands `nself auth roles list` and `nself auth roles create` do NOT exist
 // in v1.0.9. Do NOT revert to executeNselfCommand() calls here until they do.
 
-import { NextResponse, NextRequest } from 'next/server'
 import { requireAuth } from '@/lib/require-auth'
+import { NextRequest, NextResponse } from 'next/server'
 
 const NOT_AVAILABLE = NextResponse.json(
   {

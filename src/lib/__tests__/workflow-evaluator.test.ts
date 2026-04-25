@@ -14,7 +14,10 @@ import vm from 'vm'
 // We test the primitive directly rather than routing through the full LokiJS
 // workflow engine, keeping the test fast and isolated.
 
-function evalInSandbox(expr: string, context: Record<string, unknown>): unknown {
+function evalInSandbox(
+  expr: string,
+  context: Record<string, unknown>,
+): unknown {
   const ctx = vm.createContext({ ...context })
   return vm.runInContext(expr, ctx, { timeout: 1000 })
 }
@@ -70,7 +73,9 @@ describe('workflow vm sandbox isolation', () => {
     // This mirrors the executeTransformDataAction pattern:
     //   input.map(item => (expr)(item))
     const ctx = vm.createContext({ item: { price: 10, qty: 3 } })
-    const result = vm.runInContext('(item) => item.price * item.qty', ctx, { timeout: 1000 })
+    const result = vm.runInContext('(item) => item.price * item.qty', ctx, {
+      timeout: 1000,
+    })
     expect(typeof result).toBe('function')
     expect((result as (i: unknown) => unknown)({ price: 10, qty: 3 })).toBe(30)
   })

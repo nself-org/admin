@@ -8,9 +8,9 @@ import {
   createDocumentState,
   getDocumentState,
 } from '@/lib/database'
+import { requireAuth } from '@/lib/require-auth'
 import { emitDocumentEdit } from '@/lib/websocket/emitters'
 import { NextRequest, NextResponse } from 'next/server'
-import { requireAuth } from '@/lib/require-auth'
 
 /**
  * GET /api/collaboration/document - Get document state

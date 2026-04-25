@@ -1,10 +1,10 @@
 import { readEnvFile } from '@/lib/env-handler'
 import { getProjectPath } from '@/lib/paths'
+import { requireAuth } from '@/lib/require-auth'
 import { exec } from 'child_process'
 import * as Minio from 'minio'
 import { NextRequest, NextResponse } from 'next/server'
 import { promisify } from 'util'
-import { requireAuth } from '@/lib/require-auth'
 
 const execAsync = promisify(exec)
 

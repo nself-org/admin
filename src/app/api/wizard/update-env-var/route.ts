@@ -1,8 +1,11 @@
 import { getProjectPath } from '@/lib/paths'
+import {
+  requireAuthPreSetup,
+  requireWizardNotComplete,
+} from '@/lib/require-auth'
 import fs from 'fs/promises'
 import { NextRequest, NextResponse } from 'next/server'
 import path from 'path'
-import { requireAuthPreSetup, requireWizardNotComplete } from '@/lib/require-auth'
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
   const authError = await requireAuthPreSetup(req)

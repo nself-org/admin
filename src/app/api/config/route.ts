@@ -1,5 +1,6 @@
 import { getEnhancedPath } from '@/lib/nself-path'
 import { getProjectPath } from '@/lib/paths'
+import { requireAuth } from '@/lib/require-auth'
 import { sanitizePath } from '@/lib/validation'
 import { execFile } from 'child_process'
 import { promises as fs } from 'fs'
@@ -7,7 +8,6 @@ import { NextRequest, NextResponse } from 'next/server'
 import path from 'path'
 import { promisify } from 'util'
 import { z } from 'zod'
-import { requireAuth } from '@/lib/require-auth'
 
 const execFileAsync = promisify(execFile)
 

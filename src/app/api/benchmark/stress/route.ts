@@ -1,7 +1,7 @@
 import { logger } from '@/lib/logger'
 import { executeNselfCommand } from '@/lib/nselfCLI'
-import { NextRequest, NextResponse } from 'next/server'
 import { requireAuth } from '@/lib/require-auth'
+import { NextRequest, NextResponse } from 'next/server'
 
 // Valid stress test targets
 const VALID_TARGETS = ['api', 'database', 'full', 'graphql', 'auth', 'storage']

@@ -1,8 +1,8 @@
 import { executeNselfCommand } from '@/lib/nselfCLI'
 import { getRateLimitInfo, isRateLimited } from '@/lib/rateLimiter'
+import { requireAuth } from '@/lib/require-auth'
 import { databaseQuerySchema, validateRequest } from '@/lib/validation'
 import { NextRequest, NextResponse } from 'next/server'
-import { requireAuth } from '@/lib/require-auth'
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
   const authError = await requireAuth(request)

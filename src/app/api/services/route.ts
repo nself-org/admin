@@ -1,10 +1,10 @@
 import { getDockerSocketPath, getProjectPath } from '@/lib/paths'
+import { requireAuth } from '@/lib/require-auth'
 import { emitServiceStatus } from '@/lib/websocket/emitters'
 import { exec } from 'child_process'
 import Docker from 'dockerode'
 import { NextRequest, NextResponse } from 'next/server'
 import { promisify } from 'util'
-import { requireAuth } from '@/lib/require-auth'
 
 const execAsync = promisify(exec)
 

@@ -6,11 +6,11 @@
  */
 
 import { validateSessionToken } from '@/lib/auth-db'
+import { requireAuth } from '@/lib/require-auth'
 import fs from 'fs'
 import { NextRequest, NextResponse } from 'next/server'
 import os from 'os'
 import path from 'path'
-import { requireAuth } from '@/lib/require-auth'
 
 const AUTH_URL = process.env.NSELF_AUTH_URL || ''
 

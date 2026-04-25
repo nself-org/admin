@@ -1,7 +1,7 @@
+import { requireAuth } from '@/lib/require-auth'
 import { provisionSSLCertificate } from '@/lib/tenant/ssl-automation'
 import { enforceTenantContext } from '@/lib/tenant/tenant-middleware'
 import { NextRequest, NextResponse } from 'next/server'
-import { requireAuth } from '@/lib/require-auth'
 
 interface RouteParams {
   params: Promise<{ id: string; domain: string }>

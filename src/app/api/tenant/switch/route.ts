@@ -1,7 +1,7 @@
 import { getTenant } from '@/lib/database'
+import { requireAuth } from '@/lib/require-auth'
 import { switchTenant } from '@/lib/tenant/tenant-context'
 import { NextRequest, NextResponse } from 'next/server'
-import { requireAuth } from '@/lib/require-auth'
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
   const authError = await requireAuth(request)

@@ -1,6 +1,6 @@
 import * as dashboardsApi from '@/lib/dashboards'
-import { NextRequest, NextResponse } from 'next/server'
 import { requireAuth } from '@/lib/require-auth'
+import { NextRequest, NextResponse } from 'next/server'
 
 interface RouteParams {
   params: Promise<{ id: string; widgetId: string }>

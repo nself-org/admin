@@ -1,6 +1,9 @@
 import { updateEnvFile, wizardConfigToEnv } from '@/lib/env-handler'
+import {
+  requireAuthPreSetup,
+  requireWizardNotComplete,
+} from '@/lib/require-auth'
 import { NextRequest, NextResponse } from 'next/server'
-import { requireAuthPreSetup, requireWizardNotComplete } from '@/lib/require-auth'
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
   const authError = await requireAuthPreSetup(request)

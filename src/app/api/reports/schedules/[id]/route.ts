@@ -1,6 +1,6 @@
 import * as reports from '@/lib/reports'
-import { NextRequest, NextResponse } from 'next/server'
 import { requireAuth } from '@/lib/require-auth'
+import { NextRequest, NextResponse } from 'next/server'
 
 interface RouteContext {
   params: Promise<{ id: string }>

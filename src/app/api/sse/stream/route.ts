@@ -3,9 +3,9 @@
  * Provides real-time data streaming via Server-Sent Events
  */
 
+import { requireAuth } from '@/lib/require-auth'
 import { getSSEManager } from '@/services/SSEManager'
 import { NextRequest } from 'next/server'
-import { requireAuth } from '@/lib/require-auth'
 
 // Initialize SSE manager on module load
 const sseManager = getSSEManager()

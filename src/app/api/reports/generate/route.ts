@@ -1,6 +1,6 @@
 import * as reports from '@/lib/reports'
-import { NextRequest, NextResponse } from 'next/server'
 import { requireAuth } from '@/lib/require-auth'
+import { NextRequest, NextResponse } from 'next/server'
 
 // POST /api/reports/generate - Generate a report
 export async function POST(request: NextRequest): Promise<NextResponse> {

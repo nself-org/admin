@@ -1,6 +1,6 @@
+import { requireAuth } from '@/lib/require-auth'
 import * as workflowsApi from '@/lib/workflows'
 import { NextRequest, NextResponse } from 'next/server'
-import { requireAuth } from '@/lib/require-auth'
 
 interface RouteParams {
   params: Promise<{ id: string }>

@@ -5,8 +5,8 @@
  * Triggers the anti-sharing key detection cron on demand.
  */
 
-import { NextResponse, NextRequest } from 'next/server'
 import { requireAuth } from '@/lib/require-auth'
+import { NextRequest, NextResponse } from 'next/server'
 
 const PING_API_URL =
   process.env.NEXT_PUBLIC_PING_API_URL?.replace(/\/$/, '') ??

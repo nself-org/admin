@@ -1,10 +1,10 @@
 import { getEnhancedPath } from '@/lib/nself-path'
 import { getProjectPath } from '@/lib/paths'
+import { requireAuth } from '@/lib/require-auth'
 import { exec } from 'child_process'
 import fs from 'fs/promises'
 import { NextRequest, NextResponse } from 'next/server'
 import { promisify } from 'util'
-import { requireAuth } from '@/lib/require-auth'
 
 const execAsync = promisify(exec)
 

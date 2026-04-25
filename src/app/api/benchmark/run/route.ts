@@ -1,8 +1,8 @@
 import { logger } from '@/lib/logger'
 import { executeNselfCommand } from '@/lib/nselfCLI'
+import { requireAuth } from '@/lib/require-auth'
 import type { BenchmarkResult } from '@/types/performance'
 import { NextRequest, NextResponse } from 'next/server'
-import { requireAuth } from '@/lib/require-auth'
 
 // Valid benchmark targets
 const VALID_TARGETS = ['api', 'database', 'full', 'graphql', 'auth', 'storage']

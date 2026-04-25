@@ -1,5 +1,5 @@
-import { NextResponse, NextRequest } from 'next/server'
 import { requireAuth } from '@/lib/require-auth'
+import { NextRequest, NextResponse } from 'next/server'
 
 /**
  * POST /api/plugins/github/sync

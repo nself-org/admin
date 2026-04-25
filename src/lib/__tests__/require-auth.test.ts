@@ -25,10 +25,14 @@ jest.mock('@/lib/csrf', () => ({
   validateCSRFToken: jest.fn(),
 }))
 
-import { cookies } from 'next/headers'
-import { hasAdminPassword } from '@/lib/database'
 import { validateCSRFToken } from '@/lib/csrf'
-import { requireAuth, requireAuthPreSetup, requireWizardNotComplete } from '../require-auth'
+import { hasAdminPassword } from '@/lib/database'
+import { cookies } from 'next/headers'
+import {
+  requireAuth,
+  requireAuthPreSetup,
+  requireWizardNotComplete,
+} from '../require-auth'
 
 const mockCookies = cookies as jest.MockedFunction<typeof cookies>
 const mockHasAdminPassword = hasAdminPassword as jest.MockedFunction<
@@ -100,7 +104,10 @@ describe('setup-complete gate', () => {
   it('returns 403 when setup is not complete (default postSetupOnly=true)', async () => {
     mockHasAdminPassword.mockResolvedValue(false)
 
-    const req = makeRequest({ sessionToken: 'valid-token', csrfHeader: 'valid-csrf' })
+    const req = makeRequest({
+      sessionToken: 'valid-token',
+      csrfHeader: 'valid-csrf',
+    })
     const result = await requireAuth(req)
 
     expect(result).not.toBeNull()
@@ -122,7 +129,10 @@ describe('setup-complete gate', () => {
     mockHasAdminPassword.mockResolvedValue(true)
     mockValidateCSRFToken.mockResolvedValue(true)
 
-    const req = makeRequest({ sessionToken: 'valid-token', csrfHeader: 'csrf-token' })
+    const req = makeRequest({
+      sessionToken: 'valid-token',
+      csrfHeader: 'csrf-token',
+    })
     const result = await requireAuth(req)
 
     expect(result).toBeNull()
@@ -170,7 +180,10 @@ describe('CSRF check', () => {
     mockHasAdminPassword.mockResolvedValue(true)
     mockValidateCSRFToken.mockResolvedValue(false)
 
-    const req = makeRequest({ sessionToken: 'valid-token', csrfHeader: 'bad-token' })
+    const req = makeRequest({
+      sessionToken: 'valid-token',
+      csrfHeader: 'bad-token',
+    })
     const result = await requireAuth(req)
 
     expect(result).not.toBeNull()
@@ -210,7 +223,10 @@ describe('valid session pass-through', () => {
     mockHasAdminPassword.mockResolvedValue(true)
     mockValidateCSRFToken.mockResolvedValue(true)
 
-    const req = makeRequest({ sessionToken: 'valid-token', csrfHeader: 'valid-csrf' })
+    const req = makeRequest({
+      sessionToken: 'valid-token',
+      csrfHeader: 'valid-csrf',
+    })
     const result = await requireAuth(req)
 
     expect(result).toBeNull()

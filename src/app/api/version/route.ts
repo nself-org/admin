@@ -1,6 +1,6 @@
-import { autoUpdater } from '@/lib/updater'
-import { NextResponse, NextRequest } from 'next/server'
 import { requireAuth } from '@/lib/require-auth'
+import { autoUpdater } from '@/lib/updater'
+import { NextRequest, NextResponse } from 'next/server'
 
 export async function GET(): Promise<NextResponse> {
   try {

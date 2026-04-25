@@ -1,7 +1,7 @@
 import * as apiKeysApi from '@/lib/api-keys'
 import { auth } from '@/lib/auth-db'
-import { NextRequest, NextResponse } from 'next/server'
 import { requireAuth } from '@/lib/require-auth'
+import { NextRequest, NextResponse } from 'next/server'
 
 /**
  * GET /api/api-keys - List all API keys

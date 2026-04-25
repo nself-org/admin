@@ -1,8 +1,8 @@
 import { logger } from '@/lib/logger'
 import { executeNselfCommand } from '@/lib/nselfCLI'
+import { requireAuth } from '@/lib/require-auth'
 import type { BenchmarkBaseline } from '@/types/performance'
 import { NextRequest, NextResponse } from 'next/server'
-import { requireAuth } from '@/lib/require-auth'
 
 // GET /api/benchmark/baseline - Read saved baseline
 export async function GET(request: NextRequest): Promise<NextResponse> {

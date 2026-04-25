@@ -1,10 +1,10 @@
 import { ErrorCode } from '@/lib/errors/codes'
 import { nselfDbRestore } from '@/lib/nselfCLI'
 import { getProjectPath } from '@/lib/paths'
+import { requireAuth } from '@/lib/require-auth'
 import fs from 'fs/promises'
 import { NextRequest, NextResponse } from 'next/server'
 import path from 'path'
-import { requireAuth } from '@/lib/require-auth'
 
 export async function GET(): Promise<NextResponse> {
   try {

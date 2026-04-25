@@ -1,5 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server'
 import { requireAuth } from '@/lib/require-auth'
+import { NextRequest, NextResponse } from 'next/server'
 
 const HASURA_ENDPOINT =
   process.env.HASURA_GRAPHQL_ENDPOINT || 'http://localhost:8080/v1/graphql'

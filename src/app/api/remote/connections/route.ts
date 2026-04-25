@@ -1,7 +1,7 @@
 import { addConnection, loadConnections } from '@/features/remote/remote'
 import type { RemoteConnection, RemoteError } from '@/features/remote/types'
-import { NextRequest, NextResponse } from 'next/server'
 import { requireAuth } from '@/lib/require-auth'
+import { NextRequest, NextResponse } from 'next/server'
 
 export async function GET() {
   try {

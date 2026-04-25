@@ -1,6 +1,6 @@
 import * as apiKeysApi from '@/lib/api-keys'
-import { NextRequest, NextResponse } from 'next/server'
 import { requireAuth } from '@/lib/require-auth'
+import { NextRequest, NextResponse } from 'next/server'
 
 /**
  * POST /api/api-keys/validate - Validate an API key

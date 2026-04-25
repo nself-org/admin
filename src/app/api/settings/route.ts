@@ -10,8 +10,8 @@
 import { loadSettings, saveSettings } from '@/features/settings/settings'
 import type { AdminSettings } from '@/features/settings/types'
 import { getProjectPath } from '@/lib/paths'
-import { NextRequest, NextResponse } from 'next/server'
 import { requireAuth } from '@/lib/require-auth'
+import { NextRequest, NextResponse } from 'next/server'
 
 // ---------------------------------------------------------------------------
 // GET /api/settings

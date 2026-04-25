@@ -9,9 +9,9 @@ import {
   removeUserPresence,
   updateUserPresence,
 } from '@/lib/database'
+import { requireAuth } from '@/lib/require-auth'
 import { emitUserPresence } from '@/lib/websocket/emitters'
 import { NextRequest, NextResponse } from 'next/server'
-import { requireAuth } from '@/lib/require-auth'
 
 /**
  * GET /api/collaboration/presence - Get online users

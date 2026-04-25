@@ -1,9 +1,9 @@
 import { executeNselfCommand } from '@/lib/nselfCLI'
 import { getProjectPath } from '@/lib/paths'
+import { requireAuth } from '@/lib/require-auth'
 import { promises as fs } from 'fs'
 import { NextRequest, NextResponse } from 'next/server'
 import path from 'path'
-import { requireAuth } from '@/lib/require-auth'
 
 /**
  * POST /api/config/import

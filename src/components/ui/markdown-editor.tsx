@@ -179,7 +179,7 @@ export function MarkdownEditor({
 // serialisation to the DOM. No manual HTML string manipulation needed.
 function MarkdownPreview({ content }: { content: string }) {
   return (
-    <div className="prose prose-sm max-w-none dark:prose-invert">
+    <div className="prose-sm prose max-w-none dark:prose-invert">
       <ReactMarkdown rehypePlugins={[rehypeSanitize]}>{content}</ReactMarkdown>
     </div>
   )

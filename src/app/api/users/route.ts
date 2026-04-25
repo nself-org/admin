@@ -10,8 +10,8 @@
 // All handlers return HTTP 404 with a structured error body so callers get a
 // machine-parseable signal instead of a 500 from a non-existent CLI command.
 
-import { NextResponse, NextRequest } from 'next/server'
 import { requireAuth } from '@/lib/require-auth'
+import { NextRequest, NextResponse } from 'next/server'
 
 const NOT_AVAILABLE = NextResponse.json(
   {

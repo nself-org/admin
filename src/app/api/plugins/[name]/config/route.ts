@@ -5,12 +5,12 @@
  */
 
 import { logger } from '@/lib/logger'
+import { requireAuth } from '@/lib/require-auth'
 import type { PluginConfig } from '@/types/plugins'
 import fs from 'fs/promises'
 import { NextRequest, NextResponse } from 'next/server'
 import os from 'os'
 import path from 'path'
-import { requireAuth } from '@/lib/require-auth'
 
 interface RouteContext {
   params: Promise<{ name: string }>

@@ -1,5 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server'
 import { requireAuth } from '@/lib/require-auth'
+import { NextRequest, NextResponse } from 'next/server'
 
 /**
  * Proxy for mux plugin rule endpoints.

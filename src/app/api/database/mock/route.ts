@@ -1,8 +1,8 @@
 import { ErrorCode } from '@/lib/errors/codes'
 import { executeDbQuery } from '@/lib/nselfCLI'
+import { requireAuth } from '@/lib/require-auth'
 import { faker } from '@faker-js/faker'
 import { NextRequest, NextResponse } from 'next/server'
-import { requireAuth } from '@/lib/require-auth'
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
   const authError = await requireAuth(request)

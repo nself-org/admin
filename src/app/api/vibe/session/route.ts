@@ -7,9 +7,9 @@
  * Local mode (NSELF_VIBE_TARGET_ENV=local) connects directly to local Docker stack.
  */
 
+import { requireAuth } from '@/lib/require-auth'
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
-import { requireAuth } from '@/lib/require-auth'
 
 const VIBE_ENABLED = process.env.NSELF_VIBE_ENABLED === 'true'
 const VIBE_API_PORT = process.env.NSELF_VIBE_PORT ?? '8003'

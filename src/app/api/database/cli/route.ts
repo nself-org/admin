@@ -7,8 +7,8 @@ import {
   nselfDbSeed,
   nselfDbSync,
 } from '@/lib/nselfCLI'
-import { NextRequest, NextResponse } from 'next/server'
 import { requireAuth } from '@/lib/require-auth'
+import { NextRequest, NextResponse } from 'next/server'
 
 /**
  * Database CLI operations - wraps nself db commands

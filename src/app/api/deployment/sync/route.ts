@@ -1,8 +1,8 @@
 import { getProjectPath } from '@/lib/paths'
-import { exec } from 'child_process'
-import { NextResponse, NextRequest } from 'next/server'
-import { promisify } from 'util'
 import { requireAuth } from '@/lib/require-auth'
+import { exec } from 'child_process'
+import { NextRequest, NextResponse } from 'next/server'
+import { promisify } from 'util'
 
 const execAsync = promisify(exec)
 

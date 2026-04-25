@@ -1,9 +1,9 @@
 import { logger } from '@/lib/logger'
 import { executeNselfCommand } from '@/lib/nselfCLI'
 import { isRateLimited } from '@/lib/rateLimiter'
+import { requireAuth } from '@/lib/require-auth'
 import type { Backup } from '@/types/database'
 import { NextRequest, NextResponse } from 'next/server'
-import { requireAuth } from '@/lib/require-auth'
 
 /**
  * GET /api/database/backup - List database backups

@@ -1,8 +1,8 @@
 // database/route.ts — CLI-First: all DB ops route through `nself db *` CLI commands.
 // Direct pg.Client connections are forbidden per nSelf Hard Rule (App -> Hasura -> Postgres).
 import { executeNselfCommand } from '@/lib/nselfCLI'
-import { NextRequest, NextResponse } from 'next/server'
 import { requireAuth } from '@/lib/require-auth'
+import { NextRequest, NextResponse } from 'next/server'
 
 // Valid PostgreSQL identifier pattern (table/schema names)
 const VALID_IDENTIFIER = /^[a-zA-Z_][a-zA-Z0-9_]*$/

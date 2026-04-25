@@ -1,8 +1,8 @@
 import { ErrorCode } from '@/lib/errors/codes'
 import { executeDbQuery } from '@/lib/nselfCLI'
+import { requireAuth } from '@/lib/require-auth'
 import type { TableInfo } from '@/types/database'
 import { NextRequest, NextResponse } from 'next/server'
-import { requireAuth } from '@/lib/require-auth'
 
 export async function GET(request: NextRequest): Promise<NextResponse> {
   try {

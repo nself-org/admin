@@ -4,8 +4,8 @@
 
 import { selectProject } from '@/features/project-picker/project-picker'
 import type { ProjectPickerError } from '@/features/project-picker/types'
-import { NextRequest, NextResponse } from 'next/server'
 import { requireAuth } from '@/lib/require-auth'
+import { NextRequest, NextResponse } from 'next/server'
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
   const authError = await requireAuth(request)

@@ -1,7 +1,7 @@
 import { logger } from '@/lib/logger'
+import { requireAuth } from '@/lib/require-auth'
 import { NextRequest, NextResponse } from 'next/server'
 import path from 'path'
-import { requireAuth } from '@/lib/require-auth'
 
 /**
  * GET /api/database/backup/[name] - Download a backup file

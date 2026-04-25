@@ -8,8 +8,8 @@
 import { stripePluginInstalled } from '@/lib/hasura-client'
 import { logger } from '@/lib/logger'
 import { executeNselfCommand } from '@/lib/nselfCLI'
-import { NextRequest, NextResponse } from 'next/server'
 import { requireAuth } from '@/lib/require-auth'
+import { NextRequest, NextResponse } from 'next/server'
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
   const authError = await requireAuth(request)

@@ -1,8 +1,8 @@
 import { getActiveProject } from '@/features/project-picker/project-picker'
-import fs from 'fs/promises'
-import { NextResponse, NextRequest } from 'next/server'
-import path from 'path'
 import { requireAuth } from '@/lib/require-auth'
+import fs from 'fs/promises'
+import { NextRequest, NextResponse } from 'next/server'
+import path from 'path'
 
 /**
  * Compute a lightweight staging-to-prod diff for the active project.

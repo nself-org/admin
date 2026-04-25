@@ -1,8 +1,8 @@
 import { executeNselfCommand } from '@/lib/nselfCLI'
+import { requireAuth } from '@/lib/require-auth'
 import { mkdir, writeFile } from 'fs/promises'
 import { NextRequest, NextResponse } from 'next/server'
 import path from 'path'
-import { requireAuth } from '@/lib/require-auth'
 
 interface RouteParams {
   params: Promise<{ id: string }>

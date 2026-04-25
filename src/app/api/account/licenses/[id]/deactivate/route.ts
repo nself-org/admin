@@ -6,8 +6,8 @@
  */
 
 import { validateSessionToken } from '@/lib/auth-db'
-import { NextRequest, NextResponse } from 'next/server'
 import { requireAuth } from '@/lib/require-auth'
+import { NextRequest, NextResponse } from 'next/server'
 
 const AUTH_URL = process.env.NSELF_AUTH_URL || ''
 

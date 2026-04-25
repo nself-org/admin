@@ -1,8 +1,8 @@
 // Multi-user Roles API — NOT available in v1.0.9.
 // See /api/auth/roles/route.ts for full explanation.
 
-import { NextResponse, NextRequest } from 'next/server'
 import { requireAuth } from '@/lib/require-auth'
+import { NextRequest, NextResponse } from 'next/server'
 
 const NOT_AVAILABLE = NextResponse.json(
   {

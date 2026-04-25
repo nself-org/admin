@@ -9,9 +9,9 @@ import {
   removeCursor,
   updateCursorPosition,
 } from '@/lib/database'
+import { requireAuth } from '@/lib/require-auth'
 import { emitCursorPosition, emitTextSelection } from '@/lib/websocket/emitters'
 import { NextRequest, NextResponse } from 'next/server'
-import { requireAuth } from '@/lib/require-auth'
 
 /**
  * GET /api/collaboration/cursor - Get cursors for document

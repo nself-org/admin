@@ -1,9 +1,9 @@
 import { readEnvFile } from '@/lib/env-handler'
 import { getProjectPath } from '@/lib/paths'
+import { requireAuth } from '@/lib/require-auth'
 import fs from 'fs/promises'
 import { NextRequest, NextResponse } from 'next/server'
 import path from 'path'
-import { requireAuth } from '@/lib/require-auth'
 
 // Generate a basic docker-compose.yml based on env settings
 async function generateDockerCompose(config: any): Promise<string> {

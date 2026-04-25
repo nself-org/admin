@@ -1,11 +1,14 @@
 import { findNselfPath, getEnhancedPath } from '@/lib/nself-path'
 import { getProjectPath } from '@/lib/paths'
+import {
+  requireAuthPreSetup,
+  requireWizardNotComplete,
+} from '@/lib/require-auth'
 import { exec } from 'child_process'
 import { promises as fs } from 'fs'
 import { NextRequest, NextResponse } from 'next/server'
 import path from 'path'
 import { promisify } from 'util'
-import { requireAuthPreSetup, requireWizardNotComplete } from '@/lib/require-auth'
 
 const execAsync = promisify(exec)
 

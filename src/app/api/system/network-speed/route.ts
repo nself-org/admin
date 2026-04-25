@@ -1,9 +1,9 @@
+import { requireAuth } from '@/lib/require-auth'
 import { exec } from 'child_process'
 import fs from 'fs/promises'
-import { NextResponse, NextRequest } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import path from 'path'
 import { promisify } from 'util'
-import { requireAuth } from '@/lib/require-auth'
 
 const execAsync = promisify(exec)
 

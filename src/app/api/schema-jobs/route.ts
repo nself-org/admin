@@ -8,8 +8,8 @@
  */
 
 import { getDb } from '@/lib/database'
-import { NextRequest, NextResponse } from 'next/server'
 import { requireAuth } from '@/lib/require-auth'
+import { NextRequest, NextResponse } from 'next/server'
 
 function getJobsCollection() {
   const db = getDb()

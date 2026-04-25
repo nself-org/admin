@@ -8,8 +8,8 @@ import {
   loadProjects,
 } from '@/features/project-picker/project-picker'
 import type { ProjectPickerError } from '@/features/project-picker/types'
-import { NextRequest, NextResponse } from 'next/server'
 import { requireAuth } from '@/lib/require-auth'
+import { NextRequest, NextResponse } from 'next/server'
 
 // Name: 1–63 chars, letters / digits / hyphens / underscores
 const SAFE_NAME_RE = /^[a-zA-Z0-9_-]{1,63}$/

@@ -1,8 +1,8 @@
 import { refreshSession } from '@/lib/auth-db'
 import { setCSRFCookie } from '@/lib/csrf'
+import { requireAuth } from '@/lib/require-auth'
 import { cookies } from 'next/headers'
 import { NextRequest, NextResponse } from 'next/server'
-import { requireAuth } from '@/lib/require-auth'
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
   const authError = await requireAuth(request)

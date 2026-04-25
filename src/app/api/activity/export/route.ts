@@ -1,7 +1,7 @@
 import * as activityApi from '@/lib/activity'
+import { requireAuth } from '@/lib/require-auth'
 import type { ActivityFilter } from '@/types/activity'
 import { NextRequest, NextResponse } from 'next/server'
-import { requireAuth } from '@/lib/require-auth'
 
 /**
  * POST /api/activity/export - Export activities

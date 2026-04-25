@@ -11,8 +11,8 @@ import {
   updateCredential,
 } from '@/features/settings/settings'
 import { getProjectPath } from '@/lib/paths'
-import { NextRequest, NextResponse } from 'next/server'
 import { requireAuth } from '@/lib/require-auth'
+import { NextRequest, NextResponse } from 'next/server'
 
 /** Regex for valid env var key names. Must match settings.ts assertValidKey. */
 const ENV_KEY_RE = /^[A-Z_][A-Z0-9_]{0,127}$/

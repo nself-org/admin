@@ -1,8 +1,8 @@
 import { streamNselfCommand } from '@/lib/nselfCLI'
+import { requireAuth } from '@/lib/require-auth'
 import { EventType, LogStreamEvent } from '@/lib/websocket/events'
 import { getWebSocketServer } from '@/lib/websocket/server'
 import { NextRequest, NextResponse } from 'next/server'
-import { requireAuth } from '@/lib/require-auth'
 
 /**
  * Parse log line to detect level

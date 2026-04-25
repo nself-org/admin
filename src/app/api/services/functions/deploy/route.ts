@@ -1,6 +1,6 @@
 import { executeNselfCommand } from '@/lib/nselfCLI'
-import { NextRequest, NextResponse } from 'next/server'
 import { requireAuth } from '@/lib/require-auth'
+import { NextRequest, NextResponse } from 'next/server'
 
 interface DeployBody {
   /** Path to the function file or directory (relative to project root). */

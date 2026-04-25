@@ -1,5 +1,5 @@
-import { NextResponse, NextRequest } from 'next/server'
 import { requireAuth } from '@/lib/require-auth'
+import { NextRequest, NextResponse } from 'next/server'
 
 /**
  * Read/write plugin-scoped env vars. In a future sprint this will call

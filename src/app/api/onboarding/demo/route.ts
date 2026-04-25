@@ -1,7 +1,7 @@
 import { getEnhancedPath } from '@/lib/nself-path'
-import { spawn } from 'child_process'
-import { NextResponse, NextRequest } from 'next/server'
 import { requireAuth } from '@/lib/require-auth'
+import { spawn } from 'child_process'
+import { NextRequest, NextResponse } from 'next/server'
 
 function runNselfDemo(): Promise<{
   success: boolean

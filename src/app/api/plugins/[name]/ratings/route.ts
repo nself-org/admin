@@ -13,10 +13,10 @@
  */
 
 import { logger } from '@/lib/logger'
+import { requireAuth } from '@/lib/require-auth'
 import crypto from 'crypto'
 import { NextRequest, NextResponse } from 'next/server'
 import os from 'os'
-import { requireAuth } from '@/lib/require-auth'
 
 const MARKETPLACE_BASE =
   process.env.NSELF_MARKETPLACE_URL?.replace(/\/marketplace\/?$/, '') ??

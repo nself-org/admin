@@ -1,8 +1,8 @@
 import { auth } from '@/lib/auth-db'
 import { logger } from '@/lib/logger'
 import * as notificationsApi from '@/lib/notifications'
-import { NextRequest, NextResponse } from 'next/server'
 import { requireAuth } from '@/lib/require-auth'
+import { NextRequest, NextResponse } from 'next/server'
 
 /**
  * POST /api/notifications/read-all - Mark all notifications as read

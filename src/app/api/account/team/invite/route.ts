@@ -7,9 +7,9 @@
 
 import { validateSessionToken } from '@/lib/auth-db'
 import { isMultiUserEnabled } from '@/lib/feature-flags'
+import { requireAuth } from '@/lib/require-auth'
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
-import { requireAuth } from '@/lib/require-auth'
 
 const AUTH_URL = process.env.NSELF_AUTH_URL || ''
 

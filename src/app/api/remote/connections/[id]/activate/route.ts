@@ -1,7 +1,7 @@
 import { setActiveConnection } from '@/features/remote/remote'
 import type { RemoteError } from '@/features/remote/types'
-import { NextResponse, NextRequest } from 'next/server'
 import { requireAuth } from '@/lib/require-auth'
+import { NextRequest, NextResponse } from 'next/server'
 
 export async function POST(
   request: NextRequest,

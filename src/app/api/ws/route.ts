@@ -3,11 +3,11 @@
  * Handles WebSocket connections for real-time updates
  */
 
+import { requireAuth } from '@/lib/require-auth'
 import { EventType } from '@/lib/websocket/events'
 import { getWebSocketServer } from '@/lib/websocket/server'
 import { Server as HTTPServer } from 'http'
 import { NextRequest, NextResponse } from 'next/server'
-import { requireAuth } from '@/lib/require-auth'
 
 // Store the HTTP server instance
 let httpServer: HTTPServer | null = null

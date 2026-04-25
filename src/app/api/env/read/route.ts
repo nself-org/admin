@@ -44,9 +44,7 @@ function redactSecrets(
   const out: Record<string, string | typeof REDACTED_VALUE> = {}
   for (const [k, v] of Object.entries(env)) {
     out[k] =
-      ALWAYS_REDACT.has(k) || SECRET_KEY_PATTERN.test(k)
-        ? REDACTED_VALUE
-        : v
+      ALWAYS_REDACT.has(k) || SECRET_KEY_PATTERN.test(k) ? REDACTED_VALUE : v
   }
   return out
 }

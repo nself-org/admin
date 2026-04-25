@@ -1,7 +1,7 @@
+import { requireAuth } from '@/lib/require-auth'
 import * as workflowsApi from '@/lib/workflows'
 import type { WorkflowStatus } from '@/types/workflow'
 import { NextRequest, NextResponse } from 'next/server'
-import { requireAuth } from '@/lib/require-auth'
 
 /**
  * GET /api/workflows

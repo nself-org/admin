@@ -1,8 +1,8 @@
 import { executeNselfCommand, nselfBackup, nselfRestore } from '@/lib/nselfCLI'
 import { isRateLimited } from '@/lib/rateLimiter'
+import { requireAuth } from '@/lib/require-auth'
 import { backupSchema, restoreSchema, validateRequest } from '@/lib/validation'
 import { NextRequest, NextResponse } from 'next/server'
-import { requireAuth } from '@/lib/require-auth'
 
 // List backups
 export async function GET(request: NextRequest): Promise<NextResponse> {

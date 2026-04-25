@@ -1,7 +1,7 @@
-import fs from 'fs'
-import { NextResponse, NextRequest } from 'next/server'
-import path from 'path'
 import { requireAuth } from '@/lib/require-auth'
+import fs from 'fs'
+import { NextRequest, NextResponse } from 'next/server'
+import path from 'path'
 
 interface OnboardingState {
   completed: boolean

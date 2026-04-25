@@ -40,10 +40,9 @@ jest.mock('rehype-sanitize', () => ({
   default: jest.fn(() => ({})),
 }))
 
-import { render, screen } from '@testing-library/react'
-import * as React from 'react'
-import rehypeSanitize from 'rehype-sanitize'
+import { render } from '@testing-library/react'
 import ReactMarkdown from 'react-markdown'
+import rehypeSanitize from 'rehype-sanitize'
 
 // ── sanitizeHtml — the validation utility used in the old MarkdownPreview ────
 import { sanitizeHtml, sanitizeUrl } from '@/lib/validation'
@@ -123,7 +122,9 @@ describe('react-markdown + rehype-sanitize wiring', () => {
     // the raw string but never calls innerHTML or dangerouslySetInnerHTML.
     const dangerous = '<script>alert(1)</script>'
     const { container } = render(
-      <ReactMarkdown rehypePlugins={[rehypeSanitize]}>{dangerous}</ReactMarkdown>,
+      <ReactMarkdown rehypePlugins={[rehypeSanitize]}>
+        {dangerous}
+      </ReactMarkdown>,
     )
     // The mock wraps in a div with data-testid; no <script> element in DOM.
     expect(container.querySelector('script')).toBeNull()

@@ -17,7 +17,7 @@ The LicensePanel shows:
 | Field             | Description                                                      |
 | ----------------- | ---------------------------------------------------------------- |
 | License key       | Truncated key (`nself_pro_xxxxx...****`)                         |
-| Tier              | Free / Any bundle ($0.99/mo) / ɳSelf+ ($3.99/mo or $39.99/yr)   |
+| Tier              | Free / Any bundle ($0.99/mo) / ɳSelf+ ($3.99/mo or $39.99/yr)    |
 | Status            | Active / Expired / Revoked                                       |
 | Expiry            | Date (for annual subscriptions) or "Monthly — renews MM/DD/YYYY" |
 | Installed plugins | Count of pro plugins currently installed                         |
@@ -35,11 +35,11 @@ The LicensePanel shows:
 
 ## License Tiers
 
-| Tier       | Monthly   | Annual     | Plugins included                        |
-| ---------- | --------- | ---------- | --------------------------------------- |
-| Free       | $0        | $0         | 25 free plugins only                    |
-| Any bundle | $0.99/mo  | $9.99/yr   | All plugins in that bundle (per F06)    |
-| ɳSelf+     | $3.99/mo  | $39.99/yr  | All 5 bundles + all apps + support      |
+| Tier       | Monthly  | Annual    | Plugins included                     |
+| ---------- | -------- | --------- | ------------------------------------ |
+| Free       | $0       | $0        | 25 free plugins only                 |
+| Any bundle | $0.99/mo | $9.99/yr  | All plugins in that bundle (per F06) |
+| ɳSelf+     | $3.99/mo | $39.99/yr | All 5 bundles + all apps + support   |
 
 ---
 

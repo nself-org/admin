@@ -30,7 +30,13 @@ function _isKnownBadSecret(s: string): boolean {
   )
 }
 
-if (process.env.NODE_ENV === 'production') {
+// Skip the guard during next build — no runtime env vars are available at
+// build time. The guard fires at server startup in real production deployments.
+const isBuildPhase =
+  process.env.NEXT_PHASE === 'phase-production-build' ||
+  process.env.VERCEL === '1'
+
+if (process.env.NODE_ENV === 'production' && !isBuildPhase) {
   if (!HASURA_ADMIN_SECRET) {
     throw new Error(
       'FATAL: HASURA_GRAPHQL_ADMIN_SECRET is not set. ' +

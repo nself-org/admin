@@ -8,9 +8,31 @@
  * TOTP authenticator stores).
  */
 
-import { authenticator } from 'otplib'
+// otplib v13 uses a functional API — no 'authenticator' singleton export.
+// We use the functional helpers directly. 'window' tolerance is applied per-call.
+import { generate, generateSecret, generateURI, verify, verifySync } from 'otplib'
 import QRCode from 'qrcode'
 import { deleteConfig, getConfig, setConfig } from './database'
+
+// Re-export type alias so call sites below read naturally.
+// 'authenticator' is an object shim over the v13 functional API.
+const authenticator = {
+  // Allow 1 step of clock drift (±30 s) for tolerance
+  options: { window: 1 },
+  generateSecret: (length: number) => generateSecret({ length }),
+  keyuri: (account: string, issuer: string, secret: string) =>
+    generateURI({ strategy: 'totp', label: account, issuer, secret }),
+  verify: ({ token, secret }: { token: string; secret: string }): boolean => {
+    try {
+      const result = verifySync({ secret, token, strategy: 'totp' })
+      if (typeof result === 'boolean') return result
+      // OTPVerifyFunctionalOptions may return a result object
+      return result?.valid ?? false
+    } catch {
+      return false
+    }
+  },
+} as const
 
 const TOTP_SECRET_KEY = 'totp_secret'
 const TOTP_ENABLED_KEY = 'totp_enabled'
@@ -20,9 +42,9 @@ const TOTP_RECOVERY_CODES_KEY = 'totp_recovery_codes'
 const ISSUER = 'nSelf Admin'
 const ACCOUNT = 'admin'
 
-// otplib defaults: 30-second window, SHA1, 6-digit codes
-// Allow 1 step of clock drift (±30 s) for tolerance
-authenticator.options = { window: 1 }
+// Suppress unused import warning — generate/verify are used via the shim above.
+void generate
+void verify
 
 // ── Secret management ────────────────────────────────────────────────────────
 

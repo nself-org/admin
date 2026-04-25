@@ -762,3 +762,33 @@ See [MIGRATION_v0.4_to_v0.5.md](MIGRATION_v0.4_to_v0.5.md) for detailed upgrade 
 - **Admin panel unified auth** (O07) — Admin now uses unified auth flow (FF_UNIFIED_AUTH). Session management via np_sessions v2. License management and device management pages wired to `nself account` CLI.
 - **Audit log live tail** (Q02) — Admin shows live stream of np_audit_log entries via Hasura subscription panel.
 - **Ollama status panel** (B38) — Admin displays Ollama service health and installed models.
+
+
+---
+
+## [1.0.12] - 2026-04-25
+
+P96 CRUNCH phase — release cascade widget, XSS hardening, 2FA TOTP, audit log, rate limiting, and ship-readiness fixes.
+
+### Added
+
+- **`ReleaseCascadeWidget`** (S173): visual release coordinator in Admin UI. Shows real-time progress of the 12-step release cascade; links out to GitHub Actions, Homebrew tap, and Docker Hub status.
+- **2FA TOTP enforcement** (S123): all admin users can enroll a TOTP authenticator app; super-admin policy can require 2FA for privileged operations.
+- **Audit log with rate limit** (S123): every sensitive admin action (env write, plugin install, license set, user manage) is written to `np_audit_log` with actor, timestamp, and IP. Rate limit enforced at the route level.
+- **`nself doctor` admin check** (S124): admin surfaces a one-click "Doctor" panel that runs `nself doctor --deep` and displays categorised findings inline. Blocks deploy button on CRITICAL findings.
+
+### Changed
+
+- **Version bumped to v1.0.12** (lockstep with CLI v1.0.12).
+- **`CLI_VERSION` constant** in `src/lib/cli-version.ts` updated to `1.0.12`.
+
+### Fixed
+
+- **XSS hardening on all output viewers** (S122): all plugin log viewers, env value displays, and JSON output panels now sanitise through DOMPurify before rendering.
+- **`requireAuth` on all 260 routes** (S121): middleware enforced across every page and API route; unauthenticated requests return 401.
+- **Dockerfile `NSELF_VERSION` build arg** updated from stale `1.0.11` to `1.0.12`.
+
+### Security
+
+- **CSRF protection** extended to all 260 routes as part of S121-S122 security lockdown.
+- **Secret redaction** hardened: additional sensitive env var patterns masked in `/api/env/read` response.

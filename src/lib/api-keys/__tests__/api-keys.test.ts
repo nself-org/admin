@@ -3,12 +3,29 @@
  * Tests for cryptographic key generation, validation, and management
  */
 
-import { initDatabase } from '@/lib/database'
+import { getDatabase, initDatabase } from '@/lib/database'
 import * as apiKeys from '../index'
 
 // Ensure database is initialized before tests
 beforeAll(async () => {
   await initDatabase()
+})
+
+// Clear API key collections before each test to prevent prefix collisions
+// across parallel/sequential test runs sharing the same LokiJS instance
+beforeEach(() => {
+  const db = getDatabase()
+  if (!db) return
+  const collections = [
+    'apiKeys',
+    'apiKeyUsage',
+    'apiKeyLogs',
+    'apiKeyRateLimit',
+  ]
+  for (const name of collections) {
+    const col = db.getCollection(name)
+    if (col) col.clear()
+  }
 })
 
 describe('API Key Generation', () => {

@@ -79,7 +79,7 @@ jobs:
 
       # S44.T01: Trivy container scan — CRITICAL fails the build, HIGH triggers warning
       - name: Trivy scan — SARIF upload (all severities)
-        uses: aquasecurity/trivy-action@0.28.0
+        uses: aquasecurity/trivy-action@v0.36.0
         with:
           image-ref: ${{ env.DOCKER_IMAGE }}:scan-${{ github.sha }}
           format: sarif
@@ -95,7 +95,7 @@ jobs:
         continue-on-error: true
 
       - name: Trivy scan — CRITICAL gate (blocks push)
-        uses: aquasecurity/trivy-action@0.28.0
+        uses: aquasecurity/trivy-action@v0.36.0
         with:
           image-ref: ${{ env.DOCKER_IMAGE }}:scan-${{ github.sha }}
           format: table

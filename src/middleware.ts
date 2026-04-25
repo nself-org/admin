@@ -1,3 +1,4 @@
+import crypto from 'crypto'
 import { NextRequest, NextResponse } from 'next/server'
 
 // ── Feature flag helpers ────────────────────────────────────────────────────
@@ -37,19 +38,131 @@ const PUBLIC_ROUTES = [
   '/api/health',
   '/api/project/status', // Allow checking project status without auth
   '/api/wizard', // Allow all wizard endpoints (pre-setup; route handlers enforce requireAuthPreSetup)
+  '/api/auth/totp/verify', // TOTP verify is called during login (before full session)
   '/_next',
   '/favicon.ico',
   '/site.webmanifest',
   '/sw.js',
 ]
 
+// ── Security headers ────────────────────────────────────────────────────────
+
+function generateNonce(): string {
+  return crypto.randomBytes(16).toString('base64')
+}
+
+function buildCsp(nonce: string): string {
+  const isProd = process.env.NODE_ENV === 'production'
+
+  if (isProd) {
+    // Production: nonce-based, no unsafe-eval, no unsafe-inline for scripts
+    return [
+      "default-src 'self'",
+      `script-src 'self' 'nonce-${nonce}'`,
+      "style-src 'self' 'unsafe-inline'", // inline styles are common in React apps
+      "img-src 'self' data: blob: https:",
+      "font-src 'self' data:",
+      "connect-src 'self' ws: wss:",
+      "worker-src 'self' blob:",
+      "frame-ancestors 'none'",
+      "base-uri 'self'",
+      "form-action 'self'",
+      "object-src 'none'",
+    ].join('; ')
+  }
+
+  // Development: permissive for HMR and dev tools (unsafe-eval needed for
+  // Next.js dev mode webpack runtime)
+  return [
+    "default-src 'self'",
+    `script-src 'self' 'nonce-${nonce}' 'unsafe-eval' 'unsafe-inline'`,
+    "style-src 'self' 'unsafe-inline'",
+    "img-src 'self' data: blob: https:",
+    "font-src 'self' data:",
+    "connect-src 'self' ws: wss:",
+    "worker-src 'self' blob:",
+    "frame-ancestors 'none'",
+    "base-uri 'self'",
+    "form-action 'self'",
+    "object-src 'none'",
+  ].join('; ')
+}
+
+function applySecurityHeaders(
+  response: NextResponse,
+  nonce: string,
+): NextResponse {
+  response.headers.set('X-Content-Type-Options', 'nosniff')
+  response.headers.set('X-Frame-Options', 'DENY')
+  response.headers.set('X-XSS-Protection', '1; mode=block')
+  response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin')
+  response.headers.set(
+    'Permissions-Policy',
+    'camera=(), microphone=(), geolocation=(), interest-cohort=()',
+  )
+  response.headers.set('Content-Security-Policy', buildCsp(nonce))
+  // Expose nonce to the page via header so _document can pick it up
+  response.headers.set('x-nonce', nonce)
+  return response
+}
+
+// ── Per-minute rate limiting (inline — middleware runs on Edge) ─────────────
+// We cannot import from rateLimiter.ts (Node.js module) in Edge middleware,
+// so we maintain a minimal in-process store for wizard + auth endpoints.
+
+interface RlEntry {
+  count: number
+  reset: number
+}
+
+const rlStore = new Map<string, RlEntry>()
+
+function getIp(request: NextRequest): string {
+  return (
+    request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ||
+    request.headers.get('x-real-ip') ||
+    'unknown'
+  )
+}
+
+function checkRateLimit(
+  ip: string,
+  bucket: string,
+  maxPerMin: number,
+): boolean {
+  const key = `${bucket}:${ip}`
+  const now = Date.now()
+  const entry = rlStore.get(key)
+
+  if (!entry || entry.reset < now) {
+    rlStore.set(key, { count: 1, reset: now + 60_000 })
+    return false // not limited
+  }
+
+  entry.count += 1
+  return entry.count > maxPerMin
+}
+
+// Cleanup stale entries every 2 minutes (lazy)
+let lastCleanup = Date.now()
+function maybeCleanup() {
+  const now = Date.now()
+  if (now - lastCleanup > 120_000) {
+    for (const [k, e] of rlStore.entries()) {
+      if (e.reset < now) rlStore.delete(k)
+    }
+    lastCleanup = now
+  }
+}
+
+// ── Main middleware ──────────────────────────────────────────────────────────
+
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
 
+  maybeCleanup()
+
   // ── Multi-user feature flag gate ─────────────────────────────────────────
-  // Block all multi-user page and API routes when NSELF_ADMIN_MULTIUSER is
-  // off (default). This fires BEFORE session checks so unauthenticated
-  // requests also get blocked — no information leak about the feature.
   if (!isMultiUserEnabled()) {
     if (MULTIUSER_API_PREFIXES.some((p) => pathname.startsWith(p))) {
       return NextResponse.json(
@@ -67,17 +180,46 @@ export async function middleware(request: NextRequest) {
     }
   }
 
-  // Allow public routes
-  if (PUBLIC_ROUTES.some((route) => pathname.startsWith(route))) {
-    return NextResponse.next()
+  // ── Per-minute rate limits ───────────────────────────────────────────────
+  const ip = getIp(request)
+
+  // Auth endpoints: 10 req/min/IP
+  if (
+    pathname.startsWith('/api/auth/login') ||
+    pathname.startsWith('/api/auth/totp')
+  ) {
+    if (checkRateLimit(ip, 'auth_strict', 10)) {
+      return NextResponse.json(
+        { error: 'rate_limited', message: 'Too many requests. Try again in a minute.' },
+        {
+          status: 429,
+          headers: { 'Retry-After': '60' },
+        },
+      )
+    }
   }
 
-  // ── SSO header auto-login ────────────────────────────────────────────────────
-  // When NSELF_ADMIN_SSO_HEADER_ENABLED=true, check for the configured SSO
-  // header (default: CF-Access-Authenticated-User-Email). If the header is
-  // present and no session cookie exists, redirect through /api/auth/sso to
-  // create a session and issue the cookie. This supports Cloudflare Access,
-  // nginx auth_request, and similar header-based SSO patterns.
+  // Wizard endpoints: 60 req/min/IP
+  if (pathname.startsWith('/api/wizard')) {
+    if (checkRateLimit(ip, 'wizard', 60)) {
+      return NextResponse.json(
+        { error: 'rate_limited', message: 'Too many wizard requests. Try again in a minute.' },
+        {
+          status: 429,
+          headers: { 'Retry-After': '60' },
+        },
+      )
+    }
+  }
+
+  // Allow public routes
+  if (PUBLIC_ROUTES.some((route) => pathname.startsWith(route))) {
+    const nonce = generateNonce()
+    const response = NextResponse.next()
+    return applySecurityHeaders(response, nonce)
+  }
+
+  // ── SSO header auto-login ────────────────────────────────────────────────
   if (process.env.NSELF_ADMIN_SSO_HEADER_ENABLED === 'true') {
     const ssoHeaderName =
       process.env.NSELF_ADMIN_SSO_HEADER_NAME ||
@@ -86,7 +228,6 @@ export async function middleware(request: NextRequest) {
     const existingSession = request.cookies.get('nself-session')?.value
 
     if (ssoEmail && !existingSession && !pathname.startsWith('/api/')) {
-      // Redirect to SSO endpoint which will create a session and bounce back
       const ssoUrl = new URL('/api/auth/sso', request.url)
       ssoUrl.searchParams.set('redirect', pathname)
       return NextResponse.redirect(ssoUrl)
@@ -98,40 +239,22 @@ export async function middleware(request: NextRequest) {
 
   // If no session token, redirect to login
   if (!sessionToken) {
-    // For API routes, return 401
     if (pathname.startsWith('/api/')) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
-
-    // For page routes, redirect to login
     return NextResponse.redirect(new URL('/login', request.url))
   }
 
   // For page routes: cookie existence is sufficient. The client-side
   // AuthContext validates the session via /api/auth/check on mount, and
   // Layout redirects to /login if isAuthenticated becomes false.
-  //
-  // Avoiding the internal HTTP fetch here fixes a race condition in Next.js
-  // dev mode (Turbopack): the validate-session API route may execute in a
-  // worker thread whose LokiJS instance hasn't loaded the newly-created
-  // session from disk yet, causing a false 401 redirect on every page
-  // navigation immediately after login.
   if (!pathname.startsWith('/api/')) {
+    const nonce = generateNonce()
     const response = NextResponse.next()
-    response.headers.set('X-Content-Type-Options', 'nosniff')
-    response.headers.set('X-Frame-Options', 'DENY')
-    response.headers.set('X-XSS-Protection', '1; mode=block')
-    response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin')
-    response.headers.set(
-      'Permissions-Policy',
-      'camera=(), microphone=(), geolocation=()',
-    )
-    return response
+    return applySecurityHeaders(response, nonce)
   }
 
   // For API routes: validate session token via internal API call.
-  // API calls happen after page load, so the session has had time to persist
-  // to disk and propagate across LokiJS instances.
   const baseUrl = request.nextUrl.origin
   try {
     const validateResponse = await fetch(
@@ -155,18 +278,9 @@ export async function middleware(request: NextRequest) {
     )
   }
 
-  // Add security headers for all requests
+  const nonce = generateNonce()
   const response = NextResponse.next()
-  response.headers.set('X-Content-Type-Options', 'nosniff')
-  response.headers.set('X-Frame-Options', 'DENY')
-  response.headers.set('X-XSS-Protection', '1; mode=block')
-  response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin')
-  response.headers.set(
-    'Permissions-Policy',
-    'camera=(), microphone=(), geolocation=()',
-  )
-
-  return response
+  return applySecurityHeaders(response, nonce)
 }
 
 export const config = {

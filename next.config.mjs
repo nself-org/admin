@@ -23,7 +23,43 @@ const nextConfig = {
     minimumCacheTTL: 60,
   },
   // Security headers
+  // NOTE: CSP with nonce injection is handled in middleware.ts (per-request
+  // nonce).  The static headers below set everything EXCEPT CSP so that
+  // middleware's dynamic CSP wins.  CSP here would override middleware on
+  // static assets; we let middleware handle all dynamic routes and rely on
+  // next.config static CSP only as a fallback for static files.
   async headers() {
+    const isProd = process.env.NODE_ENV === 'production'
+    // Base CSP without nonce — used for static asset responses only.
+    // Dynamic pages get a per-request nonce injected by middleware.
+    const staticCsp = isProd
+      ? [
+          "default-src 'self'",
+          "script-src 'self'",
+          "style-src 'self' 'unsafe-inline'",
+          "img-src 'self' data: blob: https:",
+          "font-src 'self' data:",
+          "connect-src 'self' ws: wss:",
+          "worker-src 'self' blob:",
+          "frame-ancestors 'none'",
+          "base-uri 'self'",
+          "form-action 'self'",
+          "object-src 'none'",
+        ].join('; ')
+      : [
+          "default-src 'self'",
+          "script-src 'self' 'unsafe-eval' 'unsafe-inline'",
+          "style-src 'self' 'unsafe-inline'",
+          "img-src 'self' data: blob: https:",
+          "font-src 'self' data:",
+          "connect-src 'self' ws: wss:",
+          "worker-src 'self' blob:",
+          "frame-ancestors 'none'",
+          "base-uri 'self'",
+          "form-action 'self'",
+          "object-src 'none'",
+        ].join('; ')
+
     return [
       {
         source: '/:path*',
@@ -59,17 +95,7 @@ const nextConfig = {
           },
           {
             key: 'Content-Security-Policy',
-            value: [
-              "default-src 'self'",
-              "script-src 'self' 'unsafe-eval' 'unsafe-inline'",
-              "style-src 'self' 'unsafe-inline'",
-              "img-src 'self' data: blob: https:",
-              "font-src 'self' data:",
-              "connect-src 'self' ws: wss:",
-              "frame-ancestors 'none'",
-              "base-uri 'self'",
-              "form-action 'self'",
-            ].join('; '),
+            value: staticCsp,
           },
         ],
       },

@@ -24,6 +24,7 @@
 
 import { validateCSRFToken } from '@/lib/csrf'
 import { hasAdminPassword } from '@/lib/database'
+import { appendAuditFile, extractSourceIp } from '@/lib/audit-file'
 import { cookies } from 'next/headers'
 import { NextRequest, NextResponse } from 'next/server'
 
@@ -49,6 +50,7 @@ export async function requireAuth(
   // GET / HEAD are safe methods — no session or CSRF check needed.
   // postSetupOnly check still applies to protect data reads after setup.
   const isMutating = !['GET', 'HEAD'].includes(request.method)
+  const sourceIp = extractSourceIp(request.headers)
 
   // Setup-complete gate: block all access (reads and writes) until the admin
   // password has been configured — unless the caller opts out (wizard routes).

@@ -15,10 +15,19 @@ const LOCKOUT_DURATION = 60 * 60 * 1000 // 1 hour lockout
 
 // Configuration
 const RATE_LIMIT_WINDOW = 15 * 60 * 1000 // 15 minutes
+const RATE_LIMIT_WINDOW_1MIN = 60 * 1000 // 1 minute window for per-minute limits
 const MAX_REQUESTS = {
   auth: 5, // 5 login attempts per 15 minutes
   api: 100, // 100 API calls per 15 minutes
   heavy: 10, // 10 heavy operations per 15 minutes
+}
+
+// Per-minute limits (stricter, shorter window)
+// auth_strict: 10/min on login + TOTP endpoints
+// wizard: 60/min on wizard endpoints
+const MAX_REQUESTS_PER_MIN: Record<string, number> = {
+  auth_strict: 10,
+  wizard: 60,
 }
 
 /**
@@ -185,6 +194,80 @@ export function clearRateLimit(
  */
 export function clearAllRateLimits(): void {
   rateLimitStore.clear()
+}
+
+/**
+ * Check if request is rate limited using a per-minute window.
+ * type: 'auth_strict' (10/min) | 'wizard' (60/min)
+ */
+export function isRateLimitedPerMin(
+  request: NextRequest,
+  type: 'auth_strict' | 'wizard',
+): boolean {
+  const clientId = getClientId(request)
+  const key = `permin:${type}:${clientId}`
+  const now = Date.now()
+  const maxRequests = MAX_REQUESTS_PER_MIN[type]
+
+  // Clean stale entries
+  for (const [k, entry] of rateLimitStore.entries()) {
+    if (
+      entry.resetTime < now &&
+      (!entry.lockedUntil || entry.lockedUntil < now)
+    ) {
+      rateLimitStore.delete(k)
+    }
+  }
+
+  const entry = rateLimitStore.get(key)
+
+  if (!entry) {
+    rateLimitStore.set(key, {
+      count: 1,
+      resetTime: now + RATE_LIMIT_WINDOW_1MIN,
+    })
+    return false
+  }
+
+  if (entry.resetTime < now) {
+    rateLimitStore.set(key, {
+      count: 1,
+      resetTime: now + RATE_LIMIT_WINDOW_1MIN,
+    })
+    return false
+  }
+
+  entry.count++
+  return entry.count > maxRequests
+}
+
+/**
+ * Get remaining requests for per-minute limit.
+ */
+export function getRateLimitInfoPerMin(
+  request: NextRequest,
+  type: 'auth_strict' | 'wizard',
+): { remaining: number; resetTime: number; limit: number } {
+  const clientId = getClientId(request)
+  const key = `permin:${type}:${clientId}`
+  const now = Date.now()
+  const maxRequests = MAX_REQUESTS_PER_MIN[type]
+
+  const entry = rateLimitStore.get(key)
+
+  if (!entry || entry.resetTime < now) {
+    return {
+      remaining: maxRequests,
+      resetTime: now + RATE_LIMIT_WINDOW_1MIN,
+      limit: maxRequests,
+    }
+  }
+
+  return {
+    remaining: Math.max(0, maxRequests - entry.count),
+    resetTime: entry.resetTime,
+    limit: maxRequests,
+  }
 }
 
 // Cleanup old entries periodically

@@ -133,8 +133,10 @@
     "next": "^16.2.4",
     "next-intl": "^4.9.1",
     "next-themes": "^0.4.6",
+    "otplib": "^13.4.0",
     "pg": "^8.20.0",
     "prettier-plugin-organize-imports": "^4.3.0",
+    "qrcode": "^1.5.4",
     "react": "^19.2.4",
     "react-day-picker": "^9.14.0",
     "react-dom": "^19.2.4",
@@ -157,7 +159,8 @@
     "unist-util-filter": "^5.0.1",
     "unist-util-visit": "^5.1.0",
     "zod": "^4.3.6",
-    "zustand": "^5.0.12"
+    "zustand": "^5.0.12",
+    "zxcvbn": "^4.4.2"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.11.1",
@@ -173,8 +176,10 @@
     "@types/flexsearch": "^0.7.42",
     "@types/jest": "^30.0.0",
     "@types/node": "^24.12.0",
+    "@types/qrcode": "^1.5.6",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
+    "@types/zxcvbn": "^4.4.5",
     "@typescript-eslint/eslint-plugin": "^8.57.2",
     "@typescript-eslint/parser": "^8.57.2",
     "axe-core": "^4.11.1",

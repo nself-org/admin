@@ -11,6 +11,7 @@ import {
   hasAdminPassword,
   revokeAllSessionsExcept,
   revokeSession,
+  rotateSession,
   setAdminPassword,
   type SessionItem,
 } from './database'
@@ -191,6 +192,16 @@ export async function revokeAllOtherSessions(
   currentToken: string,
 ): Promise<number> {
   return revokeAllSessionsExcept(userId, currentToken)
+}
+
+/**
+ * Rotate session token on privilege escalation (e.g., setup completion).
+ * Returns new SessionItem with fresh token + CSRF, or null if session not found.
+ */
+export async function rotateAdminSession(
+  oldToken: string,
+): Promise<SessionItem | null> {
+  return rotateSession(oldToken)
 }
 
 // Get session info (including CSRF token)

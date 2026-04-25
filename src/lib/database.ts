@@ -654,6 +654,48 @@ export async function refreshSession(
   return session
 }
 
+/**
+ * Rotate session token on privilege escalation.
+ *
+ * Called after setup completion (password first set) to prevent session
+ * fixation.  Deletes the old token, creates a new one with the same metadata,
+ * and returns the new token + new CSRF token.
+ */
+export async function rotateSession(
+  oldToken: string,
+): Promise<SessionItem | null> {
+  await initDatabase()
+  const session = sessionsCollection?.findOne({ token: oldToken }) ?? null
+  if (!session) return null
+
+  // Remove old token
+  sessionsCollection?.remove(session)
+
+  // Create a fresh token + CSRF
+  const newToken = crypto.randomBytes(32).toString('hex')
+  const newCsrfToken = crypto.randomBytes(32).toString('hex')
+  const now = new Date()
+  const newSession: SessionItem = {
+    ...session,
+    token: newToken,
+    csrfToken: newCsrfToken,
+    createdAt: now,
+    lastActive: now,
+  }
+  sessionsCollection?.insert(newSession)
+  await addAuditLog('session_rotated', { userId: session.userId }, true)
+
+  await new Promise<void>((resolve) => {
+    if (!db) { resolve(); return }
+    ;(db as any).saveDatabase((err: unknown) => {
+      if (err) console.warn('Failed to persist rotated session:', err)
+      resolve()
+    })
+  })
+
+  return newSession
+}
+
 // Project cache operations
 export async function getCachedProjectInfo(key: string): Promise<any> {
   await initDatabase()

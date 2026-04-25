@@ -1,3 +1,4 @@
+import { appendAuditFile, extractSourceIp } from '@/lib/audit-file'
 import {
   checkPasswordExists,
   isDevMode,
@@ -5,7 +6,6 @@ import {
   setupAdminPassword,
 } from '@/lib/auth-db'
 import { setCSRFCookie } from '@/lib/csrf'
-import { appendAuditFile, extractSourceIp } from '@/lib/audit-file'
 import { addAuditLog } from '@/lib/database'
 import { NextRequest, NextResponse } from 'next/server'
 

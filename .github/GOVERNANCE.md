@@ -22,7 +22,6 @@ Under the maintainer council model, a small group of trusted maintainers (3-7 pe
 
 A lightweight RFC (Request for Comments) process for significant changes is planned for a future release. Until then, major proposals should be opened as GitHub issues with the `proposal` label and discussed before implementation begins. The founder or a CODEOWNER will tag the issue `accepted`, `needs-revision`, or `declined` after discussion.
 
-
 ## DCO Sign-Off
 
 nSelf uses the [Developer Certificate of Origin (DCO)](https://developercertificate.org/) instead of a CLA. All contributors must sign off on their commits:

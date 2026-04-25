@@ -5,10 +5,10 @@
  * enables TOTP.  Returns 10 one-time recovery codes.
  */
 
-import { confirmTotpSetup } from '@/lib/totp'
-import { requireAuth } from '@/lib/require-auth'
-import { addAuditLog } from '@/lib/database'
 import { appendAuditFile, extractSourceIp } from '@/lib/audit-file'
+import { addAuditLog } from '@/lib/database'
+import { requireAuth } from '@/lib/require-auth'
+import { confirmTotpSetup } from '@/lib/totp'
 import { NextRequest, NextResponse } from 'next/server'
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
@@ -29,7 +29,12 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     const result = await confirmTotpSetup(code.trim())
 
     const sourceIp = extractSourceIp(request.headers)
-    await addAuditLog('totp_setup', { success: result.success }, result.success, 'admin')
+    await addAuditLog(
+      'totp_setup',
+      { success: result.success },
+      result.success,
+      'admin',
+    )
     appendAuditFile({
       timestamp: new Date().toISOString(),
       user: 'admin',

@@ -763,7 +763,6 @@ See [MIGRATION_v0.4_to_v0.5.md](MIGRATION_v0.4_to_v0.5.md) for detailed upgrade 
 - **Audit log live tail** (Q02) — Admin shows live stream of np_audit_log entries via Hasura subscription panel.
 - **Ollama status panel** (B38) — Admin displays Ollama service health and installed models.
 
-
 ---
 
 ## [1.0.12] - 2026-04-25

@@ -9,8 +9,12 @@
  * Returns current TOTP status (enabled / remaining recovery codes).
  */
 
-import { isTotpEnabled, initTotpSetup, getRemainingRecoveryCodeCount } from '@/lib/totp'
 import { requireAuth } from '@/lib/require-auth'
+import {
+  getRemainingRecoveryCodeCount,
+  initTotpSetup,
+  isTotpEnabled,
+} from '@/lib/totp'
 import { NextRequest, NextResponse } from 'next/server'
 
 export async function GET(request: NextRequest): Promise<NextResponse> {

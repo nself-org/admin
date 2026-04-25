@@ -4,8 +4,8 @@ This file lists the current maintainers of this repository.
 
 ## Core Maintainers
 
-| Name | GitHub | Area | Contact |
-|------|--------|------|---------|
+| Name          | GitHub         | Area                | Contact                 |
+| ------------- | -------------- | ------------------- | ----------------------- |
 | Aric Camarata | @aric-camarata | Founder / All areas | aric.camarata@gmail.com |
 
 ## Becoming a Maintainer
@@ -35,4 +35,3 @@ No emeritus maintainers yet.
 ---
 
 See [GOVERNANCE.md](GOVERNANCE.md) for the full governance model.
-

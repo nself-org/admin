@@ -5,10 +5,10 @@
  * Called after password authentication succeeds when TOTP is enabled.
  */
 
-import { verifyTotpCode } from '@/lib/totp'
-import { addAuditLog } from '@/lib/database'
 import { appendAuditFile, extractSourceIp } from '@/lib/audit-file'
-import { isRateLimited, getRateLimitInfo } from '@/lib/rateLimiter'
+import { addAuditLog } from '@/lib/database'
+import { getRateLimitInfo, isRateLimited } from '@/lib/rateLimiter'
+import { verifyTotpCode } from '@/lib/totp'
 import { NextRequest, NextResponse } from 'next/server'
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
@@ -16,11 +16,16 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   if (isRateLimited(request, 'auth')) {
     const info = getRateLimitInfo(request, 'auth')
     return NextResponse.json(
-      { success: false, error: 'Too many verification attempts. Please try again later.' },
+      {
+        success: false,
+        error: 'Too many verification attempts. Please try again later.',
+      },
       {
         status: 429,
         headers: {
-          'Retry-After': String(Math.ceil((info.resetTime - Date.now()) / 1000)),
+          'Retry-After': String(
+            Math.ceil((info.resetTime - Date.now()) / 1000),
+          ),
         },
       },
     )

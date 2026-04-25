@@ -10,7 +10,13 @@
 
 // otplib v13 uses a functional API — no 'authenticator' singleton export.
 // We use the functional helpers directly. 'window' tolerance is applied per-call.
-import { generate, generateSecret, generateURI, verify, verifySync } from 'otplib'
+import {
+  generate,
+  generateSecret,
+  generateURI,
+  verify,
+  verifySync,
+} from 'otplib'
 import QRCode from 'qrcode'
 import { deleteConfig, getConfig, setConfig } from './database'
 
@@ -116,7 +122,8 @@ export async function verifyTotpCode(code: string): Promise<boolean> {
   }
 
   // Try recovery codes
-  const recoveryCodes: string[] = (await getConfig(TOTP_RECOVERY_CODES_KEY)) || []
+  const recoveryCodes: string[] =
+    (await getConfig(TOTP_RECOVERY_CODES_KEY)) || []
   const cleanCode = code.toUpperCase().replace(/[-\s]/g, '')
   const idx = recoveryCodes.findIndex(
     (rc) => rc.toUpperCase().replace(/[-\s]/g, '') === cleanCode,

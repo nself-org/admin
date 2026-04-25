@@ -5,10 +5,10 @@
  * Requires auth + CSRF.
  */
 
-import { regenerateRecoveryCodes } from '@/lib/totp'
-import { requireAuth } from '@/lib/require-auth'
-import { addAuditLog } from '@/lib/database'
 import { appendAuditFile, extractSourceIp } from '@/lib/audit-file'
+import { addAuditLog } from '@/lib/database'
+import { requireAuth } from '@/lib/require-auth'
+import { regenerateRecoveryCodes } from '@/lib/totp'
 import { NextRequest, NextResponse } from 'next/server'
 
 export async function POST(request: NextRequest): Promise<NextResponse> {

@@ -49,7 +49,11 @@ const PUBLIC_ROUTES = [
 function generateNonce(): string {
   const buffer = new Uint8Array(16)
   globalThis.crypto.getRandomValues(buffer)
-  return btoa(Array.from(buffer).map(b => String.fromCharCode(b)).join(''))
+  return btoa(
+    Array.from(buffer)
+      .map((b) => String.fromCharCode(b))
+      .join(''),
+  )
 }
 
 function buildCsp(nonce: string): string {
@@ -191,7 +195,10 @@ export async function middleware(request: NextRequest) {
   ) {
     if (checkRateLimit(ip, 'auth_strict', 10)) {
       return NextResponse.json(
-        { error: 'rate_limited', message: 'Too many requests. Try again in a minute.' },
+        {
+          error: 'rate_limited',
+          message: 'Too many requests. Try again in a minute.',
+        },
         {
           status: 429,
           headers: { 'Retry-After': '60' },
@@ -204,7 +211,10 @@ export async function middleware(request: NextRequest) {
   if (pathname.startsWith('/api/wizard')) {
     if (checkRateLimit(ip, 'wizard', 60)) {
       return NextResponse.json(
-        { error: 'rate_limited', message: 'Too many wizard requests. Try again in a minute.' },
+        {
+          error: 'rate_limited',
+          message: 'Too many wizard requests. Try again in a minute.',
+        },
         {
           status: 429,
           headers: { 'Retry-After': '60' },

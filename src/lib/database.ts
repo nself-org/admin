@@ -686,7 +686,10 @@ export async function rotateSession(
   await addAuditLog('session_rotated', { userId: session.userId }, true)
 
   await new Promise<void>((resolve) => {
-    if (!db) { resolve(); return }
+    if (!db) {
+      resolve()
+      return
+    }
     ;(db as any).saveDatabase((err: unknown) => {
       if (err) console.warn('Failed to persist rotated session:', err)
       resolve()

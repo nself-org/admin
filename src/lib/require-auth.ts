@@ -22,9 +22,9 @@
  * be applied consistently to all mutating routes.
  */
 
+import { extractSourceIp } from '@/lib/audit-file'
 import { validateCSRFToken } from '@/lib/csrf'
 import { hasAdminPassword } from '@/lib/database'
-import { appendAuditFile, extractSourceIp } from '@/lib/audit-file'
 import { cookies } from 'next/headers'
 import { NextRequest, NextResponse } from 'next/server'
 

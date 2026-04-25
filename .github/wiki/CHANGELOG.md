@@ -5,6 +5,41 @@ All notable changes to nself-admin will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.11] - 2026-04-25
+
+### Security
+
+- **Auth middleware on all 260 routes** (S121): `requireAuth` middleware enforced across every App Router page and API route. Unauthenticated requests return 401 and redirect to `/login`.
+- **CSRF protection** added to all 260 routes as part of S121 security lockdown.
+- **Secret redaction** in `/api/env/read`: `HASURA_GRAPHQL_ADMIN_SECRET`, `NSELF_PLUGIN_LICENSE_KEY`, and other sensitive vars are masked in the API response. Operators see `***` in the UI; plaintext never leaves the server.
+- **Wizard write guards**: `/build` wizard routes now verify auth before accepting any POST; unauthenticated wizard writes return 401.
+- **Default binding to 127.0.0.1**: Docker Compose production config now binds admin port 3021 to `127.0.0.1` only. External exposure requires the new `--expose-network` flag (default: off).
+- **`--expose-network` flag**: explicit opt-in to bind admin on `0.0.0.0` for LAN/remote-admin scenarios.
+- **Gitleaks credential scanner** added to CI (S102-T01+T02): all PRs and pushes now run gitleaks to prevent accidental secret commits.
+
+### Fixed
+
+- **Dockerfile version sync** (S211-T07b): `NSELF_VERSION` build arg and `ADMIN_VERSION` env var in Dockerfile updated to `1.0.11`; stale `1.0.10` references removed.
+- **CLI version constant** (S211-T06): `src/lib/cli-version.ts` `CLI_VERSION` bumped to `1.0.11` to match CLI lockstep.
+- **`react-markdown` lockfile** (S211-T07): `pnpm-lock.yaml` regenerated to include `react-markdown@^9.0.1`; specifier mismatch resolved.
+- **`dompurify` lockfile specifier** (S211-T07b): `pnpm-lock.yaml` specifier for `dompurify` synced.
+- **TypeScript errors** (S211-T07b): resolved `TS2552` and `TS2307` type errors across build.
+- **`NODE_ENV` readonly** (S211-T07b): `NODE_ENV` typed as `readonly` in TS config to prevent accidental mutation.
+- **`eslint-plugin-react-hooks`** (S211-T07b): upgraded to resolve `react-hooks/rules-of-hooks` CI failures.
+- **`ActivityTimeline` useMemo** (S211-T07b): wrapped expensive computations in `useMemo` to fix lint exhaustive-deps warning.
+- **Dead code removal** (S211-T07b): deleted `page.old.tsx` and excluded remaining dead-code files from ESLint scope.
+- **Prettier formatting** (S211-T07b): applied Prettier to all files; `services/functions/page.tsx` formatted.
+- **LokiJS test isolation** (S211-T07b): fixed prefix collision in `api-keys` tests causing false failures in parallel Jest runs.
+- **Vibe session export** (S211-T07b): removed invalid `maxSessionsPerUser` export from vibe session route that caused CI type errors.
+- **Hasura startup guard** (S211-T07b / `fix(build)`): `HASURA_GRAPHQL_ADMIN_SECRET` guard skipped during `next build` phase to prevent build-time failures in CI containers without a running Hasura.
+- **Gitleaks allowlist path** (ci): fixed allowlist path reference after `ai-dir` removal.
+
+### Changed
+
+- **Version bumped to v1.0.11** to maintain lockstep with CLI v1.0.11 (per nSelf CLI-Admin version-lockstep policy).
+
+---
+
 ## [0.5.0] - 2026-01-31
 
 ### 🎉 Production-Ready Release

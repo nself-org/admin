@@ -115,6 +115,14 @@ export default [
     },
   },
   {
-    ignores: ['node_modules/**', '.next/**', 'dist/**', '*.config.*'],
+    ignores: [
+      'node_modules/**',
+      '.next/**',
+      'dist/**',
+      '*.config.*',
+      // Dead code / pending code files — not part of the shipped product
+      'src/app/page.old.tsx',
+      'src/components/services_pending_code.tsx',
+    ],
   },
 ]

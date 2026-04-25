@@ -13,6 +13,7 @@ import { notFound } from 'next/navigation'
 import * as React from 'react'
 import { Suspense } from 'react'
 import ReactMarkdown from 'react-markdown'
+import rehypeSanitize from 'rehype-sanitize'
 
 function HelpArticleContent({ id }: { id: string }) {
   const [feedbackGiven, setFeedbackGiven] = React.useState(false)
@@ -44,6 +45,7 @@ function HelpArticleContent({ id }: { id: string }) {
     return (
       <ReactMarkdown
         className="prose-zinc prose max-w-none dark:prose-invert"
+        rehypePlugins={[rehypeSanitize]}
         components={{
           code({ className, children, ...rest }) {
             const match = /language-(\w+)/.exec(className || '')

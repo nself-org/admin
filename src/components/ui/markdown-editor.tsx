@@ -1,9 +1,10 @@
 'use client'
 
 import { cn } from '@/lib/utils'
-import { sanitizeHtml, sanitizeUrl } from '@/lib/validation'
 import { Code, Eye } from 'lucide-react'
 import * as React from 'react'
+import ReactMarkdown from 'react-markdown'
+import rehypeSanitize from 'rehype-sanitize'
 import { Button } from './button'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './tabs'
 import { Textarea } from './textarea'
@@ -170,43 +171,16 @@ export function MarkdownEditor({
   )
 }
 
-// Simple markdown preview (basic implementation)
-// In production, you might want to use a library like react-markdown
+// Markdown preview using react-markdown + rehype-sanitize.
+// WHY: dangerouslySetInnerHTML with manual sanitization is fragile — regex-based
+// escaping can be bypassed via attribute injection, partial-tag tricks, or
+// DOM clobbering. react-markdown parses via unified and rehype-sanitize strips
+// all attributes/elements not on the allowlist at the AST level, before any
+// serialisation to the DOM. No manual HTML string manipulation needed.
 function MarkdownPreview({ content }: { content: string }) {
-  const html = React.useMemo(() => {
-    return content
-      .split('\n')
-      .map((line) => {
-        // Sanitize text content first to prevent XSS via dangerouslySetInnerHTML
-        line = sanitizeHtml(line)
-
-        // Headers
-        if (line.startsWith('### ')) return `<h3>${line.slice(4)}</h3>`
-        if (line.startsWith('## ')) return `<h2>${line.slice(3)}</h2>`
-        if (line.startsWith('# ')) return `<h1>${line.slice(2)}</h1>`
-
-        // Bold
-        line = line.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-
-        // Italic
-        line = line.replace(/\*(.+?)\*/g, '<em>$1</em>')
-
-        // Inline code
-        line = line.replace(/`(.+?)`/g, '<code>$1</code>')
-
-        // Links (sanitize URLs to prevent javascript: XSS)
-        line = line.replace(/\[(.+?)\]\((.+?)\)/g, (_match, text, url) => {
-          const safeUrl = sanitizeUrl(url)
-          return `<a href="${safeUrl}">${text}</a>`
-        })
-
-        // Empty lines
-        if (!line.trim()) return '<br />'
-
-        return `<p>${line}</p>`
-      })
-      .join('\n')
-  }, [content])
-
-  return <div dangerouslySetInnerHTML={{ __html: html }} />
+  return (
+    <div className="prose prose-sm max-w-none dark:prose-invert">
+      <ReactMarkdown rehypePlugins={[rehypeSanitize]}>{content}</ReactMarkdown>
+    </div>
+  )
 }

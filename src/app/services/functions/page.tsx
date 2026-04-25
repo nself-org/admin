@@ -102,7 +102,7 @@ function FunctionsContent() {
 
   // Enhanced features state
   const [activeTab, setActiveTab] = useUrlState<string>('tab', 'overview')
-  const [_deploymentStatus, _setDeploymentStatus] = useState<
+  const [deploymentStatus, setDeploymentStatus] = useState<
     DeploymentStatus[]
   >([])
   const [logLevel, setLogLevel] = useState('all')

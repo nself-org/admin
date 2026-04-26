@@ -67,10 +67,23 @@ paths = [
   '''testdata/.*''',
   '''test/.*fixtures.*''',
   '''\.github/workflows/gitleaks\.yml''',
+  '''src/tests/.*''',
+  '''src/lib/.*/__tests__/.*''',
+  '''docs/.*\.md''',
+  '''src/app/.*/page\.tsx''',
 ]
 regexes = [
   '''sk_live_FAKE_TEST_FOR_CI_GATE''',
   '''AKIA_FAKE_TEST_KEY_DO_NOT_USE''',
   '''AIza_FAKE_GOOGLE_KEY_DO_NOT_USE''',
   '''nself_pro_FAKE_TEST_KEY_DO_NOT_USE''',
+  '''sk_test_abc123''',
+  '''pk_test_abc123''',
+  '''whsec_abc123''',
+  '''nself_ab_[0-9]{36,}''',
+  '''jwt-secret-key-32-chars''',
+  '''T00000000/B00000000/X+''',
+  '''nsf_ci_[a-z0-9]{14,}''',
+  '''a3f2d8c9b1e4''',
+  '''eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9''',
 ]

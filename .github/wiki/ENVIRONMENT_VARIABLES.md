@@ -27,13 +27,13 @@ This document provides a complete reference for all environment variables used b
 
 Basic project settings that define your nself deployment.
 
-| Variable              | Type   | Default           | Required | Description                                 |
+| Variable | Type | Default | Required | Description |
 | --------------------- | ------ | ----------------- | -------- | ------------------------------------------- |
-| `ENV`                 | string | `dev`             | Yes      | Environment mode (`dev`, `staging`, `prod`) |
-| `PROJECT_NAME`        | string | -                 | **Yes**  | Project identifier (alphanumeric + dash)    |
-| `PROJECT_DESCRIPTION` | string | `""`              | No       | Human-readable project description          |
-| `BASE_DOMAIN`         | string | `local.nself.org` | Yes      | Base domain for all services                |
-| `ADMIN_EMAIL`         | string | `""`              | No       | Administrative contact email                |
+| `ENV` | string | `dev` | Yes | Environment mode (`dev`, `staging`, `prod`) |
+| `PROJECT_NAME` | string | - | **Yes** | Project identifier (alphanumeric + dash) |
+| `PROJECT_DESCRIPTION` | string | `""` | No | Human-readable project description |
+| `BASE_DOMAIN` | string | `local.nself.org` | Yes | Base domain for all services |
+| `ADMIN_EMAIL` | string | `""` | No | Administrative contact email |
 
 ### Examples
 
@@ -53,29 +53,29 @@ Control which services are included in your stack. Core services default to `tru
 
 ### Core Services (Always Required)
 
-| Variable           | Type | Default | Description                             |
+| Variable | Type | Default | Description |
 | ------------------ | ---- | ------- | --------------------------------------- |
-| `POSTGRES_ENABLED` | bool | `true`  | PostgreSQL database (always required)   |
-| `HASURA_ENABLED`   | bool | `true`  | Hasura GraphQL engine (always required) |
-| `AUTH_ENABLED`     | bool | `true`  | Authentication service (recommended)    |
-| `STORAGE_ENABLED`  | bool | `true`  | MinIO storage service (recommended)     |
+| `POSTGRES_ENABLED` | bool | `true` | PostgreSQL database (always required) |
+| `HASURA_ENABLED` | bool | `true` | Hasura GraphQL engine (always required) |
+| `AUTH_ENABLED` | bool | `true` | Authentication service (recommended) |
+| `STORAGE_ENABLED` | bool | `true` | MinIO storage service (recommended) |
 
 ### Optional Services
 
-| Variable              | Type | Default | Description                               |
+| Variable | Type | Default | Description |
 | --------------------- | ---- | ------- | ----------------------------------------- |
-| `NSELF_ADMIN_ENABLED` | bool | `false` | Enable nself-admin UI                     |
-| `REDIS_ENABLED`       | bool | `false` | Enable Redis cache                        |
-| `MAILPIT_ENABLED`     | bool | `false` | Enable development email capture          |
-| `FUNCTIONS_ENABLED`   | bool | `false` | Enable serverless functions (coming soon) |
-| `PROMETHEUS_ENABLED`  | bool | `false` | Enable Prometheus metrics                 |
-| `GRAFANA_ENABLED`     | bool | `false` | Enable Grafana dashboards                 |
-| `LOKI_ENABLED`        | bool | `false` | Enable log aggregation                    |
-| `SEARCH_ENABLED`      | bool | `false` | Enable search services                    |
+| `NSELF_ADMIN_ENABLED` | bool | `false` | Enable nself-admin UI |
+| `REDIS_ENABLED` | bool | `false` | Enable Redis cache |
+| `MAILPIT_ENABLED` | bool | `false` | Enable development email capture |
+| `FUNCTIONS_ENABLED` | bool | `false` | Enable serverless functions (coming soon) |
+| `PROMETHEUS_ENABLED` | bool | `false` | Enable Prometheus metrics |
+| `GRAFANA_ENABLED` | bool | `false` | Enable Grafana dashboards |
+| `LOKI_ENABLED` | bool | `false` | Enable log aggregation |
+| `SEARCH_ENABLED` | bool | `false` | Enable search services |
 
 ### Bundle Flags
 
-| Variable             | Type | Default | Description                                    |
+| Variable | Type | Default | Description |
 | -------------------- | ---- | ------- | ---------------------------------------------- |
 | `MONITORING_ENABLED` | bool | `false` | Enables Prometheus, Grafana, and Loki together |
 
@@ -103,15 +103,15 @@ MONITORING_ENABLED=true
 
 PostgreSQL database settings.
 
-| Variable              | Type   | Default              | Required | Description                     |
+| Variable | Type | Default | Required | Description |
 | --------------------- | ------ | -------------------- | -------- | ------------------------------- |
-| `POSTGRES_DB`         | string | `nself`              | Yes      | Database name                   |
-| `POSTGRES_USER`       | string | `postgres`           | Yes      | Database user (always postgres) |
-| `POSTGRES_PASSWORD`   | string | `nself-dev-password` | Yes      | Database password               |
-| `POSTGRES_HOST`       | string | `postgres`           | No       | Database host                   |
-| `POSTGRES_PORT`       | int    | `5432`               | No       | Database port                   |
-| `POSTGRES_VERSION`    | string | `16-alpine`          | No       | PostgreSQL version              |
-| `POSTGRES_EXTENSIONS` | string | `uuid-ossp,pgcrypto` | No       | Comma-separated extensions      |
+| `POSTGRES_DB` | string | `nself` | Yes | Database name |
+| `POSTGRES_USER` | string | `postgres` | Yes | Database user (always postgres) |
+| `POSTGRES_PASSWORD` | string | `nself-dev-password` | Yes | Database password |
+| `POSTGRES_HOST` | string | `postgres` | No | Database host |
+| `POSTGRES_PORT` | int | `5432` | No | Database port |
+| `POSTGRES_VERSION` | string | `16-alpine` | No | PostgreSQL version |
+| `POSTGRES_EXTENSIONS` | string | `uuid-ossp,pgcrypto` | No | Comma-separated extensions |
 
 ### Example
 
@@ -128,17 +128,17 @@ POSTGRES_EXTENSIONS=uuid-ossp,pgcrypto,postgis
 
 Hasura GraphQL engine settings.
 
-| Variable                           | Type   | Default      | Required | Description                   |
+| Variable | Type | Default | Required | Description |
 | ---------------------------------- | ------ | ------------ | -------- | ----------------------------- |
-| `HASURA_VERSION`                   | string | `v2.44.0`    | No       | Hasura version                |
-| `HASURA_GRAPHQL_ADMIN_SECRET`      | string | -            | **Yes**  | Admin secret (min 32 chars)   |
-| `HASURA_JWT_KEY`                   | string | -            | **Yes**  | JWT secret key (min 32 chars) |
-| `HASURA_JWT_TYPE`                  | string | `HS256`      | No       | JWT algorithm (HS256, RS256)  |
-| `HASURA_GRAPHQL_ENABLE_CONSOLE`    | bool   | `true` (dev) | No       | Enable web console            |
-| `HASURA_GRAPHQL_DEV_MODE`          | bool   | `true` (dev) | No       | Development mode              |
-| `HASURA_GRAPHQL_ENABLE_TELEMETRY`  | bool   | `false`      | No       | Send usage stats              |
-| `HASURA_GRAPHQL_CORS_DOMAIN`       | string | `*` (dev)    | No       | CORS domains                  |
-| `HASURA_GRAPHQL_UNAUTHORIZED_ROLE` | string | `public`     | No       | Default unauthorized role     |
+| `HASURA_VERSION` | string | `v2.44.0` | No | Hasura version |
+| `HASURA_GRAPHQL_ADMIN_SECRET` | string | - | **Yes** | Admin secret (min 32 chars) |
+| `HASURA_JWT_KEY` | string | - | **Yes** | JWT secret key (min 32 chars) |
+| `HASURA_JWT_TYPE` | string | `HS256` | No | JWT algorithm (HS256, RS256) |
+| `HASURA_GRAPHQL_ENABLE_CONSOLE` | bool | `true` (dev) | No | Enable web console |
+| `HASURA_GRAPHQL_DEV_MODE` | bool | `true` (dev) | No | Development mode |
+| `HASURA_GRAPHQL_ENABLE_TELEMETRY` | bool | `false` | No | Send usage stats |
+| `HASURA_GRAPHQL_CORS_DOMAIN` | string | `*` (dev) | No | CORS domains |
+| `HASURA_GRAPHQL_UNAUTHORIZED_ROLE` | string | `public` | No | Default unauthorized role |
 
 ### Important Notes
 
@@ -163,13 +163,13 @@ HASURA_GRAPHQL_CORS_DOMAIN=https://myapp.com,https://api.myapp.com
 
 Hasura Auth service configuration.
 
-| Variable                            | Type   | Default   | Description                      |
+| Variable | Type | Default | Description |
 | ----------------------------------- | ------ | --------- | -------------------------------- |
-| `AUTH_VERSION`                      | string | `v0.36.0` | Auth service version             |
-| `AUTH_JWT_REFRESH_TOKEN_EXPIRES_IN` | int    | `2592000` | Refresh token lifetime (seconds) |
-| `AUTH_JWT_ACCESS_TOKEN_EXPIRES_IN`  | int    | `900`     | Access token lifetime (seconds)  |
-| `AUTH_WEBAUTHN_ENABLED`             | bool   | `false`   | Enable passwordless auth         |
-| `AUTH_EMAIL_VERIFICATION_REQUIRED`  | bool   | `false`   | Require email verification       |
+| `AUTH_VERSION` | string | `v0.36.0` | Auth service version |
+| `AUTH_JWT_REFRESH_TOKEN_EXPIRES_IN` | int | `2592000` | Refresh token lifetime (seconds) |
+| `AUTH_JWT_ACCESS_TOKEN_EXPIRES_IN` | int | `900` | Access token lifetime (seconds) |
+| `AUTH_WEBAUTHN_ENABLED` | bool | `false` | Enable passwordless auth |
+| `AUTH_EMAIL_VERIFICATION_REQUIRED` | bool | `false` | Require email verification |
 
 ### Example
 
@@ -186,15 +186,15 @@ AUTH_WEBAUTHN_ENABLED=true               # Enable passwordless login
 
 Object storage configuration.
 
-| Variable              | Type   | Default      | Required | Description                 |
+| Variable | Type | Default | Required | Description |
 | --------------------- | ------ | ------------ | -------- | --------------------------- |
-| `STORAGE_ENABLED`     | bool   | `true`       | No       | Enable storage service      |
-| `MINIO_VERSION`       | string | `latest`     | No       | MinIO version               |
-| `MINIO_ROOT_USER`     | string | `minioadmin` | Yes\*    | Root username               |
-| `MINIO_ROOT_PASSWORD` | string | -            | Yes\*    | Root password (min 8 chars) |
-| `MINIO_PORT`          | int    | `9000`       | No       | MinIO API port              |
-| `MINIO_CONSOLE_PORT`  | int    | `9001`       | No       | MinIO console port          |
-| `S3_BUCKET`           | string | `nself`      | No       | Default bucket name         |
+| `STORAGE_ENABLED` | bool | `true` | No | Enable storage service |
+| `MINIO_VERSION` | string | `latest` | No | MinIO version |
+| `MINIO_ROOT_USER` | string | `minioadmin` | Yes\* | Root username |
+| `MINIO_ROOT_PASSWORD` | string | - | Yes\* | Root password (min 8 chars) |
+| `MINIO_PORT` | int | `9000` | No | MinIO API port |
+| `MINIO_CONSOLE_PORT` | int | `9001` | No | MinIO console port |
+| `S3_BUCKET` | string | `nself` | No | Default bucket name |
 
 \*Required if STORAGE_ENABLED=true
 
@@ -213,19 +213,19 @@ S3_BUCKET=myapp-storage
 
 ### Redis Configuration
 
-| Variable         | Type   | Default    | Description        |
+| Variable | Type | Default | Description |
 | ---------------- | ------ | ---------- | ------------------ |
-| `REDIS_ENABLED`  | bool   | `false`    | Enable Redis cache |
-| `REDIS_VERSION`  | string | `7-alpine` | Redis version      |
-| `REDIS_PORT`     | int    | `6379`     | Redis port         |
-| `REDIS_PASSWORD` | string | `""`       | Redis password     |
+| `REDIS_ENABLED` | bool | `false` | Enable Redis cache |
+| `REDIS_VERSION` | string | `7-alpine` | Redis version |
+| `REDIS_PORT` | int | `6379` | Redis port |
+| `REDIS_PASSWORD` | string | `""` | Redis password |
 
 ### Search Services
 
-| Variable         | Type   | Default       | Description           |
+| Variable | Type | Default | Description |
 | ---------------- | ------ | ------------- | --------------------- |
-| `SEARCH_ENABLED` | bool   | `false`       | Enable search service |
-| `SEARCH_ENGINE`  | string | `meilisearch` | Search engine choice  |
+| `SEARCH_ENABLED` | bool | `false` | Enable search service |
+| `SEARCH_ENGINE` | string | `meilisearch` | Search engine choice |
 
 Available search engines:
 
@@ -333,16 +333,16 @@ FRONTEND_APP_2_ROUTE=portal
 
 ### Variables
 
-| Pattern                             | Type   | Required | Description                   |
+| Pattern | Type | Required | Description |
 | ----------------------------------- | ------ | -------- | ----------------------------- |
-| `FRONTEND_APP_COUNT`                | int    | Yes      | Number of frontend apps       |
-| `FRONTEND_APP_N_DISPLAY_NAME`       | string | No       | Human-readable name           |
-| `FRONTEND_APP_N_SYSTEM_NAME`        | string | No       | System identifier (no spaces) |
-| `FRONTEND_APP_N_TABLE_PREFIX`       | string | No       | Database table prefix         |
-| `FRONTEND_APP_N_PORT`               | int    | **Yes**  | Local development port        |
-| `FRONTEND_APP_N_ROUTE`              | string | No       | Subdomain/route               |
-| `FRONTEND_APP_N_REMOTE_SCHEMA_NAME` | string | No       | Hasura remote schema name     |
-| `FRONTEND_APP_N_REMOTE_SCHEMA_URL`  | string | No       | GraphQL endpoint URL          |
+| `FRONTEND_APP_COUNT` | int | Yes | Number of frontend apps |
+| `FRONTEND_APP_N_DISPLAY_NAME` | string | No | Human-readable name |
+| `FRONTEND_APP_N_SYSTEM_NAME` | string | No | System identifier (no spaces) |
+| `FRONTEND_APP_N_TABLE_PREFIX` | string | No | Database table prefix |
+| `FRONTEND_APP_N_PORT` | int | **Yes** | Local development port |
+| `FRONTEND_APP_N_ROUTE` | string | No | Subdomain/route |
+| `FRONTEND_APP_N_REMOTE_SCHEMA_NAME` | string | No | Hasura remote schema name |
+| `FRONTEND_APP_N_REMOTE_SCHEMA_URL` | string | No | GraphQL endpoint URL |
 
 ### Port Requirements
 
@@ -356,17 +356,17 @@ FRONTEND_APP_2_ROUTE=portal
 
 Automated backup settings.
 
-| Variable                | Type   | Default     | Description              |
+| Variable | Type | Default | Description |
 | ----------------------- | ------ | ----------- | ------------------------ |
-| `BACKUP_ENABLED`        | bool   | `false`     | Enable automated backups |
-| `BACKUP_SCHEDULE`       | string | `0 2 * * *` | Cron schedule            |
-| `BACKUP_RETENTION_DAYS` | int    | `30`        | Days to retain backups   |
-| `BACKUP_DIR`            | string | `./backups` | Backup directory         |
-| `BACKUP_STORAGE`        | string | `local`     | Storage location         |
-| `BACKUP_TYPES`          | string | `database`  | Backup types             |
-| `BACKUP_COMPRESSION`    | bool   | `true`      | Enable compression       |
-| `BACKUP_ENCRYPTION`     | bool   | `false`     | Enable encryption        |
-| `BACKUP_CLOUD_PROVIDER` | string | `""`        | Cloud provider           |
+| `BACKUP_ENABLED` | bool | `false` | Enable automated backups |
+| `BACKUP_SCHEDULE` | string | `0 2 * * *` | Cron schedule |
+| `BACKUP_RETENTION_DAYS` | int | `30` | Days to retain backups |
+| `BACKUP_DIR` | string | `./backups` | Backup directory |
+| `BACKUP_STORAGE` | string | `local` | Storage location |
+| `BACKUP_TYPES` | string | `database` | Backup types |
+| `BACKUP_COMPRESSION` | bool | `true` | Enable compression |
+| `BACKUP_ENCRYPTION` | bool | `false` | Enable encryption |
+| `BACKUP_CLOUD_PROVIDER` | string | `""` | Cloud provider |
 
 ### Cron Schedule Examples
 
@@ -435,7 +435,7 @@ AUTH_SMTP_SENDER=noreply@example.com
 
 ## Monitoring Bundle
 
-Enable comprehensive monitoring with a single flag or individual services.
+Enable full monitoring with a single flag or individual services.
 
 ### Bundle Flag
 
@@ -483,14 +483,14 @@ Files are loaded in this exact order (later overrides earlier):
 
 ### From Old Variable Names
 
-| Old Variable                | New Variable                         | Notes                   |
+| Old Variable | New Variable | Notes |
 | --------------------------- | ------------------------------------ | ----------------------- |
-| `NADMIN_ENABLED`            | `NSELF_ADMIN_ENABLED`                | Use new name            |
-| `MINIO_ENABLED`             | `STORAGE_ENABLED`                    | Storage service control |
-| `DB_BACKUP_*`               | `BACKUP_*`                           | Remove DB\_ prefix      |
-| `ELASTICSEARCH_ENABLED`     | `SEARCH_ENABLED`                     | Generic search flag     |
-| `USER_SERVICE_*`            | `CS_*`                               | New service pattern     |
-| `HASURA_GRAPHQL_JWT_SECRET` | `HASURA_JWT_KEY` + `HASURA_JWT_TYPE` | Split into two vars     |
+| `NADMIN_ENABLED` | `NSELF_ADMIN_ENABLED` | Use new name |
+| `MINIO_ENABLED` | `STORAGE_ENABLED` | Storage service control |
+| `DB_BACKUP_*` | `BACKUP_*` | Remove DB\_ prefix |
+| `ELASTICSEARCH_ENABLED` | `SEARCH_ENABLED` | Generic search flag |
+| `USER_SERVICE_*` | `CS_*` | New service pattern |
+| `HASURA_GRAPHQL_JWT_SECRET` | `HASURA_JWT_KEY` + `HASURA_JWT_TYPE` | Split into two vars |
 
 ### Example Migration
 

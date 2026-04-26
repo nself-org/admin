@@ -2,7 +2,7 @@
 
 ## Overview
 
-The nself-admin advanced search system provides comprehensive full-text search across all system data including logs, configurations, audit trails, and files. The system uses real indexing and ranking algorithms to deliver fast, accurate search results.
+The nself-admin advanced search system provides full full-text search across all system data including logs, configurations, audit trails, and files. The system uses real indexing and ranking algorithms to deliver fast, accurate search results.
 
 ## Features
 
@@ -96,18 +96,18 @@ GET /api/search?action=filters
 The search index (`src/lib/search-index.ts`) provides:
 
 1. **`search(query, options)`**: Main search function
-   - Searches across all data sources in parallel
-   - Applies filters and ranking
-   - Returns paginated results
+ - Searches across all data sources in parallel
+ - Applies filters and ranking
+ - Returns paginated results
 
 2. **`getSuggestions(query, limit)`**: Get autocomplete suggestions
-   - Returns relevant suggestions based on partial query
-   - Extracts from titles and service names
+ - Returns relevant suggestions based on partial query
+ - Extracts from titles and service names
 
 3. **`getSearchFilters()`**: Get available filter options
-   - Returns list of active services
-   - Returns available result types
-   - Returns available log levels
+ - Returns list of active services
+ - Returns available result types
+ - Returns available log levels
 
 ## Usage
 

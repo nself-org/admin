@@ -1,6 +1,6 @@
 # nself Admin Documentation
 
-Welcome to the nself Admin documentation! This comprehensive guide will help you understand, deploy, and use nself Admin effectively.
+Welcome to the nself Admin documentation. This full guide will help you understand, deploy, and use nself Admin effectively.
 
 ## 🚀 Quick Start
 
@@ -84,25 +84,25 @@ Welcome to the nself Admin documentation! This comprehensive guide will help you
 
 - **[GitHub Issues](https://github.com/nself-org/admin/issues)** - Report bugs or request features
 - **[Discussions](https://github.com/nself-org/admin/discussions)** - Community support
-- **[Discord](https://discord.gg/nself)** - Real-time chat support
+- **[Community chat](https://chat.nself.org)** - Real-time chat support
 
 ---
 
 ## Quick Navigation
 
-| Topic                  | Description                | Link                                  |
+| Topic | Description | Link |
 | ---------------------- | -------------------------- | ------------------------------------- |
-| 🚀 **Quick Start**     | Get running in 5 minutes   | [Quick Start](Quick-Start.md)         |
-| 🎯 **Setup Wizard**    | Complete wizard guide      | [Init Wizard](Init-Wizard-Guide.md)   |
-| 📊 **Dashboard**       | Using the dashboard        | [Dashboard](Dashboard-Overview.md)    |
-| 🔧 **Services**        | Managing services          | [Services](Service-Configuration.md)  |
-| 🧩 **Plugins**         | Third-party integrations   | [Plugins](Plugins.md)                 |
-| 🗄️ **Database**        | Database operations        | [Database](Database-Management.md)    |
-| 🏗️ **Architecture**    | System design              | [Architecture](ARCHITECTURE.md)       |
-| 📡 **API**             | REST API reference         | [API Docs](API.md)                    |
-| 🐳 **Docker**          | Docker deployment          | [Docker](deployment/Docker.md)        |
-| 🚨 **Troubleshooting** | Common issues              | [Troubleshooting](TROUBLESHOOTING.md) |
-| ❓ **FAQ**             | Frequently asked questions | [FAQ](FAQ.md)                         |
+| 🚀 **Quick Start** | Get running in 5 minutes | [Quick Start](Quick-Start.md) |
+| 🎯 **Setup Wizard** | Complete wizard guide | [Init Wizard](Init-Wizard-Guide.md) |
+| 📊 **Dashboard** | Using the dashboard | [Dashboard](Dashboard-Overview.md) |
+| 🔧 **Services** | Managing services | [Services](Service-Configuration.md) |
+| 🧩 **Plugins** | Third-party integrations | [Plugins](Plugins.md) |
+| 🗄️ **Database** | Database operations | [Database](Database-Management.md) |
+| 🏗️ **Architecture** | System design | [Architecture](ARCHITECTURE.md) |
+| 📡 **API** | REST API reference | [API Docs](API.md) |
+| 🐳 **Docker** | Docker deployment | [Docker](deployment/Docker.md) |
+| 🚨 **Troubleshooting** | Common issues | [Troubleshooting](TROUBLESHOOTING.md) |
+| ❓ **FAQ** | Frequently asked questions | [FAQ](FAQ.md) |
 
 ---
 
@@ -268,9 +268,9 @@ Please report security vulnerabilities to our [security policy](SECURITY.md). Do
 
 ### Getting Help
 
-1. **Documentation**: Start with this comprehensive documentation
+1. **Documentation**: Start with this full documentation
 2. **GitHub Issues**: https://github.com/nself-org/admin/issues
-3. **Community**: Join our Discord
+3. **Community**: Join the community chat at chat.nself.org
 4. **Commercial Support**: Available for enterprise users
 
 ### Useful Links

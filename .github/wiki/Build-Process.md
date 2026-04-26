@@ -16,7 +16,7 @@ The build process transforms your wizard configuration into a complete, running 
 
 ### Phase 1: Initialization
 
-**Duration**: 1-2 seconds  
+**Duration**: 1-2 seconds 
 **What Happens**:
 
 - Validates project directory
@@ -36,7 +36,7 @@ project/
 
 ### Phase 2: Docker Compose Generation
 
-**Duration**: 2-3 seconds  
+**Duration**: 2-3 seconds 
 **What Happens**:
 
 - Parses environment configuration
@@ -83,7 +83,7 @@ volumes:
 
 ### Phase 3: Service Configuration
 
-**Duration**: 3-4 seconds  
+**Duration**: 3-4 seconds 
 **What Happens**:
 
 - Creates service-specific configs
@@ -129,7 +129,7 @@ server {
 
 ### Phase 4: Database Setup
 
-**Duration**: 2-3 seconds  
+**Duration**: 2-3 seconds 
 **What Happens**:
 
 - Creates database schemas
@@ -156,7 +156,7 @@ GRANT ALL ON SCHEMA public TO postgres;
 
 ### Phase 5: Custom Service Setup
 
-**Duration**: 1-2 seconds per service  
+**Duration**: 1-2 seconds per service 
 **What Happens**:
 
 - Creates service directories
@@ -180,7 +180,7 @@ services/api/
 
 ### Phase 6: Network Configuration
 
-**Duration**: 1 second  
+**Duration**: 1 second 
 **What Happens**:
 
 - Creates Docker network
@@ -206,7 +206,7 @@ Service IPs:
 
 ### Phase 7: Validation
 
-**Duration**: 1-2 seconds  
+**Duration**: 1-2 seconds 
 **What Happens**:
 
 - Verifies all files generated

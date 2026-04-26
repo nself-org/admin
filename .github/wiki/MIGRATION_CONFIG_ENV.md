@@ -47,20 +47,20 @@ export default function EnvEditorPage() {
 ### New Components
 
 1. **EnvVariableRow** (`/src/components/config/EnvVariableRow.tsx`)
-   - Standalone component for variable rows
-   - Can be reused in other pages
+ - Standalone component for variable rows
+ - Can be reused in other pages
 
 2. **EnvTabBar** (`/src/components/config/EnvTabBar.tsx`)
-   - Environment tab switcher
-   - Role-based access control built-in
+ - Environment tab switcher
+ - Role-based access control built-in
 
 3. **SecretInput** (`/src/components/config/SecretInput.tsx`)
-   - Masked input field
-   - Reusable for password/token fields
+ - Masked input field
+ - Reusable for password/token fields
 
 4. **EnvImportExport** (`/src/components/config/EnvImportExport.tsx`)
-   - Bulk operations menu
-   - Import, export, find/replace
+ - Bulk operations menu
+ - Import, export, find/replace
 
 ### New API Endpoint
 
@@ -295,8 +295,8 @@ If you encounter issues after migration:
    ```
 
 2. **Check Browser Console**:
-   - Look for errors
-   - Check Network tab for API failures
+ - Look for errors
+ - Check Network tab for API failures
 
 3. **Verify API Endpoint**:
 
@@ -305,9 +305,9 @@ If you encounter issues after migration:
    ```
 
 4. **Report Issues**:
-   - Open GitHub issue
-   - Include browser console logs
-   - Attach screenshots
+ - Open GitHub issue
+ - Include browser console logs
+ - Attach screenshots
 
 ## FAQ
 

@@ -24,7 +24,7 @@ This guide helps you migrate from nself-admin v0.4.x to v0.5.0 (Production-Ready
 - **198 fully functional pages** (up from ~50 in v0.4)
 - **60+ production-grade components** with loading states and error boundaries
 - **Real-time WebSocket updates** for services and logs
-- **Comprehensive error handling** across all endpoints
+- **Full error handling** across all endpoints
 - **Enhanced security** with improved session management
 - **Mobile-responsive design** with WCAG 2.1 AA compliance
 - **Performance optimizations** (sub-1.5s page loads)
@@ -593,4 +593,4 @@ curl -i -N \
 
 ---
 
-**Congratulations on upgrading to nself-admin v0.5.0!**
+**Congratulations on upgrading to nself-admin v0.5.0**

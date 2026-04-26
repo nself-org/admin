@@ -13,76 +13,76 @@ Complete WebSocket real-time system implementation for nself-admin using Socket.
 ### Core Library (3 files)
 
 1. **`src/lib/websocket/server.ts`** (381 lines)
-   - Socket.io server setup
-   - Room-based architecture
-   - Event batching (max 10 events or 100ms)
-   - Presence tracking with auto-cleanup
-   - Heartbeat ping/pong (30s interval)
-   - Graceful shutdown
+ - Socket.io server setup
+ - Room-based architecture
+ - Event batching (max 10 events or 100ms)
+ - Presence tracking with auto-cleanup
+ - Heartbeat ping/pong (30s interval)
+ - Graceful shutdown
 
 2. **`src/lib/websocket/client.ts`** (308 lines)
-   - Client connection manager
-   - Auto-reconnect with exponential backoff (1s, 2s, 4s, 8s, 16s)
-   - Connection status tracking
-   - Event subscription management
-   - Room join/leave functionality
-   - Browser-only (SSR safe)
+ - Client connection manager
+ - Auto-reconnect with exponential backoff (1s, 2s, 4s, 8s, 16s)
+ - Connection status tracking
+ - Event subscription management
+ - Room join/leave functionality
+ - Browser-only (SSR safe)
 
 3. **`src/lib/websocket/events.ts`** (237 lines)
-   - Event type definitions
-   - TypeScript interfaces for all 6 event types
-   - Type guards for runtime validation
-   - Configuration constants
-   - Event batching config
+ - Event type definitions
+ - TypeScript interfaces for all 6 event types
+ - Type guards for runtime validation
+ - Configuration constants
+ - Event batching config
 
 ### React Hooks (3 files)
 
 4. **`src/hooks/useWebSocket.ts`** (79 lines)
-   - React hook for WebSocket connection
-   - Connection status state management
-   - Event subscription helpers
-   - Auto-connect on mount
-   - Cleanup on unmount
+ - React hook for WebSocket connection
+ - Connection status state management
+ - Event subscription helpers
+ - Auto-connect on mount
+ - Cleanup on unmount
 
 5. **`src/hooks/useServiceStatus.ts`** (55 lines)
-   - Service status updates hook
-   - Real-time status tracking per service
-   - Automatic state updates via WebSocket
+ - Service status updates hook
+ - Real-time status tracking per service
+ - Automatic state updates via WebSocket
 
 6. **`src/hooks/useBuildProgress.ts`** (48 lines)
-   - Build progress tracking hook
-   - Progress history
-   - Build state helpers (isBuilding, isComplete, isFailed)
+ - Build progress tracking hook
+ - Progress history
+ - Build state helpers (isBuilding, isComplete, isFailed)
 
 ### API Route (1 file)
 
 7. **`src/app/api/ws/route.ts`** (238 lines)
-   - WebSocket API endpoint
-   - Server initialization
-   - GET endpoint for health check
-   - POST endpoint for event emission
-   - Helper functions to emit events from other API routes
+ - WebSocket API endpoint
+ - Server initialization
+ - GET endpoint for health check
+ - POST endpoint for event emission
+ - Helper functions to emit events from other API routes
 
 ### Documentation (1 file)
 
 8. **`src/lib/websocket/README.md`** (350+ lines)
-   - Complete usage guide
-   - Example code snippets
-   - Testing guidelines
-   - Performance metrics
+ - Complete usage guide
+ - Example code snippets
+ - Testing guidelines
+ - Performance metrics
 
 ## Event Types
 
 Six real-time event types implemented:
 
-| Event Type        | Interface             | Use Case                                 |
+| Event Type | Interface | Use Case |
 | ----------------- | --------------------- | ---------------------------------------- |
-| `service:status`  | `ServiceStatusEvent`  | Service running/stopped/unhealthy status |
-| `build:progress`  | `BuildProgressEvent`  | Build step progress (0-100%)             |
-| `deploy:progress` | `DeployProgressEvent` | Deployment stage progress                |
-| `logs:stream`     | `LogStreamEvent`      | Real-time log streaming                  |
-| `docker:stats`    | `DockerStatsEvent`    | Container CPU/memory stats               |
-| `db:query:result` | `DbQueryResultEvent`  | Database query results                   |
+| `service:status` | `ServiceStatusEvent` | Service running/stopped/unhealthy status |
+| `build:progress` | `BuildProgressEvent` | Build step progress (0-100%) |
+| `deploy:progress` | `DeployProgressEvent` | Deployment stage progress |
+| `logs:stream` | `LogStreamEvent` | Real-time log streaming |
+| `docker:stats` | `DockerStatsEvent` | Container CPU/memory stats |
+| `db:query:result` | `DbQueryResultEvent` | Database query results |
 
 ## Architecture Features
 

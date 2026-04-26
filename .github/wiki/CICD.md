@@ -19,9 +19,9 @@ nself-admin uses GitHub Actions for CI/CD automation with the following goals:
 
 - **Quality Assurance**: All code changes are tested automatically
 - **Security**: Dependencies are audited daily for vulnerabilities
-- **Performance**: Lighthouse audits ensure optimal user experience
+- **Performance**: Lighthouse audits ensure optimal user workflow
 - **Automation**: Deployments to staging and production are fully automated
-- **Observability**: Comprehensive monitoring and logging
+- **Observability**: Full monitoring and logging
 
 ### Pipeline Architecture
 
@@ -156,30 +156,30 @@ pnpm run build
 **Steps**:
 
 1. **Build Docker Image**
-   - Uses Docker Buildx for efficient builds
-   - Enables layer caching for faster builds
-   - Tags image with `staging` and commit SHA
+ - Uses Docker Buildx for efficient builds
+ - Enables layer caching for faster builds
+ - Tags image with `staging` and commit SHA
 
 2. **Push to Docker Hub**
-   - Authenticates using secrets
-   - Pushes `staging` tag
-   - Pushes `staging-<sha>` tag for rollback capability
+ - Authenticates using secrets
+ - Pushes `staging` tag
+ - Pushes `staging-<sha>` tag for rollback capability
 
 3. **Deploy to Server**
-   - SSH into staging server
-   - Pulls latest `staging` image
-   - Stops and removes old container
-   - Starts new container with updated image
+ - SSH into staging server
+ - Pulls latest `staging` image
+ - Stops and removes old container
+ - Starts new container with updated image
 
 4. **Smoke Tests**
-   - Waits for service to be ready
-   - Checks `/api/health` endpoint
-   - Validates version endpoint
-   - Fails deployment if checks don't pass
+ - Waits for service to be ready
+ - Checks `/api/health` endpoint
+ - Validates version endpoint
+ - Fails deployment if checks don't pass
 
 5. **Notification**
-   - Posts deployment status to Slack (optional)
-   - Includes deployment URL and commit info
+ - Posts deployment status to Slack (optional)
+ - Includes deployment URL and commit info
 
 **Rollback**:
 
@@ -202,29 +202,29 @@ docker run -d --name nself-admin-staging ... nself/nself-admin:staging-<previous
 **Steps**:
 
 1. **Pre-Release Validation**
-   - Runs full test suite
-   - Ensures all tests pass before release
+ - Runs full test suite
+ - Ensures all tests pass before release
 
 2. **Build Multi-Platform Image**
-   - Builds for `linux/amd64` and `linux/arm64`
-   - Ensures compatibility with different architectures
-   - Uses Docker Buildx
+ - Builds for `linux/amd64` and `linux/arm64`
+ - Ensures compatibility with different architectures
+ - Uses Docker Buildx
 
 3. **Tag Strategy**
-   - `latest` - Always points to latest stable release
-   - `0.5.0` - Full semantic version
-   - `0.5` - Minor version (receives patches)
-   - `0` - Major version
+ - `latest` - Always points to latest stable release
+ - `0.5.0` - Full semantic version
+ - `0.5` - Minor version (receives patches)
+ - `0` - Major version
 
 4. **Create GitHub Release**
-   - Auto-generates changelog from commits
-   - Includes installation instructions
-   - Attaches release artifacts (tar.gz)
-   - Marks as pre-release if tag contains `alpha`, `beta`, or `rc`
+ - Auto-generates changelog from commits
+ - Includes installation instructions
+ - Attaches release artifacts (tar.gz)
+ - Marks as pre-release if tag contains `alpha`, `beta`, or `rc`
 
 5. **Update Docker Hub**
-   - Updates repository README
-   - Syncs documentation from repo
+ - Updates repository README
+ - Syncs documentation from repo
 
 **Creating a Release**:
 
@@ -254,19 +254,19 @@ git push origin main --tags
 **Steps**:
 
 1. **Run Security Audit**
-   - Executes `pnpm audit`
-   - Checks for known vulnerabilities
-   - Categorizes by severity (critical, high, moderate, low)
+ - Executes `pnpm audit`
+ - Checks for known vulnerabilities
+ - Categorizes by severity (critical, high, moderate, low)
 
 2. **Create/Update Issue**
-   - If vulnerabilities found, creates GitHub issue
-   - Updates existing issue if already open
-   - Labels: `security`, `dependencies`, `automated`
-   - Includes remediation steps
+ - If vulnerabilities found, creates GitHub issue
+ - Updates existing issue if already open
+ - Labels: `security`, `dependencies`, `automated`
+ - Includes remediation steps
 
 3. **Fail on Critical**
-   - Pipeline fails if critical vulnerabilities detected
-   - Requires immediate attention
+ - Pipeline fails if critical vulnerabilities detected
+ - Requires immediate attention
 
 **Issue Template**:
 
@@ -595,8 +595,8 @@ Error: ECONNREFUSED
 **Security**:
 
 - Automatically redacts sensitive fields:
-  - `password`, `token`, `secret`, `apiKey`, `api_key`
-  - `authorization`, `cookie`, `session`
+ - `password`, `token`, `secret`, `apiKey`, `api_key`
+ - `authorization`, `cookie`, `session`
 - Never logs credentials in any environment
 
 **Log Aggregation**:
@@ -616,15 +616,15 @@ Error: ECONNREFUSED
 
 Navigate to `Settings > Secrets and variables > Actions` and add:
 
-| Secret Name          | Description                  | Required For     |
+| Secret Name | Description | Required For |
 | -------------------- | ---------------------------- | ---------------- |
-| `DOCKERHUB_USERNAME` | Docker Hub username          | Staging, Release |
-| `DOCKERHUB_TOKEN`    | Docker Hub access token      | Staging, Release |
-| `STAGING_HOST`       | Staging server hostname/IP   | Staging          |
-| `STAGING_USER`       | SSH username for staging     | Staging          |
-| `STAGING_SSH_KEY`    | Private SSH key for staging  | Staging          |
-| `STAGING_URL`        | Staging server URL           | Staging          |
-| `SLACK_WEBHOOK`      | Slack webhook URL (optional) | Notifications    |
+| `DOCKERHUB_USERNAME` | Docker Hub username | Staging, Release |
+| `DOCKERHUB_TOKEN` | Docker Hub access token | Staging, Release |
+| `STAGING_HOST` | Staging server hostname/IP | Staging |
+| `STAGING_USER` | SSH username for staging | Staging |
+| `STAGING_SSH_KEY` | Private SSH key for staging | Staging |
+| `STAGING_URL` | Staging server URL | Staging |
+| `SLACK_WEBHOOK` | Slack webhook URL (optional) | Notifications |
 
 2. **Docker Hub Setup**
 

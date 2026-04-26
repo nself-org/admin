@@ -88,7 +88,7 @@ Sessions are now stored in LokiJS embedded database (`nadmin.db`):
 
 - **CSRF Protection**: SameSite=strict cookies + origin validation
 - **Rate Limiting**: Built-in rate limiting on authentication endpoints
-- **Input Validation**: Comprehensive validation using Zod schemas
+- **Input Validation**: Full validation using Zod schemas
 - **Shell Injection Prevention**: execFile() with array arguments instead of exec()
 - **SQL Injection Prevention**: Parameterized queries and identifier validation
 - **Path Traversal Prevention**: Resolved path validation
@@ -104,7 +104,7 @@ Sessions are now stored in LokiJS embedded database (`nadmin.db`):
 
 ## Security Audit
 
-For a comprehensive security audit of the nself-admin codebase, see **[[SECURITY_AUDIT|Security Audit Report]]**.
+For a full security audit of the nself-admin codebase, see **[[SECURITY_AUDIT|Security Audit Report]]**.
 
 The audit covers:
 

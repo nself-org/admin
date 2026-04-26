@@ -1,10 +1,10 @@
 # Operations
 
-Operational reference for running nSelf Admin in production.
+Operational reference for running ɳSelf Admin in production.
 
 ## Error Reporting with Sentry
 
-nSelf Admin supports optional Sentry error reporting. When `SENTRY_DSN` is set, uncaught runtime errors are forwarded to your Sentry project. When unset, there is no overhead — the Sentry SDK is loaded lazily and has zero import side-effects.
+ɳSelf Admin supports optional Sentry error reporting. When `SENTRY_DSN` is set, uncaught runtime errors are forwarded to your Sentry project. When unset, there is no overhead, the Sentry SDK is loaded lazily and has zero import side-effects.
 
 ### Setup
 
@@ -16,11 +16,11 @@ nSelf Admin supports optional Sentry error reporting. When `SENTRY_DSN` is set, 
 SENTRY_DSN=https://xxxxx@o0.ingest.sentry.io/0
 ```
 
-4. Restart nSelf Admin. Errors will appear in your Sentry dashboard.
+4. Restart ɳSelf Admin. Errors will appear in your Sentry dashboard.
 
 ### Disabling
 
-Leave `SENTRY_DSN` blank (or unset) to disable. No restart is required after removing the value — the next server restart picks up the change.
+Leave `SENTRY_DSN` blank (or unset) to disable. No restart is required after removing the value, the next server restart picks up the change.
 
 ### What is reported
 
@@ -41,7 +41,7 @@ Rate limiting is applied: no more than 10 identical errors per minute are forwar
 
 ## Admin Secret Guard
 
-nSelf Admin refuses to start in production with a known dev-stub admin secret. If `HASURA_GRAPHQL_ADMIN_SECRET` is set to a value containing `dummy`, or is `hasura-admin-secret-dev`, or `changeme`, the process throws:
+ɳSelf Admin refuses to start in production with a known dev-stub admin secret. If `HASURA_GRAPHQL_ADMIN_SECRET` is set to a value containing `dummy`, or is `hasura-admin-secret-dev`, or `changeme`, the process throws:
 
 ```
 FATAL: dev-stub HASURA_GRAPHQL_ADMIN_SECRET detected in production.
@@ -51,5 +51,5 @@ Set a secure random secret (minimum 32 characters) in `.env.secrets` for product
 
 ## Related
 
-- `src/lib/error-logging.ts` — error logging implementation
-- `src/app/api/graphql/hasura/route.ts` — admin secret guard
+- `src/lib/error-logging.ts`, error logging implementation
+- `src/app/api/graphql/hasura/route.ts`, admin secret guard

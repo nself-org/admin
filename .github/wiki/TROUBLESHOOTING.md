@@ -141,8 +141,8 @@ docker-compose --version
    ```
 
 3. **Clear browser cache**
-   - Hard refresh: Cmd+Shift+R (Mac) / Ctrl+Shift+R (Windows)
-   - Clear site data in DevTools
+ - Hard refresh: Cmd+Shift+R (Mac) / Ctrl+Shift+R (Windows)
+ - Clear site data in DevTools
 
 ### Auto-Save Not Working
 
@@ -171,9 +171,9 @@ docker-compose --version
    ```
 
 3. **Browser console errors**
-   - Open DevTools (F12)
-   - Check Console tab for errors
-   - Check Network tab for failed requests
+ - Open DevTools (F12)
+ - Check Console tab for errors
+ - Check Network tab for failed requests
 
 ### Validation Errors
 
@@ -253,12 +253,12 @@ docker-compose exec <service> env | grep PROJECT_NAME
 
 Old variables still being used? Update them:
 
-| Old                     | New                   |
+| Old | New |
 | ----------------------- | --------------------- |
-| `NADMIN_ENABLED`        | `NSELF_ADMIN_ENABLED` |
-| `MINIO_ENABLED`         | `STORAGE_ENABLED`     |
-| `DB_BACKUP_*`           | `BACKUP_*`            |
-| `ELASTICSEARCH_ENABLED` | `SEARCH_ENABLED`      |
+| `NADMIN_ENABLED` | `NSELF_ADMIN_ENABLED` |
+| `MINIO_ENABLED` | `STORAGE_ENABLED` |
+| `DB_BACKUP_*` | `BACKUP_*` |
+| `ELASTICSEARCH_ENABLED` | `SEARCH_ENABLED` |
 
 ---
 
@@ -471,8 +471,8 @@ ERROR: relation does not exist
    ```
 
 2. **Check session**
-   - Clear browser cookies
-   - Try incognito/private window
+ - Clear browser cookies
+ - Try incognito/private window
 
 ### JWT Errors
 
@@ -528,10 +528,10 @@ netstat -an | grep 3100
    ```
 
 3. **Common port conflicts**
-   - 3000: Create React App / Hasura Console
-   - 3100: nself-admin
-   - 5432: Local PostgreSQL
-   - 6379: Local Redis
+ - 3000: Create React App / Hasura Console
+ - 3100: nself-admin
+ - 5432: Local PostgreSQL
+ - 6379: Local Redis
 
 ### Cannot Access Services
 
@@ -596,9 +596,9 @@ docker-compose logs --tail=100
    ```
 
 3. **Optimize queries**
-   - Add database indexes
-   - Use Hasura query caching
-   - Enable connection pooling
+ - Add database indexes
+ - Use Hasura query caching
+ - Enable connection pooling
 
 ### High Memory Usage
 
@@ -660,8 +660,8 @@ no space left on device
    ```
 
 3. **Move Docker data**
-   - Docker Desktop: Preferences > Resources > Advanced
-   - Change disk image location
+ - Docker Desktop: Preferences > Resources > Advanced
+ - Change disk image location
 
 ### Container Keeps Restarting
 
@@ -754,14 +754,14 @@ docker-compose exec -T postgres psql -U postgres nself < backup.sql
 ### Before Asking for Help
 
 1. **Check documentation**
-   - `/docs` folder in project
-   - [Environment Variables Guide](./ENVIRONMENT_VARIABLES.md)
-   - [Wizard Guide](./WIZARD_GUIDE.md)
+ - `/docs` folder in project
+ - [Environment Variables Guide](./ENVIRONMENT_VARIABLES.md)
+ - [Wizard Guide](./WIZARD_GUIDE.md)
 
 2. **Search existing issues**
-   - GitHub Issues
-   - Stack Overflow
-   - Discord/Slack history
+ - GitHub Issues
+ - Stack Overflow
+ - the community chat/Slack history
 
 3. **Gather information**
 
@@ -781,41 +781,41 @@ docker-compose exec -T postgres psql -U postgres nself < backup.sql
 ### Where to Get Help
 
 1. **GitHub Issues**
-   - https://github.com/nself/admin/issues
-   - Include: Error message, steps to reproduce, system info
+ - https://github.com/nself/admin/issues
+ - Include: Error message, steps to reproduce, system info
 
 2. **Community**
-   - Discord: [invite link]
-   - Slack: [invite link]
-   - Forum: [link]
+ - the community chat: [invite link]
+ - Slack: [invite link]
+ - Forum: [link]
 
 3. **Commercial Support**
-   - Email: support@nself.com
-   - Priority support available
+ - Email: support@nself.com
+ - Priority support available
 
 ### Reporting Bugs
 
 Include:
 
 1. **Environment**
-   - OS and version
-   - Docker version
-   - Node version
-   - Browser (if UI issue)
+ - OS and version
+ - Docker version
+ - Node version
+ - Browser (if UI issue)
 
 2. **Steps to reproduce**
-   - Exact commands run
-   - Configuration used
-   - Expected vs actual behavior
+ - Exact commands run
+ - Configuration used
+ - Expected vs actual behavior
 
 3. **Error messages**
-   - Full error text
-   - Screenshots if UI issue
-   - Relevant logs
+ - Full error text
+ - Screenshots if UI issue
+ - Relevant logs
 
 4. **What you've tried**
-   - Solutions attempted
-   - Workarounds found
+ - Solutions attempted
+ - Workarounds found
 
 ---
 
@@ -823,18 +823,18 @@ Include:
 
 ### Quick Reference
 
-| Error                            | Likely Cause         | Solution                        |
+| Error | Likely Cause | Solution |
 | -------------------------------- | -------------------- | ------------------------------- |
-| `EADDRINUSE`                     | Port in use          | Change port or kill process     |
-| `ECONNREFUSED`                   | Service not running  | Start service or check port     |
-| `EACCES`                         | Permission denied    | Check file permissions          |
-| `ENOENT`                         | File not found       | Verify file path                |
-| `password authentication failed` | Wrong credentials    | Check env file                  |
-| `JWT secret too short`           | Secret < 32 chars    | Generate longer secret          |
-| `Invalid project name`           | Special characters   | Use only lowercase and dashes   |
-| `Container unhealthy`            | Health check failing | Check service logs              |
-| `no space left on device`        | Disk full            | Clean Docker or free space      |
-| `network not found`              | Docker network issue | Recreate with docker-compose up |
+| `EADDRINUSE` | Port in use | Change port or kill process |
+| `ECONNREFUSED` | Service not running | Start service or check port |
+| `EACCES` | Permission denied | Check file permissions |
+| `ENOENT` | File not found | Verify file path |
+| `password authentication failed` | Wrong credentials | Check env file |
+| `JWT secret too short` | Secret < 32 chars | Generate longer secret |
+| `Invalid project name` | Special characters | Use only lowercase and dashes |
+| `Container unhealthy` | Health check failing | Check service logs |
+| `no space left on device` | Disk full | Clean Docker or free space |
+| `network not found` | Docker network issue | Recreate with docker-compose up |
 
 ---
 

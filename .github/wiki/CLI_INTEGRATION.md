@@ -71,23 +71,23 @@ services:
 
 ### Environment Variables
 
-| Variable                | Description                    | Default    |
+| Variable | Description | Default |
 | ----------------------- | ------------------------------ | ---------- |
-| `ADMIN_PASSWORD`        | Admin interface password       | (required) |
-| `ADMIN_PORT`            | Port to expose admin interface | 3021       |
-| `PROJECT_PATH`          | Path to nself project          | /project   |
-| `AUTO_UPDATE`           | Enable automatic updates       | true       |
-| `UPDATE_CHECK_INTERVAL` | Hours between update checks    | 6          |
-| `NODE_ENV`              | Environment mode               | production |
-| `TZ`                    | Timezone                       | UTC        |
+| `ADMIN_PASSWORD` | Admin interface password | (required) |
+| `ADMIN_PORT` | Port to expose admin interface | 3021 |
+| `PROJECT_PATH` | Path to nself project | /project |
+| `AUTO_UPDATE` | Enable automatic updates | true |
+| `UPDATE_CHECK_INTERVAL` | Hours between update checks | 6 |
+| `NODE_ENV` | Environment mode | production |
+| `TZ` | Timezone | UTC |
 
 ### Volume Mounts
 
-| Mount Point            | Description                            | Required |
+| Mount Point | Description | Required |
 | ---------------------- | -------------------------------------- | -------- |
-| `/var/run/docker.sock` | Docker socket for container management | Yes      |
-| `/project`             | Your nself project directory           | Yes      |
-| `/data`                | Persistent data storage                | No       |
+| `/var/run/docker.sock` | Docker socket for container management | Yes |
+| `/project` | Your nself project directory | Yes |
+| `/data` | Persistent data storage | No |
 
 ## Features
 
@@ -163,13 +163,13 @@ nself admin open
 
 nself Admin v0.0.8 wraps the CLI plugin system with a visual UI. These are the CLI commands executed by the Admin API:
 
-| nself Admin Action    | CLI Command Executed          |
+| nself Admin Action | CLI Command Executed |
 | --------------------- | ----------------------------- |
-| View plugins page     | `nself plugin list`           |
+| View plugins page | `nself plugin list` |
 | Install plugin button | `nself plugin install <name>` |
-| Remove plugin button  | `nself plugin remove <name>`  |
-| Sync button           | `nself plugin <name> sync`    |
-| View plugin status    | `nself plugin status <name>`  |
+| Remove plugin button | `nself plugin remove <name>` |
+| Sync button | `nself plugin <name> sync` |
+| View plugin status | `nself plugin status <name>` |
 
 > **Full CLI docs**: See [nself CLI](https://github.com/nself-org/cli) for complete plugin command reference.
 
@@ -177,15 +177,15 @@ nself Admin v0.0.8 wraps the CLI plugin system with a visual UI. These are the C
 
 nself Admin v0.0.8 wraps database operations. These are the CLI commands executed by the Admin API:
 
-| nself Admin Action    | CLI Command Executed      |
+| nself Admin Action | CLI Command Executed |
 | --------------------- | ------------------------- |
-| Create backup button  | `nself db backup create`  |
-| Backup list           | `nself db backup list`    |
-| Restore button        | `nself db restore <file>` |
-| Run migrations        | `nself db migrate up`     |
+| Create backup button | `nself db backup create` |
+| Backup list | `nself db backup list` |
+| Restore button | `nself db restore <file>` |
+| Run migrations | `nself db migrate up` |
 | View migration status | `nself db migrate status` |
-| Execute SQL query     | `nself db query "<sql>"`  |
-| Schema browser        | `nself db inspect`        |
+| Execute SQL query | `nself db query "<sql>"` |
+| Schema browser | `nself db inspect` |
 
 > **Full CLI docs**: See [nself CLI](https://github.com/nself-org/cli) for complete database command reference.
 
@@ -202,13 +202,13 @@ Current stable version: `1.0.0-beta.3`
 
 ## Docker Image Tags
 
-| Tag            | Description                  |
+| Tag | Description |
 | -------------- | ---------------------------- |
-| `latest`       | Latest stable release        |
-| `1.0.0-beta.3` | Specific version             |
-| `1.0`          | Latest 1.0.x version         |
-| `beta`         | Latest beta release          |
-| `dev`          | Development build (unstable) |
+| `latest` | Latest stable release |
+| `1.0.0-beta.3` | Specific version |
+| `1.0` | Latest 1.0.x version |
+| `beta` | Latest beta release |
+| `dev` | Development build (unstable) |
 
 ## Platform Support
 
@@ -296,7 +296,7 @@ npm test
 
 - GitHub Issues: https://github.com/nself-org/admin/issues
 - Documentation: https://docs.nself.org/admin
-- Discord: https://discord.gg/nself
+- the community chat: https://chat.nself.org
 
 ## License
 

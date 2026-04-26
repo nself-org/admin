@@ -1,6 +1,6 @@
-# Admin URL Shortener — Design Spec
+# Admin URL Shortener, Design Spec
 
-This document describes the URL shortener design for shareable admin deep-links. The shortener is **not built in v1.0.9** — it is a ready-to-build spec for a future minor release.
+This document describes the URL shortener design for shareable admin deep-links. The shortener is **not built in v1.0.9**, it is a ready-to-build spec for a future minor release.
 
 ## Problem
 
@@ -14,11 +14,11 @@ While fully functional, these URLs are awkward to paste in Slack or copy into in
 
 ## Design Goals
 
-1. Lossless — the short URL must expand to the exact original URL, including all params
-2. Self-contained — the shortener state lives in the admin's LokiJS database, no external service
-3. Operator-only — short links are scoped to the same admin instance (single-user, not multi-tenant)
-4. Expiring — short links expire after 30 days by default (configurable)
-5. No external dependency — must work fully offline
+1. Lossless, the short URL must expand to the exact original URL, including all params
+2. Self-contained, the shortener state lives in the admin's LokiJS database, no external service
+3. Operator-only, short links are scoped to the same admin instance (single-user, not multi-tenant)
+4. Expiring, short links expire after 30 days by default (configurable)
+5. No external dependency, must work fully offline
 
 ## Data Model (LokiJS)
 
@@ -34,10 +34,10 @@ interface AdminShortLink {
 
 ## API Routes
 
-| Method | Path                         | Purpose                                                                   |
+| Method | Path | Purpose |
 | ------ | ---------------------------- | ------------------------------------------------------------------------- |
-| `POST` | `/api/admin/shortlink`       | Create a short link; body: `{ path: string }`; returns `{ slug: string }` |
-| `GET`  | `/api/admin/shortlink/:slug` | Resolve a slug; returns `{ fullPath: string }` or 404                     |
+| `POST` | `/api/admin/shortlink` | Create a short link; body: `{ path: string }`; returns `{ slug: string }` |
+| `GET` | `/api/admin/shortlink/:slug` | Resolve a slug; returns `{ fullPath: string }` or 404 |
 
 ## Redirect Route
 
@@ -82,7 +82,7 @@ A Next.js route handler scheduled on `setInterval` (or via the `cron` plugin if 
 
 - Short links resolve only within the same admin instance (localhost:3021). No cross-instance sharing.
 - The operator is authenticated before any short link is created (existing session check).
-- Short link slugs contain no embedded path info — cannot be enumerated for path discovery without a valid session to resolve them.
+- Short link slugs contain no embedded path info, cannot be enumerated for path discovery without a valid session to resolve them.
 - `NSELF_ADMIN_SHORTLINKS` is `false` by default. Opt-in only.
 
 ## Implementation Order
@@ -99,6 +99,6 @@ When building this feature:
 
 ## Related Files
 
-- `src/components/ui/copy-link-button.tsx` — the button that will trigger shortening
-- `src/lib/database.ts` — LokiJS schema
-- `.github/wiki/url-state.md` — 6-param URL vocabulary and `useUrlState` hook reference
+- `src/components/ui/copy-link-button.tsx`, the button that will trigger shortening
+- `src/lib/database.ts`, LokiJS schema
+- `.github/wiki/url-state.md`, 6-param URL vocabulary and `useUrlState` hook reference

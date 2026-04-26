@@ -1,6 +1,6 @@
 # Frequently Asked Questions (FAQ)
 
-Comprehensive answers to common questions about nself Admin.
+Full answers to common questions about nself Admin.
 
 ## Table of Contents
 
@@ -157,10 +157,10 @@ docker run -d --name nself-admin-2 -p 3022:3021 ...
 
 1. **Development**: Edit `.env.development`
 2. **Production**:
-   - Stop services
-   - Update password in `.env.production`
-   - Update in PostgreSQL: `ALTER USER postgres PASSWORD 'new-password';`
-   - Restart services
+ - Stop services
+ - Update password in `.env.production`
+ - Update in PostgreSQL: `ALTER USER postgres PASSWORD 'new-password';`
+ - Restart services
 
 ## Services
 
@@ -297,8 +297,8 @@ Database → Backup → Select file → Restore
 **Answer**:
 
 1. **Allocate more Docker resources**:
-   - Docker Desktop → Settings → Resources
-   - Increase CPU and Memory
+ - Docker Desktop → Settings → Resources
+ - Increase CPU and Memory
 
 2. **Optimize services**:
 
@@ -583,7 +583,7 @@ services:
 - 📚 **[Full Documentation](Home)**
 - 💬 **[GitHub Discussions](https://github.com/nself-org/admin/discussions)**
 - 🐛 **[Report Issues](https://github.com/nself-org/admin/issues)**
-- 🎮 **[Discord Community](https://discord.gg/nself)**
+- 🎮 **[community at chat.nself.org](https://chat.nself.org)**
 
 ### How can I contribute?
 
@@ -593,7 +593,7 @@ We welcome contributions!
 - Check [open issues](https://github.com/nself-org/admin/issues)
 - Submit pull requests
 - Improve documentation
-- Share your experience
+- Share your workflow
 
 ---
 

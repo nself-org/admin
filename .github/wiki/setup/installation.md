@@ -118,12 +118,12 @@ chmod -R 755 /path/to/your/project
 
 ## Environment Variables
 
-| Variable             | Description                      | Default       |
+| Variable | Description | Default |
 | -------------------- | -------------------------------- | ------------- |
-| `NSELF_PROJECT_PATH` | Path to project inside container | `/workspace`  |
-| `NODE_ENV`           | Environment mode                 | `production`  |
-| `PORT`               | Internal port                    | `3021`        |
-| `HOSTNAME`           | Container hostname               | Auto-detected |
+| `NSELF_PROJECT_PATH` | Path to project inside container | `/workspace` |
+| `NODE_ENV` | Environment mode | `production` |
+| `PORT` | Internal port | `3021` |
+| `HOSTNAME` | Container hostname | Auto-detected |
 
 ## Verification
 

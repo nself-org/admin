@@ -7,7 +7,7 @@ Complete checklist for releasing nself-admin v0.5.0.
 ### Documentation
 
 - [x] Update README.md with v0.5.0 features
-- [x] Create comprehensive CHANGELOG.md entry
+- [x] Create full CHANGELOG.md entry
 - [x] Write USER_GUIDE.md with step-by-step tutorials
 - [x] Create MIGRATION_v0.4_to_v0.5.md guide
 - [ ] Update API.md with all endpoints
@@ -437,11 +437,11 @@ nself admin
 
 # Or via Docker
 docker run -d \
-  --name nself-admin \
-  -p 3021:3021 \
-  -v $(pwd):/workspace \
-  -v /var/run/docker.sock:/var/run/docker.sock \
-  nself/nself-admin:0.5.0
+ --name nself-admin \
+ -p 3021:3021 \
+ -v $(pwd):/workspace \
+ -v /var/run/docker.sock:/var/run/docker.sock \
+ nself/nself-admin:0.5.0
 ```
 ````
 

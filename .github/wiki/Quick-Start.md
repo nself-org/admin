@@ -89,10 +89,10 @@ Add your first API service:
 
 1. Click **"Add Service"**
 2. Enter:
-   - Name: `api`
-   - Framework: `Express (TypeScript)`
-   - Port: `4001`
-   - Route: `api`
+ - Name: `api`
+ - Framework: `Express (TypeScript)`
+ - Port: `4001`
+ - Route: `api`
 3. Click **Next** →
 
 ### Step 5: Frontend Apps
@@ -101,9 +101,9 @@ Add your frontend:
 
 1. Click **"Add Your First App"**
 2. Enter:
-   - Name: `Web App`
-   - Port: `3001`
-   - URL: `app`
+ - Name: `Web App`
+ - Port: `3001`
+ - URL: `app`
 3. Click **Next** →
 
 ### Step 6: Review & Build
@@ -139,15 +139,15 @@ nAdmin will launch:
 
 Once running, you can access:
 
-| Service              | URL                       | Credentials           |
+| Service | URL | Credentials |
 | -------------------- | ------------------------- | --------------------- |
-| **nAdmin Dashboard** | http://localhost:3021     | Your password         |
-| **Hasura Console**   | http://localhost:8080     | Admin secret in .env  |
-| **API Service**      | http://api.localhost      | No auth required      |
-| **MinIO Console**    | http://localhost:9001     | minioadmin/minioadmin |
-| **Frontend App**     | http://app.localhost:3001 | Your app              |
+| **nAdmin Dashboard** | http://localhost:3021 | Your password |
+| **Hasura Console** | http://localhost:8080 | Admin secret in .env |
+| **API Service** | http://api.localhost | No auth required |
+| **MinIO Console** | http://localhost:9001 | minioadmin/minioadmin |
+| **Frontend App** | http://app.localhost:3001 | Your app |
 
-## 🎉 Congratulations!
+## 🎉 Congratulations
 
 You now have a complete development stack running with:
 
@@ -279,13 +279,13 @@ sudo usermod -aG docker $USER
 ## Get Help
 
 - 📚 **[Full Documentation](Home)**
-- 💬 **[Discord Community](https://discord.gg/nself)**
+- 💬 **[community at chat.nself.org](https://chat.nself.org)**
 - 🐛 **[Report Issues](https://github.com/nself-org/admin/issues)**
 - ❓ **[FAQ](FAQ)**
 
 ## Pro Tips
 
-1. **Use Chrome/Edge** for best UI experience
+1. **Use Chrome/Edge** for best UI workflow
 2. **Keep Docker Desktop open** while running
 3. **Allocate 4GB+ RAM to Docker** for smooth operation
 4. **Use the wizard's tooltips** - hover over ⓘ icons

@@ -1,6 +1,6 @@
 # Output Viewer
 
-The Output Viewer streams live CLI command output into the Admin UI via Server-Sent Events (SSE). You see the same output you would see in a terminal — in real time, in the browser.
+The Output Viewer streams live CLI command output into the Admin UI via Server-Sent Events (SSE). You see the same output you would see in a terminal, in real time, in the browser.
 
 ---
 
@@ -17,11 +17,11 @@ The Output Viewer streams live CLI command output into the Admin UI via Server-S
 
 The panel appears at the bottom of the relevant Admin zone (e.g., Build zone for `nself build`). It supports:
 
-- **ANSI color codes** — nSelf CLI color-codes its output. The Output Viewer renders colors correctly.
-- **Line-level buffering** — Each line appears as soon as it's flushed, not after the command finishes.
-- **Search** — Filter output lines by keyword.
-- **Copy** — Copy the full output to clipboard.
-- **Persist** — Output is saved to LokiJS `activity_log` collection for the session so you can scroll back after the command finishes.
+- **ANSI color codes**, ɳSelf CLI color-codes its output. The Output Viewer renders colors correctly.
+- **Line-level buffering**, Each line appears as soon as it's flushed, not after the command finishes.
+- **Search**, Filter output lines by keyword.
+- **Copy**, Copy the full output to clipboard.
+- **Persist**, Output is saved to LokiJS `activity_log` collection for the session so you can scroll back after the command finishes.
 
 ---
 

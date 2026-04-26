@@ -37,12 +37,12 @@ When you first access nAdmin, you'll see the password setup screen:
 ![Password Setup](../images/password-setup.png)
 
 1. **Enter a secure password**
-   - Development mode: Minimum 3 characters
-   - Production mode: Minimum 12 characters with complexity requirements
+ - Development mode: Minimum 3 characters
+ - Production mode: Minimum 12 characters with complexity requirements
 
 2. **Click "Set Password"**
-   - Password is hashed and stored in the database
-   - You'll be automatically logged in
+ - Password is hashed and stored in the database
+ - You'll be automatically logged in
 
 ### Password Requirements
 
@@ -58,10 +58,10 @@ Detected when running on localhost or \*.local domains:
 
 - Minimum 12 characters
 - Must contain:
-  - At least one uppercase letter (A-Z)
-  - At least one lowercase letter (a-z)
-  - At least one number (0-9)
-  - At least one special character (@$!%\*?&)
+ - At least one uppercase letter (A-Z)
+ - At least one lowercase letter (a-z)
+ - At least one number (0-9)
+ - At least one special character (@$!%\*?&)
 
 Example strong password: `MyS3cur3P@ssw0rd!`
 
@@ -119,17 +119,17 @@ Initial Setup:
 
 Choose which services to include:
 
-| Service          | Description           | Default |
+| Service | Description | Default |
 | ---------------- | --------------------- | ------- |
-| **PostgreSQL**   | Primary database      | ✅      |
-| **Redis**        | Caching and sessions  | ✅      |
-| **Hasura**       | GraphQL engine        | ✅      |
-| **MinIO**        | S3-compatible storage | ✅      |
-| **Auth Service** | Authentication        | ✅      |
-| **NestJS API**   | Backend API           | ✅      |
-| **BullMQ**       | Job queue             | ✅      |
-| **Nginx**        | Reverse proxy         | ✅      |
-| **MailHog**      | Email testing         | ⬜      |
+| **PostgreSQL** | Primary database | ✅ |
+| **Redis** | Caching and sessions | ✅ |
+| **Hasura** | GraphQL engine | ✅ |
+| **MinIO** | S3-compatible storage | ✅ |
+| **Auth Service** | Authentication | ✅ |
+| **NestJS API** | Backend API | ✅ |
+| **BullMQ** | Job queue | ✅ |
+| **Nginx** | Reverse proxy | ✅ |
+| **MailHog** | Email testing | ⬜ |
 
 **Service Groups:**
 
@@ -184,7 +184,7 @@ Building nself project...
    nself init
    ```
 
-   Creates project structure and configuration files
+ Creates project structure and configuration files
 
 2. **Environment Setup**
 
@@ -208,7 +208,7 @@ Building nself project...
    ```bash
    nself build
    ```
-   Builds custom service containers
+ Builds custom service containers
 
 ### Build Completion
 
@@ -307,12 +307,12 @@ Each service shows:
 
 Access your services:
 
-| Service            | URL                   | Credentials           |
+| Service | URL | Credentials |
 | ------------------ | --------------------- | --------------------- |
-| **Hasura Console** | http://localhost:8080 | Admin secret in env   |
-| **MinIO Console**  | http://localhost:9001 | minioadmin/minioadmin |
-| **PostgreSQL**     | localhost:5432        | app_user/[generated]  |
-| **Redis**          | localhost:6379        | No auth (dev)         |
+| **Hasura Console** | http://localhost:8080 | Admin secret in env |
+| **MinIO Console** | http://localhost:9001 | minioadmin/minioadmin |
+| **PostgreSQL** | localhost:5432 | app_user/[generated] |
+| **Redis** | localhost:6379 | No auth (dev) |
 
 ## Step 7: Verify Installation
 
@@ -437,10 +437,10 @@ After resetting, navigate to http://localhost:3021 and you'll be prompted to set
 ### Important Notes
 
 - **Data Loss**: Resetting the password by deleting `nadmin.db` will also clear:
-  - All active sessions
-  - Cached project information
-  - Audit logs
-  - Any other stored configuration
+ - All active sessions
+ - Cached project information
+ - Audit logs
+ - Any other stored configuration
 - **Project Data Safe**: Your actual nself project data is never affected by password reset
 
 - **Container Must Be Running**: For the CLI reset command to work, the nAdmin container must be running

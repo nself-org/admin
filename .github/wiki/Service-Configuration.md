@@ -1,24 +1,24 @@
 # Service Configuration Guide
 
-Comprehensive guide to configuring all service types in nself Admin, from core services to custom applications.
+Full guide to configuring all service types in nself Admin, from core services to custom applications.
 
 ## Table of Contents
 
 - [Core Services](#core-services)
-  - [PostgreSQL](#postgresql)
-  - [Hasura GraphQL](#hasura-graphql)
-  - [Authentication](#authentication)
-  - [Nginx](#nginx)
+ - [PostgreSQL](#postgresql)
+ - [Hasura GraphQL](#hasura-graphql)
+ - [Authentication](#authentication)
+ - [Nginx](#nginx)
 - [Optional Services](#optional-services)
-  - [Redis](#redis)
-  - [MinIO Storage](#minio-storage)
-  - [Mailpit](#mailpit)
-  - [MeiliSearch](#meilisearch)
-  - [MLflow](#mlflow)
+ - [Redis](#redis)
+ - [MinIO Storage](#minio-storage)
+ - [Mailpit](#mailpit)
+ - [MeiliSearch](#meilisearch)
+ - [MLflow](#mlflow)
 - [Custom Services](#custom-services)
-  - [Framework Templates](#framework-templates)
-  - [Configuration Options](#configuration-options)
-  - [Environment Variables](#environment-variables)
+ - [Framework Templates](#framework-templates)
+ - [Configuration Options](#configuration-options)
+ - [Environment Variables](#environment-variables)
 - [Monitoring Stack](#monitoring-stack)
 - [Service Dependencies](#service-dependencies)
 - [Resource Management](#resource-management)
@@ -512,47 +512,47 @@ nself Admin provides 40+ pre-configured templates:
 
 #### Node.js Templates
 
-| Framework    | Port | Description           | Best For              |
+| Framework | Port | Description | Best For |
 | ------------ | ---- | --------------------- | --------------------- |
-| Express      | 4001 | Minimal, flexible     | REST APIs             |
-| Express (TS) | 4001 | TypeScript version    | Type-safe APIs        |
-| Fastify      | 4001 | High performance      | Microservices         |
-| Fastify (TS) | 4001 | TypeScript version    | Fast microservices    |
-| NestJS       | 4001 | Enterprise-grade      | Large applications    |
-| Koa          | 4001 | Lightweight           | Modern middleware     |
-| Hapi         | 4001 | Configuration-centric | Complex routing       |
-| Hono         | 4001 | Ultra-fast            | Edge computing        |
-| Socket.io    | 4001 | Real-time             | WebSocket apps        |
-| tRPC         | 4001 | Type-safe RPC         | Full-stack TypeScript |
+| Express | 4001 | Minimal, flexible | REST APIs |
+| Express (TS) | 4001 | TypeScript version | Type-safe APIs |
+| Fastify | 4001 | High performance | Microservices |
+| Fastify (TS) | 4001 | TypeScript version | Fast microservices |
+| NestJS | 4001 | Enterprise-grade | Large applications |
+| Koa | 4001 | Lightweight | Modern middleware |
+| Hapi | 4001 | Configuration-centric | Complex routing |
+| Hono | 4001 | Ultra-fast | Edge computing |
+| Socket.io | 4001 | Real-time | WebSocket apps |
+| tRPC | 4001 | Type-safe RPC | Full-stack TypeScript |
 
 #### Python Templates
 
-| Framework | Port | Description        | Best For          |
+| Framework | Port | Description | Best For |
 | --------- | ---- | ------------------ | ----------------- |
-| FastAPI   | 4002 | Modern, fast       | REST + GraphQL    |
-| Django    | 4002 | Batteries included | Full applications |
-| Flask     | 4002 | Minimal            | Simple APIs       |
-| Tornado   | 4002 | Non-blocking       | Real-time apps    |
-| Pyramid   | 4002 | Flexible           | Scalable apps     |
+| FastAPI | 4002 | Modern, fast | REST + GraphQL |
+| Django | 4002 | Batteries included | Full applications |
+| Flask | 4002 | Minimal | Simple APIs |
+| Tornado | 4002 | Non-blocking | Real-time apps |
+| Pyramid | 4002 | Flexible | Scalable apps |
 
 #### Other Languages
 
-| Language | Framework   | Port | Description         |
+| Language | Framework | Port | Description |
 | -------- | ----------- | ---- | ------------------- |
-| Go       | Gin         | 4003 | Fast HTTP framework |
-| Go       | Fiber       | 4003 | Express-inspired    |
-| Go       | Echo        | 4003 | High performance    |
-| Ruby     | Sinatra     | 4004 | Minimal DSL         |
-| Ruby     | Rails       | 4004 | Full framework      |
-| PHP      | Laravel     | 4005 | Modern PHP          |
-| PHP      | Slim        | 4005 | Micro framework     |
-| Java     | Spring Boot | 4006 | Enterprise Java     |
-| Rust     | Actix       | 4007 | Blazing fast        |
-| Rust     | Rocket      | 4007 | Type-safe           |
-| C#       | ASP.NET     | 4008 | Microsoft stack     |
-| Kotlin   | Ktor        | 4009 | Coroutine-based     |
-| Scala    | Play        | 4010 | Reactive            |
-| Elixir   | Phoenix     | 4011 | Real-time           |
+| Go | Gin | 4003 | Fast HTTP framework |
+| Go | Fiber | 4003 | Express-inspired |
+| Go | Echo | 4003 | High performance |
+| Ruby | Sinatra | 4004 | Minimal DSL |
+| Ruby | Rails | 4004 | Full framework |
+| PHP | Laravel | 4005 | Modern PHP |
+| PHP | Slim | 4005 | Micro framework |
+| Java | Spring Boot | 4006 | Enterprise Java |
+| Rust | Actix | 4007 | Blazing fast |
+| Rust | Rocket | 4007 | Type-safe |
+| C# | ASP.NET | 4008 | Microsoft stack |
+| Kotlin | Ktor | 4009 | Coroutine-based |
+| Scala | Play | 4010 | Reactive |
+| Elixir | Phoenix | 4011 | Real-time |
 
 ### Configuration Options
 
@@ -813,16 +813,16 @@ graph LR
 
 ### Resource Allocation Guidelines
 
-| Service     | Min CPU | Rec CPU | Min RAM | Rec RAM |
+| Service | Min CPU | Rec CPU | Min RAM | Rec RAM |
 | ----------- | ------- | ------- | ------- | ------- |
-| PostgreSQL  | 0.5     | 2.0     | 512MB   | 2GB     |
-| Hasura      | 0.25    | 1.0     | 256MB   | 512MB   |
-| Redis       | 0.25    | 0.5     | 128MB   | 256MB   |
-| Nginx       | 0.1     | 0.25    | 64MB    | 128MB   |
-| API Service | 0.25    | 1.0     | 256MB   | 512MB   |
-| Worker      | 0.25    | 1.0     | 256MB   | 512MB   |
-| MinIO       | 0.25    | 1.0     | 512MB   | 1GB     |
-| Monitoring  | 0.5     | 2.0     | 1GB     | 2GB     |
+| PostgreSQL | 0.5 | 2.0 | 512MB | 2GB |
+| Hasura | 0.25 | 1.0 | 256MB | 512MB |
+| Redis | 0.25 | 0.5 | 128MB | 256MB |
+| Nginx | 0.1 | 0.25 | 64MB | 128MB |
+| API Service | 0.25 | 1.0 | 256MB | 512MB |
+| Worker | 0.25 | 1.0 | 256MB | 512MB |
+| MinIO | 0.25 | 1.0 | 512MB | 1GB |
+| Monitoring | 0.5 | 2.0 | 1GB | 2GB |
 
 ### Docker Resource Configuration
 

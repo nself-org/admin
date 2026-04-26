@@ -158,10 +158,10 @@ pnpm audit
 - **Storage:** LokiJS `auditLog` collection
 - **Retention:** 30 days with automatic TTL
 - **Events Logged:**
-  - Authentication attempts (success/failure)
-  - Session operations (create, refresh, revoke)
-  - Password changes
-  - Security events (rate limits, CSRF failures)
+ - Authentication attempts (success/failure)
+ - Session operations (create, refresh, revoke)
+ - Password changes
+ - Security events (rate limits, CSRF failures)
 
 #### Sensitive Data Protection
 
@@ -203,7 +203,7 @@ pnpm run lint
 
 ### New Files
 
-1. `/docs/SECURITY_AUDIT_REPORT.md` - Comprehensive security audit
+1. `/docs/SECURITY_AUDIT_REPORT.md` - Full security audit
 2. `/docs/SECURITY_HARDENING_SUMMARY.md` - This file
 3. `/src/lib/requestLimits.ts` - Request/response size limits
 4. `/src/components/SessionTimeoutWarning.tsx` - Session timeout UI
@@ -211,7 +211,7 @@ pnpm run lint
 
 ### Modified Files
 
-1. `/next.config.mjs` - Added comprehensive security headers
+1. `/next.config.mjs` - Added full security headers
 2. `/src/lib/validation.ts` - Added SQL injection prevention
 3. `/src/lib/rateLimiter.ts` - Added account lockout mechanism
 4. `/src/app/api/auth/login/route.ts` - Added lockout check
@@ -247,18 +247,18 @@ pnpm run lint
 
 ## OWASP Top 10 Compliance
 
-| Vulnerability                      | Status | Implementation                                                |
+| Vulnerability | Status | Implementation |
 | ---------------------------------- | ------ | ------------------------------------------------------------- |
-| A01:2021 Broken Access Control     | ✅     | Session-based auth, middleware protection                     |
-| A02:2021 Cryptographic Failures    | ✅     | bcrypt, secure tokens, httpOnly cookies                       |
-| A03:2021 Injection                 | ✅     | Zod validation, parameterized queries, no shell interpolation |
-| A04:2021 Insecure Design           | ✅     | Defense in depth, rate limiting, CSRF tokens                  |
-| A05:2021 Security Misconfiguration | ✅     | Security headers, minimal Docker image, secrets management    |
-| A06:2021 Vulnerable Components     | ✅     | All dependencies updated, 0 vulnerabilities                   |
-| A07:2021 Authentication Failures   | ✅     | Strong passwords, rate limiting, account lockout              |
-| A08:2021 Software/Data Integrity   | ✅     | Dependency pinning, audit logs, integrity checks              |
-| A09:2021 Logging Failures          | ✅     | Comprehensive audit logs, no sensitive data in logs           |
-| A10:2021 SSRF                      | ✅     | Whitelisted origins, no arbitrary URL fetching                |
+| A01:2021 Broken Access Control | ✅ | Session-based auth, middleware protection |
+| A02:2021 Cryptographic Failures | ✅ | bcrypt, secure tokens, httpOnly cookies |
+| A03:2021 Injection | ✅ | Zod validation, parameterized queries, no shell interpolation |
+| A04:2021 Insecure Design | ✅ | Defense in depth, rate limiting, CSRF tokens |
+| A05:2021 Security Misconfiguration | ✅ | Security headers, minimal Docker image, secrets management |
+| A06:2021 Vulnerable Components | ✅ | All dependencies updated, 0 vulnerabilities |
+| A07:2021 Authentication Failures | ✅ | Strong passwords, rate limiting, account lockout |
+| A08:2021 Software/Data Integrity | ✅ | Dependency pinning, audit logs, integrity checks |
+| A09:2021 Logging Failures | ✅ | Full audit logs, no sensitive data in logs |
+| A10:2021 SSRF | ✅ | Whitelisted origins, no arbitrary URL fetching |
 
 ---
 
@@ -352,14 +352,14 @@ For security issues:
 
 ## Conclusion
 
-nself-admin v0.4.0 has undergone comprehensive security hardening and is **production-ready**. All critical security measures are in place, including:
+nself-admin v0.4.0 has undergone full security hardening and is **production-ready**. All critical security measures are in place, including:
 
 - ✅ Strong authentication with rate limiting and account lockout
 - ✅ CSRF protection with session-based tokens
 - ✅ XSS prevention with CSP and input sanitization
 - ✅ SQL injection prevention with parameterized queries
 - ✅ Command injection prevention with safe execution
-- ✅ Comprehensive security headers
+- ✅ Full security headers
 - ✅ Docker security with resource limits
 - ✅ 0 dependency vulnerabilities
 - ✅ Audit logging and monitoring

@@ -417,7 +417,7 @@ git push origin main
 ## Getting Help
 
 - **Documentation**: Check `/docs` folder
-- **Discord**: Join our [Discord server](https://discord.gg/nself)
+- **the community chat**: Join our [community chat at chat.nself.org](https://chat.nself.org)
 - **GitHub Issues**: Search existing issues or create new one
 - **Stack Overflow**: Tag with `nself-admin`
 

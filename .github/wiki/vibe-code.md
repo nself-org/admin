@@ -1,14 +1,14 @@
 # Vibe-Code Web IDE
 
-Vibe-Code is a browser-based AI pair-programming IDE built into the nSelf Admin UI at
+Vibe-Code is a browser-based AI pair-programming IDE built into the ɳSelf Admin UI at
 `http://localhost:3021/vibe`. Describe a feature in plain language and it generates the complete
-vertical stack: a SQL migration, Hasura permissions, and a React UI component — in one AI turn.
+vertical stack: a SQL migration, Hasura permissions, and a React UI component, in one AI turn.
 
 ## Requirements
 
-- nSelf Admin running at `http://localhost:3021`
+- ɳSelf Admin running at `http://localhost:3021`
 - `NSELF_VIBE_ENABLED=true` in your `.env` file
-- Local nSelf Docker stack running (`nself start`)
+- Local ɳSelf Docker stack running (`nself start`)
 - For full AI generation: vibe_api CS_2 on port 8002 (`NSELF_VIBE_PORT=8002`)
 - Without vibe_api: stub mode generates a realistic template for UI development
 
@@ -28,26 +28,26 @@ vertical stack: a SQL migration, Hasura permissions, and a React UI component �
 
 The IDE is a 4-panel layout:
 
-| Panel       | Keyboard | Purpose                                                                           |
+| Panel | Keyboard | Purpose |
 | ----------- | -------- | --------------------------------------------------------------------------------- |
-| Chat        | Alt+1    | Feature request input and conversation history                                    |
-| Diff Viewer | Alt+2    | Monaco editor showing the generated code per layer (Migration / Permissions / UI) |
-| File Tree   | Alt+3    | Preview of all generated files                                                    |
-| Terminal    | Alt+4    | Apply output stream and apply button                                              |
+| Chat | Alt+1 | Feature request input and conversation history |
+| Diff Viewer | Alt+2 | Monaco editor showing the generated code per layer (Migration / Permissions / UI) |
+| File Tree | Alt+3 | Preview of all generated files |
+| Terminal | Alt+4 | Apply output stream and apply button |
 
 ## Layer Tabs
 
 Within the Diff Viewer, use **Left/Right arrow keys** to switch between:
 
-- **Migration SQL** — the `CREATE TABLE` / `CREATE INDEX` statements
-- **Permissions** — the Hasura metadata JSON for row-level access control
-- **UI Files** — the generated React (TSX) component(s)
+- **Migration SQL**, the `CREATE TABLE` / `CREATE INDEX` statements
+- **Permissions**, the Hasura metadata JSON for row-level access control
+- **UI Files**, the generated React (TSX) component(s)
 
 ## Apply Pipeline
 
 1. Generate a feature (30 seconds or less for a typical CRUD feature on local Ollama)
 2. Click **Apply Changes** in the Terminal panel
-3. A 3-second countdown starts — review the diff before it completes
+3. A 3-second countdown starts, review the diff before it completes
 4. Click **Apply** after the countdown
 5. The pipeline runs: SQL migration via `nself migrate apply`, then Hasura permissions, then file write
 
@@ -66,20 +66,20 @@ The Apply button stays disabled until the phrase is typed exactly.
 
 All vars go in `admin/.env`:
 
-| Variable                            | Default   | Description                                      |
+| Variable | Default | Description |
 | ----------------------------------- | --------- | ------------------------------------------------ |
-| `NSELF_VIBE_ENABLED`                | `true`    | Enable Vibe-Code IDE                             |
-| `NSELF_VIBE_PORT`                   | `8002`    | Port for vibe_api CS_2                           |
-| `NSELF_VIBE_MAX_PROMPT_TOKENS`      | `16000`   | Max tokens per generation                        |
-| `NSELF_VIBE_MAX_SESSIONS_PER_USER`  | `3`       | Max concurrent sessions                          |
-| `NSELF_VIBE_AI_PROVIDER`            | `claw-ai` | AI provider: `claw-ai` or `ollama`               |
-| `NSELF_VIBE_TARGET_ENV`             | `local`   | Default environment: `local`, `staging`, `prod`  |
-| `NSELF_VIBE_APPLY_REQUIRES_CONFIRM` | `true`    | Always require confirmation before apply         |
-| `NSELF_VIBE_UI_FRAMEWORK`           | `react`   | Generated UI framework: `react` or `flutter-web` |
+| `NSELF_VIBE_ENABLED` | `true` | Enable Vibe-Code IDE |
+| `NSELF_VIBE_PORT` | `8002` | Port for vibe_api CS_2 |
+| `NSELF_VIBE_MAX_PROMPT_TOKENS` | `16000` | Max tokens per generation |
+| `NSELF_VIBE_MAX_SESSIONS_PER_USER` | `3` | Max concurrent sessions |
+| `NSELF_VIBE_AI_PROVIDER` | `claw-ai` | AI provider: `claw-ai` or `ollama` |
+| `NSELF_VIBE_TARGET_ENV` | `local` | Default environment: `local`, `staging`, `prod` |
+| `NSELF_VIBE_APPLY_REQUIRES_CONFIRM` | `true` | Always require confirmation before apply |
+| `NSELF_VIBE_UI_FRAMEWORK` | `react` | Generated UI framework: `react` or `flutter-web` |
 
 ## Security
 
-- SQL migrations run only through `nself migrate apply` — no direct SQL execution endpoint
+- SQL migrations run only through `nself migrate apply`, no direct SQL execution endpoint
 - Generated DDL is validated: only `CREATE TABLE` and `CREATE INDEX` are allowed in CRUD features
 - Every apply logs to `np_audit_log` with the diff snapshot, user ID, environment, and timestamp
 - Rate limit: max 1 apply per 30 seconds per generation

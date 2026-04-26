@@ -6,7 +6,7 @@
 
 ## Overview
 
-Comprehensive integration of WebSocket real-time updates into all critical pages of nself-admin. The WebSocket infrastructure (documented in `WEBSOCKET_IMPLEMENTATION.md`) has been fully integrated into the frontend and backend.
+Full integration of WebSocket real-time updates into all critical pages of nself-admin. The WebSocket infrastructure (documented in `WEBSOCKET_IMPLEMENTATION.md`) has been fully integrated into the frontend and backend.
 
 ---
 
@@ -32,7 +32,7 @@ Comprehensive integration of WebSocket real-time updates into all critical pages
 - Automatic fallback to polling if connection lost
 - Real-time health status updates
 
-**User Experience**:
+**user workflow**:
 
 - Instant feedback when services start/stop/restart
 - Clear visual indication of live connection status
@@ -61,11 +61,11 @@ Comprehensive integration of WebSocket real-time updates into all critical pages
 
 - Imported `emitBuildProgress` from centralized emitters
 - Emit progress at each build stage:
-  - 0%: Build start
-  - 10%: Validating configuration
-  - 40%: Generating docker-compose.yml
-  - 70%: Creating networks and pulling images
-  - 100%: Build complete
+ - 0%: Build start
+ - 10%: Validating configuration
+ - 40%: Generating docker-compose.yml
+ - 70%: Creating networks and pulling images
+ - 100%: Build complete
 - Emit failure events with descriptive messages
 - Real-time error reporting
 
@@ -77,7 +77,7 @@ Comprehensive integration of WebSocket real-time updates into all critical pages
 - Instant error notification
 - Connection status indicator
 
-**User Experience**:
+**user workflow**:
 
 - See build progress in real-time
 - Know exactly which step is executing
@@ -109,7 +109,7 @@ Comprehensive integration of WebSocket real-time updates into all critical pages
 - Connection status indicator
 - Event batching for high-frequency logs
 
-**User Experience**:
+**user workflow**:
 
 - See logs appear instantly as they're generated
 - Pause streaming to analyze specific logs
@@ -264,7 +264,7 @@ All pages with real-time updates show connection status:
 
 - If WebSocket disconnected, pages fall back to polling
 - Automatic reconnection in background
-- Seamless transition back to live updates when reconnected
+- transition back to live updates when reconnected
 - No user intervention required
 
 ---
@@ -388,6 +388,6 @@ The WebSocket real-time system is now fully integrated into nself-admin's critic
 4. API routes emit events for all operations
 5. Performance target of <100ms latency achieved
 
-The system provides instant feedback for all user actions, eliminates the need for polling, and creates a modern, responsive admin experience.
+The system provides instant feedback for all user actions, eliminates the need for polling, and creates a modern, responsive admin workflow.
 
 **Ready for**: User testing, performance benchmarking, and v0.5.0 release.

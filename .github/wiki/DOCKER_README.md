@@ -1,8 +1,6 @@
 # nself-admin - Web UI for nself CLI
 
-[![Version](https://img.shields.io/badge/version-0.5.0-blue.svg)](https://github.com/nself-org/admin/releases)
-[![Docker Pulls](https://img.shields.io/docker/pulls/nself/nself-admin)](https://hub.docker.com/r/nself/nself-admin)
-[![License](https://img.shields.io/badge/license-MIT-green.svg)](https://github.com/nself-org/admin/blob/main/LICENSE)
+Version 0.5.0 · [Docker Hub](https://hub.docker.com/r/nself/nself-admin) · MIT License
 
 Production-ready web interface for managing your self-hosted backend stack using the [nself CLI](https://github.com/nself-org/cli).
 
@@ -21,12 +19,12 @@ Open http://localhost:3021 in your browser.
 
 ## Docker Tags
 
-| Tag       | Description                      | Use Case                  |
+| Tag | Description | Use Case |
 | --------- | -------------------------------- | ------------------------- |
-| `latest`  | Latest stable release            | Production                |
-| `0.5.0`   | Specific version                 | Production (pinned)       |
-| `0.5`     | Minor version (receives patches) | Production (auto-updates) |
-| `staging` | Latest staging build             | Testing                   |
+| `latest` | Latest stable release | Production |
+| `0.5.0` | Specific version | Production (pinned) |
+| `0.5` | Minor version (receives patches) | Production (auto-updates) |
+| `staging` | Latest staging build | Testing |
 
 ## Supported Platforms
 
@@ -37,17 +35,17 @@ Open http://localhost:3021 in your browser.
 
 ### Required
 
-| Variable             | Default      | Description                |
+| Variable | Default | Description |
 | -------------------- | ------------ | -------------------------- |
 | `NSELF_PROJECT_PATH` | `/workspace` | Path to your nself project |
 
 ### Optional
 
-| Variable    | Default      | Description                       |
+| Variable | Default | Description |
 | ----------- | ------------ | --------------------------------- |
-| `PORT`      | `3021`       | Server port                       |
-| `NODE_ENV`  | `production` | Environment mode                  |
-| `LOG_LEVEL` | `info`       | Log level (debug/info/warn/error) |
+| `PORT` | `3021` | Server port |
+| `NODE_ENV` | `production` | Environment mode |
+| `LOG_LEVEL` | `info` | Log level (debug/info/warn/error) |
 
 ## Volume Mounts
 

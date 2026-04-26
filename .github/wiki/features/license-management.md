@@ -1,6 +1,6 @@
 # License Management
 
-The License Management pages in Admin UI let you set, view, and revoke your nSelf plugin license without using the terminal.
+The License Management pages in Admin UI let you set, view, and revoke your ɳSelf plugin license without using the terminal.
 
 ---
 
@@ -14,13 +14,13 @@ Go to **License** (Zone Z07) in the Admin sidebar.
 
 The LicensePanel shows:
 
-| Field             | Description                                                      |
+| Field | Description |
 | ----------------- | ---------------------------------------------------------------- |
-| License key       | Truncated key (`nself_pro_xxxxx...****`)                         |
-| Tier              | Free / Any bundle ($0.99/mo) / ɳSelf+ ($3.99/mo or $39.99/yr)    |
-| Status            | Active / Expired / Revoked                                       |
-| Expiry            | Date (for annual subscriptions) or "Monthly — renews MM/DD/YYYY" |
-| Installed plugins | Count of pro plugins currently installed                         |
+| License key | Truncated key (`nself_pro_xxxxx...****`) |
+| Tier | Free / Any bundle ($0.99/mo) / ɳSelf+ ($3.99/mo or $39.99/yr) |
+| Status | Active / Expired / Revoked |
+| Expiry | Date (for annual subscriptions) or "Monthly , renews MM/DD/YYYY" |
+| Installed plugins | Count of pro plugins currently installed |
 
 ---
 
@@ -35,11 +35,11 @@ The LicensePanel shows:
 
 ## License Tiers
 
-| Tier       | Monthly  | Annual    | Plugins included                     |
+| Tier | Monthly | Annual | Plugins included |
 | ---------- | -------- | --------- | ------------------------------------ |
-| Free       | $0       | $0        | 25 free plugins only                 |
-| Any bundle | $0.99/mo | $9.99/yr  | All plugins in that bundle (per F06) |
-| ɳSelf+     | $3.99/mo | $39.99/yr | All 5 bundles + all apps + support   |
+| Free | $0 | $0 | 25 free plugins only |
+| Any bundle | $0.99/mo | $9.99/yr | All plugins in that bundle (per F06) |
+| ɳSelf+ | $3.99/mo | $39.99/yr | All 5 bundles + all apps + support |
 
 ---
 
@@ -55,4 +55,4 @@ Dormant plugins remain installed on disk but do not start with the stack. They s
 
 ## Buying a License
 
-The License page includes a link to `nself.org/pricing` for purchasing. Licenses are managed on nself.org — the Admin UI does not handle billing directly.
+The License page includes a link to `nself.org/pricing` for purchasing. Licenses are managed on nself.org, the Admin UI does not handle billing directly.

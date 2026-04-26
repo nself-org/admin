@@ -97,39 +97,39 @@ Guide users through a logical flow:
 
 ### Frontend
 
-| Technology       | Version | Purpose                      |
+| Technology | Version | Purpose |
 | ---------------- | ------- | ---------------------------- |
-| Next.js          | 16.x    | React framework (App Router) |
-| React            | 19.x    | UI library                   |
-| TypeScript       | 5.9     | Type safety                  |
-| Tailwind CSS     | 4.x     | Styling                      |
-| Radix UI         | Latest  | Headless components          |
-| Zustand          | 5.x     | Global state                 |
-| SWR              | 2.x     | Data fetching                |
-| Socket.io Client | 4.8     | WebSocket                    |
-| Monaco Editor    | 4.x     | Code editor                  |
-| Recharts         | 3.x     | Charts                       |
+| Next.js | 16.x | React framework (App Router) |
+| React | 19.x | UI library |
+| TypeScript | 5.9 | Type safety |
+| Tailwind CSS | 4.x | Styling |
+| Radix UI | Latest | Headless components |
+| Zustand | 5.x | Global state |
+| SWR | 2.x | Data fetching |
+| Socket.io Client | 4.8 | WebSocket |
+| Monaco Editor | 4.x | Code editor |
+| Recharts | 3.x | Charts |
 
 ### Backend
 
-| Technology | Version | Purpose           |
+| Technology | Version | Purpose |
 | ---------- | ------- | ----------------- |
-| Node.js    | 18+     | Runtime           |
-| LokiJS     | 1.5     | Embedded database |
-| bcryptjs   | 3.x     | Password hashing  |
-| Socket.io  | 4.8     | WebSocket server  |
-| Dockerode  | 4.x     | Docker API        |
-| Zod        | 4.x     | Validation        |
+| Node.js | 18+ | Runtime |
+| LokiJS | 1.5 | Embedded database |
+| bcryptjs | 3.x | Password hashing |
+| Socket.io | 4.8 | WebSocket server |
+| Dockerode | 4.x | Docker API |
+| Zod | 4.x | Validation |
 
 ### Development
 
-| Technology | Version | Purpose         |
+| Technology | Version | Purpose |
 | ---------- | ------- | --------------- |
-| Jest       | 30.x    | Unit testing    |
-| Playwright | 1.55    | E2E testing     |
-| ESLint     | 9.x     | Linting         |
-| Prettier   | 3.x     | Formatting      |
-| pnpm       | 10.x    | Package manager |
+| Jest | 30.x | Unit testing |
+| Playwright | 1.55 | E2E testing |
+| ESLint | 9.x | Linting |
+| Prettier | 3.x | Formatting |
+| pnpm | 10.x | Package manager |
 
 ---
 

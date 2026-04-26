@@ -34,10 +34,10 @@ This security audit report documents all security measures implemented in nself-
 - **Login Attempts:** 5 attempts per 15 minutes
 - **Implementation:** `/src/lib/rateLimiter.ts`
 - **Features:**
-  - IP-based fingerprinting with user agent
-  - Progressive delay on failed attempts (up to 5 seconds)
-  - Automatic cleanup of expired entries
-  - Clear rate limit on successful login
+ - IP-based fingerprinting with user agent
+ - Progressive delay on failed attempts (up to 5 seconds)
+ - Automatic cleanup of expired entries
+ - Clear rate limit on successful login
 
 #### Account Lockout
 
@@ -51,11 +51,11 @@ This security audit report documents all security measures implemented in nself-
 - **Storage:** LokiJS database with TTL
 - **Duration:** 7 days (default) or 30 days (remember me)
 - **Security Features:**
-  - httpOnly cookies (XSS protection)
-  - sameSite: strict (CSRF protection)
-  - Secure flag in production (HTTPS only)
-  - Auto-extension on activity
-  - Session refresh regenerates CSRF token
+ - httpOnly cookies (XSS protection)
+ - sameSite: strict (CSRF protection)
+ - Secure flag in production (HTTPS only)
+ - Auto-extension on activity
+ - Session refresh regenerates CSRF token
 
 #### Password Hashing
 
@@ -110,11 +110,11 @@ This security audit report documents all security measures implemented in nself-
 
 - **Status:** ✅ IMPLEMENTED in next.config.mjs
 - **Directives:**
-  - `default-src 'self'`
-  - `script-src 'self' 'unsafe-eval' 'unsafe-inline'` (Next.js requirement)
-  - `style-src 'self' 'unsafe-inline'` (Tailwind requirement)
-  - `img-src 'self' data: https:`
-  - `connect-src 'self' ws: wss:`
+ - `default-src 'self'`
+ - `script-src 'self' 'unsafe-eval' 'unsafe-inline'` (Next.js requirement)
+ - `style-src 'self' 'unsafe-inline'` (Tailwind requirement)
+ - `img-src 'self' data: https:`
+ - `connect-src 'self' ws: wss:`
 
 #### Output Escaping
 
@@ -190,9 +190,9 @@ exec(`nself db query "${userQuery}"`)
 #### Rate Limiting
 
 - **Types:**
-  - Auth: 5 requests / 15 min
-  - API: 100 requests / 15 min
-  - Heavy: 10 requests / 15 min
+ - Auth: 5 requests / 15 min
+ - API: 100 requests / 15 min
+ - Heavy: 10 requests / 15 min
 - **Per-Endpoint:** Applied based on operation type
 
 #### Request Size Limits
@@ -223,9 +223,9 @@ exec(`nself db query "${userQuery}"`)
 
 - **User:** Currently running as root (required for Docker socket)
 - **Alternatives:**
-  1. Docker Socket Proxy (most secure)
-  2. Match host Docker GID
-  3. Use Docker-in-Docker with proper permissions
+ 1. Docker Socket Proxy (most secure)
+ 2. Match host Docker GID
+ 3. Use Docker-in-Docker with proper permissions
 
 #### Network Isolation
 
@@ -305,25 +305,25 @@ None
 #### High Severity (2)
 
 1. **next** v16.1.4 → v16.1.5
-   - CVE-2026-23864: HTTP request deserialization DoS
-   - CVE-2026-24842: Hardlink path traversal in tar
-   - **Fix:** Upgrade to next@16.1.5
+ - CVE-2026-23864: HTTP request deserialization DoS
+ - CVE-2026-24842: Hardlink path traversal in tar
+ - **Fix:** Upgrade to next@16.1.5
 
 2. **tar** v7.5.6 → v7.5.7
-   - CVE-2026-24842: Arbitrary file creation via hardlink
-   - **Fix:** Upgrade to tar@7.5.7
+ - CVE-2026-24842: Arbitrary file creation via hardlink
+ - **Fix:** Upgrade to tar@7.5.7
 
 #### Moderate Severity (3)
 
 1. **mdast-util-to-hast** v13.2.0 → v13.2.1
-   - CVE-2025-66400: Unsanitized class attribute
-   - **Fix:** Update dependency
+ - CVE-2025-66400: Unsanitized class attribute
+ - **Fix:** Update dependency
 
 2. **next** Image Optimizer DoS (CVE-2025-59471)
-   - Not applicable (we don't use remotePatterns)
+ - Not applicable (we don't use remotePatterns)
 
 3. **next** PPR Resume Endpoint DoS (CVE-2025-59472)
-   - Not applicable (we don't use Partial Prerendering)
+ - Not applicable (we don't use Partial Prerendering)
 
 #### Remediation
 
@@ -344,11 +344,11 @@ pnpm audit fix
 
 - **Storage:** LokiJS `auditLog` collection
 - **Events:**
-  - Authentication attempts (success/failure)
-  - Session operations (create, refresh, revoke)
-  - Password changes
-  - Failed API requests
-  - Security events (rate limits, CSRF failures)
+ - Authentication attempts (success/failure)
+ - Session operations (create, refresh, revoke)
+ - Password changes
+ - Failed API requests
+ - Security events (rate limits, CSRF failures)
 
 #### Sensitive Data Protection
 
@@ -456,18 +456,18 @@ catch (error) {
 
 ## OWASP Top 10 Compliance
 
-| Vulnerability                      | Status | Mitigation                                                    |
+| Vulnerability | Status | Mitigation |
 | ---------------------------------- | ------ | ------------------------------------------------------------- |
-| A01:2021 Broken Access Control     | ✅     | Session-based auth, middleware protection                     |
-| A02:2021 Cryptographic Failures    | ✅     | bcrypt, secure tokens, httpOnly cookies                       |
-| A03:2021 Injection                 | ✅     | Zod validation, parameterized queries, no shell interpolation |
-| A04:2021 Insecure Design           | ✅     | Defense in depth, rate limiting, CSRF tokens                  |
-| A05:2021 Security Misconfiguration | ✅     | Security headers, minimal Docker image, secrets management    |
-| A06:2021 Vulnerable Components     | ⚠️     | 5 vulnerabilities to fix (non-critical)                       |
-| A07:2021 Authentication Failures   | ✅     | Strong passwords, rate limiting, session management           |
-| A08:2021 Software/Data Integrity   | ✅     | Dependency pinning, audit logs, integrity checks              |
-| A09:2021 Logging Failures          | ✅     | Comprehensive audit logs, no sensitive data in logs           |
-| A10:2021 SSRF                      | ✅     | Whitelisted origins, no arbitrary URL fetching                |
+| A01:2021 Broken Access Control | ✅ | Session-based auth, middleware protection |
+| A02:2021 Cryptographic Failures | ✅ | bcrypt, secure tokens, httpOnly cookies |
+| A03:2021 Injection | ✅ | Zod validation, parameterized queries, no shell interpolation |
+| A04:2021 Insecure Design | ✅ | Defense in depth, rate limiting, CSRF tokens |
+| A05:2021 Security Misconfiguration | ✅ | Security headers, minimal Docker image, secrets management |
+| A06:2021 Vulnerable Components | ⚠️ | 5 vulnerabilities to fix (non-critical) |
+| A07:2021 Authentication Failures | ✅ | Strong passwords, rate limiting, session management |
+| A08:2021 Software/Data Integrity | ✅ | Dependency pinning, audit logs, integrity checks |
+| A09:2021 Logging Failures | ✅ | Full audit logs, no sensitive data in logs |
+| A10:2021 SSRF | ✅ | Whitelisted origins, no arbitrary URL fetching |
 
 ---
 
@@ -585,15 +585,15 @@ For security issues, please contact:
 
 ## Version History
 
-| Version | Date       | Changes                              |
+| Version | Date | Changes |
 | ------- | ---------- | ------------------------------------ |
-| v0.4.0  | 2026-01-31 | Initial security audit and hardening |
+| v0.4.0 | 2026-01-31 | Initial security audit and hardening |
 
 ---
 
 ## Conclusion
 
-nself-admin has implemented comprehensive security measures across all layers of the application. The system is **production-ready** with only minor dependency updates needed. All critical security measures are in place, including authentication, authorization, input validation, CSRF protection, and audit logging.
+nself-admin has implemented full security measures across all layers of the application. The system is **production-ready** with only minor dependency updates needed. All critical security measures are in place, including authentication, authorization, input validation, CSRF protection, and audit logging.
 
 **Next Steps:**
 

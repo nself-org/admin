@@ -5,42 +5,42 @@
 ### On Every PR
 
 - **test.yml** runs automatically
-  - Lint & format checks
-  - TypeScript type checking
-  - Unit tests with coverage
-  - E2E tests (Playwright)
-  - Production build test
+ - Lint & format checks
+ - TypeScript type checking
+ - Unit tests with coverage
+ - E2E tests (Playwright)
+ - Production build test
 
 ### On Merge to Main
 
 - **deploy-staging.yml** runs automatically
-  - Builds Docker image
-  - Pushes to Docker Hub (staging tag)
-  - Deploys to staging server
-  - Runs smoke tests
+ - Builds Docker image
+ - Pushes to Docker Hub (staging tag)
+ - Deploys to staging server
+ - Runs smoke tests
 
 ### On Version Tag (v\*)
 
 - **release.yml** runs automatically
-  - Full test suite
-  - Multi-platform Docker build
-  - Pushes to Docker Hub (latest + version)
-  - Creates GitHub Release
-  - Updates Docker Hub README
+ - Full test suite
+ - Multi-platform Docker build
+ - Pushes to Docker Hub (latest + version)
+ - Creates GitHub Release
+ - Updates Docker Hub README
 
 ### Daily
 
 - **dependency-audit.yml** runs automatically
-  - Scans for security vulnerabilities
-  - Creates GitHub issue if found
-  - Fails on critical vulnerabilities
+ - Scans for security vulnerabilities
+ - Creates GitHub issue if found
+ - Fails on critical vulnerabilities
 
 ### Weekly
 
 - **lighthouse.yml** runs automatically
-  - Performance audit
-  - Accessibility audit
-  - Comments results on PRs
+ - Performance audit
+ - Accessibility audit
+ - Comments results on PRs
 
 ## Quick Commands
 

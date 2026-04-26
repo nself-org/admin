@@ -1,20 +1,20 @@
-# Contributing to nSelf Admin
+# Contributing to ɳSelf Admin
 
-Admin is the local companion web UI for the nSelf CLI. It runs at `localhost:3021` on your machine and is distributed as a Docker image — it is not a hosted website.
+Admin is the local companion web UI for the ɳSelf CLI. It runs at `localhost:3021` on your machine and is distributed as a Docker image, it is not a hosted website.
 
 ## Before You Start
 
 - Read the [Code of Conduct](Code-of-Conduct.md). All contributors must follow it.
-- Read the [Governance model](https://github.com/nself-org/admin/blob/main/.github/GOVERNANCE.md) — it explains how decisions get made.
+- Read the [Governance model](https://github.com/nself-org/admin/blob/main/.github/GOVERNANCE.md), it explains how decisions get made.
 - Check [open issues](https://github.com/nself-org/admin/issues) and [Discussions](https://github.com/nself-org/admin/discussions) before opening a new one.
 
 ## What Admin Is (and Isn't)
 
-Admin is a **local GUI wrapper** for the nSelf CLI. It:
+Admin is a **local GUI wrapper** for the ɳSelf CLI. It:
 
 - Runs on the user's machine, not on any server
-- Communicates with a locally running nSelf backend stack
-- Delegates all backend operations to the nSelf CLI binary
+- Communicates with a locally running ɳSelf backend stack
+- Delegates all backend operations to the ɳSelf CLI binary
 - Is distributed as `nself/nself-admin` Docker image, launched via `nself admin start`
 
 It is **not** a web app you deploy. Do not add server-side features or API routes that bypass the CLI.
@@ -23,7 +23,7 @@ It is **not** a web app you deploy. Do not add server-side features or API route
 
 1. Search [existing issues](https://github.com/nself-org/admin/issues) first.
 2. Open a new issue using the **Bug Report** template.
-3. Include: Admin version, nSelf CLI version (`nself version`), OS, browser, steps to reproduce.
+3. Include: Admin version, ɳSelf CLI version (`nself version`), OS, browser, steps to reproduce.
 
 ## Requesting Features
 
@@ -38,7 +38,7 @@ It is **not** a web app you deploy. Do not add server-side features or API route
 - Node.js 22 or later
 - pnpm 9 or later (no npm or yarn)
 - Docker (to test the final image)
-- nSelf CLI (for integration testing)
+- ɳSelf CLI (for integration testing)
 
 ### First-time setup
 
@@ -67,13 +67,13 @@ nself admin start   # uses the installed image; swap for local image to test
 
 ## Branching Model
 
-| Branch      | Purpose            |
+| Branch | Purpose |
 | ----------- | ------------------ |
-| `main`      | Latest stable      |
-| `feat/xxx`  | New features       |
-| `fix/xxx`   | Bug fixes          |
-| `chore/xxx` | Maintenance        |
-| `docs/xxx`  | Documentation only |
+| `main` | Latest stable |
+| `feat/xxx` | New features |
+| `fix/xxx` | Bug fixes |
+| `chore/xxx` | Maintenance |
+| `docs/xxx` | Documentation only |
 
 Always branch from `main`. Target `main` in your PR.
 
@@ -106,21 +106,21 @@ git push origin feat/my-feature
 
 ## Code Style
 
-- **TypeScript strict mode** — no `any`. Every component and API boundary must be fully typed.
-- **Formatting:** Prettier — runs via `pnpm format`. CI fails on unformatted code.
-- **Lint:** ESLint — `pnpm lint` must pass with zero warnings.
+- **TypeScript strict mode**, no `any`. Every component and API boundary must be fully typed.
+- **Formatting:** Prettier, runs via `pnpm format`. CI fails on unformatted code.
+- **Lint:** ESLint, `pnpm lint` must pass with zero warnings.
 - **Tests:** all existing tests must pass. New UI components need at least a render test.
-- **No direct backend calls** — all server operations go through CLI delegation layer.
+- **No direct backend calls**, all server operations go through CLI delegation layer.
 
 ## Commit Conventions
 
 Use [Conventional Commits](https://www.conventionalcommits.org/):
 
-- `feat:` — new feature
-- `fix:` — bug fix
-- `chore:` — maintenance
-- `docs:` — documentation only
-- `test:` — tests only
+- `feat:`, new feature
+- `fix:`, bug fix
+- `chore:`, maintenance
+- `docs:`, documentation only
+- `test:`, tests only
 
 ## Pre-commit Hooks
 
@@ -143,7 +143,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 }
 ```
 
-**Allowlisted routes** (intentionally public — no requireAuth needed):
+**Allowlisted routes** (intentionally public, no requireAuth needed):
 
 - `auth/login`, `auth/init`, `auth/sso`, `auth/pairing`, `auth/oauth`
 - `validate-session`, `api/health`
@@ -164,18 +164,18 @@ Internationalisation strategy for Admin is under review. Translation contributio
 
 ## Questions
 
-- [GitHub Discussions](https://github.com/nself-org/admin/discussions) — preferred for questions
+- [GitHub Discussions](https://github.com/nself-org/admin/discussions), preferred for questions
 - Community: [nself.org](https://nself.org)
 
 ## Related
 
-- [GOVERNANCE.md](https://github.com/nself-org/admin/blob/main/.github/GOVERNANCE.md) — decision model
-- [ENFORCEMENT.md](https://github.com/nself-org/admin/blob/main/.github/ENFORCEMENT.md) — code of conduct enforcement
-- [CODEOWNERS](https://github.com/nself-org/admin/blob/main/.github/CODEOWNERS) — who reviews what
-- [[Dev-Setup]] — local environment setup
-- [[Release-Process]] — release workflow
-- [[Architecture]] — how Admin's pages and CLI delegation fit together
-- [nSelf CLI repo](https://github.com/nself-org/cli) — backend CLI that Admin delegates to
+- [GOVERNANCE.md](https://github.com/nself-org/admin/blob/main/.github/GOVERNANCE.md), decision model
+- [ENFORCEMENT.md](https://github.com/nself-org/admin/blob/main/.github/ENFORCEMENT.md), code of conduct enforcement
+- [CODEOWNERS](https://github.com/nself-org/admin/blob/main/.github/CODEOWNERS), who reviews what
+- [[Dev-Setup]], local environment setup
+- [[Release-Process]], release workflow
+- [[Architecture]], how Admin's pages and CLI delegation fit together
+- [ɳSelf CLI repo](https://github.com/nself-org/cli), backend CLI that Admin delegates to
 
 ---
 

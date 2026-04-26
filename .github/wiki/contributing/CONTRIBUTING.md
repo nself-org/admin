@@ -325,7 +325,7 @@ export async function restartContainer(
 
 ## Getting Help
 
-- **Discord**: Join our [Discord server](https://discord.gg/nself)
+- **the community chat**: Join our [community chat at chat.nself.org](https://chat.nself.org)
 - **GitHub Discussions**: Ask questions in [Discussions](https://github.com/nself-org/admin/discussions)
 - **Issue Tracker**: Report bugs in [Issues](https://github.com/nself-org/admin/issues)
 

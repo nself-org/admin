@@ -1,6 +1,6 @@
 # Accessibility in nself-admin
 
-nself-admin is committed to providing an accessible experience for all users, including those who rely on assistive technologies such as screen readers, keyboard navigation, or other accessibility tools.
+nself-admin is committed to providing an accessible workflow for all users, including those who rely on assistive technologies such as screen readers, keyboard navigation, or other accessibility tools.
 
 ---
 
@@ -13,7 +13,7 @@ We strive to meet or exceed the Web Content Accessibility Guidelines (WCAG) 2.1 
 - **Perceivable** - Information and UI components are presentable to users in ways they can perceive
 - **Operable** - UI components and navigation are operable by all users
 - **Understandable** - Information and operation of UI is understandable
-- **Robust** - Content can be interpreted by a wide variety of user agents, including assistive technologies
+- **Production-ready** - Content can be interpreted by a wide variety of user agents, including assistive technologies
 
 ---
 
@@ -140,11 +140,11 @@ If you encounter an accessibility barrier while using nself-admin:
 
 1. **Create an Issue**: File a GitHub issue with the "accessibility" label
 2. **Provide Details**: Include:
-   - What you were trying to do
-   - What barrier you encountered
-   - Your assistive technology (if applicable)
-   - Browser and version
-   - Screenshots/recordings (if possible)
+ - What you were trying to do
+ - What barrier you encountered
+ - Your assistive technology (if applicable)
+ - Browser and version
+ - Screenshots/recordings (if possible)
 3. **Priority**: We treat accessibility issues as high priority and aim to fix them promptly
 
 ---

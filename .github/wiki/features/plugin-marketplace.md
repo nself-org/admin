@@ -14,14 +14,14 @@ Go to **Plugins → Marketplace** (Zone Z06) in the Admin sidebar.
 
 The PluginInstallMatrix is the main view. It shows all available plugins in a grid:
 
-| Column   | Description                                                   |
+| Column | Description |
 | -------- | ------------------------------------------------------------- |
-| Name     | Plugin display name (ɳ-prefixed for paid)                     |
-| Category | One of the 13 official categories                             |
-| Status   | Installed / Not installed / Upgrade available                 |
-| Tier     | Free / Any bundle ($0.99/mo) / ɳSelf+ ($3.99/mo or $39.99/yr) |
-| Price    | $0 (free) or bundle price                                     |
-| Action   | Install / Upgrade / Uninstall button                          |
+| Name | Plugin display name (ɳ-prefixed for paid) |
+| Category | One of the 13 official categories |
+| Status | Installed / Not installed / Upgrade available |
+| Tier | Free / Any bundle ($0.99/mo) / ɳSelf+ ($3.99/mo or $39.99/yr) |
+| Price | $0 (free) or bundle price |
+| Action | Install / Upgrade / Uninstall button |
 
 ---
 
@@ -55,4 +55,4 @@ When a newer version of an installed plugin is available:
 
 ## License Check
 
-The Admin UI calls `ping.nself.org/license/validate` to check the current license tier before any paid plugin install. If the license check fails (network error), install is blocked with a "Could not validate license — check your connection" error.
+The Admin UI calls `ping.nself.org/license/validate` to check the current license tier before any paid plugin install. If the license check fails (network error), install is blocked with a "Could not validate license, check your connection" error.

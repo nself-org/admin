@@ -1,17 +1,17 @@
-# Admin URL State — Deep-Linking Reference
+# Admin URL State, Deep-Linking Reference
 
 Every admin page serializes its filter, tab, search, and cursor state into URL search params. This means any admin view is directly shareable by copying the browser URL.
 
 ## 6-Param Vocabulary
 
-| Param                   | Type   | Purpose                        | Example                  |
+| Param | Type | Purpose | Example |
 | ----------------------- | ------ | ------------------------------ | ------------------------ |
-| `?tab=<name>`           | string | Active tab on a multi-tab page | `?tab=metrics`           |
-| `?q=<text>`             | string | Search query                   | `?q=postgres`            |
-| `?since=<duration>`     | string | Time-range filter              | `?since=1h`              |
-| `?filter.<key>=<value>` | string | Arbitrary filter               | `?filter.status=active`  |
-| `?cursor=<opaque>`      | string | Pagination cursor              | `?cursor=eyJpZCI6MTAwfQ` |
-| `?selected=<id>`        | string | Selected row ID                | `?selected=abc123`       |
+| `?tab=<name>` | string | Active tab on a multi-tab page | `?tab=metrics` |
+| `?q=<text>` | string | Search query | `?q=postgres` |
+| `?since=<duration>` | string | Time-range filter | `?since=1h` |
+| `?filter.<key>=<value>` | string | Arbitrary filter | `?filter.status=active` |
+| `?cursor=<opaque>` | string | Pagination cursor | `?cursor=eyJpZCI6MTAwfQ` |
+| `?selected=<id>` | string | Selected row ID | `?selected=abc123` |
 
 Multiple params may be combined: `/monitor?tab=metrics&since=1h`
 
@@ -32,10 +32,10 @@ const [timeRange, setTimeRange] = useUrlState<string>('since', '1h')
 
 ### Options
 
-| Option     | Default     | Description                                                              |
+| Option | Default | Description |
 | ---------- | ----------- | ------------------------------------------------------------------------ |
 | `pushMode` | `'replace'` | `'replace'` = no back-stack entry; `'push'` = adds browser history entry |
-| `debounce` | `0`         | ms to wait before updating URL (use 200-400 for text inputs)             |
+| `debounce` | `0` | ms to wait before updating URL (use 200-400 for text inputs) |
 
 ### Suspense requirement
 
@@ -67,12 +67,12 @@ The button is hidden in print mode. To suppress it on a specific page, pass `sho
 
 ## Rollout Status
 
-| Group                | Routes                                                                                                                                                 | Params                   | Status         |
+| Group | Routes | Params | Status |
 | -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------ | -------------- |
-| Tab pages            | services/\*, monitor, notifications, reports, help, backup, plugins/[name], database/inspect, database/data, k8s/status, tools/webhooks, claw/sessions | `?tab=`                  | Done (P95 Y01) |
-| Search pages         | plugins, help/search, helm/values, logs                                                                                                                | `?q=`, `?filter.*`       | Done (P95 Y01) |
-| Time-range pages     | monitor                                                                                                                                                | `?since=`                | Done (P95 Y01) |
-| Seed pages (P94 S35) | logs, plugins, services                                                                                                                                | Native `useSearchParams` | Done (P94 S35) |
+| Tab pages | services/\*, monitor, notifications, reports, help, backup, plugins/[name], database/inspect, database/data, k8s/status, tools/webhooks, claw/sessions | `?tab=` | Done (P95 Y01) |
+| Search pages | plugins, help/search, helm/values, logs | `?q=`, `?filter.*` | Done (P95 Y01) |
+| Time-range pages | monitor | `?since=` | Done (P95 Y01) |
+| Seed pages (P94 S35) | logs, plugins, services | Native `useSearchParams` | Done (P94 S35) |
 
 ## i18n Note
 

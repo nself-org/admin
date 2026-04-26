@@ -522,4 +522,4 @@ NODE_OPTIONS="--max-old-space-size=4096" npm run dev
 - Read [Project Structure](structure.md) for detailed code organization
 - Review [Contributing Guide](contributing.md) for submission guidelines
 - Check [API Documentation](../api/authentication.md) for endpoint details
-- See [Testing Guide](testing.md) for comprehensive testing strategies
+- See [Testing Guide](testing.md) for full testing strategies

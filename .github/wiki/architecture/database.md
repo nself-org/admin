@@ -8,15 +8,15 @@ nAdmin uses LokiJS as its embedded database, providing a lightweight, high-perfo
 
 ### Chosen Over Alternatives
 
-| Feature          | LokiJS | LowDB | SQLite | NeDB |
+| Feature | LokiJS | LowDB | SQLite | NeDB |
 | ---------------- | ------ | ----- | ------ | ---- |
-| **Size**         | 19KB   | 10KB  | 400KB+ | 50KB |
-| **In-Memory**    | ✅     | ❌    | ❌     | ✅   |
-| **Persistence**  | ✅     | ✅    | ✅     | ✅   |
-| **Indexes**      | ✅     | ❌    | ✅     | ✅   |
-| **TTL Support**  | ✅     | ❌    | ❌     | ❌   |
-| **TypeScript**   | ✅     | ✅    | ✅     | ❌   |
-| **Transactions** | ✅     | ❌    | ✅     | ❌   |
+| **Size** | 19KB | 10KB | 400KB+ | 50KB |
+| **In-Memory** | ✅ | ❌ | ❌ | ✅ |
+| **Persistence** | ✅ | ✅ | ✅ | ✅ |
+| **Indexes** | ✅ | ❌ | ✅ | ✅ |
+| **TTL Support** | ✅ | ❌ | ❌ | ❌ |
+| **TypeScript** | ✅ | ✅ | ✅ | ❌ |
+| **Transactions** | ✅ | ❌ | ✅ | ❌ |
 
 ### Key Benefits
 

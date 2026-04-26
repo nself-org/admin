@@ -219,16 +219,16 @@ nself config database
 
 ## What's Next?
 
-- [Managing Services](../guides/managing-services.md) - Deep dive into service management
+- [Managing Services](../guides/managing-services.md) - Deep explore service management
 - [Database Operations](../guides/database-operations.md) - Advanced database tasks
 - [Configuration Guide](configuration.md) - Detailed configuration options
-- [Troubleshooting Guide](../guides/troubleshooting.md) - Comprehensive problem solving
+- [Troubleshooting Guide](../guides/troubleshooting.md) - Full problem solving
 
 ## Getting Help
 
 - **Documentation**: Browse the full docs at `/help`
 - **System Check**: Run diagnostics at `/doctor`
-- **Community**: Join our Discord server
+- **Community**: Join the community chat at chat.nself.org server
 - **Support**: Email support@nself.com
 
 ---

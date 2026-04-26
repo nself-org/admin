@@ -1,16 +1,16 @@
 # Environment Switcher
 
-The Admin UI environment switcher lets you control a local, staging, or production nSelf backend from a single Admin UI running on your laptop.
+The Admin UI environment switcher lets you control a local, staging, or production ɳSelf backend from a single Admin UI running on your laptop.
 
 ---
 
 ## Environments
 
-| Environment | Default URL                                               | Notes                                    |
+| Environment | Default URL | Notes |
 | ----------- | --------------------------------------------------------- | ---------------------------------------- |
-| Local       | `http://localhost`                                        | `nself start` stack on developer machine |
-| Staging     | configurable (default: `https://staging.your-domain.com`) | Hetzner staging server                   |
-| Production  | configurable                                              | **Red-tint guard active**                |
+| Local | `http://localhost` | `nself start` stack on developer machine |
+| Staging | configurable (default: `https://staging.your-domain.com`) | Hetzner staging server |
+| Production | configurable | **Red-tint guard active** |
 
 ---
 

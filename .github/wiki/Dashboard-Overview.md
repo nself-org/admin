@@ -402,30 +402,30 @@ Custom Services: 1 CPU, 512 MB RAM each
 
 ## Keyboard Shortcuts
 
-| Shortcut | Action               |
+| Shortcut | Action |
 | -------- | -------------------- |
-| `Ctrl+K` | Quick search         |
-| `Ctrl+L` | View logs            |
-| `Ctrl+S` | Stop all services    |
+| `Ctrl+K` | Quick search |
+| `Ctrl+L` | View logs |
+| `Ctrl+S` | Stop all services |
 | `Ctrl+R` | Restart all services |
-| `Ctrl+/` | Show shortcuts       |
-| `Esc`    | Close modal          |
+| `Ctrl+/` | Show shortcuts |
+| `Esc` | Close modal |
 
 ## Performance Tips
 
 ### Dashboard Optimization
 
 1. **Reduce Update Frequency**:
-   - Settings → Performance → Update Interval
-   - Default: 5s, Can set to 10s or 30s
+ - Settings → Performance → Update Interval
+ - Default: 5s, Can set to 10s or 30s
 
 2. **Limit Log Retention**:
-   - Settings → Logs → Max Lines
-   - Default: 1000, Reduce for better performance
+ - Settings → Logs → Max Lines
+ - Default: 1000, Reduce for better performance
 
 3. **Disable Unused Widgets**:
-   - Remove widgets you don't need
-   - Reduces API calls and rendering
+ - Remove widgets you don't need
+ - Reduces API calls and rendering
 
 ### Browser Recommendations
 
@@ -512,7 +512,7 @@ curl http://localhost:3021/api/docker/logs?service=postgres \
 
 ## Next Steps
 
-- **[Service Management](Service-Management)** - Deep dive into service control
+- **[Service Management](Service-Management)** - Deep explore service control
 - **[Monitoring & Metrics](Monitoring-Metrics)** - Advanced monitoring setup
 - **[Database Management](Database-Management)** - Database operations
 - **[API Reference](api/Reference)** - Complete API documentation

@@ -2,7 +2,7 @@
 
 **Standard:** WCAG 2.1 AA
 **Date:** 2026-01-31
-**Auditor:** Comprehensive Code Review
+**Auditor:** Full Code Review
 
 ---
 

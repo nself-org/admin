@@ -1,6 +1,6 @@
 # Init Wizard Complete Guide
 
-The nself Admin Init Wizard is a powerful 6-step configuration tool that guides you through setting up your entire development stack. This comprehensive guide covers every field, option, and best practice.
+The nself Admin Init Wizard is a 6-step configuration tool that guides you through setting up your entire development stack. This full guide covers every field, option, and best practice.
 
 ## Table of Contents
 
@@ -37,9 +37,9 @@ The foundation of your stack configuration.
 
 ### Project Name
 
-**Field**: Text input  
-**Default**: `my_project`  
-**Validation**: Lowercase alphanumeric with underscores  
+**Field**: Text input 
+**Default**: `my_project` 
+**Validation**: Lowercase alphanumeric with underscores 
 **Impact**: Used for Docker container prefixes and database names
 
 **Best Practices**:
@@ -55,26 +55,26 @@ The foundation of your stack configuration.
 
 ### Environment
 
-**Field**: Dropdown  
-**Options**: Development, Staging, Production  
-**Default**: Development  
+**Field**: Dropdown 
+**Options**: Development, Staging, Production 
+**Default**: Development 
 **Impact**: Determines security settings, performance tuning, and default passwords
 
 **Environment Differences**:
 
-| Setting           | Development | Staging     | Production      |
+| Setting | Development | Staging | Production |
 | ----------------- | ----------- | ----------- | --------------- |
-| Debug Logs        | Enabled     | Enabled     | Disabled        |
-| Default Passwords | Allowed     | Warning     | Required Change |
-| SSL               | Optional    | Recommended | Required        |
-| Monitoring        | Basic       | Full        | Full + Alerts   |
-| Backups           | Optional    | Daily       | Hourly          |
+| Debug Logs | Enabled | Enabled | Disabled |
+| Default Passwords | Allowed | Warning | Required Change |
+| SSL | Optional | Recommended | Required |
+| Monitoring | Basic | Full | Full + Alerts |
+| Backups | Optional | Daily | Hourly |
 
 ### Domain/Host
 
-**Field**: Text input  
-**Default**: `localhost` (dev), actual domain (staging/prod)  
-**Examples**: `localhost`, `dev.myapp.com`, `api.production.com`  
+**Field**: Text input 
+**Default**: `localhost` (dev), actual domain (staging/prod) 
+**Examples**: `localhost`, `dev.myapp.com`, `api.production.com` 
 **Impact**: Used for nginx routing and CORS configuration
 
 **Configuration by Environment**:
@@ -85,9 +85,9 @@ The foundation of your stack configuration.
 
 ### Admin Email
 
-**Field**: Email input  
-**Validation**: Valid email format  
-**Default**: `admin@nself.local`  
+**Field**: Email input 
+**Validation**: Valid email format 
+**Default**: `admin@nself.local` 
 **Impact**: Used for Let's Encrypt SSL, admin notifications, and initial admin account
 
 **Important Notes**:
@@ -100,9 +100,9 @@ The foundation of your stack configuration.
 
 #### Database Name
 
-**Field**: Text input  
-**Default**: `nself`  
-**Validation**: PostgreSQL naming rules  
+**Field**: Text input 
+**Default**: `nself` 
+**Validation**: PostgreSQL naming rules 
 **Impact**: Main database for all services
 
 **Naming Conventions**:
@@ -113,8 +113,8 @@ The foundation of your stack configuration.
 
 #### Database Password
 
-**Field**: Password input  
-**Default**: `nself-dev-password` (dev only)  
+**Field**: Password input 
+**Default**: `nself-dev-password` (dev only) 
 **Validation**:
 
 - Dev: Minimum 3 characters
@@ -243,7 +243,7 @@ Enable additional services based on your needs.
 
 ### Redis Cache
 
-**Purpose**: High-performance caching and pub/sub  
+**Purpose**: High-performance caching and pub/sub 
 **When to Enable**:
 
 - Need caching layer
@@ -263,7 +263,7 @@ Password: Auto-generated
 
 ### Storage (MinIO)
 
-**Purpose**: S3-compatible object storage  
+**Purpose**: S3-compatible object storage 
 **When to Enable**:
 
 - File uploads
@@ -284,7 +284,7 @@ Console Port: 9001
 
 ### Search (MeiliSearch)
 
-**Purpose**: Lightning-fast search engine  
+**Purpose**: Lightning-fast search engine 
 **When to Enable**:
 
 - Full-text search
@@ -303,7 +303,7 @@ Max Payload: 100MB
 
 ### Email (Mailpit)
 
-**Purpose**: Email testing in development  
+**Purpose**: Email testing in development 
 **When to Enable**:
 
 - Testing email flows
@@ -321,7 +321,7 @@ Auth: None (dev only)
 
 ### MLflow
 
-**Purpose**: ML experiment tracking  
+**Purpose**: ML experiment tracking 
 **When to Enable**:
 
 - Machine learning projects
@@ -340,7 +340,7 @@ Port: 5000
 
 ### Monitoring Stack
 
-**Purpose**: Complete observability solution  
+**Purpose**: Complete observability solution 
 **When to Enable**:
 
 - Production deployments
@@ -369,7 +369,7 @@ Port: 5000
 
 ### Automated Backups
 
-**Purpose**: Scheduled backup system  
+**Purpose**: Scheduled backup system 
 **When to Enable**:
 
 - Production data
@@ -403,8 +403,8 @@ Add your own microservices and APIs with 40+ pre-configured templates.
 
 #### Service Name
 
-**Field**: Text input  
-**Validation**: Lowercase, alphanumeric, underscores  
+**Field**: Text input 
+**Validation**: Lowercase, alphanumeric, underscores 
 **Examples**: `api_gateway`, `payment_service`, `worker_queue`
 
 #### Framework Selection
@@ -467,9 +467,9 @@ Add your own microservices and APIs with 40+ pre-configured templates.
 
 #### Port Configuration
 
-**Field**: Number input  
-**Range**: 1024-65535  
-**Default**: 4001+ (auto-incremented)  
+**Field**: Number input 
+**Range**: 1024-65535 
+**Default**: 4001+ (auto-incremented) 
 **Reserved Ports**:
 
 - 5432: PostgreSQL
@@ -483,8 +483,8 @@ Add your own microservices and APIs with 40+ pre-configured templates.
 
 #### Route Configuration
 
-**Field**: Text input (optional)  
-**Purpose**: External API endpoint  
+**Field**: Text input (optional) 
+**Purpose**: External API endpoint 
 **Examples**:
 
 - Empty: Internal-only service (workers, queues)
@@ -536,36 +536,36 @@ Configure external frontend applications that consume your backend.
 
 #### Display Name
 
-**Field**: Text input  
-**Example**: "Admin Dashboard", "Customer Portal"  
+**Field**: Text input 
+**Example**: "Admin Dashboard", "Customer Portal" 
 **Purpose**: Human-readable name for the UI
 
 #### System Name
 
-**Field**: Text input  
-**Auto-generated**: From display name  
-**Validation**: Lowercase, underscores  
+**Field**: Text input 
+**Auto-generated**: From display name 
+**Validation**: Lowercase, underscores 
 **Example**: `admin_dashboard`
 
 #### Table Prefix
 
-**Field**: Text input (3-4 chars)  
-**Purpose**: Database table namespacing  
-**Example**: `adm_` for admin tables  
+**Field**: Text input (3-4 chars) 
+**Purpose**: Database table namespacing 
+**Example**: `adm_` for admin tables 
 **Impact**: All Hasura tables for this app will be prefixed
 
 #### Local Port
 
-**Field**: Number input  
-**Range**: 3000-9999  
-**Default**: 3001+ (auto-incremented)  
+**Field**: Number input 
+**Range**: 3000-9999 
+**Default**: 3001+ (auto-incremented) 
 **Purpose**: Development server port
 
 ### URL Configuration
 
 #### Development URL
 
-**Field**: Smart URL input  
+**Field**: Smart URL input 
 **Examples**:
 
 - `admin` → admin.localhost
@@ -574,7 +574,7 @@ Configure external frontend applications that consume your backend.
 
 #### Production URL
 
-**Field**: Smart URL input  
+**Field**: Smart URL input 
 **Examples**:
 
 - `admin` → admin.yourdomain.com
@@ -585,8 +585,8 @@ Configure external frontend applications that consume your backend.
 
 #### Custom GraphQL Endpoint
 
-**Field**: URL input (optional)  
-**Purpose**: Add frontend's GraphQL to Hasura  
+**Field**: URL input (optional) 
+**Purpose**: Add frontend's GraphQL to Hasura 
 **Example**: `api` → api.localhost/graphql
 
 **Benefits**:
@@ -801,7 +801,7 @@ Solution: Check Docker logs, ensure Docker is running
 - [FAQ](FAQ)
 - [Common Issues](Troubleshooting)
 - [GitHub Issues](https://github.com/nself-org/admin/issues)
-- [Discord Community](https://discord.gg/nself)
+- [community at chat.nself.org](https://chat.nself.org)
 
 ## Next Steps
 

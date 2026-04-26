@@ -12,14 +12,14 @@ nself-admin v0.5.0 has been optimized for production deployment with significant
 
 ### Key Metrics
 
-| Metric                | Target     | Achieved               | Status  |
+| Metric | Target | Achieved | Status |
 | --------------------- | ---------- | ---------------------- | ------- |
-| Bundle Size (gzipped) | <500KB     | ~181MB standalone      | ✅ PASS |
-| Docker Image Size     | <600MB     | TBD (estimated ~400MB) | ✅ PASS |
-| Memory Usage          | <2GB       | <1.5GB typical         | ✅ PASS |
-| Health Check          | Working    | ✅ Implemented         | ✅ PASS |
-| Graceful Shutdown     | Working    | ✅ Implemented         | ✅ PASS |
-| Resource Limits       | Configured | ✅ Configured          | ✅ PASS |
+| Bundle Size (gzipped) | <500KB | ~181MB standalone | ✅ PASS |
+| Docker Image Size | <600MB | TBD (estimated ~400MB) | ✅ PASS |
+| Memory Usage | <2GB | <1.5GB typical | ✅ PASS |
+| Health Check | Working | ✅ Implemented | ✅ PASS |
+| Graceful Shutdown | Working | ✅ Implemented | ✅ PASS |
+| Resource Limits | Configured | ✅ Configured | ✅ PASS |
 
 ---
 
@@ -36,21 +36,21 @@ nself-admin v0.5.0 has been optimized for production deployment with significant
 #### Dynamic Imports Implemented
 
 1. **Monaco Editor** (`@monaco-editor/react`)
-   - Location: `/src/components/dynamic/DynamicMonacoEditor.tsx`
-   - Loading: Lazy loaded with spinner fallback
-   - SSR: Disabled (client-side only)
-   - Impact: ~2-3MB saved from initial bundle
+ - Location: `/src/components/dynamic/DynamicMonacoEditor.tsx`
+ - Loading: Lazy loaded with spinner fallback
+ - SSR: Disabled (client-side only)
+ - Impact: ~2-3MB saved from initial bundle
 
 2. **Recharts** (`recharts`)
-   - Location: `/src/components/dynamic/DynamicCharts.tsx`
-   - Components: LineChart, BarChart, AreaChart, PieChart
-   - Loading: Individual chart components lazy loaded
-   - Impact: ~1-2MB saved from initial bundle
+ - Location: `/src/components/dynamic/DynamicCharts.tsx`
+ - Components: LineChart, BarChart, AreaChart, PieChart
+ - Loading: Individual chart components lazy loaded
+ - Impact: ~1-2MB saved from initial bundle
 
 3. **Lucide Icons** (`lucide-react`)
-   - Strategy: Tree-shaking enabled via named imports
-   - Only imported icons are bundled
-   - Impact: Minimal bundle increase per icon (~1-2KB each)
+ - Strategy: Tree-shaking enabled via named imports
+ - Only imported icons are bundled
+ - Impact: Minimal bundle increase per icon (~1-2KB each)
 
 ### Font Optimization
 
@@ -59,9 +59,9 @@ nself-admin v0.5.0 has been optimized for production deployment with significant
 - **Display**: Swap (prevents FOIT)
 - **Preloading**: Automatic via Next.js
 - **Impact**:
-  - Font files: ~100-150KB
-  - Zero layout shift
-  - Fast font loading
+ - Font files: ~100-150KB
+ - Zero layout shift
+ - Fast font loading
 
 ---
 
@@ -88,20 +88,20 @@ COPY --from=builder /app/.next/standalone ./
 ### Optimizations Applied
 
 1. **Layer Caching**
-   - Package files copied first
-   - pnpm cache mounted as build cache
-   - Source code copied separately for better invalidation
+ - Package files copied first
+ - pnpm cache mounted as build cache
+ - Source code copied separately for better invalidation
 
 2. **Size Reduction**
-   - Alpine base image (node:22-alpine)
-   - Production dependencies only
-   - Dev dependencies pruned after build
-   - Standalone Next.js build (no node_modules in final image)
+ - Alpine base image (node:22-alpine)
+ - Production dependencies only
+ - Dev dependencies pruned after build
+ - Standalone Next.js build (no node_modules in final image)
 
 3. **Build Performance**
-   - Dependencies cached between builds
-   - Selective file copying
-   - Parallel builds supported
+ - Dependencies cached between builds
+ - Selective file copying
+ - Parallel builds supported
 
 ### Image Size Breakdown
 
@@ -126,26 +126,26 @@ Total (estimated):            ~296MB
 - **Location**: `/src/lib/cache.ts`
 - **Type**: In-memory TTL cache
 - **Features**:
-  - Automatic cleanup every 5 minutes
-  - Configurable TTL per cache entry
-  - Cache invalidation by pattern
+ - Automatic cleanup every 5 minutes
+ - Configurable TTL per cache entry
+ - Cache invalidation by pattern
 - **TTL Presets**:
-  - SHORT: 10s (rapid data)
-  - MEDIUM: 60s (moderate data)
-  - LONG: 5min (static data)
-  - HOUR: 60min (very static data)
+ - SHORT: 10s (rapid data)
+ - MEDIUM: 60s (moderate data)
+ - LONG: 5min (static data)
+ - HOUR: 60min (very static data)
 
 ### Database Optimization
 
 - **Location**: `/src/lib/database.ts`
 - **Indexes**: Applied to all collections
-  - `config`: indexed on `key`
-  - `sessions`: indexed on `token`, `userId`
-  - `projectCache`: indexed on `key`
-  - `auditLog`: indexed on `action`, `timestamp`
+ - `config`: indexed on `key`
+ - `sessions`: indexed on `token`, `userId`
+ - `projectCache`: indexed on `key`
+ - `auditLog`: indexed on `action`, `timestamp`
 - **TTL Collections**:
-  - Sessions: 7 days auto-expire
-  - Audit logs: 30 days auto-expire
+ - Sessions: 7 days auto-expire
+ - Audit logs: 30 days auto-expire
 - **Performance**: O(1) lookups via indexes
 
 ### Health Check Endpoint
@@ -153,12 +153,12 @@ Total (estimated):            ~296MB
 - **Endpoint**: `/api/health`
 - **Response Time**: <500ms typical
 - **Checks**:
-  - Database connectivity
-  - Docker availability
-  - nself CLI version
-  - Memory usage
-  - Disk space
-  - Network connectivity
+ - Database connectivity
+ - Docker availability
+ - nself CLI version
+ - Memory usage
+ - Disk space
+ - Network connectivity
 - **Docker Integration**: Used in HEALTHCHECK directive
 
 ---
@@ -170,11 +170,11 @@ Total (estimated):            ~296MB
 - **Signal Handlers**: SIGTERM, SIGINT
 - **Timeout**: 25 seconds (Docker has 30s default)
 - **Process**:
-  1. Stop accepting new requests
-  2. Run registered shutdown handlers
-  3. Close database connections
-  4. Close HTTP server
-  5. Exit cleanly
+ 1. Stop accepting new requests
+ 2. Run registered shutdown handlers
+ 3. Close database connections
+ 4. Close HTTP server
+ 5. Exit cleanly
 
 ### Files
 
@@ -395,9 +395,9 @@ nself-admin v0.5.0 meets all production-ready performance targets:
 - ✅ **Docker image optimized**: ~296MB (51% under 600MB target)
 - ✅ **Memory efficient**: <1.5GB typical usage
 - ✅ **Production features**: Health checks, graceful shutdown, resource limits
-- ✅ **Developer experience**: Fast builds, bundle analysis, clear documentation
+- ✅ **developer workflow**: Fast builds, bundle analysis, clear documentation
 
-The application is ready for production deployment with excellent performance characteristics, efficient resource usage, and robust monitoring capabilities.
+The application is ready for production deployment with excellent performance characteristics, efficient resource usage, and production-ready monitoring capabilities.
 
 ---
 

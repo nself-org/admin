@@ -25,12 +25,13 @@ Required for publishing Docker images to Docker Hub.
 2. Navigate to Settings → Secrets and variables → Actions
 3. Click "New repository secret"
 4. Add each secret:
- - Name: `DOCKERHUB_USERNAME`
- - Value: Your Docker Hub username
- - Click "Add secret"
- - Name: `DOCKERHUB_TOKEN`
- - Value: The access token you created
- - Click "Add secret"
+
+- Name: `DOCKERHUB_USERNAME`
+- Value: Your Docker Hub username
+- Click "Add secret"
+- Name: `DOCKERHUB_TOKEN`
+- Value: The access token you created
+- Click "Add secret"
 
 ## Workflow Files
 
@@ -40,12 +41,12 @@ The repository includes three main workflow files:
 
 - Builds and publishes multi-arch Docker images
 - Triggers on:
- - Push to main/master branch
- - Version tags (v\*)
- - Manual workflow dispatch
+- Push to main/master branch
+- Version tags (v\*)
+- Manual workflow dispatch
 - Publishes to:
- - Docker Hub: `nself/admin`
- - GitHub Container Registry: `ghcr.io/nself-org/admin`
+- Docker Hub: `nself/admin`
+- GitHub Container Registry: `ghcr.io/nself-org/admin`
 
 ### docker-buildx.yml
 

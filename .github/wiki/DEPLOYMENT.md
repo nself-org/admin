@@ -156,19 +156,22 @@ docker pull nself/nself-admin:latest
 **Critical volumes:**
 
 1. **Project Directory** (`/workspace`)
- - Contains your nself project
- - Must be mounted read-write
- - Example: `-v /home/user/myproject:/workspace:rw`
+
+- Contains your nself project
+- Must be mounted read-write
+- Example: `-v /home/user/myproject:/workspace:rw`
 
 2. **Docker Socket** (`/var/run/docker.sock`)
- - Required for container management
- - Security consideration: grants Docker control
- - Example: `-v /var/run/docker.sock:/var/run/docker.sock:rw`
+
+- Required for container management
+- Security consideration: grants Docker control
+- Example: `-v /var/run/docker.sock:/var/run/docker.sock:rw`
 
 3. **Data Directory** (`/app/data`)
- - Stores nAdmin database (nadmin.db)
- - Sessions, audit logs, cache
- - Example: `-v nself-admin-data:/app/data`
+
+- Stores nAdmin database (nadmin.db)
+- Sessions, audit logs, cache
+- Example: `-v nself-admin-data:/app/data`
 
 ### Docker Socket Security
 
@@ -574,17 +577,20 @@ Configure to check `https://admin.example.com/api/health` every 5 minutes.
 ### What to Back Up
 
 1. **nAdmin Database** (`nadmin.db`)
- - Sessions, passwords, cache
- - Located at `/app/data/nadmin.db`
+
+- Sessions, passwords, cache
+- Located at `/app/data/nadmin.db`
 
 2. **Project Directory** (`/workspace`)
- - Your nself project configuration
- - Environment files
- - Docker Compose configs
+
+- Your nself project configuration
+- Environment files
+- Docker Compose configs
 
 3. **Docker Volumes**
- - Named volumes used by services
- - PostgreSQL data, MinIO buckets, etc.
+
+- Named volumes used by services
+- PostgreSQL data, MinIO buckets, etc.
 
 ### Backup Methods
 

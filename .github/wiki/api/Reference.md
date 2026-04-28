@@ -11,14 +11,14 @@ Complete API documentation for nself Admin, including all endpoints, authenticat
 - [Error Handling](#error-handling)
 - [Rate Limiting](#rate-limiting)
 - [API Endpoints](#api-endpoints)
- - [Auth](#auth)
- - [Project](#project)
- - [Services](#services)
- - [Docker](#docker)
- - [System](#system)
- - [Database](#database)
- - [Files](#files)
- - [Monitoring](#monitoring)
+- [Auth](#auth)
+- [Project](#project)
+- [Services](#services)
+- [Docker](#docker)
+- [System](#system)
+- [Database](#database)
+- [Files](#files)
+- [Monitoring](#monitoring)
 
 ## Overview
 
@@ -118,20 +118,20 @@ Docker: http://nself-admin:3021/api
 
 ### HTTP Status Codes
 
-| Code | Description | Usage |
+| Code | Description       | Usage                    |
 | ---- | ----------------- | ------------------------ |
-| 200 | OK | Successful GET/PUT |
-| 201 | Created | Successful POST |
-| 204 | No Content | Successful DELETE |
-| 400 | Bad Request | Invalid parameters |
-| 401 | Unauthorized | Missing/invalid token |
-| 403 | Forbidden | Insufficient permissions |
-| 404 | Not Found | Resource not found |
-| 409 | Conflict | Resource already exists |
-| 422 | Unprocessable | Validation failed |
-| 429 | Too Many Requests | Rate limit exceeded |
-| 500 | Server Error | Internal error |
-| 503 | Unavailable | Service down |
+| 200  | OK                | Successful GET/PUT       |
+| 201  | Created           | Successful POST          |
+| 204  | No Content        | Successful DELETE        |
+| 400  | Bad Request       | Invalid parameters       |
+| 401  | Unauthorized      | Missing/invalid token    |
+| 403  | Forbidden         | Insufficient permissions |
+| 404  | Not Found         | Resource not found       |
+| 409  | Conflict          | Resource already exists  |
+| 422  | Unprocessable     | Validation failed        |
+| 429  | Too Many Requests | Rate limit exceeded      |
+| 500  | Server Error      | Internal error           |
+| 503  | Unavailable       | Service down             |
 
 ### Error Codes
 
@@ -1277,8 +1277,10 @@ All inputs are validated using JSON schemas:
 
 1. Import the [Postman Collection](https://api.postman.com/collections/...)
 2. Set environment variables:
- - `baseUrl`: http://localhost:3021
- - `token`: Your JWT token
+
+- `baseUrl`: http://localhost:3021
+- `token`: Your JWT token
+
 3. Run requests
 
 ### Using Insomnia

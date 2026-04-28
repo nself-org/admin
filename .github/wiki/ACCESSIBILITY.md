@@ -140,11 +140,13 @@ If you encounter an accessibility barrier while using nself-admin:
 
 1. **Create an Issue**: File a GitHub issue with the "accessibility" label
 2. **Provide Details**: Include:
- - What you were trying to do
- - What barrier you encountered
- - Your assistive technology (if applicable)
- - Browser and version
- - Screenshots/recordings (if possible)
+
+- What you were trying to do
+- What barrier you encountered
+- Your assistive technology (if applicable)
+- Browser and version
+- Screenshots/recordings (if possible)
+
 3. **Priority**: We treat accessibility issues as high priority and aim to fix them promptly
 
 ---

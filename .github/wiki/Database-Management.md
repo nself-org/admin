@@ -91,9 +91,11 @@ nself can automatically seed your database with sample data:
 
 1. Navigate to **Database > Seed**
 2. Select your seeding options:
- - **Sample Users** - Test user accounts
- - **Product Catalog** - Sample products/items
- - **Transaction Data** - Sample orders/transactions
+
+- **Sample Users** - Test user accounts
+- **Product Catalog** - Sample products/items
+- **Transaction Data** - Sample orders/transactions
+
 3. Click **Run Seeding**
 
 ### Custom Seeding
@@ -158,10 +160,12 @@ The migrations panel shows:
 
 1. Navigate to **Database > Backup**
 2. Configure backup options:
- - **Database** - Select target database
- - **Format** - SQL dump or custom format
- - **Compression** - Enable gzip compression
- - **Tables** - Select specific tables (optional)
+
+- **Database** - Select target database
+- **Format** - SQL dump or custom format
+- **Compression** - Enable gzip compression
+- **Tables** - Select specific tables (optional)
+
 3. Click **Create Backup**
 
 ### Backup Formats
@@ -194,10 +198,12 @@ BACKUP_COMPRESSION=true        # Enable compression
 1. Navigate to **Database > Restore**
 2. Select backup file or upload new backup
 3. Choose restore options:
- - **Target database** - Destination database
- - **Drop existing** - Replace existing data
- - **Schema only** - Structure without data
- - **Data only** - Data without structure
+
+- **Target database** - Destination database
+- **Drop existing** - Replace existing data
+- **Schema only** - Structure without data
+- **Data only** - Data without structure
+
 4. Click **Restore Database**
 
 ## Connection Management
@@ -291,13 +297,13 @@ GRANT SELECT ON ALL TABLES IN SCHEMA public TO analytics_user;
 
 ### Common Issues
 
-| Issue | Cause | Solution |
+| Issue              | Cause                   | Solution                                      |
 | ------------------ | ----------------------- | --------------------------------------------- |
-| Connection timeout | Network/firewall | Check network connectivity and firewall rules |
-| Permission denied | Insufficient privileges | Grant appropriate database permissions |
-| Lock timeout | Long-running queries | Identify and terminate blocking queries |
-| Disk space full | Large database/logs | Clean up old data and logs |
-| Slow queries | Missing indexes | Analyze and add appropriate indexes |
+| Connection timeout | Network/firewall        | Check network connectivity and firewall rules |
+| Permission denied  | Insufficient privileges | Grant appropriate database permissions        |
+| Lock timeout       | Long-running queries    | Identify and terminate blocking queries       |
+| Disk space full    | Large database/logs     | Clean up old data and logs                    |
+| Slow queries       | Missing indexes         | Analyze and add appropriate indexes           |
 
 ### Diagnostic Queries
 

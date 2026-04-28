@@ -70,9 +70,9 @@ Configure fundamental project settings and metadata.
 #### Environment (Required)
 
 - **Options**:
- - `development` (dev) - Local development
- - `staging` - Testing environment
- - `production` (prod) - Live environment
+- `development` (dev) - Local development
+- `staging` - Testing environment
+- `production` (prod) - Live environment
 - **Default**: `development`
 - **Impact**: Determines which `.env.*` file to write to
 
@@ -81,11 +81,11 @@ Configure fundamental project settings and metadata.
 - **Format**: Valid domain name
 - **Default**: `localhost` (dev) or `local.nself.org`
 - **Examples**:
- - Development: `localhost`, `myapp.local`
- - Production: `myapp.com`, `api.example.com`
+- Development: `localhost`, `myapp.local`
+- Production: `myapp.com`, `api.example.com`
 - **Validation**:
- - Dev mode: Allows subdomains like `api.test`
- - Production: Must be valid FQDN
+- Dev mode: Allows subdomains like `api.test`
+- Production: Must be valid FQDN
 
 #### Database Name (Required)
 
@@ -98,8 +98,8 @@ Configure fundamental project settings and metadata.
 
 - **Default**: `nself-dev-password` (dev only)
 - **Requirements**:
- - Development: Minimum 3 characters
- - Production: Minimum 12 characters, mixed case, numbers, special chars
+- Development: Minimum 3 characters
+- Production: Minimum 12 characters, mixed case, numbers, special chars
 - **Security**: Never commit production passwords to git
 
 #### Admin Email (Optional)
@@ -164,41 +164,41 @@ View and configure the required services that form the foundation of your nself 
 - **Description**: Primary database for all services
 - **Port**: 5432
 - **Configuration Options**:
- - Version (default: 16-alpine)
- - Extensions (uuid-ossp, pgcrypto, etc.)
- - Connection pool settings
- - Performance tuning
+- Version (default: 16-alpine)
+- Extensions (uuid-ossp, pgcrypto, etc.)
+- Connection pool settings
+- Performance tuning
 
 #### Hasura GraphQL (Required)
 
 - **Description**: Instant GraphQL API for your database
 - **Port**: 8080 (API), 3000 (Console)
 - **Configuration Options**:
- - Admin secret (min 32 chars)
- - JWT configuration
- - CORS settings
- - Dev mode toggle
- - Console access
+- Admin secret (min 32 chars)
+- JWT configuration
+- CORS settings
+- Dev mode toggle
+- Console access
 
 #### Hasura Auth (Required)
 
 - **Description**: User authentication and authorization
 - **Port**: 4000
 - **Configuration Options**:
- - Token expiration times
- - Email verification
- - Social auth providers
- - WebAuthn support
+- Token expiration times
+- Email verification
+- Social auth providers
+- WebAuthn support
 
 #### Nginx (Required)
 
 - **Description**: Reverse proxy and load balancer
 - **Ports**: 80 (HTTP), 443 (HTTPS)
 - **Configuration Options**:
- - SSL certificates
- - Rate limiting
- - Gzip compression
- - Client max body size
+- SSL certificates
+- Rate limiting
+- Gzip compression
+- Client max body size
 
 ### Configuration Modal
 
@@ -228,9 +228,9 @@ Enable additional services to enhance your stack's capabilities.
 - **Ports**: 9000 (API), 9001 (Console)
 - **Use Cases**: File uploads, static assets, backups
 - **Configuration**:
- - Root credentials
- - Default bucket name
- - Region settings
+- Root credentials
+- Default bucket name
+- Region settings
 
 #### Redis Cache
 
@@ -239,9 +239,9 @@ Enable additional services to enhance your stack's capabilities.
 - **Port**: 6379
 - **Use Cases**: Session storage, caching, pub/sub
 - **Configuration**:
- - Password protection
- - Persistence settings
- - Memory limits
+- Password protection
+- Persistence settings
+- Memory limits
 
 #### nself Admin UI (This tool)
 
@@ -264,23 +264,23 @@ Enable additional services to enhance your stack's capabilities.
 - **Description**: Full-text search with 6 engine options
 - **Default**: Disabled
 - **Options**:
- - **Meilisearch** (recommended) - Fast, typo-tolerant
- - **Typesense** - High performance alternative
- - **Zinc** - Lightweight Elasticsearch alternative
- - **Elasticsearch** - Industry standard
- - **OpenSearch** - AWS fork of Elasticsearch
- - **Sonic** - Ultra-lightweight
+- **Meilisearch** (recommended) - Fast, typo-tolerant
+- **Typesense** - High performance alternative
+- **Zinc** - Lightweight Elasticsearch alternative
+- **Elasticsearch** - Industry standard
+- **OpenSearch** - AWS fork of Elasticsearch
+- **Sonic** - Ultra-lightweight
 
 #### Monitoring Bundle
 
 - **Description**: Complete observability stack
 - **Default**: Disabled
 - **Includes**:
- - **Prometheus** - Metrics collection
- - **Grafana** - Visualization dashboards
- - **Loki** - Log aggregation
- - **Tempo** - Distributed tracing
- - **cAdvisor** - Container metrics
+- **Prometheus** - Metrics collection
+- **Grafana** - Visualization dashboards
+- **Loki** - Log aggregation
+- **Tempo** - Distributed tracing
+- **cAdvisor** - Container metrics
 - **Note**: Enabling this sets all monitoring services
 
 ### Toggle All
@@ -314,14 +314,14 @@ Add your own backend services that run as part of the Docker stack.
 #### Framework/Language (Required)
 
 - **Dropdown Options**:
- - Node.js: `express`, `fastify`, `nestjs`, `hono`
- - Python: `fastapi`, `django`, `flask`
- - Go: `gin`, `fiber`, `echo`
- - Ruby: `rails`, `sinatra`
- - Java: `spring`, `quarkus`
- - PHP: `laravel`, `symfony`
- - Rust: `actix`, `rocket`
- - Other: `custom`
+- Node.js: `express`, `fastify`, `nestjs`, `hono`
+- Python: `fastapi`, `django`, `flask`
+- Go: `gin`, `fiber`, `echo`
+- Ruby: `rails`, `sinatra`
+- Java: `spring`, `quarkus`
+- PHP: `laravel`, `symfony`
+- Rust: `actix`, `rocket`
+- Other: `custom`
 - **Impact**: Determines Docker image and setup
 
 #### Port (Required)
@@ -336,8 +336,8 @@ Add your own backend services that run as part of the Docker stack.
 - **Format**: Lowercase alphanumeric with dashes
 - **Example**: `api`, `webhooks`, `admin-api`
 - **Result**:
- - Dev: `api.localhost`
- - Prod: `api.yourdomain.com`
+- Dev: `api.localhost`
+- Prod: `api.yourdomain.com`
 
 ### Advanced Options
 
@@ -418,8 +418,8 @@ Configure external frontend applications that will consume your backend services
 
 - **Format**: Subdomain or full domain
 - **Examples**:
- - Dev: `admin` → `admin.localhost`
- - Prod: `admin.myapp.com`
+- Dev: `admin` → `admin.localhost`
+- Prod: `admin.myapp.com`
 - **Used for**: Nginx routing configuration
 
 #### GraphQL Endpoint (Optional)
@@ -505,17 +505,17 @@ The review page displays:
 #### Services Configuration
 
 - **Core Services** (always enabled):
- - PostgreSQL Database
- - Hasura GraphQL
- - Authentication Service
- - Nginx Proxy
+- PostgreSQL Database
+- Hasura GraphQL
+- Authentication Service
+- Nginx Proxy
 - **Optional Services** (if enabled):
- - Storage (MinIO)
- - Redis Cache
- - nself Admin UI
- - Email Service
- - Search Engine
- - Monitoring Stack
+- Storage (MinIO)
+- Redis Cache
+- nself Admin UI
+- Email Service
+- Search Engine
+- Monitoring Stack
 
 #### Custom Services Count
 
@@ -545,34 +545,39 @@ The review page displays:
 - **Icon**: Hammer icon
 - **Action**: Redirects to `/build?from=wizard`
 - **Process**:
- 1. Saves final configuration
- 2. Navigates to build page
- 3. Initiates `nself build` command
- 4. Shows real-time build progress
+
+1.  Saves final configuration
+2.  Navigates to build page
+3.  Initiates `nself build` command
+4.  Shows real-time build progress
 
 ### Build Process
 
 After clicking "Build Project":
 
 1. **Configuration Validation**
- - Checks all required fields
- - Validates port uniqueness
- - Ensures secret strength
+
+- Checks all required fields
+- Validates port uniqueness
+- Ensures secret strength
 
 2. **File Generation**
- - Creates docker-compose.yml
- - Generates nginx configuration
- - Sets up service configs
+
+- Creates docker-compose.yml
+- Generates nginx configuration
+- Sets up service configs
 
 3. **Container Building**
- - Pulls required images
- - Builds custom services
- - Sets up networks
+
+- Pulls required images
+- Builds custom services
+- Sets up networks
 
 4. **Completion**
- - Shows success message
- - Provides next steps
- - Option to start services
+
+- Shows success message
+- Provides next steps
+- Option to start services
 
 ---
 
@@ -759,8 +764,8 @@ FRONTEND_APP_3_PORT=3003
 
 - **Cause**: Invalid format for environment
 - **Fix**:
- - Dev: Use `localhost` or `.local` domains
- - Prod: Use valid FQDN
+- Dev: Use `localhost` or `.local` domains
+- Prod: Use valid FQDN
 
 #### Build Fails
 
@@ -772,9 +777,10 @@ FRONTEND_APP_3_PORT=3003
 
 - **Cause**: Configuration or dependency issues
 - **Fix**:
- 1. Check docker logs: `docker-compose logs [service]`
- 2. Verify environment variables
- 3. Ensure ports are available
+
+1.  Check docker logs: `docker-compose logs [service]`
+2.  Verify environment variables
+3.  Ensure ports are available
 
 ### Reset Wizard
 
@@ -783,8 +789,10 @@ To start fresh:
 1. Click "Reset Configuration" on any step
 2. Confirm the reset action
 3. Wizard runs:
- - `nself reset --force`
- - `nself init --full`
+
+- `nself reset --force`
+- `nself init --full`
+
 4. Returns to Step 1
 
 ### Manual Configuration
@@ -851,9 +859,11 @@ After completing the wizard:
 1. **Build Project**: Click "Build Project" on Step 6
 2. **Start Services**: Navigate to `/start` after build
 3. **Access Services**:
- - Hasura Console: `http://localhost:3000`
- - nself Admin: `http://localhost:3100`
- - Your Apps: Configured ports
+
+- Hasura Console: `http://localhost:3000`
+- nself Admin: `http://localhost:3100`
+- Your Apps: Configured ports
+
 4. **Development**: Start coding your applications
 5. **Monitoring**: Check service health and logs
 

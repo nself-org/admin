@@ -28,12 +28,12 @@ vertical stack: a SQL migration, Hasura permissions, and a React UI component, i
 
 The IDE is a 4-panel layout:
 
-| Panel | Keyboard | Purpose |
+| Panel       | Keyboard | Purpose                                                                           |
 | ----------- | -------- | --------------------------------------------------------------------------------- |
-| Chat | Alt+1 | Feature request input and conversation history |
-| Diff Viewer | Alt+2 | Monaco editor showing the generated code per layer (Migration / Permissions / UI) |
-| File Tree | Alt+3 | Preview of all generated files |
-| Terminal | Alt+4 | Apply output stream and apply button |
+| Chat        | Alt+1    | Feature request input and conversation history                                    |
+| Diff Viewer | Alt+2    | Monaco editor showing the generated code per layer (Migration / Permissions / UI) |
+| File Tree   | Alt+3    | Preview of all generated files                                                    |
+| Terminal    | Alt+4    | Apply output stream and apply button                                              |
 
 ## Layer Tabs
 
@@ -66,16 +66,16 @@ The Apply button stays disabled until the phrase is typed exactly.
 
 All vars go in `admin/.env`:
 
-| Variable | Default | Description |
+| Variable                            | Default   | Description                                      |
 | ----------------------------------- | --------- | ------------------------------------------------ |
-| `NSELF_VIBE_ENABLED` | `true` | Enable Vibe-Code IDE |
-| `NSELF_VIBE_PORT` | `8002` | Port for vibe_api CS_2 |
-| `NSELF_VIBE_MAX_PROMPT_TOKENS` | `16000` | Max tokens per generation |
-| `NSELF_VIBE_MAX_SESSIONS_PER_USER` | `3` | Max concurrent sessions |
-| `NSELF_VIBE_AI_PROVIDER` | `claw-ai` | AI provider: `claw-ai` or `ollama` |
-| `NSELF_VIBE_TARGET_ENV` | `local` | Default environment: `local`, `staging`, `prod` |
-| `NSELF_VIBE_APPLY_REQUIRES_CONFIRM` | `true` | Always require confirmation before apply |
-| `NSELF_VIBE_UI_FRAMEWORK` | `react` | Generated UI framework: `react` or `flutter-web` |
+| `NSELF_VIBE_ENABLED`                | `true`    | Enable Vibe-Code IDE                             |
+| `NSELF_VIBE_PORT`                   | `8002`    | Port for vibe_api CS_2                           |
+| `NSELF_VIBE_MAX_PROMPT_TOKENS`      | `16000`   | Max tokens per generation                        |
+| `NSELF_VIBE_MAX_SESSIONS_PER_USER`  | `3`       | Max concurrent sessions                          |
+| `NSELF_VIBE_AI_PROVIDER`            | `claw-ai` | AI provider: `claw-ai` or `ollama`               |
+| `NSELF_VIBE_TARGET_ENV`             | `local`   | Default environment: `local`, `staging`, `prod`  |
+| `NSELF_VIBE_APPLY_REQUIRES_CONFIRM` | `true`    | Always require confirmation before apply         |
+| `NSELF_VIBE_UI_FRAMEWORK`           | `react`   | Generated UI framework: `react` or `flutter-web` |
 
 ## Security
 

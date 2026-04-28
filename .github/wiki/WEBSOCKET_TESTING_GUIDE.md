@@ -32,35 +32,41 @@
 
 1. Click "Stop" on a running service
 2. **Expected**:
- - Service card immediately shows "Stopping" status (yellow)
- - After 1-2 seconds, shows "Stopped" status (red)
- - No page refresh required
- - Connection badge stays green
+
+- Service card immediately shows "Stopping" status (yellow)
+- After 1-2 seconds, shows "Stopped" status (red)
+- No page refresh required
+- Connection badge stays green
 
 3. Click "Start" on the stopped service
 4. **Expected**:
- - Service card immediately shows "Starting" status (yellow)
- - After 2-3 seconds, shows "Running" status (green)
- - Health indicator updates to "healthy"
+
+- Service card immediately shows "Starting" status (yellow)
+- After 2-3 seconds, shows "Running" status (green)
+- Health indicator updates to "healthy"
 
 #### C. Service Restart
 
 1. Click "Restart" on a running service
 2. **Expected**:
- - Service card shows "Restarting" status (yellow)
- - After 3-4 seconds, shows "Running" status (green)
+
+- Service card shows "Restarting" status (yellow)
+- After 3-4 seconds, shows "Running" status (green)
 
 #### D. Connection Interruption
 
 1. Stop your WiFi or disconnect network
 2. **Expected**:
- - Connection badge turns yellow, shows "Reconnecting"
- - After ~5 seconds, turns red, shows "Offline"
+
+- Connection badge turns yellow, shows "Reconnecting"
+- After ~5 seconds, turns red, shows "Offline"
+
 3. Restore network connection
 4. **Expected**:
- - Badge automatically turns yellow "Reconnecting"
- - Within 1-2 seconds, turns green "Live"
- - Service status updates resume
+
+- Badge automatically turns yellow "Reconnecting"
+- Within 1-2 seconds, turns green "Live"
+- Service status updates resume
 
 ### Success Criteria
 
@@ -88,35 +94,39 @@
 
 1. Click "Start Build"
 2. **Expected**:
- - Connection indicator appears immediately (green)
- - Progress bar starts at 0%
- - Build step 1 shows "in-progress" (blue spinner)
+
+- Connection indicator appears immediately (green)
+- Progress bar starts at 0%
+- Build step 1 shows "in-progress" (blue spinner)
 
 3. Watch progress bar
 4. **Expected**:
- - Progress increases: 0% → 10% → 40% → 70% → 100%
- - Each step completes and shows green checkmark
- - Current step shows blue spinner
- - Elapsed time counter updates every second
+
+- Progress increases: 0% → 10% → 40% → 70% → 100%
+- Each step completes and shows green checkmark
+- Current step shows blue spinner
+- Elapsed time counter updates every second
 
 5. Wait for completion
 6. **Expected**:
- - Progress reaches 100%
- - All steps show green checkmarks
- - "Build Successful!" message appears
- - Auto-redirect to `/start` after 2 seconds
+
+- Progress reaches 100%
+- All steps show green checkmarks
+- "Build Successful!" message appears
+- Auto-redirect to `/start` after 2 seconds
 
 #### C. Build Error Simulation
 
 1. Rename `.env` to `.env.backup`
 2. Click "Retry Build"
 3. **Expected**:
- - Build starts
- - Progress stops at ~40%
- - Build step 2 shows red X
- - Error message appears: "Build failed: docker-compose.yml was not created"
- - "Build Failed" header shows
- - Connection indicator stays green (still connected)
+
+- Build starts
+- Progress stops at ~40%
+- Build step 2 shows red X
+- Error message appears: "Build failed: docker-compose.yml was not created"
+- "Build Failed" header shows
+- Connection indicator stays green (still connected)
 
 #### D. Connection During Build
 
@@ -124,10 +134,11 @@
 2. Start a build
 3. Immediately stop WiFi
 4. **Expected**:
- - Connection indicator turns yellow "Reconnecting..."
- - Build continues (API call already in progress)
- - Progress updates may lag
- - When network restores, updates resume
+
+- Connection indicator turns yellow "Reconnecting..."
+- Build continues (API call already in progress)
+- Progress updates may lag
+- When network restores, updates resume
 
 ### Success Criteria
 
@@ -157,40 +168,45 @@
 
 1. Click "Stream" button
 2. **Expected**:
- - Button changes to "Pause"
- - Connection indicator stays green
- - Footer shows "Live streaming" with pulsing dot (green)
+
+- Button changes to "Pause"
+- Connection indicator stays green
+- Footer shows "Live streaming" with pulsing dot (green)
 
 3. Generate some logs (restart the service)
 4. **Expected**:
- - New logs appear immediately in viewer
- - Auto-scroll to bottom
- - Footer shows count like "(5 live)" in green
+
+- New logs appear immediately in viewer
+- Auto-scroll to bottom
+- Footer shows count like "(5 live)" in green
 
 #### C. Pause Streaming
 
 1. Click "Pause" button
 2. **Expected**:
- - Button changes back to "Stream"
- - "Live streaming" indicator disappears
- - No new logs appear (even if service generates them)
+
+- Button changes back to "Stream"
+- "Live streaming" indicator disappears
+- No new logs appear (even if service generates them)
 
 #### D. Filter While Streaming
 
 1. Click "Stream" to resume
 2. Select "Error" from log level filter
 3. **Expected**:
- - Only error-level logs are shown
- - Live logs still appear (if they're errors)
- - Count shows filtered total
+
+- Only error-level logs are shown
+- Live logs still appear (if they're errors)
+- Count shows filtered total
 
 #### E. Search While Streaming
 
 1. Type "postgres" in search box
 2. **Expected**:
- - Only logs containing "postgres" are shown
- - Live logs still appear (if they match search)
- - Streaming continues in background
+
+- Only logs containing "postgres" are shown
+- Live logs still appear (if they match search)
+- Streaming continues in background
 
 ### Success Criteria
 
@@ -219,17 +235,19 @@
 
 1. In Tab 1, stop a service
 2. **Expected**:
- - Tab 1: Service status updates immediately
- - Tab 2: Service status also updates immediately
- - Both tabs stay in sync
+
+- Tab 1: Service status updates immediately
+- Tab 2: Service status also updates immediately
+- Both tabs stay in sync
 
 #### C. Close Tab 1
 
 1. Close Tab 1
 2. **Expected**:
- - Tab 2 continues working normally
- - Tab 2 connection stays green
- - No errors in Tab 2 console
+
+- Tab 2 continues working normally
+- Tab 2 connection stays green
+- No errors in Tab 2 console
 
 ### Success Criteria
 
@@ -252,17 +270,19 @@
 
 1. Load Dashboard
 2. **Expected in Network tab**:
- - WebSocket connection established to `/api/ws`
- - Connection stays open (not constantly reconnecting)
- - No errors
+
+- WebSocket connection established to `/api/ws`
+- Connection stays open (not constantly reconnecting)
+- No errors
 
 #### B. Event Latency
 
 1. Click "Stop" on a service
 2. **Measure**:
- - Time from click to status change
- - **Target**: <100ms
- - Use browser DevTools Performance tab for precise measurement
+
+- Time from click to status change
+- **Target**: <100ms
+- Use browser DevTools Performance tab for precise measurement
 
 #### C. Event Batching (Logs)
 
@@ -270,9 +290,10 @@
 2. Click "Stream"
 3. Restart a service (generates many logs quickly)
 4. **Expected**:
- - Logs appear in batches (not individual events)
- - Network tab shows fewer WebSocket messages than actual log lines
- - **Target**: ~80% reduction in events
+
+- Logs appear in batches (not individual events)
+- Network tab shows fewer WebSocket messages than actual log lines
+- **Target**: ~80% reduction in events
 
 #### D. Memory Usage
 
@@ -280,9 +301,10 @@
 2. Let app run for 5 minutes with logs streaming
 3. Take heap snapshot
 4. **Expected**:
- - No significant memory increase
- - Old log entries are garbage collected
- - No memory leaks
+
+- No significant memory increase
+- Old log entries are garbage collected
+- No memory leaks
 
 ### Success Criteria
 
@@ -305,14 +327,16 @@
 
 1. Stop the nself-admin server (`Ctrl+C`)
 2. **Expected**:
- - Connection indicator turns red "Offline"
- - Dashboard continues to function (shows cached data)
+
+- Connection indicator turns red "Offline"
+- Dashboard continues to function (shows cached data)
 
 3. Restart server (`pnpm dev`)
 4. **Expected**:
- - Connection indicator turns yellow "Reconnecting"
- - Within 1-2 seconds, turns green "Live"
- - Real-time updates resume
+
+- Connection indicator turns yellow "Reconnecting"
+- Within 1-2 seconds, turns green "Live"
+- Real-time updates resume
 
 #### B. Invalid Event
 
@@ -323,9 +347,10 @@
    window.dispatchEvent(new CustomEvent('invalid-ws-event'))
    ```
 3. **Expected**:
- - No crashes
- - Connection stays green
- - Normal operation continues
+
+- No crashes
+- Connection stays green
+- Normal operation continues
 
 ### Success Criteria
 

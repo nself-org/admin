@@ -635,13 +635,13 @@ kubectl exec -n nself-admin deployment/nself-admin -- tar -xzf /tmp/restore.tar.
 
 ### Common Issues
 
-| Issue | Cause | Solution |
+| Issue                      | Cause                  | Solution                                   |
 | -------------------------- | ---------------------- | ------------------------------------------ |
-| Pods not starting | Resource constraints | Check resource limits and node capacity |
-| Database connection errors | Wrong configuration | Verify ConfigMap and Secret values |
-| Ingress not working | DNS/certificate issues | Check DNS records and certificate status |
-| High memory usage | Memory leaks | Monitor and restart pods if necessary |
-| Slow performance | Resource limits | Increase CPU/memory limits or add replicas |
+| Pods not starting          | Resource constraints   | Check resource limits and node capacity    |
+| Database connection errors | Wrong configuration    | Verify ConfigMap and Secret values         |
+| Ingress not working        | DNS/certificate issues | Check DNS records and certificate status   |
+| High memory usage          | Memory leaks           | Monitor and restart pods if necessary      |
+| Slow performance           | Resource limits        | Increase CPU/memory limits or add replicas |
 
 ### Debugging Commands
 

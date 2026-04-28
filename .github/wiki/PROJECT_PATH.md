@@ -35,23 +35,26 @@ docker run -d \
 ## How It Works
 
 1. The `getProjectPath()` function in `src/lib/paths.ts` determines the correct path:
- - First checks for `PROJECT_PATH` environment variable (production)
- - Falls back to `.backend` folder in development
- - Default: `./.backend` as last resort
+
+- First checks for `PROJECT_PATH` environment variable (production)
+- Falls back to `.backend` folder in development
+- Default: `./.backend` as last resort
 
 2. All nself CLI commands are executed in this project directory:
- - `nself init` - Initialize project structure
- - `nself build` - Generate Docker configurations
- - `nself start` - Start backend services
- - `nself stop` - Stop services
- - `nself status` - Check service health
+
+- `nself init` - Initialize project structure
+- `nself build` - Generate Docker configurations
+- `nself start` - Start backend services
+- `nself stop` - Stop services
+- `nself status` - Check service health
 
 3. The admin interface provides:
- - Real-time monitoring of Docker containers
- - Service health checks
- - Log viewing
- - Configuration management
- - Database management tools
+
+- Real-time monitoring of Docker containers
+- Service health checks
+- Log viewing
+- Configuration management
+- Database management tools
 
 ## Security Considerations
 

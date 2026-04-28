@@ -51,91 +51,91 @@ This is the **first production-ready release** of nself-admin, representing a co
 #### 📊 Full Page Coverage (198 Pages)
 
 - **Dashboard & Overview** (15 pages)
- - Real-time dashboard with live metrics
- - Service overview grid with health indicators
- - Quick actions and common tasks
- - System resource monitoring
- - Activity feed and recent events
+- Real-time dashboard with live metrics
+- Service overview grid with health indicators
+- Quick actions and common tasks
+- System resource monitoring
+- Activity feed and recent events
 
 - **Database Management** (25 pages)
- - Full-featured SQL console with Monaco editor
- - Query history and saved queries
- - Backup creation and restoration wizard
- - Automated backup scheduling with cron
- - Migration management (create, run, rollback)
- - Schema browser with table visualization
- - Query explain/analyze support
- - Database performance metrics
- - Connection pool monitoring
- - Index management and optimization
+- Full-featured SQL console with Monaco editor
+- Query history and saved queries
+- Backup creation and restoration wizard
+- Automated backup scheduling with cron
+- Migration management (create, run, rollback)
+- Schema browser with table visualization
+- Query explain/analyze support
+- Database performance metrics
+- Connection pool monitoring
+- Index management and optimization
 
 - **Service Management** (30 pages)
- - Individual service detail pages (PostgreSQL, Hasura, Auth, Functions, MinIO, Redis, Mailpit, Nginx)
- - Service configuration editors
- - Container logs viewer with filtering
- - Service health checks and diagnostics
- - Resource usage per service
- - Service dependency visualization
- - Container shell access
+- Individual service detail pages (PostgreSQL, Hasura, Auth, Functions, MinIO, Redis, Mailpit, Nginx)
+- Service configuration editors
+- Container logs viewer with filtering
+- Service health checks and diagnostics
+- Resource usage per service
+- Service dependency visualization
+- Container shell access
 
 - **Deployment & Environments** (35 pages)
- - Multi-environment management (Dev, Staging, Production)
- - Blue-green deployment strategy
- - Canary deployment controls
- - Preview environment generation
- - Rollback management
- - Deployment history and audit log
- - Environment diff viewer
- - Secrets management per environment
- - Environment variable editor with validation
+- Multi-environment management (Dev, Staging, Production)
+- Blue-green deployment strategy
+- Canary deployment controls
+- Preview environment generation
+- Rollback management
+- Deployment history and audit log
+- Environment diff viewer
+- Secrets management per environment
+- Environment variable editor with validation
 
 - **Cloud & Infrastructure** (28 pages)
- - AWS integration (EC2, RDS, S3, Route53)
- - Google Cloud Platform support
- - DigitalOcean integration
- - Azure support
- - Server provisioning wizard
- - Cloud resource monitoring
- - Cost estimation
- - Multi-cloud deployment
+- AWS integration (EC2, RDS, S3, Route53)
+- Google Cloud Platform support
+- DigitalOcean integration
+- Azure support
+- Server provisioning wizard
+- Cloud resource monitoring
+- Cost estimation
+- Multi-cloud deployment
 
 - **Kubernetes & Orchestration** (22 pages)
- - Cluster management
- - Namespace viewer
- - Pod monitoring and logs
- - Helm chart management
- - Service mesh integration
- - Ingress configuration
- - ConfigMap and Secret management
- - Resource quotas and limits
+- Cluster management
+- Namespace viewer
+- Pod monitoring and logs
+- Helm chart management
+- Service mesh integration
+- Ingress configuration
+- ConfigMap and Secret management
+- Resource quotas and limits
 
 - **Monitoring & Observability** (18 pages)
- - Grafana dashboard integration
- - Prometheus metrics viewer
- - Loki log aggregation
- - Alert configuration
- - Uptime monitoring
- - Performance profiling
- - Trace viewer
- - Custom metrics dashboard
+- Grafana dashboard integration
+- Prometheus metrics viewer
+- Loki log aggregation
+- Alert configuration
+- Uptime monitoring
+- Performance profiling
+- Trace viewer
+- Custom metrics dashboard
 
 - **Security & Access** (12 pages)
- - SSL certificate management (mkcert, Let's Encrypt)
- - Certificate renewal automation
- - Trust store management
- - Access control configuration
- - Audit log viewer
- - Security scan results
- - Vulnerability reports
+- SSL certificate management (mkcert, Let's Encrypt)
+- Certificate renewal automation
+- Trust store management
+- Access control configuration
+- Audit log viewer
+- Security scan results
+- Vulnerability reports
 
 - **Plugins & Extensions** (13 pages)
- - Plugin marketplace
- - Installed plugins dashboard
- - Plugin configuration
- - Stripe integration (revenue, customers, subscriptions)
- - GitHub integration (repos, issues, PRs, CI/CD)
- - Shopify integration (products, orders, inventory)
- - Custom plugin development guide
+- Plugin marketplace
+- Installed plugins dashboard
+- Plugin configuration
+- Stripe integration (revenue, customers, subscriptions)
+- GitHub integration (repos, issues, PRs, CI/CD)
+- Shopify integration (products, orders, inventory)
+- Custom plugin development guide
 
 #### 🧩 Production-Grade Components (60+ Components)
 
@@ -227,65 +227,65 @@ This is the **first production-ready release** of nself-admin, representing a co
 #### ⚡ Real-Time Features
 
 - **WebSocket Integration**
- - Live service status updates
- - Real-time log streaming
- - Container event notifications
- - Deployment progress tracking
- - Resource usage monitoring
+- Live service status updates
+- Real-time log streaming
+- Container event notifications
+- Deployment progress tracking
+- Resource usage monitoring
 
 - **Server-Sent Events (SSE)**
- - Long-running operation updates
- - Build process streaming
- - CLI command output streaming
- - Metrics updates
+- Long-running operation updates
+- Build process streaming
+- CLI command output streaming
+- Metrics updates
 
 #### 🔒 Security Enhancements
 
 - **Authentication**
- - bcrypt password hashing
- - Session management with httpOnly cookies
- - 7-day session expiry with auto-renewal
- - CSRF protection
- - Rate limiting on auth endpoints
+- bcrypt password hashing
+- Session management with httpOnly cookies
+- 7-day session expiry with auto-renewal
+- CSRF protection
+- Rate limiting on auth endpoints
 
 - **Authorization**
- - Role-based access control foundation
- - Environment-based access (dev, staging, prod)
- - Secrets management per environment
- - Audit logging for all actions
+- Role-based access control foundation
+- Environment-based access (dev, staging, prod)
+- Secrets management per environment
+- Audit logging for all actions
 
 - **Input Validation**
- - Zod schema validation on all forms
- - Command injection prevention (execFile vs exec)
- - GraphQL query allowlisting
- - File path sanitization
- - Environment variable validation
+- Zod schema validation on all forms
+- Command injection prevention (execFile vs exec)
+- GraphQL query allowlisting
+- File path sanitization
+- Environment variable validation
 
 #### 🎨 user workflow
 
 - **Responsive Design**
- - Mobile-first approach
- - Tablet optimization
- - Desktop layouts
- - Touch-friendly interactions
+- Mobile-first approach
+- Tablet optimization
+- Desktop layouts
+- Touch-friendly interactions
 
 - **Accessibility**
- - WCAG 2.1 AA compliance
- - Keyboard navigation
- - Screen reader support
- - Focus management
- - ARIA attributes
+- WCAG 2.1 AA compliance
+- Keyboard navigation
+- Screen reader support
+- Focus management
+- ARIA attributes
 
 - **Dark Mode**
- - Full dark mode support
- - System preference detection
- - Persistent theme selection
- - Smooth transitions
+- Full dark mode support
+- System preference detection
+- Persistent theme selection
+- Smooth transitions
 
 - **Progressive Web App (PWA)**
- - Installable on mobile/desktop
- - Offline capability (coming soon)
- - App-like workflow
+- Installable on mobile/desktop
+- Offline capability (coming soon)
+- App-like workflow
 
 #### 📡 API Infrastructure (120+ Endpoints)
 
@@ -306,43 +306,43 @@ This is the **first production-ready release** of nself-admin, representing a co
 #### 🏗️ Architecture Improvements
 
 - **State Management**
- - Zustand for global state
- - SWR for data fetching with caching
- - React Context for feature-specific state
- - LocalStorage persistence where appropriate
+- Zustand for global state
+- SWR for data fetching with caching
+- React Context for feature-specific state
+- LocalStorage persistence where appropriate
 
 - **Code Organization**
- - Feature-based folder structure
- - Shared components library
- - Utility functions library
- - Type-safe API client
+- Feature-based folder structure
+- Shared components library
+- Utility functions library
+- Type-safe API client
 
 - **Build Optimization**
- - Code splitting per route
- - Dynamic imports for heavy components
- - Image optimization
- - Bundle size reduction (30% smaller)
- - Lighthouse score: 95+
+- Code splitting per route
+- Dynamic imports for heavy components
+- Image optimization
+- Bundle size reduction (30% smaller)
+- Lighthouse score: 95+
 
 #### 🚀 Performance
 
 - **Rendering**
- - React 19 concurrent features
- - Virtual scrolling for large lists
- - Memoization of expensive calculations
- - Lazy loading of images and components
+- React 19 concurrent features
+- Virtual scrolling for large lists
+- Memoization of expensive calculations
+- Lazy loading of images and components
 
 - **Networking**
- - API response caching
- - Request deduplication
- - Optimistic UI updates
- - Retry logic with exponential backoff
+- API response caching
+- Request deduplication
+- Optimistic UI updates
+- Retry logic with exponential backoff
 
 - **Metrics**
- - Initial load: < 1.5s
- - API response: < 100ms average
- - Real-time latency: < 50ms
- - Time to Interactive: < 2s
+- Initial load: < 1.5s
+- API response: < 100ms average
+- Real-time latency: < 50ms
+- Time to Interactive: < 2s
 
 ### Fixed
 
@@ -443,86 +443,86 @@ See [MIGRATION_v0.4_to_v0.5.md](MIGRATION_v0.4_to_v0.5.md) for detailed upgrade 
 ### Added
 
 - **Full Security Audit** (`docs/SECURITY_AUDIT.md`)
- - 3-pass security review covering OWASP Top 10
- - Authentication and session management audit
- - API routes and input validation analysis
- - Command injection vulnerability assessment
- - Dependency vulnerability scan
- - Prioritized remediation recommendations
+- 3-pass security review covering OWASP Top 10
+- Authentication and session management audit
+- API routes and input validation analysis
+- Command injection vulnerability assessment
+- Dependency vulnerability scan
+- Prioritized remediation recommendations
 
 - **Plugin Management UI** (Aligns with nself CLI v0.4.8)
- - Plugin dashboard (`/plugins`) with installed/available plugins grid
- - Plugin installation wizard with environment variable configuration
- - Plugin configuration management
- - Plugin-specific detail pages (`/plugins/[name]`)
- - Webhook event monitoring and retry
- - Plugin sync controls and history
- - Plugin health indicators
+- Plugin dashboard (`/plugins`) with installed/available plugins grid
+- Plugin installation wizard with environment variable configuration
+- Plugin configuration management
+- Plugin-specific detail pages (`/plugins/[name]`)
+- Webhook event monitoring and retry
+- Plugin sync controls and history
+- Plugin health indicators
 
 - **Stripe Plugin UI** (`/plugins/stripe`)
- - Revenue dashboard (MRR, ARR, key metrics)
- - Customer management interface with search
- - Subscription viewer with status filters
- - Invoice management and PDF download
- - Payment methods viewer
- - Webhook event log with filtering
+- Revenue dashboard (MRR, ARR, key metrics)
+- Customer management interface with search
+- Subscription viewer with status filters
+- Invoice management and PDF download
+- Payment methods viewer
+- Webhook event log with filtering
 
 - **GitHub Plugin UI** (`/plugins/github`)
- - Repository overview and sync status
- - Issues and Pull Requests dashboard
- - CI/CD status (GitHub Actions runs)
- - Commit history and releases
- - Activity feed
+- Repository overview and sync status
+- Issues and Pull Requests dashboard
+- CI/CD status (GitHub Actions runs)
+- Commit history and releases
+- Activity feed
 
 - **Shopify Plugin UI** (`/plugins/shopify`)
- - Store overview and metrics
- - Product catalog viewer with variants
- - Order management with status filters
- - Customer list
- - Inventory status
+- Store overview and metrics
+- Product catalog viewer with variants
+- Order management with status filters
+- Customer list
+- Inventory status
 
 - **Enhanced Database UI**
- - Backup creation wizard with type selection
- - Backup list with download/delete actions
- - Backup restore workflow with confirmation
- - Scheduled backups with visual cron editor
- - Migration management (run, rollback, create)
- - Schema browser with table visualization
- - Monaco-based SQL console with syntax highlighting
- - Query history (persisted) and saved queries
- - Query results export (CSV, JSON)
- - Query explain/analyze support
+- Backup creation wizard with type selection
+- Backup list with download/delete actions
+- Backup restore workflow with confirmation
+- Scheduled backups with visual cron editor
+- Migration management (run, rollback, create)
+- Schema browser with table visualization
+- Monaco-based SQL console with syntax highlighting
+- Query history (persisted) and saved queries
+- Query results export (CSV, JSON)
+- Query explain/analyze support
 
 - **Cloud Provider Integration**
- - AWS configuration and deployment
- - Google Cloud Platform (GCP) support
- - DigitalOcean integration
- - Provider status monitoring
+- AWS configuration and deployment
+- Google Cloud Platform (GCP) support
+- DigitalOcean integration
+- Provider status monitoring
 
 - **Kubernetes Management UI**
- - Cluster configuration
- - Namespace management
- - Pod monitoring
- - Helm chart support
+- Cluster configuration
+- Namespace management
+- Pod monitoring
+- Helm chart support
 
 - **Performance & Deployment**
- - Benchmark runner UI
- - Cache management interface
- - Blue-green deployment controls
- - Rollback management
+- Benchmark runner UI
+- Cache management interface
+- Blue-green deployment controls
+- Rollback management
 
 ### Security Fixes
 
 - **Command Injection** - Fixed vulnerabilities in 9 API routes using `execFile` instead of `exec`
- - `/api/database/backups/route.ts`
- - `/api/database/migrations/route.ts`
- - `/api/database/schema/route.ts`
- - `/api/cloud/aws/route.ts`
- - `/api/cloud/gcp/route.ts`
- - `/api/cloud/digitalocean/route.ts`
- - `/api/kubernetes/route.ts`
- - `/api/kubernetes/helm/route.ts`
- - `/api/performance/benchmark/route.ts`
+- `/api/database/backups/route.ts`
+- `/api/database/migrations/route.ts`
+- `/api/database/schema/route.ts`
+- `/api/cloud/aws/route.ts`
+- `/api/cloud/gcp/route.ts`
+- `/api/cloud/digitalocean/route.ts`
+- `/api/kubernetes/route.ts`
+- `/api/kubernetes/helm/route.ts`
+- `/api/performance/benchmark/route.ts`
 - **GraphQL Query Injection** - Added allowlisted query patterns to prevent arbitrary query execution
 - **Session Validation** - Enhanced session security with proper token verification
 - **Password Storage** - Improved password hashing and validation
@@ -566,22 +566,22 @@ See [MIGRATION_v0.4_to_v0.5.md](MIGRATION_v0.4_to_v0.5.md) for detailed upgrade 
 ### Added
 
 - **Multi-Environment Deployment UI**
- - New `/deployment/staging` page for staging deployments
- - New `/deployment/prod` page for production deployments
- - New `/deployment/environments` page for environment management
- - Deploy API routes (`/api/deploy/staging`, `/api/deploy/production`)
+- New `/deployment/staging` page for staging deployments
+- New `/deployment/prod` page for production deployments
+- New `/deployment/environments` page for environment management
+- Deploy API routes (`/api/deploy/staging`, `/api/deploy/production`)
 - **CLI Integration Improvements**
- - Added `findNselfPath()` and `findNselfPathSync()` for dynamic CLI path resolution
- - Added `getEnhancedPath()` for proper PATH environment in container
- - CLI version detection in health endpoint (`cliVersion` field)
- - Support for `PROJECT_PATH` and `NSELF_PROJECT_PATH` environment variables
+- Added `findNselfPath()` and `findNselfPathSync()` for dynamic CLI path resolution
+- Added `getEnhancedPath()` for proper PATH environment in container
+- CLI version detection in health endpoint (`cliVersion` field)
+- Support for `PROJECT_PATH` and `NSELF_PROJECT_PATH` environment variables
 - **Container Enhancements**
- - Added mkcert binary for local SSL certificate generation
- - Added docker-cli-compose for Docker Compose support
- - Documented Docker socket security considerations
+- Added mkcert binary for local SSL certificate generation
+- Added docker-cli-compose for Docker Compose support
+- Documented Docker socket security considerations
 - **Unit Testing Infrastructure**
- - Added Jest configuration (`jest.config.js`, `jest.setup.js`)
- - Created initial test suite for nself-path utilities
+- Added Jest configuration (`jest.config.js`, `jest.setup.js`)
+- Created initial test suite for nself-path utilities
 
 ### Changed
 
@@ -611,18 +611,18 @@ See [MIGRATION_v0.4_to_v0.5.md](MIGRATION_v0.4_to_v0.5.md) for detailed upgrade 
 ### Added
 
 - **SSL Configuration Page** (`/config/ssl`)
- - Certificate status display (mode, validity, expiry)
- - Local certificate generation via mkcert integration
- - Let's Encrypt configuration support
- - Trust store installation guide with OS-specific instructions
+- Certificate status display (mode, validity, expiry)
+- Local certificate generation via mkcert integration
+- Let's Encrypt configuration support
+- Trust store installation guide with OS-specific instructions
 - **Centralized Constants** (`src/lib/constants.ts`)
- - All port definitions (ADMIN: 3021, LOKI: 3100, etc.)
- - Version information for dynamic display
+- All port definitions (ADMIN: 3021, LOKI: 3100, etc.)
+- Version information for dynamic display
 - **Full Roadmap** (`docs/ROADMAP.md`)
- - Detailed plans for v0.0.7 through v0.1.0
- - Aligned with nself CLI v0.4.3-v0.5.0 release schedule
- - Technical architecture notes with TypeScript interfaces
- - Multi-environment deployment considerations
+- Detailed plans for v0.0.7 through v0.1.0
+- Aligned with nself CLI v0.4.3-v0.5.0 release schedule
+- Technical architecture notes with TypeScript interfaces
+- Multi-environment deployment considerations
 
 ### Changed
 
@@ -632,8 +632,8 @@ See [MIGRATION_v0.4_to_v0.5.md](MIGRATION_v0.4_to_v0.5.md) for detailed upgrade 
 ### Fixed
 
 - **TypeScript Error Handling** - Fixed 30+ API routes with proper error handling
- - Changed `error?.message` and `error.message` patterns to proper type checking
- - Pattern: `error instanceof Error ? error.message : 'Unknown error'`
+- Changed `error?.message` and `error.message` patterns to proper type checking
+- Pattern: `error instanceof Error ? error.message : 'Unknown error'`
 - **Promise Typing** - Fixed `Promise<Response>` return type in SSL generate-local route
 - **File System Errors** - Added `NodeJS.ErrnoException` typing for file operations
 

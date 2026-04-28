@@ -103,11 +103,11 @@ curl http://localhost:3021/api/version
 
 Available release channels:
 
-| Channel | Description | Docker Tag | Stability |
+| Channel         | Description         | Docker Tag           | Stability |
 | --------------- | ------------------- | -------------------- | --------- |
-| **Stable** | Production releases | `latest`, `0.0.8` | High |
-| **Beta** | Pre-release testing | `beta`, `0.0.9-beta` | Medium |
-| **Development** | Latest changes | `dev`, `main` | Low |
+| **Stable**      | Production releases | `latest`, `0.0.8`    | High      |
+| **Beta**        | Pre-release testing | `beta`, `0.0.9-beta` | Medium    |
+| **Development** | Latest changes      | `dev`, `main`        | Low       |
 
 ### Version Pinning
 
@@ -512,13 +512,13 @@ Document your update process:
 
 ### Common Update Issues
 
-| Issue | Cause | Solution |
+| Issue                 | Cause                          | Solution                                  |
 | --------------------- | ------------------------------ | ----------------------------------------- |
-| Container won't start | Breaking configuration changes | Check configuration migration guide |
-| Database errors | Database migration failed | Restore from backup, check migration logs |
-| Permission errors | File ownership changed | Fix file permissions with `chown` |
-| Port conflicts | New port requirements | Update port mappings |
-| Missing features | Incomplete update | Verify image version and restart |
+| Container won't start | Breaking configuration changes | Check configuration migration guide       |
+| Database errors       | Database migration failed      | Restore from backup, check migration logs |
+| Permission errors     | File ownership changed         | Fix file permissions with `chown`         |
+| Port conflicts        | New port requirements          | Update port mappings                      |
+| Missing features      | Incomplete update              | Verify image version and restart          |
 
 ### Update Verification
 

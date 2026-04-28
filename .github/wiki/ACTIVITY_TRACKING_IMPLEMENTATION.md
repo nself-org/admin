@@ -52,18 +52,20 @@ Replaced 200+ lines of mock activity data with real-time event aggregation from 
 Activities are now aggregated from:
 
 1. **Audit Logs** (existing)
- - Login/logout events
- - Session creation/deletion
- - Password changes
- - Configuration updates
- - Notification actions
+
+- Login/logout events
+- Session creation/deletion
+- Password changes
+- Configuration updates
+- Notification actions
 
 2. **New Activity Logging** (ready for integration)
- - Service operations (start/stop/restart)
- - Deployments (staging/production)
- - Database operations (sync/seed/migrate)
- - Backup operations
- - Secret access
+
+- Service operations (start/stop/restart)
+- Deployments (staging/production)
+- Database operations (sync/seed/migrate)
+- Backup operations
+- Secret access
 
 ## Technical Details
 

@@ -17,11 +17,11 @@
 ## Plugins (NEW)
 
 - [[Plugins]]
- - [[Plugins#stripe-plugin|Stripe Plugin]]
- - [[Plugins#github-plugin|GitHub Plugin]]
- - [[Plugins#shopify-plugin|Shopify Plugin]]
- - [[Plugins#webhook-integration|Webhook Integration]]
- - [[Plugins#plugin-development|Plugin Development]]
+- [[Plugins#stripe-plugin|Stripe Plugin]]
+- [[Plugins#github-plugin|GitHub Plugin]]
+- [[Plugins#shopify-plugin|Shopify Plugin]]
+- [[Plugins#webhook-integration|Webhook Integration]]
+- [[Plugins#plugin-development|Plugin Development]]
 
 ## Architecture
 

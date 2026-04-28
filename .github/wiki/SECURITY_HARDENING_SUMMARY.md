@@ -158,10 +158,10 @@ pnpm audit
 - **Storage:** LokiJS `auditLog` collection
 - **Retention:** 30 days with automatic TTL
 - **Events Logged:**
- - Authentication attempts (success/failure)
- - Session operations (create, refresh, revoke)
- - Password changes
- - Security events (rate limits, CSRF failures)
+- Authentication attempts (success/failure)
+- Session operations (create, refresh, revoke)
+- Password changes
+- Security events (rate limits, CSRF failures)
 
 #### Sensitive Data Protection
 
@@ -247,18 +247,18 @@ pnpm run lint
 
 ## OWASP Top 10 Compliance
 
-| Vulnerability | Status | Implementation |
+| Vulnerability                      | Status | Implementation                                                |
 | ---------------------------------- | ------ | ------------------------------------------------------------- |
-| A01:2021 Broken Access Control | ✅ | Session-based auth, middleware protection |
-| A02:2021 Cryptographic Failures | ✅ | bcrypt, secure tokens, httpOnly cookies |
-| A03:2021 Injection | ✅ | Zod validation, parameterized queries, no shell interpolation |
-| A04:2021 Insecure Design | ✅ | Defense in depth, rate limiting, CSRF tokens |
-| A05:2021 Security Misconfiguration | ✅ | Security headers, minimal Docker image, secrets management |
-| A06:2021 Vulnerable Components | ✅ | All dependencies updated, 0 vulnerabilities |
-| A07:2021 Authentication Failures | ✅ | Strong passwords, rate limiting, account lockout |
-| A08:2021 Software/Data Integrity | ✅ | Dependency pinning, audit logs, integrity checks |
-| A09:2021 Logging Failures | ✅ | Full audit logs, no sensitive data in logs |
-| A10:2021 SSRF | ✅ | Whitelisted origins, no arbitrary URL fetching |
+| A01:2021 Broken Access Control     | ✅     | Session-based auth, middleware protection                     |
+| A02:2021 Cryptographic Failures    | ✅     | bcrypt, secure tokens, httpOnly cookies                       |
+| A03:2021 Injection                 | ✅     | Zod validation, parameterized queries, no shell interpolation |
+| A04:2021 Insecure Design           | ✅     | Defense in depth, rate limiting, CSRF tokens                  |
+| A05:2021 Security Misconfiguration | ✅     | Security headers, minimal Docker image, secrets management    |
+| A06:2021 Vulnerable Components     | ✅     | All dependencies updated, 0 vulnerabilities                   |
+| A07:2021 Authentication Failures   | ✅     | Strong passwords, rate limiting, account lockout              |
+| A08:2021 Software/Data Integrity   | ✅     | Dependency pinning, audit logs, integrity checks              |
+| A09:2021 Logging Failures          | ✅     | Full audit logs, no sensitive data in logs                    |
+| A10:2021 SSRF                      | ✅     | Whitelisted origins, no arbitrary URL fetching                |
 
 ---
 

@@ -48,13 +48,13 @@ GET /api/system/metrics       # System resource usage
 
 ### Health Status Indicators
 
-| Status | Color | Description |
+| Status       | Color     | Description                        |
 | ------------ | --------- | ---------------------------------- |
-| **Healthy** | 🟢 Green | Service running normally |
-| **Warning** | 🟡 Yellow | Minor issues, still functional |
+| **Healthy**  | 🟢 Green  | Service running normally           |
+| **Warning**  | 🟡 Yellow | Minor issues, still functional     |
 | **Critical** | 🟠 Orange | Major issues, degraded performance |
-| **Down** | 🔴 Red | Service unavailable |
-| **Unknown** | ⚪ Gray | Status cannot be determined |
+| **Down**     | 🔴 Red    | Service unavailable                |
+| **Unknown**  | ⚪ Gray   | Status cannot be determined        |
 
 ### Service-Specific Health Checks
 
@@ -398,13 +398,13 @@ GET /api/metrics/docker   # Container metrics
 
 ### Common Monitoring Issues
 
-| Issue | Cause | Solution |
+| Issue                    | Cause                        | Solution                     |
 | ------------------------ | ---------------------------- | ---------------------------- |
-| Missing metrics | Service not exposing metrics | Configure metrics endpoint |
-| High monitoring overhead | Too frequent collection | Reduce collection frequency |
-| Alert storms | Cascade failures | Implement alert dependencies |
-| Disk space from logs | Log retention too long | Configure log rotation |
-| Slow dashboard loading | Too much data | Implement data aggregation |
+| Missing metrics          | Service not exposing metrics | Configure metrics endpoint   |
+| High monitoring overhead | Too frequent collection      | Reduce collection frequency  |
+| Alert storms             | Cascade failures             | Implement alert dependencies |
+| Disk space from logs     | Log retention too long       | Configure log rotation       |
+| Slow dashboard loading   | Too much data                | Implement data aggregation   |
 
 ### Debugging Monitoring
 

@@ -67,13 +67,13 @@ nself admin start   # uses the installed image; swap for local image to test
 
 ## Branching Model
 
-| Branch | Purpose |
+| Branch      | Purpose            |
 | ----------- | ------------------ |
-| `main` | Latest stable |
-| `feat/xxx` | New features |
-| `fix/xxx` | Bug fixes |
-| `chore/xxx` | Maintenance |
-| `docs/xxx` | Documentation only |
+| `main`      | Latest stable      |
+| `feat/xxx`  | New features       |
+| `fix/xxx`   | Bug fixes          |
+| `chore/xxx` | Maintenance        |
+| `docs/xxx`  | Documentation only |
 
 Always branch from `main`. Target `main` in your PR.
 

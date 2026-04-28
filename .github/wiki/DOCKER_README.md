@@ -19,12 +19,12 @@ Open http://localhost:3021 in your browser.
 
 ## Docker Tags
 
-| Tag | Description | Use Case |
+| Tag       | Description                      | Use Case                  |
 | --------- | -------------------------------- | ------------------------- |
-| `latest` | Latest stable release | Production |
-| `0.5.0` | Specific version | Production (pinned) |
-| `0.5` | Minor version (receives patches) | Production (auto-updates) |
-| `staging` | Latest staging build | Testing |
+| `latest`  | Latest stable release            | Production                |
+| `0.5.0`   | Specific version                 | Production (pinned)       |
+| `0.5`     | Minor version (receives patches) | Production (auto-updates) |
+| `staging` | Latest staging build             | Testing                   |
 
 ## Supported Platforms
 
@@ -35,17 +35,17 @@ Open http://localhost:3021 in your browser.
 
 ### Required
 
-| Variable | Default | Description |
+| Variable             | Default      | Description                |
 | -------------------- | ------------ | -------------------------- |
 | `NSELF_PROJECT_PATH` | `/workspace` | Path to your nself project |
 
 ### Optional
 
-| Variable | Default | Description |
+| Variable    | Default      | Description                       |
 | ----------- | ------------ | --------------------------------- |
-| `PORT` | `3021` | Server port |
-| `NODE_ENV` | `production` | Environment mode |
-| `LOG_LEVEL` | `info` | Log level (debug/info/warn/error) |
+| `PORT`      | `3021`       | Server port                       |
+| `NODE_ENV`  | `production` | Environment mode                  |
+| `LOG_LEVEL` | `info`       | Log level (debug/info/warn/error) |
 
 ## Volume Mounts
 

@@ -90,19 +90,19 @@ Welcome to the nself Admin documentation. This full guide will help you understa
 
 ## Quick Navigation
 
-| Topic | Description | Link |
+| Topic                  | Description                | Link                                  |
 | ---------------------- | -------------------------- | ------------------------------------- |
-| 🚀 **Quick Start** | Get running in 5 minutes | [Quick Start](Quick-Start.md) |
-| 🎯 **Setup Wizard** | Complete wizard guide | [Init Wizard](Init-Wizard-Guide.md) |
-| 📊 **Dashboard** | Using the dashboard | [Dashboard](Dashboard-Overview.md) |
-| 🔧 **Services** | Managing services | [Services](Service-Configuration.md) |
-| 🧩 **Plugins** | Third-party integrations | [Plugins](Plugins.md) |
-| 🗄️ **Database** | Database operations | [Database](Database-Management.md) |
-| 🏗️ **Architecture** | System design | [Architecture](ARCHITECTURE.md) |
-| 📡 **API** | REST API reference | [API Docs](API.md) |
-| 🐳 **Docker** | Docker deployment | [Docker](deployment/Docker.md) |
-| 🚨 **Troubleshooting** | Common issues | [Troubleshooting](TROUBLESHOOTING.md) |
-| ❓ **FAQ** | Frequently asked questions | [FAQ](FAQ.md) |
+| 🚀 **Quick Start**     | Get running in 5 minutes   | [Quick Start](Quick-Start.md)         |
+| 🎯 **Setup Wizard**    | Complete wizard guide      | [Init Wizard](Init-Wizard-Guide.md)   |
+| 📊 **Dashboard**       | Using the dashboard        | [Dashboard](Dashboard-Overview.md)    |
+| 🔧 **Services**        | Managing services          | [Services](Service-Configuration.md)  |
+| 🧩 **Plugins**         | Third-party integrations   | [Plugins](Plugins.md)                 |
+| 🗄️ **Database**        | Database operations        | [Database](Database-Management.md)    |
+| 🏗️ **Architecture**    | System design              | [Architecture](ARCHITECTURE.md)       |
+| 📡 **API**             | REST API reference         | [API Docs](API.md)                    |
+| 🐳 **Docker**          | Docker deployment          | [Docker](deployment/Docker.md)        |
+| 🚨 **Troubleshooting** | Common issues              | [Troubleshooting](TROUBLESHOOTING.md) |
+| ❓ **FAQ**             | Frequently asked questions | [FAQ](FAQ.md)                         |
 
 ---
 

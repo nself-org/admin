@@ -275,16 +275,16 @@ Complete multi-tenancy support with organization management, role-based access c
 
 ## Version History
 
-| Version | Release Date | Status | Highlights |
+| Version | Release Date | Status   | Highlights                          |
 | ------- | ------------ | -------- | ----------------------------------- |
-| v0.2.0 | Jan 31, 2026 | Released | Foundation & CLI alignment |
-| v0.3.0 | Jan 31, 2026 | Released | Auth & Security expansion |
-| v0.4.0 | Jan 31, 2026 | Released | Services expansion (9 new services) |
-| v0.6.0 | Feb 1, 2026 | Released | Multi-tenancy & Organizations |
-| v0.7.0 | Feb 1, 2026 | Released | Real-time Collaboration & Analytics |
-| v0.8.0 | Feb 1, 2026 | Released | Production-ready stable release |
-| v0.9.0 | Feb 1, 2026 | Released | 100% Feature Complete & QA Verified |
-| v1.0.0 | Q2 2026 | Planned | Public Release Candidate |
+| v0.2.0  | Jan 31, 2026 | Released | Foundation & CLI alignment          |
+| v0.3.0  | Jan 31, 2026 | Released | Auth & Security expansion           |
+| v0.4.0  | Jan 31, 2026 | Released | Services expansion (9 new services) |
+| v0.6.0  | Feb 1, 2026  | Released | Multi-tenancy & Organizations       |
+| v0.7.0  | Feb 1, 2026  | Released | Real-time Collaboration & Analytics |
+| v0.8.0  | Feb 1, 2026  | Released | Production-ready stable release     |
+| v0.9.0  | Feb 1, 2026  | Released | 100% Feature Complete & QA Verified |
+| v1.0.0  | Q2 2026      | Planned  | Public Release Candidate            |
 
 ---
 

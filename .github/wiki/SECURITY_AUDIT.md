@@ -13,12 +13,12 @@ This document contains the consolidated findings from three independent security
 
 ### Overall Risk Assessment
 
-| Severity | Count | Primary Categories |
+| Severity     | Count | Primary Categories                                                   |
 | ------------ | ----- | -------------------------------------------------------------------- |
-| **CRITICAL** | 10 | Command Injection (7), Auth Bypass (2), Plain Text Passwords (1) |
-| **HIGH** | 12 | Input Validation (4), Auth Gaps (3), Injection (3), Dependencies (2) |
-| **MEDIUM** | 11 | Rate Limiting (2), CORS (1), Headers (2), Secrets (3), Other (3) |
-| **LOW** | 8 | Logging (2), Config (3), Code Quality (3) |
+| **CRITICAL** | 10    | Command Injection (7), Auth Bypass (2), Plain Text Passwords (1)     |
+| **HIGH**     | 12    | Input Validation (4), Auth Gaps (3), Injection (3), Dependencies (2) |
+| **MEDIUM**   | 11    | Rate Limiting (2), CORS (1), Headers (2), Secrets (3), Other (3)     |
+| **LOW**      | 8     | Logging (2), Config (3), Code Quality (3)                            |
 
 ### Key Findings
 

@@ -157,10 +157,11 @@ docker run -d --name nself-admin-2 -p 3022:3021 ...
 
 1. **Development**: Edit `.env.development`
 2. **Production**:
- - Stop services
- - Update password in `.env.production`
- - Update in PostgreSQL: `ALTER USER postgres PASSWORD 'new-password';`
- - Restart services
+
+- Stop services
+- Update password in `.env.production`
+- Update in PostgreSQL: `ALTER USER postgres PASSWORD 'new-password';`
+- Restart services
 
 ## Services
 
@@ -297,8 +298,9 @@ Database → Backup → Select file → Restore
 **Answer**:
 
 1. **Allocate more Docker resources**:
- - Docker Desktop → Settings → Resources
- - Increase CPU and Memory
+
+- Docker Desktop → Settings → Resources
+- Increase CPU and Memory
 
 2. **Optimize services**:
 

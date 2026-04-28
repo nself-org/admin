@@ -255,23 +255,23 @@ This document describes all keyboard shortcuts and navigation patterns in the ns
 ### Navigation Shortcuts (varies by screen reader)
 
 - **VoiceOver (macOS):**
- - VO + U - Rotor (navigate by headings, landmarks, links)
- - VO + Command + H - Next heading
- - VO + Command + L - Next link
- - VO + Command + J - Next form control
+- VO + U - Rotor (navigate by headings, landmarks, links)
+- VO + Command + H - Next heading
+- VO + Command + L - Next link
+- VO + Command + J - Next form control
 
 - **NVDA (Windows):**
- - H - Next heading
- - K - Next link
- - F - Next form field
- - D - Next landmark
- - T - Next table
+- H - Next heading
+- K - Next link
+- F - Next form field
+- D - Next landmark
+- T - Next table
 
 - **JAWS (Windows):**
- - H - Next heading
- - R - Next region/landmark
- - F - Next form field
- - T - Next table
+- H - Next heading
+- R - Next region/landmark
+- F - Next form field
+- T - Next table
 
 ---
 
@@ -350,19 +350,19 @@ All interactive elements have visible focus indicators:
 ### Testing Tools
 
 - **Browser Extensions:**
- - axe DevTools (Chrome, Firefox)
- - WAVE (Chrome, Firefox)
- - Lighthouse (Chrome DevTools)
+- axe DevTools (Chrome, Firefox)
+- WAVE (Chrome, Firefox)
+- Lighthouse (Chrome DevTools)
 
 - **Screen Readers:**
- - VoiceOver (macOS built-in)
- - NVDA (Windows, free)
- - JAWS (Windows, commercial)
+- VoiceOver (macOS built-in)
+- NVDA (Windows, free)
+- JAWS (Windows, commercial)
 
 - **Automated Testing:**
- - pa11y (CLI tool)
- - axe-core (JavaScript library)
- - jest-axe (Jest integration)
+- pa11y (CLI tool)
+- axe-core (JavaScript library)
+- jest-axe (Jest integration)
 
 ### Further Reading
 

@@ -247,10 +247,10 @@ sequenceDiagram
 
 - Minimum 12 characters
 - Must contain:
- - Uppercase letter (A-Z)
- - Lowercase letter (a-z)
- - Number (0-9)
- - Special character (@$!%\*?&)
+- Uppercase letter (A-Z)
+- Lowercase letter (a-z)
+- Number (0-9)
+- Special character (@$!%\*?&)
 
 ### Password Hashing
 
@@ -478,16 +478,16 @@ axios.interceptors.response.use(
 
 ### Error Codes
 
-| Code | Description |
+| Code                       | Description                        |
 | -------------------------- | ---------------------------------- |
-| `AUTH_INVALID_CREDENTIALS` | Wrong password |
-| `AUTH_SESSION_EXPIRED` | Session has expired |
-| `AUTH_SESSION_INVALID` | Session token invalid |
-| `AUTH_CSRF_INVALID` | CSRF token missing or invalid |
-| `AUTH_PASSWORD_WEAK` | Password doesn't meet requirements |
-| `AUTH_PASSWORD_EXISTS` | Password already set (setup) |
-| `AUTH_NOT_AUTHENTICATED` | No valid session |
-| `AUTH_RATE_LIMITED` | Too many attempts |
+| `AUTH_INVALID_CREDENTIALS` | Wrong password                     |
+| `AUTH_SESSION_EXPIRED`     | Session has expired                |
+| `AUTH_SESSION_INVALID`     | Session token invalid              |
+| `AUTH_CSRF_INVALID`        | CSRF token missing or invalid      |
+| `AUTH_PASSWORD_WEAK`       | Password doesn't meet requirements |
+| `AUTH_PASSWORD_EXISTS`     | Password already set (setup)       |
+| `AUTH_NOT_AUTHENTICATED`   | No valid session                   |
+| `AUTH_RATE_LIMITED`        | Too many attempts                  |
 
 ## Testing
 

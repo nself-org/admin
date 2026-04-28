@@ -6,25 +6,25 @@ The Admin UI v2 (P94 modernization) is organized into 17 distinct zones. Each zo
 
 ## Zone Map
 
-| Zone | Name | CLI surface covered | Route |
+| Zone | Name            | CLI surface covered                   | Route                  |
 | ---- | --------------- | ------------------------------------- | ---------------------- |
-| Z01 | Dashboard | status, health, doctor | `/` |
-| Z02 | Services | start, stop, restart, service | `/services` |
-| Z03 | Build | build | `/build` |
-| Z04 | Config | config, env | `/config` |
-| Z05 | Plugins | plugin install/uninstall/upgrade/list | `/plugins` |
-| Z06 | Marketplace | plugin marketplace | `/plugins/marketplace` |
-| Z07 | License | license set/revoke/status | `/license` |
-| Z08 | Deploy | deploy, promote | `/deploy` |
-| Z09 | Logs | logs, monitor | `/logs` |
-| Z10 | Database | db, migrate | `/database` |
-| Z11 | Backup & DR | backup, dr | `/backup` |
-| Z12 | Security | security, waf, trust, secrets | `/security` |
-| Z13 | Monitoring | Grafana embed, alerts | `/monitoring` |
-| Z14 | AI | ai, claw | `/ai` |
-| Z15 | Custom Services | custom-service (CS_N management) | `/services/custom` |
-| Z16 | Audit | audit | `/audit` |
-| Z17 | Settings | admin UI preferences, env switcher | `/settings` |
+| Z01  | Dashboard       | status, health, doctor                | `/`                    |
+| Z02  | Services        | start, stop, restart, service         | `/services`            |
+| Z03  | Build           | build                                 | `/build`               |
+| Z04  | Config          | config, env                           | `/config`              |
+| Z05  | Plugins         | plugin install/uninstall/upgrade/list | `/plugins`             |
+| Z06  | Marketplace     | plugin marketplace                    | `/plugins/marketplace` |
+| Z07  | License         | license set/revoke/status             | `/license`             |
+| Z08  | Deploy          | deploy, promote                       | `/deploy`              |
+| Z09  | Logs            | logs, monitor                         | `/logs`                |
+| Z10  | Database        | db, migrate                           | `/database`            |
+| Z11  | Backup & DR     | backup, dr                            | `/backup`              |
+| Z12  | Security        | security, waf, trust, secrets         | `/security`            |
+| Z13  | Monitoring      | Grafana embed, alerts                 | `/monitoring`          |
+| Z14  | AI              | ai, claw                              | `/ai`                  |
+| Z15  | Custom Services | custom-service (CS_N management)      | `/services/custom`     |
+| Z16  | Audit           | audit                                 | `/audit`               |
+| Z17  | Settings        | admin UI preferences, env switcher    | `/settings`            |
 
 ---
 
@@ -44,15 +44,15 @@ When targeting Production, the UI activates a red-tint overlay on all destructiv
 
 Every Admin UI page implements 7 states:
 
-| State | Trigger | UI |
+| State     | Trigger                                | UI                       |
 | --------- | -------------------------------------- | ------------------------ |
-| Loading | Data fetch in progress | Skeleton loader |
-| Populated | Data loaded successfully | Normal view |
-| Empty | No data (e.g., no plugins installed) | Empty state with CTA |
-| Error | Network error / CLI command failed | Error card with retry |
-| Offline | No connection to target backend | Offline banner |
-| Mismatch | Admin version differs from CLI version | Version mismatch warning |
-| Revoked | License revoked / plugin dormant | Revoked state card |
+| Loading   | Data fetch in progress                 | Skeleton loader          |
+| Populated | Data loaded successfully               | Normal view              |
+| Empty     | No data (e.g., no plugins installed)   | Empty state with CTA     |
+| Error     | Network error / CLI command failed     | Error card with retry    |
+| Offline   | No connection to target backend        | Offline banner           |
+| Mismatch  | Admin version differs from CLI version | Version mismatch warning |
+| Revoked   | License revoked / plugin dormant       | Revoked state card       |
 
 ---
 

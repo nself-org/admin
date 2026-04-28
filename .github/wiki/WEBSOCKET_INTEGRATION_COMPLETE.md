@@ -61,11 +61,11 @@ Full integration of WebSocket real-time updates into all critical pages of nself
 
 - Imported `emitBuildProgress` from centralized emitters
 - Emit progress at each build stage:
- - 0%: Build start
- - 10%: Validating configuration
- - 40%: Generating docker-compose.yml
- - 70%: Creating networks and pulling images
- - 100%: Build complete
+- 0%: Build start
+- 10%: Validating configuration
+- 40%: Generating docker-compose.yml
+- 70%: Creating networks and pulling images
+- 100%: Build complete
 - Emit failure events with descriptive messages
 - Real-time error reporting
 

@@ -17,15 +17,15 @@ The AI Cost Optimization dashboard shows how much you are spending on AI request
 
 ## API Endpoints (internal auth)
 
-| Method | Path | Description |
+| Method | Path                         | Description                                  |
 | ------ | ---------------------------- | -------------------------------------------- |
-| `GET` | `/ai/cost/report` | Recommendations for last N days (`?days=30`) |
-| `GET` | `/ai/cost/savings` | Projected total monthly savings |
-| `GET` | `/ai/cost/score` | Optimization score 0-100 |
-| `GET` | `/ai/cost/rules` | Active routing rules |
-| `POST` | `/ai/cost/rules` | Apply a recommendation as a rule |
-| `POST` | `/ai/cost/rules/:id/disable` | Disable a routing rule |
-| `POST` | `/ai/cost/analyze` | Trigger on-demand analysis |
+| `GET`  | `/ai/cost/report`            | Recommendations for last N days (`?days=30`) |
+| `GET`  | `/ai/cost/savings`           | Projected total monthly savings              |
+| `GET`  | `/ai/cost/score`             | Optimization score 0-100                     |
+| `GET`  | `/ai/cost/rules`             | Active routing rules                         |
+| `POST` | `/ai/cost/rules`             | Apply a recommendation as a rule             |
+| `POST` | `/ai/cost/rules/:id/disable` | Disable a routing rule                       |
+| `POST` | `/ai/cost/analyze`           | Trigger on-demand analysis                   |
 
 ## Quality Sampling
 

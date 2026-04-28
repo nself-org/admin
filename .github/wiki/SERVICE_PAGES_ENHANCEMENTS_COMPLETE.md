@@ -1132,29 +1132,33 @@ const [setupSteps, setSetupSteps] = useState([
 For each service page, complete these steps:
 
 1. **Create Enhanced Page**
- - [ ] Add Tabs component with all required tabs
- - [ ] Implement stats/metrics cards
- - [ ] Add service-specific features
- - [ ] Ensure responsive design
+
+- [ ] Add Tabs component with all required tabs
+- [ ] Implement stats/metrics cards
+- [ ] Add service-specific features
+- [ ] Ensure responsive design
 
 2. **Create API Routes**
- - [ ] Create all required API route files
- - [ ] Implement CLI delegation (call `nself service <name> <command>`)
- - [ ] Add proper error handling
- - [ ] Return standardized JSON response
+
+- [ ] Create all required API route files
+- [ ] Implement CLI delegation (call `nself service <name> <command>`)
+- [ ] Add proper error handling
+- [ ] Return standardized JSON response
 
 3. **Test Functionality**
- - [ ] Test all tabs and features
- - [ ] Verify CLI commands execute correctly
- - [ ] Check error states
- - [ ] Test responsive behavior
+
+- [ ] Test all tabs and features
+- [ ] Verify CLI commands execute correctly
+- [ ] Check error states
+- [ ] Test responsive behavior
 
 4. **Code Quality**
- - [ ] Run `pnpm run lint` - must have 0 errors
- - [ ] Run `pnpm run format` - auto-format all files
- - [ ] Run `pnpm run type-check` - must pass
- - [ ] Remove unused imports
- - [ ] Fix any ESLint warnings
+
+- [ ] Run `pnpm run lint` - must have 0 errors
+- [ ] Run `pnpm run format` - auto-format all files
+- [ ] Run `pnpm run type-check` - must pass
+- [ ] Remove unused imports
+- [ ] Fix any ESLint warnings
 
 ---
 

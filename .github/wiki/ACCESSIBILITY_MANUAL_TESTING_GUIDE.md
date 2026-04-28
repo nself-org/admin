@@ -13,47 +13,54 @@ Use this checklist when adding new features or pages:
 ### ✅ Keyboard Navigation (5 minutes per page)
 
 1. **Tab through entire page:**
- - [ ] Can navigate to all interactive elements
- - [ ] Tab order follows visual layout
- - [ ] Focus visible on all elements (2px blue ring)
- - [ ] No keyboard traps
+
+- [ ] Can navigate to all interactive elements
+- [ ] Tab order follows visual layout
+- [ ] Focus visible on all elements (2px blue ring)
+- [ ] No keyboard traps
 
 2. **Test keyboard actions:**
- - [ ] Enter activates buttons and links
- - [ ] Space activates buttons
- - [ ] Escape closes modals/dropdowns
- - [ ] Arrow keys work in custom widgets (tabs, menus)
+
+- [ ] Enter activates buttons and links
+- [ ] Space activates buttons
+- [ ] Escape closes modals/dropdowns
+- [ ] Arrow keys work in custom widgets (tabs, menus)
 
 3. **Skip navigation:**
- - [ ] Skip link appears on first Tab press
- - [ ] Skip link moves focus to main content
+
+- [ ] Skip link appears on first Tab press
+- [ ] Skip link moves focus to main content
 
 ### ✅ Screen Reader (10 minutes per page)
 
 **Using VoiceOver (Mac):** Cmd+F5 to enable
 
 1. **Navigate page structure:**
- - [ ] Page title announced correctly
- - [ ] Landmarks announced (banner, navigation, main)
- - [ ] Headings in logical order (H1 → H2 → H3)
+
+- [ ] Page title announced correctly
+- [ ] Landmarks announced (banner, navigation, main)
+- [ ] Headings in logical order (H1 → H2 → H3)
 
 2. **Test form fields:**
- - [ ] All labels announced before input
- - [ ] Required fields announced as "required"
- - [ ] Errors announced immediately (role="alert")
- - [ ] Error text associated with field
+
+- [ ] All labels announced before input
+- [ ] Required fields announced as "required"
+- [ ] Errors announced immediately (role="alert")
+- [ ] Error text associated with field
 
 3. **Test dynamic content:**
- - [ ] Loading states announced ("Loading...")
- - [ ] Status changes announced automatically
- - [ ] Alerts announced without navigation
- - [ ] Success/error messages announced
+
+- [ ] Loading states announced ("Loading...")
+- [ ] Status changes announced automatically
+- [ ] Alerts announced without navigation
+- [ ] Success/error messages announced
 
 4. **Test interactive elements:**
- - [ ] Buttons have descriptive labels
- - [ ] Links describe destination
- - [ ] Icon-only buttons have aria-label
- - [ ] Collapsible sections announce expanded/collapsed
+
+- [ ] Buttons have descriptive labels
+- [ ] Links describe destination
+- [ ] Icon-only buttons have aria-label
+- [ ] Collapsible sections announce expanded/collapsed
 
 ### ✅ Color Contrast (2 minutes per page)
 
@@ -62,10 +69,11 @@ Use this checklist when adding new features or pages:
 1. Inspect element → Styles panel → Color picker
 2. Check contrast ratio badge
 3. Verify:
- - [ ] Regular text: ≥ 4.5:1
- - [ ] Large text (18pt+): ≥ 3:1
- - [ ] UI components: ≥ 3:1
- - [ ] Focus indicators: ≥ 3:1
+
+- [ ] Regular text: ≥ 4.5:1
+- [ ] Large text (18pt+): ≥ 3:1
+- [ ] UI components: ≥ 3:1
+- [ ] Focus indicators: ≥ 3:1
 
 ---
 
@@ -312,8 +320,9 @@ import { Dialog } from '@headlessui/react'
 2. Get background color hex code
 3. Paste into tool
 4. Verify:
- - Normal text: WCAG AA (4.5:1) ✅
- - Large text: WCAG AA (3:1) ✅
+
+- Normal text: WCAG AA (4.5:1) ✅
+- Large text: WCAG AA (3:1) ✅
 
 ---
 
@@ -348,23 +357,23 @@ import { Dialog } from '@headlessui/react'
 
 ### Level A (Must Have)
 
-| Guideline | Requirement | Test |
+| Guideline                  | Requirement                       | Test                                |
 | -------------------------- | --------------------------------- | ----------------------------------- |
-| 1.1.1 Non-text Content | Images have alt text | Check all `<img>` have `alt` |
-| 1.3.1 Info & Relationships | Semantic HTML | Use `<nav>`, `<main>`, `<h1>`, etc. |
-| 2.1.1 Keyboard | All functions keyboard accessible | Tab through page |
-| 2.4.1 Bypass Blocks | Skip navigation link | First tab shows skip link |
-| 3.3.1 Error Identification | Errors clearly described | Errors have `role="alert"` |
-| 4.1.2 Name, Role, Value | All UI has accessible name | All buttons/links have labels |
+| 1.1.1 Non-text Content     | Images have alt text              | Check all `<img>` have `alt`        |
+| 1.3.1 Info & Relationships | Semantic HTML                     | Use `<nav>`, `<main>`, `<h1>`, etc. |
+| 2.1.1 Keyboard             | All functions keyboard accessible | Tab through page                    |
+| 2.4.1 Bypass Blocks        | Skip navigation link              | First tab shows skip link           |
+| 3.3.1 Error Identification | Errors clearly described          | Errors have `role="alert"`          |
+| 4.1.2 Name, Role, Value    | All UI has accessible name        | All buttons/links have labels       |
 
 ### Level AA (Should Have)
 
-| Guideline | Requirement | Test |
+| Guideline              | Requirement          | Test                          |
 | ---------------------- | -------------------- | ----------------------------- |
-| 1.4.3 Contrast | 4.5:1 text, 3:1 UI | Use contrast checker |
-| 2.4.7 Focus Visible | Focus always visible | Tab and verify outline |
-| 3.3.3 Error Suggestion | Errors suggest fix | Error text includes guidance |
-| 4.1.3 Status Messages | Changes announced | aria-live for dynamic content |
+| 1.4.3 Contrast         | 4.5:1 text, 3:1 UI   | Use contrast checker          |
+| 2.4.7 Focus Visible    | Focus always visible | Tab and verify outline        |
+| 3.3.3 Error Suggestion | Errors suggest fix   | Error text includes guidance  |
+| 4.1.3 Status Messages  | Changes announced    | aria-live for dynamic content |
 
 ---
 

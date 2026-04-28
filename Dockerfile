@@ -43,6 +43,7 @@ COPY postcss.config.js ./
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV NODE_ENV=production
 ENV STANDALONE=true
+ENV NODE_OPTIONS=--max-old-space-size=4096
 
 # Build the application in standalone mode
 RUN pnpm run build
@@ -83,7 +84,7 @@ RUN ARCH=$(uname -m) && \
     chmod +x /usr/local/bin/mkcert
 
 # Install nself CLI pre-built binary
-ARG NSELF_VERSION=1.0.11
+ARG NSELF_VERSION=1.0.13
 RUN ARCH=$(uname -m) && \
     if [ "$ARCH" = "x86_64" ]; then NSELF_ARCH="amd64"; \
     elif [ "$ARCH" = "aarch64" ]; then NSELF_ARCH="arm64"; \
@@ -117,7 +118,7 @@ ENV NEXT_TELEMETRY_DISABLED=1
 ENV HOSTNAME="0.0.0.0"
 # Port 3021 is the reserved port for nself-admin (not 3100, which is for Loki)
 ENV PORT=3021
-ENV ADMIN_VERSION=1.0.11
+ENV ADMIN_VERSION=1.0.13
 
 # Environment variables that can be set at runtime:
 # NSELF_PROJECT_PATH - Path to mounted project (default: /workspace)
@@ -127,7 +128,7 @@ ENV ADMIN_VERSION=1.0.11
 # Add labels for container metadata
 LABEL org.opencontainers.image.title="nself-admin"
 LABEL org.opencontainers.image.description="Web-based administration interface for nself CLI"
-LABEL org.opencontainers.image.version="1.0.11"
+LABEL org.opencontainers.image.version="1.0.13"
 LABEL org.opencontainers.image.vendor="nself.org"
 LABEL org.opencontainers.image.source="https://github.com/nself-org/admin"
 LABEL org.opencontainers.image.licenses="Proprietary - Free for personal use, Commercial license required"

@@ -297,11 +297,13 @@ docker run -d \
 1. Open `http://localhost:3021`
 2. You'll be prompted to set admin password (even if you had one before)
 3. Set a strong password:
- - Minimum 12 characters
- - At least 1 uppercase letter
- - At least 1 lowercase letter
- - At least 1 number
- - At least 1 special character
+
+- Minimum 12 characters
+- At least 1 uppercase letter
+- At least 1 lowercase letter
+- At least 1 number
+- At least 1 special character
+
 4. Click "Create Password"
 
 ### Step 6: Verify Database Migration
@@ -673,13 +675,13 @@ If you encounter issues not covered here:
    ```
 
 3. **Search GitHub Issues:**
- [github.com/nself-org/admin/issues](https://github.com/nself-org/admin/issues)
+   [github.com/nself-org/admin/issues](https://github.com/nself-org/admin/issues)
 
 4. **Ask Community:**
- [github.com/nself-org/admin/discussions](https://github.com/nself-org/admin/discussions)
+   [github.com/nself-org/admin/discussions](https://github.com/nself-org/admin/discussions)
 
 5. **Report Bug:**
- [github.com/nself-org/admin/issues/new](https://github.com/nself-org/admin/issues/new)
+   [github.com/nself-org/admin/issues/new](https://github.com/nself-org/admin/issues/new)
 
 ---
 
@@ -705,23 +707,27 @@ After migration, verify:
 After successful migration:
 
 1. **Explore New Features**
- - Try the new database console
- - Check out deployment workflows
- - Configure monitoring alerts
+
+- Try the new database console
+- Check out deployment workflows
+- Configure monitoring alerts
 
 2. **Update Documentation**
- - Review new user guide
- - Check updated API reference
+
+- Review new user guide
+- Check updated API reference
 
 3. **Security Review**
- - Audit access controls
- - Review secrets management
- - Check SSL configuration
+
+- Audit access controls
+- Review secrets management
+- Check SSL configuration
 
 4. **Performance Tuning**
- - Monitor resource usage
- - Optimize queries if needed
- - Configure caching
+
+- Monitor resource usage
+- Optimize queries if needed
+- Configure caching
 
 ---
 

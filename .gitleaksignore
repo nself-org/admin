@@ -1,0 +1,30 @@
+# .gitleaksignore — gitleaks v8 false-positive fingerprints
+#
+# All entries below are placeholder / example values in tests, docs, or UI fixtures.
+# None are real credentials. Allowlisted here so CI stays green.
+# Format: one fingerprint per line (commit:file:rule:line)
+# See .github/wiki/architecture/auth-bypass-fix.md for audit trail.
+
+# pk_test_abc123 placeholder in plugin-config.test.ts (test fixture)
+a54c97fe3d3d49e551070a0c7670da280892e93e:src/tests/plugin-config.test.ts:generic-api-key:67
+
+# nself_ab_1234... placeholder in api-keys test (test fixture)
+7dc8a41bc7c8aad20e18141efb85349a6e12006a:src/lib/api-keys/__tests__/api-keys.test.ts:generic-api-key:388
+
+# JWT_SECRET=jwt-secret-key-32-chars example in docs/Build-Process.md
+041260292f555d77c1f1e603dcb9595391388f83:docs/Build-Process.md:generic-api-key:220
+
+# eyJhbGci... truncated JWT example in docs/api/Reference.md
+041260292f555d77c1f1e603dcb9595391388f83:docs/api/Reference.md:generic-api-key:52
+
+# token: "a3f2d8c9b1e4..." placeholder in docs/architecture/database.md
+de380efade95986b7d6e886827f1683c6d03c3fb:docs/architecture/database.md:generic-api-key:82
+
+# Slack T00000000/B00000000/XXX... example URL in cicd/page.tsx (UI placeholder)
+807a5b2fab1a25b3a6c1f62b107912e980794ef9:src/app/deployment/cicd/page.tsx:slack-webhook-url:514
+
+# Slack T00000000/B00000000/XXX... example URL in webhooks/page.tsx (UI placeholder)
+807a5b2fab1a25b3a6c1f62b107912e980794ef9:src/app/tools/webhooks/page.tsx:slack-webhook-url:616
+
+# nsf_ci_abcdef... placeholder token in settings/page.tsx (UI example)
+807a5b2fab1a25b3a6c1f62b107912e980794ef9:src/app/settings/page.tsx:generic-api-key:423

@@ -62,37 +62,39 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   }
 
   try {
-    // Proxy to vibe_api CS_2 if running, otherwise return a stub session for local mode
-    let sessionData: object
+    const vibeRes = await fetch(`${VIBE_API_BASE}/session`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ target_env }),
+      signal: AbortSignal.timeout(5000),
+    })
 
-    try {
-      const vibeRes = await fetch(`${VIBE_API_BASE}/session`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ target_env }),
-        signal: AbortSignal.timeout(5000),
-      })
-
-      if (!vibeRes.ok) {
-        throw new Error(`vibe_api error: ${vibeRes.status}`)
-      }
-
-      sessionData = (await vibeRes.json()) as object
-    } catch {
-      // vibe_api not running — return stub session for UI development/local mode
-      sessionData = {
-        id: `local-${Date.now().toString(36)}`,
-        created_at: new Date().toISOString(),
-        target_env,
-        schema_snapshot: null,
-        _stub: true, // indicates this is a stub session (vibe_api not running)
-      }
+    if (!vibeRes.ok) {
+      return NextResponse.json(
+        {
+          error: 'Vibe AI service is offline. Start the vibe_api custom service (CS_2) to use Vibe-Code.',
+          service: 'vibe_api',
+        },
+        {
+          status: 503,
+          headers: { 'X-Service-Required': 'vibe_api' },
+        },
+      )
     }
 
+    const sessionData = (await vibeRes.json()) as object
     return NextResponse.json(sessionData)
-  } catch (err) {
-    const message = err instanceof Error ? err.message : 'Internal error'
-    return NextResponse.json({ error: message }, { status: 500 })
+  } catch {
+    return NextResponse.json(
+      {
+        error: 'Vibe AI service is offline. Start the vibe_api custom service (CS_2) to use Vibe-Code.',
+        service: 'vibe_api',
+      },
+      {
+        status: 503,
+        headers: { 'X-Service-Required': 'vibe_api' },
+      },
+    )
   }
 }
 
@@ -107,16 +109,30 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     })
 
     if (!vibeRes.ok) {
-      return NextResponse.json({ sessions: [], total: 0 })
+      return NextResponse.json(
+        {
+          error: 'Vibe AI service is offline. Start the vibe_api custom service (CS_2) to use Vibe-Code.',
+          service: 'vibe_api',
+        },
+        {
+          status: 503,
+          headers: { 'X-Service-Required': 'vibe_api' },
+        },
+      )
     }
 
     const data = (await vibeRes.json()) as object
     return NextResponse.json(data)
   } catch {
-    return NextResponse.json({
-      sessions: [],
-      total: 0,
-      _note: `vibe_api not reachable on port ${VIBE_API_PORT}`,
-    })
+    return NextResponse.json(
+      {
+        error: 'Vibe AI service is offline. Start the vibe_api custom service (CS_2) to use Vibe-Code.',
+        service: 'vibe_api',
+      },
+      {
+        status: 503,
+        headers: { 'X-Service-Required': 'vibe_api' },
+      },
+    )
   }
 }

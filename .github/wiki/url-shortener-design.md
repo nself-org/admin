@@ -34,10 +34,10 @@ interface AdminShortLink {
 
 ## API Routes
 
-| Method | Path | Purpose |
+| Method | Path                         | Purpose                                                                   |
 | ------ | ---------------------------- | ------------------------------------------------------------------------- |
-| `POST` | `/api/admin/shortlink` | Create a short link; body: `{ path: string }`; returns `{ slug: string }` |
-| `GET` | `/api/admin/shortlink/:slug` | Resolve a slug; returns `{ fullPath: string }` or 404 |
+| `POST` | `/api/admin/shortlink`       | Create a short link; body: `{ path: string }`; returns `{ slug: string }` |
+| `GET`  | `/api/admin/shortlink/:slug` | Resolve a slug; returns `{ fullPath: string }` or 404                     |
 
 ## Redirect Route
 

@@ -299,18 +299,18 @@ docker run -d \
 
 ### Required Variables
 
-| Variable | Description | Default |
+| Variable             | Description                  | Default      |
 | -------------------- | ---------------------------- | ------------ |
 | `NSELF_PROJECT_PATH` | Path to project in container | `/workspace` |
 
 ### Optional Variables
 
-| Variable | Description | Default |
+| Variable   | Description          | Default      |
 | ---------- | -------------------- | ------------ |
-| `NODE_ENV` | Environment mode | `production` |
-| `PORT` | Internal port | `3021` |
-| `DEBUG` | Enable debug logging | `false` |
-| `TZ` | Timezone | `UTC` |
+| `NODE_ENV` | Environment mode     | `production` |
+| `PORT`     | Internal port        | `3021`       |
+| `DEBUG`    | Enable debug logging | `false`      |
+| `TZ`       | Timezone             | `UTC`        |
 
 ### Setting Variables
 

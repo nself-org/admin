@@ -12,15 +12,15 @@ Version 0.0.8 · MIT License · Docker-ready
 
 ### Why nself Admin?
 
-| Feature | Description |
+| Feature                  | Description                                             |
 | ------------------------ | ------------------------------------------------------- |
-| **Zero-Config Start** | Launch a complete development stack in under 5 minutes |
-| **Intelligent Wizard** | 6-step configuration with smart defaults and validation |
-| **Real-Time Monitoring** | Live metrics, logs, and health checks for all services |
-| **Docker-First Design** | Runs in a container with zero footprint on your host |
-| **Plugin System** | Extend with Stripe, GitHub, Shopify integrations |
-| **40+ Templates** | Pre-configured for Node.js, Python, Go, Rust, and more |
-| **Multi-Environment** | Manage dev, staging, and production configs |
+| **Zero-Config Start**    | Launch a complete development stack in under 5 minutes  |
+| **Intelligent Wizard**   | 6-step configuration with smart defaults and validation |
+| **Real-Time Monitoring** | Live metrics, logs, and health checks for all services  |
+| **Docker-First Design**  | Runs in a container with zero footprint on your host    |
+| **Plugin System**        | Extend with Stripe, GitHub, Shopify integrations        |
+| **40+ Templates**        | Pre-configured for Node.js, Python, Go, Rust, and more  |
+| **Multi-Environment**    | Manage dev, staging, and production configs             |
 
 ---
 
@@ -70,14 +70,14 @@ Version 0.0.8 · MIT License · Docker-ready
 
 ## Technology Stack
 
-| Layer | Technology |
+| Layer     | Technology                       |
 | --------- | -------------------------------- |
-| Frontend | Next.js 16, React 19, TypeScript |
-| Styling | Tailwind CSS v4 |
-| State | Zustand |
-| Database | LokiJS (embedded) |
-| Container | Docker API via Dockerode |
-| Real-time | WebSockets, Server-Sent Events |
+| Frontend  | Next.js 16, React 19, TypeScript |
+| Styling   | Tailwind CSS v4                  |
+| State     | Zustand                          |
+| Database  | LokiJS (embedded)                |
+| Container | Docker API via Dockerode         |
+| Real-time | WebSockets, Server-Sent Events   |
 
 ---
 

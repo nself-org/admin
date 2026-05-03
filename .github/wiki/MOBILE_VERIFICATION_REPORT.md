@@ -23,35 +23,35 @@ nAdmin has **strong mobile responsiveness foundations** already in place:
 
 ### ✅ Fully Responsive (No Changes Needed)
 
-| Page | Status | Notes |
+| Page            | Status           | Notes                                                         |
 | --------------- | ---------------- | ------------------------------------------------------------- |
 | `/` (Dashboard) | ✅ **Excellent** | Grid cards stack properly, sparklines scale, bottom nav works |
-| `/login` | ✅ **Excellent** | Full-screen centered layout, large touch targets |
-| `/build` | ✅ **Excellent** | Full-screen wizard, step-by-step mobile-friendly |
-| `/config` | ✅ **Good** | Tab bar scrolls horizontally on mobile, controls wrap |
-| `/services` | ✅ **Excellent** | Grid → 2-col → 1-col stacking, metric cards responsive |
+| `/login`        | ✅ **Excellent** | Full-screen centered layout, large touch targets              |
+| `/build`        | ✅ **Excellent** | Full-screen wizard, step-by-step mobile-friendly              |
+| `/config`       | ✅ **Good**      | Tab bar scrolls horizontally on mobile, controls wrap         |
+| `/services`     | ✅ **Excellent** | Grid → 2-col → 1-col stacking, metric cards responsive        |
 
 ### ⚠️ Needs Minor Improvements
 
-| Page | Issues | Fix Needed |
+| Page                     | Issues                                        | Fix Needed                                    |
 | ------------------------ | --------------------------------------------- | --------------------------------------------- |
-| `/config/env` | Table with 3 columns may be cramped on mobile | Convert to accordion/card view on mobile |
-| `/services/postgresql` | Service detail tables not tested | Add horizontal scroll wrapper |
-| `/services/hasura` | Service detail tables not tested | Add horizontal scroll wrapper |
-| `/database/console` | SQL editor may be hard to use on mobile | Ensure Monaco editor scales properly |
-| `/database/sync` | Command output in pre/code blocks | Add horizontal scroll, reduce font size |
-| `/deployment/staging` | Deployment forms with many fields | Stack form fields vertically |
-| `/deployment/production` | Deployment forms with many fields | Stack form fields vertically |
-| `/monitor/prometheus` | Grafana iframe embed | Ensure iframe is responsive |
-| `/monitor/loki` | Log viewer table | Add horizontal scroll or convert to card view |
+| `/config/env`            | Table with 3 columns may be cramped on mobile | Convert to accordion/card view on mobile      |
+| `/services/postgresql`   | Service detail tables not tested              | Add horizontal scroll wrapper                 |
+| `/services/hasura`       | Service detail tables not tested              | Add horizontal scroll wrapper                 |
+| `/database/console`      | SQL editor may be hard to use on mobile       | Ensure Monaco editor scales properly          |
+| `/database/sync`         | Command output in pre/code blocks             | Add horizontal scroll, reduce font size       |
+| `/deployment/staging`    | Deployment forms with many fields             | Stack form fields vertically                  |
+| `/deployment/production` | Deployment forms with many fields             | Stack form fields vertically                  |
+| `/monitor/prometheus`    | Grafana iframe embed                          | Ensure iframe is responsive                   |
+| `/monitor/loki`          | Log viewer table                              | Add horizontal scroll or convert to card view |
 
 ### ❌ Critical Issues (Must Fix)
 
-| Page | Issue | Fix Required |
+| Page                | Issue                          | Fix Required                                                          |
 | ------------------- | ------------------------------ | --------------------------------------------------------------------- |
-| `/database/console` | SQL query results table | Wide tables overflow - add horizontal scroll + mobile table component |
-| `/system/resources` | Resource usage table | 6+ columns - convert to card layout on mobile |
-| `/tools/graphql` | GraphQL playground split panes | Split panes don't work well on mobile - stack vertically |
+| `/database/console` | SQL query results table        | Wide tables overflow - add horizontal scroll + mobile table component |
+| `/system/resources` | Resource usage table           | 6+ columns - convert to card layout on mobile                         |
+| `/tools/graphql`    | GraphQL playground split panes | Split panes don't work well on mobile - stack vertically              |
 
 ---
 
@@ -396,14 +396,14 @@ Bottom Navigation Bar
 
 ### Current Touch Targets
 
-| Element | Size | Status |
+| Element                | Size    | Status                  |
 | ---------------------- | ------- | ----------------------- |
-| Hamburger menu button | 44x44px | ✅ Perfect |
-| Bottom nav buttons | 48x48px | ✅ Perfect |
-| Primary action buttons | 44x48px | ✅ Perfect |
+| Hamburger menu button  | 44x44px | ✅ Perfect              |
+| Bottom nav buttons     | 48x48px | ✅ Perfect              |
+| Primary action buttons | 44x48px | ✅ Perfect              |
 | Icon buttons in tables | 32x32px | ⚠️ Small but acceptable |
-| Inline edit buttons | 24x24px | ❌ Too small |
-| Checkbox inputs | 16x16px | ❌ Too small |
+| Inline edit buttons    | 24x24px | ❌ Too small            |
+| Checkbox inputs        | 16x16px | ❌ Too small            |
 
 ### Recommendations
 

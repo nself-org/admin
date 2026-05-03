@@ -1,0 +1,143 @@
+name: Build Size Gate
+
+# Guards against heap regressions and unexpected bundle size growth in admin.
+# Fails a PR if the reported Next.js build first-load JS exceeds HEAP_LIMIT_KB.
+#
+# Complements:
+#   ci.yml              — standard build + lint + type-check
+#   version-lockstep.yml — admin↔cli version lockstep
+#
+# Authority: P98 S98-02 T11; admin CRUNCH hardening.
+
+on:
+  pull_request:
+    paths:
+      - 'src/**'
+      - 'package.json'
+      - 'pnpm-lock.yaml'
+      - 'next.config.mjs'
+      - '.github/workflows/build-size-gate.yml'
+  push:
+    branches:
+      - main
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  # Maximum acceptable first-load JS for any route, in kB.
+  # This is the shared JS chunk that every page loads. Adjust upward only
+  # via a deliberate PR that explains the new dependencies.
+  HEAP_LIMIT_KB: 512
+
+jobs:
+  build-size:
+    name: Build size check
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.28.0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build (with size output)
+        id: build
+        run: |
+          set -euo pipefail
+          # Capture Next.js build output. The build writes a size summary to stdout.
+          pnpm build 2>&1 | tee /tmp/next-build.log
+          echo "build_log=/tmp/next-build.log" >> "$GITHUB_OUTPUT"
+
+      - name: Parse first-load JS sizes
+        id: sizes
+        run: |
+          set -euo pipefail
+          BUILD_LOG="${{ steps.build.outputs.build_log }}"
+
+          # Extract "First Load JS shared by all" line from Next.js output.
+          # Next.js prints something like: "First Load JS shared by all  210 kB"
+          SHARED_LINE=$(grep -E 'First Load JS shared by all' "${BUILD_LOG}" | tail -1 || true)
+
+          if [ -z "${SHARED_LINE}" ]; then
+            printf '::warning::Cannot find "First Load JS shared by all" in build output — skipping heap gate\n'
+            echo "shared_kb=0" >> "$GITHUB_OUTPUT"
+            echo "gate_skipped=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          echo "gate_skipped=false" >> "$GITHUB_OUTPUT"
+
+          # Parse the kB number. Handles "210 kB" and "1.2 MB" (converted to kB).
+          SIZE_RAW=$(printf '%s\n' "${SHARED_LINE}" | grep -oE '[0-9]+(\.[0-9]+)? (kB|MB)' | tail -1)
+          SIZE_NUM=$(printf '%s\n' "${SIZE_RAW}" | grep -oE '[0-9]+(\.[0-9]+)?')
+          SIZE_UNIT=$(printf '%s\n' "${SIZE_RAW}" | grep -oE '(kB|MB)$')
+
+          if [ "${SIZE_UNIT}" = "MB" ]; then
+            # Convert MB → kB (integer arithmetic; floor is conservative)
+            SHARED_KB=$(awk "BEGIN {printf \"%d\", ${SIZE_NUM} * 1024}")
+          else
+            SHARED_KB=$(awk "BEGIN {printf \"%d\", ${SIZE_NUM}}")
+          fi
+
+          printf 'First-load JS shared chunk: %s kB\n' "${SHARED_KB}"
+          echo "shared_kb=${SHARED_KB}" >> "$GITHUB_OUTPUT"
+
+      - name: Heap gate
+        if: steps.sizes.outputs.gate_skipped == 'false'
+        run: |
+          set -euo pipefail
+          SHARED_KB="${{ steps.sizes.outputs.shared_kb }}"
+          LIMIT="${HEAP_LIMIT_KB}"
+
+          printf 'First-load JS: %s kB  |  limit: %s kB\n' "${SHARED_KB}" "${LIMIT}"
+
+          if [ "${SHARED_KB}" -gt "${LIMIT}" ]; then
+            printf '::error::Build size regression: first-load JS is %s kB (limit: %s kB). '\
+'Review new dependencies added in this PR or raise HEAP_LIMIT_KB with justification.\n' \
+              "${SHARED_KB}" "${LIMIT}"
+            exit 1
+          fi
+
+          printf '  OK  first-load JS %s kB <= %s kB\n' "${SHARED_KB}" "${LIMIT}"
+
+      - name: Upload build log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: next-build-log
+          path: /tmp/next-build.log
+          retention-days: 7
+
+  # Single required status check name for branch protection.
+  summary:
+    name: Summary
+    runs-on: ubuntu-latest
+    needs: [build-size]
+    if: always()
+    steps:
+      - name: Report status
+        run: |
+          STATUS="${{ needs.build-size.result }}"
+          if [ "${STATUS}" = "success" ]; then
+            echo "Build size gate passed."
+          elif [ "${STATUS}" = "skipped" ]; then
+            echo "Build size gate skipped."
+          else
+            echo "Build size gate FAILED — first-load JS exceeds limit. See build-size job above."
+            exit 1
+          fi

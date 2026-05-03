@@ -89,10 +89,12 @@ Add your first API service:
 
 1. Click **"Add Service"**
 2. Enter:
- - Name: `api`
- - Framework: `Express (TypeScript)`
- - Port: `4001`
- - Route: `api`
+
+- Name: `api`
+- Framework: `Express (TypeScript)`
+- Port: `4001`
+- Route: `api`
+
 3. Click **Next** →
 
 ### Step 5: Frontend Apps
@@ -101,9 +103,11 @@ Add your frontend:
 
 1. Click **"Add Your First App"**
 2. Enter:
- - Name: `Web App`
- - Port: `3001`
- - URL: `app`
+
+- Name: `Web App`
+- Port: `3001`
+- URL: `app`
+
 3. Click **Next** →
 
 ### Step 6: Review & Build
@@ -139,13 +143,13 @@ nAdmin will launch:
 
 Once running, you can access:
 
-| Service | URL | Credentials |
+| Service              | URL                       | Credentials           |
 | -------------------- | ------------------------- | --------------------- |
-| **nAdmin Dashboard** | http://localhost:3021 | Your password |
-| **Hasura Console** | http://localhost:8080 | Admin secret in .env |
-| **API Service** | http://api.localhost | No auth required |
-| **MinIO Console** | http://localhost:9001 | minioadmin/minioadmin |
-| **Frontend App** | http://app.localhost:3001 | Your app |
+| **nAdmin Dashboard** | http://localhost:3021     | Your password         |
+| **Hasura Console**   | http://localhost:8080     | Admin secret in .env  |
+| **API Service**      | http://api.localhost      | No auth required      |
+| **MinIO Console**    | http://localhost:9001     | minioadmin/minioadmin |
+| **Frontend App**     | http://app.localhost:3001 | Your app              |
 
 ## 🎉 Congratulations
 

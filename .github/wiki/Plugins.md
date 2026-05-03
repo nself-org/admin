@@ -10,15 +10,15 @@ nself Admin provides a **visual interface** for managing plugins installed via t
 
 ## What nself Admin Provides
 
-| Feature | Description |
+| Feature               | Description                                                       |
 | --------------------- | ----------------------------------------------------------------- |
-| **Plugin Dashboard** | Visual overview of installed and available plugins |
-| **Install Wizard** | Guided installation with environment variable forms |
-| **Configuration UI** | Edit plugin settings without touching .env files |
-| **Sync Controls** | One-click sync with real-time progress |
-| **Webhook Monitor** | View and retry webhook events |
+| **Plugin Dashboard**  | Visual overview of installed and available plugins                |
+| **Install Wizard**    | Guided installation with environment variable forms               |
+| **Configuration UI**  | Edit plugin settings without touching .env files                  |
+| **Sync Controls**     | One-click sync with real-time progress                            |
+| **Webhook Monitor**   | View and retry webhook events                                     |
 | **Plugin Dashboards** | Plugin-specific analytics (Stripe revenue, GitHub activity, etc.) |
-| **Schema Viewer** | Browse tables created by plugins |
+| **Schema Viewer**     | Browse tables created by plugins                                  |
 
 ---
 

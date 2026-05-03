@@ -198,9 +198,10 @@ pnpm dev --turbo
    ```
 
 2. **Make your changes**
- - Edit files
- - Add tests
- - Update documentation
+
+- Edit files
+- Add tests
+- Update documentation
 
 3. **Run quality checks**
 
@@ -212,9 +213,10 @@ pnpm dev --turbo
    ```
 
 4. **Test manually**
- - Start dev server
- - Test in browser
- - Check console for errors
+
+- Start dev server
+- Test in browser
+- Check console for errors
 
 5. **Commit changes**
 

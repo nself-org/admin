@@ -14,7 +14,7 @@ on:
   workflow_dispatch:
 
 env:
-  LICENSE_GATE_MODE: warn  # Change to "fail" after 2026-05-20 triage window
+  LICENSE_GATE_MODE: fail  # Flipped from warn → fail on 2026-05-03 (P98 S13-T03). Triage window complete — audit clean.
 
 jobs:
   node-license-gate:

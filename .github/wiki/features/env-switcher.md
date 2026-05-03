@@ -6,11 +6,11 @@ The Admin UI environment switcher lets you control a local, staging, or producti
 
 ## Environments
 
-| Environment | Default URL | Notes |
+| Environment | Default URL                                               | Notes                                    |
 | ----------- | --------------------------------------------------------- | ---------------------------------------- |
-| Local | `http://localhost` | `nself start` stack on developer machine |
-| Staging | configurable (default: `https://staging.your-domain.com`) | Hetzner staging server |
-| Production | configurable | **Red-tint guard active** |
+| Local       | `http://localhost`                                        | `nself start` stack on developer machine |
+| Staging     | configurable (default: `https://staging.your-domain.com`) | Hetzner staging server                   |
+| Production  | configurable                                              | **Red-tint guard active**                |
 
 ---
 

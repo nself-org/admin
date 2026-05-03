@@ -25,6 +25,7 @@
     "dev": "next dev --turbo -p ${PORT:-3021}",
     "build": "next build --webpack",
     "build:analyze": "ANALYZE=true next build --webpack",
+    "build:profile": "NODE_OPTIONS='--max-old-space-size=4096' ANALYZE=true next build --webpack 2>&1 | tee .next/build-profile.log",
     "start": "next start -p ${PORT:-3021}",
     "lint": "eslint src",
     "type-check": "tsc --noEmit",

@@ -19,11 +19,11 @@ NSELF_ADMIN_SSO_HEADER_NAME=CF-Access-Authenticated-User-Email
 NSELF_ADMIN_SSO_AUTO_PROVISION=false
 ```
 
-| Variable | Default | Purpose |
+| Variable                         | Default                              | Purpose                                             |
 | -------------------------------- | ------------------------------------ | --------------------------------------------------- |
-| `NSELF_ADMIN_SSO_HEADER_ENABLED` | `false` | Enable SSO header auto-login |
-| `NSELF_ADMIN_SSO_HEADER_NAME` | `CF-Access-Authenticated-User-Email` | Name of the header carrying the user's email |
-| `NSELF_ADMIN_SSO_AUTO_PROVISION` | `false` | Allow unknown emails to create sessions (see below) |
+| `NSELF_ADMIN_SSO_HEADER_ENABLED` | `false`                              | Enable SSO header auto-login                        |
+| `NSELF_ADMIN_SSO_HEADER_NAME`    | `CF-Access-Authenticated-User-Email` | Name of the header carrying the user's email        |
+| `NSELF_ADMIN_SSO_AUTO_PROVISION` | `false`                              | Allow unknown emails to create sessions (see below) |
 
 ## Auto-provision
 

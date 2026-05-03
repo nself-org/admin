@@ -36,24 +36,35 @@ describe('GET /api/account/me', () => {
     expect(res.status).toBe(401)
   })
 
-  it('returns stub data when NSELF_AUTH_URL is not set', async () => {
+  it('returns 503 with X-Service-Required: auth when NSELF_AUTH_URL is not set', async () => {
     delete process.env.NSELF_AUTH_URL
     const res = await GET(makeRequest())
     const data = await res.json()
 
-    expect(res.status).toBe(200)
-    expect(data.success).toBe(true)
-    expect(data.data).toHaveProperty('email')
-    expect(data.data).toHaveProperty('tier')
-    expect(data.data).toHaveProperty('licenseCount')
-    expect(data.data).toHaveProperty('lastLogin')
+    expect(res.status).toBe(503)
+    expect(res.headers.get('X-Service-Required')).toBe('auth')
+    expect(data.success).toBe(false)
+    expect(data.service).toBe('auth')
   })
 
-  it('returns 200 success stub when NSELF_AUTH_URL is empty string', async () => {
+  it('returns 503 with X-Service-Required: auth when NSELF_AUTH_URL is empty string', async () => {
     process.env.NSELF_AUTH_URL = ''
     const res = await GET(makeRequest())
     const data = await res.json()
-    expect(res.status).toBe(200)
-    expect(data.success).toBe(true)
+
+    expect(res.status).toBe(503)
+    expect(res.headers.get('X-Service-Required')).toBe('auth')
+    expect(data.success).toBe(false)
+  })
+
+  it('returns 503 when auth service is unreachable', async () => {
+    process.env.NSELF_AUTH_URL = 'http://127.0.0.1:19999'
+    // fetch will throw ECONNREFUSED — the route should catch it and return 503
+    const res = await GET(makeRequest())
+    const data = await res.json()
+
+    expect(res.status).toBe(503)
+    expect(res.headers.get('X-Service-Required')).toBe('auth')
+    expect(data.success).toBe(false)
   })
 })

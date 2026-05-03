@@ -59,7 +59,8 @@ export async function GET(request: NextRequest): Promise<Response> {
     // vibe_api responded but with a non-OK status
     return new Response(
       JSON.stringify({
-        error: 'Vibe AI service is offline. Start the vibe_api custom service (CS_2) to use Vibe-Code.',
+        error:
+          'Vibe AI service is offline. Start the vibe_api custom service (CS_2) to use Vibe-Code.',
         service: 'vibe_api',
       }),
       {
@@ -74,7 +75,8 @@ export async function GET(request: NextRequest): Promise<Response> {
     // vibe_api not reachable (ECONNREFUSED, timeout, etc.)
     return new Response(
       JSON.stringify({
-        error: 'Vibe AI service is offline. Start the vibe_api custom service (CS_2) to use Vibe-Code.',
+        error:
+          'Vibe AI service is offline. Start the vibe_api custom service (CS_2) to use Vibe-Code.',
         service: 'vibe_api',
       }),
       {

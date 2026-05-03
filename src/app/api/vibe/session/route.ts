@@ -72,7 +72,8 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     if (!vibeRes.ok) {
       return NextResponse.json(
         {
-          error: 'Vibe AI service is offline. Start the vibe_api custom service (CS_2) to use Vibe-Code.',
+          error:
+            'Vibe AI service is offline. Start the vibe_api custom service (CS_2) to use Vibe-Code.',
           service: 'vibe_api',
         },
         {
@@ -87,7 +88,8 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   } catch {
     return NextResponse.json(
       {
-        error: 'Vibe AI service is offline. Start the vibe_api custom service (CS_2) to use Vibe-Code.',
+        error:
+          'Vibe AI service is offline. Start the vibe_api custom service (CS_2) to use Vibe-Code.',
         service: 'vibe_api',
       },
       {
@@ -111,7 +113,8 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     if (!vibeRes.ok) {
       return NextResponse.json(
         {
-          error: 'Vibe AI service is offline. Start the vibe_api custom service (CS_2) to use Vibe-Code.',
+          error:
+            'Vibe AI service is offline. Start the vibe_api custom service (CS_2) to use Vibe-Code.',
           service: 'vibe_api',
         },
         {
@@ -126,7 +129,8 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
   } catch {
     return NextResponse.json(
       {
-        error: 'Vibe AI service is offline. Start the vibe_api custom service (CS_2) to use Vibe-Code.',
+        error:
+          'Vibe AI service is offline. Start the vibe_api custom service (CS_2) to use Vibe-Code.',
         service: 'vibe_api',
       },
       {

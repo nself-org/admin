@@ -37,11 +37,17 @@ export function getCurrentUserName(): string {
 }
 
 /**
- * Check if user is authenticated
- * For client-side use
+ * Check if user is authenticated (client-side approximation).
+ *
+ * NOTE: The nself-session cookie is httpOnly — it is intentionally invisible to
+ * JavaScript, so document.cookie cannot be used to detect it.  This function
+ * returns false in all browser contexts.  Rely on the AuthContext (which calls
+ * /api/auth/check on mount) for accurate authentication state.  This function
+ * is retained for API surface compatibility but should not be used for access
+ * control decisions.
  */
 export function isAuthenticated(): boolean {
-  // Check if session cookie exists
-  if (typeof document === 'undefined') return false
-  return document.cookie.includes('session=')
+  // httpOnly cookies are not readable by JavaScript; always return false.
+  // Use useAuth() / AuthContext.isAuthenticated for real auth state.
+  return false
 }

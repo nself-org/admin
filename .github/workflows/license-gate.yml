@@ -25,7 +25,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: "22"
 
       - name: Install pnpm
         uses: pnpm/action-setup@v4
@@ -40,12 +40,19 @@ jobs:
           # Install license-checker
           pnpx license-checker --summary --excludePrivatePackages 2>/dev/null || true
 
-          # Check for AGPL/SSPL
+          # Check for AGPL/SSPL, honoring .github/license-allowlist.json
           AGPL_SSPL=$(pnpx license-checker --json --excludePrivatePackages 2>/dev/null | \
             node -e "
-              const d = JSON.parse(require('fs').readFileSync('/dev/stdin','utf8'));
+              const fs = require('fs');
+              const d = JSON.parse(fs.readFileSync('/dev/stdin','utf8'));
+              let allowlist = {};
+              try {
+                const cfg = JSON.parse(fs.readFileSync('.github/license-allowlist.json','utf8'));
+                allowlist = cfg.allowlist || {};
+              } catch (e) { /* no allowlist file — treat as empty */ }
               const bad = Object.entries(d)
                 .filter(([k,v]) => /AGPL|SSPL/i.test(v.licenses || ''))
+                .filter(([k,v]) => !allowlist[k])
                 .map(([k,v]) => k + ': ' + v.licenses);
               process.stdout.write(bad.join('\n'));
             " || echo "")
@@ -56,14 +63,14 @@ jobs:
             echo "$AGPL_SSPL"
             echo ""
             echo "Action required: remove or replace the offending dependency"
-            echo "Allowlist: add to .github/license-allowlist.txt with justification"
+            echo "False positive? Add to .github/license-allowlist.json with justification"
             if [ "$LICENSE_GATE_MODE" = "fail" ]; then
               exit 1
             else
               echo "WARN-ONLY MODE: not failing PR (triage window active until 2026-05-20)"
             fi
           else
-            echo "PASS: No AGPL/SSPL licenses found in admin/ dependencies"
+            echo "PASS: No AGPL/SSPL licenses found in admin/ dependencies (allowlist honored)"
           fi
 
       - name: Generate THIRD_PARTY_LICENSES.md

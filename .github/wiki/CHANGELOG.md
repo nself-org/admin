@@ -5,6 +5,102 @@ All notable changes to nself-admin will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.18] - PENDING (P99 Sprint 3.5 release cascade)
+
+P99 Sprints 3.1–3.3 patch release (CLI ↔ Admin lockstep at v1.0.18). Pairs with plugins-pro v1.1.6. Filled by Sprint 3.4 (this sprint) — concrete bullets land when sprints 3.1/3.2/3.3 complete.
+
+### Fixed
+
+<!-- Sprint 3.1: admin /environments page mock removal — fill from sprint completion notes -->
+<!-- Sprint 3.1: admin benchmark mock data — fill -->
+<!-- Sprint 3.1: admin np-tables fallback — fill -->
+<!-- Sprint 3.1: vercel.json X-Nself-Version dynamic — fill -->
+<!-- Sprint 3.1 T11: web/org releases page hardcoded version — fill -->
+
+### Security
+
+<!-- Sprint 3.3: CSP enforce mode (overlap with web/) — fill -->
+
+---
+
+## [1.0.17] - PENDING (P99 Sprint 2.6 release cascade)
+
+P99 Sprints 2.1–2.5 patch release (CLI ↔ Admin lockstep at v1.0.17). Filled by Sprint 2.6 — bullets land when sprints 2.1–2.5 complete.
+
+### Added
+
+<!-- Sprint 2.1: plugin marketplace UI updates from contract integrity — fill -->
+<!-- Sprint 2.5: ops hygiene admin page additions — fill -->
+
+---
+
+## [1.0.16] - PENDING (P99 Sprint 1.8 release cascade)
+
+P99 reliability + data-integrity + security-lockdown patch release. Bundles unreleased v1.0.14 + v1.0.15 work plus full P99 Sprints 1.1–1.7. CLI ↔ Admin lockstep maintained at v1.0.16. Plugins-pro paired patch is v1.1.4.
+
+User-action items (T01–T03, T18, T04+T05) from the Sprint 1.8 prep are NOT in this release; they land in the next patch.
+
+### Added
+
+- **Blue-green/canary deploy state file with atomic write + 0600 perms** (1.1.T06+T06-FIX).
+- **mux audit queue + 1s flusher** (1.2.T05).
+- **Stripe `Idempotency-Key` shared helper** (1.2.T06+T07).
+- **Hasura row filters on `np_*` tables** (1.3.T01+T02). Row-level isolation enforced across the full `np_*` surface; doctor verifies coverage.
+- **SSRF guard shared module** (1.3.T05).
+- **Ollama installer SHA pinning + verify pipeline** (1.3.T08).
+- **Loki retention extended to 30d** (1.6.T11). `cli/internal/compose/monitoring/loki.go` `DefaultLokiConfig.RetentionPeriod` now `720h` (was `168h`).
+
+### Changed
+
+- **mux Gmail timeout retry telemetry split** (1.2.T01). Retry counter decomposed into `attempt`, `outcome`, `latency_ms`.
+- **HTTP timeout sweep — 17 CLI sites migrated to scoped `httptimeout`/`httpclient`** (1.4 series); `forbidigo` lint blocks new bare `http.Client{}` usage.
+- **GitHub Actions pinned to commit SHAs across 17 workflows** (1.5.T09 + T13). Node runners moved 20 → 22 in lockstep.
+- **homebrew formula audit hardening** (1.5.T16).
+- **license-gate workflow updated for AGPL ua-parser-js → v1 MIT** (1.5.T17+T17b).
+- **Version bumped to v1.0.16** to maintain lockstep with CLI v1.0.16 (per ɳSelf CLI ↔ Admin version-lockstep policy).
+
+### Fixed
+
+- **mux `SafeGo` panic guards** (1.1.T01).
+- **Cron stagger jitter (0–60s)** (1.1.T02). Prevents thundering-herd on the top of the hour.
+- **nginx healthcheck endpoint** returns 200 on `/healthz` consistently across reload cycles (1.1.T03).
+- **Identifier sanitizer error returns** (1.1.T04). No more silent truncation.
+- **Plugin scaffold panic→error** (1.1.T05).
+- **mux Gmail timeout retry** with telemetry split (1.2.T01).
+- **claw DLQ + tiered retry (5m / 30m / 2h / 24h)** (1.2.T02).
+- **Telegram webhook ingress validation** (1.2.T03).
+- **mux nil `AccountEmail` → DLQ guard** (1.2.T04). Nil-account events now route to DLQ instead of nil-deref panic.
+- **Admin yaml syntax fix** (1.5.T08).
+- **GH Actions failures: Node 20 → 22 across 17 workflows** (1.5.T13).
+- **Web/org CSP smoke test tsx loader** (1.5.T14) and **4 web/org check workflows** (1.5.T15).
+
+### Security
+
+- **ai SHA-256 audit hashing** (1.3.T04). All ai-plugin audit log entries hashed with SHA-256 (was MD5).
+- **admin CSP nonce + httpOnly session cookies** (1.3.T06+T07). Inline scripts gated by per-request nonce; session cookie set httpOnly + Secure + SameSite=Strict.
+- **mux attachment path-traversal hardening** (1.3.T10).
+- **License pubkey ldflag pin (SEC-10)** (1.3.T11). `LICENSE_PUBLIC_KEY_OVERRIDE` env var removed.
+- **Fuzz test on identifier sanitizer** (1.3.T03). 1M+ iterations against the sanitizer regex.
+
+### Internal
+
+- **plugins-pro CI checkout fixes** for ntask iOS + sibling workflows (1.5.T07+T07b).
+- **clawde AI action SHA-pinned replacement** (1.5.T11).
+- **nchat tests env fix** (1.5.T09), **nclaw + ntv plugins-pro PAT** (1.5.T10).
+- **plugins-pro auth-enterprise + byok import path fixes** (1.5.T06b/c).
+- **HTTP timeout sweep — 76 plugins-pro sites migrated** (1.4 series, plugins-pro side; total ecosystem footprint 93 sites).
+- **Pricing/brand sweep:** canonical `$0.99 / $3.99 / $39.99` across 5 READMEs + `cli/README` + 11 brand-voice fixes; `nclaw` indigo → sky-500 (18 occurrences); `nMedia` → `nTV`; `ClawDE+` → `ClawDE`.
+- **DR + ops:** Hasura migration runbook now ACTIONABLE (PostgREST primary, RTO < 4h); Stripe failover (Lemon Squeezy) PREP runbook published.
+- **Doctrine:** `nchat install.sh` 15 `docker compose` invocations → `nself` CLI (nSelf-First); LICENSING_SPEC doc-drift cleanup queued.
+
+### Notes
+
+- v1.0.14 + v1.0.15 work was never tagged separately; both batches are folded into v1.0.16.
+- CLI ships at v1.0.16 in lockstep per CLI ↔ Admin lockstep hard rule.
+- Plugins-pro ships v1.1.4 alongside.
+
+---
+
 ## [1.0.11] - 2026-04-25
 
 ### Security

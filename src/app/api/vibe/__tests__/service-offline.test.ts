@@ -56,7 +56,9 @@ describe('vibe routes — vibe_api offline returns 503, no stub data', () => {
 
     // Simulate ECONNREFUSED from vibe_api
     global.fetch = jest.fn().mockRejectedValue(
-      Object.assign(new Error('fetch failed'), { cause: { code: 'ECONNREFUSED' } }),
+      Object.assign(new Error('fetch failed'), {
+        cause: { code: 'ECONNREFUSED' },
+      }),
     )
   })
 
@@ -68,10 +70,9 @@ describe('vibe routes — vibe_api offline returns 503, no stub data', () => {
   describe('POST /api/vibe/session', () => {
     it('returns 503 with X-Service-Required: vibe_api when vibe_api is unreachable', async () => {
       const { POST } = await import('../session/route')
-      const req = makePostRequest(
-        'http://localhost:3021/api/vibe/session',
-        { target_env: 'local' },
-      )
+      const req = makePostRequest('http://localhost:3021/api/vibe/session', {
+        target_env: 'local',
+      })
       const res = await POST(req)
       const data = await res.json()
 
@@ -87,10 +88,10 @@ describe('vibe routes — vibe_api offline returns 503, no stub data', () => {
   describe('POST /api/vibe/generate', () => {
     it('returns 503 with X-Service-Required: vibe_api when vibe_api is unreachable', async () => {
       const { POST } = await import('../generate/route')
-      const req = makePostRequest(
-        'http://localhost:3021/api/vibe/generate',
-        { session_id: 'sess-001', prompt: 'Add a comments table' },
-      )
+      const req = makePostRequest('http://localhost:3021/api/vibe/generate', {
+        session_id: 'sess-001',
+        prompt: 'Add a comments table',
+      })
       const res = await POST(req)
       const data = await res.json()
 
@@ -152,10 +153,9 @@ describe('vibe routes — disabled returns 503 (no stub)', () => {
   it('POST /api/vibe/session returns 503 when vibe disabled', async () => {
     jest.resetModules()
     const { POST } = await import('../session/route')
-    const req = makePostRequest(
-      'http://localhost:3021/api/vibe/session',
-      { target_env: 'local' },
-    )
+    const req = makePostRequest('http://localhost:3021/api/vibe/session', {
+      target_env: 'local',
+    })
     const res = await POST(req)
     const data = await res.json()
     expect(res.status).toBe(503)

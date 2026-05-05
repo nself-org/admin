@@ -17,11 +17,11 @@ Both route groups now return **503 Service Unavailable** with an `X-Service-Requ
 
 ### `/api/account/me`
 
-| Condition | Before | After |
-|-----------|--------|-------|
-| `NSELF_AUTH_URL` unset | 200 with fake operator record | 503 `X-Service-Required: auth` |
-| Auth service unreachable | 503 (already correct) | 503 `X-Service-Required: auth` |
-| Auth service returns non-OK | Upstream status (already correct) | Upstream status (unchanged) |
+| Condition                   | Before                            | After                          |
+| --------------------------- | --------------------------------- | ------------------------------ |
+| `NSELF_AUTH_URL` unset      | 200 with fake operator record     | 503 `X-Service-Required: auth` |
+| Auth service unreachable    | 503 (already correct)             | 503 `X-Service-Required: auth` |
+| Auth service returns non-OK | Upstream status (already correct) | Upstream status (unchanged)    |
 
 Response shape on 503:
 
@@ -35,12 +35,12 @@ Response shape on 503:
 
 ### `/api/vibe/{generate,stream,session}`
 
-| Route | Condition | Before | After |
-|-------|-----------|--------|-------|
-| POST `/vibe/session` | vibe_api unreachable | 200 with `_stub: true` session | 503 `X-Service-Required: vibe_api` |
-| POST `/vibe/generate` | vibe_api unreachable | 200 with stub SQL + TSX | 503 `X-Service-Required: vibe_api` |
-| GET `/vibe/stream` | vibe_api unreachable | 200 SSE stub stream | 503 `X-Service-Required: vibe_api` |
-| GET `/vibe/session` (list) | vibe_api unreachable | 200 empty list | 503 `X-Service-Required: vibe_api` |
+| Route                      | Condition            | Before                         | After                              |
+| -------------------------- | -------------------- | ------------------------------ | ---------------------------------- |
+| POST `/vibe/session`       | vibe_api unreachable | 200 with `_stub: true` session | 503 `X-Service-Required: vibe_api` |
+| POST `/vibe/generate`      | vibe_api unreachable | 200 with stub SQL + TSX        | 503 `X-Service-Required: vibe_api` |
+| GET `/vibe/stream`         | vibe_api unreachable | 200 SSE stub stream            | 503 `X-Service-Required: vibe_api` |
+| GET `/vibe/session` (list) | vibe_api unreachable | 200 empty list                 | 503 `X-Service-Required: vibe_api` |
 
 Response shape on 503:
 
@@ -62,11 +62,11 @@ The banner includes a link to the Services page so the operator can start the re
 
 ## Env Vars
 
-| Var | Default | Purpose |
-|-----|---------|---------|
-| `NSELF_AUTH_URL` | *(unset)* | URL of the O04 auth service. When unset, `/api/account/me` returns 503. |
-| `NSELF_VIBE_ENABLED` | `false` | Must be `true` for vibe routes to attempt upstream contact. |
-| `NSELF_VIBE_PORT` | `8003` | Port where vibe_api CS_2 listens. |
+| Var                  | Default   | Purpose                                                                 |
+| -------------------- | --------- | ----------------------------------------------------------------------- |
+| `NSELF_AUTH_URL`     | _(unset)_ | URL of the O04 auth service. When unset, `/api/account/me` returns 503. |
+| `NSELF_VIBE_ENABLED` | `false`   | Must be `true` for vibe routes to attempt upstream contact.             |
+| `NSELF_VIBE_PORT`    | `8003`    | Port where vibe_api CS_2 listens.                                       |
 
 ## Testing
 

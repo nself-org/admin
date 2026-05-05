@@ -60,11 +60,20 @@ function buildCsp(nonce: string): string {
   const isProd = process.env.NODE_ENV === 'production'
 
   if (isProd) {
-    // Production: nonce-based, no unsafe-eval, no unsafe-inline for scripts
+    // Production: nonce-based script-src — no unsafe-eval, no unsafe-inline for scripts.
+    // style-src retains 'unsafe-inline' because React JSX `style={{...}}` props render
+    // as HTML element style attributes (e.g. <div style="width:50%">).  The CSP spec
+    // provides no nonce/hash mechanism for element-level style attributes — nonces and
+    // hashes only apply to <style> blocks and <link rel="stylesheet">.  All 144+
+    // occurrences of style={{...}} in this codebase are dynamic values (percentages,
+    // computed widths) that cannot be replaced with static Tailwind classes without
+    // significant refactor out of scope for this ticket.  The XSS risk surface for
+    // style-src is substantially lower than script-src; blocking scripts (done via
+    // nonce) is the primary XSS defense.
     return [
       "default-src 'self'",
       `script-src 'self' 'nonce-${nonce}'`,
-      "style-src 'self' 'unsafe-inline'", // inline styles are common in React apps
+      "style-src 'self' 'unsafe-inline'",
       "img-src 'self' data: blob: https:",
       "font-src 'self' data:",
       "connect-src 'self' ws: wss:",

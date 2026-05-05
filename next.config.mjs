@@ -35,7 +35,15 @@ const nextConfig = {
     const staticCsp = isProd
       ? [
           "default-src 'self'",
+          // No 'unsafe-eval' and no 'unsafe-inline' for script-src in production.
+          // Dynamic pages get a per-request nonce injected by middleware.ts.
+          // This static header is the fallback for static assets (_next/static/*).
           "script-src 'self'",
+          // 'unsafe-inline' is required for style-src because React JSX style={{...}}
+          // props render as HTML element style attributes.  The CSP spec does not
+          // support nonce/hash for element-level style attributes — only for <style>
+          // blocks.  Removing unsafe-inline would break all dynamic inline styles
+          // (progress bars, computed widths, etc.) throughout the admin UI.
           "style-src 'self' 'unsafe-inline'",
           "img-src 'self' data: blob: https:",
           "font-src 'self' data:",

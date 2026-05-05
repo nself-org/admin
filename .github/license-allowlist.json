@@ -1,0 +1,5 @@
+{
+  "$schema": "./license-allowlist.schema.json",
+  "_comment": "Allowlist for license-checker false positives. Each entry MUST include reason + verified_by + verified_date. Consumed by .github/workflows/license-gate.yml. Add an entry ONLY when license-checker misclassifies a package — never to silence a real AGPL/SSPL/GPL dependency. For true positives, replace the dependency with a permissively-licensed alternative.",
+  "allowlist": {}
+}

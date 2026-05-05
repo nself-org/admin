@@ -49,6 +49,51 @@ The middleware automatically adds the following security headers to protected ro
 - `X-Content-Type-Options: nosniff`
 - `X-Frame-Options: DENY`
 - `X-XSS-Protection: 1; mode=block`
+- `Referrer-Policy: strict-origin-when-cross-origin`
+- `Permissions-Policy: camera=(), microphone=(), geolocation=()` (no browser feature access)
+
+### Content Security Policy
+
+Admin ships with a strict CSP applied via `next.config.mjs` headers. The policy denies inline scripts in production, restricts script sources to `self`, and prevents the page from being framed by any other origin.
+
+```text
+default-src 'self';
+script-src 'self' 'wasm-unsafe-eval';
+style-src 'self' 'unsafe-inline';
+img-src 'self' data: blob:;
+font-src 'self' data:;
+connect-src 'self' ws: wss:;
+frame-ancestors 'none';
+form-action 'self';
+base-uri 'self';
+object-src 'none';
+```
+
+Notes:
+
+- `'unsafe-inline'` for styles is required by Tailwind's CSS-in-JS injection. Removing it would require a CSP nonce on every style block.
+- `connect-src` allows `ws:` / `wss:` so the Socket.io live-update layer works in dev (`ws://localhost:3021`) and in production (`wss://...`).
+- `frame-ancestors 'none'` is a stricter modern replacement for `X-Frame-Options: DENY` and is enforced by every browser that supports CSP level 2+.
+
+To verify the policy in a running container:
+
+```bash
+curl -sI http://localhost:3021/login | grep -i content-security
+```
+
+### Session Cookies: Attribute Reference
+
+Sessions are stored in httpOnly cookies issued by the auth layer. Each cookie carries:
+
+| Attribute  | Value                                          | Why                                                                           |
+| ---------- | ---------------------------------------------- | ----------------------------------------------------------------------------- |
+| `HttpOnly` | `true`                                         | JavaScript cannot read the cookie. Protects against XSS-based session theft.  |
+| `SameSite` | `Strict`                                       | Cookie is never sent on cross-origin requests. Hard CSRF stop.                |
+| `Secure`   | `true` (production)                            | Cookie is only sent over HTTPS. Set automatically when `NODE_ENV=production`. |
+| `Path`     | `/`                                            | Available to the whole admin app.                                             |
+| `Max-Age`  | `86400` (24h) / `604800` (7d if `Remember Me`) | Bounded session lifetime.                                                     |
+
+The `Secure` flag is gated on `NODE_ENV` so local dev over plain HTTP still works while production deployments cannot leak the cookie over an unencrypted channel. CSRF defense is layered: SameSite=Strict cookie attribute + origin validation on all mutating routes.
 
 ### Protected Routes
 

@@ -135,4 +135,3 @@ function sanitizePrompt(prompt: string): string {
     )
     .trim()
 }
-

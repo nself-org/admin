@@ -49,7 +49,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
           cache: 'pnpm'
 
       - name: Install dependencies
@@ -107,8 +107,7 @@ jobs:
           printf 'First-load JS: %s kB  |  limit: %s kB\n' "${SHARED_KB}" "${LIMIT}"
 
           if [ "${SHARED_KB}" -gt "${LIMIT}" ]; then
-            printf '::error::Build size regression: first-load JS is %s kB (limit: %s kB). '\
-'Review new dependencies added in this PR or raise HEAP_LIMIT_KB with justification.\n' \
+            printf '::error::Build size regression: first-load JS is %s kB (limit: %s kB). Review new dependencies added in this PR or raise HEAP_LIMIT_KB with justification.\n' \
               "${SHARED_KB}" "${LIMIT}"
             exit 1
           fi

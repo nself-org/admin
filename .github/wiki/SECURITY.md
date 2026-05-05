@@ -85,13 +85,13 @@ curl -sI http://localhost:3021/login | grep -i content-security
 
 Sessions are stored in httpOnly cookies issued by the auth layer. Each cookie carries:
 
-| Attribute | Value | Why |
-|-----------|-------|-----|
-| `HttpOnly` | `true` | JavaScript cannot read the cookie. Protects against XSS-based session theft. |
-| `SameSite` | `Strict` | Cookie is never sent on cross-origin requests. Hard CSRF stop. |
-| `Secure` | `true` (production) | Cookie is only sent over HTTPS. Set automatically when `NODE_ENV=production`. |
-| `Path` | `/` | Available to the whole admin app. |
-| `Max-Age` | `86400` (24h) / `604800` (7d if `Remember Me`) | Bounded session lifetime. |
+| Attribute  | Value                                          | Why                                                                           |
+| ---------- | ---------------------------------------------- | ----------------------------------------------------------------------------- |
+| `HttpOnly` | `true`                                         | JavaScript cannot read the cookie. Protects against XSS-based session theft.  |
+| `SameSite` | `Strict`                                       | Cookie is never sent on cross-origin requests. Hard CSRF stop.                |
+| `Secure`   | `true` (production)                            | Cookie is only sent over HTTPS. Set automatically when `NODE_ENV=production`. |
+| `Path`     | `/`                                            | Available to the whole admin app.                                             |
+| `Max-Age`  | `86400` (24h) / `604800` (7d if `Remember Me`) | Bounded session lifetime.                                                     |
 
 The `Secure` flag is gated on `NODE_ENV` so local dev over plain HTTP still works while production deployments cannot leak the cookie over an unencrypted channel. CSRF defense is layered: SameSite=Strict cookie attribute + origin validation on all mutating routes.
 

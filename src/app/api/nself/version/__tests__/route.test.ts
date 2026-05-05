@@ -45,7 +45,9 @@ describe('GET /api/nself/version — version parsing', () => {
 
   it('preserves the v prefix on pre-release tags', async () => {
     expect(await versionFor('nself version v1.2.3-rc.1')).toBe('v1.2.3-rc.1')
-    expect(await versionFor('nself version v1.0.0-beta.4')).toBe('v1.0.0-beta.4')
+    expect(await versionFor('nself version v1.0.0-beta.4')).toBe(
+      'v1.0.0-beta.4',
+    )
     expect(await versionFor('nself version v2.0.0-alpha.1+sha.abc')).toBe(
       'v2.0.0-alpha.1+sha.abc',
     )

@@ -43,6 +43,9 @@ function LicensesContent() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [offline, setOffline] = useState(false)
+  // S11.T07: rate-limited state distinct from offline/error
+  const [rateLimited, setRateLimited] = useState(false)
+  const [rateLimitedSeconds, setRateLimitedSeconds] = useState<number | null>(null)
   const [sortKey, setSortKey] = useState<SortKey>('status')
   const [sortAsc, setSortAsc] = useState(true)
 
@@ -53,11 +56,33 @@ function LicensesContent() {
     setLoading(true)
     setError(null)
     setOffline(false)
+    setRateLimited(false)
+    setRateLimitedSeconds(null)
     try {
       const res = await fetch('/api/account/licenses')
 
       if (res.status === 401) {
         router.push('/login?reason=expired')
+        return
+      }
+
+      // S11.T07: 429 rate-limited — distinct from offline/generic error
+      if (res.status === 429) {
+        const raw = res.headers.get('Retry-After')
+        let seconds: number | null = null
+        if (raw) {
+          const delta = Number(raw)
+          if (!Number.isNaN(delta) && delta >= 0) {
+            seconds = Math.ceil(delta)
+          } else {
+            const date = Date.parse(raw)
+            if (!Number.isNaN(date)) {
+              seconds = Math.max(0, Math.ceil((date - Date.now()) / 1000))
+            }
+          }
+        }
+        setRateLimited(true)
+        setRateLimitedSeconds(seconds)
         return
       }
 
@@ -199,6 +224,29 @@ function LicensesContent() {
           </div>
         )}
 
+        {/* S11.T07: Rate-limited — distinct banner from offline/error */}
+        {rateLimited && !loading && (
+          <div
+            role="alert"
+            aria-live="assertive"
+            className="mb-6 flex items-center justify-between gap-3 rounded-xl border border-sky-200 bg-sky-50 px-4 py-3 text-sm text-sky-700 dark:border-sky-800 dark:bg-sky-900/20 dark:text-sky-400"
+          >
+            <span>
+              {rateLimitedSeconds != null
+                ? `Too many requests. Please wait ${rateLimitedSeconds}s before refreshing.`
+                : 'Too many requests. Please wait a moment before refreshing.'}
+            </span>
+            <button
+              type="button"
+              onClick={fetchLicenses}
+              disabled={loading}
+              className="flex-shrink-0 rounded border border-sky-400/50 px-3 py-1 text-xs hover:bg-sky-100 dark:hover:bg-sky-900/30 transition-colors disabled:opacity-50"
+            >
+              Retry
+            </button>
+          </div>
+        )}
+
         {/* Error */}
         {error && !loading && (
           <div
@@ -218,7 +266,7 @@ function LicensesContent() {
         {loading && licenses.length === 0 && <LicensesSkeleton />}
 
         {/* Empty state */}
-        {!loading && !error && licenses.length === 0 && (
+        {!loading && !error && !rateLimited && licenses.length === 0 && (
           <div className="rounded-xl border border-dashed border-zinc-300 bg-zinc-50 p-12 text-center dark:border-zinc-700 dark:bg-zinc-800/50">
             <Key
               className="mx-auto mb-3 h-10 w-10 text-zinc-400"
@@ -243,7 +291,7 @@ function LicensesContent() {
         )}
 
         {/* License table */}
-        {!loading && sortedLicenses.length > 0 && (
+        {!loading && !rateLimited && sortedLicenses.length > 0 && (
           <div className="overflow-hidden rounded-xl border border-zinc-200 bg-white shadow-sm dark:border-zinc-700 dark:bg-zinc-800">
             <div className="overflow-x-auto">
               <table className="w-full text-left text-sm">

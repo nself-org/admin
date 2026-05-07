@@ -225,6 +225,7 @@ function MarketplaceCard({
   onUninstall,
   installing,
   uninstalling,
+  gracePeriod = false,
 }: {
   plugin: MarketplacePlugin
   isInstalled: boolean
@@ -232,6 +233,8 @@ function MarketplaceCard({
   onUninstall: (name: string) => void
   installing: string | null
   uninstalling: string | null
+  /** S11.T06: true when this plugin was just rate-limited on install */
+  gracePeriod?: boolean
 }) {
   const emoji = getPluginEmoji(plugin)
   const isInstalling = installing === plugin.name
@@ -274,6 +277,12 @@ function MarketplaceCard({
             <span className="flex items-center gap-1 rounded-full border border-amber-500/30 bg-amber-500/15 px-2 py-0.5 text-xs text-amber-400">
               <Lock className="h-3 w-3" />
               Pro
+            </span>
+          )}
+          {/* S11.T06: grace-period badge */}
+          {gracePeriod && (
+            <span className="rounded-full border border-orange-500/30 bg-orange-900/20 px-2 py-0.5 text-xs text-orange-400">
+              Rate limited
             </span>
           )}
         </div>
@@ -337,7 +346,7 @@ function MarketplaceCard({
       ) : (
         <button
           onClick={() => onInstall(plugin.name)}
-          disabled={isInstalling}
+          disabled={isInstalling || gracePeriod}
           className="flex items-center justify-center gap-2 rounded-lg bg-emerald-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-emerald-500 disabled:opacity-50"
         >
           {isInstalling ? (
@@ -399,6 +408,11 @@ function MarketplaceContent() {
   const [sortBy, setSortBy] = useState<'popular' | 'recent' | 'name'>('popular')
   const [installing, setInstalling] = useState<string | null>(null)
   const [uninstalling, setUninstalling] = useState<string | null>(null)
+  // S11.T06: rate-limited state with Retry-After countdown
+  const [installRateLimited, setInstallRateLimited] = useState<{
+    plugin: string
+    retryAfterSeconds: number | null
+  } | null>(null)
 
   const {
     data: marketplaceData,
@@ -413,13 +427,32 @@ function MarketplaceContent() {
   }>('/api/plugins', fetcher)
 
   // T03: fix — use correct route /api/plugins/{name}/install
+  // S11.T06: 429 detection with Retry-After countdown
   const handleInstall = async (pluginName: string) => {
     setInstalling(pluginName)
+    setInstallRateLimited(null)
     try {
       const response = await fetch(
         `/api/plugins/${encodeURIComponent(pluginName)}/install`,
         { method: 'POST' },
       )
+      if (response.status === 429) {
+        const raw = response.headers.get('Retry-After')
+        let retryAfterSeconds: number | null = null
+        if (raw) {
+          const delta = Number(raw)
+          if (!Number.isNaN(delta) && delta >= 0) {
+            retryAfterSeconds = Math.ceil(delta)
+          } else {
+            const date = Date.parse(raw)
+            if (!Number.isNaN(date)) {
+              retryAfterSeconds = Math.max(0, Math.ceil((date - Date.now()) / 1000))
+            }
+          }
+        }
+        setInstallRateLimited({ plugin: pluginName, retryAfterSeconds })
+        return
+      }
       if (response.ok) {
         mutateInstalled()
       }
@@ -647,6 +680,27 @@ function MarketplaceContent() {
         </div>
       </div>
 
+      {/* S11.T06: install rate-limited banner */}
+      {installRateLimited && (
+        <div
+          role="alert"
+          className="flex items-center justify-between gap-3 rounded-xl border border-amber-700/50 bg-amber-900/20 px-4 py-3 text-sm text-amber-300"
+        >
+          <span>
+            {installRateLimited.retryAfterSeconds != null
+              ? `Rate limited — retry installing "${installRateLimited.plugin}" in ${installRateLimited.retryAfterSeconds}s.`
+              : `Rate limited. Please wait a moment before installing "${installRateLimited.plugin}" again.`}
+          </span>
+          <button
+            type="button"
+            onClick={() => setInstallRateLimited(null)}
+            className="flex-shrink-0 rounded border border-amber-600/50 px-2 py-1 text-xs hover:bg-amber-900/30 transition-colors"
+          >
+            Dismiss
+          </button>
+        </div>
+      )}
+
       {/* Results Count */}
       <div className="text-sm text-zinc-500">
         Showing {filteredPlugins.length} plugin
@@ -668,6 +722,7 @@ function MarketplaceContent() {
               onUninstall={handleUninstall}
               installing={installing}
               uninstalling={uninstalling}
+              gracePeriod={installRateLimited?.plugin === plugin.name}
             />
           ))}
         </div>

@@ -77,15 +77,16 @@ const categories: { value: PluginCategory | 'all'; label: string }[] = [
 // Bundle display names (T07 + T08)
 const bundleLabels: Record<string, string> = {
   nclaw: 'ɳClaw Bundle',
-  clawde: 'ClawDE+',
-  nmedia: 'nMedia',
+  clawde: 'ClawDE',
+  nmedia: 'nTV',
+  ntv: 'nTV',
   nfamily: 'nFamily',
   nchat: 'nChat',
 }
 
 const bundlePrice: Record<string, string> = {
   nclaw: '$0.99/mo',
-  clawde: '$1.99/mo',
+  clawde: '$0.99/mo',
   nmedia: '$0.99/mo',
   nfamily: '$0.99/mo',
   nchat: '$0.99/mo',
@@ -626,8 +627,8 @@ function MarketplaceContent() {
           >
             <option value="all">All Bundles</option>
             <option value="nclaw">ɳClaw Bundle</option>
-            <option value="clawde">ClawDE+</option>
-            <option value="nmedia">nMedia</option>
+            <option value="clawde">ClawDE</option>
+            <option value="nmedia">nTV</option>
             <option value="nfamily">nFamily</option>
             <option value="nchat">nChat</option>
           </select>

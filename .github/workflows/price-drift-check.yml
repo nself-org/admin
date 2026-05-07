@@ -1,0 +1,101 @@
+name: Price drift check
+
+# S5.T10 — fails CI if any price string in tracked source files
+# disagrees with the canonical values from SPORT F07.
+#
+# Canonical prices (F07, 2026-04-22):
+#   All bundles:  $0.99/mo  /  $9.99/yr
+#   ɳSelf+:       $3.99/mo  /  $39.99/yr
+#
+# Forbidden (superseded) prices:
+#   $1.99/mo  $19.99/yr  $4.99/mo  $49.99/yr  (old tiers)
+
+on:
+  pull_request:
+    paths:
+      - 'src/**/*.tsx'
+      - 'src/**/*.ts'
+      - '.github/workflows/price-drift-check.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'src/**/*.tsx'
+      - 'src/**/*.ts'
+
+jobs:
+  price-drift:
+    name: Detect stale price strings
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check for superseded price strings
+        run: |
+          set -e
+
+          # Superseded price strings that must NOT appear in source
+          BANNED_PRICES=(
+            '\$1\.99/mo'
+            '\$19\.99/yr'
+            '\$4\.99/mo'
+            '\$49\.99/yr'
+            '\$9\.99/mo'
+            '\$99\.99/yr'
+            'ClawDE\+'
+            'nMedia'
+          )
+
+          FAIL=0
+          for pattern in "${BANNED_PRICES[@]}"; do
+            matches=$(grep -rn --include='*.tsx' --include='*.ts' \
+              --exclude-dir=node_modules --exclude-dir=.next --exclude-dir=dist \
+              -E "$pattern" src/ || true)
+            if [ -n "$matches" ]; then
+              echo "FAIL: found superseded string matching '$pattern':"
+              echo "$matches"
+              FAIL=1
+            fi
+          done
+
+          if [ "$FAIL" -eq 1 ]; then
+            echo ""
+            echo "Canonical prices per SPORT F07 (2026-04-22):"
+            echo "  All bundles:  \$0.99/mo  /  \$9.99/yr"
+            echo "  ɳSelf+:       \$3.99/mo  /  \$39.99/yr"
+            exit 1
+          fi
+
+          echo "OK: no superseded price strings found."
+
+      - name: Verify canonical bundle prices present
+        run: |
+          set -e
+          python3 - <<'EOF'
+          import subprocess, sys, re
+
+          # Check that the bundle price map has all bundles at $0.99/mo
+          src = open('src/app/plugins/marketplace/page.tsx').read()
+
+          # Extract bundlePrice object
+          m = re.search(r'const bundlePrice.*?=\s*\{(.*?)\}', src, re.DOTALL)
+          if not m:
+              print('WARN: could not find bundlePrice object')
+              sys.exit(0)
+
+          block = m.group(1)
+          bundles = re.findall(r"(\w+):\s*'(\$[\d.]+/\w+)'", block)
+
+          errors = []
+          for name, price in bundles:
+              if price != '$0.99/mo':
+                  errors.append(f"  {name}: {price!r} (expected '$0.99/mo')")
+
+          if errors:
+              print('FAIL: non-canonical bundle prices in marketplace/page.tsx:')
+              for e in errors:
+                  print(e)
+              sys.exit(1)
+
+          print(f'OK: all {len(bundles)} bundle prices are $0.99/mo.')
+          EOF

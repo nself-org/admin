@@ -89,7 +89,7 @@ export function BundleUpsell({
           <ExternalLink className="h-3.5 w-3.5" />
         </a>
         <p className="text-center text-xs text-zinc-500">
-          Or get ɳSelf+ for $49.99/yr — all bundles + all apps
+          Or get ɳSelf+ for $3.99/mo or $39.99/yr — all bundles + all apps
         </p>
       </div>
     </div>

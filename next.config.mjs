@@ -55,6 +55,11 @@ const nextConfig = {
           "object-src 'none'",
         ].join('; ')
       : [
+          // Development-only CSP (SEC-T11): 'unsafe-eval' is required by the
+          // Next.js dev server (HMR / fast-refresh module evaluation).  It is
+          // gated exclusively to NODE_ENV !== 'production' via the isProd
+          // ternary above.  The production branch omits both 'unsafe-eval' and
+          // 'unsafe-inline' from script-src entirely.
           "default-src 'self'",
           "script-src 'self' 'unsafe-eval' 'unsafe-inline'",
           "style-src 'self' 'unsafe-inline'",

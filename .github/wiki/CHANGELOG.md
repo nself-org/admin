@@ -5,6 +5,28 @@ All notable changes to nself-admin will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0] - PENDING (v1.1.0 release cascade)
+
+Minor release. CLI ↔ Admin lockstep at v1.1.0. ɳSentry bundle, ClawDE bundle buyable, ɳFamily ratified, nCloud waitlist mode.
+
+### Added
+
+- **Bundle Management pages** (`/bundles/*`): install, uninstall, and status views for all 7 bundles (6 paid + ɳTask free). Delegates to `nself bundle install/uninstall/status <name>`.
+- **ɳSentry dashboard page** (`/sentry`): shows real-time health across all 13 ɳSentry plugins (uptime monitors, active incidents, SLO compliance, synthetic check results, RUM metrics). Requires ɳSentry bundle license.
+- **ɳFamily status page** (`/family`): shows CSAM scan health and ɳFamily plugin install state. Requires ɳFamily bundle license.
+- **nCloud provisioning page** (`/cloud`): waitlist enrollment UI and provisioning status for nCloud managed deployments.
+- **Multi-Tenant Convention Wall indicator** in doctor panel: surfaces PERM-RLS-01 violations from `nself doctor --deep`.
+- **License management**: ClawDE bundle now has a buyable license flow — purchase link to nself.org/products/clawde, license-set UI, plugin install gate.
+- **License tier badge** updated to show ɳSentry bundle as a distinct purchasable tier.
+- **Plugin count**: Admin now lists 29 free + 110 paid = 139 total plugins across all pages.
+
+### Changed
+
+- **Bundle list page** (`/bundles`): now shows 7 total bundles (ɳClaw, ɳChat, ɳTV, ɳFamily, ClawDE, ɳSentry, ɳTask-free).
+- **Minimum CLI version badge**: v1.1.0 required for ɳSentry + ɳFamily + nCloud features.
+
+---
+
 ## [1.0.18] - PENDING (P99 Sprint 3.5 release cascade)
 
 P99 Sprints 3.1–3.3 patch release (CLI ↔ Admin lockstep at v1.0.18). Pairs with plugins-pro v1.1.6. Filled by Sprint 3.4 (this sprint) — concrete bullets land when sprints 3.1/3.2/3.3 complete.

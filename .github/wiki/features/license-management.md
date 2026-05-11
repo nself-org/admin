@@ -37,9 +37,9 @@ The LicensePanel shows:
 
 | Tier       | Monthly  | Annual    | Plugins included                     |
 | ---------- | -------- | --------- | ------------------------------------ |
-| Free       | $0       | $0        | 25 free plugins only                 |
+| Free       | $0       | $0        | 29 free plugins only                 |
 | Any bundle | $0.99/mo | $9.99/yr  | All plugins in that bundle (per F06) |
-| ɳSelf+     | $3.99/mo | $39.99/yr | All 5 bundles + all apps + support   |
+| ɳSelf+     | $3.99/mo | $39.99/yr | All 6 bundles + all apps + support   |
 
 ---
 

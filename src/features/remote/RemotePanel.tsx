@@ -674,7 +674,7 @@ export function RemotePanel() {
       {!loading && connections.length === 0 && !showAddForm && (
         <p className="text-nself-text-muted mb-4 text-xs">
           No remote connections saved. Add one below to connect to a remote
-          nCloud server.
+          ɳCloud server.
         </p>
       )}
 

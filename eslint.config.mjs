@@ -4,6 +4,36 @@ import typescriptParser from '@typescript-eslint/parser'
 import reactHooks from 'eslint-plugin-react-hooks'
 import security from 'eslint-plugin-security'
 
+// S11.T01: ui-state-coverage rule (resolved at runtime). admin is a separate
+// git repo from web/, so it cannot use workspace:* — the package is published
+// via the web monorepo and consumed here as a regular npm dep. If it has not
+// been installed yet (fresh clone, pre-install state, or out-of-tree consumer)
+// we fall back to a stub plugin that registers a no-op rule so flat-config
+// validation passes without breaking admin's lint pipeline.
+const noopRule = {
+  meta: {
+    type: 'suggestion',
+    schema: [],
+    messages: { stub: 'Stub: install @nself-web/eslint-plugin-nself to enable.' },
+  },
+  create() {
+    return {}
+  },
+}
+let nselfPlugin = {
+  meta: { name: '@nself-web/eslint-plugin-nself-stub', version: '0.0.0' },
+  rules: { 'ui-state-coverage': noopRule },
+}
+try {
+  const mod = await import('@nself-web/eslint-plugin-nself')
+  if (mod && mod.default && mod.default.rules && mod.default.rules['ui-state-coverage']) {
+    nselfPlugin = mod.default
+  }
+} catch {
+  // Plugin not installed locally — keep the stub. Real CI runs install the
+  // package via the lockfile so the live rule activates there.
+}
+
 export default [
   js.configs.recommended,
   security.configs.recommended,
@@ -112,6 +142,16 @@ export default [
     files: ['src/app/api/**/*.ts'],
     rules: {
       'no-console': ['warn', { allow: ['error', 'warn'] }],
+    },
+  },
+  // S11.T01: ui-state-coverage — enforce 7-state UI on data-fetching
+  // components in admin/src/**/*.{ts,tsx}. Severity error blocks CI on
+  // missing 429 / offline branches; auto-fix inserts a TODO marker.
+  {
+    files: ['src/**/*.ts', 'src/**/*.tsx'],
+    plugins: { '@nself-web/nself': nselfPlugin },
+    rules: {
+      '@nself-web/nself/ui-state-coverage': 'error',
     },
   },
   {

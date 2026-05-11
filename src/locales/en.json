@@ -41,7 +41,7 @@
   },
   "remote": {
     "title": "Remote Mode",
-    "subtitle": "Connect to an nCloud server via SSH or API.",
+    "subtitle": "Connect to an ɳCloud server via SSH or API.",
     "addConnection": "Add Connection",
     "activate": "Activate",
     "test": "Test"

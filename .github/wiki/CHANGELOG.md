@@ -5,25 +5,35 @@ All notable changes to nself-admin will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.1.0] - PENDING (v1.1.0 release cascade)
+## [1.1.0] - 2026-05-15
 
-Minor release. CLI ↔ Admin lockstep at v1.1.0. ɳSentry bundle, ClawDE bundle buyable, ɳFamily ratified, nCloud waitlist mode.
+Minor release. CLI ↔ Admin lockstep at v1.1.0. ɳSentry bundle, ClawDE bundle buyable (price drop to $0.99/mo), ɳFamily ratified, nCloud waitlist mode. UI state coverage enforcement and mock-data sweep.
 
 ### Added
 
-- **Bundle Management pages** (`/bundles/*`): install, uninstall, and status views for all 7 bundles (6 paid + ɳTask free). Delegates to `nself bundle install/uninstall/status <name>`.
-- **ɳSentry dashboard page** (`/sentry`): shows real-time health across all 13 ɳSentry plugins (uptime monitors, active incidents, SLO compliance, synthetic check results, RUM metrics). Requires ɳSentry bundle license.
-- **ɳFamily status page** (`/family`): shows CSAM scan health and ɳFamily plugin install state. Requires ɳFamily bundle license.
-- **nCloud provisioning page** (`/cloud`): waitlist enrollment UI and provisioning status for nCloud managed deployments.
-- **Multi-Tenant Convention Wall indicator** in doctor panel: surfaces PERM-RLS-01 violations from `nself doctor --deep`.
-- **License management**: ClawDE bundle now has a buyable license flow — purchase link to nself.org/products/clawde, license-set UI, plugin install gate.
-- **License tier badge** updated to show ɳSentry bundle as a distinct purchasable tier.
-- **Plugin count**: Admin now lists 29 free + 110 paid = 139 total plugins across all pages.
+- **Bundle Management pages** (`/bundles/*`) (S13.T20): install, uninstall, and status views for all 7 bundles (6 paid + ɳTask free). Delegates to `nself bundle install/uninstall/status <name>`.
+- **ɳSentry dashboard page** (`/sentry`) (S10.T22): real-time health across all 13 ɳSentry plugins (uptime, incidents, SLO compliance, synthetic results, RUM metrics). Requires ɳSentry bundle license.
+- **ɳFamily status page** (`/family`) (S11.T11): CSAM scan health, parental-consent status, ɳFamily plugin install state. Requires ɳFamily bundle license.
+- **nCloud provisioning page** (`/cloud`) (S12.T09): waitlist enrollment UI and provisioning status for nCloud managed deployments.
+- **Multi-Tenant Convention Wall indicator** in doctor panel (S12.T10): surfaces PERM-RLS-01 violations from `nself doctor --deep`.
+- **License management** (S13.T20): ClawDE bundle now has a buyable license flow — purchase link to nself.org/products/clawde, license-set UI, plugin install gate.
+- **License tier badge** (S10.T22): updated to show ɳSentry as a distinct purchasable bundle tier.
+- **ui-state-coverage ESLint rule** (S05.T01) wired into `pnpm lint`: every page component must render all 7 UI states (loading, empty, error, no-permission, partial-data, success, edge) or declare an explicit waiver comment.
 
 ### Changed
 
+- **ClawDE bundle marketplace price** (S05.T08): now displayed as $0.99/mo or $9.99/yr across all bundle pages (was $1.99/mo). Aligns with pricing canon update of 2026-04-22.
 - **Bundle list page** (`/bundles`): now shows 7 total bundles (ɳClaw, ɳChat, ɳTV, ɳFamily, ClawDE, ɳSentry, ɳTask-free).
 - **Minimum CLI version badge**: v1.1.0 required for ɳSentry + ɳFamily + nCloud features.
+- **Plugin count** displayed across all admin pages: 29 free + 109 paid (per F03/F04 canonical inventories).
+
+### Fixed
+
+- **Mock data swept from production paths** (S05.T02..T07): `/dashboard`, `/services`, `/plugins`, `/bundles`, `/sentry`, `/family`, `/cloud` pages now read live data from Hasura + CLI subprocess; mock fallbacks isolated to test fixtures only.
+
+### Security
+
+- Single-operator RBAC posture (P94 S73) preserved: multi-user surfaces (`/users`, `/tenant/*`, `/auth/roles`) remain hidden behind `NSELF_ADMIN_MULTIUSER=false` default; v1.2.0 target for GA.
 
 ---
 

@@ -13,12 +13,9 @@ interface NselfPlugin {
   version: string
   tier:
     | 'free'
-    | 'basic'
-    | 'pro'
-    | 'elite'
-    | 'business'
-    | 'business-plus'
-    | 'enterprise'
+    | 'bundle'
+    | 'nself-plus'
+    | 'cloud'
   installed: boolean
   enabled: boolean
   bundle: string | null
@@ -34,7 +31,7 @@ const CATALOG: NselfPlugin[] = [
   {
     name: 'notify',
     version: '1.0.0',
-    tier: 'basic',
+    tier: 'bundle',
     installed: false,
     enabled: false,
     bundle: 'nChat',
@@ -47,7 +44,7 @@ const CATALOG: NselfPlugin[] = [
   {
     name: 'cron',
     version: '1.0.0',
-    tier: 'basic',
+    tier: 'bundle',
     installed: true,
     enabled: true,
     bundle: null,
@@ -60,7 +57,7 @@ const CATALOG: NselfPlugin[] = [
   {
     name: 'ai',
     version: '1.0.0',
-    tier: 'pro',
+    tier: 'bundle',
     installed: true,
     enabled: true,
     bundle: 'ɳClaw',
@@ -73,7 +70,7 @@ const CATALOG: NselfPlugin[] = [
   {
     name: 'mux',
     version: '1.0.0',
-    tier: 'pro',
+    tier: 'bundle',
     installed: true,
     enabled: true,
     bundle: 'ɳClaw',
@@ -86,7 +83,7 @@ const CATALOG: NselfPlugin[] = [
   {
     name: 'claw',
     version: '1.0.0',
-    tier: 'pro',
+    tier: 'bundle',
     installed: false,
     enabled: false,
     bundle: 'ɳClaw',
@@ -99,7 +96,7 @@ const CATALOG: NselfPlugin[] = [
   {
     name: 'chat',
     version: '1.0.0',
-    tier: 'basic',
+    tier: 'bundle',
     installed: false,
     enabled: false,
     bundle: 'nChat',
@@ -112,7 +109,7 @@ const CATALOG: NselfPlugin[] = [
   {
     name: 'livekit',
     version: '1.0.0',
-    tier: 'basic',
+    tier: 'bundle',
     installed: false,
     enabled: false,
     bundle: 'nChat',
@@ -125,10 +122,10 @@ const CATALOG: NselfPlugin[] = [
   {
     name: 'media-processing',
     version: '1.0.0',
-    tier: 'basic',
+    tier: 'bundle',
     installed: false,
     enabled: false,
-    bundle: 'nMedia',
+    bundle: 'ntv',
     description: 'Transcoding, thumbnails, metadata extraction',
     requiresLicense: true,
     hasUpdate: false,
@@ -141,7 +138,7 @@ const CATALOG: NselfPlugin[] = [
     tier: 'free',
     installed: false,
     enabled: false,
-    bundle: 'nMedia',
+    bundle: 'ntv',
     description: 'Torrent acquisition queue',
     requiresLicense: false,
     hasUpdate: false,
@@ -166,7 +163,7 @@ const CATALOG: NselfPlugin[] = [
 export async function GET() {
   return NextResponse.json({
     plugins: CATALOG,
-    licenseTier: 'pro',
+    licenseTier: 'bundle',
     licenseValid: true,
   })
 }

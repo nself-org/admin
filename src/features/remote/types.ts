@@ -1,12 +1,12 @@
 /**
  * Types for the remote-mode feature.
- * Manages saved connections to remote nCloud servers and tracks which one is active.
+ * Manages saved connections to remote ɳCloud servers and tracks which one is active.
  */
 
-/** Transport mode used to reach a remote nCloud server. */
+/** Transport mode used to reach a remote ɳCloud server. */
 export type RemoteMode = 'ssh' | 'api'
 
-/** A single saved connection to a remote nCloud server. */
+/** A single saved connection to a remote ɳCloud server. */
 export interface RemoteConnection {
   /** Unique identifier — assigned on creation, never changes. */
   id: string

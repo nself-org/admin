@@ -317,7 +317,7 @@ export default function GeminiPoolPage() {
             )}
           </div>
           <div className="mb-4 rounded-lg border border-zinc-800 bg-black/30 p-4">
-            <p className="mb-3 text-xs text-zinc-400">nClaw will:</p>
+            <p className="mb-3 text-xs text-zinc-400">ɳClaw will:</p>
             <ul className="space-y-1.5 text-xs text-zinc-400">
               {steps.map((step, i) => {
                 const completed = i < provisionLogs.length

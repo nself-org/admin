@@ -8,7 +8,7 @@ export default function RemotePage() {
           Remote Mode
         </h1>
         <p className="text-nself-text-muted text-xs">
-          Connect to an nCloud server via SSH or API and drive its stack from
+          Connect to an ɳCloud server via SSH or API and drive its stack from
           here.
         </p>
       </div>

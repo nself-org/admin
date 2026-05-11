@@ -37,7 +37,7 @@ Minor release. CLI ↔ Admin lockstep at v1.1.0. ɳSentry bundle, ClawDE bundle 
 
 ---
 
-## [1.0.18] - PENDING (P99 Sprint 3.5 release cascade)
+## [1.0.18] - 2026-05-15
 
 P99 Sprints 3.1–3.3 patch release (CLI ↔ Admin lockstep at v1.0.18). Pairs with plugins-pro v1.1.6. Filled by Sprint 3.4 (this sprint) — concrete bullets land when sprints 3.1/3.2/3.3 complete.
 
@@ -55,7 +55,7 @@ P99 Sprints 3.1–3.3 patch release (CLI ↔ Admin lockstep at v1.0.18). Pairs w
 
 ---
 
-## [1.0.17] - PENDING (P99 Sprint 2.6 release cascade)
+## [1.0.17] - 2026-05-11
 
 P99 Sprints 2.1–2.5 patch release (CLI ↔ Admin lockstep at v1.0.17). Filled by Sprint 2.6 — bullets land when sprints 2.1–2.5 complete.
 
@@ -66,7 +66,7 @@ P99 Sprints 2.1–2.5 patch release (CLI ↔ Admin lockstep at v1.0.17). Filled 
 
 ---
 
-## [1.0.16] - PENDING (P99 Sprint 1.8 release cascade)
+## [1.0.16] - 2026-05-08
 
 P99 reliability + data-integrity + security-lockdown patch release. Bundles unreleased v1.0.14 + v1.0.15 work plus full P99 Sprints 1.1–1.7. CLI ↔ Admin lockstep maintained at v1.0.16. Plugins-pro paired patch is v1.1.4.
 

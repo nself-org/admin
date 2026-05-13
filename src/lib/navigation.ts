@@ -714,6 +714,48 @@ const _allNavigation: Array<NavGroup> = [
       },
     ],
   },
+  // ── ɳSentry ───────────────────────────────────────────────
+  {
+    title: 'ɳSentry',
+    collapsed: true,
+    links: [
+      {
+        title: 'Uptime Monitors',
+        href: '/sentry/uptime',
+        icon: 'activity',
+        badge: { text: 'NEW', color: 'emerald' },
+        description: 'Monitor service uptime and availability',
+      },
+      {
+        title: 'Status Pages',
+        href: '/sentry/status-pages',
+        icon: 'layout-dashboard',
+        badge: { text: 'NEW', color: 'emerald' },
+        description: 'Public-facing status pages',
+      },
+      {
+        title: 'SLOs',
+        href: '/sentry/slos',
+        icon: 'gauge',
+        badge: { text: 'NEW', color: 'emerald' },
+        description: 'Service level objectives and error budgets',
+      },
+      {
+        title: 'Incidents',
+        href: '/sentry/incidents',
+        icon: 'alert-triangle',
+        badge: { text: 'NEW', color: 'emerald' },
+        description: 'Incident management and timeline',
+      },
+      {
+        title: 'RUM',
+        href: '/sentry/rum',
+        icon: 'monitor',
+        badge: { text: 'NEW', color: 'emerald' },
+        description: 'Real user monitoring and session replay',
+      },
+    ],
+  },
   // ── Vibe-Code ─────────────────────────────────────────────
   {
     title: 'Vibe-Code',

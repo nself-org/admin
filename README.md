@@ -14,7 +14,7 @@
 
 **Production-ready web UI for the [nself CLI](https://github.com/nself-org/cli)** - Enterprise-grade management interface for your self-hosted backend stack.
 
-> **v1.1.1** is the current release featuring 198 fully functional pages, 60+ production-grade components, real-time updates, error handling, and security hardening.
+> **v1.1.2** is the current release featuring 198 fully functional pages, 60+ production-grade components, real-time updates, error handling, and security hardening.
 
 ---
 

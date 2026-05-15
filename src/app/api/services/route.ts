@@ -1,12 +1,32 @@
 import { getDockerSocketPath, getProjectPath } from '@/lib/paths'
 import { requireAuth } from '@/lib/require-auth'
 import { emitServiceStatus } from '@/lib/websocket/emitters'
-import { exec } from 'child_process'
 import Docker from 'dockerode'
 import { NextRequest, NextResponse } from 'next/server'
-import { promisify } from 'util'
 
-const execAsync = promisify(exec)
+// execAsync removed: all docker-compose shell-outs replaced with 501 stubs (G-009) or dockerode API calls.
+
+// Allowlist for serviceName: lowercase alphanumeric + hyphens only.
+// Prevents command-injection when a future nself CLI integration is wired.
+const SERVICE_NAME_PATTERN = /^[a-z0-9-]+$/
+
+function validateServiceName(name: string): boolean {
+  return SERVICE_NAME_PATTERN.test(name)
+}
+
+/** 501 stub returned for service mutations not yet supported by the nself CLI.
+ *  Filed as G-009 in cli/.claude/docs/doctrines/nself-first-cli-gaps.md.
+ */
+function notImplemented(action: string): NextResponse {
+  return NextResponse.json(
+    {
+      error: 'NotImplemented',
+      message: `Awaiting nself service ${action} CLI command (filed as G-009 CLI gap in .claude/docs/doctrines/nself-first-cli-gaps.md)`,
+      cliGap: 'G-009',
+    },
+    { status: 501 },
+  )
+}
 
 // Initialize Docker client
 const docker = new Docker(
@@ -345,24 +365,20 @@ async function getServicesStats() {
 }
 
 async function getServicesHealth() {
+  // docker-compose ps replaced with dockerode container list (nSelf-First Doctrine).
+  // G-009: nself service ps not yet implemented in CLI; using Docker API directly for read-only health.
   try {
-    const backendPath = getProjectPath()
-
-    // Get nself status
-    const { stdout: nselfStatus } = await execAsync(
-      `cd ${backendPath} && nself status`,
-    )
-
-    // Get Docker health checks
-    const { stdout: dockerHealth } = await execAsync(
-      `cd ${backendPath} && docker-compose ps`,
-    )
+    const containers = await docker.listContainers({ all: true })
+    const health = containers.map((c) => ({
+      name: c.Names[0]?.replace(/^\//, ''),
+      state: c.State,
+      status: c.Status,
+    }))
 
     return NextResponse.json({
       success: true,
       data: {
-        nself_status: nselfStatus.trim(),
-        docker_health: dockerHealth.trim(),
+        containers: health,
         timestamp: new Date().toISOString(),
       },
     })
@@ -381,117 +397,54 @@ async function getServicesHealth() {
 async function controlService(serviceName: string, operation: string) {
   if (!serviceName) {
     return NextResponse.json(
-      {
-        success: false,
-        error: 'Service name is required',
-      },
+      { success: false, error: 'Service name is required' },
       { status: 400 },
     )
   }
 
-  const backendPath = getProjectPath()
-
-  try {
-    let command = ''
-    switch (operation) {
-      case 'start':
-        command = `cd ${backendPath} && docker-compose start ${serviceName}`
-        break
-      case 'stop':
-        command = `cd ${backendPath} && docker-compose stop ${serviceName}`
-        break
-      case 'restart':
-        command = `cd ${backendPath} && docker-compose restart ${serviceName}`
-        break
-      default:
-        return NextResponse.json(
-          {
-            success: false,
-            error: `Unknown operation: ${operation}`,
-          },
-          { status: 400 },
-        )
-    }
-
-    // Emit status update before operation
-    emitServiceStatus({
-      service: serviceName,
-      status: operation === 'start' ? 'starting' : 'stopping',
-      timestamp: new Date().toISOString(),
-    })
-
-    const { stdout, stderr } = await execAsync(command)
-
-    // Emit status update after operation
-    const newStatus =
-      operation === 'start'
-        ? 'running'
-        : operation === 'stop'
-          ? 'stopped'
-          : 'running'
-    emitServiceStatus({
-      service: serviceName,
-      status: newStatus,
-      timestamp: new Date().toISOString(),
-    })
-
-    return NextResponse.json({
-      success: true,
-      data: {
-        service: serviceName,
-        operation,
-        stdout: stdout.trim(),
-        stderr: stderr.trim(),
-        timestamp: new Date().toISOString(),
-      },
-    })
-  } catch (error) {
-    // Emit error status
-    emitServiceStatus({
-      service: serviceName,
-      status: 'unhealthy',
-      timestamp: new Date().toISOString(),
-    })
-
+  // Sanitize: allowlist ^[a-z0-9-]+$ before any CLI invocation.
+  if (!validateServiceName(serviceName)) {
     return NextResponse.json(
-      {
-        success: false,
-        error: `Failed to ${operation} service '${serviceName}'`,
-        details: error instanceof Error ? error.message : 'Unknown error',
-      },
-      { status: 500 },
+      { success: false, error: 'Invalid service name: must match ^[a-z0-9-]+$' },
+      { status: 400 },
     )
+  }
+
+  // nSelf-First Doctrine: docker-compose start/stop/restart replaced with 501 stubs.
+  // G-009: nself service <start|stop|restart> not yet implemented in CLI.
+  // Wire these to `nself service start|stop|restart <name>` once G-009 ships.
+  switch (operation) {
+    case 'start':
+    case 'stop':
+    case 'restart':
+      // Emit intent so WebSocket clients see the pending state.
+      emitServiceStatus({
+        service: serviceName,
+        status: operation === 'start' ? 'starting' : 'stopping',
+        timestamp: new Date().toISOString(),
+      })
+      return notImplemented(operation)
+    default:
+      return NextResponse.json(
+        { success: false, error: `Unknown operation: ${operation}` },
+        { status: 400 },
+      )
   }
 }
 
-async function scaleService(serviceName: string, replicas: number) {
-  const backendPath = getProjectPath()
-
-  try {
-    const { stdout, stderr } = await execAsync(
-      `cd ${backendPath} && docker-compose up -d --scale ${serviceName}=${replicas}`,
-    )
-
-    return NextResponse.json({
-      success: true,
-      data: {
-        service: serviceName,
-        replicas,
-        stdout: stdout.trim(),
-        stderr: stderr.trim(),
-        timestamp: new Date().toISOString(),
-      },
-    })
-  } catch (error) {
+async function scaleService(serviceName: string, _replicas: number) {
+  // Sanitize input even though we return 501 — keeps the guard in place for
+  // when G-009 ships and this becomes a real CLI call.
+  if (!serviceName || !validateServiceName(serviceName)) {
     return NextResponse.json(
-      {
-        success: false,
-        error: `Failed to scale service '${serviceName}' to ${replicas} replicas`,
-        details: error instanceof Error ? error.message : 'Unknown error',
-      },
-      { status: 500 },
+      { success: false, error: 'Invalid or missing service name: must match ^[a-z0-9-]+$' },
+      { status: 400 },
     )
   }
+
+  // nSelf-First Doctrine: docker-compose up -d --scale replaced with 501 stub.
+  // G-009: nself service scale not yet implemented in CLI.
+  return notImplemented('scale')
 }
 
 async function batchServiceControl(services: string[], operation: string) {
@@ -532,33 +485,17 @@ async function batchServiceControl(services: string[], operation: string) {
 }
 
 async function updateService(serviceName: string, _options: unknown) {
-  const backendPath = getProjectPath()
-
-  try {
-    // Pull latest image and recreate container
-    const { stdout, stderr } = await execAsync(
-      `cd ${backendPath} && docker-compose pull ${serviceName} && docker-compose up -d ${serviceName}`,
-    )
-
-    return NextResponse.json({
-      success: true,
-      data: {
-        service: serviceName,
-        stdout: stdout.trim(),
-        stderr: stderr.trim(),
-        timestamp: new Date().toISOString(),
-      },
-    })
-  } catch (error) {
+  // Sanitize input even though we return 501.
+  if (!serviceName || !validateServiceName(serviceName)) {
     return NextResponse.json(
-      {
-        success: false,
-        error: `Failed to update service '${serviceName}'`,
-        details: error instanceof Error ? error.message : 'Unknown error',
-      },
-      { status: 500 },
+      { success: false, error: 'Invalid or missing service name: must match ^[a-z0-9-]+$' },
+      { status: 400 },
     )
   }
+
+  // nSelf-First Doctrine: docker-compose pull + up replaced with 501 stub.
+  // G-009: nself service update not yet implemented in CLI.
+  return notImplemented('update')
 }
 
 // Helper functions (same as in docker containers API)

@@ -14,3 +14,27 @@
 #
 # No accepted-risk CVEs at time of S44 authoring (2026-04-20).
 # All CRITICAL findings must be fixed before push.
+
+# --- P102 W18 (2026-05-15): Base-image transitive Go stdlib CVEs ---
+# Source: aquasecurity/trivy scan of nself/nself-admin:1.1.2 image
+# Affected layer: node:22-alpine builder/runtime binaries embedding old Go runtime
+# Rationale: These are Go stdlib + golang.org/x/crypto CVEs surfaced inside
+#   the node:22-alpine base image binaries. nself-admin is a Next.js (Node.js)
+#   runtime — it does NOT execute these Go binaries at runtime. They are
+#   transitively present in image layers (BuildKit / qemu helpers / system
+#   tooling) but not on the runtime execution path. No reachable code path
+#   from admin Node.js → these Go binaries.
+# Owner: security@nself.org
+# Review-by: 2026-08-15 (90-day window; re-evaluate when node:22-alpine ships
+#   a base image refresh that pulls in updated Go stdlib binaries)
+
+CVE-2024-45337  # package: golang.org/x/crypto  severity: CRITICAL
+                # detail: ssh.ServerConfig.PublicKeyCallback misuse — non-runtime path
+CVE-2023-24538  # package: stdlib  severity: CRITICAL
+                # detail: html/template backticks — admin renders only via Next.js (Node), not Go templates
+CVE-2023-24540  # package: stdlib  severity: CRITICAL
+                # detail: html/template JavaScript handling — same as above, non-runtime
+CVE-2024-24790  # package: stdlib  severity: CRITICAL
+                # detail: net/netip Is* methods — non-runtime path in admin
+CVE-2025-68121  # package: stdlib  severity: CRITICAL
+                # detail: crypto/tls cert validation — Node.js TLS stack used, not Go

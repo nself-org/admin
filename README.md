@@ -14,7 +14,7 @@
 
 **Production-ready web UI for the [nself CLI](https://github.com/nself-org/cli)** - Enterprise-grade management interface for your self-hosted backend stack.
 
-> **v1.0.11** is the current release featuring 198 fully functional pages, 60+ production-grade components, real-time updates, error handling, and security hardening.
+> **v1.1.2** is the current release featuring 198 fully functional pages, 60+ production-grade components, real-time updates, error handling, and security hardening.
 
 ---
 
@@ -26,10 +26,17 @@
 - [Screenshots](#screenshots)
 - [Documentation](#documentation)
 - [Technology Stack](#technology-stack)
+- [Architecture Decisions](#architecture-decisions)
 - [System Requirements](#system-requirements)
 - [Contributing](#contributing)
 - [Support](#support)
 - [License](#license)
+
+---
+
+## Architecture Decisions
+
+- [ADR-003: admin/ Next.js Permanent Exception](.github/wiki/ADR-003-nextjs-permanent-exception.md) — admin/ stays on Next.js permanently while the rest of the nSelf ecosystem converges on React+Vite+Tauri 2. Server.js, Docker socket, LokiJS, pg, and socket.io server are load-bearing.
 
 ---
 

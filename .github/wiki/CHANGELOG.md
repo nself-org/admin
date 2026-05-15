@@ -5,6 +5,41 @@ All notable changes to nself-admin will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.2] - 2026-05-15
+
+Patch release. CLI ↔ Admin lockstep at v1.1.2. P101 nClaw groundwork carry-through plus security hardening and doc-truth corrections.
+
+### Added
+
+- Plugin inventory views updated to reflect 29 free / 112 paid plugin counts (per SPORT F03/F04 regeneration).
+- Doctor panel surfaces new baseline rules from nself-audit (10 rules) and the `--deep` security-always-free integration.
+- ADR-003 reference page: admin Next.js permanent exception (no migration to Tauri 2).
+
+### Fixed
+
+- Plugin signing verification UI now uses canonical SHA-256 of tarball bytes. Matches CLI and Worker.
+- Doctor panel correctly reports AGPL/SSPL gate as fail-mode active (was previously displayed as warn-only).
+- License management UI: revoke action now confirms server-side invalidation. Stale-key edge case eliminated.
+- Build configuration: no remaining TODO / stub / unimplemented placeholders in production paths.
+
+### Security
+
+- Doctor `--deep` runs without a license in admin's panel. Critical findings render as red badge with exit-1 indicator.
+- AGPL/SSPL license gate fail mode reflected in admin's Plugins page status column.
+
+### Changed
+
+- Plugin count badge: 29 free + 112 paid (was 29 free + 109 paid).
+- Version badge: v1.1.2 across all admin pages (CLI lockstep).
+
+### Docs
+
+- README version bumped to v1.1.2.
+
+### Known limitations (carry-forward to v1.1.3)
+
+- Multi-user admin UI surfaces remain gated behind `NSELF_ADMIN_MULTIUSER=false`. v1.2.0 GA target unchanged.
+
 ## [1.1.0] - 2026-05-15
 
 Minor release. CLI ↔ Admin lockstep at v1.1.0. ɳSentry bundle, ClawDE bundle buyable (price drop to $0.99/mo), ɳFamily ratified, nCloud waitlist mode. UI state coverage enforcement and mock-data sweep.

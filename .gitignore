@@ -84,7 +84,15 @@ docker-compose.*.yml
 /ssl/
 /certs/
 /data/
-backups/
+# Ignore runtime backup data at repo root only (Docker writes to /backups inside container;
+# a local backups/ dir may appear when running nself outside Docker). Anchored to root so
+# it does not match src/**/backups/ API route groups.
+/backups/
+*.backup
+*.dump
+# Explicitly re-include any backups/ directory under src/ (API route source)
+!src/**/backups/
+!src/**/backups/**
 pg_data/
 
 # Development database

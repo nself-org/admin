@@ -11,4 +11,4 @@
  *
  * To update: bump all three files atomically as part of the release process.
  */
-export const CLI_VERSION = '1.1.0'
+export const CLI_VERSION = '1.1.1'

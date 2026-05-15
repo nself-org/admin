@@ -2,6 +2,10 @@
 
 Technical architecture documentation for nself-admin v1.0.0.
 
+## Architecture Decision Records
+
+- [ADR-003: admin/ Next.js Permanent Exception](./ADR-003-nextjs-permanent-exception.md) — admin/ stays on Next.js permanently while the rest of the nSelf ecosystem converges on React + Vite + Tauri 2 (per the 2026-05-14 Flutter-elimination directive). Server.js, Docker socket integration, LokiJS, `pg` direct connection, and the server-side socket.io emitter are all architecturally incompatible with a Vite SPA. Status: **Accepted (permanent)**.
+
 ## Table of Contents
 
 1. [System Overview](#system-overview)

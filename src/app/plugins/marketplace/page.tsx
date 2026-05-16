@@ -88,6 +88,7 @@ const bundlePrice: Record<string, string> = {
   nclaw: '$0.99/mo',
   clawde: '$0.99/mo',
   nmedia: '$0.99/mo',
+  ntv: '$0.99/mo',
   nfamily: '$0.99/mo',
   nchat: '$0.99/mo',
 }
@@ -662,6 +663,7 @@ function MarketplaceContent() {
             <option value="nclaw">ɳClaw Bundle</option>
             <option value="clawde">ClawDE</option>
             <option value="nmedia">nTV</option>
+            <option value="ntv">nTV</option>
             <option value="nfamily">nFamily</option>
             <option value="nchat">nChat</option>
           </select>

@@ -107,8 +107,10 @@ git push origin feat/my-feature
 ## Code Style
 
 - **TypeScript strict mode**, no `any`. Every component and API boundary must be fully typed.
-- **Formatting:** Prettier, runs via `pnpm format`. CI fails on unformatted code.
-- **Lint:** ESLint, `pnpm lint` must pass with zero warnings.
+- **Formatting:** Prettier, runs via `pnpm format`. CI fails on unformatted code. Config extends `@nself/config/prettier` (shared ecosystem base) with admin-specific plugins.
+- **Lint:** ESLint, `pnpm lint` must pass with zero warnings. Config extends `@nself/config/eslint/next` (shared ecosystem base) with admin-specific security, react-hooks, and TypeScript overrides.
+- **TypeScript:** `tsconfig.json` extends `@nself/config/tsconfig/next.json` (shared ecosystem base). Admin-specific overrides: `jsx: "react-jsx"` and `paths: { "@/*": ["./src/*"] }`.
+- **Shared config:** `@nself/config` is consumed as a regular dependency (not a workspace ref — admin is a separate git repo). During the PUBLISH_STAGED phase it resolves via `file:` reference; after the S28 npm publish it will resolve as a semver dep.
 - **Tests:** all existing tests must pass. New UI components need at least a render test.
 - **No direct backend calls**, all server operations go through CLI delegation layer.
 

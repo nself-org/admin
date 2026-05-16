@@ -164,6 +164,7 @@
     "zxcvbn": "^4.4.2"
   },
   "devDependencies": {
+    "@nself/config": "file:../web/packages/config",
     "@axe-core/playwright": "^4.11.1",
     "@axe-core/react": "^4.11.1",
     "@eslint/eslintrc": "^3.3.5",

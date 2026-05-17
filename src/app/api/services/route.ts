@@ -69,6 +69,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         success: false,
         error: 'Services operation failed',
         details: error instanceof Error ? error.message : 'Unknown error',
+        data: { services: [] },
       },
       { status: 500 },
     )
@@ -215,6 +216,7 @@ async function getServicesList() {
         success: false,
         error: 'Failed to get services list',
         details: error instanceof Error ? error.message : 'Unknown error',
+        data: { services: [] },
       },
       { status: 500 },
     )

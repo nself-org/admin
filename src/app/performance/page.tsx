@@ -5,6 +5,7 @@ import { ChartSkeleton } from '@/components/skeletons'
 import type { ServiceProfile, SystemProfile } from '@/types/performance'
 import {
   Activity,
+  AlertCircle,
   Clock,
   Cpu,
   Database,
@@ -17,7 +18,7 @@ import {
   Zap,
 } from 'lucide-react'
 import Link from 'next/link'
-import { Suspense, useCallback, useEffect, useState } from 'react'
+import { Suspense, useState } from 'react'
 import {
   Area,
   AreaChart,
@@ -27,6 +28,9 @@ import {
   XAxis,
   YAxis,
 } from 'recharts'
+import useSWR from 'swr'
+
+const fetcher = (url: string) => fetch(url).then((res) => res.json())
 
 interface MetricData {
   timestamp: string
@@ -37,113 +41,26 @@ interface MetricData {
 }
 
 function PerformanceContent() {
-  const [loading, setLoading] = useState(true)
   const [isRunning, setIsRunning] = useState(false)
   const [autoRefresh, setAutoRefresh] = useState(true)
-  const [systemProfile, setSystemProfile] = useState<SystemProfile | null>(null)
-  const [services, setServices] = useState<ServiceProfile[]>([])
-  const [metricsHistory, setMetricsHistory] = useState<MetricData[]>([])
 
-  const fetchPerformanceData = useCallback(async () => {
-    try {
-      // Generate mock data for now - replace with real API
-      const now = Date.now()
-      const points = 20
+  const { data, error, isLoading, mutate } = useSWR<{
+    systemProfile: SystemProfile | null
+    services: ServiceProfile[]
+    metricsHistory: MetricData[]
+  }>('/api/performance', fetcher, {
+    refreshInterval: autoRefresh ? 5000 : 0,
+  })
 
-      const mockMetrics = Array.from({ length: points }, (_, i) => ({
-        timestamp: new Date(now - (points - i) * 60000).toLocaleTimeString([], {
-          hour: '2-digit',
-          minute: '2-digit',
-        }),
-        cpu: Math.random() * 30 + 25,
-        memory: Math.random() * 15 + 55,
-        disk: Math.random() * 10 + 30,
-        network: Math.random() * 50 + 20,
-      }))
-
-      setMetricsHistory(mockMetrics)
-
-      setSystemProfile({
-        cpu: {
-          usage: Math.random() * 30 + 25,
-          cores: 8,
-          loadAvg: [1.2, 1.5, 1.8],
-        },
-        memory: {
-          total: 16384,
-          used: 10240,
-          free: 6144,
-          percentage: 62.5,
-        },
-        disk: {
-          total: 512000,
-          used: 180000,
-          free: 332000,
-          percentage: 35.2,
-        },
-        network: {
-          bytesIn: 1024000,
-          bytesOut: 512000,
-          packetsIn: 10000,
-          packetsOut: 8000,
-        },
-      })
-
-      setServices([
-        {
-          name: 'PostgreSQL',
-          cpu: 8.5,
-          memory: { used: 512, limit: 2048, percentage: 25 },
-          responseTime: { avg: 2.3, p50: 1.8, p95: 5.2, p99: 12.1 },
-          requestsPerSecond: 150,
-          errorRate: 0.01,
-        },
-        {
-          name: 'Hasura',
-          cpu: 15.2,
-          memory: { used: 768, limit: 2048, percentage: 37.5 },
-          responseTime: { avg: 45, p50: 32, p95: 120, p99: 250 },
-          requestsPerSecond: 85,
-          errorRate: 0.02,
-        },
-        {
-          name: 'Auth Service',
-          cpu: 5.1,
-          memory: { used: 256, limit: 1024, percentage: 25 },
-          responseTime: { avg: 25, p50: 18, p95: 65, p99: 150 },
-          requestsPerSecond: 45,
-          errorRate: 0.005,
-        },
-        {
-          name: 'Redis',
-          cpu: 2.3,
-          memory: { used: 128, limit: 512, percentage: 25 },
-          responseTime: { avg: 0.5, p50: 0.3, p95: 1.2, p99: 2.5 },
-          requestsPerSecond: 500,
-          errorRate: 0,
-        },
-      ])
-    } catch (_error) {
-      // Handle error silently
-    } finally {
-      setLoading(false)
-    }
-  }, [])
-
-  useEffect(() => {
-    fetchPerformanceData()
-
-    if (autoRefresh) {
-      const interval = setInterval(fetchPerformanceData, 5000)
-      return () => clearInterval(interval)
-    }
-  }, [autoRefresh, fetchPerformanceData])
+  const systemProfile = data?.systemProfile ?? null
+  const services = data?.services ?? []
+  const metricsHistory = data?.metricsHistory ?? []
 
   const runProfile = async () => {
     setIsRunning(true)
     try {
       await fetch('/api/performance/profile', { method: 'POST' })
-      await fetchPerformanceData()
+      await mutate()
     } finally {
       setIsRunning(false)
     }
@@ -155,7 +72,23 @@ function PerformanceContent() {
     return `${bytes} B`
   }
 
-  if (loading) {
+  if (error) {
+    return (
+      <>
+        <HeroPattern />
+        <div className="relative mx-auto max-w-7xl">
+          <div className="flex items-center gap-3 rounded-xl border border-red-200 bg-red-50 p-6 dark:border-red-800 dark:bg-red-900/20">
+            <AlertCircle className="h-5 w-5 shrink-0 text-red-500" />
+            <p className="text-sm text-red-700 dark:text-red-400">
+              Failed to load performance data. Please try again.
+            </p>
+          </div>
+        </div>
+      </>
+    )
+  }
+
+  if (isLoading) {
     return (
       <>
         <HeroPattern />

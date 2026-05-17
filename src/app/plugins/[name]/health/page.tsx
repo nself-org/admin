@@ -49,13 +49,6 @@ interface HealthState {
 
 const REFRESH_INTERVAL_MS = 10_000
 
-const MOCK_DOCKER_STATS: DockerStats = {
-  cpuPercent: 0.8,
-  memoryUsage: '48 MiB',
-  memoryLimit: '512 MiB',
-  memoryPercent: 9.4,
-}
-
 function isOwnerTier(tier: string | null): boolean {
   return tier === 'owner' || tier === 'enterprise'
 }
@@ -184,29 +177,19 @@ export default function PluginHealthPage() {
         healthy = data?.plugin?.healthy !== false
         licenseTier = data?.plugin?.licenseTier ?? null
 
-        // Parse metrics from plugin data if available, otherwise build mock
+        // Parse metrics from plugin data if available
         if (data?.metrics) {
           metrics = {
             requestsPerMin: data.metrics.requestsPerMin ?? 0,
             errorRate: data.metrics.errorRate ?? 0,
             p95LatencyMs: data.metrics.p95LatencyMs ?? 0,
           }
-        } else {
-          // Mock metrics — real implementation scrapes /metrics endpoint
-          metrics = {
-            requestsPerMin: Math.floor(Math.random() * 120) + 20,
-            errorRate: parseFloat((Math.random() * 3).toFixed(2)),
-            p95LatencyMs: Math.floor(Math.random() * 80) + 15,
-          }
         }
       }
 
       if (statsRes.status === 'fulfilled' && statsRes.value.ok) {
         const statsData = await statsRes.value.json()
-        dockerStats = statsData?.stats ?? MOCK_DOCKER_STATS
-      } else {
-        // API not yet implemented — use mock data
-        dockerStats = MOCK_DOCKER_STATS
+        dockerStats = statsData?.stats ?? null
       }
 
       setState((prev) => ({

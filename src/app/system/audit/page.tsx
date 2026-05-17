@@ -5,14 +5,16 @@ import { HeroPattern } from '@/components/HeroPattern'
 import { TableSkeleton } from '@/components/skeletons'
 import {
   Activity,
+  AlertCircle,
   Download,
   FileText,
   Filter,
-  Loader2,
+  RefreshCw,
   Search,
   User,
 } from 'lucide-react'
-import { Suspense, useEffect, useState } from 'react'
+import { Suspense } from 'react'
+import useSWR from 'swr'
 
 interface AuditEntry {
   id: string
@@ -25,63 +27,51 @@ interface AuditEntry {
   details?: string
 }
 
-function SystemAuditContent() {
-  const [entries, setEntries] = useState<AuditEntry[]>([])
-  const [loading, setLoading] = useState(true)
-  const [_filter, _setFilter] = useState({
-    user: '',
-    action: '',
-    result: '',
-    dateFrom: '',
-    dateTo: '',
-  })
+const fetcher = (url: string) => fetch(url).then((res) => res.json())
 
-  useEffect(() => {
-    const mockEntries: AuditEntry[] = [
-      {
-        id: '1',
-        timestamp: new Date().toISOString(),
-        user: 'admin',
-        action: 'login',
-        resource: '/auth/login',
-        result: 'success',
-        ipAddress: '192.168.1.100',
-      },
-      {
-        id: '2',
-        timestamp: new Date(Date.now() - 3600000).toISOString(),
-        user: 'admin',
-        action: 'update_config',
-        resource: '/config/env',
-        result: 'success',
-        ipAddress: '192.168.1.100',
-      },
-      {
-        id: '3',
-        timestamp: new Date(Date.now() - 7200000).toISOString(),
-        user: 'user1',
-        action: 'login',
-        resource: '/auth/login',
-        result: 'failure',
-        ipAddress: '192.168.1.50',
-        details: 'Invalid password',
-      },
-    ]
-    setEntries(mockEntries)
-    setLoading(false)
-  }, [])
+function SystemAuditContent() {
+  const { data, error, mutate } = useSWR<{ entries: AuditEntry[]; total: number }>(
+    '/api/system/audit',
+    fetcher,
+  )
+
+  const entries = data?.entries ?? []
 
   const exportAuditLog = () => {
-    // Export logic
+    const content = entries
+      .map(
+        (e) =>
+          `${e.timestamp}\t${e.user}\t${e.action}\t${e.resource}\t${e.result}\t${e.ipAddress}`,
+      )
+      .join('\n')
+    const blob = new Blob([content], { type: 'text/plain' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = 'audit-log.txt'
+    a.click()
+    URL.revokeObjectURL(url)
   }
 
-  if (loading) {
+  if (error) {
     return (
       <>
         <HeroPattern />
         <div className="mx-auto max-w-7xl">
-          <div className="flex items-center justify-center py-12">
-            <Loader2 className="h-8 w-8 animate-spin text-blue-500" />
+          <div className="rounded-lg border border-red-500/30 bg-red-900/20 p-6">
+            <div className="flex items-center gap-3">
+              <AlertCircle className="h-5 w-5 text-red-400" />
+              <p className="text-red-400">
+                {error instanceof Error ? error.message : 'Failed to load audit log'}
+              </p>
+            </div>
+            <button
+              onClick={() => mutate()}
+              className="mt-4 inline-flex items-center gap-2 rounded-lg border border-zinc-700 bg-zinc-800 px-4 py-2 text-sm text-white hover:bg-zinc-700"
+            >
+              <RefreshCw className="h-4 w-4" />
+              Retry
+            </button>
           </div>
         </div>
       </>
@@ -103,7 +93,7 @@ function SystemAuditContent() {
                 View all system activity and user actions
               </p>
             </div>
-            <Button onClick={exportAuditLog} variant="outline">
+            <Button onClick={exportAuditLog} variant="outline" disabled={entries.length === 0}>
               <Download className="mr-2 h-4 w-4" />
               Export
             </Button>
@@ -128,73 +118,80 @@ function SystemAuditContent() {
         </div>
 
         <div className="rounded-lg border border-zinc-200 bg-white dark:border-zinc-700 dark:bg-zinc-800">
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead className="bg-zinc-50 dark:bg-zinc-900/50">
-                <tr>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-zinc-500 uppercase">
-                    Timestamp
-                  </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-zinc-500 uppercase">
-                    User
-                  </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-zinc-500 uppercase">
-                    Action
-                  </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-zinc-500 uppercase">
-                    Resource
-                  </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-zinc-500 uppercase">
-                    Result
-                  </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-zinc-500 uppercase">
-                    IP Address
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-zinc-200 dark:divide-zinc-700">
-                {entries.map((entry) => (
-                  <tr
-                    key={entry.id}
-                    className="hover:bg-zinc-50 dark:hover:bg-zinc-800/50"
-                  >
-                    <td className="px-4 py-3 text-sm text-zinc-600 dark:text-zinc-400">
-                      {new Date(entry.timestamp).toLocaleString()}
-                    </td>
-                    <td className="px-4 py-3">
-                      <div className="flex items-center gap-2">
-                        <User className="h-4 w-4 text-zinc-400" />
-                        <span className="text-sm">{entry.user}</span>
-                      </div>
-                    </td>
-                    <td className="px-4 py-3">
-                      <div className="flex items-center gap-2">
-                        <Activity className="h-4 w-4 text-zinc-400" />
-                        <span className="text-sm">{entry.action}</span>
-                      </div>
-                    </td>
-                    <td className="px-4 py-3 font-mono text-sm text-zinc-600 dark:text-zinc-400">
-                      {entry.resource}
-                    </td>
-                    <td className="px-4 py-3">
-                      <span
-                        className={`rounded px-2 py-1 text-xs font-medium ${
-                          entry.result === 'success'
-                            ? 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400'
-                            : 'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400'
-                        }`}
-                      >
-                        {entry.result}
-                      </span>
-                    </td>
-                    <td className="px-4 py-3 font-mono text-sm text-zinc-600 dark:text-zinc-400">
-                      {entry.ipAddress}
-                    </td>
+          {entries.length === 0 ? (
+            <div className="p-12 text-center">
+              <FileText className="mx-auto mb-4 h-12 w-12 text-zinc-400" />
+              <p className="text-zinc-600 dark:text-zinc-400">No audit entries found</p>
+            </div>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead className="bg-zinc-50 dark:bg-zinc-900/50">
+                  <tr>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-zinc-500 uppercase">
+                      Timestamp
+                    </th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-zinc-500 uppercase">
+                      User
+                    </th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-zinc-500 uppercase">
+                      Action
+                    </th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-zinc-500 uppercase">
+                      Resource
+                    </th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-zinc-500 uppercase">
+                      Result
+                    </th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-zinc-500 uppercase">
+                      IP Address
+                    </th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                </thead>
+                <tbody className="divide-y divide-zinc-200 dark:divide-zinc-700">
+                  {entries.map((entry) => (
+                    <tr
+                      key={entry.id}
+                      className="hover:bg-zinc-50 dark:hover:bg-zinc-800/50"
+                    >
+                      <td className="px-4 py-3 text-sm text-zinc-600 dark:text-zinc-400">
+                        {new Date(entry.timestamp).toLocaleString()}
+                      </td>
+                      <td className="px-4 py-3">
+                        <div className="flex items-center gap-2">
+                          <User className="h-4 w-4 text-zinc-400" />
+                          <span className="text-sm">{entry.user}</span>
+                        </div>
+                      </td>
+                      <td className="px-4 py-3">
+                        <div className="flex items-center gap-2">
+                          <Activity className="h-4 w-4 text-zinc-400" />
+                          <span className="text-sm">{entry.action}</span>
+                        </div>
+                      </td>
+                      <td className="px-4 py-3 font-mono text-sm text-zinc-600 dark:text-zinc-400">
+                        {entry.resource}
+                      </td>
+                      <td className="px-4 py-3">
+                        <span
+                          className={`rounded px-2 py-1 text-xs font-medium ${
+                            entry.result === 'success'
+                              ? 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400'
+                              : 'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400'
+                          }`}
+                        >
+                          {entry.result}
+                        </span>
+                      </td>
+                      <td className="px-4 py-3 font-mono text-sm text-zinc-600 dark:text-zinc-400">
+                        {entry.ipAddress}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
         </div>
       </div>
     </>

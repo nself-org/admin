@@ -51,50 +51,27 @@ function RunBenchmarkContent() {
     setError(null)
 
     try {
-      // Simulate warmup
-      for (let i = 0; i <= config.warmup; i++) {
-        await new Promise((resolve) => setTimeout(resolve, 1000))
-        setProgress((i / config.warmup) * 20)
-      }
+      setPhase('warmup')
+      setProgress(10)
 
       setPhase('running')
+      setProgress(30)
 
-      // Simulate benchmark
-      for (let i = 0; i <= config.duration; i++) {
-        await new Promise((resolve) => setTimeout(resolve, 50))
-        setProgress(20 + (i / config.duration) * 80)
+      const res = await fetch('/api/benchmark/run', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(config),
+      })
+
+      setProgress(90)
+
+      if (!res.ok) {
+        throw new Error(`Benchmark failed: ${res.statusText}`)
       }
 
-      // Mock result
-      const mockResult: BenchmarkResult = {
-        id: Date.now().toString(),
-        target: `${config.target === 'api' ? 'API' : config.target === 'database' ? 'Database' : 'Full System'}`,
-        type: config.target,
-        timestamp: new Date().toISOString(),
-        duration: config.duration * 1000,
-        requests: {
-          total: config.concurrency * config.duration * 10,
-          successful: Math.floor(
-            config.concurrency * config.duration * 10 * 0.999,
-          ),
-          failed: Math.floor(config.concurrency * config.duration * 10 * 0.001),
-          perSecond: config.concurrency * 10,
-        },
-        latency: {
-          min: 5 + Math.random() * 5,
-          max: 250 + Math.random() * 200,
-          avg: 30 + Math.random() * 20,
-          p50: 25 + Math.random() * 15,
-          p95: 100 + Math.random() * 50,
-          p99: 200 + Math.random() * 100,
-        },
-        throughput: {
-          bytesPerSecond: config.concurrency * 10 * 1024,
-          requestsPerSecond: config.concurrency * 10,
-        },
-      }
-
-      setResult(mockResult)
+      const data = await res.json()
+      setProgress(100)
+      setResult(data.result ?? data)
       setPhase('complete')
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Benchmark failed')

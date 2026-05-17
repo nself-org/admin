@@ -19,6 +19,7 @@ import { Suspense, useCallback, useEffect, useState } from 'react'
 function EnvironmentDiffContent() {
   const [loading, setLoading] = useState(true)
   const [comparing, setComparing] = useState(false)
+  const [error, setError] = useState<string | null>(null)
   const [sourceEnv, setSourceEnv] = useState<Environment>('staging')
   const [targetEnv, setTargetEnv] = useState<Environment>('production')
   const [diff, setDiff] = useState<EnvironmentDiff | null>(null)
@@ -32,52 +33,19 @@ function EnvironmentDiffContent() {
 
   const fetchDiff = useCallback(async () => {
     setComparing(true)
+    setError(null)
     try {
-      // Mock data - replace with real API
-      await new Promise((resolve) => setTimeout(resolve, 500))
-      setDiff({
-        source: sourceEnv,
-        target: targetEnv,
-        variables: {
-          added: ['NEW_FEATURE_FLAG', 'ANALYTICS_KEY'],
-          removed: ['OLD_DEBUG_MODE'],
-          changed: [
-            {
-              key: 'LOG_LEVEL',
-              sourceValue: 'debug',
-              targetValue: 'info',
-            },
-            {
-              key: 'CACHE_TTL',
-              sourceValue: '300',
-              targetValue: '3600',
-            },
-          ],
-        },
-        secrets: {
-          added: ['STRIPE_WEBHOOK_SECRET'],
-          removed: [],
-          changed: ['API_KEY'],
-        },
-        services: {
-          added: [],
-          removed: [],
-          changed: [
-            {
-              name: 'hasura',
-              sourceVersion: '2.33.0',
-              targetVersion: '2.32.1',
-            },
-            {
-              name: 'auth',
-              sourceVersion: '1.3.0-beta',
-              targetVersion: '1.2.5',
-            },
-          ],
-        },
-      })
-    } catch (_error) {
-      // Handle error silently
+      const res = await fetch(
+        `/api/environments/diff?source=${encodeURIComponent(sourceEnv)}&target=${encodeURIComponent(targetEnv)}`,
+      )
+      if (!res.ok) throw new Error(`HTTP ${res.status}`)
+      const data = await res.json()
+      setDiff(data.diff ?? null)
+    } catch (err) {
+      setError(
+        err instanceof Error ? err.message : 'Failed to fetch environment diff',
+      )
+      setDiff(null)
     } finally {
       setComparing(false)
       setLoading(false)
@@ -101,6 +69,25 @@ function EnvironmentDiffContent() {
         <div className="relative mx-auto max-w-7xl">
           <div className="flex items-center justify-center py-20">
             <div className="h-8 w-8 animate-spin rounded-full border-4 border-sky-500 border-t-transparent" />
+          </div>
+        </div>
+      </>
+    )
+  }
+
+  if (error) {
+    return (
+      <>
+        <HeroPattern />
+        <div className="relative mx-auto max-w-7xl">
+          <div className="rounded-xl border border-red-200 bg-red-50 p-6 dark:border-red-800 dark:bg-red-900/20">
+            <p className="text-red-700 dark:text-red-400">{error}</p>
+            <button
+              onClick={fetchDiff}
+              className="mt-4 rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700"
+            >
+              Retry
+            </button>
           </div>
         </div>
       </>

@@ -15,25 +15,19 @@ import { Suspense, useCallback, useEffect, useState } from 'react'
 
 function BlueGreenDeployContent() {
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
   const [actionLoading, setActionLoading] = useState<string | null>(null)
   const [deployment, setDeployment] = useState<BlueGreenDeployment | null>(null)
 
   const fetchDeployment = useCallback(async () => {
     try {
-      // Mock data - replace with real API
-      setDeployment({
-        id: 'bg-1',
-        environment: 'production',
-        activeColor: 'blue',
-        blueVersion: 'v1.2.5',
-        greenVersion: 'v1.3.0',
-        blueStatus: 'active',
-        greenStatus: 'standby',
-        lastSwitch: new Date(Date.now() - 86400000 * 2).toISOString(),
-        canRollback: true,
-      })
-    } catch (_error) {
-      // Handle error silently
+      setError(null)
+      const res = await fetch('/api/deploy/blue-green')
+      if (!res.ok) throw new Error(`HTTP ${res.status}`)
+      const data = await res.json()
+      setDeployment(data.deployment ?? null)
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to load blue-green status')
     } finally {
       setLoading(false)
     }
@@ -78,6 +72,25 @@ function BlueGreenDeployContent() {
         <div className="relative mx-auto max-w-7xl">
           <div className="flex items-center justify-center py-20">
             <div className="h-8 w-8 animate-spin rounded-full border-4 border-blue-500 border-t-transparent" />
+          </div>
+        </div>
+      </>
+    )
+  }
+
+  if (error) {
+    return (
+      <>
+        <HeroPattern />
+        <div className="relative mx-auto max-w-7xl">
+          <div className="rounded-xl border border-red-200 bg-red-50 p-6 dark:border-red-800 dark:bg-red-900/20">
+            <p className="text-red-700 dark:text-red-400">{error}</p>
+            <button
+              onClick={fetchDeployment}
+              className="mt-4 rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700"
+            >
+              Retry
+            </button>
           </div>
         </div>
       </>

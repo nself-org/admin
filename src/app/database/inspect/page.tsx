@@ -1,6 +1,5 @@
 'use client'
 
-import { PageTemplate } from '@/components/PageTemplate'
 import { FormSkeleton } from '@/components/skeletons'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Badge } from '@/components/ui/badge'
@@ -102,171 +101,39 @@ function DatabaseInspectContent() {
   const fetchInspectData = useCallback(async () => {
     setIsRefreshing(true)
     try {
-      // Mock data - in real implementation, fetch from API
+      const response = await fetch('/api/database/status', { cache: 'no-store' })
+
+      if (response.status === 401) {
+        window.location.href = '/login'
+        return
+      }
+
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`)
+      }
+
+      const data = await response.json()
+      const d = data.data ?? {}
+
       setOverview({
-        size: '256 MB',
-        tableCount: 24,
-        indexCount: 48,
-        activeConnections: 8,
-        maxConnections: 100,
-        uptime: '14 days, 6 hours',
-        version: 'PostgreSQL 16.1',
-        cacheHitRatio: 98.7,
+        size: d.size ?? '—',
+        tableCount: d.tableCount ?? 0,
+        indexCount: d.indexCount ?? 0,
+        activeConnections: d.activeConnections ?? 0,
+        maxConnections: d.maxConnections ?? 0,
+        uptime: d.uptime ?? '—',
+        version: d.version ?? '—',
+        cacheHitRatio: d.cacheHitRatio ?? 0,
       })
 
-      setTableSizes([
-        {
-          name: 'users',
-          schema: 'public',
-          rows: 15420,
-          totalSize: '48 MB',
-          dataSize: '32 MB',
-          indexSize: '14 MB',
-          toastSize: '2 MB',
-        },
-        {
-          name: 'posts',
-          schema: 'public',
-          rows: 142850,
-          totalSize: '96 MB',
-          dataSize: '72 MB',
-          indexSize: '18 MB',
-          toastSize: '6 MB',
-        },
-        {
-          name: 'comments',
-          schema: 'public',
-          rows: 523410,
-          totalSize: '64 MB',
-          dataSize: '48 MB',
-          indexSize: '12 MB',
-          toastSize: '4 MB',
-        },
-        {
-          name: 'sessions',
-          schema: 'public',
-          rows: 8240,
-          totalSize: '24 MB',
-          dataSize: '16 MB',
-          indexSize: '6 MB',
-          toastSize: '2 MB',
-        },
-        {
-          name: 'audit_logs',
-          schema: 'public',
-          rows: 1254680,
-          totalSize: '18 MB',
-          dataSize: '12 MB',
-          indexSize: '4 MB',
-          toastSize: '2 MB',
-        },
-      ])
-
-      setCacheStats({
-        hitRatio: 98.7,
-        heapHit: 4582156,
-        heapRead: 62450,
-        indexHit: 1245890,
-        indexRead: 8420,
-      })
-
-      setIndexUsage([
-        {
-          name: 'users_pkey',
-          table: 'users',
-          scans: 145820,
-          rowsRead: 145820,
-          rowsFetched: 145820,
-          usage: 'high',
-        },
-        {
-          name: 'users_email_idx',
-          table: 'users',
-          scans: 82450,
-          rowsRead: 82450,
-          rowsFetched: 82450,
-          usage: 'high',
-        },
-        {
-          name: 'posts_user_id_idx',
-          table: 'posts',
-          scans: 52180,
-          rowsRead: 142850,
-          rowsFetched: 52180,
-          usage: 'medium',
-        },
-        {
-          name: 'posts_created_at_idx',
-          table: 'posts',
-          scans: 12450,
-          rowsRead: 142850,
-          rowsFetched: 12450,
-          usage: 'medium',
-        },
-        {
-          name: 'comments_post_id_idx',
-          table: 'comments',
-          scans: 5240,
-          rowsRead: 523410,
-          rowsFetched: 5240,
-          usage: 'low',
-        },
-        {
-          name: 'old_legacy_idx',
-          table: 'legacy_data',
-          scans: 0,
-          rowsRead: 0,
-          rowsFetched: 0,
-          usage: 'unused',
-        },
-      ])
-
-      setSlowQueries([
-        {
-          query:
-            'SELECT * FROM posts WHERE user_id = $1 ORDER BY created_at DESC LIMIT 100',
-          calls: 12450,
-          totalTime: 4520.5,
-          meanTime: 0.36,
-          rows: 1245000,
-        },
-        {
-          query:
-            'SELECT COUNT(*) FROM comments WHERE post_id IN (SELECT id FROM posts WHERE user_id = $1)',
-          calls: 5240,
-          totalTime: 2180.2,
-          meanTime: 0.42,
-          rows: 5240,
-        },
-        {
-          query: 'UPDATE users SET last_login = NOW() WHERE id = $1',
-          calls: 8240,
-          totalTime: 824.0,
-          meanTime: 0.1,
-          rows: 8240,
-        },
-      ])
-
-      setLocks([
-        {
-          pid: 12458,
-          type: 'relation',
-          mode: 'AccessShareLock',
-          granted: true,
-          relation: 'users',
-          duration: '00:00:02',
-        },
-        {
-          pid: 12459,
-          type: 'relation',
-          mode: 'RowExclusiveLock',
-          granted: true,
-          relation: 'posts',
-          duration: '00:00:01',
-        },
-      ])
+      setTableSizes(Array.isArray(d.tableSizes) ? d.tableSizes : [])
+      setCacheStats(d.cacheStats ?? null)
+      setIndexUsage(Array.isArray(d.indexUsage) ? d.indexUsage : [])
+      setSlowQueries(Array.isArray(d.slowQueries) ? d.slowQueries : [])
+      setLocks(Array.isArray(d.locks) ? d.locks : [])
     } catch (error) {
       console.error('Failed to fetch inspect data:', error)
+      setOverview(null)
     } finally {
       setIsLoading(false)
       setIsRefreshing(false)
@@ -298,22 +165,32 @@ function DatabaseInspectContent() {
 
   if (isLoading) {
     return (
-      <PageTemplate
-        title="Database Inspector"
-        description="Analyze and monitor your PostgreSQL database performance"
-      >
+      <div className="space-y-6 p-6">
+        <div>
+          <h1 className="text-2xl font-bold text-zinc-900 dark:text-white">
+            Database Inspector
+          </h1>
+          <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
+            Analyze and monitor your PostgreSQL database performance
+          </p>
+        </div>
         <div className="flex items-center justify-center py-12">
           <Loader2 className="h-8 w-8 animate-spin text-zinc-400" />
         </div>
-      </PageTemplate>
+      </div>
     )
   }
 
   return (
-    <PageTemplate
-      title="Database Inspector"
-      description="Analyze and monitor your PostgreSQL database performance"
-    >
+    <div className="space-y-6 p-6">
+      <div>
+        <h1 className="text-2xl font-bold text-zinc-900 dark:text-white">
+          Database Inspector
+        </h1>
+        <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
+          Analyze and monitor your PostgreSQL database performance
+        </p>
+      </div>
       <div className="space-y-6">
         {/* Info Alert */}
         <Alert>
@@ -902,7 +779,7 @@ function DatabaseInspectContent() {
           </TabsContent>
         </Tabs>
       </div>
-    </PageTemplate>
+    </div>
   )
 }
 

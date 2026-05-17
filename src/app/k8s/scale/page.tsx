@@ -19,46 +19,6 @@ import useSWR from 'swr'
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json())
 
-// Mock data
-const mockDeployments: K8sDeployment[] = [
-  {
-    name: 'nself-api',
-    namespace: 'default',
-    replicas: { desired: 3, ready: 3, available: 3, updated: 3 },
-    strategy: 'RollingUpdate',
-    image: 'nself/api:v1.2.3',
-    createdAt: '2024-01-15T10:30:00Z',
-    conditions: [],
-  },
-  {
-    name: 'nself-hasura',
-    namespace: 'default',
-    replicas: { desired: 2, ready: 2, available: 2, updated: 2 },
-    strategy: 'RollingUpdate',
-    image: 'hasura/graphql-engine:v2.35.0',
-    createdAt: '2024-01-15T10:30:00Z',
-    conditions: [],
-  },
-  {
-    name: 'nself-auth',
-    namespace: 'default',
-    replicas: { desired: 2, ready: 2, available: 2, updated: 2 },
-    strategy: 'RollingUpdate',
-    image: 'nself/auth:v1.0.0',
-    createdAt: '2024-01-15T10:30:00Z',
-    conditions: [],
-  },
-  {
-    name: 'nself-nginx',
-    namespace: 'default',
-    replicas: { desired: 2, ready: 2, available: 2, updated: 2 },
-    strategy: 'RollingUpdate',
-    image: 'nginx:1.25-alpine',
-    createdAt: '2024-01-15T10:30:00Z',
-    conditions: [],
-  },
-]
-
 function K8sScalePageContent() {
   const searchParams = useSearchParams()
   const initialDeployment = searchParams.get('deployment') || ''
@@ -74,13 +34,11 @@ function K8sScalePageContent() {
     message: string
   } | null>(null)
 
-  const { data, isLoading, mutate } = useSWR<{ deployments: K8sDeployment[] }>(
-    '/api/k8s/deployments',
-    fetcher,
-    { fallbackData: { deployments: mockDeployments }, refreshInterval: 5000 },
-  )
+  const { data, error, isLoading, mutate } = useSWR<{
+    deployments: K8sDeployment[]
+  }>('/api/k8s/deployments', fetcher, { refreshInterval: 5000 })
 
-  const deployments = data?.deployments || mockDeployments
+  const deployments = data?.deployments ?? []
 
   const handleScale = async (deploymentName: string) => {
     const target = targetReplicas[deploymentName]
@@ -89,17 +47,34 @@ function K8sScalePageContent() {
     setScaling(deploymentName)
     setScaleResult(null)
 
-    // Simulate scaling
-    await new Promise((resolve) => setTimeout(resolve, 2000))
-
-    setScaleResult({
-      deployment: deploymentName,
-      success: true,
-      message: `Successfully scaled ${deploymentName} to ${target} replicas`,
-    })
-
-    await mutate()
-    setScaling(null)
+    try {
+      const res = await fetch(
+        `/api/k8s/deployments/${encodeURIComponent(deploymentName)}/scale`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ replicas: target }),
+        },
+      )
+      if (!res.ok) throw new Error(`HTTP ${res.status}`)
+      setScaleResult({
+        deployment: deploymentName,
+        success: true,
+        message: `Successfully scaled ${deploymentName} to ${target} replicas`,
+      })
+      await mutate()
+    } catch (err) {
+      setScaleResult({
+        deployment: deploymentName,
+        success: false,
+        message:
+          err instanceof Error
+            ? err.message
+            : `Failed to scale ${deploymentName}`,
+      })
+    } finally {
+      setScaling(null)
+    }
   }
 
   const getReplicaCount = (deployment: K8sDeployment) =>
@@ -122,6 +97,50 @@ function K8sScalePageContent() {
           {[1, 2, 3].map((i) => (
             <div key={i} className="h-32 rounded-lg bg-zinc-800/50" />
           ))}
+        </div>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="space-y-6">
+        <div>
+          <h1 className="text-2xl font-semibold text-white">
+            Scale Deployments
+          </h1>
+        </div>
+        <div className="rounded-lg border border-red-500/30 bg-red-900/20 p-6">
+          <p className="text-red-400">
+            {error instanceof Error
+              ? error.message
+              : 'Failed to load deployments'}
+          </p>
+          <button
+            onClick={() => mutate()}
+            className="mt-4 rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700"
+          >
+            Retry
+          </button>
+        </div>
+      </div>
+    )
+  }
+
+  if (deployments.length === 0) {
+    return (
+      <div className="space-y-6">
+        <div>
+          <h1 className="text-2xl font-semibold text-white">
+            Scale Deployments
+          </h1>
+        </div>
+        <div className="rounded-lg border border-zinc-700/50 bg-zinc-800/50 p-12 text-center">
+          <AlertCircle className="mx-auto mb-4 h-10 w-10 text-zinc-500" />
+          <p className="text-zinc-400">No deployments found</p>
+          <p className="text-sm text-zinc-500">
+            Connect to a Kubernetes cluster to manage deployments
+          </p>
         </div>
       </div>
     )

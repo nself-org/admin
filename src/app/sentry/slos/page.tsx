@@ -62,6 +62,16 @@ export default function SentrySlosPage() {
     return () => clearInterval(id)
   }, [load])
 
+  if (loading && data === null) {
+    return (
+      <div className="mx-auto max-w-4xl space-y-4 p-6">
+        <div className="bg-nself-surface h-8 w-48 animate-pulse rounded-lg" />
+        <div className="bg-nself-surface h-32 animate-pulse rounded-lg" />
+        <div className="bg-nself-surface h-32 animate-pulse rounded-lg" />
+      </div>
+    )
+  }
+
   return (
     <div className="mx-auto max-w-4xl space-y-4 p-6">
       {/* Header */}

@@ -24,50 +24,12 @@ function PreviewDeployContent() {
 
   const fetchPreviews = useCallback(async () => {
     try {
-      // Mock data - replace with real API
-      const mockPreviews: PreviewEnvironment[] = [
-        {
-          id: 'preview-1',
-          name: 'feature-auth-redesign',
-          branch: 'feature/auth-redesign',
-          commit: 'a1b2c3d',
-          url: 'https://preview-auth-redesign.example.com',
-          status: 'active',
-          createdAt: new Date(Date.now() - 86400000 * 2).toISOString(),
-          expiresAt: new Date(Date.now() + 86400000 * 5).toISOString(),
-          createdBy: 'developer@example.com',
-          services: [
-            {
-              name: 'frontend',
-              status: 'running',
-              url: 'https://preview-auth-redesign.example.com',
-            },
-            {
-              name: 'api',
-              status: 'running',
-              url: 'https://api.preview-auth-redesign.example.com',
-            },
-            { name: 'hasura', status: 'running' },
-          ],
-        },
-        {
-          id: 'preview-2',
-          name: 'fix-payment-flow',
-          branch: 'fix/payment-flow',
-          commit: 'e4f5g6h',
-          url: 'https://preview-payment.example.com',
-          status: 'creating',
-          createdAt: new Date(Date.now() - 3600000).toISOString(),
-          createdBy: 'developer@example.com',
-          services: [
-            { name: 'frontend', status: 'pending' },
-            { name: 'api', status: 'building' },
-          ],
-        },
-      ]
-      setPreviews(mockPreviews)
+      const res = await fetch('/api/deploy/preview')
+      if (!res.ok) throw new Error(`HTTP ${res.status}`)
+      const data = await res.json()
+      setPreviews(data.previews ?? [])
     } catch (_error) {
-      // Handle error silently
+      setPreviews([])
     } finally {
       setLoading(false)
     }

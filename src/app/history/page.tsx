@@ -5,6 +5,7 @@ import { TableSkeleton } from '@/components/skeletons'
 import type { HistoryEntry } from '@/types/deployment'
 import {
   Activity,
+  AlertCircle,
   ChevronDown,
   ChevronRight,
   Clock,
@@ -19,11 +20,12 @@ import {
   User,
 } from 'lucide-react'
 import Link from 'next/link'
-import { Suspense, useCallback, useEffect, useState } from 'react'
+import { Suspense, useState } from 'react'
+import useSWR from 'swr'
+
+const fetcher = (url: string) => fetch(url).then((res) => res.json())
 
 function HistoryContent() {
-  const [loading, setLoading] = useState(true)
-  const [history, setHistory] = useState<HistoryEntry[]>([])
   const [filterType, setFilterType] = useState<string>('all')
   const [filterUser, setFilterUser] = useState<string>('all')
 
@@ -37,103 +39,21 @@ function HistoryContent() {
     'sync',
   ]
 
-  const fetchHistory = useCallback(async () => {
-    try {
-      // Mock data - replace with real API
-      const mockHistory: HistoryEntry[] = [
-        {
-          id: 'hist-1',
-          type: 'deployment',
-          action: 'deploy',
-          description: 'Deployed v1.3.0 to production',
-          user: 'developer@example.com',
-          timestamp: new Date(Date.now() - 3600000).toISOString(),
-          metadata: { version: 'v1.3.0', environment: 'production' },
-        },
-        {
-          id: 'hist-2',
-          type: 'config_change',
-          action: 'update',
-          description: 'Updated LOG_LEVEL to debug',
-          user: 'developer@example.com',
-          timestamp: new Date(Date.now() - 7200000).toISOString(),
-          metadata: { key: 'LOG_LEVEL', oldValue: 'info', newValue: 'debug' },
-        },
-        {
-          id: 'hist-3',
-          type: 'database',
-          action: 'migrate',
-          description: 'Applied migration: add_user_preferences',
-          user: 'admin@example.com',
-          timestamp: new Date(Date.now() - 86400000).toISOString(),
-          metadata: { migration: 'add_user_preferences' },
-        },
-        {
-          id: 'hist-4',
-          type: 'service',
-          action: 'restart',
-          description: 'Restarted hasura service',
-          user: 'developer@example.com',
-          timestamp: new Date(Date.now() - 172800000).toISOString(),
-          metadata: { service: 'hasura' },
-        },
-        {
-          id: 'hist-5',
-          type: 'security',
-          action: 'rotate',
-          description: 'Rotated API keys for production',
-          user: 'admin@example.com',
-          timestamp: new Date(Date.now() - 259200000).toISOString(),
-          metadata: { keys: ['API_KEY', 'JWT_SECRET'] },
-        },
-        {
-          id: 'hist-6',
-          type: 'sync',
-          action: 'sync',
-          description: 'Synced staging to production',
-          user: 'developer@example.com',
-          timestamp: new Date(Date.now() - 345600000).toISOString(),
-          metadata: { source: 'staging', target: 'production' },
-        },
-        {
-          id: 'hist-7',
-          type: 'deployment',
-          action: 'rollback',
-          description: 'Rolled back production to v1.2.5',
-          user: 'admin@example.com',
-          timestamp: new Date(Date.now() - 432000000).toISOString(),
-          metadata: { fromVersion: 'v1.2.6', toVersion: 'v1.2.5' },
-        },
-        {
-          id: 'hist-8',
-          type: 'database',
-          action: 'backup',
-          description: 'Created database backup',
-          user: 'system',
-          timestamp: new Date(Date.now() - 518400000).toISOString(),
-          metadata: { size: '2.5GB', file: 'backup-2024-01-20.sql' },
-        },
-      ]
+  const { data, error, isLoading } = useSWR<{
+    success: boolean
+    history: HistoryEntry[]
+    total: number
+    types: string[]
+  }>('/api/history', fetcher)
 
-      let filtered = mockHistory
-      if (filterType !== 'all') {
-        filtered = filtered.filter((h) => h.type === filterType)
-      }
-      if (filterUser !== 'all') {
-        filtered = filtered.filter((h) => h.user === filterUser)
-      }
-
-      setHistory(filtered)
-    } catch (_error) {
-      // Handle error silently
-    } finally {
-      setLoading(false)
-    }
-  }, [filterType, filterUser])
-
-  useEffect(() => {
-    fetchHistory()
-  }, [fetchHistory])
+  const allHistory = data?.history ?? []
+  let history = allHistory
+  if (filterType !== 'all') {
+    history = history.filter((h) => h.type === filterType)
+  }
+  if (filterUser !== 'all') {
+    history = history.filter((h) => h.user === filterUser)
+  }
 
   const getTypeIcon = (type: string) => {
     switch (type) {
@@ -183,7 +103,25 @@ function HistoryContent() {
     return 'Just now'
   }
 
-  if (loading) {
+  if (error) {
+    return (
+      <>
+        <HeroPattern />
+        <div className="relative mx-auto max-w-7xl">
+          <div className="rounded-lg border border-red-500/30 bg-red-900/20 p-6">
+            <div className="flex items-center gap-3">
+              <AlertCircle className="h-5 w-5 text-red-400" />
+              <p className="text-red-400">
+                {error instanceof Error ? error.message : 'Failed to load history'}
+              </p>
+            </div>
+          </div>
+        </div>
+      </>
+    )
+  }
+
+  if (isLoading) {
     return (
       <>
         <HeroPattern />

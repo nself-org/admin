@@ -26,41 +26,11 @@ interface Secret {
   lastRotated?: string
 }
 
-const mockSecrets: Secret[] = [
-  {
-    id: '1',
-    key: 'JWT_SECRET',
-    value: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9',
-    environment: 'production',
-    createdAt: '2024-01-15T10:00:00Z',
-    lastRotated: '2024-01-10T14:30:00Z',
-  },
-  {
-    id: '2',
-    key: 'HASURA_ADMIN_SECRET',
-    value: 'hasura_secret_key_prod_2024',
-    environment: 'production',
-    createdAt: '2024-01-15T10:00:00Z',
-  },
-  {
-    id: '3',
-    key: 'DATABASE_PASSWORD',
-    value: 'pg_password_secure_12345',
-    environment: 'production',
-    createdAt: '2024-01-15T10:00:00Z',
-  },
-  {
-    id: '4',
-    key: 'MINIO_ROOT_PASSWORD',
-    value: 'minio_admin_password_2024',
-    environment: 'production',
-    createdAt: '2024-01-15T10:00:00Z',
-  },
-]
+const EMPTY_SECRETS: Secret[] = []
 
 function SecretsManagementContent() {
   const [selectedEnv, setSelectedEnv] = useState('production')
-  const [secrets, setSecrets] = useState(mockSecrets)
+  const [secrets, setSecrets] = useState<Secret[]>(EMPTY_SECRETS)
   const [visibleSecrets, setVisibleSecrets] = useState<Set<string>>(new Set())
   const [showAddForm, setShowAddForm] = useState(false)
   const [newKey, setNewKey] = useState('')

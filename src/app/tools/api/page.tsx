@@ -27,7 +27,7 @@ import {
   Upload,
   X,
 } from 'lucide-react'
-import { Suspense, useEffect, useState } from 'react'
+import { Suspense, useState } from 'react'
 
 interface ApiRequest {
   id: string
@@ -974,125 +974,41 @@ function ApiExplorerContent() {
     'collections' | 'history' | 'environments' | 'docs'
   >('collections')
 
-  useEffect(() => {
-    // Load mock data
-    const mockCollections: Collection[] = [
-      {
-        id: '1',
-        name: 'User API',
-        description: 'User management endpoints',
-        requests: ['req1', 'req2'],
-        variables: { baseUrl: 'https://api.example.com' },
-        baseUrl: 'https://api.example.com',
-      },
-      {
-        id: '2',
-        name: 'Auth API',
-        description: 'Authentication endpoints',
-        requests: ['req3'],
-        variables: { baseUrl: 'https://auth.example.com' },
-        baseUrl: 'https://auth.example.com',
-      },
-    ]
-
-    const mockHistory: ApiRequest[] = [
-      {
-        id: 'req1',
-        name: 'Get Users',
-        method: 'GET',
-        url: 'https://api.example.com/users',
-        headers: { Authorization: 'Bearer token123' },
-        bodyType: 'none',
-        timestamp: '2024-01-15T10:30:00Z',
-      },
-      {
-        id: 'req2',
-        name: 'Create User',
-        method: 'POST',
-        url: 'https://api.example.com/users',
-        headers: { 'Content-Type': 'application/json' },
-        body: '{"name": "John Doe", "email": "john@example.com"}',
-        bodyType: 'json',
-        timestamp: '2024-01-15T10:25:00Z',
-      },
-      {
-        id: 'req3',
-        name: 'Login',
-        method: 'POST',
-        url: 'https://auth.example.com/login',
-        headers: { 'Content-Type': 'application/json' },
-        body: '{"username": "admin", "password": "password"}',
-        bodyType: 'json',
-        timestamp: '2024-01-15T10:20:00Z',
-      },
-    ]
-
-    const mockEnvironments: Environment[] = [
-      {
-        id: '1',
-        name: 'Development',
-        variables: {
-          baseUrl: 'http://localhost:3000',
-          apiKey: 'dev-key-123',
-        },
-        baseUrl: 'http://localhost:3000',
-      },
-      {
-        id: '2',
-        name: 'Production',
-        variables: {
-          baseUrl: 'https://api.example.com',
-          apiKey: 'prod-key-456',
-        },
-        baseUrl: 'https://api.example.com',
-      },
-    ]
-
-    setCollections(mockCollections)
-    setRequestHistory(mockHistory)
-    setEnvironments(mockEnvironments)
-  }, [])
 
   const handleSendRequest = async (request: ApiRequest) => {
     setLoading(true)
 
-    // Simulate API request
-    await new Promise((resolve) => setTimeout(resolve, 1000))
-
-    // Mock response
-    const mockResponse: ApiResponse = {
-      status: 200,
-      statusText: 'OK',
-      headers: {
-        'content-type': 'application/json',
-        'content-length': '156',
-        server: 'nginx/1.18.0',
-        date: new Date().toISOString(),
-      },
-      body: JSON.stringify(
-        {
-          success: true,
-          data: {
-            users: [
-              { id: 1, name: 'John Doe', email: 'john@example.com' },
-              { id: 2, name: 'Jane Smith', email: 'jane@example.com' },
-            ],
-          },
-          meta: {
-            total: 2,
-            page: 1,
-            limit: 10,
-          },
-        },
-        null,
-        2,
-      ),
-      size: 156,
-      time: 245,
-      timestamp: new Date().toISOString(),
+    try {
+      const res = await fetch(request.url, {
+        method: request.method,
+        headers: request.headers as Record<string, string>,
+        body: request.body && request.method !== 'GET' ? request.body : undefined,
+      })
+      const start = Date.now()
+      const text = await res.text()
+      const elapsed = Date.now() - start
+      const responseHeaders: Record<string, string> = {}
+      res.headers.forEach((val, key) => { responseHeaders[key] = val })
+      setCurrentResponse({
+        status: res.status,
+        statusText: res.statusText,
+        headers: responseHeaders,
+        body: text,
+        size: text.length,
+        time: elapsed,
+        timestamp: new Date().toISOString(),
+      })
+    } catch (err) {
+      setCurrentResponse({
+        status: 0,
+        statusText: 'Network Error',
+        headers: {},
+        body: err instanceof Error ? err.message : String(err),
+        size: 0,
+        time: 0,
+        timestamp: new Date().toISOString(),
+      })
     }
-
-    setCurrentResponse(mockResponse)
 
     // Add to history
     const requestWithId = {

@@ -69,6 +69,16 @@ export default function SentryUptimePage() {
   const operational = data?.monitors.filter((m) => m.status === 'operational').length ?? 0
   const total = data?.monitors.length ?? 0
 
+  if (loading && data === null) {
+    return (
+      <div className="mx-auto max-w-5xl space-y-4 p-6">
+        <div className="bg-nself-surface h-8 w-64 animate-pulse rounded-lg" />
+        <div className="bg-nself-surface h-24 animate-pulse rounded-lg" />
+        <div className="bg-nself-surface h-48 animate-pulse rounded-lg" />
+      </div>
+    )
+  }
+
   return (
     <div className="mx-auto max-w-5xl space-y-4 p-6">
       {/* Header */}

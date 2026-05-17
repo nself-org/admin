@@ -1,6 +1,5 @@
 'use client'
 
-import { PageTemplate } from '@/components/PageTemplate'
 import {
   QueryHistory,
   QueryHistoryItem,
@@ -94,100 +93,68 @@ function DatabaseConsoleContent() {
   const [showSaveDialog, setShowSaveDialog] = useState(false)
   const [saveQueryName, setSaveQueryName] = useState('')
   const [saveQueryFolder, setSaveQueryFolder] = useState('')
+  const [databases, setDatabases] = useState<string[]>([])
+  const [schemaTables, setSchemaTables] = useState<any[]>([])
 
-  // Mock database list
-  const databases = ['main', 'users', 'analytics', 'logs']
-
-  // Mock schema data
-  const mockTables = [
-    {
-      name: 'users',
-      schema: 'public',
-      rowCount: 1543,
-      columns: [
-        {
-          name: 'id',
-          type: 'bigint',
-          nullable: false,
-          isPrimaryKey: true,
-        },
-        { name: 'email', type: 'varchar', nullable: false },
-        { name: 'name', type: 'varchar', nullable: true },
-        { name: 'created_at', type: 'timestamp', nullable: false },
-        { name: 'updated_at', type: 'timestamp', nullable: false },
-      ],
-    },
-    {
-      name: 'posts',
-      schema: 'public',
-      rowCount: 5432,
-      columns: [
-        {
-          name: 'id',
-          type: 'bigint',
-          nullable: false,
-          isPrimaryKey: true,
-        },
-        {
-          name: 'user_id',
-          type: 'bigint',
-          nullable: false,
-          isForeignKey: true,
-        },
-        { name: 'title', type: 'varchar', nullable: false },
-        { name: 'content', type: 'text', nullable: true },
-        { name: 'published', type: 'boolean', nullable: false },
-        { name: 'created_at', type: 'timestamp', nullable: false },
-      ],
-    },
-    {
-      name: 'comments',
-      schema: 'public',
-      rowCount: 12543,
-      columns: [
-        {
-          name: 'id',
-          type: 'bigint',
-          nullable: false,
-          isPrimaryKey: true,
-        },
-        {
-          name: 'post_id',
-          type: 'bigint',
-          nullable: false,
-          isForeignKey: true,
-        },
-        {
-          name: 'user_id',
-          type: 'bigint',
-          nullable: false,
-          isForeignKey: true,
-        },
-        { name: 'content', type: 'text', nullable: false },
-        { name: 'created_at', type: 'timestamp', nullable: false },
-      ],
-    },
-  ]
-
-  // Initialize with template query
+  // Load databases, schema and persisted local data
   useEffect(() => {
-    setIsLoading(true)
-    // Simulate loading
-    setTimeout(() => {
-      setIsConnected(true)
-      setQuery(QUERY_TEMPLATES[0].query)
-      setIsLoading(false)
-    }, 500)
+    const load = async () => {
+      setIsLoading(true)
+      try {
+        const [dbRes, schemaRes] = await Promise.all([
+          fetch('/api/database/query', { cache: 'no-store' }),
+          fetch('/api/database/schema', { cache: 'no-store' }),
+        ])
 
-    // Load saved data from localStorage
+        if (dbRes.status === 401 || schemaRes.status === 401) {
+          window.location.href = '/login'
+          return
+        }
+
+        if (dbRes.ok) {
+          const dbData = await dbRes.json()
+          const dbs = dbData.data?.databases ?? dbData.data ?? []
+          setDatabases(Array.isArray(dbs) ? dbs : [])
+          if (Array.isArray(dbs) && dbs.length > 0) {
+            setSelectedDatabase(dbs[0])
+          }
+        }
+
+        if (schemaRes.ok) {
+          const schemaData = await schemaRes.json()
+          const tables = schemaData.data?.tables ?? schemaData.data ?? []
+          setSchemaTables(Array.isArray(tables) ? tables : [])
+        }
+
+        setIsConnected(true)
+      } catch (_err) {
+        setIsConnected(false)
+      } finally {
+        setIsLoading(false)
+      }
+
+      setQuery(QUERY_TEMPLATES[0].query)
+    }
+
+    load()
+
+    // Load persisted data from localStorage
     const savedHistory = localStorage.getItem('db-console-history')
     if (savedHistory) {
-      setQueryHistory(JSON.parse(savedHistory).slice(0, 50)) // Keep last 50
+      try {
+        setQueryHistory(JSON.parse(savedHistory).slice(0, 50))
+      } catch {
+        // ignore corrupt data
+      }
     }
 
     const savedQueriesData = localStorage.getItem('db-console-saved')
     if (savedQueriesData) {
-      setSavedQueries(JSON.parse(savedQueriesData))
+      try {
+        setSavedQueries(JSON.parse(savedQueriesData))
+      } catch {
+        // ignore corrupt data
+      }
     }
   }, [])
 
@@ -218,49 +185,61 @@ function DatabaseConsoleContent() {
     const startTime = Date.now()
 
     try {
-      // Simulate API call with timeout
-      await new Promise((resolve) =>
-        setTimeout(resolve, 500 + Math.random() * 1500),
-      )
+      const response = await fetch('/api/database/query', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sql: query, database: selectedDatabase }),
+      })
 
-      // Mock result
-      const mockResult: QueryResult = {
-        columns: ['id', 'email', 'name', 'created_at'],
-        rows: Array.from({ length: 25 }, (_, i) => [
-          i + 1,
-          `user${i + 1}@example.com`,
-          `User ${i + 1}`,
-          new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000)
-            .toISOString()
-            .split('T')[0],
-        ]),
-        rowCount: 25,
+      if (response.status === 401) {
+        window.location.href = '/login'
+        return
+      }
+
+      const data = await response.json()
+
+      if (!response.ok || !data.success) {
+        const errorMessage = data.error ?? `HTTP ${response.status}`
+        setError(errorMessage)
+        const historyItem: QueryHistoryItem = {
+          id: Date.now().toString(),
+          query,
+          database: selectedDatabase,
+          executionTime: Date.now() - startTime,
+          timestamp: new Date().toLocaleString(),
+          status: 'error',
+          error: errorMessage,
+        }
+        setQueryHistory((prev) => [historyItem, ...prev.slice(0, 49)])
+        toast.error(errorMessage)
+        return
+      }
+
+      const queryResult: QueryResult = {
+        columns: data.data?.columns ?? [],
+        rows: data.data?.rows ?? [],
+        rowCount: data.data?.rowCount ?? 0,
         executionTime: Date.now() - startTime,
       }
 
-      setResult(mockResult)
+      setResult(queryResult)
 
-      // Add to history
       const historyItem: QueryHistoryItem = {
         id: Date.now().toString(),
         query,
         database: selectedDatabase,
-        executionTime: mockResult.executionTime,
+        executionTime: queryResult.executionTime,
         timestamp: new Date().toLocaleString(),
         status: 'success',
-        rowCount: mockResult.rowCount,
+        rowCount: queryResult.rowCount,
       }
       setQueryHistory((prev) => [historyItem, ...prev.slice(0, 49)])
-
-      toast.success(
-        `Query executed successfully (${mockResult.executionTime}ms)`,
-      )
+      toast.success(`Query executed (${queryResult.executionTime}ms)`)
     } catch (err) {
       const errorMessage =
         err instanceof Error ? err.message : 'Query execution failed'
       setError(errorMessage)
 
-      // Add to history
       const historyItem: QueryHistoryItem = {
         id: Date.now().toString(),
         query,
@@ -271,7 +250,6 @@ function DatabaseConsoleContent() {
         error: errorMessage,
       }
       setQueryHistory((prev) => [historyItem, ...prev.slice(0, 49)])
-
       toast.error(errorMessage)
     } finally {
       setIsExecuting(false)
@@ -378,14 +356,31 @@ function DatabaseConsoleContent() {
 
   if (isLoading) {
     return (
-      <PageTemplate description="Interactive PostgreSQL database console">
+      <div className="space-y-6 p-6">
+        <div>
+          <h1 className="text-2xl font-bold text-zinc-900 dark:text-white">
+            Database Console
+          </h1>
+          <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
+            Interactive PostgreSQL console
+          </p>
+        </div>
         <CodeEditorSkeleton />
-      </PageTemplate>
+      </div>
     )
   }
 
   return (
-    <PageTemplate description="Interactive PostgreSQL database console with SQL editor, schema browser, and query history">
+    <div className="space-y-6 p-6">
+      <div>
+        <h1 className="text-2xl font-bold text-zinc-900 dark:text-white">
+          Database Console
+        </h1>
+        <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
+          Interactive PostgreSQL console with SQL editor, schema browser, and
+          query history. Destructive statements require confirmation.
+        </p>
+      </div>
       <div className="space-y-6">
         {/* Connection Status */}
         <Card>
@@ -452,7 +447,7 @@ function DatabaseConsoleContent() {
           {showSchema && (
             <div className="col-span-12 lg:col-span-3">
               <SchemaBrowser
-                tables={mockTables}
+                tables={schemaTables}
                 onTableClick={handleTableClick}
                 onColumnClick={handleColumnClick}
               />
@@ -661,7 +656,7 @@ function DatabaseConsoleContent() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-    </PageTemplate>
+    </div>
   )
 }
 

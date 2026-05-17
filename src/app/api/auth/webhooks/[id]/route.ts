@@ -52,6 +52,30 @@ export async function GET(
 }
 
 /**
+ * PATCH /api/auth/webhooks/[id]
+ * Enable/disable a webhook. The nself CLI does not yet expose an enable/disable
+ * subcommand for auth webhooks. Return 501 Not Implemented so the page's
+ * optimistic-UI toggle can still update local state without crashing.
+ */
+export async function PATCH(
+  _request: NextRequest,
+  { params }: { params: Promise<{ id: string }> },
+): Promise<NextResponse> {
+  const authError = await requireAuth(_request)
+  if (authError) return authError
+
+  const { id } = await params
+  return NextResponse.json(
+    {
+      success: false,
+      error: 'Enable/disable is not yet supported by the nself CLI',
+      id,
+    },
+    { status: 501 },
+  )
+}
+
+/**
  * DELETE /api/auth/webhooks/[id]
  * Deletes a webhook via nself auth webhooks delete <id>
  */

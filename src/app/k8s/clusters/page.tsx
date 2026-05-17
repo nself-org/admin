@@ -20,61 +20,26 @@ import useSWR from 'swr'
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json())
 
-// Mock clusters
-const mockClusters: K8sCluster[] = [
-  {
-    name: 'production',
-    context: 'do-nyc1-production',
-    platform: 'doks',
-    apiServer: 'https://k8s-prod.example.com:6443',
-    namespace: 'default',
-    status: 'connected',
-    version: '1.28.2',
-    nodes: 3,
-    current: true,
-  },
-  {
-    name: 'staging',
-    context: 'do-nyc1-staging',
-    platform: 'doks',
-    apiServer: 'https://k8s-staging.example.com:6443',
-    namespace: 'default',
-    status: 'connected',
-    version: '1.28.2',
-    nodes: 2,
-    current: false,
-  },
-  {
-    name: 'development',
-    context: 'minikube',
-    platform: 'minikube',
-    apiServer: 'https://localhost:8443',
-    namespace: 'default',
-    status: 'disconnected',
-    version: '1.27.0',
-    nodes: 1,
-    current: false,
-  },
-]
-
 function K8sClustersContent() {
   const [switching, setSwitching] = useState<string | null>(null)
 
-  const { data, isLoading, mutate } = useSWR<{ clusters: K8sCluster[] }>(
+  const { data, isLoading, error, mutate } = useSWR<{ clusters: K8sCluster[] }>(
     '/api/k8s/clusters',
     fetcher,
-    { fallbackData: { clusters: mockClusters } },
   )
 
-  const clusters = data?.clusters || mockClusters
+  const clusters = data?.clusters ?? []
   const currentCluster = clusters.find((c) => c.current)
 
   const handleSwitch = async (clusterName: string) => {
     setSwitching(clusterName)
-    // Simulate switching
-    await new Promise((resolve) => setTimeout(resolve, 1500))
-    await mutate()
-    setSwitching(null)
+    try {
+      const res = await fetch(`/api/k8s/clusters/${encodeURIComponent(clusterName)}/switch`, { method: 'POST' })
+      if (!res.ok) throw new Error(`HTTP ${res.status}`)
+      await mutate()
+    } finally {
+      setSwitching(null)
+    }
   }
 
   const handleDelete = async (clusterName: string) => {
@@ -112,6 +77,31 @@ function K8sClustersContent() {
           {[1, 2, 3].map((i) => (
             <div key={i} className="h-24 rounded-lg bg-zinc-800/50" />
           ))}
+        </div>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center gap-4">
+          <Link href="/k8s" className="rounded-lg border border-zinc-700 bg-zinc-800 p-2 hover:bg-zinc-700">
+            <ArrowLeft className="h-5 w-5" />
+          </Link>
+          <h1 className="text-2xl font-semibold text-white">Kubernetes Clusters</h1>
+        </div>
+        <div className="rounded-lg border border-red-500/30 bg-red-900/20 p-6">
+          <p className="text-red-400">
+            {error instanceof Error ? error.message : 'Failed to load clusters'}
+          </p>
+          <button
+            onClick={() => mutate()}
+            className="mt-4 inline-flex items-center gap-2 rounded-lg border border-zinc-700 bg-zinc-800 px-4 py-2 text-sm text-white hover:bg-zinc-700"
+          >
+            <RefreshCw className="h-4 w-4" />
+            Retry
+          </button>
         </div>
       </div>
     )

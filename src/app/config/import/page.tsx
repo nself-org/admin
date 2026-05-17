@@ -1,7 +1,5 @@
 'use client'
 
-import { PageTemplate } from '@/components/PageTemplate'
-import { FormSkeleton } from '@/components/skeletons'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import {
@@ -20,6 +18,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import {
+  AlertCircle,
   AlertTriangle,
   CheckCircle,
   Eye,
@@ -27,9 +26,10 @@ import {
   Settings,
   Terminal,
   Upload,
+  WifiOff,
   XCircle,
 } from 'lucide-react'
-import { Suspense, useCallback, useRef, useState } from 'react'
+import { useCallback, useRef, useState } from 'react'
 
 const ENVIRONMENTS = [
   { value: 'local', label: 'Local' },
@@ -43,15 +43,16 @@ const FORMATS = [
   { value: 'yaml', label: 'YAML' },
 ]
 
-function ConfigImportContent() {
+type ActionState = 'idle' | 'previewing' | 'importing' | 'success' | 'error' | 'unauth' | 'offline'
+
+export default function ConfigImportPage() {
   const [environment, setEnvironment] = useState('local')
   const [format, setFormat] = useState('json')
   const [fileContent, setFileContent] = useState('')
   const [fileName, setFileName] = useState<string | null>(null)
-  const [isImporting, setIsImporting] = useState(false)
-  const [isPreviewing, setIsPreviewing] = useState(false)
+  const [actionState, setActionState] = useState<ActionState>('idle')
   const [lastOutput, setLastOutput] = useState('')
-  const [importSuccess, setImportSuccess] = useState<boolean | null>(null)
+  const [errorMessage, setErrorMessage] = useState('')
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   const handleFileUpload = useCallback(
@@ -86,7 +87,6 @@ function ConfigImportContent() {
       const file = event.dataTransfer.files[0]
       if (!file) return
 
-      // Create a synthetic event-like structure for reuse
       const dataTransfer = new DataTransfer()
       dataTransfer.items.add(file)
 
@@ -107,16 +107,17 @@ function ConfigImportContent() {
     [],
   )
 
-  const runPreview = async () => {
+  const callImportApi = async (preview: boolean) => {
     if (!fileContent) {
-      setLastOutput('Error: No configuration content to preview.')
-      setImportSuccess(false)
+      setLastOutput(`Error: No configuration content to ${preview ? 'preview' : 'import'}.`)
+      setErrorMessage(`No configuration content to ${preview ? 'preview' : 'import'}.`)
+      setActionState('error')
       return
     }
 
-    setIsPreviewing(true)
+    setActionState(preview ? 'previewing' : 'importing')
     setLastOutput('')
-    setImportSuccess(null)
+    setErrorMessage('')
 
     try {
       const response = await fetch('/api/config/import', {
@@ -126,314 +127,311 @@ function ConfigImportContent() {
           environment,
           content: fileContent,
           format,
-          preview: true,
+          preview,
         }),
       })
+
+      if (response.status === 401) {
+        setActionState('unauth')
+        return
+      }
 
       const data = await response.json()
       const output =
         data.data?.output || data.data?.stderr || data.error || data.details
       setLastOutput(output || JSON.stringify(data, null, 2))
-      setImportSuccess(data.success)
-    } catch (error) {
-      setLastOutput(
-        error instanceof Error ? error.message : 'Preview request failed',
-      )
-      setImportSuccess(false)
-    } finally {
-      setIsPreviewing(false)
+
+      if (data.success) {
+        setActionState('success')
+      } else {
+        setErrorMessage(output || `${preview ? 'Preview' : 'Import'} failed`)
+        setActionState('error')
+      }
+    } catch (_err) {
+      const msg = 'Cannot reach admin API. Check your network connection.'
+      setLastOutput(msg)
+      setErrorMessage(msg)
+      setActionState('offline')
     }
   }
 
-  const runImport = async () => {
-    if (!fileContent) {
-      setLastOutput('Error: No configuration content to import.')
-      setImportSuccess(false)
-      return
-    }
+  const isActionDisabled = actionState === 'previewing' || actionState === 'importing' || !fileContent
 
-    setIsImporting(true)
-    setLastOutput('')
-    setImportSuccess(null)
-
-    try {
-      const response = await fetch('/api/config/import', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          environment,
-          content: fileContent,
-          format,
-          preview: false,
-        }),
-      })
-
-      const data = await response.json()
-      const output =
-        data.data?.output || data.data?.stderr || data.error || data.details
-      setLastOutput(output || JSON.stringify(data, null, 2))
-      setImportSuccess(data.success)
-    } catch (error) {
-      setLastOutput(
-        error instanceof Error ? error.message : 'Import request failed',
-      )
-      setImportSuccess(false)
-    } finally {
-      setIsImporting(false)
-    }
+  if (actionState === 'unauth') {
+    return (
+      <div className="flex flex-col items-center justify-center py-24 gap-4">
+        <AlertCircle className="h-10 w-10 text-destructive" />
+        <p className="text-lg font-medium">Not authenticated</p>
+        <p className="text-sm text-muted-foreground">Please log in to import configuration.</p>
+        <Button variant="outline" onClick={() => { window.location.href = '/login' }}>Go to Login</Button>
+      </div>
+    )
   }
 
-  const isActionDisabled = isImporting || isPreviewing || !fileContent
+  if (actionState === 'offline') {
+    return (
+      <div className="flex flex-col items-center justify-center py-24 gap-4">
+        <WifiOff className="h-10 w-10 text-muted-foreground" />
+        <p className="text-lg font-medium">Cannot connect to admin API</p>
+        <p className="text-sm text-muted-foreground">{errorMessage}</p>
+        <Button variant="outline" onClick={() => setActionState('idle')}>Retry</Button>
+      </div>
+    )
+  }
 
   return (
-    <PageTemplate
-      title="Config Import"
-      description="Import configuration from a file into an environment using nself CLI"
-    >
-      <div className="space-y-6">
-        {/* Info Alert */}
-        <Alert>
-          <Settings className="h-4 w-4" />
-          <AlertTitle>nself CLI Integration</AlertTitle>
+    <div className="space-y-6 max-w-4xl">
+      <div>
+        <h1 className="text-2xl font-bold flex items-center gap-2">
+          <Upload className="h-6 w-6" />
+          Config Import
+        </h1>
+        <p className="text-sm text-muted-foreground mt-1">
+          Import configuration from a file into an environment. Values are validated before applying.
+        </p>
+      </div>
+
+      {/* Info Alert */}
+      <Alert>
+        <Settings className="h-4 w-4" />
+        <AlertTitle>nself CLI Integration</AlertTitle>
+        <AlertDescription>
+          This page executes{' '}
+          <code className="rounded bg-muted px-1 text-xs">
+            nself config import
+          </code>{' '}
+          to import configuration into a specific environment. Use the preview
+          button to see changes before applying. Uploaded values are validated by the CLI before being applied.
+        </AlertDescription>
+      </Alert>
+
+      {/* Warning for prod */}
+      {environment === 'prod' && (
+        <Alert variant="destructive" className="border-red-600 bg-red-950/50">
+          <AlertTriangle className="h-4 w-4" />
+          <AlertTitle>Production Environment</AlertTitle>
           <AlertDescription>
-            This page executes{' '}
-            <code className="rounded bg-zinc-100 px-1 dark:bg-zinc-800">
-              nself config import
-            </code>{' '}
-            to import configuration into a specific environment. Use the preview
-            button to see changes before applying.
+            You are importing configuration into the{' '}
+            <strong>production</strong> environment. Please preview changes
+            before applying.
           </AlertDescription>
         </Alert>
+      )}
 
-        {/* Warning for prod */}
-        {environment === 'prod' && (
-          <Alert variant="destructive" className="border-red-600 bg-red-950/50">
-            <AlertTriangle className="h-4 w-4" />
-            <AlertTitle>Production Environment</AlertTitle>
-            <AlertDescription>
-              You are importing configuration into the{' '}
-              <strong>production</strong> environment. Please preview changes
-              before applying.
-            </AlertDescription>
-          </Alert>
-        )}
+      {actionState === 'error' && errorMessage && (
+        <Alert variant="destructive">
+          <AlertCircle className="h-4 w-4" />
+          <AlertDescription>{errorMessage}</AlertDescription>
+        </Alert>
+      )}
 
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-          {/* Import Controls */}
-          <Card>
-            <CardHeader>
-              <div className="flex items-center gap-2">
-                <Upload className="h-5 w-5 text-blue-600" />
-                <CardTitle>Import Configuration</CardTitle>
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+        {/* Import Controls */}
+        <Card>
+          <CardHeader>
+            <div className="flex items-center gap-2">
+              <Upload className="h-5 w-5 text-blue-600" />
+              <CardTitle>Import Configuration</CardTitle>
+            </div>
+            <CardDescription>
+              Upload a configuration file and select the target environment
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            {/* File Upload Area */}
+            <div
+              onDrop={handleDrop}
+              onDragOver={handleDragOver}
+              onClick={() => fileInputRef.current?.click()}
+              className="cursor-pointer rounded-lg border-2 border-dashed border-zinc-300 p-8 text-center transition-colors hover:border-blue-400 hover:bg-blue-50/50 dark:border-zinc-600 dark:hover:border-blue-500 dark:hover:bg-blue-950/20"
+            >
+              <Upload className="mx-auto mb-3 h-8 w-8 text-zinc-400" />
+              {fileName ? (
+                <div>
+                  <p className="text-sm font-medium text-zinc-900 dark:text-white">
+                    {fileName}
+                  </p>
+                  <p className="mt-1 text-xs text-zinc-500">
+                    {fileContent.length} characters loaded
+                  </p>
+                </div>
+              ) : (
+                <div>
+                  <p className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+                    Drop a file here or click to upload
+                  </p>
+                  <p className="mt-1 text-xs text-zinc-500">
+                    Supports JSON and YAML configuration files
+                  </p>
+                </div>
+              )}
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept=".json,.yaml,.yml"
+                onChange={handleFileUpload}
+                className="hidden"
+              />
+            </div>
+
+            {/* Environment and Format Selectors */}
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+                  Target Environment
+                </label>
+                <Select value={environment} onValueChange={setEnvironment}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {ENVIRONMENTS.map((env) => (
+                      <SelectItem key={env.value} value={env.value}>
+                        {env.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
-              <CardDescription>
-                Upload a configuration file and select the target environment
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              {/* File Upload Area */}
-              <div
-                onDrop={handleDrop}
-                onDragOver={handleDragOver}
-                onClick={() => fileInputRef.current?.click()}
-                className="cursor-pointer rounded-lg border-2 border-dashed border-zinc-300 p-8 text-center transition-colors hover:border-blue-400 hover:bg-blue-50/50 dark:border-zinc-600 dark:hover:border-blue-500 dark:hover:bg-blue-950/20"
+
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+                  Format
+                </label>
+                <Select value={format} onValueChange={setFormat}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {FORMATS.map((fmt) => (
+                      <SelectItem key={fmt.value} value={fmt.value}>
+                        {fmt.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex gap-3">
+              <Button
+                variant="outline"
+                onClick={() => callImportApi(true)}
+                disabled={isActionDisabled}
+                className="flex-1"
+                size="lg"
               >
-                <Upload className="mx-auto mb-3 h-8 w-8 text-zinc-400" />
-                {fileName ? (
-                  <div>
-                    <p className="text-sm font-medium text-zinc-900 dark:text-white">
-                      {fileName}
-                    </p>
-                    <p className="mt-1 text-xs text-zinc-500">
-                      {fileContent.length} characters loaded
-                    </p>
-                  </div>
+                {actionState === 'previewing' ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Previewing...
+                  </>
                 ) : (
-                  <div>
-                    <p className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
-                      Drop a file here or click to upload
-                    </p>
-                    <p className="mt-1 text-xs text-zinc-500">
-                      Supports JSON and YAML configuration files
-                    </p>
-                  </div>
+                  <>
+                    <Eye className="mr-2 h-4 w-4" />
+                    Preview Changes
+                  </>
                 )}
-                <input
-                  ref={fileInputRef}
-                  type="file"
-                  accept=".json,.yaml,.yml"
-                  onChange={handleFileUpload}
-                  className="hidden"
-                />
-              </div>
+              </Button>
 
-              {/* Environment and Format Selectors */}
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
-                    Target Environment
-                  </label>
-                  <Select value={environment} onValueChange={setEnvironment}>
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {ENVIRONMENTS.map((env) => (
-                        <SelectItem key={env.value} value={env.value}>
-                          {env.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
-                    Format
-                  </label>
-                  <Select value={format} onValueChange={setFormat}>
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {FORMATS.map((fmt) => (
-                        <SelectItem key={fmt.value} value={fmt.value}>
-                          {fmt.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-
-              {/* Action Buttons */}
-              <div className="flex gap-3">
-                <Button
-                  variant="outline"
-                  onClick={runPreview}
-                  disabled={isActionDisabled}
-                  className="flex-1"
-                  size="lg"
-                >
-                  {isPreviewing ? (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Previewing...
-                    </>
-                  ) : (
-                    <>
-                      <Eye className="mr-2 h-4 w-4" />
-                      Preview Changes
-                    </>
-                  )}
-                </Button>
-
-                <Button
-                  onClick={runImport}
-                  disabled={isActionDisabled}
-                  className="flex-1"
-                  size="lg"
-                >
-                  {isImporting ? (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Importing...
-                    </>
-                  ) : (
-                    <>
-                      <Upload className="mr-2 h-4 w-4" />
-                      Apply Import
-                    </>
-                  )}
-                </Button>
-              </div>
-
-              {/* Command Preview */}
-              <div className="rounded-lg bg-zinc-900 p-4 font-mono text-sm text-green-400">
-                <div className="flex items-center gap-2 text-zinc-500">
-                  <Terminal className="h-4 w-4" />
-                  <span>Command:</span>
-                </div>
-                <div className="mt-2">
-                  $ nself config import --env={environment} --format={format}
-                  {fileName ? ` --file=${fileName}` : ' --file=<config-file>'}
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* CLI Output */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Terminal className="h-5 w-5" />
-                CLI Output
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <ScrollArea className="h-96 rounded-lg bg-zinc-950 p-4">
-                {lastOutput ? (
-                  <pre className="font-mono text-xs whitespace-pre-wrap text-zinc-300">
-                    {lastOutput}
-                  </pre>
+              <Button
+                onClick={() => callImportApi(false)}
+                disabled={isActionDisabled}
+                className="flex-1"
+                size="lg"
+              >
+                {actionState === 'importing' ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Importing...
+                  </>
                 ) : (
-                  <div className="flex h-full items-center justify-center text-zinc-500">
-                    Upload a file and preview or import to see output here
-                  </div>
+                  <>
+                    <Upload className="mr-2 h-4 w-4" />
+                    Apply Import
+                  </>
                 )}
-              </ScrollArea>
-            </CardContent>
-          </Card>
-        </div>
+              </Button>
+            </div>
 
-        {/* File Content Preview */}
-        {fileContent && (
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Eye className="h-5 w-5" />
-                File Content Preview
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <ScrollArea className="h-48 rounded-lg bg-zinc-950 p-4">
+            {/* Command Preview */}
+            <div className="rounded-lg bg-zinc-900 p-4 font-mono text-sm text-green-400">
+              <div className="flex items-center gap-2 text-zinc-500">
+                <Terminal className="h-4 w-4" />
+                <span>Command:</span>
+              </div>
+              <div className="mt-2">
+                $ nself config import --env={environment} --format={format}
+                {fileName ? ` --file=${fileName}` : ' --file=<config-file>'}
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* CLI Output */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Terminal className="h-5 w-5" />
+              CLI Output
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ScrollArea className="h-96 rounded-lg bg-zinc-950 p-4">
+              {lastOutput ? (
                 <pre className="font-mono text-xs whitespace-pre-wrap text-zinc-300">
-                  {fileContent}
+                  {lastOutput}
                 </pre>
-              </ScrollArea>
-            </CardContent>
-          </Card>
-        )}
-
-        {/* Success/Error Indicator */}
-        {importSuccess !== null && lastOutput && (
-          <div
-            className={`fixed right-4 bottom-4 flex items-center gap-2 rounded-lg px-4 py-2 text-sm text-white shadow-lg ${
-              importSuccess ? 'bg-emerald-600' : 'bg-red-600'
-            }`}
-          >
-            {importSuccess ? (
-              <>
-                <CheckCircle className="h-4 w-4" />
-                Operation completed successfully
-              </>
-            ) : (
-              <>
-                <XCircle className="h-4 w-4" />
-                Operation failed
-              </>
-            )}
-          </div>
-        )}
+              ) : (
+                <div className="flex h-full items-center justify-center text-zinc-500">
+                  Upload a file and preview or import to see output here
+                </div>
+              )}
+            </ScrollArea>
+          </CardContent>
+        </Card>
       </div>
-    </PageTemplate>
-  )
-}
 
-export default function ConfigImportPage() {
-  return (
-    <Suspense fallback={<FormSkeleton />}>
-      <ConfigImportContent />
-    </Suspense>
+      {/* File Content Preview */}
+      {fileContent && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Eye className="h-5 w-5" />
+              File Content Preview
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ScrollArea className="h-48 rounded-lg bg-zinc-950 p-4">
+              <pre className="font-mono text-xs whitespace-pre-wrap text-zinc-300">
+                {fileContent}
+              </pre>
+            </ScrollArea>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Success/Error Indicator */}
+      {(actionState === 'success' || actionState === 'error') && lastOutput && (
+        <div
+          className={`fixed right-4 bottom-4 flex items-center gap-2 rounded-lg px-4 py-2 text-sm text-white shadow-lg ${
+            actionState === 'success' ? 'bg-emerald-600' : 'bg-red-600'
+          }`}
+        >
+          {actionState === 'success' ? (
+            <>
+              <CheckCircle className="h-4 w-4" />
+              Operation completed successfully
+            </>
+          ) : (
+            <>
+              <XCircle className="h-4 w-4" />
+              Operation failed
+            </>
+          )}
+        </div>
+      )}
+    </div>
   )
 }

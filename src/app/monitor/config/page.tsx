@@ -45,35 +45,10 @@ function MonitorConfigContent() {
   const [config, setConfig] = useState<MonitoringConfig | null>(null)
 
   const fetchConfig = useCallback(async () => {
-    try {
-      // Mock data - replace with real API
-      setConfig({
-        prometheus: {
-          enabled: true,
-          retentionDays: 15,
-          scrapeInterval: '15s',
-        },
-        loki: {
-          enabled: true,
-          retentionDays: 7,
-        },
-        grafana: {
-          enabled: true,
-          adminPassword: '********',
-          anonymousAccess: false,
-        },
-        alerting: {
-          enabled: true,
-          emailEnabled: false,
-          slackEnabled: true,
-          slackWebhook: 'https://hooks.slack.com/services/...',
-        },
-      })
-    } catch (_error) {
-      // Handle error silently
-    } finally {
-      setLoading(false)
-    }
+    // No API route available — monitoring configuration is not exposed via the admin API.
+    // Use `nself monitor config` to view or update configuration directly from the CLI.
+    setConfig(null)
+    setLoading(false)
   }, [])
 
   useEffect(() => {
@@ -110,13 +85,48 @@ function MonitorConfigContent() {
     })
   }
 
-  if (loading || !config) {
+  if (loading) {
     return (
       <>
         <HeroPattern />
         <div className="relative mx-auto max-w-7xl">
           <div className="flex items-center justify-center py-20">
             <div className="h-8 w-8 animate-spin rounded-full border-4 border-cyan-500 border-t-transparent" />
+          </div>
+        </div>
+      </>
+    )
+  }
+
+  if (!config) {
+    return (
+      <>
+        <HeroPattern />
+        <div className="relative mx-auto max-w-7xl">
+          <div className="mb-10 border-b border-zinc-200 pb-8 dark:border-zinc-800">
+            <Link
+              href="/monitor"
+              className="mb-4 inline-flex items-center gap-2 text-sm text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              Back to Monitor
+            </Link>
+            <h1 className="bg-gradient-to-r from-cyan-600 to-teal-400 bg-clip-text text-4xl font-bold text-transparent dark:from-cyan-400 dark:to-teal-300">
+              Monitoring Configuration
+            </h1>
+          </div>
+          <div className="rounded-xl border border-zinc-200 bg-white p-8 text-center shadow-sm dark:border-zinc-700 dark:bg-zinc-800">
+            <Settings className="mx-auto mb-4 h-12 w-12 text-zinc-400" />
+            <h3 className="mb-2 text-lg font-semibold text-zinc-900 dark:text-white">
+              Configuration not available
+            </h3>
+            <p className="text-zinc-600 dark:text-zinc-400">
+              Monitoring configuration is not exposed via the Admin API. Use the CLI
+              to view or update configuration directly.
+            </p>
+            <p className="mt-4 font-mono text-sm text-cyan-500">
+              nself monitor config
+            </p>
           </div>
         </div>
       </>

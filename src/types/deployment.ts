@@ -2,6 +2,50 @@
  * Deployment & Environment Types for nself-admin v0.0.8
  */
 
+// ── Control-Plane Types (reality-derived from `nself env target *`) ────────────
+
+/**
+ * Capability level for a server — computed by CLI probe, NEVER by the UI.
+ * manage   = SSH ok + key present + docker reachable
+ * read-only = host resolves but no working SSH
+ * hidden   = no key ref / host unset / unreachable
+ */
+export type ServerCapability = 'manage' | 'read-only' | 'hidden'
+
+/**
+ * One server entry from `nself env target list --json`.
+ * sshKeyRef is the KEY NAME only — raw SSH key bytes are NEVER stored or displayed.
+ */
+export interface ControlPlaneServer {
+  name: string
+  host: string
+  role: string
+  capability: ServerCapability
+  /** Resolver explanation strings, e.g. "SSH key missing", "Docker unreachable" */
+  reason?: string[]
+  primary?: boolean
+  /** Key reference name only — not the key material */
+  sshKeyRef?: string
+  remotePath?: string
+  upstreams?: string[]
+}
+
+/** One environment entry from CLI inventory */
+export interface ControlPlaneEnvironment {
+  name: string
+  kind: string
+  servers: ControlPlaneServer[]
+}
+
+/** Full inventory response from `nself env target list --json` */
+export interface ControlPlaneInventory {
+  environments: ControlPlaneEnvironment[]
+  probed?: boolean
+  timestamp?: string
+}
+
+// ── Legacy static union (kept for backward compat in other pages) ──────────────
+
 export type Environment = 'local' | 'development' | 'staging' | 'production'
 
 export type DeploymentStrategy =

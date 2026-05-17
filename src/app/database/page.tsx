@@ -1,6 +1,5 @@
 'use client'
 
-import { PageTemplate } from '@/components/PageTemplate'
 import { ListSkeleton } from '@/components/skeletons'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Badge } from '@/components/ui/badge'
@@ -405,10 +404,11 @@ function DatabaseContent() {
 
   if (isLoading && !status) {
     return (
-      <PageTemplate
-        title="Database"
-        description="PostgreSQL database management and monitoring"
-      >
+      <div className="space-y-6 p-6">
+        <div>
+          <h1 className="text-2xl font-bold">Database</h1>
+          <p className="text-muted-foreground">PostgreSQL database management and monitoring</p>
+        </div>
         <div className="space-y-6">
           <div className="animate-pulse">
             <div className="mb-6 h-24 rounded-lg bg-zinc-200 dark:bg-zinc-800" />
@@ -422,16 +422,17 @@ function DatabaseContent() {
             </div>
           </div>
         </div>
-      </PageTemplate>
+      </div>
     )
   }
 
   if (hasError && !status) {
     return (
-      <PageTemplate
-        title="Database"
-        description="PostgreSQL database management and monitoring"
-      >
+      <div className="space-y-6 p-6">
+        <div>
+          <h1 className="text-2xl font-bold">Database</h1>
+          <p className="text-muted-foreground">PostgreSQL database management and monitoring</p>
+        </div>
         <Alert variant="destructive">
           <AlertTriangle className="h-4 w-4" />
           <AlertTitle>Connection Error</AlertTitle>
@@ -446,15 +447,16 @@ function DatabaseContent() {
             Retry Connection
           </Button>
         </div>
-      </PageTemplate>
+      </div>
     )
   }
 
   return (
-    <PageTemplate
-      title="Database"
-      description="PostgreSQL database management and monitoring"
-    >
+    <div className="space-y-6 p-6">
+      <div>
+        <h1 className="text-2xl font-bold">Database</h1>
+        <p className="text-muted-foreground">PostgreSQL database management and monitoring</p>
+      </div>
       <div className="space-y-6">
         {/* Connection Status */}
         <ConnectionStatus status={status} />
@@ -512,7 +514,7 @@ function DatabaseContent() {
           </div>
         )}
       </div>
-    </PageTemplate>
+    </div>
   )
 }
 

@@ -34,6 +34,10 @@ import { GET, HEAD } from '../route'
 const getMockExecAsync = () =>
   (global as typeof global & { __mockExecAsync: jest.Mock }).__mockExecAsync
 
+// Helper: minimal Request with no query params (default GET behaviour)
+const makeRequest = (url = 'http://localhost:3021/api/health') =>
+  new Request(url)
+
 describe('GET /api/health', () => {
   beforeEach(() => {
     jest.clearAllMocks()
@@ -58,7 +62,7 @@ describe('GET /api/health', () => {
       'MemTotal: 8000000 kB\nMemAvailable: 4000000 kB\ncpu 100 100 100 100',
     )
 
-    const response = await GET()
+    const response = await GET(makeRequest())
     const data = await response.json()
 
     expect(response.status).toBe(200)
@@ -78,7 +82,7 @@ describe('GET /api/health', () => {
       'MemTotal: 8000000 kB\nMemAvailable: 4000000 kB\ncpu 100 100 100 100',
     )
 
-    const response = await GET()
+    const response = await GET(makeRequest())
     const data = await response.json()
 
     expect(response.status).toBe(503)
@@ -98,7 +102,7 @@ describe('GET /api/health', () => {
       'MemTotal: 8000000 kB\nMemAvailable: 4000000 kB\ncpu 100 100 100 100',
     )
 
-    const response = await GET()
+    const response = await GET(makeRequest())
     const data = await response.json()
 
     expect(response.status).toBe(503)
@@ -115,7 +119,7 @@ describe('GET /api/health', () => {
       'MemTotal: 8000000 kB\nMemAvailable: 4000000 kB\ncpu 100 100 100 100',
     )
 
-    const response = await GET()
+    const response = await GET(makeRequest())
     const data = await response.json()
 
     expect(data.resources).toBeDefined()
@@ -132,7 +136,7 @@ describe('GET /api/health', () => {
       'MemTotal: 8000000 kB\nMemAvailable: 4000000 kB\ncpu 100 100 100 100',
     )
 
-    const response = await GET()
+    const response = await GET(makeRequest())
     const data = await response.json()
 
     expect(data.uptime).toBeGreaterThanOrEqual(0)

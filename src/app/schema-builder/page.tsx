@@ -1,6 +1,5 @@
 'use client'
 
-import { PageTemplate } from '@/components/PageTemplate'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -26,6 +25,7 @@ import {
   generateForwardDDL,
   generateId,
   generateReverseDDL,
+  type AllowedDefaultFunction,
   type CanvasColumn,
   type CanvasRelationship,
   type CanvasState,
@@ -678,15 +678,14 @@ export default function SchemaBuilderPage() {
     setIsSaving(true)
     setSaveResult(null)
     try {
-      const forwardDDL = generateForwardDDL(state)
-      const reverseDDL = generateReverseDDL(state)
+      // R4/secfix2: send canvas only — server derives DDL via the validated generator.
+      // Never send raw forwardDDL/reverseDDL (API rejects them with 400).
       const res = await fetch('/api/schema-jobs', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           name: `schema_builder_${Date.now()}`,
-          forwardDDL,
-          reverseDDL,
+          canvas: state,
         }),
       })
       if (res.ok) {
@@ -853,10 +852,17 @@ export default function SchemaBuilderPage() {
   )
 
   return (
-    <PageTemplate
-      title="Visual Schema Builder"
-      description="Design your database schema visually — drag tables, define columns, and generate Postgres DDL"
-    >
+    <div className="relative mx-auto max-w-7xl">
+      {/* Page header */}
+      <div className="mb-6 border-b border-zinc-700 pb-6">
+        <h1 className="bg-gradient-to-r from-sky-500 to-sky-300 bg-clip-text text-4xl font-bold text-transparent">
+          Visual Schema Builder
+        </h1>
+        <p className="mt-2 text-zinc-400">
+          Design your database schema visually — drag tables, define columns, and generate Postgres DDL
+        </p>
+      </div>
+
       {/* Aria live region for a11y */}
       <div
         aria-live="polite"
@@ -1307,27 +1313,124 @@ export default function SchemaBuilderPage() {
                   </SelectContent>
                 </Select>
               </div>
-              <div>
-                <Label htmlFor="col-default">Default value</Label>
-                <Input
-                  id="col-default"
-                  value={editingColumn.col.default ?? ''}
-                  onChange={(e) =>
-                    setEditingColumn((prev) =>
-                      prev
-                        ? {
-                            ...prev,
-                            col: {
-                              ...prev.col,
-                              default: e.target.value || undefined,
-                            },
-                          }
-                        : null,
-                    )
+              {/* Typed default: none | literal | function — no free-text DDL (R2) */}
+              <div className="space-y-2">
+                <Label htmlFor="col-default-kind">Default</Label>
+                <Select
+                  value={
+                    editingColumn.col.default === undefined ||
+                    editingColumn.col.default === ''
+                      ? 'none'
+                      : (['now', 'gen_random_uuid', 'uuid_generate_v4', 'current_timestamp'] as AllowedDefaultFunction[]).some(
+                            (fn) =>
+                              editingColumn.col.default === fn ||
+                              editingColumn.col.default === `${fn}()`,
+                          )
+                        ? 'function'
+                        : 'literal'
                   }
-                  className="mt-1"
-                  placeholder="e.g. now()"
-                />
+                  onValueChange={(kind) => {
+                    setEditingColumn((prev) => {
+                      if (!prev) return null
+                      if (kind === 'none')
+                        return { ...prev, col: { ...prev.col, default: undefined } }
+                      if (kind === 'function')
+                        return { ...prev, col: { ...prev.col, default: 'now()' } }
+                      // literal — keep existing or reset
+                      const currentIsFunction = (
+                        ['now', 'gen_random_uuid', 'uuid_generate_v4', 'current_timestamp'] as AllowedDefaultFunction[]
+                      ).some(
+                        (fn) =>
+                          prev.col.default === fn ||
+                          prev.col.default === `${fn}()`,
+                      )
+                      return {
+                        ...prev,
+                        col: {
+                          ...prev.col,
+                          default: currentIsFunction ? '' : (prev.col.default ?? ''),
+                        },
+                      }
+                    })
+                  }}
+                >
+                  <SelectTrigger id="col-default-kind" className="mt-1">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="none">None</SelectItem>
+                    <SelectItem value="literal">Literal value</SelectItem>
+                    <SelectItem value="function">SQL function</SelectItem>
+                  </SelectContent>
+                </Select>
+
+                {/* Literal value input */}
+                {editingColumn.col.default !== undefined &&
+                  editingColumn.col.default !== '' &&
+                  !(
+                    ['now', 'gen_random_uuid', 'uuid_generate_v4', 'current_timestamp'] as AllowedDefaultFunction[]
+                  ).some(
+                    (fn) =>
+                      editingColumn.col.default === fn ||
+                      editingColumn.col.default === `${fn}()`,
+                  ) && (
+                    <Input
+                      id="col-default-literal"
+                      value={editingColumn.col.default}
+                      onChange={(e) =>
+                        setEditingColumn((prev) =>
+                          prev
+                            ? {
+                                ...prev,
+                                col: {
+                                  ...prev.col,
+                                  default: e.target.value,
+                                },
+                              }
+                            : null,
+                        )
+                      }
+                      placeholder="e.g. 0, true, hello"
+                      aria-label="Literal default value"
+                    />
+                  )}
+
+                {/* Allowed SQL function picker */}
+                {editingColumn.col.default !== undefined &&
+                  (
+                    ['now', 'gen_random_uuid', 'uuid_generate_v4', 'current_timestamp'] as AllowedDefaultFunction[]
+                  ).some(
+                    (fn) =>
+                      editingColumn.col.default === fn ||
+                      editingColumn.col.default === `${fn}()`,
+                  ) && (
+                    <Select
+                      value={
+                        (editingColumn.col.default ?? '')
+                          .replace(/\(\)$/, '') as AllowedDefaultFunction
+                      }
+                      onValueChange={(fn) =>
+                        setEditingColumn((prev) =>
+                          prev
+                            ? {
+                                ...prev,
+                                col: { ...prev.col, default: `${fn}()` },
+                              }
+                            : null,
+                        )
+                      }
+                    >
+                      <SelectTrigger aria-label="SQL function for default">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="now">now()</SelectItem>
+                        <SelectItem value="gen_random_uuid">gen_random_uuid()</SelectItem>
+                        <SelectItem value="uuid_generate_v4">uuid_generate_v4()</SelectItem>
+                        <SelectItem value="current_timestamp">current_timestamp()</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  )}
               </div>
               <div className="flex items-center gap-2">
                 <Switch
@@ -1412,6 +1515,6 @@ export default function SchemaBuilderPage() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-    </PageTemplate>
+    </div>
   )
 }

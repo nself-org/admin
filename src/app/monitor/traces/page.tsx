@@ -43,83 +43,10 @@ function TracesContent() {
   const [filterService, setFilterService] = useState('all')
 
   const fetchTraces = useCallback(async () => {
-    try {
-      // Mock data - replace with real API
-      const mockTraces: Trace[] = [
-        {
-          id: 'trace-1',
-          name: 'POST /api/graphql',
-          service: 'hasura',
-          duration: 125,
-          timestamp: new Date(Date.now() - 60000).toISOString(),
-          status: 'ok',
-          spanCount: 5,
-          spans: [
-            {
-              id: 'span-1',
-              name: 'HTTP POST /api/graphql',
-              service: 'nginx',
-              duration: 125,
-              startTime: 0,
-              status: 'ok',
-              children: [
-                {
-                  id: 'span-2',
-                  name: 'graphql.execute',
-                  service: 'hasura',
-                  duration: 100,
-                  startTime: 5,
-                  status: 'ok',
-                  children: [
-                    {
-                      id: 'span-3',
-                      name: 'db.query',
-                      service: 'postgres',
-                      duration: 45,
-                      startTime: 15,
-                      status: 'ok',
-                    },
-                    {
-                      id: 'span-4',
-                      name: 'db.query',
-                      service: 'postgres',
-                      duration: 30,
-                      startTime: 65,
-                      status: 'ok',
-                    },
-                  ],
-                },
-              ],
-            },
-          ],
-        },
-        {
-          id: 'trace-2',
-          name: 'POST /api/auth/login',
-          service: 'auth',
-          duration: 85,
-          timestamp: new Date(Date.now() - 120000).toISOString(),
-          status: 'ok',
-          spanCount: 4,
-          spans: [],
-        },
-        {
-          id: 'trace-3',
-          name: 'GET /api/users',
-          service: 'hasura',
-          duration: 350,
-          timestamp: new Date(Date.now() - 180000).toISOString(),
-          status: 'error',
-          spanCount: 3,
-          spans: [],
-        },
-      ]
-      setTraces(mockTraces)
-    } catch (_error) {
-      // Handle error silently
-    } finally {
-      setLoading(false)
-    }
+    // No API route available — distributed trace data is not exposed via the admin API.
+    // Use `nself traces` to view traces directly from the CLI.
+    setTraces([])
+    setLoading(false)
   }, [])
 
   useEffect(() => {
@@ -221,6 +148,39 @@ function TracesContent() {
         <div className="relative mx-auto max-w-7xl">
           <div className="flex items-center justify-center py-20">
             <div className="h-8 w-8 animate-spin rounded-full border-4 border-sky-500 border-t-transparent" />
+          </div>
+        </div>
+      </>
+    )
+  }
+
+  if (traces.length === 0) {
+    return (
+      <>
+        <HeroPattern />
+        <div className="relative mx-auto max-w-7xl">
+          <div className="mb-10 border-b border-zinc-200 pb-8 dark:border-zinc-800">
+            <Link
+              href="/monitor"
+              className="mb-4 inline-flex items-center gap-2 text-sm text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              Back to Monitor
+            </Link>
+            <h1 className="bg-gradient-to-r from-sky-500 to-blue-400 bg-clip-text text-4xl font-bold text-transparent dark:from-sky-400 dark:to-pink-300">
+              Distributed Tracing
+            </h1>
+          </div>
+          <div className="rounded-xl border border-zinc-200 bg-white p-8 text-center shadow-sm dark:border-zinc-700 dark:bg-zinc-800">
+            <GitBranch className="mx-auto mb-4 h-12 w-12 text-zinc-400" />
+            <h3 className="mb-2 text-lg font-semibold text-zinc-900 dark:text-white">
+              Trace data not available
+            </h3>
+            <p className="text-zinc-600 dark:text-zinc-400">
+              Distributed trace data is not exposed via the Admin API. Use the CLI
+              to view traces directly.
+            </p>
+            <p className="mt-4 font-mono text-sm text-sky-500">nself traces</p>
           </div>
         </div>
       </>

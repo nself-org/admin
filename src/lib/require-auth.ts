@@ -133,7 +133,7 @@ export async function requireWizardNotComplete(
         success: false,
         error: 'Setup already complete. Wizard writes are disabled.',
       },
-      { status: 403 },
+      { status: 401 },
     )
   }
 

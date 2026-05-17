@@ -54,6 +54,7 @@ function FrontendDetailContent() {
   const appName = params.name as string
 
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
   const [actionLoading, setActionLoading] = useState<string | null>(null)
   const [app, setApp] = useState<FrontendApp | null>(null)
   const [deployments, setDeployments] = useState<Deployment[]>([])
@@ -64,100 +65,16 @@ function FrontendDetailContent() {
 
   const fetchApp = useCallback(async () => {
     try {
-      // Mock data - replace with real API
-      setApp({
-        id: 'app-1',
-        name: appName,
-        framework: 'Next.js',
-        status: 'running',
-        url: `https://${appName}.example.com`,
-        branch: 'main',
-        lastDeployed: new Date(Date.now() - 3600000).toISOString(),
-        buildTime: 45,
-        metrics: {
-          requests: 15000,
-          latency: 120,
-          errors: 5,
-        },
-      })
-
-      setDeployments([
-        {
-          id: 'dep-1',
-          version: 'v1.3.0',
-          commit: 'a1b2c3d',
-          status: 'success',
-          deployedAt: new Date(Date.now() - 3600000).toISOString(),
-          duration: 45,
-        },
-        {
-          id: 'dep-2',
-          version: 'v1.2.9',
-          commit: 'b2c3d4e',
-          status: 'success',
-          deployedAt: new Date(Date.now() - 86400000).toISOString(),
-          duration: 42,
-        },
-        {
-          id: 'dep-3',
-          version: 'v1.2.8',
-          commit: 'c3d4e5f',
-          status: 'failed',
-          deployedAt: new Date(Date.now() - 172800000).toISOString(),
-          duration: 38,
-        },
-      ])
-
-      setBuildLogs([
-        {
-          timestamp: '10:30:01',
-          message: 'Installing dependencies...',
-          type: 'info',
-        },
-        {
-          timestamp: '10:30:15',
-          message: 'Dependencies installed successfully',
-          type: 'success',
-        },
-        {
-          timestamp: '10:30:16',
-          message: 'Running build command...',
-          type: 'info',
-        },
-        {
-          timestamp: '10:30:35',
-          message: 'Warning: Large bundle size detected',
-          type: 'warn',
-        },
-        {
-          timestamp: '10:30:45',
-          message: 'Build completed successfully',
-          type: 'success',
-        },
-        {
-          timestamp: '10:30:46',
-          message: 'Deploying to edge network...',
-          type: 'info',
-        },
-        {
-          timestamp: '10:30:52',
-          message: 'Deployment complete!',
-          type: 'success',
-        },
-      ])
-
-      // Generate mock metrics data
-      const data = []
-      for (let i = 23; i >= 0; i--) {
-        data.push({
-          time: `${String(23 - i).padStart(2, '0')}:00`,
-          requests: Math.floor(Math.random() * 1000) + 500,
-          latency: Math.floor(Math.random() * 50) + 80,
-        })
-      }
-      setMetricsData(data)
-    } catch (_error) {
-      // Handle error silently
+      setError(null)
+      const res = await fetch(`/api/frontend/${encodeURIComponent(appName)}`)
+      if (!res.ok) throw new Error(`HTTP ${res.status}`)
+      const data = await res.json()
+      setApp(data.app ?? null)
+      setDeployments(data.deployments ?? [])
+      setBuildLogs(data.buildLogs ?? [])
+      setMetricsData(data.metrics ?? [])
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to load app details')
     } finally {
       setLoading(false)
     }
@@ -220,6 +137,25 @@ function FrontendDetailContent() {
         <div className="relative mx-auto max-w-7xl">
           <div className="flex items-center justify-center py-20">
             <div className="h-8 w-8 animate-spin rounded-full border-4 border-cyan-500 border-t-transparent" />
+          </div>
+        </div>
+      </>
+    )
+  }
+
+  if (error) {
+    return (
+      <>
+        <HeroPattern />
+        <div className="relative mx-auto max-w-7xl">
+          <div className="rounded-xl border border-red-200 bg-red-50 p-6 dark:border-red-800 dark:bg-red-900/20">
+            <p className="text-red-700 dark:text-red-400">{error}</p>
+            <button
+              onClick={fetchApp}
+              className="mt-4 rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700"
+            >
+              Retry
+            </button>
           </div>
         </div>
       </>

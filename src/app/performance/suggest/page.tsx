@@ -4,6 +4,7 @@ import { HeroPattern } from '@/components/HeroPattern'
 import { ChartSkeleton } from '@/components/skeletons'
 import type { OptimizationSuggestion } from '@/types/performance'
 import {
+  AlertCircle,
   AlertTriangle,
   ArrowLeft,
   CheckCircle,
@@ -19,112 +20,31 @@ import {
   Zap,
 } from 'lucide-react'
 import Link from 'next/link'
-import { Suspense, useCallback, useEffect, useState } from 'react'
+import { Suspense, useState } from 'react'
+import useSWR from 'swr'
+
+const fetcher = (url: string) => fetch(url).then((res) => res.json())
 
 function SuggestContent() {
-  const [loading, setLoading] = useState(true)
   const [isAnalyzing, setIsAnalyzing] = useState(false)
-  const [suggestions, setSuggestions] = useState<OptimizationSuggestion[]>([])
   const [filterCategory, setFilterCategory] = useState<string>('all')
   const [filterPriority, setFilterPriority] = useState<string>('all')
   const [appliedSuggestions, setAppliedSuggestions] = useState<Set<string>>(
     new Set(),
   )
 
-  const fetchSuggestions = useCallback(async () => {
-    try {
-      // Mock data - replace with real API
-      const mockSuggestions: OptimizationSuggestion[] = [
-        {
-          id: '1',
-          category: 'database',
-          priority: 'high',
-          title: 'Add index to users.email column',
-          description:
-            'The users table is frequently queried by email but lacks an index on this column. Adding an index could improve query performance by 10-100x.',
-          impact: 'Query time reduction from ~125ms to ~2ms',
-          command: 'nself db migrate:create add_email_index',
-          documentationUrl:
-            'https://www.postgresql.org/docs/current/indexes.html',
-        },
-        {
-          id: '2',
-          category: 'cache',
-          priority: 'high',
-          title: 'Increase Redis maxmemory',
-          description:
-            'Redis is approaching its memory limit (85% used). Consider increasing maxmemory to prevent eviction of frequently accessed keys.',
-          impact: 'Prevent cache misses and improve response times',
-          command: 'nself config set redis.maxmemory 2gb',
-        },
-        {
-          id: '3',
-          category: 'memory',
-          priority: 'medium',
-          title: 'Optimize Hasura memory allocation',
-          description:
-            'Hasura is using more memory than necessary for the current workload. Reducing the allocation could free resources for other services.',
-          impact: 'Free up ~512MB of memory',
-          command: 'nself config set hasura.memory 1536m',
-        },
-        {
-          id: '4',
-          category: 'network',
-          priority: 'medium',
-          title: 'Enable HTTP/2 in Nginx',
-          description:
-            'HTTP/2 is not enabled. Enabling it would improve performance for clients through multiplexing and header compression.',
-          impact: 'Reduce page load time by 20-30%',
-          command: 'nself config set nginx.http2 true',
-        },
-        {
-          id: '5',
-          category: 'database',
-          priority: 'medium',
-          title: 'Increase PostgreSQL shared_buffers',
-          description:
-            'Current shared_buffers is set to default. Increasing it to 25% of available RAM would improve cache hit ratio.',
-          impact: 'Improve cache hit ratio from 98.5% to 99.5%',
-          command: 'nself config set postgres.shared_buffers 4GB',
-        },
-        {
-          id: '6',
-          category: 'cpu',
-          priority: 'low',
-          title: 'Enable query caching in Hasura',
-          description:
-            'GraphQL query caching is not enabled. This could reduce CPU usage for repeated queries.',
-          impact: 'Reduce CPU usage by 10-15%',
-          command: 'nself config set hasura.query_cache true',
-        },
-        {
-          id: '7',
-          category: 'config',
-          priority: 'low',
-          title: 'Enable gzip compression',
-          description:
-            'Response compression is not fully optimized. Enabling gzip for all text-based responses would reduce bandwidth.',
-          impact: 'Reduce bandwidth by 60-70%',
-          command: 'nself config set nginx.gzip on',
-        },
-      ]
-      setSuggestions(mockSuggestions)
-    } catch (_error) {
-      // Handle error silently
-    } finally {
-      setLoading(false)
-    }
-  }, [])
+  const { data, error, isLoading, mutate } = useSWR<{
+    success: boolean
+    suggestions: OptimizationSuggestion[]
+  }>('/api/performance/suggest', fetcher)
 
-  useEffect(() => {
-    fetchSuggestions()
-  }, [fetchSuggestions])
+  const suggestions = data?.suggestions ?? []
 
   const runAnalysis = async () => {
     setIsAnalyzing(true)
     try {
       await fetch('/api/performance/analyze', { method: 'POST' })
-      await fetchSuggestions()
+      await mutate()
     } finally {
       setIsAnalyzing(false)
     }
@@ -210,7 +130,27 @@ function SuggestContent() {
     applied: appliedSuggestions.size,
   }
 
-  if (loading) {
+  if (error) {
+    return (
+      <>
+        <HeroPattern />
+        <div className="relative mx-auto max-w-7xl">
+          <div className="rounded-lg border border-red-500/30 bg-red-900/20 p-6">
+            <div className="flex items-center gap-3">
+              <AlertCircle className="h-5 w-5 text-red-400" />
+              <p className="text-red-400">
+                {error instanceof Error
+                  ? error.message
+                  : 'Failed to load optimization suggestions'}
+              </p>
+            </div>
+          </div>
+        </div>
+      </>
+    )
+  }
+
+  if (isLoading) {
     return (
       <>
         <HeroPattern />

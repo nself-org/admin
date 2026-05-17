@@ -11,7 +11,6 @@
  *   - Export CSV button (current page)
  */
 
-import { PageTemplate } from '@/components/PageTemplate'
 import { FormSkeleton } from '@/components/skeletons'
 import {
   AlertTriangle,
@@ -28,59 +27,6 @@ import {
 } from 'lucide-react'
 import { Suspense, useCallback, useEffect, useState } from 'react'
 
-const MOCK_TABLES: string[] = [
-  'np_ai_usage',
-  'np_ai_sessions',
-  'np_mux_rules',
-  'np_mux_messages',
-  'np_claw_sessions',
-  'np_claw_messages',
-  'np_claw_memories',
-  'np_notify_channels',
-  'np_notify_log',
-  'np_cron_jobs',
-  'np_plugin_registry',
-  'np_billing_subscriptions',
-  'np_billing_invoices',
-  'np_license_keys',
-  'np_telemetry_events',
-]
-
-// Minimal mock rows per table — real data comes from the API
-const MOCK_ROW_DATA: Record<string, Record<string, unknown>[]> = {
-  np_plugin_registry: [
-    {
-      id: 1,
-      name: 'ai',
-      version: '1.2.0',
-      enabled: true,
-      installed_at: '2026-01-15T10:00:00Z',
-    },
-    {
-      id: 2,
-      name: 'mux',
-      version: '1.0.5',
-      enabled: true,
-      installed_at: '2026-01-15T10:01:00Z',
-    },
-    {
-      id: 3,
-      name: 'claw',
-      version: '0.9.2',
-      enabled: false,
-      installed_at: '2026-02-01T09:00:00Z',
-    },
-  ],
-  np_license_keys: [
-    {
-      id: '00000000-cafe',
-      key_prefix: 'nself_pro_owner',
-      tier: 'enterprise',
-      active: true,
-      expires_at: null,
-    },
-  ],
-}
 
 type SortDir = 'asc' | 'desc' | null
 
@@ -149,14 +95,21 @@ function NpTablesContent() {
       setTablesError(null)
       try {
         const res = await fetch('/api/database/np-tables')
+        if (res.status === 401) {
+          window.location.href = '/login'
+          return
+        }
         if (res.ok) {
           const data = await res.json()
-          setTables(data?.tables ?? MOCK_TABLES)
+          const raw = data?.tables
+          setTables(Array.isArray(raw) ? raw : [])
         } else {
-          setTables(MOCK_TABLES)
+          setTablesError(`Error ${res.status}`)
+          setTables([])
         }
-      } catch {
-        setTables(MOCK_TABLES)
+      } catch (err) {
+        setTablesError(err instanceof Error ? err.message : 'Failed to load tables')
+        setTables([])
       } finally {
         setTablesLoading(false)
       }
@@ -172,24 +125,27 @@ function NpTablesContent() {
       const res = await fetch(
         `/api/database/np-tables/${tableName}?page=${pageNum}&limit=${LIMIT}`,
       )
+      if (res.status === 401) {
+        window.location.href = '/login'
+        return
+      }
       if (res.ok) {
         const data: TableRowsResponse = await res.json()
-        const fetchedRows = data.rows ?? []
+        const fetchedRows = Array.isArray(data.rows) ? data.rows : []
         setRows(fetchedRows)
         setTotal(data.total ?? fetchedRows.length)
         setColumns(fetchedRows.length > 0 ? Object.keys(fetchedRows[0]) : [])
       } else {
-        // API not yet implemented — fall back to mock data
-        const mockRows = MOCK_ROW_DATA[tableName] ?? []
-        setRows(mockRows)
-        setTotal(mockRows.length)
-        setColumns(mockRows.length > 0 ? Object.keys(mockRows[0]) : [])
+        setRowsError(`Error ${res.status}`)
+        setRows([])
+        setTotal(0)
+        setColumns([])
       }
-    } catch {
-      const mockRows = MOCK_ROW_DATA[tableName] ?? []
-      setRows(mockRows)
-      setTotal(mockRows.length)
-      setColumns(mockRows.length > 0 ? Object.keys(mockRows[0]) : [])
+    } catch (err) {
+      setRowsError(err instanceof Error ? err.message : 'Failed to load rows')
+      setRows([])
+      setTotal(0)
+      setColumns([])
     } finally {
       setRowsLoading(false)
     }
@@ -253,10 +209,19 @@ function NpTablesContent() {
   }
 
   return (
-    <PageTemplate
-      title="Plugin Tables"
-      description="Read-only browser for np_* database tables created by installed plugins"
-    >
+    <div className="space-y-6 p-6">
+      <div>
+        <h1 className="text-2xl font-bold text-zinc-900 dark:text-white">
+          Plugin Tables
+        </h1>
+        <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
+          Read-only browser for{' '}
+          <code className="rounded bg-zinc-100 px-1 py-0.5 text-xs dark:bg-zinc-800">
+            np_*
+          </code>{' '}
+          database tables created by installed plugins
+        </p>
+      </div>
       <div className="flex min-h-[600px] gap-0 overflow-hidden rounded-xl border border-zinc-700/50 bg-zinc-800/50">
         {/* Sidebar */}
         <aside className="w-56 shrink-0 border-r border-zinc-700/50 bg-zinc-900/50">
@@ -494,7 +459,7 @@ function NpTablesContent() {
           )}
         </div>
       </div>
-    </PageTemplate>
+    </div>
   )
 }
 

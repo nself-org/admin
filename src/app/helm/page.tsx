@@ -96,64 +96,6 @@ function MetricCard({
   )
 }
 
-// Mock releases
-const mockReleases: HelmRelease[] = [
-  {
-    name: 'nself',
-    namespace: 'default',
-    revision: 5,
-    status: 'deployed',
-    chart: 'nself',
-    chartVersion: '0.4.4',
-    appVersion: '1.2.3',
-    updatedAt: '2024-01-25T10:30:00Z',
-    description: 'nself stack deployment',
-  },
-  {
-    name: 'prometheus',
-    namespace: 'monitoring',
-    revision: 3,
-    status: 'deployed',
-    chart: 'prometheus',
-    chartVersion: '25.8.0',
-    appVersion: '2.48.0',
-    updatedAt: '2024-01-20T14:00:00Z',
-    description: 'Prometheus monitoring stack',
-  },
-  {
-    name: 'grafana',
-    namespace: 'monitoring',
-    revision: 2,
-    status: 'deployed',
-    chart: 'grafana',
-    chartVersion: '7.0.19',
-    appVersion: '10.2.3',
-    updatedAt: '2024-01-20T14:30:00Z',
-    description: 'Grafana dashboards',
-  },
-  {
-    name: 'cert-manager',
-    namespace: 'cert-manager',
-    revision: 1,
-    status: 'deployed',
-    chart: 'cert-manager',
-    chartVersion: '1.13.3',
-    appVersion: '1.13.3',
-    updatedAt: '2024-01-15T09:00:00Z',
-    description: 'Certificate management',
-  },
-  {
-    name: 'ingress-nginx',
-    namespace: 'ingress-nginx',
-    revision: 4,
-    status: 'deployed',
-    chart: 'ingress-nginx',
-    chartVersion: '4.9.0',
-    appVersion: '1.9.5',
-    updatedAt: '2024-01-18T11:00:00Z',
-    description: 'NGINX Ingress Controller',
-  },
-]
 
 const statusColors: Record<string, string> = {
   deployed: 'bg-emerald-900/30 text-emerald-400',
@@ -170,10 +112,10 @@ function HelmContent() {
   const { data, isLoading, mutate } = useSWR<{ releases: HelmRelease[] }>(
     '/api/helm/releases',
     fetcher,
-    { fallbackData: { releases: mockReleases }, refreshInterval: 30000 },
+    { refreshInterval: 30000 },
   )
 
-  const releases = data?.releases || mockReleases
+  const releases = data?.releases ?? []
 
   const filteredReleases = releases.filter(
     (r) =>

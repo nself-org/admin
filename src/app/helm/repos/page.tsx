@@ -20,44 +20,6 @@ import useSWR from 'swr'
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json())
 
-// Mock repos
-const mockRepos: HelmRepo[] = [
-  {
-    name: 'bitnami',
-    url: 'https://charts.bitnami.com/bitnami',
-    lastUpdated: '2024-01-25T10:00:00Z',
-  },
-  {
-    name: 'prometheus-community',
-    url: 'https://prometheus-community.github.io/helm-charts',
-    lastUpdated: '2024-01-24T10:00:00Z',
-  },
-  {
-    name: 'grafana',
-    url: 'https://grafana.github.io/helm-charts',
-    lastUpdated: '2024-01-24T10:00:00Z',
-  },
-  {
-    name: 'jetstack',
-    url: 'https://charts.jetstack.io',
-    lastUpdated: '2024-01-23T10:00:00Z',
-  },
-  {
-    name: 'ingress-nginx',
-    url: 'https://kubernetes.github.io/ingress-nginx',
-    lastUpdated: '2024-01-22T10:00:00Z',
-  },
-  {
-    name: 'elastic',
-    url: 'https://helm.elastic.co',
-    lastUpdated: '2024-01-21T10:00:00Z',
-  },
-  {
-    name: 'hashicorp',
-    url: 'https://helm.releases.hashicorp.com',
-    lastUpdated: '2024-01-20T10:00:00Z',
-  },
-]
 
 // Popular repos to add
 const popularRepos = [
@@ -124,10 +86,10 @@ function HelmReposContent() {
   const { data, isLoading, mutate } = useSWR<{ repos: HelmRepo[] }>(
     '/api/helm/repos',
     fetcher,
-    { fallbackData: { repos: mockRepos } },
+
   )
 
-  const repos = data?.repos || mockRepos
+  const repos = data?.repos ?? []
 
   const filteredRepos = repos.filter(
     (repo) =>

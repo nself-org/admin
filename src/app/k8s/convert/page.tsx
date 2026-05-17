@@ -16,116 +16,6 @@ import {
 import Link from 'next/link'
 import { Suspense, useState } from 'react'
 
-// Mock converted manifests
-const mockManifests: K8sManifest[] = [
-  {
-    filename: 'deployment-api.yaml',
-    kind: 'Deployment',
-    name: 'nself-api',
-    content: `apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: nself-api
-  namespace: default
-spec:
-  replicas: 3
-  selector:
-    matchLabels:
-      app: nself-api
-  template:
-    metadata:
-      labels:
-        app: nself-api
-    spec:
-      containers:
-        - name: api
-          image: nself/api:latest
-          ports:
-            - containerPort: 3000
-          resources:
-            limits:
-              memory: "512Mi"
-              cpu: "500m"`,
-  },
-  {
-    filename: 'service-api.yaml',
-    kind: 'Service',
-    name: 'nself-api',
-    content: `apiVersion: v1
-kind: Service
-metadata:
-  name: nself-api
-  namespace: default
-spec:
-  selector:
-    app: nself-api
-  ports:
-    - port: 80
-      targetPort: 3000
-  type: ClusterIP`,
-  },
-  {
-    filename: 'deployment-hasura.yaml',
-    kind: 'Deployment',
-    name: 'nself-hasura',
-    content: `apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: nself-hasura
-  namespace: default
-spec:
-  replicas: 2
-  selector:
-    matchLabels:
-      app: nself-hasura
-  template:
-    metadata:
-      labels:
-        app: nself-hasura
-    spec:
-      containers:
-        - name: hasura
-          image: hasura/graphql-engine:v2.35.0
-          ports:
-            - containerPort: 8080
-          env:
-            - name: HASURA_GRAPHQL_DATABASE_URL
-              valueFrom:
-                secretKeyRef:
-                  name: nself-secrets
-                  key: database-url`,
-  },
-  {
-    filename: 'ingress.yaml',
-    kind: 'Ingress',
-    name: 'nself-ingress',
-    content: `apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: nself-ingress
-  namespace: default
-  annotations:
-    kubernetes.io/ingress.class: nginx
-    cert-manager.io/cluster-issuer: letsencrypt-prod
-spec:
-  tls:
-    - hosts:
-        - api.example.com
-      secretName: nself-tls
-  rules:
-    - host: api.example.com
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: nself-api
-                port:
-                  number: 80`,
-  },
-]
-
 function K8sConvertContent() {
   const [options, setOptions] = useState<K8sConvertOptions>({
     namespace: 'default',
@@ -144,11 +34,20 @@ function K8sConvertContent() {
 
   const handleConvert = async () => {
     setConverting(true)
-    // Simulate conversion
-    await new Promise((resolve) => setTimeout(resolve, 2000))
-    setManifests(mockManifests)
-    setSelectedManifest(mockManifests[0])
-    setConverting(false)
+    try {
+      const res = await fetch('/api/k8s/convert', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(options),
+      })
+      if (!res.ok) throw new Error(`HTTP ${res.status}`)
+      const data = await res.json()
+      const result: K8sManifest[] = data?.manifests ?? []
+      setManifests(result)
+      if (result.length > 0) setSelectedManifest(result[0])
+    } finally {
+      setConverting(false)
+    }
   }
 
   const handleCopy = (content: string) => {

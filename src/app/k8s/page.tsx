@@ -110,139 +110,12 @@ function MetricCard({
   )
 }
 
-// Mock data
-const mockCluster: K8sCluster = {
-  name: 'production',
-  context: 'do-nyc1-production',
-  platform: 'doks',
-  apiServer: 'https://k8s.example.com:6443',
-  namespace: 'default',
-  status: 'connected',
-  version: '1.28.2',
-  nodes: 3,
-  current: true,
-}
-
-const mockDeployments: K8sDeployment[] = [
-  {
-    name: 'nself-api',
-    namespace: 'default',
-    replicas: { desired: 3, ready: 3, available: 3, updated: 3 },
-    strategy: 'RollingUpdate',
-    image: 'nself/api:v1.2.3',
-    createdAt: '2024-01-15T10:30:00Z',
-    conditions: [
-      {
-        type: 'Available',
-        status: 'True',
-        lastTransitionTime: '2024-01-15T10:30:00Z',
-      },
-    ],
-  },
-  {
-    name: 'nself-hasura',
-    namespace: 'default',
-    replicas: { desired: 2, ready: 2, available: 2, updated: 2 },
-    strategy: 'RollingUpdate',
-    image: 'hasura/graphql-engine:v2.35.0',
-    createdAt: '2024-01-15T10:30:00Z',
-    conditions: [
-      {
-        type: 'Available',
-        status: 'True',
-        lastTransitionTime: '2024-01-15T10:30:00Z',
-      },
-    ],
-  },
-  {
-    name: 'nself-auth',
-    namespace: 'default',
-    replicas: { desired: 2, ready: 2, available: 2, updated: 2 },
-    strategy: 'RollingUpdate',
-    image: 'nself/auth:v1.0.0',
-    createdAt: '2024-01-15T10:30:00Z',
-    conditions: [
-      {
-        type: 'Available',
-        status: 'True',
-        lastTransitionTime: '2024-01-15T10:30:00Z',
-      },
-    ],
-  },
-]
-
-const mockPods: K8sPod[] = [
-  {
-    name: 'nself-api-7d9f8b6c5-abc12',
-    namespace: 'default',
-    status: 'Running',
-    ready: '1/1',
-    restarts: 0,
-    age: '2d',
-    containers: [],
-  },
-  {
-    name: 'nself-api-7d9f8b6c5-def34',
-    namespace: 'default',
-    status: 'Running',
-    ready: '1/1',
-    restarts: 0,
-    age: '2d',
-    containers: [],
-  },
-  {
-    name: 'nself-api-7d9f8b6c5-ghi56',
-    namespace: 'default',
-    status: 'Running',
-    ready: '1/1',
-    restarts: 1,
-    age: '2d',
-    containers: [],
-  },
-  {
-    name: 'nself-hasura-5c4d3b2a1-jkl78',
-    namespace: 'default',
-    status: 'Running',
-    ready: '1/1',
-    restarts: 0,
-    age: '2d',
-    containers: [],
-  },
-  {
-    name: 'nself-hasura-5c4d3b2a1-mno90',
-    namespace: 'default',
-    status: 'Running',
-    ready: '1/1',
-    restarts: 0,
-    age: '2d',
-    containers: [],
-  },
-  {
-    name: 'nself-auth-6e5f4g3h2-pqr12',
-    namespace: 'default',
-    status: 'Running',
-    ready: '1/1',
-    restarts: 0,
-    age: '2d',
-    containers: [],
-  },
-  {
-    name: 'nself-auth-6e5f4g3h2-stu34',
-    namespace: 'default',
-    status: 'Pending',
-    ready: '0/1',
-    restarts: 0,
-    age: '5m',
-    containers: [],
-  },
-]
-
 function K8sContent() {
   const [_refreshing, setRefreshing] = useState(false)
 
   const {
     data,
-    error: _error,
+    error,
     isLoading,
     mutate,
   } = useSWR<{
@@ -250,11 +123,6 @@ function K8sContent() {
     deployments?: K8sDeployment[]
     pods?: K8sPod[]
   }>('/api/k8s/status', fetcher, {
-    fallbackData: {
-      cluster: mockCluster,
-      deployments: mockDeployments,
-      pods: mockPods,
-    },
     refreshInterval: 30000,
   })
 
@@ -280,9 +148,30 @@ function K8sContent() {
     )
   }
 
-  const cluster = data?.cluster || mockCluster
-  const deployments = data?.deployments || mockDeployments
-  const pods = data?.pods || mockPods
+  if (error) {
+    return (
+      <div className="space-y-6">
+        <div>
+          <h1 className="text-2xl font-semibold text-white">Kubernetes</h1>
+        </div>
+        <div className="rounded-lg border border-red-500/30 bg-red-900/20 p-6">
+          <p className="text-red-400">
+            {error instanceof Error ? error.message : 'Failed to load Kubernetes status'}
+          </p>
+          <button
+            onClick={() => mutate()}
+            className="mt-4 rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700"
+          >
+            Retry
+          </button>
+        </div>
+      </div>
+    )
+  }
+
+  const cluster = data?.cluster ?? null
+  const deployments = data?.deployments ?? []
+  const pods = data?.pods ?? []
 
   const runningPods = pods.filter((p) => p.status === 'Running').length
   const totalReplicas = deployments.reduce(
@@ -293,6 +182,9 @@ function K8sContent() {
     (acc, d) => acc + d.replicas.ready,
     0,
   )
+  const podRunPct = pods.length > 0 ? (runningPods / pods.length) * 100 : 0
+  const replicaReadyPct =
+    totalReplicas > 0 ? (readyReplicas / totalReplicas) * 100 : 0
 
   const statusColors: Record<string, string> = {
     Running: 'bg-emerald-900/30 text-emerald-400',
@@ -407,7 +299,7 @@ function K8sContent() {
               <MetricCard
                 title="Pods"
                 value={`${runningPods}/${pods.length}`}
-                percentage={(runningPods / pods.length) * 100}
+                percentage={podRunPct}
                 description="Running pods"
                 icon={Box}
                 color="emerald"
@@ -416,7 +308,7 @@ function K8sContent() {
               <MetricCard
                 title="Replicas"
                 value={`${readyReplicas}/${totalReplicas}`}
-                percentage={(readyReplicas / totalReplicas) * 100}
+                percentage={replicaReadyPct}
                 description="Ready replicas"
                 icon={Scale}
                 color="sky"

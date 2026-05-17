@@ -19,92 +19,38 @@ import {
 import Link from 'next/link'
 import { Suspense, useCallback, useEffect, useState } from 'react'
 
+type ScaleUIState = 'loading' | 'empty' | 'error' | 'data' | 'partial'
+
 function ScaleContent() {
+  const [uiState, setUiState] = useState<ScaleUIState>('loading')
   const [loading, setLoading] = useState(true)
   const [services, setServices] = useState<ScalingConfig[]>([])
   const [actionLoading, setActionLoading] = useState<string | null>(null)
+  const [actionSuccess, setActionSuccess] = useState<string | null>(null)
+  const [error, setError] = useState<string | null>(null)
 
   const fetchServices = useCallback(async () => {
+    setLoading(true)
+    setError(null)
     try {
-      // Mock data - replace with real API
-      const mockServices: ScalingConfig[] = [
-        {
-          service: 'PostgreSQL',
-          current: { replicas: 1, cpu: '2', memory: '4Gi' },
-          recommended: {
-            replicas: 1,
-            cpu: '4',
-            memory: '8Gi',
-            reason: 'High memory usage detected',
-          },
-          autoScaling: {
-            enabled: false,
-            minReplicas: 1,
-            maxReplicas: 1,
-            targetCPU: 80,
-          },
-        },
-        {
-          service: 'Hasura',
-          current: { replicas: 2, cpu: '1', memory: '2Gi' },
-          recommended: {
-            replicas: 3,
-            cpu: '1',
-            memory: '2Gi',
-            reason: 'Increased request volume',
-          },
-          autoScaling: {
-            enabled: true,
-            minReplicas: 2,
-            maxReplicas: 5,
-            targetCPU: 70,
-            targetMemory: 80,
-          },
-        },
-        {
-          service: 'Auth Service',
-          current: { replicas: 1, cpu: '0.5', memory: '512Mi' },
-          autoScaling: {
-            enabled: false,
-            minReplicas: 1,
-            maxReplicas: 3,
-            targetCPU: 70,
-          },
-        },
-        {
-          service: 'Functions',
-          current: { replicas: 2, cpu: '0.5', memory: '1Gi' },
-          autoScaling: {
-            enabled: true,
-            minReplicas: 1,
-            maxReplicas: 10,
-            targetCPU: 60,
-          },
-        },
-        {
-          service: 'Redis',
-          current: { replicas: 1, cpu: '0.5', memory: '1Gi' },
-          autoScaling: {
-            enabled: false,
-            minReplicas: 1,
-            maxReplicas: 1,
-            targetCPU: 80,
-          },
-        },
-        {
-          service: 'MinIO',
-          current: { replicas: 1, cpu: '1', memory: '2Gi' },
-          autoScaling: {
-            enabled: false,
-            minReplicas: 1,
-            maxReplicas: 1,
-            targetCPU: 80,
-          },
-        },
-      ]
-      setServices(mockServices)
-    } catch (_error) {
-      // Handle error silently
+      const res = await fetch('/api/scale')
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}))
+        throw new Error(data.error ?? `HTTP ${res.status}`)
+      }
+      const data = await res.json()
+      const svcs: ScalingConfig[] = (data.services ?? []) as ScalingConfig[]
+      setServices(svcs)
+      if (svcs.length === 0) {
+        setUiState('empty')
+      } else if (data.partial) {
+        setUiState('partial')
+      } else {
+        setUiState('data')
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to load scaling data')
+      setUiState('error')
     } finally {
       setLoading(false)
     }
@@ -116,12 +62,17 @@ function ScaleContent() {
 
   const scaleService = async (serviceName: string, replicas: number) => {
     setActionLoading(`${serviceName}-scale`)
+    setActionSuccess(null)
     try {
-      await fetch('/api/scale', {
+      const res = await fetch(`/api/scale/${encodeURIComponent(serviceName)}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ service: serviceName, replicas }),
+        body: JSON.stringify({ replicas }),
       })
+      if (res.ok) {
+        setActionSuccess(`${serviceName} scaled to ${replicas} replica${replicas !== 1 ? 's' : ''}`)
+        setTimeout(() => setActionSuccess(null), 3000)
+      }
       await fetchServices()
     } finally {
       setActionLoading(null)
@@ -130,12 +81,17 @@ function ScaleContent() {
 
   const toggleAutoScaling = async (serviceName: string, enabled: boolean) => {
     setActionLoading(`${serviceName}-auto`)
+    setActionSuccess(null)
     try {
-      await fetch('/api/scale/auto', {
+      const res = await fetch('/api/scale/auto', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ service: serviceName, enabled }),
       })
+      if (res.ok) {
+        setActionSuccess(`Autoscaling ${enabled ? 'enabled' : 'disabled'} for ${serviceName}`)
+        setTimeout(() => setActionSuccess(null), 3000)
+      }
       await fetchServices()
     } finally {
       setActionLoading(null)
@@ -148,7 +104,7 @@ function ScaleContent() {
   ).length
   const hasRecommendations = services.filter((s) => s.recommended).length
 
-  if (loading) {
+  if (uiState === 'loading') {
     return (
       <>
         <HeroPattern />
@@ -161,10 +117,72 @@ function ScaleContent() {
     )
   }
 
+  if (uiState === 'error') {
+    return (
+      <>
+        <HeroPattern />
+        <div className="relative mx-auto max-w-7xl">
+          <div className="flex flex-col items-center justify-center py-20 text-center">
+            <AlertTriangle className="mb-4 h-12 w-12 text-red-500" />
+            <h2 className="mb-2 text-xl font-semibold text-zinc-900 dark:text-white">
+              Failed to load scaling data
+            </h2>
+            <p className="mb-6 text-zinc-500 dark:text-zinc-400">{error}</p>
+            <button
+              onClick={() => fetchServices()}
+              className="flex items-center gap-2 rounded-lg bg-sky-500 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-sky-600"
+            >
+              <RefreshCw className="h-4 w-4" />
+              Retry
+            </button>
+          </div>
+        </div>
+      </>
+    )
+  }
+
+  if (uiState === 'empty') {
+    return (
+      <>
+        <HeroPattern />
+        <div className="relative mx-auto max-w-7xl">
+          <div className="flex flex-col items-center justify-center py-20 text-center">
+            <Server className="mb-4 h-12 w-12 text-zinc-400" />
+            <h2 className="mb-2 text-xl font-semibold text-zinc-900 dark:text-white">
+              No services found
+            </h2>
+            <p className="mb-6 text-zinc-500 dark:text-zinc-400">
+              Start your nself stack first, then scaling data will appear here.
+            </p>
+            <button
+              onClick={() => fetchServices()}
+              className="flex items-center gap-2 rounded-lg border border-zinc-300 px-4 py-2 text-sm font-medium text-zinc-700 transition-colors hover:bg-zinc-50 dark:border-zinc-600 dark:text-zinc-300 dark:hover:bg-zinc-800"
+            >
+              <RefreshCw className="h-4 w-4" />
+              Refresh
+            </button>
+          </div>
+        </div>
+      </>
+    )
+  }
+
   return (
     <>
       <HeroPattern />
       <div className="relative mx-auto max-w-7xl">
+        {actionSuccess && (
+          <div className="mb-4 flex items-center gap-2 rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-700 dark:border-green-800 dark:bg-green-900/20 dark:text-green-400">
+            <Activity className="h-4 w-4 flex-shrink-0" />
+            {actionSuccess}
+          </div>
+        )}
+        {uiState === 'partial' && (
+          <div className="mb-4 flex items-center gap-2 rounded-lg border border-yellow-200 bg-yellow-50 px-4 py-3 text-sm text-yellow-700 dark:border-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400">
+            <AlertTriangle className="h-4 w-4 flex-shrink-0" />
+            Some service data is unavailable. Showing partial results.
+          </div>
+        )}
         <div className="mb-10 border-b border-zinc-200 pb-8 dark:border-zinc-800">
           <div className="flex items-center justify-between">
             <div>

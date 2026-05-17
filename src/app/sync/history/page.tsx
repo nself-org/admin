@@ -4,6 +4,7 @@ import { HeroPattern } from '@/components/HeroPattern'
 import { TableSkeleton } from '@/components/skeletons'
 import type { Environment, SyncOperation } from '@/types/deployment'
 import {
+  AlertCircle,
   ArrowLeft,
   ArrowRight,
   CheckCircle,
@@ -17,11 +18,12 @@ import {
   XCircle,
 } from 'lucide-react'
 import Link from 'next/link'
-import { Suspense, useCallback, useEffect, useState } from 'react'
+import { Suspense, useState } from 'react'
+import useSWR from 'swr'
+
+const fetcher = (url: string) => fetch(url).then((res) => res.json())
 
 function SyncHistoryContent() {
-  const [loading, setLoading] = useState(true)
-  const [syncHistory, setSyncHistory] = useState<SyncOperation[]>([])
   const [filterEnv, setFilterEnv] = useState<Environment | 'all'>('all')
   const [filterStatus, setFilterStatus] = useState<
     'all' | 'completed' | 'failed' | 'in_progress'
@@ -35,82 +37,22 @@ function SyncHistoryContent() {
     'production',
   ]
 
-  const fetchHistory = useCallback(async () => {
-    try {
-      // Mock data - replace with real API
-      const mockHistory: SyncOperation[] = [
-        {
-          id: 'sync-1',
-          source: 'staging',
-          target: 'production',
-          status: 'completed',
-          startedAt: new Date(Date.now() - 3600000).toISOString(),
-          completedAt: new Date(Date.now() - 3500000).toISOString(),
-          changes: { variables: 3, secrets: 0, services: 1 },
-          syncedBy: 'developer@example.com',
-        },
-        {
-          id: 'sync-2',
-          source: 'development',
-          target: 'staging',
-          status: 'completed',
-          startedAt: new Date(Date.now() - 86400000).toISOString(),
-          completedAt: new Date(Date.now() - 86400000 + 60000).toISOString(),
-          changes: { variables: 5, secrets: 2, services: 2 },
-          syncedBy: 'developer@example.com',
-        },
-        {
-          id: 'sync-3',
-          source: 'staging',
-          target: 'production',
-          status: 'failed',
-          startedAt: new Date(Date.now() - 172800000).toISOString(),
-          error: 'Connection timeout to production server',
-          syncedBy: 'developer@example.com',
-        },
-        {
-          id: 'sync-4',
-          source: 'local',
-          target: 'development',
-          status: 'completed',
-          startedAt: new Date(Date.now() - 259200000).toISOString(),
-          completedAt: new Date(Date.now() - 259200000 + 30000).toISOString(),
-          changes: { variables: 8, secrets: 0, services: 0 },
-          syncedBy: 'developer@example.com',
-        },
-        {
-          id: 'sync-5',
-          source: 'development',
-          target: 'staging',
-          status: 'completed',
-          startedAt: new Date(Date.now() - 345600000).toISOString(),
-          completedAt: new Date(Date.now() - 345600000 + 45000).toISOString(),
-          changes: { variables: 2, secrets: 1, services: 3 },
-          syncedBy: 'admin@example.com',
-        },
-      ]
+  const { data, error, isLoading } = useSWR<{
+    success: boolean
+    history: SyncOperation[]
+    total: number
+  }>('/api/sync/history', fetcher)
 
-      let filtered = mockHistory
-      if (filterEnv !== 'all') {
-        filtered = filtered.filter(
-          (s) => s.source === filterEnv || s.target === filterEnv,
-        )
-      }
-      if (filterStatus !== 'all') {
-        filtered = filtered.filter((s) => s.status === filterStatus)
-      }
-
-      setSyncHistory(filtered)
-    } catch (_error) {
-      // Handle error silently
-    } finally {
-      setLoading(false)
-    }
-  }, [filterEnv, filterStatus])
-
-  useEffect(() => {
-    fetchHistory()
-  }, [fetchHistory])
+  const allHistory = data?.history ?? []
+  let syncHistory = allHistory
+  if (filterEnv !== 'all') {
+    syncHistory = syncHistory.filter(
+      (s) => s.source === filterEnv || s.target === filterEnv,
+    )
+  }
+  if (filterStatus !== 'all') {
+    syncHistory = syncHistory.filter((s) => s.status === filterStatus)
+  }
 
   const getStatusIcon = (status: string) => {
     switch (status) {
@@ -138,7 +80,25 @@ function SyncHistoryContent() {
     }
   }
 
-  if (loading) {
+  if (error) {
+    return (
+      <>
+        <HeroPattern />
+        <div className="relative mx-auto max-w-7xl">
+          <div className="rounded-lg border border-red-500/30 bg-red-900/20 p-6">
+            <div className="flex items-center gap-3">
+              <AlertCircle className="h-5 w-5 text-red-400" />
+              <p className="text-red-400">
+                {error instanceof Error ? error.message : 'Failed to load sync history'}
+              </p>
+            </div>
+          </div>
+        </div>
+      </>
+    )
+  }
+
+  if (isLoading) {
     return (
       <>
         <HeroPattern />

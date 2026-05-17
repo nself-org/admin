@@ -55,6 +55,25 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       'pull',
       'info',
       'init',
+      'plugin',
+      'license',
+      'migrate',
+      'update',
+      'env',
+      // Service lifecycle (G-009 / S26)
+      'service',
+      // Deployment & infrastructure
+      'deploy',
+      'server',
+      // Operations
+      'clean',
+      'backup',
+      'restore',
+      'scale',
+      'health',
+      'metrics',
+      'monitor',
+      'infra',
     ]
 
     if (!allowedCommands.includes(command)) {

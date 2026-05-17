@@ -102,38 +102,6 @@ function MetricCard({
   )
 }
 
-// Mock server data
-const mockServer: CloudServer = {
-  id: 'srv-1',
-  name: 'prod-api-1',
-  ip: '203.0.113.10',
-  provider: 'digitalocean',
-  region: 'nyc1',
-  size: 'medium',
-  status: 'running',
-  createdAt: '2024-01-15T10:30:00Z',
-  specs: { vcpu: 2, memory: '4 GB', storage: '80 GB SSD' },
-  sshKeyName: 'deploy-key',
-  tags: { environment: 'production', team: 'platform' },
-}
-
-const mockMetrics: ServerMetrics = {
-  serverId: 'srv-1',
-  cpu: 45,
-  memory: {
-    used: 2.8 * 1024 * 1024 * 1024,
-    total: 4 * 1024 * 1024 * 1024,
-    percentage: 70,
-  },
-  disk: {
-    used: 32 * 1024 * 1024 * 1024,
-    total: 80 * 1024 * 1024 * 1024,
-    percentage: 40,
-  },
-  network: { bytesIn: 150 * 1024 * 1024, bytesOut: 85 * 1024 * 1024 },
-  timestamp: new Date().toISOString(),
-}
-
 const statusColors: Record<string, string> = {
   running: 'bg-emerald-900/30 text-emerald-400',
   stopped: 'bg-zinc-700 text-zinc-400',
@@ -152,23 +120,22 @@ function ServerDetailContent({ name }: { name: string }) {
 
   const {
     data: serverData,
+    error: serverError,
     isLoading: serverLoading,
     mutate,
   } = useSWR<{ server: CloudServer }>(
     `/api/cloud/servers/${serverName}`,
     fetcher,
-    { fallbackData: { server: mockServer } },
   )
 
   const { data: metricsData, isLoading: _metricsLoading } = useSWR<{
     metrics: ServerMetrics
   }>(`/api/cloud/servers/${serverName}/metrics`, fetcher, {
-    fallbackData: { metrics: mockMetrics },
     refreshInterval: 30000,
   })
 
-  const server = serverData?.server || mockServer
-  const metrics = metricsData?.metrics || mockMetrics
+  const server = serverData?.server ?? null
+  const metrics = metricsData?.metrics ?? null
 
   const handleAction = async (
     action: 'start' | 'stop' | 'restart' | 'delete',
@@ -188,6 +155,27 @@ function ServerDetailContent({ name }: { name: string }) {
 
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text)
+  }
+
+  if (serverError) {
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center gap-4">
+          <Link
+            href="/cloud/servers"
+            className="rounded-lg border border-zinc-700 bg-zinc-800 p-2 hover:bg-zinc-700"
+          >
+            <ArrowLeft className="h-5 w-5" />
+          </Link>
+        </div>
+        <div className="flex items-center gap-3 rounded-xl border border-red-200 bg-red-50 p-6 dark:border-red-800 dark:bg-red-900/20">
+          <AlertCircle className="h-5 w-5 shrink-0 text-red-500" />
+          <p className="text-sm text-red-700 dark:text-red-400">
+            Failed to load server details. Please try again.
+          </p>
+        </div>
+      </div>
+    )
   }
 
   if (serverLoading) {
@@ -223,6 +211,25 @@ function ServerDetailContent({ name }: { name: string }) {
     const days = Math.floor(diff / (1000 * 60 * 60 * 24))
     const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))
     return `${days}d ${hours}h`
+  }
+
+  if (!server) {
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center gap-4">
+          <Link
+            href="/cloud/servers"
+            className="rounded-lg border border-zinc-700 bg-zinc-800 p-2 hover:bg-zinc-700"
+          >
+            <ArrowLeft className="h-5 w-5" />
+          </Link>
+        </div>
+        <div className="flex items-center gap-3 rounded-xl border border-zinc-700 bg-zinc-800/50 p-6">
+          <Server className="h-5 w-5 shrink-0 text-zinc-400" />
+          <p className="text-sm text-zinc-400">Server not found.</p>
+        </div>
+      </div>
+    )
   }
 
   return (
@@ -337,36 +344,38 @@ function ServerDetailContent({ name }: { name: string }) {
           {/* Server Info */}
           <div className="space-y-6 lg:col-span-2">
             {/* Quick Stats */}
-            <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-              <MetricCard
-                title="CPU Usage"
-                value={`${metrics.cpu}%`}
-                percentage={metrics.cpu}
-                icon={Cpu}
-              />
-              <MetricCard
-                title="Memory"
-                value={formatBytes(metrics.memory.used)}
-                percentage={metrics.memory.percentage}
-                description={`of ${formatBytes(metrics.memory.total)}`}
-                icon={MemoryStick}
-              />
-              <MetricCard
-                title="Disk"
-                value={formatBytes(metrics.disk.used)}
-                percentage={metrics.disk.percentage}
-                description={`of ${formatBytes(metrics.disk.total)}`}
-                icon={HardDrive}
-              />
-              <MetricCard
-                title="Network"
-                value={formatBytes(
-                  metrics.network.bytesIn + metrics.network.bytesOut,
-                )}
-                description="In + Out"
-                icon={Network}
-              />
-            </div>
+            {metrics && (
+              <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+                <MetricCard
+                  title="CPU Usage"
+                  value={`${metrics.cpu}%`}
+                  percentage={metrics.cpu}
+                  icon={Cpu}
+                />
+                <MetricCard
+                  title="Memory"
+                  value={formatBytes(metrics.memory.used)}
+                  percentage={metrics.memory.percentage}
+                  description={`of ${formatBytes(metrics.memory.total)}`}
+                  icon={MemoryStick}
+                />
+                <MetricCard
+                  title="Disk"
+                  value={formatBytes(metrics.disk.used)}
+                  percentage={metrics.disk.percentage}
+                  description={`of ${formatBytes(metrics.disk.total)}`}
+                  icon={HardDrive}
+                />
+                <MetricCard
+                  title="Network"
+                  value={formatBytes(
+                    metrics.network.bytesIn + metrics.network.bytesOut,
+                  )}
+                  description="In + Out"
+                  icon={Network}
+                />
+              </div>
+            )}
 
             {/* Connection Info */}
             <div className="rounded-lg border border-zinc-700/50 bg-zinc-800/50 p-4">

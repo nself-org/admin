@@ -117,10 +117,22 @@ jobs:
             exit 1
           fi
 
+  clean-root:
+    name: Clean Root Check
+    uses: nself-org/.github/.github/workflows/clean-root.yml@v1
+    with:
+      allowed-markdown: "README.md"
+
+  security:
+    name: Security Audit
+    uses: nself-org/.github/.github/workflows/security.yml@v1
+    with:
+      fail-on-severity: "high"
+
   summary:
     name: CI Summary
     runs-on: ubuntu-latest
-    needs: [lint, typecheck, test, build]
+    needs: [lint, typecheck, test, build, clean-root, security]
     if: always()
     steps:
       - name: Generate summary
@@ -150,6 +162,18 @@ jobs:
             echo "- Build: passed" >> $GITHUB_STEP_SUMMARY
           else
             echo "- Build: failed" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          if [ "${{ needs.clean-root.result }}" == "success" ]; then
+            echo "- Clean Root: passed" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "- Clean Root: failed" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          if [ "${{ needs.security.result }}" == "success" ]; then
+            echo "- Security: passed" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "- Security: failed" >> $GITHUB_STEP_SUMMARY
           fi
 
           echo "" >> $GITHUB_STEP_SUMMARY

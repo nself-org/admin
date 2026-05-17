@@ -36,7 +36,11 @@ const PUBLIC_ROUTES = [
   '/api/auth/validate-session', // Allow session validation from middleware
   '/api/health',
   '/api/project/status', // Allow checking project status without auth
-  '/api/wizard', // Allow all wizard endpoints (pre-setup; route handlers enforce requireAuthPreSetup)
+  '/api/wizard/status', // Wizard status polling — read-only, safe before setup
+  // NOTE: /api/wizard/update-env-var, /api/wizard/finalize, /api/wizard/reset are NOT listed here.
+  // Those mutation routes are guarded at the handler level by requireWizardNotComplete() which
+  // returns 401 post-setup. Listing the bare /api/wizard prefix here would blanket-bypass auth
+  // for all wizard routes including write routes — that is the security bug this comment fixes.
   '/api/auth/totp/verify', // TOTP verify is called during login (before full session)
   '/_next',
   '/favicon.ico',

@@ -5,11 +5,126 @@
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
+// ─── R1: Type allowlist ───────────────────────────────────────────────────────
+
+/** Regex gate: type token must start with a letter and contain only safe chars */
+const COLUMN_TYPE_REGEX = /^[a-zA-Z][a-zA-Z0-9 ]*(\(\d+(,\d+)?\))?(\[\])?$/
+
+/** Explicit set of base Postgres types (without parametrization) */
+const ALLOWED_BASE_TYPES = new Set([
+  'int', 'integer', 'bigint', 'smallint', 'serial', 'bigserial',
+  'boolean', 'text', 'varchar', 'char', 'numeric', 'decimal',
+  'real', 'double precision', 'date', 'timestamp', 'timestamptz',
+  'time', 'uuid', 'jsonb', 'json', 'bytea', 'inet', 'cidr',
+])
+
+/**
+ * Validate a column type string against the Postgres type allowlist.
+ * Throws if the type is not recognized.
+ * @param type Raw type string from CanvasColumn (e.g. "varchar(255)", "uuid")
+ * @returns The validated type string unchanged
+ */
+export function validateColumnType(type: string): string {
+  if (!COLUMN_TYPE_REGEX.test(type)) {
+    throw new Error(
+      `Invalid column type: "${type}". Only safe Postgres type tokens are allowed.`,
+    )
+  }
+  // Strip optional parenthesized size and array suffix to get base type
+  const base = type.replace(/\(\d+(,\d+)?\)/, '').replace(/\[\]$/, '').trim().toLowerCase()
+  if (!ALLOWED_BASE_TYPES.has(base)) {
+    throw new Error(
+      `Unrecognized column type: "${type}". Allowed types: ${[...ALLOWED_BASE_TYPES].join(', ')}.`,
+    )
+  }
+  return type
+}
+
+// ─── R2: Typed default model ──────────────────────────────────────────────────
+
+/** Allowed SQL functions for DEFAULT clauses */
+const ALLOWED_DEFAULT_FUNCTIONS = new Set([
+  'now', 'gen_random_uuid', 'uuid_generate_v4', 'current_timestamp',
+])
+
+/** Allowed SQL function names for DEFAULT clauses — typed for exhaustive checks */
+export type AllowedDefaultFunction = 'now' | 'gen_random_uuid' | 'uuid_generate_v4' | 'current_timestamp'
+
+/**
+ * Typed model for column DEFAULT values.
+ * - none: no DEFAULT clause emitted
+ * - literal: a validated string, number, or boolean literal
+ * - function: a whitelisted SQL function call (no arguments)
+ */
+export type ColumnDefault =
+  | { kind: 'none' }
+  | { kind: 'literal'; value: string | number | boolean }
+  | { kind: 'function'; name: AllowedDefaultFunction }
+
+/**
+ * Emit the SQL fragment for a DEFAULT clause value.
+ * Throws for invalid inputs.
+ */
+export function emitDefaultClause(def: ColumnDefault): string | null {
+  if (def.kind === 'none') return null
+  if (def.kind === 'function') {
+    if (!ALLOWED_DEFAULT_FUNCTIONS.has(def.name)) {
+      throw new Error(`Disallowed DEFAULT function: "${def.name}"`)
+    }
+    return `${def.name}()`
+  }
+  // literal
+  const { value } = def
+  if (typeof value === 'number') {
+    if (!Number.isFinite(value)) throw new Error('DEFAULT literal must be a finite number')
+    return String(value)
+  }
+  if (typeof value === 'boolean') {
+    return value ? 'true' : 'false'
+  }
+  // string literal — dollar-quote to prevent injection
+  // Use a tag that cannot appear in the value: if $tag$ appears in value,
+  // fall back to single-quote escaping (double every single-quote)
+  const tag = 'nself_default_'
+  if (!value.includes(`$${tag}$`)) {
+    return `$${tag}$${value}$${tag}$`
+  }
+  // Fallback: single-quote escape
+  return `'${value.replace(/'/g, "''")}'`
+}
+
+/**
+ * Coerce a legacy raw-string default to a typed ColumnDefault.
+ * Used for callers that still pass string defaults from the canvas UI.
+ * - Pure function name (now, gen_random_uuid, uuid_generate_v4, current_timestamp)
+ *   with optional () → emitted as function call
+ * - Numeric string → literal number
+ * - "true"/"false" → literal boolean
+ * - Anything else → literal string (dollar-quoted)
+ */
+export function coerceStringDefault(raw: string): ColumnDefault {
+  const stripped = raw.trim().replace(/\(\)$/, '')
+  if (ALLOWED_DEFAULT_FUNCTIONS.has(stripped)) {
+    return {
+      kind: 'function',
+      name: stripped as AllowedDefaultFunction,
+    }
+  }
+  const num = Number(raw.trim())
+  if (!Number.isNaN(num) && Number.isFinite(num)) {
+    return { kind: 'literal', value: num }
+  }
+  if (raw.trim() === 'true') return { kind: 'literal', value: true }
+  if (raw.trim() === 'false') return { kind: 'literal', value: false }
+  return { kind: 'literal', value: raw.trim() }
+}
+
 export interface CanvasColumn {
   id: string
   name: string
   type: string
   nullable: boolean
+  /** Legacy string-based default (coerced via coerceStringDefault at DDL emit time) */
   default?: string
   isPrimaryKey: boolean
   /** Derived/display-only: true when this column is the source of an FK edge */
@@ -75,9 +190,16 @@ export function generateCreateTable(table: CanvasTable): string {
   const colDefs = table.columns
     .filter((c) => c.name.trim())
     .map((col) => {
-      let def = `  ${pgIdent(col.name)} ${col.type}`
+      // R1: validate type against allowlist before concatenation
+      const validatedType = validateColumnType(col.type)
+      let def = `  ${pgIdent(col.name)} ${validatedType}`
       if (!col.nullable) def += ' NOT NULL'
-      if (col.default) def += ` DEFAULT ${col.default}`
+      // R2: coerce legacy string default to typed model, then emit safely
+      if (col.default !== undefined && col.default !== '') {
+        const typedDefault = coerceStringDefault(col.default)
+        const clause = emitDefaultClause(typedDefault)
+        if (clause !== null) def += ` DEFAULT ${clause}`
+      }
       if (col.isPrimaryKey) def += ' PRIMARY KEY'
       return def
     })

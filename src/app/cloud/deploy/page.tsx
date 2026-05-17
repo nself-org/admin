@@ -24,54 +24,6 @@ const fetcher = (url: string) => fetch(url).then((res) => res.json())
 
 type DeployStep = 'provider' | 'target' | 'config' | 'deploy'
 
-// Mock data
-const mockProviders: CloudProvider[] = [
-  {
-    id: 'digitalocean',
-    name: 'digitalocean',
-    displayName: 'DigitalOcean',
-    category: 'developer',
-    configured: true,
-    validated: true,
-    regions: [],
-    sizes: [],
-    features: ['Droplets'],
-  },
-  {
-    id: 'hetzner',
-    name: 'hetzner',
-    displayName: 'Hetzner',
-    category: 'budget',
-    configured: true,
-    validated: true,
-    regions: [],
-    sizes: [],
-    features: ['Cloud Servers'],
-  },
-]
-
-const mockServers: CloudServer[] = [
-  {
-    id: 'srv-1',
-    name: 'prod-api-1',
-    ip: '203.0.113.10',
-    provider: 'digitalocean',
-    region: 'nyc1',
-    size: 'medium',
-    status: 'running',
-    createdAt: '2024-01-15T10:30:00Z',
-  },
-  {
-    id: 'srv-2',
-    name: 'prod-db-1',
-    ip: '203.0.113.11',
-    provider: 'hetzner',
-    region: 'fsn1',
-    size: 'large',
-    status: 'running',
-    createdAt: '2024-01-10T08:00:00Z',
-  },
-]
 
 function QuickDeployContent() {
   const router = useRouter()
@@ -91,17 +43,15 @@ function QuickDeployContent() {
   const { data: providerData } = useSWR<{ providers: CloudProvider[] }>(
     '/api/cloud/providers/configured',
     fetcher,
-    { fallbackData: { providers: mockProviders } },
   )
 
   const { data: serverData } = useSWR<{ servers: CloudServer[] }>(
     '/api/cloud/servers',
     fetcher,
-    { fallbackData: { servers: mockServers } },
   )
 
-  const providers = providerData?.providers || mockProviders
-  const servers = (serverData?.servers || mockServers).filter(
+  const providers = providerData?.providers ?? []
+  const servers = (serverData?.servers ?? []).filter(
     (s) => s.status === 'running',
   )
 

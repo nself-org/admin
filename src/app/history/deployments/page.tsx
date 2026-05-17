@@ -4,6 +4,7 @@ import { HeroPattern } from '@/components/HeroPattern'
 import { TableSkeleton } from '@/components/skeletons'
 import type { Deployment, Environment } from '@/types/deployment'
 import {
+  AlertCircle,
   ArrowLeft,
   CheckCircle,
   ChevronDown,
@@ -19,11 +20,12 @@ import {
   XCircle,
 } from 'lucide-react'
 import Link from 'next/link'
-import { Suspense, useCallback, useEffect, useState } from 'react'
+import { Suspense, useState } from 'react'
+import useSWR from 'swr'
+
+const fetcher = (url: string) => fetch(url).then((res) => res.json())
 
 function DeploymentHistoryContent() {
-  const [loading, setLoading] = useState(true)
-  const [deployments, setDeployments] = useState<Deployment[]>([])
   const [filterEnv, setFilterEnv] = useState<Environment | 'all'>('all')
   const [filterStatus, setFilterStatus] = useState<string>('all')
 
@@ -35,105 +37,21 @@ function DeploymentHistoryContent() {
     'production',
   ]
 
-  const fetchDeployments = useCallback(async () => {
-    try {
-      // Mock data - replace with real API
-      const mockDeployments: Deployment[] = [
-        {
-          id: 'deploy-1',
-          environment: 'production',
-          strategy: 'blue-green',
-          status: 'success',
-          version: 'v1.3.0',
-          commit: 'a1b2c3d',
-          branch: 'main',
-          startedAt: new Date(Date.now() - 3600000).toISOString(),
-          completedAt: new Date(Date.now() - 3500000).toISOString(),
-          duration: 100,
-          deployedBy: 'developer@example.com',
-          changes: ['Add user profile feature', 'Fix payment bug'],
-          rollbackAvailable: true,
-        },
-        {
-          id: 'deploy-2',
-          environment: 'staging',
-          strategy: 'standard',
-          status: 'success',
-          version: 'v1.3.0-rc.1',
-          commit: 'b2c3d4e',
-          branch: 'release/1.3',
-          startedAt: new Date(Date.now() - 86400000).toISOString(),
-          completedAt: new Date(Date.now() - 86400000 + 120000).toISOString(),
-          duration: 120,
-          deployedBy: 'developer@example.com',
-          changes: ['Update dependencies'],
-          rollbackAvailable: true,
-        },
-        {
-          id: 'deploy-3',
-          environment: 'production',
-          strategy: 'canary',
-          status: 'failed',
-          version: 'v1.2.6',
-          commit: 'c3d4e5f',
-          branch: 'main',
-          startedAt: new Date(Date.now() - 172800000).toISOString(),
-          completedAt: new Date(Date.now() - 172800000 + 180000).toISOString(),
-          duration: 180,
-          deployedBy: 'developer@example.com',
-          error: 'Health check failed after deployment',
-          rollbackAvailable: false,
-        },
-        {
-          id: 'deploy-4',
-          environment: 'development',
-          strategy: 'standard',
-          status: 'success',
-          version: 'v1.3.0-dev.5',
-          commit: 'd4e5f6g',
-          branch: 'feature/user-profile',
-          startedAt: new Date(Date.now() - 259200000).toISOString(),
-          completedAt: new Date(Date.now() - 259200000 + 60000).toISOString(),
-          duration: 60,
-          deployedBy: 'developer@example.com',
-          rollbackAvailable: true,
-        },
-        {
-          id: 'deploy-5',
-          environment: 'production',
-          strategy: 'blue-green',
-          status: 'success',
-          version: 'v1.2.5',
-          commit: 'e5f6g7h',
-          branch: 'main',
-          startedAt: new Date(Date.now() - 345600000).toISOString(),
-          completedAt: new Date(Date.now() - 345600000 + 90000).toISOString(),
-          duration: 90,
-          deployedBy: 'admin@example.com',
-          changes: ['Security patches', 'Performance improvements'],
-          rollbackAvailable: true,
-        },
-      ]
+  const { data, error, isLoading } = useSWR<{
+    success: boolean
+    deployments: Deployment[]
+    total: number
+    statistics: { successful: number; failed: number; rolledBack: number }
+  }>('/api/history/deployments', fetcher)
 
-      let filtered = mockDeployments
-      if (filterEnv !== 'all') {
-        filtered = filtered.filter((d) => d.environment === filterEnv)
-      }
-      if (filterStatus !== 'all') {
-        filtered = filtered.filter((d) => d.status === filterStatus)
-      }
-
-      setDeployments(filtered)
-    } catch (_error) {
-      // Handle error silently
-    } finally {
-      setLoading(false)
-    }
-  }, [filterEnv, filterStatus])
-
-  useEffect(() => {
-    fetchDeployments()
-  }, [fetchDeployments])
+  const allDeployments = data?.deployments ?? []
+  let deployments = allDeployments
+  if (filterEnv !== 'all') {
+    deployments = deployments.filter((d) => d.environment === filterEnv)
+  }
+  if (filterStatus !== 'all') {
+    deployments = deployments.filter((d) => d.status === filterStatus)
+  }
 
   const getStatusIcon = (status: string) => {
     switch (status) {
@@ -180,7 +98,25 @@ function DeploymentHistoryContent() {
     }
   }
 
-  if (loading) {
+  if (error) {
+    return (
+      <>
+        <HeroPattern />
+        <div className="relative mx-auto max-w-7xl">
+          <div className="rounded-lg border border-red-500/30 bg-red-900/20 p-6">
+            <div className="flex items-center gap-3">
+              <AlertCircle className="h-5 w-5 text-red-400" />
+              <p className="text-red-400">
+                {error instanceof Error ? error.message : 'Failed to load deployment history'}
+              </p>
+            </div>
+          </div>
+        </div>
+      </>
+    )
+  }
+
+  if (isLoading) {
     return (
       <>
         <HeroPattern />

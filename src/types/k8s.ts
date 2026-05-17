@@ -36,6 +36,11 @@ export interface K8sNamespace {
   status: 'Active' | 'Terminating'
   createdAt: string
   labels?: Record<string, string>
+  resourceCounts?: {
+    deployments: number
+    pods: number
+    services: number
+  }
 }
 
 export interface K8sDeployment {

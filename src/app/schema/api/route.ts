@@ -62,11 +62,14 @@ export async function GET(_request: NextRequest): Promise<NextResponse> {
 // ─── POST — create job + emit DDL ─────────────────────────────────────────────
 
 interface SchemaApiBody {
-  /** Optional canvas state to emit DDL from */
+  /** Canvas state to emit DDL from — REQUIRED (caller-supplied raw DDL is rejected) */
   canvas?: CanvasState
-  /** Pre-generated forward DDL (if canvas not provided) */
+  /**
+   * @deprecated R4: Raw caller-supplied DDL is rejected. Always supply `canvas`.
+   * These fields are ignored if present; retained in type for backward-compatible
+   * JSON parsing (existing clients that send them get a 400 with guidance).
+   */
   forwardDDL?: string
-  /** Pre-generated reverse DDL (if canvas not provided) */
   reverseDDL?: string
   /** Human-readable migration label */
   name?: string
@@ -81,17 +84,28 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
     const body = (await request.json()) as SchemaApiBody
 
-    // Resolve DDL — either from a canvas state or from pre-generated strings
+    // R4: Reject caller-supplied raw DDL — always regenerate from a validated canvas.
+    // This closes the direct-DDL bypass: a CSRF/XSS attacker cannot inject arbitrary
+    // SQL by posting forwardDDL/reverseDDL directly. The canvas goes through the
+    // hardened schema-builder (R1 type allowlist + R2 typed defaults).
+    if (!body.canvas) {
+      return NextResponse.json(
+        {
+          success: false,
+          error:
+            'DDL must be generated from a validated schema canvas. ' +
+            'Supply a `canvas` field (CanvasState) — raw `forwardDDL`/`reverseDDL` are not accepted.',
+        },
+        { status: 400 },
+      )
+    }
+
+    // Resolve DDL from the validated canvas only
     let forwardDDL: string
     let reverseDDL: string
 
-    if (body.canvas) {
-      forwardDDL = generateForwardDDL(body.canvas)
-      reverseDDL = generateReverseDDL(body.canvas)
-    } else {
-      forwardDDL = body.forwardDDL ?? ''
-      reverseDDL = body.reverseDDL ?? ''
-    }
+    forwardDDL = generateForwardDDL(body.canvas)
+    reverseDDL = generateReverseDDL(body.canvas)
 
     if (!forwardDDL.trim()) {
       return NextResponse.json(

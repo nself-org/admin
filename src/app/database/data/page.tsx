@@ -1,6 +1,5 @@
 'use client'
 
-import { PageTemplate } from '@/components/PageTemplate'
 import { TableSkeleton } from '@/components/skeletons'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Badge } from '@/components/ui/badge'
@@ -57,7 +56,7 @@ import {
   Upload,
   X,
 } from 'lucide-react'
-import { Suspense, useCallback, useState } from 'react'
+import { Suspense, useCallback, useEffect, useState } from 'react'
 
 type ExportFormat = 'csv' | 'json'
 
@@ -83,109 +82,12 @@ interface ImportPreview {
   sampleRows: Record<string, string>[]
 }
 
-// Sample data for demonstration
-const SAMPLE_TABLES: TableInfo[] = [
-  {
-    name: 'users',
-    rowCount: 1250,
-    columns: [
-      'id',
-      'email',
-      'name',
-      'password_hash',
-      'avatar_url',
-      'role',
-      'created_at',
-      'updated_at',
-    ],
-  },
-  {
-    name: 'posts',
-    rowCount: 3420,
-    columns: [
-      'id',
-      'title',
-      'content',
-      'user_id',
-      'status',
-      'published_at',
-      'created_at',
-      'updated_at',
-    ],
-  },
-  {
-    name: 'comments',
-    rowCount: 8750,
-    columns: ['id', 'content', 'post_id', 'user_id', 'created_at'],
-  },
-  {
-    name: 'sessions',
-    rowCount: 450,
-    columns: [
-      'id',
-      'user_id',
-      'token',
-      'ip_address',
-      'user_agent',
-      'expires_at',
-      'created_at',
-    ],
-  },
-  {
-    name: 'audit_logs',
-    rowCount: 15200,
-    columns: [
-      'id',
-      'user_id',
-      'action',
-      'entity_type',
-      'entity_id',
-      'ip_address',
-      'created_at',
-    ],
-  },
-]
-
-const SAMPLE_PII_FIELDS: PIIField[] = [
-  {
-    table: 'users',
-    column: 'email',
-    type: 'email',
-    sampleValue: 'john.doe@example.com',
-    selected: true,
-  },
-  {
-    table: 'users',
-    column: 'name',
-    type: 'name',
-    sampleValue: 'John Doe',
-    selected: true,
-  },
-  {
-    table: 'sessions',
-    column: 'ip_address',
-    type: 'ip',
-    sampleValue: '192.168.1.100',
-    selected: true,
-  },
-  {
-    table: 'sessions',
-    column: 'user_agent',
-    type: 'custom',
-    sampleValue: 'Mozilla/5.0 (Macintosh...)',
-    selected: false,
-  },
-  {
-    table: 'audit_logs',
-    column: 'ip_address',
-    type: 'ip',
-    sampleValue: '10.0.0.50',
-    selected: true,
-  },
-]
-
 function DatabaseDataContent() {
   const [activeTab, setActiveTab] = useUrlState<string>('tab', 'export')
+
+  // Tables loaded from real schema API
+  const [tables, setTables] = useState<TableInfo[]>([])
+  const [tablesLoading, setTablesLoading] = useState(true)
 
   // Export state
   const [selectedExportTable, setSelectedExportTable] = useState<string>('')
@@ -202,12 +104,36 @@ function DatabaseDataContent() {
   const [importOutput, setImportOutput] = useState<string>('')
   const [previewSheetOpen, setPreviewSheetOpen] = useState(false)
 
-  // Anonymize state
-  const [piiFields, setPiiFields] = useState<PIIField[]>(SAMPLE_PII_FIELDS)
+  // Anonymize state — starts empty; populated by real scan
+  const [piiFields, setPiiFields] = useState<PIIField[]>([])
   const [isScanning, setIsScanning] = useState(false)
   const [isAnonymizing, setIsAnonymizing] = useState(false)
   const [anonymizeOutput, setAnonymizeOutput] = useState<string>('')
   const [anonymizeProgress, setAnonymizeProgress] = useState(0)
+
+  // Load real table list from schema API on mount
+  useEffect(() => {
+    const fetchTables = async () => {
+      try {
+        const response = await fetch('/api/database/schema', {
+          cache: 'no-store',
+        })
+        if (response.status === 401) {
+          window.location.href = '/login'
+          return
+        }
+        if (!response.ok) throw new Error(`HTTP ${response.status}`)
+        const data = await response.json()
+        const raw = data?.data?.tables
+        setTables(Array.isArray(raw) ? raw : [])
+      } catch (_err) {
+        setTables([])
+      } finally {
+        setTablesLoading(false)
+      }
+    }
+    fetchTables()
+  }, [])
 
   const handleExport = async () => {
     if (!selectedExportTable) return
@@ -216,32 +142,47 @@ function DatabaseDataContent() {
     setExportOutput('')
 
     try {
-      // Simulate CLI call
-      await new Promise((resolve) => setTimeout(resolve, 1500))
+      const body: Record<string, unknown> = {
+        action: 'export',
+        table: selectedExportTable,
+        format: exportFormat,
+      }
+      if (exportLimit) body.limit = parseInt(exportLimit)
 
-      const table = SAMPLE_TABLES.find((t) => t.name === selectedExportTable)
-      const rowCount = exportLimit
-        ? Math.min(parseInt(exportLimit), table?.rowCount || 0)
-        : table?.rowCount || 0
-
-      setExportOutput(
-        `Exporting ${selectedExportTable} to ${exportFormat.toUpperCase()}...\n\n` +
-          `Rows exported: ${rowCount.toLocaleString()}\n` +
-          `File size: ${(rowCount * 0.5).toFixed(1)} KB\n` +
-          `Output: ./exports/${selectedExportTable}_${new Date().toISOString().split('T')[0]}.${exportFormat}\n\n` +
-          `Export completed successfully!`,
-      )
-
-      // Simulate download
-      const blob = new Blob(['Sample export data'], {
-        type: exportFormat === 'csv' ? 'text/csv' : 'application/json',
+      const response = await fetch('/api/database/cli', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
       })
-      const url = URL.createObjectURL(blob)
-      const a = document.createElement('a')
-      a.href = url
-      a.download = `${selectedExportTable}.${exportFormat}`
-      a.click()
-      URL.revokeObjectURL(url)
+
+      if (response.status === 401) {
+        window.location.href = '/login'
+        return
+      }
+
+      const data = await response.json()
+
+      if (!response.ok || !data.success) {
+        setExportOutput(data.details || data.error || `Error ${response.status}`)
+        return
+      }
+
+      const output: string = data.data?.output || 'Export completed.'
+      setExportOutput(output)
+
+      // Trigger download from returned content if available
+      const content: string | undefined = data.data?.content
+      if (content) {
+        const blob = new Blob([content], {
+          type: exportFormat === 'csv' ? 'text/csv' : 'application/json',
+        })
+        const url = URL.createObjectURL(blob)
+        const a = document.createElement('a')
+        a.href = url
+        a.download = `${selectedExportTable}.${exportFormat}`
+        a.click()
+        URL.revokeObjectURL(url)
+      }
     } catch (error) {
       setExportOutput(error instanceof Error ? error.message : 'Export failed')
     } finally {
@@ -252,38 +193,62 @@ function DatabaseDataContent() {
   const handleFileSelect = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const file = e.target.files?.[0]
-      if (file) {
-        setImportFile(file)
+      if (!file) return
 
-        // Simulate parsing preview
-        const format = file.name.endsWith('.json') ? 'json' : 'csv'
-        setImportPreview({
-          fileName: file.name,
-          format,
-          rowCount: 150,
-          columns: ['id', 'name', 'email', 'created_at'],
-          sampleRows: [
-            {
-              id: '1',
-              name: 'Alice Smith',
-              email: 'alice@example.com',
-              created_at: '2024-01-15',
-            },
-            {
-              id: '2',
-              name: 'Bob Johnson',
-              email: 'bob@example.com',
-              created_at: '2024-01-16',
-            },
-            {
-              id: '3',
-              name: 'Carol White',
-              email: 'carol@example.com',
-              created_at: '2024-01-17',
-            },
-          ],
-        })
+      setImportFile(file)
+      const format = file.name.endsWith('.json') ? 'json' : 'csv'
+
+      // Read first bytes to build a preview without mock data
+      const reader = new FileReader()
+      reader.onload = (evt) => {
+        const text = (evt.target?.result as string) || ''
+        const lines = text.split('\n').filter(Boolean)
+
+        if (format === 'csv') {
+          const columns = lines[0]?.split(',').map((c) => c.trim()) ?? []
+          const sampleRows = lines.slice(1, 4).map((line) => {
+            const vals = line.split(',')
+            return Object.fromEntries(
+              columns.map((col, i) => [col, (vals[i] ?? '').trim()]),
+            )
+          })
+          setImportPreview({
+            fileName: file.name,
+            format,
+            rowCount: Math.max(0, lines.length - 1),
+            columns,
+            sampleRows,
+          })
+        } else {
+          try {
+            const parsed = JSON.parse(text)
+            const arr: Record<string, string>[] = Array.isArray(parsed)
+              ? parsed
+              : [parsed]
+            const columns = arr.length > 0 ? Object.keys(arr[0]) : []
+            setImportPreview({
+              fileName: file.name,
+              format,
+              rowCount: arr.length,
+              columns,
+              sampleRows: arr.slice(0, 3).map((r) =>
+                Object.fromEntries(
+                  Object.entries(r).map(([k, v]) => [k, String(v)]),
+                ),
+              ),
+            })
+          } catch {
+            setImportPreview({
+              fileName: file.name,
+              format,
+              rowCount: 0,
+              columns: [],
+              sampleRows: [],
+            })
+          }
+        }
       }
+      reader.readAsText(file.slice(0, 16384))
     },
     [],
   )
@@ -295,18 +260,32 @@ function DatabaseDataContent() {
     setImportOutput('')
 
     try {
-      // Simulate CLI call
-      await new Promise((resolve) => setTimeout(resolve, 2000))
+      // Read the full file content then POST to CLI endpoint
+      const text = await importFile.text()
+      const response = await fetch('/api/database/cli', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'import',
+          table: selectedImportTable,
+          format: importFile.name.endsWith('.json') ? 'json' : 'csv',
+          content: text,
+        }),
+      })
 
-      setImportOutput(
-        `Importing ${importFile.name} into ${selectedImportTable}...\n\n` +
-          `Rows parsed: ${importPreview?.rowCount || 0}\n` +
-          `Rows inserted: ${importPreview?.rowCount || 0}\n` +
-          `Rows skipped: 0\n` +
-          `Errors: 0\n\n` +
-          `Import completed successfully!`,
-      )
+      if (response.status === 401) {
+        window.location.href = '/login'
+        return
+      }
 
+      const data = await response.json()
+
+      if (!response.ok || !data.success) {
+        setImportOutput(data.details || data.error || `Error ${response.status}`)
+        return
+      }
+
+      setImportOutput(data.data?.output || 'Import completed.')
       setImportFile(null)
       setImportPreview(null)
       setSelectedImportTable('')
@@ -319,22 +298,50 @@ function DatabaseDataContent() {
 
   const handleScanPII = async () => {
     setIsScanning(true)
+    setPiiFields([])
     setAnonymizeOutput('Scanning database for PII fields...\n')
 
     try {
-      await new Promise((resolve) => setTimeout(resolve, 2000))
+      const response = await fetch('/api/database/cli', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'analyze' }),
+      })
 
-      setAnonymizeOutput(
-        `Scanning database for PII fields...\n\n` +
-          `Tables scanned: ${SAMPLE_TABLES.length}\n` +
-          `Columns analyzed: ${SAMPLE_TABLES.reduce((acc, t) => acc + t.columns.length, 0)}\n` +
-          `PII fields detected: ${SAMPLE_PII_FIELDS.length}\n\n` +
-          `Scan completed. Review detected fields below.`,
-      )
+      if (response.status === 401) {
+        window.location.href = '/login'
+        return
+      }
 
-      setPiiFields(SAMPLE_PII_FIELDS)
+      const data = await response.json()
+
+      if (!response.ok || !data.success) {
+        setAnonymizeOutput(
+          data.details || data.error || `Error ${response.status}`,
+        )
+        return
+      }
+
+      const output: string = data.data?.output || ''
+      setAnonymizeOutput(output || 'Scan completed.')
+
+      // CLI may return detected PII fields in data.data.piiFields
+      const rawFields = data.data?.piiFields
+      if (Array.isArray(rawFields)) {
+        setPiiFields(
+          rawFields.map((f: Partial<PIIField>) => ({
+            table: f.table ?? '',
+            column: f.column ?? '',
+            type: f.type ?? 'custom',
+            sampleValue: f.sampleValue ?? '',
+            selected: true,
+          })),
+        )
+      }
     } catch (error) {
-      setAnonymizeOutput(error instanceof Error ? error.message : 'Scan failed')
+      setAnonymizeOutput(
+        error instanceof Error ? error.message : 'Scan failed',
+      )
     } finally {
       setIsScanning(false)
     }
@@ -349,22 +356,34 @@ function DatabaseDataContent() {
     setAnonymizeOutput('Starting anonymization...\n')
 
     try {
-      for (let i = 0; i < selectedFields.length; i++) {
-        const field = selectedFields[i]
-        await new Promise((resolve) => setTimeout(resolve, 800))
-        setAnonymizeProgress(((i + 1) / selectedFields.length) * 100)
-        setAnonymizeOutput(
-          (prev) =>
-            prev + `Anonymizing ${field.table}.${field.column}... done\n`,
-        )
+      const response = await fetch('/api/database/cli', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'anonymize',
+          fields: selectedFields.map((f) => `${f.table}.${f.column}`),
+        }),
+      })
+
+      if (response.status === 401) {
+        window.location.href = '/login'
+        return
       }
 
+      const data = await response.json()
+
+      if (!response.ok || !data.success) {
+        setAnonymizeOutput(
+          (prev) =>
+            prev +
+            `\nError: ${data.details || data.error || `HTTP ${response.status}`}`,
+        )
+        return
+      }
+
+      setAnonymizeProgress(100)
       setAnonymizeOutput(
-        (prev) =>
-          prev +
-          `\nAnonymization completed!\n` +
-          `Fields processed: ${selectedFields.length}\n` +
-          `Records updated: ${selectedFields.length * 500} (estimated)`,
+        (prev) => prev + (data.data?.output || '\nAnonymization completed.'),
       )
     } catch (error) {
       setAnonymizeOutput(
@@ -400,10 +419,15 @@ function DatabaseDataContent() {
   }
 
   return (
-    <PageTemplate
-      title="Data Operations"
-      description="Export, import, and anonymize database data"
-    >
+    <div className="space-y-6 p-6">
+      <div>
+        <h1 className="text-2xl font-bold text-zinc-900 dark:text-white">
+          Data Operations
+        </h1>
+        <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
+          Export, import, and anonymize database data
+        </p>
+      </div>
       <div className="space-y-6">
         {/* Info Alert */}
         <Alert>
@@ -463,17 +487,23 @@ function DatabaseDataContent() {
                       value={selectedExportTable}
                       onValueChange={setSelectedExportTable}
                     >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Choose a table..." />
+                      <SelectTrigger disabled={tablesLoading}>
+                        <SelectValue
+                          placeholder={
+                            tablesLoading ? 'Loading tables...' : 'Choose a table...'
+                          }
+                        />
                       </SelectTrigger>
                       <SelectContent>
-                        {SAMPLE_TABLES.map((table) => (
+                        {tables.map((table) => (
                           <SelectItem key={table.name} value={table.name}>
                             <div className="flex items-center justify-between gap-4">
                               <span>{table.name}</span>
-                              <span className="text-xs text-zinc-500">
-                                {table.rowCount.toLocaleString()} rows
-                              </span>
+                              {table.rowCount !== undefined && (
+                                <span className="text-xs text-zinc-500">
+                                  {table.rowCount.toLocaleString()} rows
+                                </span>
+                              )}
                             </div>
                           </SelectItem>
                         ))}
@@ -660,11 +690,15 @@ function DatabaseDataContent() {
                       value={selectedImportTable}
                       onValueChange={setSelectedImportTable}
                     >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Choose target table..." />
+                      <SelectTrigger disabled={tablesLoading}>
+                        <SelectValue
+                          placeholder={
+                            tablesLoading ? 'Loading tables...' : 'Choose target table...'
+                          }
+                        />
                       </SelectTrigger>
                       <SelectContent>
-                        {SAMPLE_TABLES.map((table) => (
+                        {tables.map((table) => (
                           <SelectItem key={table.name} value={table.name}>
                             {table.name}
                           </SelectItem>
@@ -1061,7 +1095,7 @@ function DatabaseDataContent() {
           </TabsContent>
         </Tabs>
       </div>
-    </PageTemplate>
+    </div>
   )
 }
 

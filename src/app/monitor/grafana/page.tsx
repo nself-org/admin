@@ -26,45 +26,10 @@ function GrafanaContent() {
   const [status, setStatus] = useState<GrafanaStatus | null>(null)
 
   const fetchStatus = useCallback(async () => {
-    try {
-      // Mock data - replace with real API
-      setStatus({
-        running: true,
-        url: 'http://localhost:3000',
-        version: '10.2.3',
-        dashboards: [
-          {
-            name: 'System Overview',
-            uid: 'system-overview',
-            url: 'http://localhost:3000/d/system-overview',
-          },
-          {
-            name: 'PostgreSQL',
-            uid: 'postgres',
-            url: 'http://localhost:3000/d/postgres',
-          },
-          {
-            name: 'Hasura GraphQL',
-            uid: 'hasura',
-            url: 'http://localhost:3000/d/hasura',
-          },
-          {
-            name: 'API Performance',
-            uid: 'api-perf',
-            url: 'http://localhost:3000/d/api-perf',
-          },
-        ],
-        dataSources: [
-          { name: 'Prometheus', type: 'prometheus', status: 'ok' },
-          { name: 'Loki', type: 'loki', status: 'ok' },
-          { name: 'PostgreSQL', type: 'postgres', status: 'ok' },
-        ],
-      })
-    } catch (_error) {
-      // Handle error silently
-    } finally {
-      setLoading(false)
-    }
+    // No API route available — Grafana status is not exposed via the admin API.
+    // Use `nself monitor grafana` to open Grafana directly.
+    setStatus(null)
+    setLoading(false)
   }, [])
 
   useEffect(() => {
@@ -78,6 +43,41 @@ function GrafanaContent() {
         <div className="relative mx-auto max-w-7xl">
           <div className="flex items-center justify-center py-20">
             <div className="h-8 w-8 animate-spin rounded-full border-4 border-orange-500 border-t-transparent" />
+          </div>
+        </div>
+      </>
+    )
+  }
+
+  if (!status) {
+    return (
+      <>
+        <HeroPattern />
+        <div className="relative mx-auto max-w-7xl">
+          <div className="mb-10 border-b border-zinc-200 pb-8 dark:border-zinc-800">
+            <Link
+              href="/monitor"
+              className="mb-4 inline-flex items-center gap-2 text-sm text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              Back to Monitor
+            </Link>
+            <h1 className="bg-gradient-to-r from-orange-600 to-yellow-400 bg-clip-text text-4xl font-bold text-transparent dark:from-orange-400 dark:to-yellow-300">
+              Grafana Integration
+            </h1>
+          </div>
+          <div className="rounded-xl border border-zinc-200 bg-white p-8 text-center shadow-sm dark:border-zinc-700 dark:bg-zinc-800">
+            <BarChart3 className="mx-auto mb-4 h-12 w-12 text-zinc-400" />
+            <h3 className="mb-2 text-lg font-semibold text-zinc-900 dark:text-white">
+              Grafana status not available
+            </h3>
+            <p className="text-zinc-600 dark:text-zinc-400">
+              Grafana status is not exposed via the Admin API. Use the CLI to manage
+              Grafana directly.
+            </p>
+            <p className="mt-4 font-mono text-sm text-orange-500">
+              nself monitor grafana
+            </p>
           </div>
         </div>
       </>

@@ -1,6 +1,5 @@
 'use client'
 
-import { PageTemplate } from '@/components/PageTemplate'
 import { TableSkeleton } from '@/components/skeletons'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Badge } from '@/components/ui/badge'
@@ -86,342 +85,24 @@ function DatabaseSchemaContent() {
   const fetchSchema = useCallback(async () => {
     setIsLoading(true)
     try {
-      // Mock data - in real implementation, fetch from API
-      const mockTables: TableInfo[] = [
-        {
-          name: 'users',
-          schema: 'public',
-          rowCount: 15420,
-          columns: [
-            {
-              name: 'id',
-              type: 'uuid',
-              nullable: false,
-              default: 'gen_random_uuid()',
-              isPrimaryKey: true,
-              isForeignKey: false,
-            },
-            {
-              name: 'email',
-              type: 'varchar(255)',
-              nullable: false,
-              isPrimaryKey: false,
-              isForeignKey: false,
-            },
-            {
-              name: 'password_hash',
-              type: 'varchar(255)',
-              nullable: false,
-              isPrimaryKey: false,
-              isForeignKey: false,
-            },
-            {
-              name: 'name',
-              type: 'varchar(100)',
-              nullable: true,
-              isPrimaryKey: false,
-              isForeignKey: false,
-            },
-            {
-              name: 'avatar_url',
-              type: 'text',
-              nullable: true,
-              isPrimaryKey: false,
-              isForeignKey: false,
-            },
-            {
-              name: 'role',
-              type: 'varchar(50)',
-              nullable: false,
-              default: "'user'",
-              isPrimaryKey: false,
-              isForeignKey: false,
-            },
-            {
-              name: 'created_at',
-              type: 'timestamptz',
-              nullable: false,
-              default: 'now()',
-              isPrimaryKey: false,
-              isForeignKey: false,
-            },
-            {
-              name: 'updated_at',
-              type: 'timestamptz',
-              nullable: false,
-              default: 'now()',
-              isPrimaryKey: false,
-              isForeignKey: false,
-            },
-          ],
-          indexes: [
-            {
-              name: 'users_pkey',
-              columns: ['id'],
-              unique: true,
-              type: 'btree',
-            },
-            {
-              name: 'users_email_idx',
-              columns: ['email'],
-              unique: true,
-              type: 'btree',
-            },
-            {
-              name: 'users_role_idx',
-              columns: ['role'],
-              unique: false,
-              type: 'btree',
-            },
-          ],
-          foreignKeys: [],
-        },
-        {
-          name: 'posts',
-          schema: 'public',
-          rowCount: 142850,
-          columns: [
-            {
-              name: 'id',
-              type: 'uuid',
-              nullable: false,
-              default: 'gen_random_uuid()',
-              isPrimaryKey: true,
-              isForeignKey: false,
-            },
-            {
-              name: 'title',
-              type: 'varchar(255)',
-              nullable: false,
-              isPrimaryKey: false,
-              isForeignKey: false,
-            },
-            {
-              name: 'content',
-              type: 'text',
-              nullable: true,
-              isPrimaryKey: false,
-              isForeignKey: false,
-            },
-            {
-              name: 'user_id',
-              type: 'uuid',
-              nullable: false,
-              isPrimaryKey: false,
-              isForeignKey: true,
-              references: { table: 'users', column: 'id' },
-            },
-            {
-              name: 'status',
-              type: 'varchar(50)',
-              nullable: false,
-              default: "'draft'",
-              isPrimaryKey: false,
-              isForeignKey: false,
-            },
-            {
-              name: 'published_at',
-              type: 'timestamptz',
-              nullable: true,
-              isPrimaryKey: false,
-              isForeignKey: false,
-            },
-            {
-              name: 'created_at',
-              type: 'timestamptz',
-              nullable: false,
-              default: 'now()',
-              isPrimaryKey: false,
-              isForeignKey: false,
-            },
-            {
-              name: 'updated_at',
-              type: 'timestamptz',
-              nullable: false,
-              default: 'now()',
-              isPrimaryKey: false,
-              isForeignKey: false,
-            },
-          ],
-          indexes: [
-            {
-              name: 'posts_pkey',
-              columns: ['id'],
-              unique: true,
-              type: 'btree',
-            },
-            {
-              name: 'posts_user_id_idx',
-              columns: ['user_id'],
-              unique: false,
-              type: 'btree',
-            },
-            {
-              name: 'posts_status_idx',
-              columns: ['status'],
-              unique: false,
-              type: 'btree',
-            },
-            {
-              name: 'posts_published_at_idx',
-              columns: ['published_at'],
-              unique: false,
-              type: 'btree',
-            },
-          ],
-          foreignKeys: [
-            {
-              name: 'posts_user_id_fkey',
-              column: 'user_id',
-              referencesTable: 'users',
-              referencesColumn: 'id',
-              onDelete: 'CASCADE',
-              onUpdate: 'CASCADE',
-            },
-          ],
-        },
-        {
-          name: 'comments',
-          schema: 'public',
-          rowCount: 523410,
-          columns: [
-            {
-              name: 'id',
-              type: 'uuid',
-              nullable: false,
-              default: 'gen_random_uuid()',
-              isPrimaryKey: true,
-              isForeignKey: false,
-            },
-            {
-              name: 'content',
-              type: 'text',
-              nullable: false,
-              isPrimaryKey: false,
-              isForeignKey: false,
-            },
-            {
-              name: 'post_id',
-              type: 'uuid',
-              nullable: false,
-              isPrimaryKey: false,
-              isForeignKey: true,
-              references: { table: 'posts', column: 'id' },
-            },
-            {
-              name: 'user_id',
-              type: 'uuid',
-              nullable: false,
-              isPrimaryKey: false,
-              isForeignKey: true,
-              references: { table: 'users', column: 'id' },
-            },
-            {
-              name: 'created_at',
-              type: 'timestamptz',
-              nullable: false,
-              default: 'now()',
-              isPrimaryKey: false,
-              isForeignKey: false,
-            },
-          ],
-          indexes: [
-            {
-              name: 'comments_pkey',
-              columns: ['id'],
-              unique: true,
-              type: 'btree',
-            },
-            {
-              name: 'comments_post_id_idx',
-              columns: ['post_id'],
-              unique: false,
-              type: 'btree',
-            },
-            {
-              name: 'comments_user_id_idx',
-              columns: ['user_id'],
-              unique: false,
-              type: 'btree',
-            },
-          ],
-          foreignKeys: [
-            {
-              name: 'comments_post_id_fkey',
-              column: 'post_id',
-              referencesTable: 'posts',
-              referencesColumn: 'id',
-              onDelete: 'CASCADE',
-              onUpdate: 'CASCADE',
-            },
-            {
-              name: 'comments_user_id_fkey',
-              column: 'user_id',
-              referencesTable: 'users',
-              referencesColumn: 'id',
-              onDelete: 'CASCADE',
-              onUpdate: 'CASCADE',
-            },
-          ],
-        },
-        {
-          name: 'categories',
-          schema: 'public',
-          rowCount: 25,
-          columns: [
-            {
-              name: 'id',
-              type: 'serial',
-              nullable: false,
-              isPrimaryKey: true,
-              isForeignKey: false,
-            },
-            {
-              name: 'name',
-              type: 'varchar(100)',
-              nullable: false,
-              isPrimaryKey: false,
-              isForeignKey: false,
-            },
-            {
-              name: 'slug',
-              type: 'varchar(100)',
-              nullable: false,
-              isPrimaryKey: false,
-              isForeignKey: false,
-            },
-            {
-              name: 'description',
-              type: 'text',
-              nullable: true,
-              isPrimaryKey: false,
-              isForeignKey: false,
-            },
-          ],
-          indexes: [
-            {
-              name: 'categories_pkey',
-              columns: ['id'],
-              unique: true,
-              type: 'btree',
-            },
-            {
-              name: 'categories_slug_idx',
-              columns: ['slug'],
-              unique: true,
-              type: 'btree',
-            },
-          ],
-          foreignKeys: [],
-        },
-      ]
-      setTables(mockTables)
-    } catch (error) {
-      console.error('Failed to fetch schema:', error)
+      const response = await fetch('/api/database/schema', {
+        cache: 'no-store',
+      })
+      if (!response.ok) {
+        setTables([])
+        return
+      }
+      const data = await response.json()
+      // API returns { success, data: { tables: TableInfo[] } }
+      const fetched = data.data?.tables ?? data.data ?? []
+      setTables(Array.isArray(fetched) ? fetched : [])
+    } catch {
+      setTables([])
     } finally {
       setIsLoading(false)
     }
   }, [])
+
 
   useEffect(() => {
     fetchSchema()
@@ -498,22 +179,32 @@ function DatabaseSchemaContent() {
 
   if (isLoading) {
     return (
-      <PageTemplate
-        title="Database Schema"
-        description="View and explore your database schema"
-      >
+      <div className="space-y-6 p-6">
+        <div>
+          <h1 className="text-2xl font-bold text-zinc-900 dark:text-white">
+            Database Schema
+          </h1>
+          <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
+            View and explore your database schema
+          </p>
+        </div>
         <div className="flex items-center justify-center py-12">
           <Loader2 className="h-8 w-8 animate-spin text-zinc-400" />
         </div>
-      </PageTemplate>
+      </div>
     )
   }
 
   return (
-    <PageTemplate
-      title="Database Schema"
-      description="View and explore your database schema"
-    >
+    <div className="space-y-6 p-6">
+      <div>
+        <h1 className="text-2xl font-bold text-zinc-900 dark:text-white">
+          Database Schema
+        </h1>
+        <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
+          View and explore your database schema
+        </p>
+      </div>
       <div className="space-y-6">
         {/* Info Alert */}
         <Alert>
@@ -928,7 +619,7 @@ function DatabaseSchemaContent() {
           </SheetContent>
         </Sheet>
       </div>
-    </PageTemplate>
+    </div>
   )
 }
 

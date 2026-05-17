@@ -17,11 +17,9 @@ import {
   FileText,
   GitBranch,
   GitCommit,
-  Loader2,
   MonitorPlay,
   Play,
   Plus,
-  RefreshCw,
   RotateCw,
   Server,
   Settings,
@@ -32,7 +30,7 @@ import {
   Webhook,
   XCircle,
 } from 'lucide-react'
-import { Suspense, useCallback, useEffect, useState } from 'react'
+import { Suspense, useState } from 'react'
 
 interface Pipeline {
   id: string
@@ -499,195 +497,24 @@ function WebhookManagement({
   )
 }
 
+const EMPTY_PIPELINES: Pipeline[] = []
+const EMPTY_DEPLOYMENTS: Deployment[] = []
+const EMPTY_WEBHOOKS: WebhookConfig[] = []
+
 function DeploymentCICDContent() {
-  const [pipelines, setPipelines] = useState<Pipeline[]>([])
-  const [deployments, setDeployments] = useState<Deployment[]>([])
-  const [webhooks, setWebhooks] = useState<WebhookConfig[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+  const pipelines = EMPTY_PIPELINES
+  const deployments = EMPTY_DEPLOYMENTS
+  const webhooks = EMPTY_WEBHOOKS
   const [selectedTab, setSelectedTab] = useState<
     'pipelines' | 'deployments' | 'webhooks'
   >('pipelines')
-  const [_selectedPipeline, _setSelectedPipeline] = useState<string | null>(
-    null,
-  )
-
-  const fetchData = useCallback(async () => {
-    try {
-      // Mock data for demonstration
-      const mockPipelines: Pipeline[] = [
-        {
-          id: '1',
-          name: 'main-deployment',
-          repository: 'nself-admin',
-          branch: 'main',
-          status: 'success',
-          lastRun: '2024-01-15T10:30:00Z',
-          duration: 420,
-          environment: 'production',
-          buildNumber: 245,
-          stages: [
-            {
-              id: '1',
-              name: 'Build',
-              status: 'success',
-              duration: 120,
-              icon: 'build',
-            },
-            {
-              id: '2',
-              name: 'Test',
-              status: 'success',
-              duration: 180,
-              icon: 'test',
-            },
-            {
-              id: '3',
-              name: 'Deploy',
-              status: 'success',
-              duration: 90,
-              icon: 'deploy',
-            },
-            {
-              id: '4',
-              name: 'Validate',
-              status: 'success',
-              duration: 30,
-              icon: 'validate',
-            },
-          ],
-          triggers: ['push', 'manual'],
-          commit: {
-            hash: 'a1b2c3d4e5f6',
-            message: 'Add new deployment features',
-            author: 'John Doe',
-            timestamp: '2024-01-15T10:00:00Z',
-          },
-        },
-        {
-          id: '2',
-          name: 'staging-deployment',
-          repository: 'nself-admin',
-          branch: 'develop',
-          status: 'running',
-          lastRun: '2024-01-15T11:00:00Z',
-          duration: 0,
-          environment: 'staging',
-          buildNumber: 89,
-          stages: [
-            {
-              id: '1',
-              name: 'Build',
-              status: 'success',
-              duration: 115,
-              icon: 'build',
-            },
-            { id: '2', name: 'Test', status: 'running', icon: 'test' },
-            { id: '3', name: 'Deploy', status: 'pending', icon: 'deploy' },
-            { id: '4', name: 'Validate', status: 'pending', icon: 'validate' },
-          ],
-          triggers: ['push', 'schedule'],
-          commit: {
-            hash: 'f6e5d4c3b2a1',
-            message: 'Fix authentication bug',
-            author: 'Jane Smith',
-            timestamp: '2024-01-15T10:45:00Z',
-          },
-        },
-      ]
-
-      const mockDeployments: Deployment[] = [
-        {
-          id: '1',
-          pipeline: 'main-deployment',
-          environment: 'production',
-          version: '1.2.5',
-          status: 'deployed',
-          timestamp: '2024-01-15T10:30:00Z',
-          duration: 420,
-          commit: {
-            hash: 'a1b2c3d4e5f6',
-            message: 'Add new deployment features',
-            author: 'John Doe',
-          },
-          rollbackAvailable: true,
-        },
-        {
-          id: '2',
-          pipeline: 'staging-deployment',
-          environment: 'staging',
-          version: '1.2.6-rc1',
-          status: 'deploying',
-          timestamp: '2024-01-15T11:00:00Z',
-          duration: 0,
-          commit: {
-            hash: 'f6e5d4c3b2a1',
-            message: 'Fix authentication bug',
-            author: 'Jane Smith',
-          },
-          rollbackAvailable: false,
-        },
-      ]
-
-      const mockWebhooks: WebhookConfig[] = [
-        {
-          id: '1',
-          name: 'Slack Notifications',
-          url: 'https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX',
-          events: ['deployment.success', 'deployment.failed'],
-          active: true,
-          lastTriggered: '2024-01-15T10:30:00Z',
-          deliveries: 142,
-        },
-        {
-          id: '2',
-          name: 'Discord Alerts',
-          url: 'https://discord.com/api/webhooks/123456789/abcdefghijklmnopqrstuvwxyz',
-          events: ['build.failed', 'deployment.failed'],
-          active: true,
-          lastTriggered: '2024-01-14T15:20:00Z',
-          deliveries: 37,
-        },
-      ]
-
-      setPipelines(mockPipelines)
-      setDeployments(mockDeployments)
-      setWebhooks(mockWebhooks)
-      setLoading(false)
-    } catch (_err) {
-      setError('Failed to fetch deployment data')
-      setLoading(false)
-    }
-  }, [])
-
-  useEffect(() => {
-    fetchData()
-    const interval = setInterval(fetchData, 30000) // Refresh every 30 seconds
-    return () => clearInterval(interval)
-  }, [fetchData])
 
   const handlePipelineAction = async (_action: string, _pipelineId: string) => {
     // Pipeline action logic would go here
   }
 
-  const handleWebhookUpdate = (webhook: WebhookConfig) => {
-    setWebhooks((prev) => prev.map((w) => (w.id === webhook.id ? webhook : w)))
-  }
-
-  if (loading) {
-    return (
-      <>
-        <HeroPattern />
-        <div className="mx-auto max-w-7xl">
-          <div className="flex items-center justify-center py-12">
-            <Loader2 className="h-8 w-8 animate-spin text-blue-500" />
-            <span className="ml-2 text-zinc-600 dark:text-zinc-400">
-              Loading deployment data...
-            </span>
-          </div>
-        </div>
-      </>
-    )
+  const handleWebhookUpdate = (_webhook: WebhookConfig) => {
+    // Webhook update logic would go here
   }
 
   return (
@@ -705,14 +532,6 @@ function DeploymentCICDContent() {
               </p>
             </div>
             <div className="flex items-center gap-2">
-              <Button
-                onClick={fetchData}
-                variant="outline"
-                className="flex items-center gap-2"
-              >
-                <RefreshCw className="h-4 w-4" />
-                Refresh
-              </Button>
               <Button className="flex items-center gap-2">
                 <Plus className="h-4 w-4" />
                 New Pipeline
@@ -756,16 +575,14 @@ function DeploymentCICDContent() {
           </div>
         </div>
 
-        {error && (
-          <div className="mb-6 rounded-lg border border-red-200 bg-red-50 p-4 dark:border-red-800 dark:bg-red-900/20">
-            <div className="flex items-center gap-2">
-              <AlertCircle className="h-5 w-5 text-red-500" />
-              <p className="text-red-700 dark:text-red-400">{error}</p>
-            </div>
+        {selectedTab === 'pipelines' && pipelines.length === 0 && (
+          <div className="flex flex-col items-center justify-center rounded-xl border border-zinc-200 bg-white py-16 dark:border-zinc-700 dark:bg-zinc-800">
+            <MonitorPlay className="mb-4 h-12 w-12 text-zinc-300 dark:text-zinc-600" />
+            <p className="text-zinc-500 dark:text-zinc-400">No pipelines configured</p>
           </div>
         )}
 
-        {selectedTab === 'pipelines' && (
+        {selectedTab === 'pipelines' && pipelines.length > 0 && (
           <div className="space-y-6">
             <div className="grid gap-6">
               {pipelines.map((pipeline) => (

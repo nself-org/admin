@@ -1,6 +1,5 @@
 'use client'
 
-import { PageTemplate } from '@/components/PageTemplate'
 import { FormSkeleton } from '@/components/skeletons'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Badge } from '@/components/ui/badge'
@@ -61,57 +60,17 @@ function DatabaseSeedContent() {
   const fetchSeeds = useCallback(async () => {
     setIsLoadingSeeds(true)
     try {
-      // Mock seed data - in real implementation, fetch from CLI
-      const mockSeeds: Seed[] = [
-        {
-          name: 'roles',
-          type: 'common',
-          status: 'applied',
-          appliedAt: '2024-01-10T10:30:00Z',
-          recordCount: 5,
-        },
-        {
-          name: 'permissions',
-          type: 'common',
-          status: 'applied',
-          appliedAt: '2024-01-10T10:30:00Z',
-          recordCount: 25,
-        },
-        {
-          name: 'categories',
-          type: 'common',
-          status: 'available',
-          recordCount: 10,
-        },
-        {
-          name: 'test_users',
-          type: 'local',
-          status: 'applied',
-          appliedAt: '2024-01-11T14:00:00Z',
-          recordCount: 50,
-        },
-        {
-          name: 'test_data',
-          type: 'local',
-          status: 'available',
-          recordCount: 100,
-        },
-        {
-          name: 'staging_config',
-          type: 'staging',
-          status: 'available',
-          recordCount: 15,
-        },
-        {
-          name: 'production_defaults',
-          type: 'production',
-          status: 'available',
-          recordCount: 8,
-        },
-      ]
-      setSeeds(mockSeeds)
-    } catch (error) {
-      console.error('Failed to fetch seeds:', error)
+      const response = await fetch('/api/database/seed', {
+        cache: 'no-store',
+      })
+      if (!response.ok) {
+        setSeeds([])
+        return
+      }
+      const data = await response.json()
+      setSeeds(Array.isArray(data.data) ? data.data : [])
+    } catch {
+      setSeeds([])
     } finally {
       setIsLoadingSeeds(false)
     }
@@ -321,10 +280,18 @@ function DatabaseSeedContent() {
   )
 
   return (
-    <PageTemplate
-      title="Database Seeding"
-      description="Seed your database with initial data using nself CLI"
-    >
+    <div className="space-y-6 p-6">
+      <div>
+        <h1 className="text-2xl font-bold text-zinc-900 dark:text-white">
+          Database Seeding
+        </h1>
+        <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
+          Seed your database with initial data using{' '}
+          <code className="rounded bg-zinc-100 px-1 py-0.5 text-xs dark:bg-zinc-800">
+            nself db seed
+          </code>
+        </p>
+      </div>
       <div className="space-y-6">
         {/* Info Alert */}
         <Alert>
@@ -579,7 +546,7 @@ function DatabaseSeedContent() {
           </Card>
         )}
       </div>
-    </PageTemplate>
+    </div>
   )
 }
 

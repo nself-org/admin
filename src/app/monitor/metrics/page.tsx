@@ -27,6 +27,7 @@ function MetricsContent() {
   const [query, setQuery] = useState('http_requests_total')
   const [timeRange, setTimeRange] = useState('1h')
   const [results, setResults] = useState<MetricSeries[]>([])
+  const [error, setError] = useState<string | null>(null)
   const [savedQueries, _setSavedQueries] = useState<string[]>([
     'http_requests_total',
     'process_cpu_seconds_total',
@@ -37,42 +38,22 @@ function MetricsContent() {
 
   const fetchMetrics = useCallback(async () => {
     setQueryLoading(true)
+    setError(null)
     try {
-      // Mock data - replace with real API
-      const now = Date.now()
-      const points = 30
-      const mockResults: MetricSeries[] = [
-        {
-          metric: query,
-          labels: { instance: 'hasura:8080', job: 'hasura' },
-          values: Array.from({ length: points }, (_, i) => ({
-            time: new Date(now - (points - i) * 120000).toLocaleTimeString([], {
-              hour: '2-digit',
-              minute: '2-digit',
-            }),
-            value: Math.random() * 100 + 50,
-          })),
-        },
-        {
-          metric: query,
-          labels: { instance: 'auth:3000', job: 'auth' },
-          values: Array.from({ length: points }, (_, i) => ({
-            time: new Date(now - (points - i) * 120000).toLocaleTimeString([], {
-              hour: '2-digit',
-              minute: '2-digit',
-            }),
-            value: Math.random() * 80 + 30,
-          })),
-        },
-      ]
-      setResults(mockResults)
-    } catch (_error) {
-      // Handle error silently
+      const res = await fetch(
+        `/api/monitor/metrics?query=${encodeURIComponent(query)}&range=${timeRange}`,
+      )
+      if (!res.ok) throw new Error(`HTTP ${res.status}`)
+      const data = await res.json()
+      setResults(data.results ?? [])
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to load metrics')
+      setResults([])
     } finally {
       setQueryLoading(false)
       setLoading(false)
     }
-  }, [query])
+  }, [query, timeRange])
 
   useEffect(() => {
     fetchMetrics()
@@ -91,6 +72,25 @@ function MetricsContent() {
         <div className="relative mx-auto max-w-7xl">
           <div className="flex items-center justify-center py-20">
             <div className="h-8 w-8 animate-spin rounded-full border-4 border-blue-500 border-t-transparent" />
+          </div>
+        </div>
+      </>
+    )
+  }
+
+  if (error) {
+    return (
+      <>
+        <HeroPattern />
+        <div className="relative mx-auto max-w-7xl">
+          <div className="rounded-xl border border-red-200 bg-red-50 p-6 dark:border-red-800 dark:bg-red-900/20">
+            <p className="text-red-700 dark:text-red-400">{error}</p>
+            <button
+              onClick={fetchMetrics}
+              className="mt-4 rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700"
+            >
+              Retry
+            </button>
           </div>
         </div>
       </>

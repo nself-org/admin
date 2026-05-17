@@ -21,62 +21,6 @@ import useSWR from 'swr'
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json())
 
-// Mock namespaces
-const mockNamespaces: K8sNamespace[] = [
-  {
-    name: 'default',
-    status: 'Active',
-    createdAt: '2024-01-01T00:00:00Z',
-    labels: { 'kubernetes.io/metadata.name': 'default' },
-  },
-  {
-    name: 'production',
-    status: 'Active',
-    createdAt: '2024-01-05T10:00:00Z',
-    labels: { environment: 'production', team: 'platform' },
-  },
-  {
-    name: 'staging',
-    status: 'Active',
-    createdAt: '2024-01-05T10:00:00Z',
-    labels: { environment: 'staging', team: 'platform' },
-  },
-  {
-    name: 'development',
-    status: 'Active',
-    createdAt: '2024-01-10T10:00:00Z',
-    labels: { environment: 'development' },
-  },
-  {
-    name: 'monitoring',
-    status: 'Active',
-    createdAt: '2024-01-03T10:00:00Z',
-    labels: { app: 'monitoring' },
-  },
-  { name: 'kube-system', status: 'Active', createdAt: '2024-01-01T00:00:00Z' },
-  { name: 'kube-public', status: 'Active', createdAt: '2024-01-01T00:00:00Z' },
-  {
-    name: 'kube-node-lease',
-    status: 'Active',
-    createdAt: '2024-01-01T00:00:00Z',
-  },
-]
-
-// Mock resource counts per namespace
-const resourceCounts: Record<
-  string,
-  { deployments: number; pods: number; services: number }
-> = {
-  default: { deployments: 4, pods: 9, services: 4 },
-  production: { deployments: 6, pods: 18, services: 8 },
-  staging: { deployments: 4, pods: 8, services: 6 },
-  development: { deployments: 2, pods: 4, services: 3 },
-  monitoring: { deployments: 3, pods: 5, services: 3 },
-  'kube-system': { deployments: 8, pods: 12, services: 4 },
-  'kube-public': { deployments: 0, pods: 0, services: 0 },
-  'kube-node-lease': { deployments: 0, pods: 0, services: 0 },
-}
-
 function K8sNamespacesContent() {
   const [showCreateModal, setShowCreateModal] = useState(false)
   const [newNamespace, setNewNamespace] = useState('')
@@ -84,13 +28,12 @@ function K8sNamespacesContent() {
   const [searchQuery, setSearchQuery] = useState('')
   const [showSystem, setShowSystem] = useState(false)
 
-  const { data, isLoading, mutate } = useSWR<{ namespaces: K8sNamespace[] }>(
+  const { data, isLoading, error, mutate } = useSWR<{ namespaces: K8sNamespace[] }>(
     '/api/k8s/namespaces',
     fetcher,
-    { fallbackData: { namespaces: mockNamespaces } },
   )
 
-  const namespaces = data?.namespaces || mockNamespaces
+  const namespaces = data?.namespaces ?? []
 
   const filteredNamespaces = namespaces.filter((ns) => {
     const matchesSearch = ns.name
@@ -103,12 +46,19 @@ function K8sNamespacesContent() {
   const handleCreate = async () => {
     if (!newNamespace) return
     setCreating(true)
-    // Simulate creation
-    await new Promise((resolve) => setTimeout(resolve, 1500))
-    await mutate()
-    setCreating(false)
-    setShowCreateModal(false)
-    setNewNamespace('')
+    try {
+      const res = await fetch('/api/k8s/namespaces', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: newNamespace }),
+      })
+      if (!res.ok) throw new Error(`HTTP ${res.status}`)
+      await mutate()
+      setShowCreateModal(false)
+      setNewNamespace('')
+    } finally {
+      setCreating(false)
+    }
   }
 
   const handleDelete = async (namespaceName: string) => {
@@ -134,6 +84,34 @@ function K8sNamespacesContent() {
           {[1, 2, 3].map((i) => (
             <div key={i} className="h-20 rounded-lg bg-zinc-800/50" />
           ))}
+        </div>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center gap-4">
+          <Link href="/k8s" className="rounded-lg border border-zinc-700 bg-zinc-800 p-2 hover:bg-zinc-700">
+            <ArrowLeft className="h-5 w-5" />
+          </Link>
+          <h1 className="text-2xl font-semibold text-white">Namespaces</h1>
+        </div>
+        <div className="rounded-lg border border-red-500/30 bg-red-900/20 p-6">
+          <div className="flex items-center gap-3">
+            <AlertCircle className="h-5 w-5 text-red-400" />
+            <p className="text-red-400">
+              {error instanceof Error ? error.message : 'Failed to load namespaces'}
+            </p>
+          </div>
+          <button
+            onClick={() => mutate()}
+            className="mt-4 inline-flex items-center gap-2 rounded-lg border border-zinc-700 bg-zinc-800 px-4 py-2 text-sm text-white hover:bg-zinc-700"
+          >
+            <RefreshCw className="h-4 w-4" />
+            Retry
+          </button>
         </div>
       </div>
     )
@@ -227,11 +205,7 @@ function K8sNamespacesContent() {
           </thead>
           <tbody className="divide-y divide-zinc-700/50">
             {filteredNamespaces.map((namespace) => {
-              const counts = resourceCounts[namespace.name] || {
-                deployments: 0,
-                pods: 0,
-                services: 0,
-              }
+              const counts = namespace.resourceCounts ?? { deployments: 0, pods: 0, services: 0 }
               const isSystem = namespace.name.startsWith('kube-')
 
               return (

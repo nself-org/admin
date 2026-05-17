@@ -30,6 +30,9 @@ import {
   Zap,
 } from 'lucide-react'
 import { Suspense, useState } from 'react'
+import useSWR from 'swr'
+
+const fetcher = (url: string) => fetch(url).then((res) => res.json())
 
 interface HasuraStats {
   version: string
@@ -238,54 +241,23 @@ query GetUsers {
   const executeQuery = async () => {
     setLoading(true)
     try {
-      // Simulate GraphQL execution
-      await new Promise((resolve) => setTimeout(resolve, 800))
-
-      // Mock result based on query type
-      const mockResult = {
-        data: {
-          users: [
-            {
-              id: 1,
-              name: 'John Doe',
-              email: 'john@example.com',
-              created_at: '2024-01-15T10:30:00.000Z',
-              profile: {
-                avatar_url: 'https://avatar.example.com/john.jpg',
-                bio: 'Software developer',
-              },
-            },
-            {
-              id: 2,
-              name: 'Jane Smith',
-              email: 'jane@example.com',
-              created_at: '2024-01-16T14:20:00.000Z',
-              profile: {
-                avatar_url: 'https://avatar.example.com/jane.jpg',
-                bio: 'Product manager',
-              },
-            },
-          ],
-        },
-        extensions: {
-          tracing: {
-            version: 1,
-            startTime: '2024-01-17T10:30:00.000Z',
-            endTime: '2024-01-17T10:30:00.125Z',
-            duration: 125000000,
-          },
-        },
-      }
-
-      setResult(mockResult)
-    } catch (_error) {
+      const res = await fetch('/api/services/hasura/query', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          query,
+          variables: variables ? JSON.parse(variables) : undefined,
+          headers: headers ? JSON.parse(headers) : undefined,
+        }),
+      })
+      const data = await res.json()
+      setResult(data)
+    } catch (err) {
       setResult({
         errors: [
           {
-            message: 'Query execution failed',
-            extensions: {
-              code: 'INTERNAL_ERROR',
-            },
+            message: err instanceof Error ? err.message : 'Query execution failed',
+            extensions: { code: 'INTERNAL_ERROR' },
           },
         ],
       })
@@ -1102,242 +1074,47 @@ function QueryMetrics({ metrics }: { metrics: QueryMetric[] }) {
 function HasuraContent() {
   const [activeTab, setActiveTab] = useUrlState<string>('tab', 'console')
 
-  // Mock data
-  const [stats] = useState<HasuraStats>({
-    version: 'Hasura GraphQL Engine v2.34.0',
-    uptime: '7 days 14:23:45',
-    totalQueries: 15234,
-    avgResponseTime: 125,
-    cacheHitRatio: 85.3,
-    activeConnections: 24,
-    errorsLast24h: 12,
-    subscriptions: 56,
-  })
+  const { data, error, mutate } = useSWR<{ success: boolean; data: HasuraStats }>(
+    '/api/services/hasura',
+    fetcher,
+  )
 
-  const [schema] = useState<GraphQLSchema>({
-    tables: [
-      {
-        name: 'users',
-        schema: 'public',
-        columns: [
-          { name: 'id', type: 'integer', nullable: false, isGenerated: true },
-          { name: 'email', type: 'text', nullable: false, isGenerated: false },
-          { name: 'name', type: 'text', nullable: true, isGenerated: false },
-          {
-            name: 'created_at',
-            type: 'timestamptz',
-            nullable: false,
-            default: 'now()',
-            isGenerated: false,
-          },
-        ],
-        primaryKey: ['id'],
-        foreignKeys: [],
-        permissions: [
-          {
-            role: 'user',
-            permission: 'select',
-            columns: ['id', 'name', 'email'],
-          },
-          { role: 'admin', permission: 'select' },
-          { role: 'admin', permission: 'insert' },
-          { role: 'admin', permission: 'update' },
-          { role: 'admin', permission: 'delete' },
-        ],
-        isTracked: true,
-        rowCount: 15234,
-      },
-      {
-        name: 'posts',
-        schema: 'public',
-        columns: [
-          { name: 'id', type: 'integer', nullable: false, isGenerated: true },
-          { name: 'title', type: 'text', nullable: false, isGenerated: false },
-          { name: 'content', type: 'text', nullable: true, isGenerated: false },
-          {
-            name: 'user_id',
-            type: 'integer',
-            nullable: false,
-            isGenerated: false,
-          },
-          {
-            name: 'published',
-            type: 'boolean',
-            nullable: false,
-            default: 'false',
-            isGenerated: false,
-          },
-        ],
-        primaryKey: ['id'],
-        foreignKeys: [
-          { column: 'user_id', references: { table: 'users', column: 'id' } },
-        ],
-        permissions: [
-          {
-            role: 'user',
-            permission: 'select',
-            filter: { user_id: { _eq: 'X-Hasura-User-Id' } },
-          },
-          { role: 'admin', permission: 'select' },
-        ],
-        isTracked: true,
-        rowCount: 8923,
-      },
-      {
-        name: 'comments',
-        schema: 'public',
-        columns: [
-          { name: 'id', type: 'integer', nullable: false, isGenerated: true },
-          {
-            name: 'content',
-            type: 'text',
-            nullable: false,
-            isGenerated: false,
-          },
-          {
-            name: 'post_id',
-            type: 'integer',
-            nullable: false,
-            isGenerated: false,
-          },
-          {
-            name: 'user_id',
-            type: 'integer',
-            nullable: false,
-            isGenerated: false,
-          },
-        ],
-        primaryKey: ['id'],
-        foreignKeys: [
-          { column: 'post_id', references: { table: 'posts', column: 'id' } },
-          { column: 'user_id', references: { table: 'users', column: 'id' } },
-        ],
-        permissions: [],
-        isTracked: false,
-        rowCount: 0,
-      },
-    ],
-    views: [],
-    functions: [],
-    relationships: [],
-  })
+  const stats: HasuraStats = data?.data ?? {
+    version: '',
+    uptime: '',
+    totalQueries: 0,
+    avgResponseTime: 0,
+    cacheHitRatio: 0,
+    activeConnections: 0,
+    errorsLast24h: 0,
+    subscriptions: 0,
+  }
 
-  const [eventTriggers] = useState<EventTrigger[]>([
-    {
-      name: 'user_created_notification',
-      table: 'users',
-      events: ['insert'],
-      webhook: 'https://api.example.com/webhooks/user-created',
-      status: 'active',
-      retryConfig: {
-        numRetries: 3,
-        timeoutSeconds: 60,
-        intervalSeconds: 10,
-      },
-      headers: {
-        Authorization: 'Bearer ***',
-        'Content-Type': 'application/json',
-      },
-      lastInvocation: {
-        status: 'success',
-        timestamp: '2024-01-17 10:25:30',
-        response: 200,
-      },
-    },
-    {
-      name: 'post_updated_sync',
-      table: 'posts',
-      events: ['update'],
-      webhook: 'https://sync.example.com/post-updated',
-      status: 'inactive',
-      retryConfig: {
-        numRetries: 5,
-        timeoutSeconds: 30,
-        intervalSeconds: 5,
-      },
-      headers: {},
-    },
-  ])
+  const schema: GraphQLSchema = { tables: [], views: [], functions: [], relationships: [] }
+  const eventTriggers: EventTrigger[] = []
+  const actions: Action[] = []
+  const remoteSchemas: RemoteSchema[] = []
+  const queryMetrics: QueryMetric[] = []
 
-  const [actions] = useState<Action[]>([
-    {
-      name: 'sendEmail',
-      definition: {
-        handler: 'https://api.example.com/send-email',
-        type: 'mutation',
-        arguments: {
-          email: 'String!',
-          subject: 'String!',
-          body: 'String!',
-        },
-        outputType: 'EmailResponse',
-      },
-      permissions: ['user', 'admin'],
-    },
-    {
-      name: 'getRecommendations',
-      definition: {
-        handler: 'https://ml.example.com/recommendations',
-        type: 'query',
-        arguments: {
-          userId: 'Int!',
-          limit: 'Int',
-        },
-        outputType: '[Recommendation]',
-      },
-      permissions: ['user'],
-    },
-  ])
-
-  const [remoteSchemas] = useState<RemoteSchema[]>([
-    {
-      name: 'auth_service',
-      url: 'https://auth.example.com/graphql',
-      headers: {
-        Authorization: 'Bearer ***',
-      },
-      timeoutSeconds: 60,
-      status: 'connected',
-      lastSync: '2 min ago',
-    },
-    {
-      name: 'payment_service',
-      url: 'https://payments.example.com/graphql',
-      headers: {},
-      timeoutSeconds: 30,
-      status: 'error',
-      lastSync: '1 hour ago',
-    },
-  ])
-
-  const [queryMetrics] = useState<QueryMetric[]>([
-    {
-      query: 'query GetUsers { users { id name email } }',
-      operationType: 'query',
-      avgExecutionTime: 45,
-      totalExecutions: 8234,
-      errorRate: 0.2,
-      lastExecuted: '2 min ago',
-    },
-    {
-      query:
-        'mutation CreatePost($title: String!, $content: String!) { insert_posts_one(object: {title: $title, content: $content}) { id } }',
-      operationType: 'mutation',
-      avgExecutionTime: 180,
-      totalExecutions: 1523,
-      errorRate: 2.1,
-      lastExecuted: '5 min ago',
-    },
-    {
-      query:
-        'subscription OnlineUsers { users(where: {last_seen: {_gte: "now() - interval \'5 minutes\'"}}) { id name } }',
-      operationType: 'subscription',
-      avgExecutionTime: 12,
-      totalExecutions: 456,
-      errorRate: 0.0,
-      lastExecuted: '1 min ago',
-    },
-  ])
+  if (error) {
+    return (
+      <div className="rounded-lg border border-red-500/30 bg-red-900/20 p-6">
+        <div className="flex items-center gap-3">
+          <AlertCircle className="h-5 w-5 text-red-400" />
+          <p className="text-red-400">
+            {error instanceof Error ? error.message : 'Failed to load Hasura stats'}
+          </p>
+        </div>
+        <button
+          onClick={() => mutate()}
+          className="mt-4 inline-flex items-center gap-2 rounded-lg border border-zinc-700 bg-zinc-800 px-4 py-2 text-sm text-white hover:bg-zinc-700"
+        >
+          <RefreshCw className="h-4 w-4" />
+          Retry
+        </button>
+      </div>
+    )
+  }
 
   const tabs = [
     { id: 'console', label: 'GraphQL Console', icon: Code },

@@ -3,6 +3,7 @@
 import { HeroPattern } from '@/components/HeroPattern'
 import { TableSkeleton } from '@/components/skeletons'
 import {
+  AlertCircle,
   AlertTriangle,
   ArrowDown,
   ArrowLeft,
@@ -19,7 +20,10 @@ import {
   XCircle,
 } from 'lucide-react'
 import Link from 'next/link'
-import { Suspense, useCallback, useEffect, useState } from 'react'
+import { Suspense, useState } from 'react'
+import useSWR from 'swr'
+
+const fetcher = (url: string) => fetch(url).then((res) => res.json())
 
 interface Migration {
   id: string
@@ -35,113 +39,22 @@ interface Migration {
 }
 
 function MigrationHistoryContent() {
-  const [loading, setLoading] = useState(true)
-  const [migrations, setMigrations] = useState<Migration[]>([])
   const [filterStatus, setFilterStatus] = useState<string>('all')
 
-  const fetchMigrations = useCallback(async () => {
-    try {
-      // Mock data - replace with real API
-      const mockMigrations: Migration[] = [
-        {
-          id: 'mig-1',
-          name: 'add_user_preferences',
-          version: '20240120_001',
-          status: 'applied',
-          appliedAt: new Date(Date.now() - 86400000).toISOString(),
-          duration: 2500,
-          direction: 'up',
-          description: 'Add user preferences table with default settings',
-          appliedBy: 'developer@example.com',
-          changes: [
-            'CREATE TABLE user_preferences',
-            'ADD INDEX idx_user_id',
-            'INSERT default settings',
-          ],
-        },
-        {
-          id: 'mig-2',
-          name: 'add_notifications_table',
-          version: '20240118_001',
-          status: 'applied',
-          appliedAt: new Date(Date.now() - 172800000).toISOString(),
-          duration: 1800,
-          direction: 'up',
-          description: 'Create notifications table for user alerts',
-          appliedBy: 'developer@example.com',
-          changes: ['CREATE TABLE notifications', 'ADD FOREIGN KEY to users'],
-        },
-        {
-          id: 'mig-3',
-          name: 'update_user_schema',
-          version: '20240115_001',
-          status: 'applied',
-          appliedAt: new Date(Date.now() - 345600000).toISOString(),
-          duration: 3200,
-          direction: 'up',
-          description: 'Add new fields to user table',
-          appliedBy: 'admin@example.com',
-          changes: [
-            'ALTER TABLE users ADD avatar_url',
-            'ALTER TABLE users ADD bio',
-          ],
-        },
-        {
-          id: 'mig-4',
-          name: 'add_analytics_tables',
-          version: '20240110_001',
-          status: 'rolled_back',
-          appliedAt: new Date(Date.now() - 604800000).toISOString(),
-          duration: 4500,
-          direction: 'down',
-          description:
-            'Analytics tables (rolled back due to performance issues)',
-          appliedBy: 'developer@example.com',
-          changes: ['DROP TABLE page_views', 'DROP TABLE events'],
-        },
-        {
-          id: 'mig-5',
-          name: 'initial_schema',
-          version: '20240101_001',
-          status: 'applied',
-          appliedAt: new Date(Date.now() - 2592000000).toISOString(),
-          duration: 8000,
-          direction: 'up',
-          description: 'Initial database schema',
-          appliedBy: 'admin@example.com',
-          changes: [
-            'CREATE TABLE users',
-            'CREATE TABLE sessions',
-            'CREATE TABLE config',
-          ],
-        },
-        {
-          id: 'mig-6',
-          name: 'add_audit_log',
-          version: '20240125_001',
-          status: 'pending',
-          direction: 'up',
-          description: 'Add audit log table for tracking changes',
-          changes: ['CREATE TABLE audit_log', 'ADD trigger for changes'],
-        },
-      ]
+  const { data, error, isLoading } = useSWR<{
+    success: boolean
+    migrations: Migration[]
+    total: number
+    pending: number
+    applied: number
+    failed: number
+  }>('/api/history/migrations', fetcher)
 
-      let filtered = mockMigrations
-      if (filterStatus !== 'all') {
-        filtered = filtered.filter((m) => m.status === filterStatus)
-      }
-
-      setMigrations(filtered)
-    } catch (_error) {
-      // Handle error silently
-    } finally {
-      setLoading(false)
-    }
-  }, [filterStatus])
-
-  useEffect(() => {
-    fetchMigrations()
-  }, [fetchMigrations])
+  const allMigrations = data?.migrations ?? []
+  const migrations =
+    filterStatus !== 'all'
+      ? allMigrations.filter((m) => m.status === filterStatus)
+      : allMigrations
 
   const getStatusIcon = (status: string) => {
     switch (status) {
@@ -173,7 +86,27 @@ function MigrationHistoryContent() {
     }
   }
 
-  if (loading) {
+  if (error) {
+    return (
+      <>
+        <HeroPattern />
+        <div className="relative mx-auto max-w-7xl">
+          <div className="rounded-lg border border-red-500/30 bg-red-900/20 p-6">
+            <div className="flex items-center gap-3">
+              <AlertCircle className="h-5 w-5 text-red-400" />
+              <p className="text-red-400">
+                {error instanceof Error
+                  ? error.message
+                  : 'Failed to load migration history'}
+              </p>
+            </div>
+          </div>
+        </div>
+      </>
+    )
+  }
+
+  if (isLoading) {
     return (
       <>
         <HeroPattern />
@@ -186,11 +119,9 @@ function MigrationHistoryContent() {
     )
   }
 
-  const appliedCount = migrations.filter((m) => m.status === 'applied').length
-  const pendingCount = migrations.filter((m) => m.status === 'pending').length
-  const rolledBackCount = migrations.filter(
-    (m) => m.status === 'rolled_back',
-  ).length
+  const appliedCount = data?.applied ?? allMigrations.filter((m) => m.status === 'applied').length
+  const pendingCount = data?.pending ?? allMigrations.filter((m) => m.status === 'pending').length
+  const rolledBackCount = allMigrations.filter((m) => m.status === 'rolled_back').length
 
   return (
     <>
@@ -230,7 +161,7 @@ function MigrationHistoryContent() {
                   Total Migrations
                 </p>
                 <p className="text-2xl font-bold text-zinc-900 dark:text-white">
-                  {migrations.length}
+                  {data?.total ?? allMigrations.length}
                 </p>
               </div>
             </div>

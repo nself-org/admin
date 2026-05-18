@@ -29,12 +29,15 @@ function _isKnownBadSecret(s: string): boolean {
   )
 }
 
-// ── Module-load startup guard (production only) ──────────────────────────────
-// Fires when NODE_ENV === 'production' so the process fails immediately on
-// misconfiguration rather than returning opaque auth errors at query time.
-// Safe during CI `pnpm build` because build runs with NODE_ENV !== 'production'.
-// (ADM-T04 concern was specifically about build phase — this satisfies both.)
-if (process.env.NODE_ENV === 'production') {
+// ── Module-load startup guard (production runtime only) ──────────────────────
+// Fires when NODE_ENV === 'production' AND we are NOT in the Next.js build phase.
+// During `next build`, NEXT_PHASE === 'phase-production-build'; route modules are
+// evaluated to collect page data but HASURA_GRAPHQL_ADMIN_SECRET is not available
+// as a build-time secret — this is correct and expected. The guard must not throw
+// during build; it only makes sense at runtime when the server is actually serving.
+// Pattern mirrors database.ts which already gates on NEXT_PHASE for the same reason.
+const _isBuildPhase = process.env.NEXT_PHASE === 'phase-production-build'
+if (process.env.NODE_ENV === 'production' && !_isBuildPhase) {
   if (!HASURA_ADMIN_SECRET) {
     throw new Error(
       'FATAL: HASURA_GRAPHQL_ADMIN_SECRET is not set. ' + 'Generate with: openssl rand -hex 32'

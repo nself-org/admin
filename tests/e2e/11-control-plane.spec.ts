@@ -337,8 +337,9 @@ test.describe('Control-Plane Inventory Page', () => {
     await page.locator('input[placeholder="5.75.235.42"]').fill('10.0.0.1')
     await page.locator('select').selectOption('primary')
 
-    // Submit
-    await page.locator('button:has-text("Add Server")').click()
+    // Submit — use .first() because the page header also has an "Add Server"
+    // button; the modal submit is the first match in DOM order.
+    await page.locator('button:has-text("Add Server")').first().click()
 
     // Verify captured POST body
     await page.waitForTimeout(500)

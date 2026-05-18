@@ -39,7 +39,9 @@ test.describe('/system/urls', () => {
     await page.goto('/system/urls')
     await page.waitForLoadState('networkidle')
     await expect(page.getByText('Hasura')).toBeVisible()
-    await expect(page.getByText('Auth')).toBeVisible()
+    // .first() because 'Auth' appears both as a service name and in the
+    // URL column; either visible confirms the table rendered correctly.
+    await expect(page.getByText('Auth').first()).toBeVisible()
   })
 
   test('offline state: shows retry button on abort', async ({ page }) => {

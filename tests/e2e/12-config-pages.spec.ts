@@ -207,7 +207,9 @@ test.describe('Rate Limits page', () => {
   test('should render Rate Limits heading', async ({ page }) => {
     await page.goto('/config/rate-limits')
     await page.waitForLoadState('networkidle')
-    const heading = page.getByRole('heading', { name: /rate limits/i })
+    // .first() because the page renders the heading in multiple places
+    // (page title + section headers); any one visible is sufficient.
+    const heading = page.getByRole('heading', { name: /rate limits/i }).first()
     await expect(heading).toBeVisible()
   })
 

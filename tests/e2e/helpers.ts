@@ -69,6 +69,13 @@ export async function setupAuth(page: Page, password = TEST_PASSWORD) {
   await page.waitForURL((url) => !url.pathname.includes('/login'), {
     timeout: 20000,
   })
+  // Let the redirect finish loading before the test body starts navigating.
+  // Without this, Firefox aborts the next page.goto() with NS_BINDING_ABORTED
+  // because the login redirect is still in-flight.  Catch the timeout that
+  // fires on pages with persistent SSE / polling connections.
+  await page.waitForLoadState('load').catch(() => {
+    // ignore — some pages never settle to 'networkidle' due to SSE streams
+  })
 }
 
 /**

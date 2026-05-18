@@ -62,12 +62,8 @@ test.describe('/system/urls', () => {
     )
     await page.goto('/system/urls')
     await page.waitForLoadState('domcontentloaded')
-    // Error or offline state shown (depends on message content)
-    const hasError = await page
-      .getByText(/failed|error|retry/i)
-      .first()
-      .isVisible()
-    expect(hasError).toBe(true)
+    // Error or offline state shown (depends on message content); auto-retries up to expect.timeout
+    await expect(page.getByText(/failed|error|retry/i).first()).toBeVisible()
   })
 
   test('redirect to login when unauthenticated', async ({ page }) => {
@@ -115,11 +111,8 @@ test.describe('/system/version', () => {
     })
     await page.goto('/system/version')
     await page.waitForLoadState('domcontentloaded')
-    const hasVersion = await page
-      .getByText(/1\.1\.1|version/i)
-      .first()
-      .isVisible()
-    expect(hasVersion).toBe(true)
+    // Auto-retries up to expect.timeout — waits for React to render mocked API data
+    await expect(page.getByText(/1\.1\.1|version/i).first()).toBeVisible()
   })
 
   test('offline state: shows retry on abort', async ({ page }) => {
@@ -166,11 +159,8 @@ test.describe('/system/diagnostics', () => {
     })
     await page.goto('/system/diagnostics')
     await page.waitForLoadState('domcontentloaded')
-    const hasDiag = await page
-      .getByText(/CLI binary|Docker daemon|diagnostics/i)
-      .first()
-      .isVisible()
-    expect(hasDiag).toBe(true)
+    // Auto-retries up to expect.timeout — waits for React to render mocked API data
+    await expect(page.getByText(/CLI binary|Docker daemon|diagnostics/i).first()).toBeVisible()
   })
 
   test('offline state: shows retry on abort', async ({ page }) => {
@@ -216,11 +206,8 @@ test.describe('/system/trust', () => {
     })
     await page.goto('/system/trust')
     await page.waitForLoadState('domcontentloaded')
-    const hasTrust = await page
-      .getByText(/ssl|dns|port|trust/i)
-      .first()
-      .isVisible()
-    expect(hasTrust).toBe(true)
+    // Auto-retries up to expect.timeout — waits for React to render mocked API data
+    await expect(page.getByText(/ssl|dns|port|trust/i).first()).toBeVisible()
   })
 
   test('offline state: shows retry on abort', async ({ page }) => {
@@ -254,11 +241,8 @@ test.describe('/system/validate', () => {
     })
     await page.goto('/system/validate')
     await page.waitForLoadState('domcontentloaded')
-    const hasVal = await page
-      .getByText(/config|environment|validate|valid/i)
-      .first()
-      .isVisible()
-    expect(hasVal).toBe(true)
+    // Auto-retries up to expect.timeout — waits for React to render mocked API data
+    await expect(page.getByText(/config|environment|validate|valid/i).first()).toBeVisible()
   })
 
   test('offline state: shows retry on abort', async ({ page }) => {
@@ -302,11 +286,8 @@ test.describe('/system/help', () => {
     })
     await page.goto('/system/help')
     await page.waitForLoadState('domcontentloaded')
-    const hasCmd = await page
-      .getByText(/start|stop|command/i)
-      .first()
-      .isVisible()
-    expect(hasCmd).toBe(true)
+    // Auto-retries up to expect.timeout — waits for React to render mocked API data
+    await expect(page.getByText(/start|stop|command/i).first()).toBeVisible()
   })
 
   test('search box filters commands', async ({ page }) => {

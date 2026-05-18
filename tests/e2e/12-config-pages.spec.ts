@@ -260,11 +260,11 @@ test.describe('Rate Limits page', () => {
   test('offline state: shows retry button on network failure', async ({ page }) => {
     await page.route('/api/config/rate-limits', (route) => route.abort('failed'))
     await page.goto('/config/rate-limits')
-    await page.waitForLoadState('networkidle')
-    const hasOffline =
-      (await page.getByRole('button', { name: /retry/i }).isVisible()) ||
-      (await page.getByText(/cannot (connect|reach)/i).isVisible())
-    expect(hasOffline).toBe(true)
+    await page.waitForLoadState('domcontentloaded')
+    // Auto-retries up to expect.timeout — waits for React to render the error state
+    await expect(
+      page.getByRole('button', { name: /retry/i }).or(page.getByText(/cannot (connect|reach)/i)).first()
+    ).toBeVisible()
   })
 
   test('error state: shows error when API returns failure', async ({ page }) => {

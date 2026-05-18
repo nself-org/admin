@@ -40,6 +40,36 @@ export async function mockProjectStatus(page: Page) {
       }),
     })
   )
+
+  // Mock the two remaining SimplifiedPolling endpoints so they return
+  // immediately in CI instead of timing out after 1.5 s on every 2-second
+  // tick.  Without these mocks, networkidle never resolves because the
+  // AbortSignal.timeout(1500) errors count as pending network activity.
+  await page.route('**/api/system/metrics', (route) =>
+    route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({
+        success: true,
+        data: {
+          cpu: { value: 10, unit: '%' },
+          memory: { value: 40, unit: '%' },
+          disk: { value: 30, unit: '%' },
+        },
+      }),
+    })
+  )
+
+  await page.route('**/api/docker/containers**', (route) =>
+    route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({
+        success: true,
+        data: { containers: [] },
+      }),
+    })
+  )
 }
 
 /**

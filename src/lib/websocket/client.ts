@@ -21,8 +21,7 @@ export class WebSocketClient {
   }
   private reconnectTimer: NodeJS.Timeout | null = null
   private heartbeatTimer: NodeJS.Timeout | null = null
-  private eventListeners: Map<EventType, Set<(data: unknown) => void>> =
-    new Map()
+  private eventListeners: Map<EventType, Set<(data: unknown) => void>> = new Map()
   private statusListeners: Set<(status: ConnectionStatus) => void> = new Set()
 
   constructor(private url: string = '') {
@@ -173,7 +172,7 @@ export class WebSocketClient {
 
     const attemptIndex = Math.min(
       this.connectionStatus.reconnectAttempts - 1,
-      RECONNECT_DELAYS.length - 1,
+      RECONNECT_DELAYS.length - 1
     )
     const delay = RECONNECT_DELAYS[attemptIndex]
 
@@ -186,10 +185,7 @@ export class WebSocketClient {
   /**
    * Subscribe to event type
    */
-  on<T = unknown>(
-    eventType: EventType,
-    listener: (data: T) => void,
-  ): () => void {
+  on<T = unknown>(eventType: EventType, listener: (data: T) => void): () => void {
     if (!this.eventListeners.has(eventType)) {
       this.eventListeners.set(eventType, new Set())
     }

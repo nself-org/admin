@@ -50,15 +50,8 @@ export function ApiKeyList({
   if (isError) {
     return (
       <div className="rounded-lg border border-red-200 bg-red-50 p-4 text-center dark:border-red-800 dark:bg-red-950">
-        <p className="text-sm text-red-600 dark:text-red-400">
-          Failed to load API keys: {error}
-        </p>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => refresh()}
-          className="mt-2"
-        >
+        <p className="text-sm text-red-600 dark:text-red-400">Failed to load API keys: {error}</p>
+        <Button variant="outline" size="sm" onClick={() => refresh()} className="mt-2">
           <RefreshCw className="mr-2 h-4 w-4" />
           Retry
         </Button>
@@ -69,9 +62,7 @@ export function ApiKeyList({
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h3 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100">
-          API Keys
-        </h3>
+        <h3 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100">API Keys</h3>
         <div className="flex items-center gap-2">
           <Button variant="ghost" size="icon" onClick={() => refresh()}>
             <RefreshCw className="h-4 w-4" />
@@ -86,9 +77,7 @@ export function ApiKeyList({
       {apiKeys.length === 0 ? (
         <div className="rounded-lg border border-dashed border-zinc-300 p-8 text-center dark:border-zinc-700">
           <Key className="mx-auto h-12 w-12 text-zinc-400" />
-          <h4 className="mt-4 text-sm font-medium text-zinc-900 dark:text-zinc-100">
-            No API Keys
-          </h4>
+          <h4 className="mt-4 text-sm font-medium text-zinc-900 dark:text-zinc-100">No API Keys</h4>
           <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
             Create your first API key to enable programmatic access.
           </p>

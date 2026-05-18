@@ -45,8 +45,7 @@ async function migrateEnvFile(filePath) {
       if (env[`FRONTEND_APP_${i}_LOCAL_SUBDOMAIN`]) {
         // If we have a local subdomain but no route, use it as the route
         if (!env[`FRONTEND_APP_${i}_ROUTE`]) {
-          env[`FRONTEND_APP_${i}_ROUTE`] =
-            env[`FRONTEND_APP_${i}_LOCAL_SUBDOMAIN`]
+          env[`FRONTEND_APP_${i}_ROUTE`] = env[`FRONTEND_APP_${i}_LOCAL_SUBDOMAIN`]
         }
         delete env[`FRONTEND_APP_${i}_LOCAL_SUBDOMAIN`]
         migrated = true
@@ -193,11 +192,7 @@ async function migrateEnvFile(filePath) {
     }
 
     // Backup
-    const backup = [
-      'DB_BACKUP_ENABLED',
-      'DB_BACKUP_SCHEDULE',
-      'DB_BACKUP_RETENTION_DAYS',
-    ]
+    const backup = ['DB_BACKUP_ENABLED', 'DB_BACKUP_SCHEDULE', 'DB_BACKUP_RETENTION_DAYS']
     const backupValues = backup.filter((k) => env[k])
     if (backupValues.length > 0) {
       newLines.push('# Backup')
@@ -227,8 +222,7 @@ async function migrateEnvFile(filePath) {
 }
 
 async function main() {
-  const projectPath =
-    process.env.NSELF_PROJECT_PATH || '/Users/admin/Sites/nself-project'
+  const projectPath = process.env.NSELF_PROJECT_PATH || '/Users/admin/Sites/nself-project'
 
   const files = [
     path.join(projectPath, '.env.dev'),

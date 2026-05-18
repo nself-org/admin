@@ -6,10 +6,7 @@ interface RouteParams {
   params: Promise<{ id: string }>
 }
 
-export async function GET(
-  request: NextRequest,
-  { params }: RouteParams,
-): Promise<NextResponse> {
+export async function GET(request: NextRequest, { params }: RouteParams): Promise<NextResponse> {
   try {
     const { id } = await params
     const result = await executeNselfCommand('tenant', [
@@ -27,7 +24,7 @@ export async function GET(
           error: 'Failed to list members',
           details: result.error || result.stderr || 'Unknown error',
         },
-        { status: 500 },
+        { status: 500 }
       )
     }
 
@@ -49,15 +46,12 @@ export async function GET(
         error: 'Failed to list members',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
 
-export async function POST(
-  request: NextRequest,
-  { params }: RouteParams,
-): Promise<NextResponse> {
+export async function POST(request: NextRequest, { params }: RouteParams): Promise<NextResponse> {
   const authError = await requireAuth(request)
   if (authError) return authError
 
@@ -67,10 +61,7 @@ export async function POST(
     const { email, role } = body
 
     if (!email) {
-      return NextResponse.json(
-        { success: false, error: 'Email is required' },
-        { status: 400 },
-      )
+      return NextResponse.json({ success: false, error: 'Email is required' }, { status: 400 })
     }
 
     const args = ['org', 'member', 'add', `--org=${id}`, `--email=${email}`]
@@ -85,7 +76,7 @@ export async function POST(
           error: 'Failed to add member',
           details: result.error || result.stderr || 'Unknown error',
         },
-        { status: 500 },
+        { status: 500 }
       )
     }
 
@@ -100,7 +91,7 @@ export async function POST(
         error: 'Failed to add member',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

@@ -60,10 +60,7 @@ const PRODUCT_TIER_LABELS: Record<string, string> = {
 // Internal helpers
 // ---------------------------------------------------------------------------
 
-function makeLicenseError(
-  message: string,
-  code: LicenseError['code'],
-): LicenseError {
+function makeLicenseError(message: string, code: LicenseError['code']): LicenseError {
   const err = new Error(message) as LicenseError
   err.code = code
   return err
@@ -94,16 +91,13 @@ async function runNselfCommand(args: string[]): Promise<string> {
     if (execErr.code === 'ENOENT') {
       throw makeLicenseError(
         `nself CLI not found at: ${nselfPath}. Install nself and ensure it is on PATH.`,
-        'CLI_NOT_FOUND',
+        'CLI_NOT_FOUND'
       )
     }
 
     // Non-zero exit from the CLI — surface its stderr if available.
     const detail = execErr.stderr?.trim() ?? execErr.message
-    throw makeLicenseError(
-      `nself ${args[0] ?? ''} failed: ${detail}`,
-      'IO_ERROR',
-    )
+    throw makeLicenseError(`nself ${args[0] ?? ''} failed: ${detail}`, 'IO_ERROR')
   }
 }
 
@@ -178,11 +172,7 @@ function parseStatusOutput(raw: string): LicenseStatus {
     const line = rawLine.trim()
 
     // Section header / separator — skip
-    if (
-      line.startsWith('=') ||
-      line.startsWith('-') ||
-      line === 'License Status'
-    ) {
+    if (line.startsWith('=') || line.startsWith('-') || line === 'License Status') {
       continue
     }
 
@@ -218,12 +208,7 @@ function parseStatusOutput(raw: string): LicenseStatus {
     if (!currentKey) continue
 
     if (line.toLowerCase().startsWith('product:')) {
-      currentKey.product = line
-        .split(':')
-        .slice(1)
-        .join(':')
-        .trim()
-        .toLowerCase()
+      currentKey.product = line.split(':').slice(1).join(':').trim().toLowerCase()
       continue
     }
 
@@ -318,10 +303,7 @@ function parseValidateOutput(raw: string): LicenseValidateResult {
       continue
     }
 
-    if (
-      line.toLowerCase().startsWith('status:') ||
-      line.toLowerCase().startsWith('message:')
-    ) {
+    if (line.toLowerCase().startsWith('status:') || line.toLowerCase().startsWith('message:')) {
       message = line.split(':').slice(1).join(':').trim()
       continue
     }
@@ -335,9 +317,7 @@ function parseValidateOutput(raw: string): LicenseValidateResult {
  */
 function parseSetOutput(raw: string, key: string): LicenseSetResult {
   const product = extractProduct(key)
-  const success =
-    !raw.toLowerCase().includes('error') &&
-    !raw.toLowerCase().includes('failed')
+  const success = !raw.toLowerCase().includes('error') && !raw.toLowerCase().includes('failed')
   return { success, product, message: raw.trim() }
 }
 
@@ -376,7 +356,7 @@ export async function setLicenseKey(key: string): Promise<LicenseSetResult> {
   if (!key.startsWith(KEY_PREFIX) || key.length < MIN_KEY_LENGTH) {
     throw makeLicenseError(
       `Invalid key format. Keys must start with "${KEY_PREFIX}" and be at least ${MIN_KEY_LENGTH} characters.`,
-      'INVALID_KEY',
+      'INVALID_KEY'
     )
   }
 
@@ -395,10 +375,7 @@ export async function validateLicenseKey(): Promise<LicenseValidateResult> {
   } catch (err) {
     const licErr = err as LicenseError
     if (licErr.code === 'CLI_NOT_FOUND') throw err
-    throw makeLicenseError(
-      `Validation failed: ${licErr.message}`,
-      'VALIDATE_FAILED',
-    )
+    throw makeLicenseError(`Validation failed: ${licErr.message}`, 'VALIDATE_FAILED')
   }
 }
 
@@ -412,9 +389,6 @@ export async function clearLicenseKeys(): Promise<void> {
   } catch (err) {
     const licErr = err as LicenseError
     if (licErr.code === 'CLI_NOT_FOUND') throw err
-    throw makeLicenseError(
-      `Failed to clear license keys: ${licErr.message}`,
-      'CLEAR_FAILED',
-    )
+    throw makeLicenseError(`Failed to clear license keys: ${licErr.message}`, 'CLEAR_FAILED')
   }
 }

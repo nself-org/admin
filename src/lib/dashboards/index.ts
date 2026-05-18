@@ -6,15 +6,21 @@
  */
 
 export {
-  createDashboard,
-  updateDashboard,
   addWidget,
-  updateWidget,
-  deleteWidget,
-  removeWidget,
   cloneDashboard,
+  createDashboard,
+  deleteWidget,
   getDashboardStats,
   getWidgetTemplatesByCategory,
+  removeWidget,
+  updateDashboard,
+  updateWidget,
 } from '../dashboards'
 
-export type { Dashboard, DashboardStats, Widget, WidgetConfig, WidgetTemplate } from '@/types/dashboard'
+export type {
+  Dashboard,
+  DashboardStats,
+  Widget,
+  WidgetConfig,
+  WidgetTemplate,
+} from '@/types/dashboard'

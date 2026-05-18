@@ -24,9 +24,7 @@ export async function GET(): Promise<NextResponse> {
 
     // Read migration files
     const files = await fs.readdir(migrationsDir)
-    const migrationFiles = files.filter(
-      (f) => f.endsWith('.sql') || f.endsWith('.js'),
-    )
+    const migrationFiles = files.filter((f) => f.endsWith('.sql') || f.endsWith('.js'))
 
     const migrations: Migration[] = migrationFiles.map((file) => {
       // Parse migration filename (e.g., "001_initial_schema.sql")
@@ -54,7 +52,7 @@ export async function GET(): Promise<NextResponse> {
         details: error instanceof Error ? error.message : 'Unknown error',
         code: ErrorCode.DB_MIGRATION_FAILED,
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -77,7 +75,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
             details: result.stderr || result.error,
             code: ErrorCode.DB_MIGRATION_FAILED,
           },
-          { status: 500 },
+          { status: 500 }
         )
       }
 
@@ -100,7 +98,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
             error: 'Migration name is required',
             code: ErrorCode.VALIDATION_ERROR,
           },
-          { status: 400 },
+          { status: 400 }
         )
       }
 
@@ -152,7 +150,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         error: 'Invalid action',
         code: ErrorCode.VALIDATION_ERROR,
       },
-      { status: 400 },
+      { status: 400 }
     )
   } catch (error) {
     return NextResponse.json(
@@ -162,7 +160,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         details: error instanceof Error ? error.message : 'Unknown error',
         code: ErrorCode.DB_MIGRATION_FAILED,
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

@@ -4,13 +4,7 @@ import { PageShell } from '@/components/PageShell'
 import { FormSkeleton } from '@/components/skeletons'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import {
@@ -64,9 +58,7 @@ function WebhooksContent() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [cliOutput, setCliOutput] = useState<string | null>(null)
-  const [lastCommand, setLastCommand] = useState<string>(
-    'nself auth webhooks list',
-  )
+  const [lastCommand, setLastCommand] = useState<string>('nself auth webhooks list')
 
   // Create form state
   const [showCreateForm, setShowCreateForm] = useState(false)
@@ -124,9 +116,7 @@ function WebhooksContent() {
 
     const eventsArg = selectedEvents.join(',')
     const secretArg = newSecret ? ` --secret=***` : ''
-    setLastCommand(
-      `nself auth webhooks create --url=${newUrl} --events=${eventsArg}${secretArg}`,
-    )
+    setLastCommand(`nself auth webhooks create --url=${newUrl} --events=${eventsArg}${secretArg}`)
 
     try {
       const res = await fetch('/api/auth/webhooks', {
@@ -226,7 +216,7 @@ function WebhooksContent() {
     setLastCommand(
       webhookId
         ? `nself auth webhooks logs --id=${webhookId} --limit=50`
-        : 'nself auth webhooks logs --limit=50',
+        : 'nself auth webhooks logs --limit=50'
     )
     try {
       const res = await fetch(`/api/auth/webhooks/logs${idParam}`)
@@ -264,9 +254,7 @@ function WebhooksContent() {
   // ---------------------------------------------------------------------------
   const toggleEvent = useCallback((eventValue: string) => {
     setSelectedEvents((prev) =>
-      prev.includes(eventValue)
-        ? prev.filter((e) => e !== eventValue)
-        : [...prev, eventValue],
+      prev.includes(eventValue) ? prev.filter((e) => e !== eventValue) : [...prev, eventValue]
     )
   }, [])
 
@@ -274,9 +262,7 @@ function WebhooksContent() {
   const generateSecret = useCallback(() => {
     const array = new Uint8Array(32)
     crypto.getRandomValues(array)
-    const secret = Array.from(array, (b) =>
-      b.toString(16).padStart(2, '0'),
-    ).join('')
+    const secret = Array.from(array, (b) => b.toString(16).padStart(2, '0')).join('')
     setNewSecret(`whsec_${secret}`)
   }, [])
 
@@ -318,8 +304,7 @@ function WebhooksContent() {
           <CardHeader>
             <CardTitle className="text-base">Create New Webhook</CardTitle>
             <CardDescription>
-              Configure a new webhook endpoint to receive auth event
-              notifications
+              Configure a new webhook endpoint to receive auth event notifications
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -373,9 +358,7 @@ function WebhooksContent() {
                         <div className="font-medium text-zinc-900 dark:text-zinc-100">
                           {event.label}
                         </div>
-                        <div className="text-xs text-zinc-500">
-                          {event.value}
-                        </div>
+                        <div className="text-xs text-zinc-500">{event.value}</div>
                       </div>
                     </label>
                   ))}
@@ -395,18 +378,12 @@ function WebhooksContent() {
                     onChange={(e) => setNewSecret(e.target.value)}
                     className="font-mono"
                   />
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={generateSecret}
-                    className="shrink-0"
-                  >
+                  <Button variant="outline" size="sm" onClick={generateSecret} className="shrink-0">
                     Generate
                   </Button>
                 </div>
                 <p className="mt-1 text-xs text-zinc-500">
-                  Used to verify webhook payloads. If left empty, one will be
-                  auto-generated.
+                  Used to verify webhook payloads. If left empty, one will be auto-generated.
                 </p>
               </div>
 
@@ -456,8 +433,8 @@ function WebhooksContent() {
             <div className="py-8 text-center">
               <Webhook className="mx-auto mb-3 h-8 w-8 text-zinc-400" />
               <p className="text-sm text-zinc-500">
-                No webhooks configured. Click &ldquo;Refresh&rdquo; to load from
-                the CLI or &ldquo;Create Webhook&rdquo; to add one.
+                No webhooks configured. Click &ldquo;Refresh&rdquo; to load from the CLI or
+                &ldquo;Create Webhook&rdquo; to add one.
               </p>
             </div>
           ) : (
@@ -473,23 +450,13 @@ function WebhooksContent() {
                         <code className="truncate text-sm font-medium text-zinc-900 dark:text-zinc-100">
                           {webhook.url}
                         </code>
-                        <Badge
-                          variant={
-                            webhook.status === 'active'
-                              ? 'default'
-                              : 'secondary'
-                          }
-                        >
+                        <Badge variant={webhook.status === 'active' ? 'default' : 'secondary'}>
                           {webhook.status}
                         </Badge>
                       </div>
                       <div className="mt-1 flex flex-wrap gap-1">
                         {webhook.events.map((event) => (
-                          <Badge
-                            key={event}
-                            variant="outline"
-                            className="text-xs"
-                          >
+                          <Badge key={event} variant="outline" className="text-xs">
                             {event}
                           </Badge>
                         ))}
@@ -591,9 +558,7 @@ function WebhooksContent() {
                 Close
               </Button>
             </div>
-            <CardDescription>
-              Recent webhook delivery attempts and responses
-            </CardDescription>
+            <CardDescription>Recent webhook delivery attempts and responses</CardDescription>
           </CardHeader>
           <CardContent>
             {loadingLogs ? (
@@ -602,14 +567,10 @@ function WebhooksContent() {
               </div>
             ) : logsOutput ? (
               <ScrollArea className="max-h-64">
-                <pre className="text-xs text-zinc-700 dark:text-zinc-300">
-                  {logsOutput}
-                </pre>
+                <pre className="text-xs text-zinc-700 dark:text-zinc-300">{logsOutput}</pre>
               </ScrollArea>
             ) : (
-              <p className="py-4 text-center text-sm text-zinc-500">
-                No delivery logs available
-              </p>
+              <p className="py-4 text-center text-sm text-zinc-500">No delivery logs available</p>
             )}
           </CardContent>
         </Card>
@@ -622,26 +583,18 @@ function WebhooksContent() {
             <Terminal className="h-4 w-4 text-zinc-500" />
             <CardTitle className="text-base">CLI Command</CardTitle>
           </div>
-          <CardDescription>
-            Command executed against the nself CLI
-          </CardDescription>
+          <CardDescription>Command executed against the nself CLI</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="rounded-lg bg-zinc-950 p-4">
-            <div className="mb-2 font-mono text-sm text-emerald-400">
-              $ {lastCommand}
-            </div>
+            <div className="mb-2 font-mono text-sm text-emerald-400">$ {lastCommand}</div>
             {cliOutput && (
               <ScrollArea className="max-h-48">
-                <pre className="font-mono text-xs text-zinc-300">
-                  {cliOutput}
-                </pre>
+                <pre className="font-mono text-xs text-zinc-300">{cliOutput}</pre>
               </ScrollArea>
             )}
             {!cliOutput && (
-              <p className="font-mono text-xs text-zinc-500">
-                Run a command to see output here
-              </p>
+              <p className="font-mono text-xs text-zinc-500">Run a command to see output here</p>
             )}
           </div>
         </CardContent>

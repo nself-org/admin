@@ -1,13 +1,6 @@
 'use client'
 
-import {
-  AlertCircle,
-  DollarSign,
-  Folder,
-  Loader2,
-  RefreshCw,
-  Users,
-} from 'lucide-react'
+import { AlertCircle, DollarSign, Folder, Loader2, RefreshCw, Users } from 'lucide-react'
 import { useCallback, useEffect, useState } from 'react'
 import type { CostProvider, CostSnapshot, ProviderComparison } from './types'
 
@@ -20,13 +13,7 @@ function fmtUsd(n: number): string {
   })
 }
 
-function Pill({
-  children,
-  tone,
-}: {
-  children: React.ReactNode
-  tone: 'pos' | 'neg' | 'neutral'
-}) {
+function Pill({ children, tone }: { children: React.ReactNode; tone: 'pos' | 'neg' | 'neutral' }) {
   const className =
     tone === 'pos'
       ? 'border-green-500/40 text-green-400 bg-green-500/10'
@@ -34,9 +21,7 @@ function Pill({
         ? 'border-red-500/40 text-red-400 bg-red-500/10'
         : 'border-nself-border text-nself-text-muted bg-nself-bg/40'
   return (
-    <span
-      className={`rounded-full border px-2 py-0.5 text-xs font-medium ${className}`}
-    >
+    <span className={`rounded-full border px-2 py-0.5 text-xs font-medium ${className}`}>
       {children}
     </span>
   )
@@ -47,8 +32,7 @@ export function CostDashboard() {
   const [comparison, setComparison] = useState<ProviderComparison | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const [currentProvider, setCurrentProvider] =
-    useState<CostProvider>('hetzner')
+  const [currentProvider, setCurrentProvider] = useState<CostProvider>('hetzner')
 
   const load = useCallback(async () => {
     setLoading(true)
@@ -81,12 +65,8 @@ export function CostDashboard() {
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="nself-gradient-text text-xl font-semibold">
-            Cost Dashboard
-          </h1>
-          <p className="text-nself-text-muted text-xs">
-            Per-project and per-user monthly spend
-          </p>
+          <h1 className="nself-gradient-text text-xl font-semibold">Cost Dashboard</h1>
+          <p className="text-nself-text-muted text-xs">Per-project and per-user monthly spend</p>
         </div>
         <div className="flex items-center gap-2">
           <select
@@ -146,22 +126,16 @@ export function CostDashboard() {
             <div className="glass-card p-4">
               <div className="mb-3 flex items-center gap-2">
                 <Folder className="text-nself-primary h-4 w-4" />
-                <p className="text-nself-text text-sm font-semibold">
-                  By Project
-                </p>
+                <p className="text-nself-text text-sm font-semibold">By Project</p>
               </div>
               {Object.keys(snapshot.byProject).length === 0 ? (
-                <p className="text-nself-text-muted text-xs">
-                  No cost data yet.
-                </p>
+                <p className="text-nself-text-muted text-xs">No cost data yet.</p>
               ) : (
                 <ul className="space-y-1">
                   {Object.entries(snapshot.byProject).map(([proj, usd]) => (
                     <li key={proj} className="flex justify-between text-sm">
                       <span className="text-nself-text">{proj}</span>
-                      <span className="text-nself-text-muted font-mono">
-                        {fmtUsd(usd)}
-                      </span>
+                      <span className="text-nself-text-muted font-mono">{fmtUsd(usd)}</span>
                     </li>
                   ))}
                 </ul>
@@ -174,17 +148,13 @@ export function CostDashboard() {
                 <p className="text-nself-text text-sm font-semibold">By User</p>
               </div>
               {Object.keys(snapshot.byUser).length === 0 ? (
-                <p className="text-nself-text-muted text-xs">
-                  No cost data yet.
-                </p>
+                <p className="text-nself-text-muted text-xs">No cost data yet.</p>
               ) : (
                 <ul className="space-y-1">
                   {Object.entries(snapshot.byUser).map(([user, usd]) => (
                     <li key={user} className="flex justify-between text-sm">
                       <span className="text-nself-text">{user}</span>
-                      <span className="text-nself-text-muted font-mono">
-                        {fmtUsd(usd)}
-                      </span>
+                      <span className="text-nself-text-muted font-mono">{fmtUsd(usd)}</span>
                     </li>
                   ))}
                 </ul>
@@ -194,12 +164,9 @@ export function CostDashboard() {
 
           {comparison !== null && (
             <div className="glass-card p-4">
-              <p className="text-nself-text mb-3 text-sm font-semibold">
-                Provider comparison
-              </p>
+              <p className="text-nself-text mb-3 text-sm font-semibold">Provider comparison</p>
               <p className="text-nself-text-muted mb-3 text-xs">
-                Estimated monthly cost on other providers for the same workload
-                shape.
+                Estimated monthly cost on other providers for the same workload shape.
               </p>
               <table className="w-full text-left text-sm">
                 <thead>
@@ -214,9 +181,7 @@ export function CostDashboard() {
                   <tr className="border-nself-border border-t">
                     <td className="text-nself-text py-2 pr-4 font-semibold">
                       {comparison.current.toUpperCase()}{' '}
-                      <span className="text-nself-primary ml-2 text-xs">
-                        (current)
-                      </span>
+                      <span className="text-nself-primary ml-2 text-xs">(current)</span>
                     </td>
                     <td className="text-nself-text py-2 pr-4 font-mono">
                       {fmtUsd(comparison.currentMonthlyUsd)}
@@ -224,9 +189,7 @@ export function CostDashboard() {
                     <td className="py-2 pr-4">
                       <Pill tone="neutral">—</Pill>
                     </td>
-                    <td className="text-nself-text-muted py-2 text-xs">
-                      Your active provider
-                    </td>
+                    <td className="text-nself-text-muted py-2 text-xs">Your active provider</td>
                   </tr>
                   {comparison.alternatives.map((alt) => {
                     const tone =
@@ -236,13 +199,8 @@ export function CostDashboard() {
                           ? 'pos'
                           : 'neutral'
                     return (
-                      <tr
-                        key={alt.provider}
-                        className="border-nself-border border-t"
-                      >
-                        <td className="text-nself-text py-2 pr-4">
-                          {alt.label}
-                        </td>
+                      <tr key={alt.provider} className="border-nself-border border-t">
+                        <td className="text-nself-text py-2 pr-4">{alt.label}</td>
                         <td className="text-nself-text py-2 pr-4 font-mono">
                           {fmtUsd(alt.monthlyUsd)}
                         </td>
@@ -252,9 +210,7 @@ export function CostDashboard() {
                             {fmtUsd(alt.deltaVsCurrentUsd)}
                           </Pill>
                         </td>
-                        <td className="text-nself-text-muted py-2 text-xs">
-                          {alt.notes}
-                        </td>
+                        <td className="text-nself-text-muted py-2 text-xs">{alt.notes}</td>
                       </tr>
                     )
                   })}

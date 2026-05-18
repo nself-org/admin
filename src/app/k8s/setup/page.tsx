@@ -78,12 +78,8 @@ const platforms: {
 ]
 
 function K8sSetupContent() {
-  const [step, setStep] = useState<
-    'platform' | 'connect' | 'verify' | 'complete'
-  >('platform')
-  const [selectedPlatform, setSelectedPlatform] = useState<K8sPlatform | null>(
-    null,
-  )
+  const [step, setStep] = useState<'platform' | 'connect' | 'verify' | 'complete'>('platform')
+  const [selectedPlatform, setSelectedPlatform] = useState<K8sPlatform | null>(null)
   const [kubeconfig, setKubeconfig] = useState('')
   const [connecting, setConnecting] = useState(false)
   const [connectionResult, setConnectionResult] = useState<{
@@ -130,12 +126,8 @@ function K8sSetupContent() {
           <ArrowLeft className="h-5 w-5" />
         </Link>
         <div>
-          <h1 className="text-2xl font-semibold text-white">
-            Kubernetes Setup
-          </h1>
-          <p className="text-sm text-zinc-400">
-            Connect to a Kubernetes cluster
-          </p>
+          <h1 className="text-2xl font-semibold text-white">Kubernetes Setup</h1>
+          <p className="text-sm text-zinc-400">Connect to a Kubernetes cluster</p>
         </div>
       </div>
 
@@ -176,11 +168,7 @@ function K8sSetupContent() {
                 {s.label}
               </div>
               {i < 3 && (
-                <div
-                  className={`mx-2 h-0.5 w-12 ${
-                    isPast ? 'bg-blue-500' : 'bg-zinc-700'
-                  }`}
-                />
+                <div className={`mx-2 h-0.5 w-12 ${isPast ? 'bg-blue-500' : 'bg-zinc-700'}`} />
               )}
             </div>
           )
@@ -192,9 +180,7 @@ function K8sSetupContent() {
         {/* Step 1: Select Platform */}
         {step === 'platform' && (
           <div className="space-y-4">
-            <h2 className="text-lg font-semibold text-white">
-              Select Kubernetes Platform
-            </h2>
+            <h2 className="text-lg font-semibold text-white">Select Kubernetes Platform</h2>
             <p className="text-sm text-zinc-400">
               Choose your Kubernetes provider or local development environment
             </p>
@@ -214,9 +200,7 @@ function K8sSetupContent() {
                     {platform.logo}
                   </div>
                   <h3 className="font-medium text-white">{platform.name}</h3>
-                  <p className="text-sm text-zinc-400">
-                    {platform.description}
-                  </p>
+                  <p className="text-sm text-zinc-400">{platform.description}</p>
                 </button>
               ))}
             </div>
@@ -236,12 +220,8 @@ function K8sSetupContent() {
         {/* Step 2: Connect */}
         {step === 'connect' && (
           <div className="space-y-4">
-            <h2 className="text-lg font-semibold text-white">
-              Connect to Cluster
-            </h2>
-            <p className="text-sm text-zinc-400">
-              Provide your kubeconfig or connection details
-            </p>
+            <h2 className="text-lg font-semibold text-white">Connect to Cluster</h2>
+            <p className="text-sm text-zinc-400">Provide your kubeconfig or connection details</p>
 
             <div className="rounded-lg border border-zinc-700/50 bg-zinc-800/50 p-4">
               <div className="mb-4 flex items-center gap-2">
@@ -258,9 +238,7 @@ function K8sSetupContent() {
 
               <p className="mt-2 text-sm text-zinc-500">
                 You can also run:{' '}
-                <code className="text-blue-400">
-                  nself k8s connect --kubeconfig=path/to/config
-                </code>
+                <code className="text-blue-400">nself k8s connect --kubeconfig=path/to/config</code>
               </p>
             </div>
 
@@ -312,9 +290,7 @@ function K8sSetupContent() {
         {/* Step 3: Verify */}
         {step === 'verify' && connectionResult?.cluster && (
           <div className="space-y-4">
-            <h2 className="text-lg font-semibold text-white">
-              Verify Connection
-            </h2>
+            <h2 className="text-lg font-semibold text-white">Verify Connection</h2>
             <p className="text-sm text-zinc-400">
               Review your cluster details and verify the connection
             </p>
@@ -323,9 +299,7 @@ function K8sSetupContent() {
               <div className="flex items-center gap-3">
                 <CheckCircle className="h-6 w-6 text-emerald-400" />
                 <div>
-                  <h3 className="font-medium text-emerald-400">
-                    Connection Successful
-                  </h3>
+                  <h3 className="font-medium text-emerald-400">Connection Successful</h3>
                   <p className="text-sm text-zinc-400">
                     Successfully connected to your Kubernetes cluster
                   </p>
@@ -338,9 +312,7 @@ function K8sSetupContent() {
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
                   <span className="text-zinc-400">Cluster Name</span>
-                  <span className="font-medium text-white">
-                    {connectionResult.cluster.name}
-                  </span>
+                  <span className="font-medium text-white">{connectionResult.cluster.name}</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-zinc-400">Kubernetes Version</span>
@@ -350,15 +322,11 @@ function K8sSetupContent() {
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-zinc-400">Nodes</span>
-                  <span className="font-medium text-white">
-                    {connectionResult.cluster.nodes}
-                  </span>
+                  <span className="font-medium text-white">{connectionResult.cluster.nodes}</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-zinc-400">Platform</span>
-                  <span className="font-medium text-white uppercase">
-                    {selectedPlatform}
-                  </span>
+                  <span className="font-medium text-white uppercase">{selectedPlatform}</span>
                 </div>
               </div>
             </div>
@@ -399,9 +367,7 @@ function K8sSetupContent() {
             </div>
 
             <div>
-              <h2 className="text-2xl font-semibold text-white">
-                Setup Complete!
-              </h2>
+              <h2 className="text-2xl font-semibold text-white">Setup Complete!</h2>
               <p className="mt-2 text-zinc-400">
                 Your Kubernetes cluster is now connected and ready to use
               </p>

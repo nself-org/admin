@@ -72,9 +72,7 @@ Settings (`.vscode/settings.json`):
     "source.fixAll.eslint": true
   },
   "typescript.tsdk": "node_modules/typescript/lib",
-  "tailwindCSS.experimental.classRegex": [
-    ["clsx\\(([^)]*)\\)", "(?:'|\"|`)([^']*)(?:'|\"|`)"]
-  ]
+  "tailwindCSS.experimental.classRegex": [["clsx\\(([^)]*)\\)", "(?:'|\"|`)([^']*)(?:'|\"|`)"]]
 }
 ```
 
@@ -355,7 +353,7 @@ export async function GET(request: Request) {
         error: 'Failed to fetch data',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -586,10 +584,7 @@ Opens interactive bundle analyzer.
        const data = await fetchData()
        return NextResponse.json({ success: true, data })
      } catch (error) {
-       return NextResponse.json(
-         { success: false, error: 'Failed' },
-         { status: 500 },
-       )
+       return NextResponse.json({ success: false, error: 'Failed' }, { status: 500 })
      }
    }
 

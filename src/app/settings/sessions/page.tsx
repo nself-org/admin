@@ -2,15 +2,7 @@
 
 import { FormSkeleton } from '@/components/skeletons'
 import { formatDistanceToNow } from 'date-fns'
-import {
-  Clock,
-  MapPin,
-  Monitor,
-  Shield,
-  Smartphone,
-  Tablet,
-  Trash2,
-} from 'lucide-react'
+import { Clock, MapPin, Monitor, Shield, Smartphone, Tablet, Trash2 } from 'lucide-react'
 import { Suspense, useEffect, useState } from 'react'
 
 interface DeviceInfo {
@@ -96,7 +88,7 @@ function SessionsContent() {
   const handleRevokeAll = async () => {
     if (
       !confirm(
-        'Are you sure you want to revoke all other sessions? You will remain logged in on this device.',
+        'Are you sure you want to revoke all other sessions? You will remain logged in on this device.'
       )
     )
       return
@@ -158,9 +150,7 @@ function SessionsContent() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-zinc-900 dark:text-white">
-            Active Sessions
-          </h1>
+          <h1 className="text-2xl font-bold text-zinc-900 dark:text-white">Active Sessions</h1>
           <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
             Manage your active login sessions across devices
           </p>
@@ -179,15 +169,11 @@ function SessionsContent() {
 
       {isLoading ? (
         <div className="rounded-lg border border-zinc-200 bg-white p-8 text-center dark:border-zinc-800 dark:bg-zinc-900">
-          <p className="text-zinc-600 dark:text-zinc-400">
-            Loading sessions...
-          </p>
+          <p className="text-zinc-600 dark:text-zinc-400">Loading sessions...</p>
         </div>
       ) : sessions.length === 0 ? (
         <div className="rounded-lg border border-zinc-200 bg-white p-8 text-center dark:border-zinc-800 dark:bg-zinc-900">
-          <p className="text-zinc-600 dark:text-zinc-400">
-            No active sessions found
-          </p>
+          <p className="text-zinc-600 dark:text-zinc-400">No active sessions found</p>
         </div>
       ) : (
         <div className="space-y-4">
@@ -225,10 +211,8 @@ function SessionsContent() {
                     </div>
                     <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
                       {session.device.os}{' '}
-                      {session.device.osVersion &&
-                        `${session.device.osVersion.split('.')[0]}`}
-                      {session.device.deviceModel &&
-                        ` • ${session.device.deviceModel}`}
+                      {session.device.osVersion && `${session.device.osVersion.split('.')[0]}`}
+                      {session.device.deviceModel && ` • ${session.device.deviceModel}`}
                     </p>
                     <div className="mt-3 flex flex-wrap gap-4 text-xs text-zinc-500 dark:text-zinc-500">
                       <div className="flex items-center gap-1">

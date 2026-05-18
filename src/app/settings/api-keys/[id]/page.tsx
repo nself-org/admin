@@ -7,12 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { PageContent } from '@/components/ui/page-content'
 import { PageHeader } from '@/components/ui/page-header'
 import { Skeleton } from '@/components/ui/skeleton'
-import {
-  useApiKey,
-  useApiKeyRateLimit,
-  useDeleteApiKey,
-  useRevokeApiKey,
-} from '@/hooks/useApiKeys'
+import { useApiKey, useApiKeyRateLimit, useDeleteApiKey, useRevokeApiKey } from '@/hooks/useApiKeys'
 import type { ApiKeyScope, ApiKeyStatus } from '@/types/api-key'
 import { format, formatDistanceToNow } from 'date-fns'
 import {
@@ -62,8 +57,7 @@ const scopeConfig: Record<ApiKeyScope, { label: string; className: string }> = {
   },
   write: {
     label: 'Read & Write',
-    className:
-      'bg-amber-100 text-amber-700 dark:bg-amber-900 dark:text-amber-300',
+    className: 'bg-amber-100 text-amber-700 dark:bg-amber-900 dark:text-amber-300',
   },
   admin: {
     label: 'Admin',
@@ -96,11 +90,7 @@ export default function ApiKeyDetailPage() {
   }, [searchParams])
 
   const handleRevoke = async () => {
-    if (
-      !confirm(
-        'Are you sure you want to revoke this API key? This action cannot be undone.',
-      )
-    ) {
+    if (!confirm('Are you sure you want to revoke this API key? This action cannot be undone.')) {
       return
     }
 
@@ -115,7 +105,7 @@ export default function ApiKeyDetailPage() {
   const handleDelete = async () => {
     if (
       !confirm(
-        'Are you sure you want to permanently delete this API key? This action cannot be undone.',
+        'Are you sure you want to permanently delete this API key? This action cannot be undone.'
       )
     ) {
       return
@@ -169,8 +159,8 @@ export default function ApiKeyDetailPage() {
               {error || 'API Key Not Found'}
             </h3>
             <p className="mt-2 text-sm text-red-500 dark:text-red-400">
-              The API key you are looking for does not exist or you do not have
-              permission to view it.
+              The API key you are looking for does not exist or you do not have permission to view
+              it.
             </p>
             <Link href="/settings/api-keys" className="mt-4 inline-block">
               <Button variant="outline">
@@ -203,10 +193,7 @@ export default function ApiKeyDetailPage() {
           <div className="flex items-center gap-2">
             {!isDisabled && (
               <>
-                <Button
-                  variant="outline"
-                  onClick={() => setIsEditing(!isEditing)}
-                >
+                <Button variant="outline" onClick={() => setIsEditing(!isEditing)}>
                   <Pencil className="mr-2 h-4 w-4" />
                   Edit
                 </Button>
@@ -225,11 +212,7 @@ export default function ApiKeyDetailPage() {
                 </Button>
               </>
             )}
-            <Button
-              variant="destructive"
-              onClick={handleDelete}
-              disabled={isDeleting}
-            >
+            <Button variant="destructive" onClick={handleDelete} disabled={isDeleting}>
               {isDeleting ? (
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               ) : (
@@ -254,39 +237,28 @@ export default function ApiKeyDetailPage() {
               {/* Left Column */}
               <div className="space-y-4">
                 <div>
-                  <p className="text-sm font-medium text-zinc-500 dark:text-zinc-400">
-                    Status
-                  </p>
-                  <Badge
-                    variant={statusStyle.variant}
-                    className={statusStyle.className}
-                  >
+                  <p className="text-sm font-medium text-zinc-500 dark:text-zinc-400">Status</p>
+                  <Badge variant={statusStyle.variant} className={statusStyle.className}>
                     {statusStyle.label}
                   </Badge>
                 </div>
 
                 <div>
-                  <p className="text-sm font-medium text-zinc-500 dark:text-zinc-400">
-                    Scope
-                  </p>
+                  <p className="text-sm font-medium text-zinc-500 dark:text-zinc-400">Scope</p>
                   <Badge variant="outline" className={scopeStyle.className}>
                     {scopeStyle.label}
                   </Badge>
                 </div>
 
                 <div>
-                  <p className="text-sm font-medium text-zinc-500 dark:text-zinc-400">
-                    Key Prefix
-                  </p>
+                  <p className="text-sm font-medium text-zinc-500 dark:text-zinc-400">Key Prefix</p>
                   <code className="rounded bg-zinc-100 px-2 py-1 font-mono text-sm dark:bg-zinc-800">
                     {maskedKey}
                   </code>
                 </div>
 
                 <div>
-                  <p className="text-sm font-medium text-zinc-500 dark:text-zinc-400">
-                    Created
-                  </p>
+                  <p className="text-sm font-medium text-zinc-500 dark:text-zinc-400">Created</p>
                   <div className="flex items-center gap-2 text-sm">
                     <Calendar className="h-4 w-4 text-zinc-400" />
                     {format(new Date(apiKey.createdAt), 'PPp')}
@@ -309,9 +281,7 @@ export default function ApiKeyDetailPage() {
                 </div>
 
                 <div>
-                  <p className="text-sm font-medium text-zinc-500 dark:text-zinc-400">
-                    Last Used
-                  </p>
+                  <p className="text-sm font-medium text-zinc-500 dark:text-zinc-400">Last Used</p>
                   <div className="flex items-center gap-2 text-sm">
                     <Clock className="h-4 w-4 text-zinc-400" />
                     {apiKey.lastUsedAt ? (
@@ -326,9 +296,7 @@ export default function ApiKeyDetailPage() {
 
                 {apiKey.expiresAt && (
                   <div>
-                    <p className="text-sm font-medium text-zinc-500 dark:text-zinc-400">
-                      Expires
-                    </p>
+                    <p className="text-sm font-medium text-zinc-500 dark:text-zinc-400">Expires</p>
                     <div className="flex items-center gap-2 text-sm">
                       <Calendar className="h-4 w-4 text-zinc-400" />
                       {format(new Date(apiKey.expiresAt), 'PPp')}
@@ -390,8 +358,7 @@ export default function ApiKeyDetailPage() {
                           className={`h-full transition-all ${
                             rateLimit.isLimited
                               ? 'bg-red-500'
-                              : rateLimit.currentRequests / rateLimit.limit >
-                                  0.8
+                              : rateLimit.currentRequests / rateLimit.limit > 0.8
                                 ? 'bg-amber-500'
                                 : 'bg-green-500'
                           }`}

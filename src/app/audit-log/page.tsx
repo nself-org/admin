@@ -12,19 +12,10 @@
  */
 
 import { AdminPagination } from '@/components/admin-account/AdminPagination'
-import {
-  AuditEventRow,
-  type AuditEvent,
-} from '@/components/admin-account/AuditEventRow'
+import { AuditEventRow, type AuditEvent } from '@/components/admin-account/AuditEventRow'
 import { ExportCSVButton } from '@/components/admin-account/ExportCSVButton'
 import { HeroPattern } from '@/components/HeroPattern'
-import {
-  AlertCircle,
-  Filter,
-  RefreshCw,
-  ScrollText,
-  WifiOff,
-} from 'lucide-react'
+import { AlertCircle, Filter, RefreshCw, ScrollText, WifiOff } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { Suspense, useCallback, useEffect, useRef, useState } from 'react'
 
@@ -46,10 +37,7 @@ function AuditLogSkeleton() {
   return (
     <div aria-busy="true" aria-label="Loading audit log">
       {[1, 2, 3, 4, 5].map((i) => (
-        <div
-          key={i}
-          className="mb-2 h-12 animate-pulse rounded-xl bg-zinc-100 dark:bg-zinc-800"
-        />
+        <div key={i} className="mb-2 h-12 animate-pulse rounded-xl bg-zinc-100 dark:bg-zinc-800" />
       ))}
     </div>
   )
@@ -62,9 +50,7 @@ function AuditLogContent() {
   const [offline, setOffline] = useState(false)
   const [nextCursor, setNextCursor] = useState<string | null>(null)
   const [prevCursors, setPrevCursors] = useState<string[]>([])
-  const [currentCursor, setCurrentCursor] = useState<string | undefined>(
-    undefined,
-  )
+  const [currentCursor, setCurrentCursor] = useState<string | undefined>(undefined)
   const [total, setTotal] = useState<number | null>(null)
 
   // Filters
@@ -87,7 +73,7 @@ function AuditLogContent() {
       if (dateTo) params.set('dateTo', dateTo)
       return params.toString()
     },
-    [typeFilter, actorFilter, dateFrom, dateTo],
+    [typeFilter, actorFilter, dateFrom, dateTo]
   )
 
   const fetchEvents = useCallback(
@@ -121,7 +107,7 @@ function AuditLogContent() {
         setLoading(false)
       }
     },
-    [buildQueryString, router],
+    [buildQueryString, router]
   )
 
   useEffect(() => {
@@ -356,10 +342,7 @@ function AuditLogContent() {
             aria-live="assertive"
             className="flex items-start gap-3 rounded-xl border border-red-200 bg-red-50 p-4 dark:border-red-800 dark:bg-red-900/20"
           >
-            <AlertCircle
-              className="h-5 w-5 flex-shrink-0 text-red-500"
-              aria-hidden="true"
-            />
+            <AlertCircle className="h-5 w-5 flex-shrink-0 text-red-500" aria-hidden="true" />
             <p className="text-sm text-red-700 dark:text-red-400">{error}</p>
           </div>
         )}
@@ -370,13 +353,8 @@ function AuditLogContent() {
         {/* Empty state */}
         {!loading && !error && events.length === 0 && (
           <div className="rounded-xl border border-dashed border-zinc-300 bg-zinc-50 p-12 text-center dark:border-zinc-700 dark:bg-zinc-800/50">
-            <ScrollText
-              className="mx-auto mb-3 h-10 w-10 text-zinc-400"
-              aria-hidden="true"
-            />
-            <h2 className="text-lg font-semibold text-zinc-900 dark:text-white">
-              No events found
-            </h2>
+            <ScrollText className="mx-auto mb-3 h-10 w-10 text-zinc-400" aria-hidden="true" />
+            <h2 className="text-lg font-semibold text-zinc-900 dark:text-white">No events found</h2>
             <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
               {typeFilter || actorFilter || dateFrom || dateTo
                 ? 'No events match the current filters. Try adjusting the filters.'

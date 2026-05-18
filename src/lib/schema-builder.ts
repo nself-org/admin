@@ -12,10 +12,30 @@ const COLUMN_TYPE_REGEX = /^[a-zA-Z][a-zA-Z0-9 ]*(\(\d+(,\d+)?\))?(\[\])?$/
 
 /** Explicit set of base Postgres types (without parametrization) */
 const ALLOWED_BASE_TYPES = new Set([
-  'int', 'integer', 'bigint', 'smallint', 'serial', 'bigserial',
-  'boolean', 'text', 'varchar', 'char', 'numeric', 'decimal',
-  'real', 'double precision', 'date', 'timestamp', 'timestamptz',
-  'time', 'uuid', 'jsonb', 'json', 'bytea', 'inet', 'cidr',
+  'int',
+  'integer',
+  'bigint',
+  'smallint',
+  'serial',
+  'bigserial',
+  'boolean',
+  'text',
+  'varchar',
+  'char',
+  'numeric',
+  'decimal',
+  'real',
+  'double precision',
+  'date',
+  'timestamp',
+  'timestamptz',
+  'time',
+  'uuid',
+  'jsonb',
+  'json',
+  'bytea',
+  'inet',
+  'cidr',
 ])
 
 /**
@@ -26,15 +46,17 @@ const ALLOWED_BASE_TYPES = new Set([
  */
 export function validateColumnType(type: string): string {
   if (!COLUMN_TYPE_REGEX.test(type)) {
-    throw new Error(
-      `Invalid column type: "${type}". Only safe Postgres type tokens are allowed.`,
-    )
+    throw new Error(`Invalid column type: "${type}". Only safe Postgres type tokens are allowed.`)
   }
   // Strip optional parenthesized size and array suffix to get base type
-  const base = type.replace(/\(\d+(,\d+)?\)/, '').replace(/\[\]$/, '').trim().toLowerCase()
+  const base = type
+    .replace(/\(\d+(,\d+)?\)/, '')
+    .replace(/\[\]$/, '')
+    .trim()
+    .toLowerCase()
   if (!ALLOWED_BASE_TYPES.has(base)) {
     throw new Error(
-      `Unrecognized column type: "${type}". Allowed types: ${[...ALLOWED_BASE_TYPES].join(', ')}.`,
+      `Unrecognized column type: "${type}". Allowed types: ${[...ALLOWED_BASE_TYPES].join(', ')}.`
     )
   }
   return type
@@ -44,11 +66,18 @@ export function validateColumnType(type: string): string {
 
 /** Allowed SQL functions for DEFAULT clauses */
 const ALLOWED_DEFAULT_FUNCTIONS = new Set([
-  'now', 'gen_random_uuid', 'uuid_generate_v4', 'current_timestamp',
+  'now',
+  'gen_random_uuid',
+  'uuid_generate_v4',
+  'current_timestamp',
 ])
 
 /** Allowed SQL function names for DEFAULT clauses — typed for exhaustive checks */
-export type AllowedDefaultFunction = 'now' | 'gen_random_uuid' | 'uuid_generate_v4' | 'current_timestamp'
+export type AllowedDefaultFunction =
+  | 'now'
+  | 'gen_random_uuid'
+  | 'uuid_generate_v4'
+  | 'current_timestamp'
 
 /**
  * Typed model for column DEFAULT values.
@@ -183,8 +212,7 @@ export function pgIdent(name: string): string {
  */
 export function generateCreateTable(table: CanvasTable): string {
   if (!table.name.trim()) return ''
-  const schemaPrefix =
-    table.schema && table.schema !== 'public' ? `${pgIdent(table.schema)}.` : ''
+  const schemaPrefix = table.schema && table.schema !== 'public' ? `${pgIdent(table.schema)}.` : ''
   const tableFQN = `${schemaPrefix}${pgIdent(table.name)}`
 
   const colDefs = table.columns
@@ -213,18 +241,14 @@ export function generateCreateTable(table: CanvasTable): string {
  * Generate DROP TABLE DDL (reverse migration).
  */
 export function generateDropTable(table: CanvasTable): string {
-  const schemaPrefix =
-    table.schema && table.schema !== 'public' ? `${pgIdent(table.schema)}.` : ''
+  const schemaPrefix = table.schema && table.schema !== 'public' ? `${pgIdent(table.schema)}.` : ''
   return `DROP TABLE IF EXISTS ${schemaPrefix}${pgIdent(table.name)} CASCADE;`
 }
 
 /**
  * Generate ALTER TABLE ADD CONSTRAINT for a foreign key relationship.
  */
-export function generateAddFK(
-  rel: CanvasRelationship,
-  tables: CanvasTable[],
-): string {
+export function generateAddFK(rel: CanvasRelationship, tables: CanvasTable[]): string {
   const fromTable = tables.find((t) => t.id === rel.fromTableId)
   const toTable = tables.find((t) => t.id === rel.toTableId)
   if (!fromTable || !toTable) return ''
@@ -249,10 +273,7 @@ export function generateAddFK(
 /**
  * Generate DROP CONSTRAINT DDL (reverse FK migration).
  */
-export function generateDropFK(
-  rel: CanvasRelationship,
-  tables: CanvasTable[],
-): string {
+export function generateDropFK(rel: CanvasRelationship, tables: CanvasTable[]): string {
   const fromTable = tables.find((t) => t.id === rel.fromTableId)
   const toTable = tables.find((t) => t.id === rel.toTableId)
   if (!fromTable || !toTable) return ''
@@ -352,9 +373,7 @@ export interface HasuraTrackRelationshipInput {
 /**
  * Build Hasura metadata API payload to track a table.
  */
-export function buildHasuraTrackTablePayload(
-  table: HasuraTrackTableInput,
-): object {
+export function buildHasuraTrackTablePayload(table: HasuraTrackTableInput): object {
   return {
     type: 'pg_track_table',
     args: {
@@ -368,9 +387,7 @@ export function buildHasuraTrackTablePayload(
 /**
  * Build Hasura metadata API payload to track an array relationship.
  */
-export function buildHasuraTrackRelationshipPayload(
-  input: HasuraTrackRelationshipInput,
-): object {
+export function buildHasuraTrackRelationshipPayload(input: HasuraTrackRelationshipInput): object {
   return {
     type: 'pg_create_array_relationship',
     args: {
@@ -390,7 +407,7 @@ export function buildHasuraTrackRelationshipPayload(
 export async function trackInHasura(
   state: CanvasState,
   hasuraUrl: string,
-  adminSecret: string,
+  adminSecret: string
 ): Promise<{ tracked: string[]; errors: string[] }> {
   const tracked: string[] = []
   const errors: string[] = []
@@ -417,9 +434,7 @@ export async function trackInHasura(
         tracked.push(table.name)
       }
     } catch (err) {
-      errors.push(
-        `Track ${table.name}: ${err instanceof Error ? err.message : 'unknown'}`,
-      )
+      errors.push(`Track ${table.name}: ${err instanceof Error ? err.message : 'unknown'}`)
     }
   }
 

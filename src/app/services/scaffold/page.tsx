@@ -6,14 +6,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { ScrollArea } from '@/components/ui/scroll-area'
-import {
-  CheckCircle,
-  Loader2,
-  Package,
-  Search,
-  Terminal,
-  XCircle,
-} from 'lucide-react'
+import { CheckCircle, Loader2, Package, Search, Terminal, XCircle } from 'lucide-react'
 import { Suspense, useCallback, useState } from 'react'
 
 // -- Types --
@@ -384,12 +377,9 @@ const LANGUAGE_FILTERS = [
 
 function getLanguageColor(language: string): string {
   const colors: Record<string, string> = {
-    JavaScript:
-      'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400',
-    TypeScript:
-      'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400',
-    Python:
-      'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400',
+    JavaScript: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400',
+    TypeScript: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400',
+    Python: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400',
     Go: 'bg-cyan-100 text-cyan-800 dark:bg-cyan-900/30 dark:text-cyan-400',
     Rust: 'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-400',
     Java: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400',
@@ -398,10 +388,7 @@ function getLanguageColor(language: string): string {
     'C#': 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400',
     Elixir: 'bg-sky-100 text-sky-800 dark:bg-sky-900/30 dark:text-sky-400',
   }
-  return (
-    colors[language] ||
-    'bg-zinc-100 text-zinc-800 dark:bg-zinc-800 dark:text-zinc-400'
-  )
+  return colors[language] || 'bg-zinc-100 text-zinc-800 dark:bg-zinc-800 dark:text-zinc-400'
 }
 
 // -- Helper Components --
@@ -424,9 +411,7 @@ function CommandPreview({ command }: { command: string }) {
 function ServiceScaffoldContent() {
   const [searchQuery, setSearchQuery] = useState('')
   const [categoryFilter, setCategoryFilter] = useState('all')
-  const [selectedTemplate, setSelectedTemplate] = useState<TemplateInfo | null>(
-    null,
-  )
+  const [selectedTemplate, setSelectedTemplate] = useState<TemplateInfo | null>(null)
   const [serviceName, setServiceName] = useState('')
   const [scaffolding, setScaffolding] = useState(false)
   const [cliOutputs, setCliOutputs] = useState<CLIOutput[]>([])
@@ -442,27 +427,23 @@ function ServiceScaffoldContent() {
       t.language.toLowerCase().includes(searchQuery.toLowerCase()) ||
       t.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
       t.id.toLowerCase().includes(searchQuery.toLowerCase())
-    const matchesCategory =
-      categoryFilter === 'all' || t.category === categoryFilter
+    const matchesCategory = categoryFilter === 'all' || t.category === categoryFilter
     return matchesSearch && matchesCategory
   })
 
   // -- Helpers --
 
-  const addOutput = useCallback(
-    (command: string, output: string, success: boolean) => {
-      setCliOutputs((prev) => [
-        {
-          command,
-          output,
-          success,
-          timestamp: new Date().toLocaleTimeString(),
-        },
-        ...prev.slice(0, 49),
-      ])
-    },
-    [],
-  )
+  const addOutput = useCallback((command: string, output: string, success: boolean) => {
+    setCliOutputs((prev) => [
+      {
+        command,
+        output,
+        success,
+        timestamp: new Date().toLocaleTimeString(),
+      },
+      ...prev.slice(0, 49),
+    ])
+  }, [])
 
   // -- Actions --
 
@@ -472,7 +453,7 @@ function ServiceScaffoldContent() {
     const namePattern = /^[a-zA-Z][a-zA-Z0-9_-]{0,63}$/
     if (!namePattern.test(serviceName)) {
       setError(
-        'Service name must start with a letter and contain only letters, numbers, hyphens, and underscores',
+        'Service name must start with a letter and contain only letters, numbers, hyphens, and underscores'
       )
       return
     }
@@ -492,8 +473,7 @@ function ServiceScaffoldContent() {
         }),
       })
       const json = await response.json()
-      const output =
-        json.data?.output || json.details || json.error || '(no output)'
+      const output = json.data?.output || json.details || json.error || '(no output)'
       addOutput(cmd, output, json.success)
 
       if (!json.success) {
@@ -514,7 +494,7 @@ function ServiceScaffoldContent() {
     const namePattern = /^[a-zA-Z][a-zA-Z0-9_-]{0,63}$/
     if (!namePattern.test(serviceName)) {
       setError(
-        'Service name must start with a letter and contain only letters, numbers, hyphens, and underscores',
+        'Service name must start with a letter and contain only letters, numbers, hyphens, and underscores'
       )
       return
     }
@@ -531,8 +511,7 @@ function ServiceScaffoldContent() {
         body: JSON.stringify({ name: serviceName }),
       })
       const json = await response.json()
-      const output =
-        json.data?.output || json.details || json.error || '(no output)'
+      const output = json.data?.output || json.details || json.error || '(no output)'
       addOutput(cmd, output, json.success)
 
       if (!json.success) {
@@ -565,8 +544,7 @@ function ServiceScaffoldContent() {
             Service Scaffolding
           </h1>
           <p className="mt-3 text-lg text-zinc-600 dark:text-zinc-400">
-            Create new services from 40+ templates across multiple languages and
-            frameworks
+            Create new services from 40+ templates across multiple languages and frameworks
           </p>
         </div>
 
@@ -576,9 +554,7 @@ function ServiceScaffoldContent() {
             <div className="flex items-start gap-3">
               <XCircle className="h-5 w-5 flex-shrink-0 text-red-500" />
               <div>
-                <p className="text-sm text-red-700 dark:text-red-400">
-                  {error}
-                </p>
+                <p className="text-sm text-red-700 dark:text-red-400">{error}</p>
               </div>
             </div>
           </div>
@@ -605,9 +581,7 @@ function ServiceScaffoldContent() {
             <div className="flex gap-2">
               <Button
                 onClick={handleScaffold}
-                disabled={
-                  !selectedTemplate || !serviceName.trim() || scaffolding
-                }
+                disabled={!selectedTemplate || !serviceName.trim() || scaffolding}
               >
                 {scaffolding ? (
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -637,10 +611,8 @@ function ServiceScaffoldContent() {
               <CheckCircle className="h-4 w-4 text-green-500" />
               <span>
                 Selected template:{' '}
-                <strong className="text-zinc-900 dark:text-white">
-                  {selectedTemplate.name}
-                </strong>{' '}
-                ({selectedTemplate.language})
+                <strong className="text-zinc-900 dark:text-white">{selectedTemplate.name}</strong> (
+                {selectedTemplate.language})
               </span>
               <button
                 onClick={() => setSelectedTemplate(null)}
@@ -710,9 +682,7 @@ function ServiceScaffoldContent() {
                   <h3 className="text-sm font-semibold text-zinc-900 dark:text-white">
                     {template.name}
                   </h3>
-                  <Badge
-                    className={`text-[10px] ${getLanguageColor(template.language)}`}
-                  >
+                  <Badge className={`text-[10px] ${getLanguageColor(template.language)}`}>
                     {template.language}
                   </Badge>
                 </div>
@@ -771,12 +741,8 @@ function ServiceScaffoldContent() {
                       ) : (
                         <XCircle className="h-3.5 w-3.5 text-red-500" />
                       )}
-                      <span className="font-mono text-green-400">
-                        $ {entry.command}
-                      </span>
-                      <span className="ml-auto text-zinc-500">
-                        {entry.timestamp}
-                      </span>
+                      <span className="font-mono text-green-400">$ {entry.command}</span>
+                      <span className="ml-auto text-zinc-500">{entry.timestamp}</span>
                     </div>
                     <pre className="mt-1 font-mono text-xs whitespace-pre-wrap text-zinc-300">
                       {entry.output || '(no output)'}

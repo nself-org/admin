@@ -15,11 +15,7 @@ import {
 } from '@/components/ui/select'
 import { Switch } from '@/components/ui/switch'
 import { useCreateSchedule, useUpdateSchedule } from '@/hooks/useReports'
-import type {
-  ReportFormat,
-  ReportSchedule,
-  ReportScheduleFrequency,
-} from '@/types/report'
+import type { ReportFormat, ReportSchedule, ReportScheduleFrequency } from '@/types/report'
 import {
   AlertCircle,
   Calendar,
@@ -96,28 +92,19 @@ export function ReportScheduleForm({
 
   // Form state
   const [frequency, setFrequency] = useState<ReportScheduleFrequency>(
-    existingSchedule?.frequency || 'daily',
+    existingSchedule?.frequency || 'daily'
   )
-  const [dayOfWeek, setDayOfWeek] = useState<number>(
-    existingSchedule?.dayOfWeek ?? 1,
-  )
-  const [dayOfMonth, setDayOfMonth] = useState<number>(
-    existingSchedule?.dayOfMonth ?? 1,
-  )
+  const [dayOfWeek, setDayOfWeek] = useState<number>(existingSchedule?.dayOfWeek ?? 1)
+  const [dayOfMonth, setDayOfMonth] = useState<number>(existingSchedule?.dayOfMonth ?? 1)
   const [time, setTime] = useState<string>(existingSchedule?.time || '09:00')
   const [timezone, setTimezone] = useState<string>(
-    existingSchedule?.timezone ||
-      Intl.DateTimeFormat().resolvedOptions().timeZone,
+    existingSchedule?.timezone || Intl.DateTimeFormat().resolvedOptions().timeZone
   )
-  const [format, setFormat] = useState<ReportFormat>(
-    existingSchedule?.format || 'pdf',
-  )
+  const [format, setFormat] = useState<ReportFormat>(existingSchedule?.format || 'pdf')
   const [recipients, setRecipients] = useState<string>(
-    existingSchedule?.recipients.join(', ') || '',
+    existingSchedule?.recipients.join(', ') || ''
   )
-  const [enabled, setEnabled] = useState<boolean>(
-    existingSchedule?.enabled ?? true,
-  )
+  const [enabled, setEnabled] = useState<boolean>(existingSchedule?.enabled ?? true)
 
   // Update form when existingSchedule changes
   useEffect(() => {
@@ -327,9 +314,7 @@ export function ReportScheduleForm({
               </Select>
             </div>
           </div>
-          <p className="mt-3 text-sm text-zinc-500">
-            {getNextRunDescription()}
-          </p>
+          <p className="mt-3 text-sm text-zinc-500">{getNextRunDescription()}</p>
         </CardContent>
       </Card>
 
@@ -350,16 +335,10 @@ export function ReportScheduleForm({
                     : 'border-zinc-700 hover:border-zinc-600'
                 }`}
               >
-                <div
-                  className={
-                    format === fmt ? 'text-emerald-400' : 'text-zinc-400'
-                  }
-                >
+                <div className={format === fmt ? 'text-emerald-400' : 'text-zinc-400'}>
                   {formatIcons[fmt]}
                 </div>
-                <span
-                  className={`text-xs ${format === fmt ? 'text-white' : 'text-zinc-400'}`}
-                >
+                <span className={`text-xs ${format === fmt ? 'text-white' : 'text-zinc-400'}`}>
                   {fmt.toUpperCase()}
                 </span>
               </button>
@@ -407,9 +386,7 @@ export function ReportScheduleForm({
                 Enable schedule
               </Label>
               <p className="text-sm text-zinc-500">
-                {enabled
-                  ? 'Reports will be generated automatically'
-                  : 'Schedule is paused'}
+                {enabled ? 'Reports will be generated automatically' : 'Schedule is paused'}
               </p>
             </div>
           </div>

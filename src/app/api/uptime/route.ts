@@ -32,10 +32,7 @@ const PROBES: Array<{ name: string; url: string }> = [
   { name: 'Minio', url: 'http://localhost:9000/minio/health/live' },
 ]
 
-async function probe(service: {
-  name: string
-  url: string
-}): Promise<ServiceUptime> {
+async function probe(service: { name: string; url: string }): Promise<ServiceUptime> {
   const start = Date.now()
   const controller = new AbortController()
   const timer = setTimeout(() => controller.abort(), 3000)
@@ -47,11 +44,7 @@ async function probe(service: {
     })
     clearTimeout(timer)
     const latencyMs = Date.now() - start
-    const status: ServiceUptime['status'] = res.ok
-      ? 'up'
-      : res.status >= 500
-        ? 'down'
-        : 'degraded'
+    const status: ServiceUptime['status'] = res.ok ? 'up' : res.status >= 500 ? 'down' : 'degraded'
     return {
       name: service.name,
       url: service.url,
@@ -83,8 +76,7 @@ async function probe(service: {
 export async function GET() {
   const services = await Promise.all(PROBES.map(probe))
   const upCount = services.filter((s) => s.status === 'up').length
-  const overall =
-    services.length === 0 ? 100 : (upCount / services.length) * 100
+  const overall = services.length === 0 ? 100 : (upCount / services.length) * 100
 
   const report: UptimeReport = {
     generatedAt: new Date().toISOString(),

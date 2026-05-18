@@ -117,11 +117,9 @@ async function checkMemory(): Promise<boolean> {
   try {
     const memInfo = await fs.readFile('/proc/meminfo', 'utf-8')
     const lines = memInfo.split('\n')
-    const memTotal = parseInt(
-      lines.find((l) => l.startsWith('MemTotal'))?.split(/\s+/)[1] || '0',
-    )
+    const memTotal = parseInt(lines.find((l) => l.startsWith('MemTotal'))?.split(/\s+/)[1] || '0')
     const memAvailable = parseInt(
-      lines.find((l) => l.startsWith('MemAvailable'))?.split(/\s+/)[1] || '0',
+      lines.find((l) => l.startsWith('MemAvailable'))?.split(/\s+/)[1] || '0'
     )
 
     // Check if we have at least 10% memory available
@@ -135,9 +133,7 @@ async function checkMemory(): Promise<boolean> {
 async function checkNetwork(): Promise<boolean> {
   try {
     // Try to resolve a common domain
-    const { stdout } = await execAsync(
-      'ping -c 1 -W 1 google.com 2>/dev/null || echo "failed"',
-    )
+    const { stdout } = await execAsync('ping -c 1 -W 1 google.com 2>/dev/null || echo "failed"')
     return !stdout.includes('failed')
   } catch {
     return false
@@ -153,15 +149,9 @@ async function getMemoryUsage(): Promise<{
     const memInfo = await fs.readFile('/proc/meminfo', 'utf-8')
     const lines = memInfo.split('\n')
     const memTotal =
-      parseInt(
-        lines.find((l) => l.startsWith('MemTotal'))?.split(/\s+/)[1] || '0',
-      ) /
-      1024 /
-      1024
+      parseInt(lines.find((l) => l.startsWith('MemTotal'))?.split(/\s+/)[1] || '0') / 1024 / 1024
     const memAvailable =
-      parseInt(
-        lines.find((l) => l.startsWith('MemAvailable'))?.split(/\s+/)[1] || '0',
-      ) /
+      parseInt(lines.find((l) => l.startsWith('MemAvailable'))?.split(/\s+/)[1] || '0') /
       1024 /
       1024
     const memUsed = memTotal - memAvailable
@@ -219,7 +209,7 @@ interface HealthData {
 
 function checksToServiceHealthList(
   checks: Record<string, boolean>,
-  latencyMs: number,
+  latencyMs: number
 ): ServiceHealth[] {
   const labelMap: Record<string, string> = {
     docker: 'Docker',
@@ -243,23 +233,16 @@ export async function GET(request: Request): Promise<NextResponse> {
     const startTime = process.hrtime()
 
     // Run all checks in parallel
-    const [
-      dockerOk,
-      filesystemOk,
-      memoryOk,
-      networkOk,
-      nselfCheck,
-      memoryUsage,
-      cpuUsage,
-    ] = await Promise.all([
-      checkDocker(),
-      checkFilesystem(),
-      checkMemory(),
-      checkNetwork(),
-      checkNselfCli(),
-      getMemoryUsage(),
-      getCpuUsage(),
-    ])
+    const [dockerOk, filesystemOk, memoryOk, networkOk, nselfCheck, memoryUsage, cpuUsage] =
+      await Promise.all([
+        checkDocker(),
+        checkFilesystem(),
+        checkMemory(),
+        checkNetwork(),
+        checkNselfCli(),
+        getMemoryUsage(),
+        getCpuUsage(),
+      ])
 
     const checks = {
       docker: dockerOk,
@@ -270,9 +253,7 @@ export async function GET(request: Request): Promise<NextResponse> {
     }
 
     const allChecksPass = Object.values(checks).every((check) => check === true)
-    const someChecksFail = Object.values(checks).some(
-      (check) => check === false,
-    )
+    const someChecksFail = Object.values(checks).some((check) => check === false)
 
     let status: 'healthy' | 'degraded' | 'unhealthy' = 'healthy'
     if (!allChecksPass && !someChecksFail) {
@@ -351,7 +332,7 @@ export async function GET(request: Request): Promise<NextResponse> {
           nself: false,
         },
       },
-      { status: 503 },
+      { status: 503 }
     )
   }
 }

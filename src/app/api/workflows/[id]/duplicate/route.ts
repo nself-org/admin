@@ -10,10 +10,7 @@ interface RouteParams {
  * POST /api/workflows/[id]/duplicate
  * Duplicate a workflow
  */
-export async function POST(
-  request: NextRequest,
-  { params }: RouteParams,
-): Promise<NextResponse> {
+export async function POST(request: NextRequest, { params }: RouteParams): Promise<NextResponse> {
   const authError = await requireAuth(request)
   if (authError) return authError
 
@@ -27,10 +24,7 @@ export async function POST(
     })
 
     if (!workflow) {
-      return NextResponse.json(
-        { success: false, error: 'Workflow not found' },
-        { status: 404 },
-      )
+      return NextResponse.json({ success: false, error: 'Workflow not found' }, { status: 404 })
     }
 
     return NextResponse.json(
@@ -38,18 +32,15 @@ export async function POST(
         success: true,
         workflow,
       },
-      { status: 201 },
+      { status: 201 }
     )
   } catch (error) {
     return NextResponse.json(
       {
         success: false,
-        error:
-          error instanceof Error
-            ? error.message
-            : 'Failed to duplicate workflow',
+        error: error instanceof Error ? error.message : 'Failed to duplicate workflow',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

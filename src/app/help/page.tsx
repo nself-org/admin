@@ -142,8 +142,7 @@ const CLI_COMMAND_GROUPS: CLICommandGroup[] = [
       },
       {
         command: 'nself build',
-        description:
-          'Generate configuration files and build Docker images from .env files',
+        description: 'Generate configuration files and build Docker images from .env files',
         uiPath: '/build',
         uiLabel: 'Build Page',
       },
@@ -182,27 +181,23 @@ const CLI_COMMAND_GROUPS: CLICommandGroup[] = [
       },
       {
         command: 'nself logs',
-        description:
-          'View and tail logs for all services or a specific service',
+        description: 'View and tail logs for all services or a specific service',
         uiPath: '/system/logs',
         uiLabel: 'Logs',
       },
       {
         command: 'nself help',
-        description:
-          'Display help information for nself or a specific subcommand',
+        description: 'Display help information for nself or a specific subcommand',
         uiPath: '/help',
         uiLabel: 'Help',
       },
       {
         command: 'nself admin',
-        description:
-          'Launch the nAdmin web UI (this application) in a Docker container',
+        description: 'Launch the nAdmin web UI (this application) in a Docker container',
       },
       {
         command: 'nself urls',
-        description:
-          'List all service URLs including admin panels and API endpoints',
+        description: 'List all service URLs including admin panels and API endpoints',
         uiPath: '/',
         uiLabel: 'Dashboard',
       },
@@ -215,36 +210,31 @@ const CLI_COMMAND_GROUPS: CLICommandGroup[] = [
       },
       {
         command: 'nself doctor',
-        description:
-          'Run diagnostic checks on the project (Docker, ports, configs, dependencies)',
+        description: 'Run diagnostic checks on the project (Docker, ports, configs, dependencies)',
         uiPath: '/doctor',
         uiLabel: 'Doctor',
       },
       {
         command: 'nself monitor',
-        description:
-          'Open the monitoring dashboard with real-time service metrics',
+        description: 'Open the monitoring dashboard with real-time service metrics',
         uiPath: '/monitor',
         uiLabel: 'Monitor',
       },
       {
         command: 'nself health',
-        description:
-          'Check the health endpoints of all running services and report status',
+        description: 'Check the health endpoints of all running services and report status',
         uiPath: '/doctor',
         uiLabel: 'Doctor',
       },
       {
         command: 'nself version',
-        description:
-          'Display the installed nself CLI version and check for updates',
+        description: 'Display the installed nself CLI version and check for updates',
         uiPath: '/system/updates',
         uiLabel: 'Updates',
       },
       {
         command: 'nself update',
-        description:
-          'Update the nself CLI, nAdmin, or both to the latest version',
+        description: 'Update the nself CLI, nAdmin, or both to the latest version',
         uiPath: '/system/updates',
         uiLabel: 'Updates',
       },
@@ -254,20 +244,17 @@ const CLI_COMMAND_GROUPS: CLICommandGroup[] = [
       },
       {
         command: 'nself metrics',
-        description:
-          'Display resource usage metrics (CPU, memory, disk) for all services',
+        description: 'Display resource usage metrics (CPU, memory, disk) for all services',
         uiPath: '/system/resources',
         uiLabel: 'Resources',
       },
       {
         command: 'nself history',
-        description:
-          'Show the history of CLI commands executed in this project',
+        description: 'Show the history of CLI commands executed in this project',
       },
       {
         command: 'nself audit',
-        description:
-          'Run a security and configuration audit on the project setup',
+        description: 'Run a security and configuration audit on the project setup',
         uiPath: '/system/security',
         uiLabel: 'Security',
       },
@@ -332,8 +319,7 @@ const CLI_COMMAND_GROUPS: CLICommandGroup[] = [
       },
       {
         command: 'nself db inspect',
-        description:
-          'Inspect tables, columns, indexes, and relationships in the database',
+        description: 'Inspect tables, columns, indexes, and relationships in the database',
         uiPath: '/database/analyze',
         uiLabel: 'Analyze',
       },
@@ -349,8 +335,7 @@ const CLI_COMMAND_GROUPS: CLICommandGroup[] = [
     id: 'tenant',
     label: 'Multi-Tenancy',
     icon: Users,
-    description:
-      'Tenant lifecycle, members, settings, billing, branding, and more',
+    description: 'Tenant lifecycle, members, settings, billing, branding, and more',
     commandCount: 50,
     commands: [
       {
@@ -459,8 +444,7 @@ const CLI_COMMAND_GROUPS: CLICommandGroup[] = [
     id: 'deploy',
     label: 'Deployment',
     icon: Rocket,
-    description:
-      'Staging, production, preview, canary, blue-green deployments, and rollbacks',
+    description: 'Staging, production, preview, canary, blue-green deployments, and rollbacks',
     commandCount: 23,
     commands: [
       {
@@ -481,13 +465,11 @@ const CLI_COMMAND_GROUPS: CLICommandGroup[] = [
       },
       {
         command: 'nself deploy canary',
-        description:
-          'Deploy to a canary group (small % of traffic) before full rollout',
+        description: 'Deploy to a canary group (small % of traffic) before full rollout',
       },
       {
         command: 'nself deploy blue-green',
-        description:
-          'Perform a blue-green deployment with zero-downtime switchover',
+        description: 'Perform a blue-green deployment with zero-downtime switchover',
       },
       {
         command: 'nself deploy rollback',
@@ -610,8 +592,7 @@ const CLI_COMMAND_GROUPS: CLICommandGroup[] = [
     id: 'service',
     label: 'Services',
     icon: Package,
-    description:
-      'Service lifecycle, scaffolding, storage, email, cache, and more',
+    description: 'Service lifecycle, scaffolding, storage, email, cache, and more',
     commandCount: 43,
     commands: [
       {
@@ -656,8 +637,7 @@ const CLI_COMMAND_GROUPS: CLICommandGroup[] = [
       },
       {
         command: 'nself service scaffold',
-        description:
-          'Scaffold boilerplate for a new service (routes, models, tests)',
+        description: 'Scaffold boilerplate for a new service (routes, models, tests)',
       },
       {
         command: 'nself service wizard',
@@ -669,8 +649,7 @@ const CLI_COMMAND_GROUPS: CLICommandGroup[] = [
       },
       {
         command: 'nself service admin <name>',
-        description:
-          'Open the admin panel for a service (e.g., Hasura console)',
+        description: 'Open the admin panel for a service (e.g., Hasura console)',
       },
       {
         command: 'nself service storage upload',
@@ -728,8 +707,7 @@ const CLI_COMMAND_GROUPS: CLICommandGroup[] = [
     id: 'config',
     label: 'Configuration',
     icon: Settings,
-    description:
-      'Environment files, secrets, vault integration, and config sync',
+    description: 'Environment files, secrets, vault integration, and config sync',
     commandCount: 20,
     commands: [
       {
@@ -810,8 +788,7 @@ const CLI_COMMAND_GROUPS: CLICommandGroup[] = [
     id: 'auth',
     label: 'Auth & Security',
     icon: Lock,
-    description:
-      'Authentication, MFA, roles, OAuth, SSL, rate limiting, and webhooks',
+    description: 'Authentication, MFA, roles, OAuth, SSL, rate limiting, and webhooks',
     commandCount: 38,
     commands: [
       {
@@ -931,15 +908,13 @@ const CLI_COMMAND_GROUPS: CLICommandGroup[] = [
     commands: [
       {
         command: 'nself perf profile',
-        description:
-          'Profile service performance and generate a flamegraph report',
+        description: 'Profile service performance and generate a flamegraph report',
         uiPath: '/system/performance',
         uiLabel: 'Performance',
       },
       {
         command: 'nself perf bench',
-        description:
-          'Run benchmarks against API endpoints and report throughput/latency',
+        description: 'Run benchmarks against API endpoints and report throughput/latency',
         uiPath: '/system/performance',
         uiLabel: 'Performance',
       },
@@ -949,8 +924,7 @@ const CLI_COMMAND_GROUPS: CLICommandGroup[] = [
       },
       {
         command: 'nself perf migrate',
-        description:
-          'Migrate to a more performant configuration (e.g., connection pooling)',
+        description: 'Migrate to a more performant configuration (e.g., connection pooling)',
       },
       {
         command: 'nself perf optimize',
@@ -1007,8 +981,7 @@ const CLI_COMMAND_GROUPS: CLICommandGroup[] = [
     id: 'dev',
     label: 'Dev Tools',
     icon: Code,
-    description:
-      'Frontend tooling, CI/CD, docs, SDK generation, testing, and more',
+    description: 'Frontend tooling, CI/CD, docs, SDK generation, testing, and more',
     commandCount: 16,
     commands: [
       {
@@ -1025,8 +998,7 @@ const CLI_COMMAND_GROUPS: CLICommandGroup[] = [
       },
       {
         command: 'nself dev ci init',
-        description:
-          'Generate CI/CD pipeline configuration (GitHub Actions, GitLab CI)',
+        description: 'Generate CI/CD pipeline configuration (GitHub Actions, GitLab CI)',
         uiPath: '/deployment/cicd',
         uiLabel: 'CI/CD',
       },
@@ -1058,8 +1030,7 @@ const CLI_COMMAND_GROUPS: CLICommandGroup[] = [
       },
       {
         command: 'nself dev sdk generate',
-        description:
-          'Generate client SDKs (TypeScript, Python, Go) from the API schema',
+        description: 'Generate client SDKs (TypeScript, Python, Go) from the API schema',
       },
       {
         command: 'nself dev test run',
@@ -1152,9 +1123,7 @@ function SearchSection() {
 
     setSearching(true)
     try {
-      const response = await fetch(
-        `/api/help/search?q=${encodeURIComponent(searchQuery)}`,
-      )
+      const response = await fetch(`/api/help/search?q=${encodeURIComponent(searchQuery)}`)
       const data = await response.json()
       setSearchResults(data.results || [])
     } catch (_error) {
@@ -1183,10 +1152,7 @@ function SearchSection() {
             className="w-full rounded-lg border border-zinc-200 bg-white py-3 pr-4 pl-10 dark:border-zinc-700 dark:bg-zinc-900"
           />
         </div>
-        <Button
-          onClick={handleSearch}
-          disabled={searching || !searchQuery.trim()}
-        >
+        <Button onClick={handleSearch} disabled={searching || !searchQuery.trim()}>
           {searching ? (
             <Loader2 className="h-4 w-4 animate-spin" />
           ) : (
@@ -1198,20 +1164,14 @@ function SearchSection() {
 
       {searchResults.length > 0 && (
         <div className="space-y-3">
-          <h3 className="font-medium text-zinc-900 dark:text-white">
-            Search Results
-          </h3>
+          <h3 className="font-medium text-zinc-900 dark:text-white">Search Results</h3>
           {searchResults.map((result, index) => (
             <div
               key={index}
               className="rounded-lg border border-zinc-200 bg-zinc-50 p-4 dark:border-zinc-700 dark:bg-zinc-900/50"
             >
-              <h4 className="mb-1 font-medium text-blue-600 dark:text-blue-400">
-                {result.title}
-              </h4>
-              <p className="mb-2 text-sm text-zinc-600 dark:text-zinc-400">
-                {result.description}
-              </p>
+              <h4 className="mb-1 font-medium text-blue-600 dark:text-blue-400">{result.title}</h4>
+              <p className="mb-2 text-sm text-zinc-600 dark:text-zinc-400">{result.description}</p>
               <div className="flex items-center gap-2">
                 <span className="rounded bg-blue-100 px-2 py-1 text-xs text-blue-700 dark:bg-blue-900/20 dark:text-blue-400">
                   {result.category}
@@ -1283,9 +1243,7 @@ function DocumentationSection() {
   const [selectedCategory, setSelectedCategory] = useState('all')
 
   const filteredDocs =
-    selectedCategory === 'all'
-      ? docs
-      : docs.filter((doc) => doc.category === selectedCategory)
+    selectedCategory === 'all' ? docs : docs.filter((doc) => doc.category === selectedCategory)
 
   return (
     <div className="rounded-lg border border-zinc-200 bg-white p-6 shadow-sm dark:border-zinc-700 dark:bg-zinc-800">
@@ -1341,9 +1299,7 @@ function DocumentationSection() {
                   <h3 className="font-medium text-zinc-900 group-hover:text-blue-600 dark:text-white dark:group-hover:text-blue-400">
                     {doc.title}
                   </h3>
-                  <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
-                    {doc.description}
-                  </p>
+                  <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">{doc.description}</p>
                 </div>
                 <ExternalLink className="h-4 w-4 text-zinc-400 group-hover:text-blue-500" />
               </div>
@@ -1369,8 +1325,7 @@ function VideoTutorialsSection() {
     {
       id: '1',
       title: 'Getting Started with nself',
-      description:
-        'Complete walkthrough of setting up your first nself project',
+      description: 'Complete walkthrough of setting up your first nself project',
       duration: '12:34',
       thumbnail: '/thumbnails/getting-started.jpg',
       category: 'getting-started',
@@ -1381,8 +1336,7 @@ function VideoTutorialsSection() {
     {
       id: '2',
       title: 'Advanced Configuration',
-      description:
-        'Deep dive into advanced configuration options and customization',
+      description: 'Deep dive into advanced configuration options and customization',
       duration: '18:45',
       thumbnail: '/thumbnails/advanced-config.jpg',
       category: 'configuration',
@@ -1393,8 +1347,7 @@ function VideoTutorialsSection() {
     {
       id: '3',
       title: 'Monitoring and Alerts Setup',
-      description:
-        'Set up comprehensive monitoring and alerting for your services',
+      description: 'Set up comprehensive monitoring and alerting for your services',
       duration: '15:20',
       thumbnail: '/thumbnails/monitoring.jpg',
       category: 'monitoring',
@@ -1454,9 +1407,7 @@ function VideoTutorialsSection() {
                   </span>
                   <div className="flex items-center gap-1">
                     <Star className="h-3 w-3 fill-current text-yellow-500" />
-                    <span className="text-xs text-zinc-500">
-                      {tutorial.rating}
-                    </span>
+                    <span className="text-xs text-zinc-500">{tutorial.rating}</span>
                   </div>
                 </div>
                 <span className="text-xs text-zinc-500">
@@ -1550,14 +1501,9 @@ function FAQSection() {
 
       <div className="space-y-3">
         {faqs.map((faq) => (
-          <div
-            key={faq.id}
-            className="rounded-lg border border-zinc-200 dark:border-zinc-700"
-          >
+          <div key={faq.id} className="rounded-lg border border-zinc-200 dark:border-zinc-700">
             <button
-              onClick={() =>
-                setExpandedFAQ(expandedFAQ === faq.id ? null : faq.id)
-              }
+              onClick={() => setExpandedFAQ(expandedFAQ === faq.id ? null : faq.id)}
               className="flex w-full items-center justify-between px-4 py-3 text-left hover:bg-zinc-50 dark:hover:bg-zinc-800/50"
             >
               <span className="font-medium">{faq.question}</span>
@@ -1570,15 +1516,11 @@ function FAQSection() {
 
             {expandedFAQ === faq.id && (
               <div className="px-4 pb-4">
-                <p className="mb-4 text-zinc-600 dark:text-zinc-400">
-                  {faq.answer}
-                </p>
+                <p className="mb-4 text-zinc-600 dark:text-zinc-400">{faq.answer}</p>
 
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <span className="text-sm text-zinc-500">
-                      Was this helpful?
-                    </span>
+                    <span className="text-sm text-zinc-500">Was this helpful?</span>
                     <button
                       onClick={() => handleFeedback(faq.id, true)}
                       className="flex items-center gap-1 rounded px-2 py-1 text-sm text-green-600 hover:bg-green-50 dark:text-green-400 dark:hover:bg-green-900/20"
@@ -1663,8 +1605,7 @@ function SupportContactSection() {
             Support Request Submitted
           </h3>
           <p className="text-zinc-600 dark:text-zinc-400">
-            We&apos;ve received your message and will get back to you within 24
-            hours.
+            We&apos;ve received your message and will get back to you within 24 hours.
           </p>
         </div>
       ) : (
@@ -1678,9 +1619,7 @@ function SupportContactSection() {
                 type="text"
                 required
                 value={formData.name}
-                onChange={(e) =>
-                  setFormData({ ...formData, name: e.target.value })
-                }
+                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                 className="w-full rounded-lg border border-zinc-200 bg-white px-3 py-2 dark:border-zinc-700 dark:bg-zinc-900"
               />
             </div>
@@ -1693,9 +1632,7 @@ function SupportContactSection() {
                 type="email"
                 required
                 value={formData.email}
-                onChange={(e) =>
-                  setFormData({ ...formData, email: e.target.value })
-                }
+                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                 className="w-full rounded-lg border border-zinc-200 bg-white px-3 py-2 dark:border-zinc-700 dark:bg-zinc-900"
               />
             </div>
@@ -1708,9 +1645,7 @@ function SupportContactSection() {
               </label>
               <select
                 value={formData.category}
-                onChange={(e) =>
-                  setFormData({ ...formData, category: e.target.value })
-                }
+                onChange={(e) => setFormData({ ...formData, category: e.target.value })}
                 className="w-full rounded-lg border border-zinc-200 bg-white px-3 py-2 dark:border-zinc-700 dark:bg-zinc-900"
               >
                 <option value="general">General Question</option>
@@ -1727,9 +1662,7 @@ function SupportContactSection() {
               </label>
               <select
                 value={formData.priority}
-                onChange={(e) =>
-                  setFormData({ ...formData, priority: e.target.value })
-                }
+                onChange={(e) => setFormData({ ...formData, priority: e.target.value })}
                 className="w-full rounded-lg border border-zinc-200 bg-white px-3 py-2 dark:border-zinc-700 dark:bg-zinc-900"
               >
                 <option value="low">Low</option>
@@ -1748,9 +1681,7 @@ function SupportContactSection() {
               type="text"
               required
               value={formData.subject}
-              onChange={(e) =>
-                setFormData({ ...formData, subject: e.target.value })
-              }
+              onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
               className="w-full rounded-lg border border-zinc-200 bg-white px-3 py-2 dark:border-zinc-700 dark:bg-zinc-900"
             />
           </div>
@@ -1763,19 +1694,13 @@ function SupportContactSection() {
               required
               rows={5}
               value={formData.message}
-              onChange={(e) =>
-                setFormData({ ...formData, message: e.target.value })
-              }
+              onChange={(e) => setFormData({ ...formData, message: e.target.value })}
               placeholder="Please describe your issue or question in detail..."
               className="w-full rounded-lg border border-zinc-200 bg-white px-3 py-2 dark:border-zinc-700 dark:bg-zinc-900"
             />
           </div>
 
-          <Button
-            type="submit"
-            disabled={submitting}
-            className="flex items-center gap-2"
-          >
+          <Button type="submit" disabled={submitting} className="flex items-center gap-2">
             {submitting ? (
               <Loader2 className="h-4 w-4 animate-spin" />
             ) : (
@@ -1793,9 +1718,7 @@ function SupportContactSection() {
             <Mail className="h-5 w-5 text-blue-500" />
             <div>
               <div className="text-sm font-medium">Email</div>
-              <div className="text-sm text-zinc-600 dark:text-zinc-400">
-                support@nself.dev
-              </div>
+              <div className="text-sm text-zinc-600 dark:text-zinc-400">support@nself.dev</div>
             </div>
           </div>
 
@@ -1803,9 +1726,7 @@ function SupportContactSection() {
             <MessageSquare className="h-5 w-5 text-green-500" />
             <div>
               <div className="text-sm font-medium">Discord</div>
-              <div className="text-sm text-zinc-600 dark:text-zinc-400">
-                Join our community
-              </div>
+              <div className="text-sm text-zinc-600 dark:text-zinc-400">Join our community</div>
             </div>
           </div>
 
@@ -1813,9 +1734,7 @@ function SupportContactSection() {
             <Globe className="h-5 w-5 text-sky-500" />
             <div>
               <div className="text-sm font-medium">Website</div>
-              <div className="text-sm text-zinc-600 dark:text-zinc-400">
-                nself.dev
-              </div>
+              <div className="text-sm text-zinc-600 dark:text-zinc-400">nself.dev</div>
             </div>
           </div>
         </div>
@@ -1886,10 +1805,7 @@ function SystemStatusSection() {
           <OverallIcon className={`h-6 w-6 ${overallConfig.color}`} />
           <div>
             <h3 className="text-lg font-semibold">
-              All Systems{' '}
-              {status.status === 'operational'
-                ? 'Operational'
-                : 'Experiencing Issues'}
+              All Systems {status.status === 'operational' ? 'Operational' : 'Experiencing Issues'}
             </h3>
             <p className="text-sm text-zinc-600 dark:text-zinc-400">
               Last updated: {new Date(status.lastUpdated).toLocaleString()}
@@ -1980,7 +1896,7 @@ function KeyboardShortcutsSection() {
       acc[shortcut.category].push(shortcut)
       return acc
     },
-    {} as Record<string, KeyboardShortcut[]>,
+    {} as Record<string, KeyboardShortcut[]>
   )
 
   return (
@@ -1991,42 +1907,32 @@ function KeyboardShortcutsSection() {
       </h2>
 
       <div className="space-y-6">
-        {Object.entries(groupedShortcuts).map(
-          ([category, categoryShortcuts]) => (
-            <div key={category}>
-              <h3 className="mb-3 font-medium text-zinc-900 dark:text-white">
-                {category}
-              </h3>
-              <div className="space-y-2">
-                {categoryShortcuts.map((shortcut, index) => (
-                  <div
-                    key={index}
-                    className="flex items-center justify-between py-2"
-                  >
-                    <span className="text-sm text-zinc-600 dark:text-zinc-400">
-                      {shortcut.description}
-                    </span>
-                    <div className="flex items-center gap-1">
-                      {shortcut.keys.map((key, keyIndex) => (
-                        <span
-                          key={keyIndex}
-                          className="flex items-center gap-1"
-                        >
-                          <kbd className="rounded border bg-zinc-100 px-2 py-1 font-mono text-xs text-zinc-700 dark:bg-zinc-700 dark:text-zinc-300">
-                            {key}
-                          </kbd>
-                          {keyIndex < shortcut.keys.length - 1 && (
-                            <span className="text-zinc-400">+</span>
-                          )}
-                        </span>
-                      ))}
-                    </div>
+        {Object.entries(groupedShortcuts).map(([category, categoryShortcuts]) => (
+          <div key={category}>
+            <h3 className="mb-3 font-medium text-zinc-900 dark:text-white">{category}</h3>
+            <div className="space-y-2">
+              {categoryShortcuts.map((shortcut, index) => (
+                <div key={index} className="flex items-center justify-between py-2">
+                  <span className="text-sm text-zinc-600 dark:text-zinc-400">
+                    {shortcut.description}
+                  </span>
+                  <div className="flex items-center gap-1">
+                    {shortcut.keys.map((key, keyIndex) => (
+                      <span key={keyIndex} className="flex items-center gap-1">
+                        <kbd className="rounded border bg-zinc-100 px-2 py-1 font-mono text-xs text-zinc-700 dark:bg-zinc-700 dark:text-zinc-300">
+                          {key}
+                        </kbd>
+                        {keyIndex < shortcut.keys.length - 1 && (
+                          <span className="text-zinc-400">+</span>
+                        )}
+                      </span>
+                    ))}
                   </div>
-                ))}
-              </div>
+                </div>
+              ))}
             </div>
-          ),
-        )}
+          </div>
+        ))}
       </div>
     </div>
   )
@@ -2038,10 +1944,7 @@ function CLIReferenceSection() {
   const [searchQuery, setSearchQuery] = useState('')
   const [expandedGroups, setExpandedGroups] = useState<Set<string>>(new Set())
 
-  const totalCommands = CLI_COMMAND_GROUPS.reduce(
-    (sum, group) => sum + group.commands.length,
-    0,
-  )
+  const totalCommands = CLI_COMMAND_GROUPS.reduce((sum, group) => sum + group.commands.length, 0)
 
   const filteredGroups = useMemo(() => {
     if (!searchQuery.trim()) return CLI_COMMAND_GROUPS
@@ -2053,15 +1956,12 @@ function CLIReferenceSection() {
         (cmd) =>
           cmd.command.toLowerCase().includes(query) ||
           cmd.description.toLowerCase().includes(query) ||
-          (cmd.uiLabel && cmd.uiLabel.toLowerCase().includes(query)),
+          (cmd.uiLabel && cmd.uiLabel.toLowerCase().includes(query))
       ),
     })).filter((group) => group.commands.length > 0)
   }, [searchQuery])
 
-  const filteredCommandCount = filteredGroups.reduce(
-    (sum, group) => sum + group.commands.length,
-    0,
-  )
+  const filteredCommandCount = filteredGroups.reduce((sum, group) => sum + group.commands.length, 0)
 
   const toggleGroup = (groupId: string) => {
     setExpandedGroups((prev) => {
@@ -2094,8 +1994,8 @@ function CLIReferenceSection() {
               nself CLI Command Reference
             </h2>
             <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
-              {totalCommands} commands across {CLI_COMMAND_GROUPS.length}{' '}
-              categories. Every UI action in nAdmin maps to a CLI command.
+              {totalCommands} commands across {CLI_COMMAND_GROUPS.length} categories. Every UI
+              action in nAdmin maps to a CLI command.
             </p>
           </div>
           <div className="flex items-center gap-2">
@@ -2170,9 +2070,7 @@ function CLIReferenceSection() {
                   </div>
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-2">
-                      <h3 className="font-semibold text-zinc-900 dark:text-white">
-                        {group.label}
-                      </h3>
+                      <h3 className="font-semibold text-zinc-900 dark:text-white">{group.label}</h3>
                       <span className="rounded-full bg-zinc-100 px-2 py-0.5 text-xs font-medium text-zinc-600 dark:bg-zinc-700 dark:text-zinc-400">
                         {group.commands.length}
                         {searchQuery &&
@@ -2240,17 +2138,14 @@ function CLIReferenceSection() {
         <div className="flex gap-3">
           <Info className="mt-0.5 h-5 w-5 flex-shrink-0 text-blue-600 dark:text-blue-400" />
           <div className="text-sm text-blue-800 dark:text-blue-300">
-            <p className="font-medium">
-              nAdmin is a UI wrapper for the nself CLI
-            </p>
+            <p className="font-medium">nAdmin is a UI wrapper for the nself CLI</p>
             <p className="mt-1 text-blue-700 dark:text-blue-400">
               Every action in this admin panel executes the corresponding{' '}
               <code className="rounded bg-blue-100 px-1.5 py-0.5 font-mono text-xs dark:bg-blue-900/30">
                 nself
               </code>{' '}
-              CLI command under the hood. You can always use the CLI directly
-              for automation, scripting, or when the UI page is not yet
-              available.
+              CLI command under the hood. You can always use the CLI directly for automation,
+              scripting, or when the UI page is not yet available.
             </p>
           </div>
         </div>
@@ -2271,13 +2166,10 @@ function HelpContent() {
         <div className="mb-8">
           <div className="mb-2 flex items-center gap-3">
             <HelpCircle className="h-8 w-8 text-blue-500" />
-            <h1 className="text-3xl font-bold text-zinc-900 dark:text-white">
-              Help & Support
-            </h1>
+            <h1 className="text-3xl font-bold text-zinc-900 dark:text-white">Help & Support</h1>
           </div>
           <p className="text-zinc-600 dark:text-zinc-400">
-            Find answers, learn best practices, and get support for your nself
-            deployment
+            Find answers, learn best practices, and get support for your nself deployment
           </p>
         </div>
 
@@ -2294,9 +2186,7 @@ function HelpContent() {
               <button
                 key={tab.id}
                 onClick={() =>
-                  setActiveTab(
-                    tab.id as 'overview' | 'cli' | 'docs' | 'faq' | 'contact',
-                  )
+                  setActiveTab(tab.id as 'overview' | 'cli' | 'docs' | 'faq' | 'contact')
                 }
                 className={`flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-colors ${
                   activeTab === tab.id

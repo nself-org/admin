@@ -21,7 +21,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           success: false,
           error: 'Environment is required',
         },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -32,7 +32,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           success: false,
           error: `Invalid environment. Allowed: ${allowedEnvs.join(', ')}`,
         },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -41,7 +41,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     const result = await executeNselfCommand(
       'config',
       ['export', `--env=${environment}`, `--format=${exportFormat}`],
-      { timeout: 15000 },
+      { timeout: 15000 }
     )
 
     if (!result.success) {
@@ -51,7 +51,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           error: 'Config export failed',
           details: result.error || result.stderr || 'Unknown error',
         },
-        { status: 500 },
+        { status: 500 }
       )
     }
 
@@ -71,7 +71,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         error: 'Config export failed',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

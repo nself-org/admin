@@ -81,14 +81,13 @@ test.describe('CORS Configuration page', () => {
     await page.waitForLoadState('networkidle')
     const retry = page.getByRole('button', { name: /retry/i })
     const offlineMsg = page.getByText(/cannot (connect|reach)/i)
-    const hasOfflineIndicator =
-      (await retry.isVisible()) || (await offlineMsg.isVisible())
+    const hasOfflineIndicator = (await retry.isVisible()) || (await offlineMsg.isVisible())
     expect(hasOfflineIndicator).toBe(true)
   })
 
   test('error state: shows error when API returns 500', async ({ page }) => {
     await page.route('/api/config/cors', (route) =>
-      route.fulfill({ status: 500, body: JSON.stringify({ success: false, error: 'test error' }) }),
+      route.fulfill({ status: 500, body: JSON.stringify({ success: false, error: 'test error' }) })
     )
     await page.goto('/config/cors')
     await page.waitForLoadState('networkidle')
@@ -164,7 +163,7 @@ test.describe('Email Configuration page', () => {
             hasPass: false,
           },
         }),
-      }),
+      })
     )
     await page.goto('/config/email')
     await page.waitForLoadState('networkidle')
@@ -228,7 +227,7 @@ test.describe('Rate Limits page', () => {
             globalBurst: '20',
           },
         }),
-      }),
+      })
     )
     await page.goto('/config/rate-limits')
     await page.waitForLoadState('networkidle')
@@ -268,7 +267,7 @@ test.describe('Rate Limits page', () => {
 
   test('error state: shows error when API returns failure', async ({ page }) => {
     await page.route('/api/config/rate-limits', (route) =>
-      route.fulfill({ status: 500, body: JSON.stringify({ success: false, error: 'test error' }) }),
+      route.fulfill({ status: 500, body: JSON.stringify({ success: false, error: 'test error' }) })
     )
     await page.goto('/config/rate-limits')
     await page.waitForLoadState('networkidle')
@@ -330,7 +329,7 @@ test.describe('Docker Configuration page', () => {
             },
           },
         }),
-      }),
+      })
     )
     await page.goto('/config/docker')
     await page.waitForLoadState('networkidle')
@@ -359,7 +358,7 @@ test.describe('Docker Configuration page', () => {
             raw: {},
           },
         }),
-      }),
+      })
     )
     await page.goto('/config/docker')
     await page.waitForLoadState('networkidle')
@@ -387,7 +386,7 @@ test.describe('Docker Configuration page', () => {
             raw: {},
           },
         }),
-      }),
+      })
     )
     await page.goto('/config/docker')
     await page.waitForLoadState('networkidle')
@@ -411,7 +410,7 @@ test.describe('Docker Configuration page', () => {
 
   test('error state: shows error when API returns failure', async ({ page }) => {
     await page.route('/api/config/docker', (route) =>
-      route.fulfill({ status: 500, body: JSON.stringify({ success: false, error: 'test error' }) }),
+      route.fulfill({ status: 500, body: JSON.stringify({ success: false, error: 'test error' }) })
     )
     await page.goto('/config/docker')
     await page.waitForLoadState('networkidle')

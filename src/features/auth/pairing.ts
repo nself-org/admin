@@ -30,7 +30,7 @@ const KEYCHAIN_ACCOUNT = 'nself-auth-token'
 function makePairingError(
   message: string,
   code: PairingError['code'],
-  details?: string,
+  details?: string
 ): PairingError {
   const err = new Error(message) as PairingError
   err.code = code
@@ -51,17 +51,13 @@ async function apiFetch<T>(path: string, init?: RequestInit): Promise<T> {
     throw makePairingError(
       'Network request failed',
       'NETWORK_ERROR',
-      err instanceof Error ? err.message : String(err),
+      err instanceof Error ? err.message : String(err)
     )
   }
 
   if (!response.ok) {
     const body = await response.text().catch(() => '')
-    throw makePairingError(
-      `Request failed with status ${response.status}`,
-      'PAIRING_FAILED',
-      body,
-    )
+    throw makePairingError(`Request failed with status ${response.status}`, 'PAIRING_FAILED', body)
   }
 
   return response.json() as Promise<T>
@@ -83,8 +79,7 @@ export async function initiatePairing(): Promise<PairingSession> {
   })
 
   const oauthUrl =
-    data.oauthUrl ||
-    `${NSELF_ORG_BASE}/oauth/pair?session=${data.sessionId}&state=${data.state}`
+    data.oauthUrl || `${NSELF_ORG_BASE}/oauth/pair?session=${data.sessionId}&state=${data.state}`
   // oauthUrl is consumed server-side (browser already opened); stored in
   // session for diagnostic use only.
   void oauthUrl
@@ -104,7 +99,7 @@ export async function initiatePairing(): Promise<PairingSession> {
  * Resolves with the final PairingSession; rejects on network errors.
  */
 export async function pollPairingStatus(
-  sessionId: string,
+  sessionId: string
 ): Promise<PairingSession & { token?: AuthToken }> {
   let attempts = 0
 
@@ -115,7 +110,7 @@ export async function pollPairingStatus(
       let data: PairingStatusResponse
       try {
         data = await apiFetch<PairingStatusResponse>(
-          `/status?sessionId=${encodeURIComponent(sessionId)}`,
+          `/status?sessionId=${encodeURIComponent(sessionId)}`
         )
       } catch (err) {
         reject(err)
@@ -138,8 +133,8 @@ export async function pollPairingStatus(
           makePairingError(
             'Pairing session expired',
             'PAIRING_EXPIRED',
-            `Session ${sessionId} expired before pairing completed`,
-          ),
+            `Session ${sessionId} expired before pairing completed`
+          )
         )
         return
       }
@@ -149,8 +144,8 @@ export async function pollPairingStatus(
           makePairingError(
             'Pairing timed out',
             'PAIRING_EXPIRED',
-            `Exceeded ${POLL_MAX_ATTEMPTS} polling attempts`,
-          ),
+            `Exceeded ${POLL_MAX_ATTEMPTS} polling attempts`
+          )
         )
         return
       }

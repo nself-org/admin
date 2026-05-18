@@ -2,12 +2,7 @@ import crypto from 'crypto'
 import { addAuditLog, getDatabase, initDatabase } from './database'
 
 // Type definitions for notifications
-export type NotificationType =
-  | 'info'
-  | 'success'
-  | 'warning'
-  | 'error'
-  | 'system'
+export type NotificationType = 'info' | 'success' | 'warning' | 'error' | 'system'
 export type NotificationPriority = 'low' | 'normal' | 'high' | 'urgent'
 export type NotificationCategory =
   | 'service'
@@ -117,15 +112,7 @@ async function ensureCollections(): Promise<void> {
       db.getCollection('notifications') ||
       db.addCollection('notifications', {
         unique: ['id'],
-        indices: [
-          'id',
-          'userId',
-          'read',
-          'createdAt',
-          'type',
-          'category',
-          'priority',
-        ],
+        indices: ['id', 'userId', 'read', 'createdAt', 'type', 'category', 'priority'],
       })
   }
 
@@ -147,9 +134,7 @@ function generateNotificationId(): string {
 /**
  * Create a new notification
  */
-export async function createNotification(
-  input: CreateNotificationInput,
-): Promise<Notification> {
+export async function createNotification(input: CreateNotificationInput): Promise<Notification> {
   await ensureCollections()
 
   const notification: Notification = {
@@ -178,7 +163,7 @@ export async function createNotification(
       category: input.category,
     },
     true,
-    input.userId,
+    input.userId
   )
 
   return notification
@@ -187,10 +172,7 @@ export async function createNotification(
 /**
  * Get a single notification by ID
  */
-export async function getNotification(
-  id: string,
-  userId: string,
-): Promise<Notification | null> {
+export async function getNotification(id: string, userId: string): Promise<Notification | null> {
   await ensureCollections()
 
   const notification = notificationsCollection?.findOne({ id, userId })
@@ -202,18 +184,11 @@ export async function getNotification(
  */
 export async function getNotifications(
   userId: string,
-  options: GetNotificationsOptions = {},
+  options: GetNotificationsOptions = {}
 ): Promise<GetNotificationsResult> {
   await ensureCollections()
 
-  const {
-    limit = 20,
-    offset = 0,
-    unreadOnly = false,
-    type,
-    category,
-    priority,
-  } = options
+  const { limit = 20, offset = 0, unreadOnly = false, type, category, priority } = options
 
   // Build query
   const query: Record<string, unknown> = { userId }
@@ -238,8 +213,7 @@ export async function getNotifications(
   const total = notificationsCollection?.find(query).length || 0
 
   // Get unread count
-  const unreadCount =
-    notificationsCollection?.find({ userId, read: false }).length || 0
+  const unreadCount = notificationsCollection?.find({ userId, read: false }).length || 0
 
   // Get paginated results
   const notifications =
@@ -254,7 +228,7 @@ export async function getNotifications(
   // Filter out expired notifications
   const now = new Date()
   const validNotifications = notifications.filter(
-    (n) => !n.expiresAt || new Date(n.expiresAt) > now,
+    (n) => !n.expiresAt || new Date(n.expiresAt) > now
   )
 
   return {
@@ -267,10 +241,7 @@ export async function getNotifications(
 /**
  * Mark a notification as read
  */
-export async function markAsRead(
-  id: string,
-  userId: string,
-): Promise<Notification | null> {
+export async function markAsRead(id: string, userId: string): Promise<Notification | null> {
   await ensureCollections()
 
   const notification = notificationsCollection?.findOne({ id, userId })
@@ -294,8 +265,7 @@ export async function markAsRead(
 export async function markAllAsRead(userId: string): Promise<number> {
   await ensureCollections()
 
-  const unreadNotifications =
-    notificationsCollection?.find({ userId, read: false }) || []
+  const unreadNotifications = notificationsCollection?.find({ userId, read: false }) || []
 
   const now = new Date()
   let count = 0
@@ -320,7 +290,7 @@ export async function markAllAsRead(userId: string): Promise<number> {
 export async function updateNotification(
   id: string,
   userId: string,
-  updates: Partial<Pick<Notification, 'read' | 'data'>>,
+  updates: Partial<Pick<Notification, 'read' | 'data'>>
 ): Promise<Notification | null> {
   await ensureCollections()
 
@@ -345,12 +315,7 @@ export async function updateNotification(
 
   notificationsCollection?.update(notification)
 
-  await addAuditLog(
-    'notification_updated',
-    { notificationId: id },
-    true,
-    userId,
-  )
+  await addAuditLog('notification_updated', { notificationId: id }, true, userId)
 
   return notification
 }
@@ -358,10 +323,7 @@ export async function updateNotification(
 /**
  * Delete a notification
  */
-export async function deleteNotification(
-  id: string,
-  userId: string,
-): Promise<boolean> {
+export async function deleteNotification(id: string, userId: string): Promise<boolean> {
   await ensureCollections()
 
   const notification = notificationsCollection?.findOne({ id, userId })
@@ -372,12 +334,7 @@ export async function deleteNotification(
 
   notificationsCollection?.remove(notification)
 
-  await addAuditLog(
-    'notification_deleted',
-    { notificationId: id },
-    true,
-    userId,
-  )
+  await addAuditLog('notification_deleted', { notificationId: id }, true, userId)
 
   return true
 }
@@ -406,9 +363,7 @@ export async function deleteAllNotifications(userId: string): Promise<number> {
 /**
  * Get notification statistics for a user
  */
-export async function getNotificationStats(
-  userId: string,
-): Promise<NotificationStats> {
+export async function getNotificationStats(userId: string): Promise<NotificationStats> {
   await ensureCollections()
 
   const allNotifications = notificationsCollection?.find({ userId }) || []
@@ -417,7 +372,7 @@ export async function getNotificationStats(
 
   // Filter out expired notifications
   const validNotifications = allNotifications.filter(
-    (n) => !n.expiresAt || new Date(n.expiresAt) > now,
+    (n) => !n.expiresAt || new Date(n.expiresAt) > now
   )
 
   const stats: NotificationStats = {
@@ -465,9 +420,7 @@ export async function getNotificationStats(
 /**
  * Get notification preferences for a user
  */
-export async function getPreferences(
-  userId: string,
-): Promise<NotificationPreferences> {
+export async function getPreferences(userId: string): Promise<NotificationPreferences> {
   await ensureCollections()
 
   const existing = preferencesCollection?.findOne({ userId })
@@ -509,7 +462,7 @@ export async function getPreferences(
  */
 export async function updatePreferences(
   userId: string,
-  updates: Partial<Omit<NotificationPreferences, 'userId' | 'updatedAt'>>,
+  updates: Partial<Omit<NotificationPreferences, 'userId' | 'updatedAt'>>
 ): Promise<NotificationPreferences> {
   await ensureCollections()
 
@@ -547,12 +500,7 @@ export async function updatePreferences(
     existingPreferences.updatedAt = new Date()
     preferencesCollection?.update(existingPreferences)
 
-    await addAuditLog(
-      'notification_preferences_updated',
-      { userId },
-      true,
-      userId,
-    )
+    await addAuditLog('notification_preferences_updated', { userId }, true, userId)
 
     return existingPreferences
   }
@@ -567,12 +515,7 @@ export async function updatePreferences(
   }
   preferencesCollection?.insert(newPreferences)
 
-  await addAuditLog(
-    'notification_preferences_updated',
-    { userId },
-    true,
-    userId,
-  )
+  await addAuditLog('notification_preferences_updated', { userId }, true, userId)
 
   return newPreferences
 }
@@ -610,7 +553,7 @@ export async function createSystemNotification(
     data?: Record<string, unknown>
     actionUrl?: string
     actionLabel?: string
-  } = {},
+  } = {}
 ): Promise<Notification> {
   return createNotification({
     userId,

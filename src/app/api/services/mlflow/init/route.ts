@@ -20,7 +20,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           error: 'Failed to initialize MLflow service',
           details: result.error || result.stderr || 'Unknown error',
         },
-        { status: 500 },
+        { status: 500 }
       )
     }
 
@@ -35,7 +35,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to initialize MLflow service',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

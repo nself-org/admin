@@ -16,18 +16,12 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
   try {
     const res = await fetch(`${muxBase()}/mux/rules`)
     if (!res.ok) {
-      return NextResponse.json(
-        { error: 'Mux plugin is not reachable' },
-        { status: res.status },
-      )
+      return NextResponse.json({ error: 'Mux plugin is not reachable' }, { status: res.status })
     }
     const data = await res.json()
     return NextResponse.json(data)
   } catch (_err) {
-    return NextResponse.json(
-      { error: 'Mux plugin is not running' },
-      { status: 503 },
-    )
+    return NextResponse.json({ error: 'Mux plugin is not running' }, { status: 503 })
   }
 }
 
@@ -45,10 +39,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     const data = await res.json()
     return NextResponse.json(data, { status: res.status })
   } catch (_err) {
-    return NextResponse.json(
-      { error: 'Mux plugin is not running' },
-      { status: 503 },
-    )
+    return NextResponse.json({ error: 'Mux plugin is not running' }, { status: 503 })
   }
 }
 
@@ -71,10 +62,7 @@ export async function PATCH(request: NextRequest): Promise<NextResponse> {
     const data = await res.json()
     return NextResponse.json(data, { status: res.status })
   } catch (_err) {
-    return NextResponse.json(
-      { error: 'Mux plugin is not running' },
-      { status: 503 },
-    )
+    return NextResponse.json({ error: 'Mux plugin is not running' }, { status: 503 })
   }
 }
 
@@ -86,10 +74,7 @@ export async function DELETE(request: NextRequest): Promise<NextResponse> {
     const { searchParams } = new URL(request.url)
     const ruleId = searchParams.get('id')
     if (!ruleId) {
-      return NextResponse.json(
-        { error: 'Missing rule id query param' },
-        { status: 400 },
-      )
+      return NextResponse.json({ error: 'Missing rule id query param' }, { status: 400 })
     }
     const res = await fetch(`${muxBase()}/mux/rules/${ruleId}`, {
       method: 'DELETE',
@@ -100,9 +85,6 @@ export async function DELETE(request: NextRequest): Promise<NextResponse> {
     const data = await res.json().catch(() => ({}))
     return NextResponse.json(data, { status: res.status })
   } catch (_err) {
-    return NextResponse.json(
-      { error: 'Mux plugin is not running' },
-      { status: 503 },
-    )
+    return NextResponse.json({ error: 'Mux plugin is not running' }, { status: 503 })
   }
 }

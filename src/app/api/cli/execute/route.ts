@@ -9,10 +9,7 @@ import { z } from 'zod'
 const execFileAsync = promisify(execFile)
 
 // Define allowed nself subcommands and their valid arguments
-const ALLOWED_NSELF_COMMANDS: Record<
-  string,
-  { args?: string[]; options?: string[] }
-> = {
+const ALLOWED_NSELF_COMMANDS: Record<string, { args?: string[]; options?: string[] }> = {
   // Core lifecycle commands
   init: { options: ['--template', '--force', '--full'] },
   build: { options: ['--clean', '--verbose', '--force', '--debug'] },
@@ -114,10 +111,9 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         return NextResponse.json(
           {
             success: false,
-            error:
-              'Invalid command format: shell metacharacters are not allowed',
+            error: 'Invalid command format: shell metacharacters are not allowed',
           },
-          { status: 400 },
+          { status: 400 }
         )
       }
 
@@ -127,7 +123,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       if (parts[0] !== 'nself') {
         return NextResponse.json(
           { success: false, error: 'Only nself commands are allowed' },
-          { status: 403 },
+          { status: 403 }
         )
       }
 
@@ -135,7 +131,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       if (!subcommand || !ALLOWED_NSELF_COMMANDS[subcommand]) {
         return NextResponse.json(
           { success: false, error: `Invalid nself command: ${subcommand}` },
-          { status: 403 },
+          { status: 403 }
         )
       }
 
@@ -147,9 +143,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         if (parts[i].startsWith('--')) {
           const optName = parts[i]
           const optValue =
-            i + 1 < parts.length && !parts[i + 1].startsWith('--')
-              ? parts[++i]
-              : 'true'
+            i + 1 < parts.length && !parts[i + 1].startsWith('--') ? parts[++i] : 'true'
           options[optName] = optValue
         } else if (!parts[i].startsWith('-')) {
           args.push(parts[i])
@@ -166,7 +160,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
             success: false,
             error: `Invalid nself command: ${parsedCommand.command}`,
           },
-          { status: 403 },
+          { status: 403 }
         )
       }
     }
@@ -179,21 +173,19 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
       // Add validated arguments
       if (parsedCommand.args) {
-        const allowedArgs =
-          ALLOWED_NSELF_COMMANDS[parsedCommand.command].args || []
+        const allowedArgs = ALLOWED_NSELF_COMMANDS[parsedCommand.command].args || []
         for (const arg of parsedCommand.args) {
           // Validate argument is allowed or matches pattern
           if (
             allowedArgs.includes(arg) ||
             (parsedCommand.command === 'logs' && /^[a-z0-9_-]+$/i.test(arg)) ||
-            (parsedCommand.command === 'restore' &&
-              /^\/backups\/[a-z0-9_\-.]+$/i.test(arg))
+            (parsedCommand.command === 'restore' && /^\/backups\/[a-z0-9_\-.]+$/i.test(arg))
           ) {
             cmdArgs.push(arg)
           } else {
             return NextResponse.json(
               { success: false, error: `Invalid argument: ${arg}` },
-              { status: 400 },
+              { status: 400 }
             )
           }
         }
@@ -201,8 +193,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
       // Add validated options
       if (parsedCommand.options) {
-        const allowedOptions =
-          ALLOWED_NSELF_COMMANDS[parsedCommand.command].options || []
+        const allowedOptions = ALLOWED_NSELF_COMMANDS[parsedCommand.command].options || []
         for (const [opt, value] of Object.entries(parsedCommand.options)) {
           if (allowedOptions.includes(opt)) {
             cmdArgs.push(opt)
@@ -211,16 +202,13 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
               if (opt === '--tail' && !/^\d+$/.test(value)) {
                 return NextResponse.json(
                   { success: false, error: 'Invalid tail value' },
-                  { status: 400 },
+                  { status: 400 }
                 )
               }
-              if (
-                opt === '--output' &&
-                !/^\/backups\/[a-z0-9_\-.]+$/i.test(value)
-              ) {
+              if (opt === '--output' && !/^\/backups\/[a-z0-9_\-.]+$/i.test(value)) {
                 return NextResponse.json(
                   { success: false, error: 'Invalid output path' },
-                  { status: 400 },
+                  { status: 400 }
                 )
               }
               cmdArgs.push(value)
@@ -228,7 +216,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           } else {
             return NextResponse.json(
               { success: false, error: `Invalid option: ${opt}` },
-              { status: 400 },
+              { status: 400 }
             )
           }
         }
@@ -247,7 +235,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
             FORCE_COLOR: '0',
           },
           timeout: 300000,
-        },
+        }
       )
 
       return NextResponse.json({
@@ -276,12 +264,9 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       {
         success: false,
         error: 'Failed to execute command',
-        details:
-          error instanceof Error
-            ? error?.message || 'Unknown error'
-            : 'Unknown error',
+        details: error instanceof Error ? error?.message || 'Unknown error' : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

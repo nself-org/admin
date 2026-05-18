@@ -30,10 +30,7 @@ type ActionInProgress =
   | { type: 'resend'; email: string }
   | null
 
-type ConfirmState =
-  | { type: 'remove'; email: string }
-  | { type: 'mfa-reset'; email: string }
-  | null
+type ConfirmState = { type: 'remove'; email: string } | { type: 'mfa-reset'; email: string } | null
 
 // ── Badge helpers ──────────────────────────────────────────────────────────────
 
@@ -102,8 +99,7 @@ export default function UsersPage() {
   } | null>(null)
 
   // Action in-progress tracker
-  const [actionInProgress, setActionInProgress] =
-    useState<ActionInProgress>(null)
+  const [actionInProgress, setActionInProgress] = useState<ActionInProgress>(null)
 
   // Confirmation state (inline)
   const [confirm, setConfirm] = useState<ConfirmState>(null)
@@ -325,8 +321,7 @@ export default function UsersPage() {
 
   // ── Helpers ───────────────────────────────────────────────────────────────────
 
-  const isRowBusy = (email: string) =>
-    actionInProgress !== null && actionInProgress.email === email
+  const isRowBusy = (email: string) => actionInProgress !== null && actionInProgress.email === email
 
   // ── Render ────────────────────────────────────────────────────────────────────
 
@@ -334,12 +329,8 @@ export default function UsersPage() {
     <div className="space-y-6">
       {/* Page header */}
       <div>
-        <h1 className="nself-gradient-text text-2xl font-semibold">
-          User Management
-        </h1>
-        <p className="mt-0.5 text-sm text-zinc-400">
-          Manage team members, roles, and MFA settings
-        </p>
+        <h1 className="nself-gradient-text text-2xl font-semibold">User Management</h1>
+        <p className="mt-0.5 text-sm text-zinc-400">Manage team members, roles, and MFA settings</p>
       </div>
 
       {/* Fetch error banner */}
@@ -360,9 +351,7 @@ export default function UsersPage() {
         <div className="flex flex-col gap-3 sm:flex-row sm:items-end">
           {/* Email */}
           <div className="flex-1 space-y-1.5">
-            <label className="text-sm font-medium text-zinc-300">
-              Email address
-            </label>
+            <label className="text-sm font-medium text-zinc-300">Email address</label>
             <input
               type="email"
               value={inviteEmail}
@@ -401,11 +390,7 @@ export default function UsersPage() {
             disabled={inviting || !inviteEmail.trim()}
             className="flex items-center gap-2 rounded-lg bg-indigo-600 px-5 py-2 text-sm font-medium text-white hover:bg-indigo-500 disabled:cursor-not-allowed disabled:opacity-50"
           >
-            {inviting ? (
-              <Loader2 className="h-4 w-4 animate-spin" />
-            ) : (
-              <Mail className="h-4 w-4" />
-            )}
+            {inviting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Mail className="h-4 w-4" />}
             {inviting ? 'Sending…' : 'Send Invite'}
           </button>
         </div>
@@ -450,9 +435,7 @@ export default function UsersPage() {
             disabled={loading}
             className="flex items-center gap-1.5 rounded-lg border border-zinc-600 bg-zinc-700/50 px-3 py-1.5 text-xs font-medium text-zinc-300 hover:bg-zinc-700 disabled:opacity-50"
           >
-            <RefreshCw
-              className={`h-3.5 w-3.5 ${loading ? 'animate-spin' : ''}`}
-            />
+            <RefreshCw className={`h-3.5 w-3.5 ${loading ? 'animate-spin' : ''}`} />
             Refresh
           </button>
         </div>
@@ -487,27 +470,17 @@ export default function UsersPage() {
               <tbody className="divide-y divide-zinc-700/30">
                 {users.map((user) => {
                   const busy = isRowBusy(user.email)
-                  const isEditing =
-                    editingRole !== null && editingRole.email === user.email
+                  const isEditing = editingRole !== null && editingRole.email === user.email
                   const isConfirmingRemove =
-                    confirm !== null &&
-                    confirm.type === 'remove' &&
-                    confirm.email === user.email
+                    confirm !== null && confirm.type === 'remove' && confirm.email === user.email
                   const isConfirmingMfa =
-                    confirm !== null &&
-                    confirm.type === 'mfa-reset' &&
-                    confirm.email === user.email
+                    confirm !== null && confirm.type === 'mfa-reset' && confirm.email === user.email
 
                   return (
-                    <tr
-                      key={user.email}
-                      className="transition-colors hover:bg-zinc-700/10"
-                    >
+                    <tr key={user.email} className="transition-colors hover:bg-zinc-700/10">
                       {/* Email */}
                       <td className="px-5 py-3">
-                        <span className="text-sm text-zinc-200">
-                          {user.email}
-                        </span>
+                        <span className="text-sm text-zinc-200">{user.email}</span>
                         {rowMsg !== null && rowMsg.email === user.email && (
                           <div
                             className={`mt-1 flex items-center gap-1 text-xs ${rowMsg.type === 'success' ? 'text-green-400' : 'text-red-400'}`}
@@ -544,20 +517,11 @@ export default function UsersPage() {
                             </select>
                             <button
                               type="button"
-                              onClick={() =>
-                                void handleUpdateRole(
-                                  user.email,
-                                  editingRole.role,
-                                )
-                              }
+                              onClick={() => void handleUpdateRole(user.email, editingRole.role)}
                               disabled={busy}
                               className="rounded bg-indigo-600 px-2 py-0.5 text-xs font-medium text-white hover:bg-indigo-500 disabled:opacity-50"
                             >
-                              {busy ? (
-                                <Loader2 className="h-3 w-3 animate-spin" />
-                              ) : (
-                                'Save'
-                              )}
+                              {busy ? <Loader2 className="h-3 w-3 animate-spin" /> : 'Save'}
                             </button>
                             <button
                               type="button"
@@ -631,21 +595,15 @@ export default function UsersPage() {
                                 <div className="flex items-center gap-1.5">
                                   <span className="text-xs text-zinc-400">
                                     Reset MFA for{' '}
-                                    <span className="font-medium text-zinc-200">
-                                      {user.email}
-                                    </span>
-                                    ?
+                                    <span className="font-medium text-zinc-200">{user.email}</span>?
                                   </span>
                                   <button
                                     type="button"
-                                    onClick={() =>
-                                      void handleMfaReset(user.email)
-                                    }
+                                    onClick={() => void handleMfaReset(user.email)}
                                     disabled={busy}
                                     className="rounded bg-amber-600 px-2 py-0.5 text-xs font-medium text-white hover:bg-amber-500 disabled:opacity-50"
                                   >
-                                    {busy &&
-                                    actionInProgress?.type === 'mfa-reset' ? (
+                                    {busy && actionInProgress?.type === 'mfa-reset' ? (
                                       <Loader2 className="h-3 w-3 animate-spin" />
                                     ) : (
                                       'Confirm'
@@ -683,10 +641,7 @@ export default function UsersPage() {
                             <div className="flex items-center gap-1.5">
                               <span className="text-xs text-zinc-400">
                                 Remove{' '}
-                                <span className="font-medium text-zinc-200">
-                                  {user.email}
-                                </span>
-                                ?
+                                <span className="font-medium text-zinc-200">{user.email}</span>?
                               </span>
                               <button
                                 type="button"

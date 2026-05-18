@@ -70,9 +70,7 @@ export function PairingGuard({ children }: PairingGuardProps) {
   if (guardState === 'checking') {
     return (
       <div className="bg-nself-bg flex min-h-screen items-center justify-center">
-        <span className="nself-gradient-text text-sm font-medium">
-          Checking session...
-        </span>
+        <span className="nself-gradient-text text-sm font-medium">Checking session...</span>
       </div>
     )
   }

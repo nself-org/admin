@@ -16,7 +16,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           error: 'Cache flush failed',
           details: result.error || result.stderr || 'Unknown error',
         },
-        { status: 500 },
+        { status: 500 }
       )
     }
 
@@ -31,7 +31,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         error: 'Cache flush failed',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

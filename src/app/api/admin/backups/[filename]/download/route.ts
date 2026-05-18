@@ -8,7 +8,7 @@ import { NextRequest, NextResponse } from 'next/server'
  */
 export async function GET(
   _request: NextRequest,
-  { params }: { params: Promise<{ filename: string }> },
+  { params }: { params: Promise<{ filename: string }> }
 ): Promise<NextResponse> {
   const { filename } = await params
 
@@ -45,9 +45,7 @@ export async function GET(
 
   try {
     const buffer = await fs.readFile(filePath)
-    const contentType = filename.endsWith('.gz')
-      ? 'application/gzip'
-      : 'application/octet-stream'
+    const contentType = filename.endsWith('.gz') ? 'application/gzip' : 'application/octet-stream'
 
     return new NextResponse(new Uint8Array(buffer), {
       status: 200,
@@ -60,7 +58,7 @@ export async function GET(
   } catch (err) {
     return NextResponse.json(
       { error: err instanceof Error ? err.message : 'Failed to read backup' },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

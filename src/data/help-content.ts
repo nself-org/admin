@@ -67,14 +67,7 @@ export const helpArticles: Record<string, HelpArticle> = {
   },
 }
 
-export const helpCategories = [
-  'Basics',
-  'API',
-  'CLI',
-  'Database',
-  'Deployment',
-  'Services',
-]
+export const helpCategories = ['Basics', 'API', 'CLI', 'Database', 'Deployment', 'Services']
 
 // Array version for filtering/mapping operations
 export const helpArticlesArray: HelpArticle[] = Object.values(helpArticles)

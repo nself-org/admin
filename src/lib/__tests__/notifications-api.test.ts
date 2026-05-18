@@ -4,13 +4,7 @@
  * Mocks global fetch — no real HTTP calls.
  */
 
-import {
-  campaigns,
-  NotifyApiError,
-  receipts,
-  tokens,
-  topics,
-} from '../api/notifications'
+import { campaigns, NotifyApiError, receipts, tokens, topics } from '../api/notifications'
 
 // ---------------------------------------------------------------------------
 // Fetch mock helpers
@@ -71,7 +65,7 @@ describe('campaigns.list', () => {
       '/api/notifications/campaign',
       expect.objectContaining({
         headers: { 'Content-Type': 'application/json' },
-      }),
+      })
     )
     expect(result.items).toHaveLength(1)
     expect(result.items[0].title).toBe('Hello')
@@ -119,7 +113,7 @@ describe('campaigns.create', () => {
 
     expect(global.fetch).toHaveBeenCalledWith(
       '/api/notifications/campaign',
-      expect.objectContaining({ method: 'POST' }),
+      expect.objectContaining({ method: 'POST' })
     )
     expect(result.id).toBe('c1')
   })

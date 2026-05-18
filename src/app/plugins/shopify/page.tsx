@@ -49,11 +49,7 @@ function MetricCard({
   const mouseX = useMotionValue(0)
   const mouseY = useMotionValue(0)
 
-  function onMouseMove({
-    currentTarget,
-    clientX,
-    clientY,
-  }: React.MouseEvent<HTMLDivElement>) {
+  function onMouseMove({ currentTarget, clientX, clientY }: React.MouseEvent<HTMLDivElement>) {
     const { left, top } = currentTarget.getBoundingClientRect()
     mouseX.set(clientX - left)
     mouseY.set(clientY - top)
@@ -76,17 +72,13 @@ function MetricCard({
       <div className="absolute inset-0 rounded-2xl ring-1 ring-zinc-900/10 transition-colors duration-300 ring-inset group-hover:ring-green-500/50 dark:ring-white/20 dark:group-hover:ring-green-400/60" />
       <div className="relative">
         <div className="flex items-center justify-between">
-          <h3 className="text-sm font-semibold text-zinc-900 dark:text-white">
-            {title}
-          </h3>
+          <h3 className="text-sm font-semibold text-zinc-900 dark:text-white">{title}</h3>
           <div className="flex h-8 w-8 items-center justify-center rounded-full bg-green-500/20 transition-colors duration-300 group-hover:bg-green-500/40 dark:bg-green-400/20 dark:group-hover:bg-green-400/40">
             <Icon className="h-4 w-4 text-green-600 group-hover:text-green-500 dark:text-green-400 dark:group-hover:text-green-300" />
           </div>
         </div>
         <div className="mt-4">
-          <div className="text-2xl font-bold text-zinc-900 dark:text-white">
-            {value}
-          </div>
+          <div className="text-2xl font-bold text-zinc-900 dark:text-white">{value}</div>
           {change !== undefined && (
             <div className="mt-2 flex items-center gap-1">
               {isPositive ? (
@@ -102,9 +94,7 @@ function MetricCard({
                 {isPositive ? '+' : ''}
                 {change.toFixed(1)}%
               </span>
-              {changeLabel && (
-                <span className="text-sm text-zinc-500">{changeLabel}</span>
-              )}
+              {changeLabel && <span className="text-sm text-zinc-500">{changeLabel}</span>}
             </div>
           )}
         </div>
@@ -196,17 +186,12 @@ function ShopifyDashboardContent() {
           </Link>
         </div>
         <div>
-          <h1 className="text-2xl font-semibold text-white">
-            Shopify Dashboard
-          </h1>
+          <h1 className="text-2xl font-semibold text-white">Shopify Dashboard</h1>
           <p className="text-sm text-zinc-400">Store metrics and inventory</p>
         </div>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
           {[1, 2, 3, 4].map((i) => (
-            <div
-              key={i}
-              className="h-32 animate-pulse rounded-lg bg-zinc-800/50"
-            />
+            <div key={i} className="h-32 animate-pulse rounded-lg bg-zinc-800/50" />
           ))}
         </div>
       </div>
@@ -258,9 +243,7 @@ function ShopifyDashboardContent() {
 
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-semibold text-white">
-            Shopify Dashboard
-          </h1>
+          <h1 className="text-2xl font-semibold text-white">Shopify Dashboard</h1>
           <p className="text-sm text-zinc-400">Store metrics and inventory</p>
         </div>
         <button
@@ -277,14 +260,10 @@ function ShopifyDashboardContent() {
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <MetricCard
           title="Total Revenue"
-          value={
-            stats ? formatCurrency(stats.totalRevenue, stats.currency) : '$0'
-          }
+          value={stats ? formatCurrency(stats.totalRevenue, stats.currency) : '$0'}
           change={stats?.periodComparison?.revenueChange}
           changeLabel={
-            stats?.periodComparison?.period
-              ? `vs last ${stats.periodComparison.period}`
-              : undefined
+            stats?.periodComparison?.period ? `vs last ${stats.periodComparison.period}` : undefined
           }
           icon={DollarSign}
         />
@@ -296,11 +275,7 @@ function ShopifyDashboardContent() {
         />
         <MetricCard
           title="Average Order Value"
-          value={
-            stats
-              ? formatCurrency(stats.averageOrderValue, stats.currency)
-              : '$0'
-          }
+          value={stats ? formatCurrency(stats.averageOrderValue, stats.currency) : '$0'}
           icon={BarChart3}
         />
         <MetricCard
@@ -315,9 +290,7 @@ function ShopifyDashboardContent() {
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-4">
         <div className="rounded-xl border border-zinc-700/50 bg-zinc-800/50 p-5">
           <div className="flex items-center justify-between">
-            <h3 className="text-sm font-medium text-zinc-400">
-              Total Products
-            </h3>
+            <h3 className="text-sm font-medium text-zinc-400">Total Products</h3>
             <Package className="h-5 w-5 text-blue-400" />
           </div>
           <p className="mt-2 text-3xl font-bold text-white">
@@ -326,9 +299,7 @@ function ShopifyDashboardContent() {
         </div>
         <div className="rounded-xl border border-zinc-700/50 bg-zinc-800/50 p-5">
           <div className="flex items-center justify-between">
-            <h3 className="text-sm font-medium text-zinc-400">
-              Active Products
-            </h3>
+            <h3 className="text-sm font-medium text-zinc-400">Active Products</h3>
             <Package className="h-5 w-5 text-emerald-400" />
           </div>
           <p className="mt-2 text-3xl font-bold text-white">
@@ -362,9 +333,7 @@ function ShopifyDashboardContent() {
             <ShoppingCart className="h-5 w-5 text-zinc-400" />
             <span className="text-sm text-zinc-400">Last synced:</span>
             <span className="text-sm text-white">
-              {stats?.lastSync
-                ? new Date(stats.lastSync).toLocaleString()
-                : 'Never'}
+              {stats?.lastSync ? new Date(stats.lastSync).toLocaleString() : 'Never'}
             </span>
           </div>
         </div>

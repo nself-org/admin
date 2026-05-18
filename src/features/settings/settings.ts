@@ -9,12 +9,7 @@
 
 import fs from 'fs/promises'
 import path from 'path'
-import type {
-  AdminSettings,
-  CredentialEntry,
-  SettingsError,
-  Theme,
-} from './types'
+import type { AdminSettings, CredentialEntry, SettingsError, Theme } from './types'
 
 // ---------------------------------------------------------------------------
 // Constants
@@ -33,7 +28,7 @@ const SETTINGS_FILE = 'admin-settings.json'
 function makeSettingsError(
   message: string,
   code: SettingsError['code'],
-  details?: string,
+  details?: string
 ): SettingsError {
   const err = new Error(message) as SettingsError
   err.code = code
@@ -45,7 +40,7 @@ function assertValidKey(key: string): void {
   if (!ENV_KEY_RE.test(key)) {
     throw makeSettingsError(
       `Invalid key "${key}". Must match /^[A-Z_][A-Z0-9_]{0,127}$/`,
-      'INVALID_KEY',
+      'INVALID_KEY'
     )
   }
 }
@@ -97,9 +92,7 @@ export function getDefaultSettings(): AdminSettings {
  * Returns default settings if the file is missing or cannot be parsed.
  * Throws SettingsError only on unexpected I/O failures.
  */
-export async function loadSettings(
-  projectPath: string,
-): Promise<AdminSettings> {
+export async function loadSettings(projectPath: string): Promise<AdminSettings> {
   const filePath = getSettingsPath(projectPath)
 
   let raw: string
@@ -113,7 +106,7 @@ export async function loadSettings(
     throw makeSettingsError(
       `Failed to read settings file: ${filePath}`,
       'IO_ERROR',
-      nodeErr.message,
+      nodeErr.message
     )
   }
 
@@ -122,11 +115,7 @@ export async function loadSettings(
     parsed = JSON.parse(raw)
   } catch (err) {
     const parseErr = err as Error
-    throw makeSettingsError(
-      'Settings file contains invalid JSON',
-      'PARSE_ERROR',
-      parseErr.message,
-    )
+    throw makeSettingsError('Settings file contains invalid JSON', 'PARSE_ERROR', parseErr.message)
   }
 
   // Merge with defaults to handle any missing fields from older versions.
@@ -135,16 +124,10 @@ export async function loadSettings(
 
   return {
     version: 1,
-    credentials: Array.isArray(data.credentials)
-      ? data.credentials
-      : defaults.credentials,
-    pluginKeys: Array.isArray(data.pluginKeys)
-      ? data.pluginKeys
-      : defaults.pluginKeys,
+    credentials: Array.isArray(data.credentials) ? data.credentials : defaults.credentials,
+    pluginKeys: Array.isArray(data.pluginKeys) ? data.pluginKeys : defaults.pluginKeys,
     envVars:
-      data.envVars !== null &&
-      typeof data.envVars === 'object' &&
-      !Array.isArray(data.envVars)
+      data.envVars !== null && typeof data.envVars === 'object' && !Array.isArray(data.envVars)
         ? (data.envVars as Record<string, string>)
         : defaults.envVars,
     telemetry:
@@ -157,13 +140,8 @@ export async function loadSettings(
             anonymousId: data.telemetry.anonymousId,
           }
         : defaults.telemetry,
-    theme:
-      data.theme === 'dark' || data.theme === 'system'
-        ? data.theme
-        : defaults.theme,
-    shortcuts: Array.isArray(data.shortcuts)
-      ? data.shortcuts
-      : defaults.shortcuts,
+    theme: data.theme === 'dark' || data.theme === 'system' ? data.theme : defaults.theme,
+    shortcuts: Array.isArray(data.shortcuts) ? data.shortcuts : defaults.shortcuts,
   }
 }
 
@@ -171,10 +149,7 @@ export async function loadSettings(
  * Atomically writes AdminSettings to disk.
  * Uses write-to-tmp + rename to avoid partial writes.
  */
-export async function saveSettings(
-  projectPath: string,
-  settings: AdminSettings,
-): Promise<void> {
+export async function saveSettings(projectPath: string, settings: AdminSettings): Promise<void> {
   const filePath = getSettingsPath(projectPath)
   const dir = path.dirname(filePath)
   const tmpPath = `${filePath}.tmp`
@@ -187,7 +162,7 @@ export async function saveSettings(
     throw makeSettingsError(
       `Failed to create settings directory: ${dir}`,
       'IO_ERROR',
-      nodeErr.message,
+      nodeErr.message
     )
   }
 
@@ -200,11 +175,7 @@ export async function saveSettings(
     const nodeErr = err as NodeJS.ErrnoException
     // Best-effort cleanup of the tmp file.
     await fs.unlink(tmpPath).catch(() => undefined)
-    throw makeSettingsError(
-      `Failed to save settings to: ${filePath}`,
-      'IO_ERROR',
-      nodeErr.message,
-    )
+    throw makeSettingsError(`Failed to save settings to: ${filePath}`, 'IO_ERROR', nodeErr.message)
   }
 }
 
@@ -220,7 +191,7 @@ export async function updateCredential(
   projectPath: string,
   key: string,
   value: string,
-  description?: string,
+  description?: string
 ): Promise<void> {
   assertValidKey(key)
   const settings = await loadSettings(projectPath)
@@ -240,10 +211,7 @@ export async function updateCredential(
  * Removes a credential entry by key.
  * No-op if the key does not exist.
  */
-export async function removeCredential(
-  projectPath: string,
-  key: string,
-): Promise<void> {
+export async function removeCredential(projectPath: string, key: string): Promise<void> {
   assertValidKey(key)
   const settings = await loadSettings(projectPath)
   settings.credentials = settings.credentials.filter((c) => c.key !== key)
@@ -262,12 +230,12 @@ export async function updatePluginKey(
   projectPath: string,
   pluginName: string,
   envVar: string,
-  value: string,
+  value: string
 ): Promise<void> {
   assertValidKey(envVar)
   const settings = await loadSettings(projectPath)
   const existing = settings.pluginKeys.findIndex(
-    (p) => p.pluginName === pluginName && p.envVar === envVar,
+    (p) => p.pluginName === pluginName && p.envVar === envVar
   )
   const entry = { pluginName, envVar, value }
 
@@ -287,10 +255,7 @@ export async function updatePluginKey(
 /**
  * Updates the telemetry opt-in/out preference.
  */
-export async function updateTelemetry(
-  projectPath: string,
-  enabled: boolean,
-): Promise<void> {
+export async function updateTelemetry(projectPath: string, enabled: boolean): Promise<void> {
   const settings = await loadSettings(projectPath)
   settings.telemetry = { ...settings.telemetry, enabled }
   await saveSettings(projectPath, settings)
@@ -299,10 +264,7 @@ export async function updateTelemetry(
 /**
  * Updates the UI theme preference.
  */
-export async function updateTheme(
-  projectPath: string,
-  theme: Theme,
-): Promise<void> {
+export async function updateTheme(projectPath: string, theme: Theme): Promise<void> {
   const settings = await loadSettings(projectPath)
   settings.theme = theme
   await saveSettings(projectPath, settings)

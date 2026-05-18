@@ -23,8 +23,7 @@ export function HealthScore({ metrics }: HealthScoreProps) {
 
     // Service availability (40 points max)
     if (metrics.servicesTotal > 0) {
-      const serviceHealth =
-        (metrics.servicesRunning / metrics.servicesTotal) * 40
+      const serviceHealth = (metrics.servicesRunning / metrics.servicesTotal) * 40
       score = score - 40 + serviceHealth
     }
 
@@ -79,9 +78,7 @@ export function HealthScore({ metrics }: HealthScoreProps) {
 
   return (
     <div className="rounded-lg border border-zinc-200 bg-white p-6 dark:border-zinc-700 dark:bg-zinc-900/50">
-      <h3 className="mb-4 text-sm font-semibold text-zinc-900 dark:text-white">
-        System Health
-      </h3>
+      <h3 className="mb-4 text-sm font-semibold text-zinc-900 dark:text-white">System Health</h3>
 
       <div className="flex flex-col items-center">
         {/* Circular Progress */}
@@ -126,9 +123,7 @@ export function HealthScore({ metrics }: HealthScoreProps) {
             >
               {score}
             </motion.div>
-            <div className="text-sm font-medium text-zinc-600 dark:text-zinc-400">
-              {text}
-            </div>
+            <div className="text-sm font-medium text-zinc-600 dark:text-zinc-400">{text}</div>
           </div>
         </div>
 

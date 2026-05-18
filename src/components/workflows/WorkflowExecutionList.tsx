@@ -13,11 +13,7 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { useCancelExecution, useWorkflowExecutions } from '@/hooks/useWorkflows'
-import type {
-  TriggerType,
-  WorkflowExecution,
-  WorkflowExecutionStatus,
-} from '@/types/workflow'
+import type { TriggerType, WorkflowExecution, WorkflowExecutionStatus } from '@/types/workflow'
 import {
   Calendar,
   CheckCircle,
@@ -53,14 +49,12 @@ const statusConfig: Record<
   running: {
     label: 'Running',
     icon: <Loader2 className="h-3.5 w-3.5 animate-spin" />,
-    className:
-      'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400',
+    className: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400',
   },
   completed: {
     label: 'Completed',
     icon: <CheckCircle className="h-3.5 w-3.5" />,
-    className:
-      'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400',
+    className: 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400',
   },
   failed: {
     label: 'Failed',
@@ -70,14 +64,12 @@ const statusConfig: Record<
   cancelled: {
     label: 'Cancelled',
     icon: <Square className="h-3.5 w-3.5" />,
-    className:
-      'bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400',
+    className: 'bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400',
   },
   timeout: {
     label: 'Timeout',
     icon: <Clock className="h-3.5 w-3.5" />,
-    className:
-      'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400',
+    className: 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400',
   },
 }
 
@@ -95,8 +87,7 @@ export function WorkflowExecutionList({
   workflowId,
   onExecutionClick,
 }: WorkflowExecutionListProps) {
-  const { executions, isLoading, isError, error, refresh } =
-    useWorkflowExecutions(workflowId)
+  const { executions, isLoading, isError, error, refresh } = useWorkflowExecutions(workflowId)
   const { cancel } = useCancelExecution()
   const [cancellingId, setCancellingId] = React.useState<string | null>(null)
 
@@ -159,9 +150,7 @@ export function WorkflowExecutionList({
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h3 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">
-          Execution History
-        </h3>
+        <h3 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">Execution History</h3>
         <Button variant="outline" size="sm" onClick={() => refresh()}>
           <RefreshCw className="mr-2 h-4 w-4" />
           Refresh
@@ -202,15 +191,11 @@ export function WorkflowExecutionList({
                     <TableCell>
                       <div className="flex items-center gap-1.5">
                         {triggerIcons[execution.triggerType]}
-                        <span className="capitalize">
-                          {execution.triggerType}
-                        </span>
+                        <span className="capitalize">{execution.triggerType}</span>
                       </div>
                     </TableCell>
                     <TableCell>
-                      <Badge
-                        className={`flex w-fit items-center gap-1 ${status.className}`}
-                      >
+                      <Badge className={`flex w-fit items-center gap-1 ${status.className}`}>
                         {status.icon}
                         {status.label}
                       </Badge>
@@ -234,8 +219,7 @@ export function WorkflowExecutionList({
                         >
                           <Eye className="h-4 w-4" />
                         </Button>
-                        {(execution.status === 'pending' ||
-                          execution.status === 'running') && (
+                        {(execution.status === 'pending' || execution.status === 'running') && (
                           <Button
                             variant="ghost"
                             size="icon"

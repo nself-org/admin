@@ -20,19 +20,20 @@ As of 2026-05-14, the nSelf ecosystem has converged on a single client-app stack
 
 Five load-bearing dependencies make `admin/` architecturally incompatible with a client-only SPA bundle (Vite + Tauri):
 
-| Dependency | What it does | Why a browser SPA cannot host it |
-|---|---|---|
-| `server.js` | Custom Node.js HTTP server wrapping `next` for graceful shutdown + standalone Docker build | Vite produces a static bundle. No server process exists to wrap. |
-| Docker socket (`/var/run/docker.sock`) | Reads container state, runs `docker exec`, streams logs via Unix socket | Browsers cannot open Unix sockets. The Node.js `net`/`fs` modules have no browser equivalent. |
-| LokiJS | Embedded in-process document DB used for activity tracking, session state, audit log buffering | The browser equivalents (IndexedDB, localStorage) have fundamentally different semantics. Moving this to the browser would change the trust boundary. |
-| `pg` (node-postgres) | Direct PostgreSQL TCP connection for queries that bypass Hasura (admin housekeeping, migration status, raw schema inspection) | PostgreSQL wire protocol is TCP. Browsers cannot speak TCP directly. WebSocket bridges exist but are not used here. |
-| `socket.io` (server) | Persistent server-side WebSocket emitter pushing container/service updates to the admin UI | The browser is the WebSocket *client*. A SPA bundle cannot itself be a WebSocket server. |
+| Dependency                             | What it does                                                                                                                  | Why a browser SPA cannot host it                                                                                                                      |
+| -------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `server.js`                            | Custom Node.js HTTP server wrapping `next` for graceful shutdown + standalone Docker build                                    | Vite produces a static bundle. No server process exists to wrap.                                                                                      |
+| Docker socket (`/var/run/docker.sock`) | Reads container state, runs `docker exec`, streams logs via Unix socket                                                       | Browsers cannot open Unix sockets. The Node.js `net`/`fs` modules have no browser equivalent.                                                         |
+| LokiJS                                 | Embedded in-process document DB used for activity tracking, session state, audit log buffering                                | The browser equivalents (IndexedDB, localStorage) have fundamentally different semantics. Moving this to the browser would change the trust boundary. |
+| `pg` (node-postgres)                   | Direct PostgreSQL TCP connection for queries that bypass Hasura (admin housekeeping, migration status, raw schema inspection) | PostgreSQL wire protocol is TCP. Browsers cannot speak TCP directly. WebSocket bridges exist but are not used here.                                   |
+| `socket.io` (server)                   | Persistent server-side WebSocket emitter pushing container/service updates to the admin UI                                    | The browser is the WebSocket _client_. A SPA bundle cannot itself be a WebSocket server.                                                              |
 
 ## Decision
 
 `admin/` stays on **Next.js (App Router)** permanently. The framework's File Conventions, Server Actions, API Routes, and middleware are load-bearing for the admin product. Next.js's hybrid server+client model is exactly what this product needs.
 
 `admin/` will continue to be:
+
 - Distributed as the `nself/nself-admin` Docker image
 - Started via `nself admin start` (CLI integration)
 - Run at `localhost:3021` on the operator's own machine
@@ -49,37 +50,45 @@ Five load-bearing dependencies make `admin/` architecturally incompatible with a
 ## Consequences
 
 ### Positive
+
 - `admin/` keeps its proven, working architecture
 - No migration risk during P102's already-aggressive Flutter elimination
 - Server-side trust boundary preserved (DB password / Docker socket never reach the browser)
 - Next.js community resources, security advisories, and tooling continue to apply
 
 ### Negative
+
 - `admin/` cannot share the SPA-only bits of `@nself/*` packages (e.g. Vite-specific plugins, Tauri-only IPC helpers). This is acceptable: admin has no need for them.
 - `admin/` is the lone Next.js codebase in the ecosystem after P102 ships. The maintenance overhead of "one Next.js repo" is small but real (separate Next.js upgrade cycle, separate ESLint config flavor).
 - Shared tooling (`@nself/config`, `@nself/eslint-config`) must publish a Next.js-flavored entry alongside the SPA entry so admin can consume it without forking config.
 
 ### Neutral
+
 - `admin/` remains its own git repository (`nself-org/admin`). It cannot use `workspace:*` references and must consume published `@nself/*` packages from npm. This is already handled (see `eslint.config.mjs` stub-fallback pattern).
 - `admin/` retains its own release cycle locked to `cli/` (CLI = Admin version lockstep from P93 onward).
 
 ## Alternatives Considered
 
 ### Alternative 1: Vite SSR (`vite-plugin-ssr` / Vike)
+
 **Rejected.** Vite SSR is production-capable but the migration cost (rewriting File Conventions routing, middleware, Server Actions, and the `server.js` integration) is enormous for zero user benefit. Next.js delivers these out of the box.
 
 ### Alternative 2: Split admin into "API server" + "Vite SPA frontend"
+
 **Rejected for P102.** This is the only architecturally clean path to a SPA frontend, but it doubles deployment complexity (two processes inside one Docker image), forces a versioned API contract between the two halves, and requires a new auth flow for the SPA. The current monolith works and has no user-facing issues. A future P10x phase MAY revisit this if a compelling reason emerges (e.g. embedding the admin UI inside a Tauri shell for cross-platform native distribution) — but that is out of P102 scope and is captured as an idea, not a commitment.
 
 ### Alternative 3: Tauri 2 with embedded Node sidecar
+
 **Rejected.** Tauri 2 sidecars can host a Node.js process, but distributing admin as a desktop binary changes its deployment model (Docker image becomes one of many distribution targets). For a local-only operator tool already happy in Docker, this is added complexity, not subtraction.
 
 ### Alternative 4: Pure Node.js + Handlebars/EJS
+
 **Rejected.** Would require rewriting the entire React component tree. The React tree is shared (in spirit, if not literally) with the rest of the ecosystem's design language. Throwing it away has no upside.
 
 ## Review Cadence
 
 This ADR is reviewed:
+
 - At the start of every major phase (P103, P104, ...) — confirm "Accepted, no migration planned"
 - If any of the five incompatible dependencies (server.js / Docker socket / LokiJS / pg / socket.io) is replaced by something browser-compatible
 - If the nSelf ecosystem standard stack itself changes (e.g. ecosystem-wide move away from React)

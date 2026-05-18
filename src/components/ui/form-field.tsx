@@ -63,16 +63,14 @@ export const FormField = React.forwardRef<HTMLInputElement, FormFieldProps>(
       disabled,
       onChange,
     },
-    ref,
+    ref
   ) => {
     const { errors, values, isLoading, setFieldValue } = useFormContext()
 
     const error = errors[name]
     const value = (values[name] as string) || ''
 
-    const handleChange = (
-      e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-    ) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
       const newValue = e.target.value
       setFieldValue(name, newValue)
       onChange?.(newValue)
@@ -115,11 +113,7 @@ export const FormField = React.forwardRef<HTMLInputElement, FormFieldProps>(
         )}
 
         {error && (
-          <p
-            id={`${name}-error`}
-            className="text-sm font-medium text-red-500"
-            role="alert"
-          >
+          <p id={`${name}-error`} className="text-sm font-medium text-red-500" role="alert">
             {error}
           </p>
         )}
@@ -129,7 +123,7 @@ export const FormField = React.forwardRef<HTMLInputElement, FormFieldProps>(
         )}
       </div>
     )
-  },
+  }
 )
 
 FormField.displayName = 'FormField'

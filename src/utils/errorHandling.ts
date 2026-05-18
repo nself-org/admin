@@ -17,10 +17,7 @@ export function restoreConsoleError() {}
 /**
  * Safe fetch wrapper that handles aborts gracefully
  */
-export async function safeFetch(
-  url: string,
-  options?: RequestInit,
-): Promise<Response | null> {
+export async function safeFetch(url: string, options?: RequestInit): Promise<Response | null> {
   try {
     const response = await fetch(url, options)
     return response

@@ -4,11 +4,7 @@
 'use client'
 
 import { api } from '@/lib/api-client'
-import type {
-  InviteMemberInput,
-  TenantMember,
-  TenantRole,
-} from '@/types/tenant'
+import type { InviteMemberInput, TenantMember, TenantRole } from '@/types/tenant'
 import { useCallback, useState } from 'react'
 import useSWR from 'swr'
 
@@ -30,7 +26,7 @@ export function useTenantMembers(tenantId: string) {
   } = useSWR<{ members: TenantMember[] }>(
     tenantId ? `/api/tenant/${tenantId}/members` : null,
     fetcher,
-    { refreshInterval: 30000 },
+    { refreshInterval: 30000 }
   )
 
   const invite = useCallback(
@@ -38,25 +34,20 @@ export function useTenantMembers(tenantId: string) {
       setIsLoading(true)
       setError(null)
       try {
-        const response = await api.post(
-          `/api/tenant/${tenantId}/members`,
-          input,
-        )
+        const response = await api.post(`/api/tenant/${tenantId}/members`, input)
         const result = await response.json()
-        if (!result.success)
-          throw new Error(result.error || 'Failed to invite member')
+        if (!result.success) throw new Error(result.error || 'Failed to invite member')
         mutate()
         return result.data
       } catch (err) {
-        const message =
-          err instanceof Error ? err.message : 'Failed to invite member'
+        const message = err instanceof Error ? err.message : 'Failed to invite member'
         setError(message)
         throw err
       } finally {
         setIsLoading(false)
       }
     },
-    [tenantId, mutate],
+    [tenantId, mutate]
   )
 
   const remove = useCallback(
@@ -64,23 +55,19 @@ export function useTenantMembers(tenantId: string) {
       setIsLoading(true)
       setError(null)
       try {
-        const response = await api.delete(
-          `/api/tenant/${tenantId}/members/${userId}`,
-        )
+        const response = await api.delete(`/api/tenant/${tenantId}/members/${userId}`)
         const result = await response.json()
-        if (!result.success)
-          throw new Error(result.error || 'Failed to remove member')
+        if (!result.success) throw new Error(result.error || 'Failed to remove member')
         mutate()
       } catch (err) {
-        const message =
-          err instanceof Error ? err.message : 'Failed to remove member'
+        const message = err instanceof Error ? err.message : 'Failed to remove member'
         setError(message)
         throw err
       } finally {
         setIsLoading(false)
       }
     },
-    [tenantId, mutate],
+    [tenantId, mutate]
   )
 
   const updateRole = useCallback(
@@ -88,25 +75,20 @@ export function useTenantMembers(tenantId: string) {
       setIsLoading(true)
       setError(null)
       try {
-        const response = await api.put(
-          `/api/tenant/${tenantId}/members/${userId}`,
-          { role },
-        )
+        const response = await api.put(`/api/tenant/${tenantId}/members/${userId}`, { role })
         const result = await response.json()
-        if (!result.success)
-          throw new Error(result.error || 'Failed to update role')
+        if (!result.success) throw new Error(result.error || 'Failed to update role')
         mutate()
         return result.data
       } catch (err) {
-        const message =
-          err instanceof Error ? err.message : 'Failed to update role'
+        const message = err instanceof Error ? err.message : 'Failed to update role'
         setError(message)
         throw err
       } finally {
         setIsLoading(false)
       }
     },
-    [tenantId, mutate],
+    [tenantId, mutate]
   )
 
   const resendInvite = useCallback(
@@ -114,22 +96,18 @@ export function useTenantMembers(tenantId: string) {
       setIsLoading(true)
       setError(null)
       try {
-        const response = await api.post(
-          `/api/tenant/${tenantId}/members/${userId}/resend`,
-        )
+        const response = await api.post(`/api/tenant/${tenantId}/members/${userId}/resend`)
         const result = await response.json()
-        if (!result.success)
-          throw new Error(result.error || 'Failed to resend invite')
+        if (!result.success) throw new Error(result.error || 'Failed to resend invite')
       } catch (err) {
-        const message =
-          err instanceof Error ? err.message : 'Failed to resend invite'
+        const message = err instanceof Error ? err.message : 'Failed to resend invite'
         setError(message)
         throw err
       } finally {
         setIsLoading(false)
       }
     },
-    [tenantId],
+    [tenantId]
   )
 
   return {

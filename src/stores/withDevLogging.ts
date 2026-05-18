@@ -9,12 +9,12 @@ type Logger = <
   Mcs extends [StoreMutatorIdentifier, unknown][] = [],
 >(
   f: StateCreator<T, Mps, Mcs>,
-  name?: string,
+  name?: string
 ) => StateCreator<T, Mps, Mcs>
 
 type LoggerImpl = <T extends unknown>(
   f: StateCreator<T, [], []>,
-  name?: string,
+  name?: string
 ) => StateCreator<T, [], []>
 
 const loggerImpl: LoggerImpl = (f, name) => (set, get, store) => {

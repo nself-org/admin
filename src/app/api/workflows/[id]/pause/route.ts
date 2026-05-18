@@ -10,10 +10,7 @@ interface RouteParams {
  * POST /api/workflows/[id]/pause
  * Pause a workflow
  */
-export async function POST(
-  request: NextRequest,
-  { params }: RouteParams,
-): Promise<NextResponse> {
+export async function POST(request: NextRequest, { params }: RouteParams): Promise<NextResponse> {
   const authError = await requireAuth(request)
   if (authError) return authError
 
@@ -23,10 +20,7 @@ export async function POST(
     const workflow = await workflowsApi.pauseWorkflow(id)
 
     if (!workflow) {
-      return NextResponse.json(
-        { success: false, error: 'Workflow not found' },
-        { status: 404 },
-      )
+      return NextResponse.json({ success: false, error: 'Workflow not found' }, { status: 404 })
     }
 
     return NextResponse.json({
@@ -37,10 +31,9 @@ export async function POST(
     return NextResponse.json(
       {
         success: false,
-        error:
-          error instanceof Error ? error.message : 'Failed to pause workflow',
+        error: error instanceof Error ? error.message : 'Failed to pause workflow',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

@@ -134,8 +134,7 @@ function BackupCard({
     },
     incremental: {
       label: 'Incremental',
-      color:
-        'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300',
+      color: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300',
     },
     differential: {
       label: 'Differential',
@@ -144,9 +143,7 @@ function BackupCard({
   }
 
   return (
-    <div
-      className={`rounded-lg border ${config.border} bg-white p-6 shadow-sm dark:bg-zinc-800`}
-    >
+    <div className={`rounded-lg border ${config.border} bg-white p-6 shadow-sm dark:bg-zinc-800`}>
       <div className="mb-4 flex items-start justify-between">
         <div className="flex items-center gap-3">
           <div className={`rounded-lg p-2 ${config.bg}`}>
@@ -155,21 +152,15 @@ function BackupCard({
             />
           </div>
           <div>
-            <h3 className="font-semibold text-zinc-900 dark:text-white">
-              {backup.name}
-            </h3>
+            <h3 className="font-semibold text-zinc-900 dark:text-white">{backup.name}</h3>
             <div className="mt-1 flex items-center gap-2">
               <span
                 className={`rounded-full px-2 py-1 text-xs font-medium ${typeConfig[backup.type].color}`}
               >
                 {typeConfig[backup.type].label}
               </span>
-              {backup.encryption && (
-                <Shield className="h-3 w-3 text-zinc-500" />
-              )}
-              {backup.compression && (
-                <Archive className="h-3 w-3 text-zinc-500" />
-              )}
+              {backup.encryption && <Shield className="h-3 w-3 text-zinc-500" />}
+              {backup.compression && <Archive className="h-3 w-3 text-zinc-500" />}
             </div>
           </div>
         </div>
@@ -242,9 +233,7 @@ function BackupCard({
         {backup.duration && (
           <div className="text-sm">
             <span className="text-zinc-500 dark:text-zinc-400">Duration: </span>
-            <span className="font-medium">
-              {formatDuration(backup.duration)}
-            </span>
+            <span className="font-medium">{formatDuration(backup.duration)}</span>
           </div>
         )}
 
@@ -300,18 +289,14 @@ function JobCard({
   const config = statusConfig[job.status]
 
   return (
-    <div
-      className={`rounded-lg border ${config.border} bg-white p-6 shadow-sm dark:bg-zinc-800`}
-    >
+    <div className={`rounded-lg border ${config.border} bg-white p-6 shadow-sm dark:bg-zinc-800`}>
       <div className="mb-4 flex items-start justify-between">
         <div className="flex items-center gap-3">
           <div className={`rounded-lg p-2 ${config.bg}`}>
             <Timer className={`h-5 w-5 ${config.color}`} />
           </div>
           <div>
-            <h3 className="font-semibold text-zinc-900 dark:text-white">
-              {job.name}
-            </h3>
+            <h3 className="font-semibold text-zinc-900 dark:text-white">{job.name}</h3>
             <div className="mt-1 flex items-center gap-2">
               <span className="rounded-full bg-zinc-100 px-2 py-1 text-xs font-medium text-zinc-700 dark:bg-zinc-700 dark:text-zinc-300">
                 {job.type}
@@ -327,17 +312,11 @@ function JobCard({
 
         <div className="flex items-center gap-1">
           <button
-            onClick={() =>
-              onAction(job.status === 'active' ? 'pause' : 'resume', job.id)
-            }
+            onClick={() => onAction(job.status === 'active' ? 'pause' : 'resume', job.id)}
             className="rounded p-1.5 hover:bg-zinc-100 dark:hover:bg-zinc-700"
             title={job.status === 'active' ? 'Pause' : 'Resume'}
           >
-            {job.status === 'active' ? (
-              <Pause className="h-4 w-4" />
-            ) : (
-              <Play className="h-4 w-4" />
-            )}
+            {job.status === 'active' ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
           </button>
           <button
             onClick={() => onAction('run', job.id)}
@@ -370,9 +349,7 @@ function JobCard({
         <div className="grid grid-cols-2 gap-4">
           <div>
             <span className="text-zinc-500 dark:text-zinc-400">Last Run</span>
-            <p className="font-medium">
-              {job.lastRun ? formatDate(job.lastRun) : 'Never'}
-            </p>
+            <p className="font-medium">{job.lastRun ? formatDate(job.lastRun) : 'Never'}</p>
           </div>
           <div>
             <span className="text-zinc-500 dark:text-zinc-400">Next Run</span>
@@ -395,44 +372,49 @@ function BackupsContent() {
   const [filter, setFilter] = useState<string>('all')
   const [searchQuery, setSearchQuery] = useState('')
 
-  const {
-    data,
-    error,
-    mutate,
-  } = useSWR<{ backups: Backup[]; jobs: BackupJob[] }>('/api/backup', fetcher)
+  const { data, error, mutate } = useSWR<{ backups: Backup[]; jobs: BackupJob[] }>(
+    '/api/backup',
+    fetcher
+  )
 
   const backups = data?.backups ?? []
   const jobs = data?.jobs ?? []
 
-  const handleBackupAction = useCallback(async (action: string, id: string) => {
-    setActionLoading(true)
-    try {
-      const res = await fetch(`/api/backup/${encodeURIComponent(id)}`, {
-        method: action === 'delete' ? 'DELETE' : 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: action !== 'delete' ? JSON.stringify({ action }) : undefined,
-      })
-      if (!res.ok) throw new Error(`HTTP ${res.status}`)
-      await mutate()
-    } finally {
-      setActionLoading(false)
-    }
-  }, [mutate])
+  const handleBackupAction = useCallback(
+    async (action: string, id: string) => {
+      setActionLoading(true)
+      try {
+        const res = await fetch(`/api/backup/${encodeURIComponent(id)}`, {
+          method: action === 'delete' ? 'DELETE' : 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: action !== 'delete' ? JSON.stringify({ action }) : undefined,
+        })
+        if (!res.ok) throw new Error(`HTTP ${res.status}`)
+        await mutate()
+      } finally {
+        setActionLoading(false)
+      }
+    },
+    [mutate]
+  )
 
-  const handleJobAction = useCallback(async (action: string, id: string) => {
-    setActionLoading(true)
-    try {
-      const res = await fetch(`/api/backup/jobs/${encodeURIComponent(id)}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action }),
-      })
-      if (!res.ok) throw new Error(`HTTP ${res.status}`)
-      await mutate()
-    } finally {
-      setActionLoading(false)
-    }
-  }, [mutate])
+  const handleJobAction = useCallback(
+    async (action: string, id: string) => {
+      setActionLoading(true)
+      try {
+        const res = await fetch(`/api/backup/jobs/${encodeURIComponent(id)}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action }),
+        })
+        if (!res.ok) throw new Error(`HTTP ${res.status}`)
+        await mutate()
+      } finally {
+        setActionLoading(false)
+      }
+    },
+    [mutate]
+  )
 
   const filteredBackups = backups.filter((backup) => {
     if (filter !== 'all' && backup.status !== filter) return false
@@ -459,7 +441,10 @@ function BackupsContent() {
     return (
       <div className="space-y-6">
         <div className="flex items-center gap-4">
-          <Link href="/operations" className="rounded-lg border border-zinc-700 bg-zinc-800 p-2 hover:bg-zinc-700">
+          <Link
+            href="/operations"
+            className="rounded-lg border border-zinc-700 bg-zinc-800 p-2 hover:bg-zinc-700"
+          >
             <AlertCircle className="h-5 w-5" />
           </Link>
           <h1 className="text-2xl font-semibold text-white">Backup Manager</h1>
@@ -490,9 +475,7 @@ function BackupsContent() {
         <div className="mb-8">
           <div className="mb-6 flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold text-zinc-900 dark:text-white">
-                Backup Manager
-              </h1>
+              <h1 className="text-3xl font-bold text-zinc-900 dark:text-white">Backup Manager</h1>
               <p className="mt-1 text-zinc-600 dark:text-zinc-400">
                 Manage database backups, schedules, and restore points
               </p>
@@ -518,9 +501,7 @@ function BackupsContent() {
             <div className="rounded-lg border border-zinc-200 bg-white p-4 dark:border-zinc-700 dark:bg-zinc-800">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-zinc-600 dark:text-zinc-400">
-                    Total
-                  </p>
+                  <p className="text-sm text-zinc-600 dark:text-zinc-400">Total</p>
                   <p className="text-2xl font-bold">{stats.total}</p>
                 </div>
                 <Archive className="h-8 w-8 text-blue-500" />
@@ -530,12 +511,8 @@ function BackupsContent() {
             <div className="rounded-lg border border-zinc-200 bg-white p-4 dark:border-zinc-700 dark:bg-zinc-800">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-zinc-600 dark:text-zinc-400">
-                    Completed
-                  </p>
-                  <p className="text-2xl font-bold text-green-600">
-                    {stats.completed}
-                  </p>
+                  <p className="text-sm text-zinc-600 dark:text-zinc-400">Completed</p>
+                  <p className="text-2xl font-bold text-green-600">{stats.completed}</p>
                 </div>
                 <CheckCircle className="h-8 w-8 text-green-500" />
               </div>
@@ -544,12 +521,8 @@ function BackupsContent() {
             <div className="rounded-lg border border-zinc-200 bg-white p-4 dark:border-zinc-700 dark:bg-zinc-800">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-zinc-600 dark:text-zinc-400">
-                    Running
-                  </p>
-                  <p className="text-2xl font-bold text-blue-600">
-                    {stats.running}
-                  </p>
+                  <p className="text-sm text-zinc-600 dark:text-zinc-400">Running</p>
+                  <p className="text-2xl font-bold text-blue-600">{stats.running}</p>
                 </div>
                 <Loader2 className="h-8 w-8 text-blue-500" />
               </div>
@@ -558,12 +531,8 @@ function BackupsContent() {
             <div className="rounded-lg border border-zinc-200 bg-white p-4 dark:border-zinc-700 dark:bg-zinc-800">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-zinc-600 dark:text-zinc-400">
-                    Failed
-                  </p>
-                  <p className="text-2xl font-bold text-red-600">
-                    {stats.failed}
-                  </p>
+                  <p className="text-sm text-zinc-600 dark:text-zinc-400">Failed</p>
+                  <p className="text-2xl font-bold text-red-600">{stats.failed}</p>
                 </div>
                 <XCircle className="h-8 w-8 text-red-500" />
               </div>
@@ -572,12 +541,8 @@ function BackupsContent() {
             <div className="rounded-lg border border-zinc-200 bg-white p-4 dark:border-zinc-700 dark:bg-zinc-800">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-zinc-600 dark:text-zinc-400">
-                    Total Size
-                  </p>
-                  <p className="text-lg font-bold">
-                    {formatSize(stats.totalSize)}
-                  </p>
+                  <p className="text-sm text-zinc-600 dark:text-zinc-400">Total Size</p>
+                  <p className="text-lg font-bold">{formatSize(stats.totalSize)}</p>
                 </div>
                 <HardDrive className="h-8 w-8 text-sky-500" />
               </div>
@@ -586,12 +551,8 @@ function BackupsContent() {
             <div className="rounded-lg border border-zinc-200 bg-white p-4 dark:border-zinc-700 dark:bg-zinc-800">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-zinc-600 dark:text-zinc-400">
-                    Active Jobs
-                  </p>
-                  <p className="text-2xl font-bold text-green-600">
-                    {stats.activeJobs}
-                  </p>
+                  <p className="text-sm text-zinc-600 dark:text-zinc-400">Active Jobs</p>
+                  <p className="text-2xl font-bold text-green-600">{stats.activeJobs}</p>
                 </div>
                 <Timer className="h-8 w-8 text-yellow-500" />
               </div>
@@ -672,17 +633,11 @@ function BackupsContent() {
               <div className="col-span-2 flex flex-col items-center justify-center rounded-lg border border-zinc-200 bg-white p-12 text-center dark:border-zinc-700 dark:bg-zinc-800">
                 <Archive className="mb-4 h-12 w-12 text-zinc-400" />
                 <p className="text-zinc-500">No backups found</p>
-                <p className="mt-1 text-sm text-zinc-400">
-                  Create a backup to get started
-                </p>
+                <p className="mt-1 text-sm text-zinc-400">Create a backup to get started</p>
               </div>
             ) : (
               filteredBackups.map((backup) => (
-                <BackupCard
-                  key={backup.id}
-                  backup={backup}
-                  onAction={handleBackupAction}
-                />
+                <BackupCard key={backup.id} backup={backup} onAction={handleBackupAction} />
               ))
             )}
           </div>
@@ -704,9 +659,7 @@ function BackupsContent() {
               <div className="flex flex-col items-center justify-center rounded-lg border border-zinc-200 bg-white p-12 text-center dark:border-zinc-700 dark:bg-zinc-800">
                 <Timer className="mb-4 h-12 w-12 text-zinc-400" />
                 <p className="text-zinc-500">No scheduled jobs</p>
-                <p className="mt-1 text-sm text-zinc-400">
-                  Create a job to automate backups
-                </p>
+                <p className="mt-1 text-sm text-zinc-400">Create a job to automate backups</p>
               </div>
             ) : (
               <div className="grid gap-6 lg:grid-cols-2">

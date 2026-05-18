@@ -105,9 +105,7 @@ export function Chart({
       case 'line':
         return (
           <LineChart {...commonProps}>
-            {showGrid && (
-              <CartesianGrid strokeDasharray="3 3" stroke={gridColor} />
-            )}
+            {showGrid && <CartesianGrid strokeDasharray="3 3" stroke={gridColor} />}
             <XAxis dataKey={xAxisKey} stroke={axisColor} />
             <YAxis stroke={axisColor} />
             {showTooltip && (
@@ -133,9 +131,7 @@ export function Chart({
       case 'bar':
         return (
           <BarChart {...commonProps}>
-            {showGrid && (
-              <CartesianGrid strokeDasharray="3 3" stroke={gridColor} />
-            )}
+            {showGrid && <CartesianGrid strokeDasharray="3 3" stroke={gridColor} />}
             <XAxis dataKey={xAxisKey} stroke={axisColor} />
             <YAxis stroke={axisColor} />
             {showTooltip && (
@@ -155,9 +151,7 @@ export function Chart({
       case 'area':
         return (
           <AreaChart {...commonProps}>
-            {showGrid && (
-              <CartesianGrid strokeDasharray="3 3" stroke={gridColor} />
-            )}
+            {showGrid && <CartesianGrid strokeDasharray="3 3" stroke={gridColor} />}
             <XAxis dataKey={xAxisKey} stroke={axisColor} />
             <YAxis stroke={axisColor} />
             {showTooltip && (
@@ -170,13 +164,7 @@ export function Chart({
               />
             )}
             {showLegend && <Legend />}
-            <Area
-              type="monotone"
-              dataKey={dataKey}
-              stroke={color}
-              fill={color}
-              fillOpacity={0.3}
-            />
+            <Area type="monotone" dataKey={dataKey} stroke={color} fill={color} fillOpacity={0.3} />
           </AreaChart>
         )
 
@@ -195,10 +183,7 @@ export function Chart({
               paddingAngle={2}
             >
               {data.map((_, index) => (
-                <Cell
-                  key={`cell-${index}`}
-                  fill={colors[index % colors.length]}
-                />
+                <Cell key={`cell-${index}`} fill={colors[index % colors.length]} />
               ))}
             </Pie>
             {showTooltip && (

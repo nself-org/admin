@@ -159,10 +159,7 @@ async function generateDockerCompose(config: any): Promise<string> {
   }
 
   // nself-admin (if enabled)
-  if (
-    config.NSELF_ADMIN_ENABLED === 'true' ||
-    config.NADMIN_ENABLED === 'true'
-  ) {
+  if (config.NSELF_ADMIN_ENABLED === 'true' || config.NADMIN_ENABLED === 'true') {
     services.push(`  nself-admin:
     image: nself/nself-admin:latest
     ports:
@@ -214,17 +211,14 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       console.error('Project directory does not exist:', projectPath)
       return NextResponse.json(
         { error: `Project directory not found: ${projectPath}` },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
     // Read environment configuration
     const config = await readEnvFile()
     if (!config) {
-      return NextResponse.json(
-        { error: 'No environment configuration found' },
-        { status: 400 },
-      )
+      return NextResponse.json({ error: 'No environment configuration found' }, { status: 400 })
     }
 
     // Generate docker-compose.yml
@@ -303,7 +297,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
               : 'Unknown error'
             : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

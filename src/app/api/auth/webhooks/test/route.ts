@@ -18,24 +18,17 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     const { id } = body as { id?: string }
 
     if (!id || typeof id !== 'string') {
-      return NextResponse.json(
-        { success: false, error: 'Webhook ID is required' },
-        { status: 400 },
-      )
+      return NextResponse.json({ success: false, error: 'Webhook ID is required' }, { status: 400 })
     }
 
     if (!VALID_ID_PATTERN.test(id)) {
       return NextResponse.json(
         { success: false, error: 'Invalid webhook ID format' },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
-    const result = await executeNselfCommand('auth', [
-      'webhooks',
-      'test',
-      `--id=${id}`,
-    ])
+    const result = await executeNselfCommand('auth', ['webhooks', 'test', `--id=${id}`])
 
     if (!result.success) {
       return NextResponse.json(
@@ -44,7 +37,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           error: 'Failed to test webhook',
           details: result.error || result.stderr || 'Unknown error',
         },
-        { status: 500 },
+        { status: 500 }
       )
     }
 
@@ -59,7 +52,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to test webhook',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

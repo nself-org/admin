@@ -3,26 +3,10 @@
 import { HeroPattern } from '@/components/HeroPattern'
 import { ChartSkeleton } from '@/components/skeletons'
 import type { BenchmarkBaseline, BenchmarkResult } from '@/types/performance'
-import {
-  Activity,
-  Clock,
-  GitCompare,
-  Play,
-  Save,
-  Target,
-  TrendingUp,
-} from 'lucide-react'
+import { Activity, Clock, GitCompare, Play, Save, Target, TrendingUp } from 'lucide-react'
 import Link from 'next/link'
 import { Suspense, useCallback, useEffect, useState } from 'react'
-import {
-  Bar,
-  BarChart,
-  CartesianGrid,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis,
-} from 'recharts'
+import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 
 function BenchmarkContent() {
   const [loading, setLoading] = useState(true)
@@ -139,13 +123,9 @@ function BenchmarkContent() {
                 <Activity className="h-5 w-5 text-sky-500 dark:text-sky-400" />
               </div>
               <div>
-                <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                  Total Requests
-                </p>
+                <p className="text-sm text-zinc-500 dark:text-zinc-400">Total Requests</p>
                 <p className="text-xl font-bold text-zinc-900 dark:text-white">
-                  {results
-                    .reduce((acc, r) => acc + r.requests.total, 0)
-                    .toLocaleString()}
+                  {results.reduce((acc, r) => acc + r.requests.total, 0).toLocaleString()}
                 </p>
               </div>
             </div>
@@ -156,13 +136,10 @@ function BenchmarkContent() {
                 <Clock className="h-5 w-5 text-blue-600 dark:text-blue-400" />
               </div>
               <div>
-                <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                  Avg Latency
-                </p>
+                <p className="text-sm text-zinc-500 dark:text-zinc-400">Avg Latency</p>
                 <p className="text-xl font-bold text-zinc-900 dark:text-white">
                   {(
-                    results.reduce((acc, r) => acc + r.latency.avg, 0) /
-                      results.length || 0
+                    results.reduce((acc, r) => acc + r.latency.avg, 0) / results.length || 0
                   ).toFixed(1)}
                   ms
                 </p>
@@ -175,9 +152,7 @@ function BenchmarkContent() {
                 <TrendingUp className="h-5 w-5 text-green-600 dark:text-green-400" />
               </div>
               <div>
-                <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                  Throughput
-                </p>
+                <p className="text-sm text-zinc-500 dark:text-zinc-400">Throughput</p>
                 <p className="text-xl font-bold text-zinc-900 dark:text-white">
                   {results
                     .reduce((acc, r) => acc + r.throughput.requestsPerSecond, 0)
@@ -193,15 +168,10 @@ function BenchmarkContent() {
                 <Target className="h-5 w-5 text-orange-600 dark:text-orange-400" />
               </div>
               <div>
-                <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                  Success Rate
-                </p>
+                <p className="text-sm text-zinc-500 dark:text-zinc-400">Success Rate</p>
                 <p className="text-xl font-bold text-zinc-900 dark:text-white">
                   {(
-                    (results.reduce(
-                      (acc, r) => acc + r.requests.successful,
-                      0,
-                    ) /
+                    (results.reduce((acc, r) => acc + r.requests.successful, 0) /
                       results.reduce((acc, r) => acc + r.requests.total, 0)) *
                       100 || 0
                   ).toFixed(2)}
@@ -281,10 +251,7 @@ function BenchmarkContent() {
               </thead>
               <tbody>
                 {results.map((result) => (
-                  <tr
-                    key={result.id}
-                    className="border-b border-zinc-100 dark:border-zinc-800"
-                  >
+                  <tr key={result.id} className="border-b border-zinc-100 dark:border-zinc-800">
                     <td className="py-3 font-medium text-zinc-900 dark:text-white">
                       {result.target}
                     </td>
@@ -311,8 +278,7 @@ function BenchmarkContent() {
                       {result.latency.p95.toFixed(1)}ms
                     </td>
                     <td className="py-3 text-zinc-600 dark:text-zinc-400">
-                      {result.throughput.requestsPerSecond.toLocaleString()}{' '}
-                      req/s
+                      {result.throughput.requestsPerSecond.toLocaleString()} req/s
                     </td>
                     <td className="py-3 text-zinc-500 dark:text-zinc-400">
                       {new Date(result.timestamp).toLocaleString()}
@@ -327,9 +293,7 @@ function BenchmarkContent() {
         {/* Baselines */}
         <div className="mb-8 rounded-xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-zinc-700 dark:bg-zinc-800">
           <div className="mb-4 flex items-center justify-between">
-            <h3 className="text-lg font-semibold text-zinc-900 dark:text-white">
-              Saved Baselines
-            </h3>
+            <h3 className="text-lg font-semibold text-zinc-900 dark:text-white">Saved Baselines</h3>
             <Link
               href="/benchmark/compare"
               className="flex items-center gap-2 text-sm text-sky-500 hover:underline dark:text-sky-400"
@@ -345,9 +309,7 @@ function BenchmarkContent() {
                 className="rounded-lg border border-zinc-200 p-4 dark:border-zinc-700"
               >
                 <div className="mb-2 flex items-center justify-between">
-                  <h4 className="font-medium text-zinc-900 dark:text-white">
-                    {baseline.name}
-                  </h4>
+                  <h4 className="font-medium text-zinc-900 dark:text-white">{baseline.name}</h4>
                   <span className="text-sm text-zinc-500">
                     {new Date(baseline.createdAt).toLocaleDateString()}
                   </span>
@@ -370,9 +332,7 @@ function BenchmarkContent() {
               <Play className="h-5 w-5 text-sky-500 dark:text-sky-400" />
             </div>
             <div>
-              <p className="font-medium text-zinc-900 dark:text-white">
-                Run Benchmark
-              </p>
+              <p className="font-medium text-zinc-900 dark:text-white">Run Benchmark</p>
               <p className="text-sm text-zinc-500">Start a new test</p>
             </div>
           </Link>
@@ -385,12 +345,8 @@ function BenchmarkContent() {
               <Save className="h-5 w-5 text-blue-600 dark:text-blue-400" />
             </div>
             <div>
-              <p className="font-medium text-zinc-900 dark:text-white">
-                Manage Baselines
-              </p>
-              <p className="text-sm text-zinc-500">
-                Save and manage benchmarks
-              </p>
+              <p className="font-medium text-zinc-900 dark:text-white">Manage Baselines</p>
+              <p className="text-sm text-zinc-500">Save and manage benchmarks</p>
             </div>
           </Link>
 
@@ -402,12 +358,8 @@ function BenchmarkContent() {
               <GitCompare className="h-5 w-5 text-green-600 dark:text-green-400" />
             </div>
             <div>
-              <p className="font-medium text-zinc-900 dark:text-white">
-                Compare Results
-              </p>
-              <p className="text-sm text-zinc-500">
-                Analyze performance changes
-              </p>
+              <p className="font-medium text-zinc-900 dark:text-white">Compare Results</p>
+              <p className="text-sm text-zinc-500">Analyze performance changes</p>
             </div>
           </Link>
         </div>
@@ -419,22 +371,18 @@ function BenchmarkContent() {
           </h3>
           <div className="space-y-2 font-mono text-sm">
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-sky-500">nself bench</span> - Run default
-              benchmark suite
+              <span className="text-sky-500">nself bench</span> - Run default benchmark suite
             </p>
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-sky-500">nself bench --target=api</span> -
-              Benchmark specific target
+              <span className="text-sky-500">nself bench --target=api</span> - Benchmark specific
+              target
             </p>
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-sky-500">nself bench --save=name</span> -
-              Save as baseline
+              <span className="text-sky-500">nself bench --save=name</span> - Save as baseline
             </p>
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-sky-500">
-                nself bench --compare=baseline
-              </span>{' '}
-              - Compare with baseline
+              <span className="text-sky-500">nself bench --compare=baseline</span> - Compare with
+              baseline
             </p>
           </div>
         </div>

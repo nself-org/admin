@@ -17,15 +17,11 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           error: 'Invalid query',
           details: 'A non-empty search query string is required',
         },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
-    const result = await executeNselfCommand('service', [
-      'search',
-      'query',
-      `--q=${query.trim()}`,
-    ])
+    const result = await executeNselfCommand('service', ['search', 'query', `--q=${query.trim()}`])
 
     if (!result.success) {
       return NextResponse.json(
@@ -34,7 +30,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           error: 'Search query failed',
           details: result.error || result.stderr || 'Unknown error',
         },
-        { status: 500 },
+        { status: 500 }
       )
     }
 
@@ -49,7 +45,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         error: 'Search query failed',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

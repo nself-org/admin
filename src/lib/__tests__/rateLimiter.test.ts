@@ -1,10 +1,5 @@
 import { NextRequest } from 'next/server'
-import {
-  clearAllRateLimits,
-  clearRateLimit,
-  getRateLimitInfo,
-  isRateLimited,
-} from '../rateLimiter'
+import { clearAllRateLimits, clearRateLimit, getRateLimitInfo, isRateLimited } from '../rateLimiter'
 
 describe('rateLimiter', () => {
   const createRequest = (ip: string = '127.0.0.1') => {

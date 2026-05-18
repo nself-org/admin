@@ -9,16 +9,9 @@ interface DeliveryLogProps {
 }
 
 const STATUS_ICON: Record<DeliveryStatus, React.ReactNode> = {
-  delivered: (
-    <CheckCircle className="h-4 w-4 text-emerald-500" aria-label="Delivered" />
-  ),
+  delivered: <CheckCircle className="h-4 w-4 text-emerald-500" aria-label="Delivered" />,
   failed: <XCircle className="h-4 w-4 text-red-500" aria-label="Failed" />,
-  retrying: (
-    <RefreshCw
-      className="h-4 w-4 animate-spin text-amber-500"
-      aria-label="Retrying"
-    />
-  ),
+  retrying: <RefreshCw className="h-4 w-4 animate-spin text-amber-500" aria-label="Retrying" />,
   pending: <Clock className="h-4 w-4 text-zinc-400" aria-label="Pending" />,
 }
 
@@ -47,18 +40,12 @@ function formatDate(iso: string): string {
  * DeliveryLog renders a table of webhook delivery attempts with status,
  * attempt count, response code, and latency.
  */
-export function DeliveryLog({
-  deliveries,
-  isLoading = false,
-}: DeliveryLogProps) {
+export function DeliveryLog({ deliveries, isLoading = false }: DeliveryLogProps) {
   if (isLoading) {
     return (
       <div className="animate-pulse space-y-2">
         {[...Array(5)].map((_, i) => (
-          <div
-            key={i}
-            className="h-12 rounded-lg bg-zinc-100 dark:bg-zinc-800"
-          />
+          <div key={i} className="h-12 rounded-lg bg-zinc-100 dark:bg-zinc-800" />
         ))}
       </div>
     )
@@ -98,16 +85,11 @@ export function DeliveryLog({
         </thead>
         <tbody className="divide-y divide-zinc-100 bg-white dark:divide-zinc-800 dark:bg-zinc-900">
           {deliveries.map((d) => (
-            <tr
-              key={d.id}
-              className="hover:bg-zinc-50 dark:hover:bg-zinc-800/40"
-            >
+            <tr key={d.id} className="hover:bg-zinc-50 dark:hover:bg-zinc-800/40">
               <td className="px-4 py-3">
                 <span className="flex items-center gap-1.5">
                   {STATUS_ICON[d.status]}
-                  <span className="text-zinc-700 dark:text-zinc-300">
-                    {STATUS_LABEL[d.status]}
-                  </span>
+                  <span className="text-zinc-700 dark:text-zinc-300">{STATUS_LABEL[d.status]}</span>
                 </span>
               </td>
               <td className="px-4 py-3 font-mono text-xs text-zinc-600 dark:text-zinc-400">

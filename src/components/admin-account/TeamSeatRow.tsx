@@ -27,12 +27,7 @@ const ROLE_LABELS: Record<TeamRole, string> = {
   viewer: 'Viewer',
 }
 
-export function TeamSeatRow({
-  seat,
-  isCurrentUser,
-  onRevoke,
-  onRoleChange,
-}: TeamSeatRowProps) {
+export function TeamSeatRow({ seat, isCurrentUser, onRevoke, onRoleChange }: TeamSeatRowProps) {
   const [revoking, setRevoking] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -82,9 +77,7 @@ export function TeamSeatRow({
                 </span>
               )}
             </p>
-            <p className="text-xs text-zinc-500 dark:text-zinc-400">
-              {seat.email}
-            </p>
+            <p className="text-xs text-zinc-500 dark:text-zinc-400">{seat.email}</p>
           </div>
         </div>
       </td>

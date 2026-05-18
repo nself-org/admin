@@ -36,29 +36,29 @@ export async function POST(): Promise<NextResponse> {
       }),
       fetch(
         'https://api.github.com/user/repos?per_page=1&affiliation=owner,collaborator,organization_member',
-        { headers, signal: AbortSignal.timeout(10_000) },
+        { headers, signal: AbortSignal.timeout(10_000) }
       ),
-      fetch(
-        'https://api.github.com/search/issues?q=is:issue+is:open&per_page=1',
-        { headers, signal: AbortSignal.timeout(10_000) },
-      ),
-      fetch(
-        'https://api.github.com/search/issues?q=is:pr+is:open&per_page=1',
-        { headers, signal: AbortSignal.timeout(10_000) },
-      ),
+      fetch('https://api.github.com/search/issues?q=is:issue+is:open&per_page=1', {
+        headers,
+        signal: AbortSignal.timeout(10_000),
+      }),
+      fetch('https://api.github.com/search/issues?q=is:pr+is:open&per_page=1', {
+        headers,
+        signal: AbortSignal.timeout(10_000),
+      }),
     ])
 
     if (!userResp.ok) {
       const text = await userResp.text()
       return NextResponse.json(
         { error: `GitHub API returned ${userResp.status}`, details: text.slice(0, 500) },
-        { status: 502 },
+        { status: 502 }
       )
     }
 
     const userData: Record<string, unknown> = await userResp.json()
-    const totalRepos = (userData.total_private_repos as number ?? 0) +
-      (userData.public_repos as number ?? 0)
+    const totalRepos =
+      ((userData.total_private_repos as number) ?? 0) + ((userData.public_repos as number) ?? 0)
 
     // Extract total_count from paginated responses (Link header carries page info;
     // we only need the count which GitHub returns in the response body for search
@@ -90,7 +90,7 @@ export async function POST(): Promise<NextResponse> {
     let workflowRuns = 0
     const topReposResp = await fetch(
       'https://api.github.com/user/repos?sort=pushed&per_page=3&affiliation=owner',
-      { headers, signal: AbortSignal.timeout(10_000) },
+      { headers, signal: AbortSignal.timeout(10_000) }
     )
     if (topReposResp.ok) {
       const topRepos: Array<Record<string, unknown>> = await topReposResp.json()
@@ -99,12 +99,12 @@ export async function POST(): Promise<NextResponse> {
           const fullName = r.full_name as string
           const resp = await fetch(
             `https://api.github.com/repos/${fullName}/actions/runs?per_page=1`,
-            { headers, signal: AbortSignal.timeout(8_000) },
+            { headers, signal: AbortSignal.timeout(8_000) }
           ).catch(() => null)
           if (!resp?.ok) return 0
           const data: { total_count: number } = await resp.json()
           return data.total_count ?? 0
-        }),
+        })
       )
       workflowRuns = runCounts.reduce((sum, n) => sum + n, 0)
     }
@@ -126,7 +126,7 @@ export async function POST(): Promise<NextResponse> {
         error: 'Failed to sync GitHub data',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

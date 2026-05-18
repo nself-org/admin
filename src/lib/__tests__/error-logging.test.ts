@@ -37,7 +37,7 @@ describe('error-logging', () => {
         expect.objectContaining({
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-        }),
+        })
       )
     })
 
@@ -54,9 +54,7 @@ describe('error-logging', () => {
     })
 
     it('handles network errors gracefully', async () => {
-      ;(global.fetch as jest.Mock).mockRejectedValueOnce(
-        new Error('Network error'),
-      )
+      ;(global.fetch as jest.Mock).mockRejectedValueOnce(new Error('Network error'))
 
       const error = new Error('Test error')
       await expect(reportError(error)).resolves.not.toThrow()
@@ -107,9 +105,7 @@ describe('error-logging', () => {
       // Should be able to report again
       await reportError(error)
 
-      expect((global.fetch as jest.Mock).mock.calls.length).toBeGreaterThan(
-        firstCallCount,
-      )
+      expect((global.fetch as jest.Mock).mock.calls.length).toBeGreaterThan(firstCallCount)
     })
 
     it('tracks different errors separately', async () => {
@@ -137,12 +133,10 @@ describe('error-logging', () => {
   describe('error report format', () => {
     it('includes all required fields', async () => {
       let capturedBody: string | null = null
-      ;(global.fetch as jest.Mock).mockImplementationOnce(
-        (_url: string, options: RequestInit) => {
-          capturedBody = options.body as string
-          return Promise.resolve({ ok: true, status: 200 })
-        },
-      )
+      ;(global.fetch as jest.Mock).mockImplementationOnce((_url: string, options: RequestInit) => {
+        capturedBody = options.body as string
+        return Promise.resolve({ ok: true, status: 200 })
+      })
 
       const error = new Error('Test error')
       error.stack = 'at file.ts:10'

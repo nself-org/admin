@@ -86,7 +86,7 @@ export function TimelineItem({
         <div
           className={cn(
             'flex h-10 w-10 items-center justify-center rounded-full',
-            variantColors[variant],
+            variantColors[variant]
           )}
         >
           {Icon ? (
@@ -96,31 +96,20 @@ export function TimelineItem({
           )}
         </div>
         {showLine && (
-          <div
-            className={cn(
-              'absolute top-10 h-full w-0.5',
-              variantBorders[variant],
-            )}
-          />
+          <div className={cn('absolute top-10 h-full w-0.5', variantBorders[variant])} />
         )}
       </div>
 
       {/* Content */}
       <div className="flex-1 pb-8">
         <div className="flex items-start justify-between">
-          <h4 className="text-sm font-semibold text-zinc-900 dark:text-zinc-50">
-            {title}
-          </h4>
+          <h4 className="text-sm font-semibold text-zinc-900 dark:text-zinc-50">{title}</h4>
           {timestamp && (
-            <time className="text-xs text-zinc-500 dark:text-zinc-400">
-              {timestamp}
-            </time>
+            <time className="text-xs text-zinc-500 dark:text-zinc-400">{timestamp}</time>
           )}
         </div>
         {description && (
-          <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
-            {description}
-          </p>
+          <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">{description}</p>
         )}
         {children && <div className="mt-2">{children}</div>}
       </div>

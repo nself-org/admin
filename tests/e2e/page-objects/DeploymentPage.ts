@@ -12,9 +12,7 @@ export class DeploymentPage {
   constructor(page: Page) {
     this.page = page
     this.pageTitle = page.locator('h1')
-    this.environmentSelector = page.locator(
-      '[data-testid="environment-selector"]',
-    )
+    this.environmentSelector = page.locator('[data-testid="environment-selector"]')
     this.configSection = page.locator('[data-testid="deployment-config"]')
     this.deployButton = page.locator('button:has-text("Deploy")')
     this.deploymentLogs = page.locator('[data-testid="deployment-logs"]')

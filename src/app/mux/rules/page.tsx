@@ -196,9 +196,7 @@ function actionFormToApi(a: ActionForm): Record<string, unknown> {
         sheets_log: {
           spreadsheet_id: a.spreadsheet_id ?? '',
           sheet_name: a.sheet_name || null,
-          columns: a.columns_csv
-            ? a.columns_csv.split(',').map((s) => s.trim())
-            : [],
+          columns: a.columns_csv ? a.columns_csv.split(',').map((s) => s.trim()) : [],
         },
       }
     case 'forward_action':
@@ -313,9 +311,7 @@ function apiActionToForm(raw: Record<string, unknown>): ActionForm {
         ...base,
         spreadsheet_id: c.spreadsheet_id as string,
         sheet_name: c.sheet_name as string,
-        columns_csv: Array.isArray(c.columns)
-          ? (c.columns as string[]).join(', ')
-          : '',
+        columns_csv: Array.isArray(c.columns) ? (c.columns as string[]).join(', ') : '',
       }
     case 'forward_action':
       return {
@@ -367,9 +363,7 @@ function apiActionToForm(raw: Record<string, unknown>): ActionForm {
     case 'extract': {
       return {
         ...base,
-        patterns: Array.isArray(c.patterns)
-          ? (c.patterns as ExtractPattern[])
-          : [],
+        patterns: Array.isArray(c.patterns) ? (c.patterns as ExtractPattern[]) : [],
       }
     }
     case 'mark_read':
@@ -387,21 +381,15 @@ function apiActionToForm(raw: Record<string, unknown>): ActionForm {
 function condToYaml(c: RuleConditions, indent: string): string {
   const lines: string[] = []
   if (c.from) lines.push(`${indent}from: "${c.from}"`)
-  if (c.subject_contains)
-    lines.push(`${indent}subject_contains: "${c.subject_contains}"`)
-  if (c.body_contains)
-    lines.push(`${indent}body_contains: "${c.body_contains}"`)
-  if (c.has_attachment !== undefined)
-    lines.push(`${indent}has_attachment: ${c.has_attachment}`)
+  if (c.subject_contains) lines.push(`${indent}subject_contains: "${c.subject_contains}"`)
+  if (c.body_contains) lines.push(`${indent}body_contains: "${c.body_contains}"`)
+  if (c.has_attachment !== undefined) lines.push(`${indent}has_attachment: ${c.has_attachment}`)
   if (c.has_words?.length)
-    lines.push(
-      `${indent}has_words: [${c.has_words.map((w) => `"${w}"`).join(', ')}]`,
-    )
-  if (c.labels?.length)
-    lines.push(`${indent}labels: [${c.labels.map((l) => `"${l}"`).join(', ')}]`)
+    lines.push(`${indent}has_words: [${c.has_words.map((w) => `"${w}"`).join(', ')}]`)
+  if (c.labels?.length) lines.push(`${indent}labels: [${c.labels.map((l) => `"${l}"`).join(', ')}]`)
   if (c.silent_trash_orgs?.length)
     lines.push(
-      `${indent}silent_trash_orgs: [${c.silent_trash_orgs.map((o) => `"${o}"`).join(', ')}]`,
+      `${indent}silent_trash_orgs: [${c.silent_trash_orgs.map((o) => `"${o}"`).join(', ')}]`
     )
   if (c.date_after) lines.push(`${indent}date_after: "${c.date_after}"`)
   if (c.date_before) lines.push(`${indent}date_before: "${c.date_before}"`)
@@ -461,20 +449,14 @@ function singleActionToYaml(a: ActionForm, indent: string): string {
       yaml = `${indent}silent_trash:\n${i2}delay_seconds: ${a.delay_seconds ?? 0}`
       break
     case 'auto_reply': {
-      const lines = [
-        `${indent}auto_reply:`,
-        `${i2}template: "${a.template ?? ''}"`,
-      ]
-      if (a.subject_prefix)
-        lines.push(`${i2}subject_prefix: "${a.subject_prefix}"`)
+      const lines = [`${indent}auto_reply:`, `${i2}template: "${a.template ?? ''}"`]
+      if (a.subject_prefix) lines.push(`${i2}subject_prefix: "${a.subject_prefix}"`)
       if (a.delay_seconds) lines.push(`${i2}delay_seconds: ${a.delay_seconds}`)
       yaml = lines.join('\n')
       break
     }
     case 'sheets_log': {
-      const cols = a.columns_csv
-        ? a.columns_csv.split(',').map((s) => `"${s.trim()}"`)
-        : []
+      const cols = a.columns_csv ? a.columns_csv.split(',').map((s) => `"${s.trim()}"`) : []
       const lines = [
         `${indent}sheets_log:`,
         `${i2}spreadsheet_id: "${a.spreadsheet_id ?? ''}"`,
@@ -489,21 +471,15 @@ function singleActionToYaml(a: ActionForm, indent: string): string {
         `${indent}companion_notify:`,
         `${i2}card_type: "${a.card_type ?? 'email_summary'}"`,
       ]
-      if (a.title_template)
-        lines.push(`${i2}title_template: "${a.title_template}"`)
-      if (a.body_template)
-        lines.push(`${i2}body_template: "${a.body_template}"`)
+      if (a.title_template) lines.push(`${i2}title_template: "${a.title_template}"`)
+      if (a.body_template) lines.push(`${i2}body_template: "${a.body_template}"`)
       yaml = lines.join('\n')
       break
     }
     case 'claw_delegate': {
-      const lines = [
-        `${indent}claw_delegate:`,
-        `${i2}auto_reply: ${a.auto_reply_flag ?? false}`,
-      ]
+      const lines = [`${indent}claw_delegate:`, `${i2}auto_reply: ${a.auto_reply_flag ?? false}`]
       if (a.context_hint) lines.push(`${i2}context_hint: "${a.context_hint}"`)
-      if (a.reply_channel)
-        lines.push(`${i2}reply_channel: "${a.reply_channel}"`)
+      if (a.reply_channel) lines.push(`${i2}reply_channel: "${a.reply_channel}"`)
       if (a.tg_chat_id) lines.push(`${i2}tg_chat_id: "${a.tg_chat_id}"`)
       if (a.timeout_secs) lines.push(`${i2}timeout_secs: ${a.timeout_secs}`)
       yaml = lines.join('\n')
@@ -610,22 +586,12 @@ const SELECT =
   'rounded-lg border border-zinc-700 bg-zinc-900 px-2 py-1.5 text-sm text-white focus:border-sky-500 focus:outline-none'
 
 function Label({ children }: { children: React.ReactNode }) {
-  return (
-    <label className="mb-1 block text-xs font-medium text-zinc-400">
-      {children}
-    </label>
-  )
+  return <label className="mb-1 block text-xs font-medium text-zinc-400">{children}</label>
 }
 
 // ── RegexPreview ──────────────────────────────────────────────────────────────
 
-function RegexPreview({
-  pattern,
-  testStrings,
-}: {
-  pattern: string
-  testStrings: string[]
-}) {
+function RegexPreview({ pattern, testStrings }: { pattern: string; testStrings: string[] }) {
   if (!pattern) return null
 
   let regex: RegExp | null = null
@@ -644,9 +610,7 @@ function RegexPreview({
       ) : (
         <div className="space-y-0.5">
           {testStrings.length === 0 ? (
-            <p className="text-xs text-zinc-600 italic">
-              No test data available
-            </p>
+            <p className="text-xs text-zinc-600 italic">No test data available</p>
           ) : (
             testStrings.slice(0, 5).map((s, i) => {
               const matches = regex ? regex.test(s) : false
@@ -657,9 +621,7 @@ function RegexPreview({
                   ) : (
                     <XCircle className="h-3 w-3 shrink-0 text-zinc-600" />
                   )}
-                  <span
-                    className={matches ? 'text-emerald-300' : 'text-zinc-500'}
-                  >
+                  <span className={matches ? 'text-emerald-300' : 'text-zinc-500'}>
                     {s.length > 60 ? s.slice(0, 60) + '...' : s}
                   </span>
                 </div>
@@ -762,14 +724,10 @@ function LabelMultiSelect({
             >
               <span
                 className={`flex h-3.5 w-3.5 items-center justify-center rounded border ${
-                  selected.includes(label)
-                    ? 'border-sky-500 bg-sky-500'
-                    : 'border-zinc-600'
+                  selected.includes(label) ? 'border-sky-500 bg-sky-500' : 'border-zinc-600'
                 }`}
               >
-                {selected.includes(label) && (
-                  <CheckCircle className="h-2.5 w-2.5 text-white" />
-                )}
+                {selected.includes(label) && <CheckCircle className="h-2.5 w-2.5 text-white" />}
               </span>
               {label}
             </button>
@@ -805,11 +763,7 @@ function ActionConfig({
     case 'leave_inbox':
     case 'discard':
     case 'mark_read':
-      return (
-        <p className="text-xs text-zinc-500 italic">
-          No additional config needed.
-        </p>
-      )
+      return <p className="text-xs text-zinc-500 italic">No additional config needed.</p>
     case 'forward_to':
     case 'webhook':
       return (
@@ -895,8 +849,7 @@ function ActionConfig({
           </div>
           <div>
             <Label>
-              Columns CSV — vars: {'{from}'}, {'{subject}'}, {'{date}'},{' '}
-              {'{rule}'}
+              Columns CSV — vars: {'{from}'}, {'{subject}'}, {'{date}'}, {'{rule}'}
             </Label>
             <input
               className={INPUT}
@@ -1056,10 +1009,7 @@ function ActionConfig({
               onChange={(e) => up({ auto_reply_flag: e.target.checked })}
               className="h-4 w-4 rounded border-zinc-600 bg-zinc-800 text-sky-500"
             />
-            <label
-              htmlFor="auto-reply-flag"
-              className="cursor-pointer text-sm text-zinc-300"
-            >
+            <label htmlFor="auto-reply-flag" className="cursor-pointer text-sm text-zinc-300">
               Auto-send reply via Gmail (otherwise sends draft to Telegram)
             </label>
           </div>
@@ -1130,9 +1080,7 @@ function ExtractConfig({
   return (
     <div className="space-y-3">
       <div className="flex items-center justify-between">
-        <p className="text-xs font-medium text-zinc-400">
-          Named extract patterns
-        </p>
+        <p className="text-xs font-medium text-zinc-400">Named extract patterns</p>
         <button
           type="button"
           onClick={addPattern}
@@ -1205,8 +1153,7 @@ function ExtractConfig({
             </div>
             {testResult && (
               <p className="text-xs text-zinc-400">
-                Test result:{' '}
-                <span className="font-mono text-emerald-300">{testResult}</span>
+                Test result: <span className="font-mono text-emerald-300">{testResult}</span>
               </p>
             )}
           </div>
@@ -1410,9 +1357,7 @@ function ActionChainBuilder({
                 title="Action type"
                 className={`${SELECT} flex-1`}
                 value={action.type}
-                onChange={(e) =>
-                  updateStep(idx, { type: e.target.value as ActionType })
-                }
+                onChange={(e) => updateStep(idx, { type: e.target.value as ActionType })}
               >
                 {ACTION_LABELS.map((a) => (
                   <option key={a.value} value={a.value}>
@@ -1432,10 +1377,7 @@ function ActionChainBuilder({
               )}
             </div>
 
-            <ActionConfig
-              action={action}
-              onChange={(a) => updateStep(idx, a)}
-            />
+            <ActionConfig action={action} onChange={(a) => updateStep(idx, a)} />
 
             <WhenClauseBuilder
               when={action.when}
@@ -1467,12 +1409,9 @@ function ActionChainBuilder({
                   }`}
                 >
                   {a.when ? '?' : ''}{' '}
-                  {ACTION_LABELS.find((l) => l.value === a.type)?.label ??
-                    a.type}
+                  {ACTION_LABELS.find((l) => l.value === a.type)?.label ?? a.type}
                 </span>
-                {idx < actions.length - 1 && (
-                  <ArrowRight className="h-3 w-3 text-zinc-600" />
-                )}
+                {idx < actions.length - 1 && <ArrowRight className="h-3 w-3 text-zinc-600" />}
               </div>
             ))}
           </div>
@@ -1493,14 +1432,11 @@ function ConditionBuilder({
   onChange: (c: RuleConditions) => void
   recentFromAddresses: string[]
 }) {
-  const upCond = (patch: Partial<RuleConditions>) =>
-    onChange({ ...conditions, ...patch })
+  const upCond = (patch: Partial<RuleConditions>) => onChange({ ...conditions, ...patch })
 
   return (
     <div className="space-y-3 rounded-lg border border-zinc-700/50 p-4">
-      <p className="text-xs font-semibold tracking-wider text-zinc-500 uppercase">
-        Conditions
-      </p>
+      <p className="text-xs font-semibold tracking-wider text-zinc-500 uppercase">Conditions</p>
 
       {/* From pattern with regex preview */}
       <div>
@@ -1512,10 +1448,7 @@ function ConditionBuilder({
           placeholder="noreply@example\.com"
         />
         {conditions.from && (
-          <RegexPreview
-            pattern={conditions.from}
-            testStrings={recentFromAddresses}
-          />
+          <RegexPreview pattern={conditions.from} testStrings={recentFromAddresses} />
         )}
       </div>
 
@@ -1525,9 +1458,7 @@ function ConditionBuilder({
         <input
           className={INPUT}
           value={conditions.subject_contains ?? ''}
-          onChange={(e) =>
-            upCond({ subject_contains: e.target.value || undefined })
-          }
+          onChange={(e) => upCond({ subject_contains: e.target.value || undefined })}
           placeholder="invoice"
         />
       </div>
@@ -1538,9 +1469,7 @@ function ConditionBuilder({
         <input
           className={INPUT}
           value={conditions.body_contains ?? ''}
-          onChange={(e) =>
-            upCond({ body_contains: e.target.value || undefined })
-          }
+          onChange={(e) => upCond({ body_contains: e.target.value || undefined })}
           placeholder="unsubscribe"
         />
       </div>
@@ -1568,9 +1497,7 @@ function ConditionBuilder({
           <Label>Labels (Gmail labels to match)</Label>
           <LabelMultiSelect
             selected={conditions.labels ?? []}
-            onChange={(labels) =>
-              upCond({ labels: labels.length > 0 ? labels : undefined })
-            }
+            onChange={(labels) => upCond({ labels: labels.length > 0 ? labels : undefined })}
           />
         </div>
       </div>
@@ -1605,10 +1532,7 @@ function ConditionBuilder({
           }
           className="h-4 w-4 rounded border-zinc-600 bg-zinc-800 text-sky-500"
         />
-        <label
-          htmlFor="has-attachment"
-          className="cursor-pointer text-sm text-zinc-300"
-        >
+        <label htmlFor="has-attachment" className="cursor-pointer text-sm text-zinc-300">
           Has attachment
         </label>
       </div>
@@ -1622,9 +1546,7 @@ function ConditionBuilder({
             title="Date after filter"
             className={INPUT}
             value={conditions.date_after ?? ''}
-            onChange={(e) =>
-              upCond({ date_after: e.target.value || undefined })
-            }
+            onChange={(e) => upCond({ date_after: e.target.value || undefined })}
           />
         </div>
         <div>
@@ -1634,9 +1556,7 @@ function ConditionBuilder({
             title="Date before filter"
             className={INPUT}
             value={conditions.date_before ?? ''}
-            onChange={(e) =>
-              upCond({ date_before: e.target.value || undefined })
-            }
+            onChange={(e) => upCond({ date_before: e.target.value || undefined })}
           />
         </div>
       </div>
@@ -1701,9 +1621,7 @@ function RuleForm({
               placeholder="100"
               className={INPUT}
               value={rule.priority}
-              onChange={(e) =>
-                up({ priority: parseInt(e.target.value) || 100 })
-              }
+              onChange={(e) => up({ priority: parseInt(e.target.value) || 100 })}
               min={1}
             />
           </div>
@@ -1714,9 +1632,7 @@ function RuleForm({
               type="number"
               className={INPUT}
               value={rule.cooldown_secs ?? ''}
-              onChange={(e) =>
-                up({ cooldown_secs: e.target.value || undefined })
-              }
+              onChange={(e) => up({ cooldown_secs: e.target.value || undefined })}
               placeholder="300"
               min={0}
             />
@@ -1731,10 +1647,7 @@ function RuleForm({
         />
 
         {/* Action chain (T-2168) */}
-        <ActionChainBuilder
-          actions={actions}
-          onChange={(a) => up({ action: a })}
-        />
+        <ActionChainBuilder actions={actions} onChange={(a) => up({ action: a })} />
 
         {/* Account scope + enabled */}
         <div className="grid grid-cols-2 gap-3">
@@ -1745,9 +1658,7 @@ function RuleForm({
                 title="Account scope"
                 className={`${SELECT} w-full`}
                 value={rule.account_id ?? ''}
-                onChange={(e) =>
-                  up({ account_id: e.target.value || undefined })
-                }
+                onChange={(e) => up({ account_id: e.target.value || undefined })}
               >
                 <option value="">All accounts</option>
                 {accounts.map((a) => (
@@ -1766,10 +1677,7 @@ function RuleForm({
               onChange={(e) => up({ enabled: e.target.checked })}
               className="h-4 w-4 rounded border-zinc-600 bg-zinc-800 text-sky-500"
             />
-            <label
-              htmlFor="enabled"
-              className="cursor-pointer text-sm text-zinc-300"
-            >
+            <label htmlFor="enabled" className="cursor-pointer text-sm text-zinc-300">
               Enabled
             </label>
           </div>
@@ -1788,11 +1696,7 @@ function RuleForm({
             disabled={saving}
             className="flex items-center gap-2 rounded-lg bg-sky-500 px-4 py-1.5 text-sm font-medium text-white transition-colors hover:bg-sky-400 disabled:opacity-50"
           >
-            {saving ? (
-              <Loader2 className="h-4 w-4 animate-spin" />
-            ) : (
-              <Save className="h-4 w-4" />
-            )}
+            {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
             {saving ? 'Saving...' : 'Save Rule'}
           </button>
         </div>
@@ -1819,13 +1723,7 @@ interface TestResult {
   actionPreview: string[]
 }
 
-function RuleTestPreview({
-  rule,
-  onClose,
-}: {
-  rule: MuxRule
-  onClose: () => void
-}) {
+function RuleTestPreview({ rule, onClose }: { rule: MuxRule; onClose: () => void }) {
   const [loading, setLoading] = useState(true)
   const [results, setResults] = useState<TestResult[]>([])
   const [error, setError] = useState<string | null>(null)
@@ -1838,18 +1736,13 @@ function RuleTestPreview({
       if (cond.from) {
         try {
           const re = new RegExp(cond.from, 'i')
-          if (!re.test(run.from_address ?? run.gmail_address ?? ''))
-            return false
+          if (!re.test(run.from_address ?? run.gmail_address ?? '')) return false
         } catch {
           return false
         }
       }
       if (cond.subject_contains) {
-        if (
-          !(run.subject ?? '')
-            .toLowerCase()
-            .includes(cond.subject_contains.toLowerCase())
-        )
+        if (!(run.subject ?? '').toLowerCase().includes(cond.subject_contains.toLowerCase()))
           return false
       }
       // We cannot test body_contains, has_attachment, labels, etc.
@@ -1857,15 +1750,14 @@ function RuleTestPreview({
       // (they would require full email data)
       return true
     },
-    [rule.conditions],
+    [rule.conditions]
   )
 
   const describeActions = useCallback(
     (run: MuxRun): string[] => {
       return actions.map((a, idx) => {
         const prefix = actions.length > 1 ? `Step ${idx + 1}: ` : ''
-        const label =
-          ACTION_LABELS.find((l) => l.value === a.type)?.label ?? a.type
+        const label = ACTION_LABELS.find((l) => l.value === a.type)?.label ?? a.type
         let detail = `${prefix}${label}`
         if (a.when) {
           detail += ` (when ${a.when.field} ${a.when.operator} "${a.when.value}")`
@@ -1895,7 +1787,7 @@ function RuleTestPreview({
         return detail
       })
     },
-    [actions],
+    [actions]
   )
 
   useEffect(() => {
@@ -1931,9 +1823,7 @@ function RuleTestPreview({
     <div className="rounded-xl border border-zinc-700/50 bg-zinc-800/50 p-5">
       <div className="mb-4 flex items-center justify-between">
         <div>
-          <h3 className="text-sm font-medium text-white">
-            Rule test: {rule.name}
-          </h3>
+          <h3 className="text-sm font-medium text-white">Rule test: {rule.name}</h3>
           <p className="mt-0.5 text-xs text-zinc-400">
             Testing against recent {results.length} emails
           </p>
@@ -2005,9 +1895,7 @@ function RuleTestPreview({
                       {r.run.from_address ?? r.run.gmail_address ?? '(unknown)'}
                     </span>
                     <span className="text-xs text-zinc-500">
-                      {r.run.created_at
-                        ? new Date(r.run.created_at).toLocaleString()
-                        : ''}
+                      {r.run.created_at ? new Date(r.run.created_at).toLocaleString() : ''}
                     </span>
                   </div>
                   <p className="truncate text-xs text-zinc-400">
@@ -2114,8 +2002,7 @@ function AccountsSection({
         <div className="space-y-4 border-t border-zinc-700/50 px-5 pt-4 pb-5">
           {accounts.length === 0 && !adding && (
             <p className="text-sm text-zinc-500">
-              No accounts connected. Add one below to enable Gmail Pub/Sub
-              processing.
+              No accounts connected. Add one below to enable Gmail Pub/Sub processing.
             </p>
           )}
 
@@ -2140,13 +2027,8 @@ function AccountsSection({
                 </thead>
                 <tbody>
                   {accounts.map((a) => (
-                    <tr
-                      key={a.id}
-                      className="border-b border-zinc-700/50 last:border-0"
-                    >
-                      <td className="px-3 py-2 text-sm text-zinc-200">
-                        {a.gmail_address}
-                      </td>
+                    <tr key={a.id} className="border-b border-zinc-700/50 last:border-0">
+                      <td className="px-3 py-2 text-sm text-zinc-200">{a.gmail_address}</td>
                       <td className="px-3 py-2 text-sm text-zinc-400">
                         {a.tg_chat_id ?? '\u2014'}
                       </td>
@@ -2216,18 +2098,14 @@ function AccountsSection({
               onSubmit={handleAdd}
               className="space-y-3 rounded-lg border border-zinc-700/50 bg-zinc-900/50 p-4"
             >
-              <p className="text-xs font-medium text-zinc-300">
-                Add Gmail account
-              </p>
+              <p className="text-xs font-medium text-zinc-300">Add Gmail account</p>
               <div>
                 <Label>Gmail address</Label>
                 <input
                   required
                   className={INPUT}
                   value={form.gmail_address}
-                  onChange={(e) =>
-                    setForm((f) => ({ ...f, gmail_address: e.target.value }))
-                  }
+                  onChange={(e) => setForm((f) => ({ ...f, gmail_address: e.target.value }))}
                   placeholder="you@gmail.com"
                 />
               </div>
@@ -2238,9 +2116,7 @@ function AccountsSection({
                   type="password"
                   className={INPUT}
                   value={form.refresh_token}
-                  onChange={(e) =>
-                    setForm((f) => ({ ...f, refresh_token: e.target.value }))
-                  }
+                  onChange={(e) => setForm((f) => ({ ...f, refresh_token: e.target.value }))}
                   placeholder="1//0g..."
                 />
               </div>
@@ -2249,9 +2125,7 @@ function AccountsSection({
                 <input
                   className={INPUT}
                   value={form.tg_chat_id}
-                  onChange={(e) =>
-                    setForm((f) => ({ ...f, tg_chat_id: e.target.value }))
-                  }
+                  onChange={(e) => setForm((f) => ({ ...f, tg_chat_id: e.target.value }))}
                   placeholder="-100123456789"
                 />
               </div>
@@ -2347,9 +2221,7 @@ export default function MuxRulesPage() {
           // Handle both single action and action array
           let action: ActionForm | ActionForm[]
           if (Array.isArray(r.actions)) {
-            action = (r.actions as Record<string, unknown>[]).map(
-              apiActionToForm,
-            )
+            action = (r.actions as Record<string, unknown>[]).map(apiActionToForm)
           } else if (r.action) {
             action = [apiActionToForm(r.action as Record<string, unknown>)]
           } else {
@@ -2363,13 +2235,11 @@ export default function MuxRulesPage() {
             conditions: (r.conditions ?? {}) as RuleConditions,
             action,
             enabled: r.enabled as boolean,
-            cooldown_secs: r.cooldown_secs
-              ? String(r.cooldown_secs)
-              : undefined,
+            cooldown_secs: r.cooldown_secs ? String(r.cooldown_secs) : undefined,
             account_id: r.account_id as string | undefined,
             created_at: r.created_at as string,
           }
-        }),
+        })
       )
       setAccounts(accountsData.accounts ?? [])
       setMuxDown(false)
@@ -2393,9 +2263,7 @@ export default function MuxRulesPage() {
         priority: ruleData.priority,
         conditions: ruleData.conditions,
         enabled: ruleData.enabled,
-        cooldown_secs: ruleData.cooldown_secs
-          ? parseInt(ruleData.cooldown_secs)
-          : undefined,
+        cooldown_secs: ruleData.cooldown_secs ? parseInt(ruleData.cooldown_secs) : undefined,
         account_id: ruleData.account_id || undefined,
       }
 
@@ -2468,9 +2336,7 @@ export default function MuxRulesPage() {
           <div className="flex items-start gap-3">
             <AlertCircle className="mt-0.5 h-5 w-5 shrink-0 text-yellow-400" />
             <div>
-              <p className="font-medium text-yellow-300">
-                nself-mux is not running
-              </p>
+              <p className="font-medium text-yellow-300">nself-mux is not running</p>
               <p className="mt-1 text-sm text-yellow-400/80">
                 Install and start the mux plugin to use the rule editor.
               </p>
@@ -2495,9 +2361,7 @@ export default function MuxRulesPage() {
           </p>
         </div>
         <div className="flex items-center gap-2">
-          {reloadMsg && (
-            <span className="text-xs text-zinc-400">{reloadMsg}</span>
-          )}
+          {reloadMsg && <span className="text-xs text-zinc-400">{reloadMsg}</span>}
           <button
             type="button"
             onClick={handleReload}
@@ -2543,21 +2407,13 @@ export default function MuxRulesPage() {
       )}
 
       {/* Test preview (T-2169) */}
-      {testingRule && (
-        <RuleTestPreview
-          rule={testingRule}
-          onClose={() => setTestingRule(null)}
-        />
-      )}
+      {testingRule && <RuleTestPreview rule={testingRule} onClose={() => setTestingRule(null)} />}
 
       {/* Loading */}
       {loading && (
         <div className="space-y-3">
           {[1, 2, 3].map((n) => (
-            <div
-              key={n}
-              className="h-14 animate-pulse rounded-xl bg-zinc-800/50"
-            />
+            <div key={n} className="h-14 animate-pulse rounded-xl bg-zinc-800/50" />
           ))}
         </div>
       )}
@@ -2614,8 +2470,8 @@ export default function MuxRulesPage() {
                 const actions = normalizeActions(rule.action)
                 const actionLabel =
                   actions.length === 1
-                    ? (ACTION_LABELS.find((a) => a.value === actions[0].type)
-                        ?.label ?? actions[0].type)
+                    ? (ACTION_LABELS.find((a) => a.value === actions[0].type)?.label ??
+                      actions[0].type)
                     : `${actions.length} steps`
 
                 return (
@@ -2624,18 +2480,12 @@ export default function MuxRulesPage() {
                     className="border-b border-zinc-700/50 last:border-0 hover:bg-zinc-800/50"
                   >
                     <td className="px-4 py-3">
-                      <span className="font-medium text-white">
-                        {rule.name}
-                      </span>
+                      <span className="font-medium text-white">{rule.name}</span>
                     </td>
-                    <td className="px-4 py-3 text-sm text-zinc-400">
-                      {rule.priority}
-                    </td>
+                    <td className="px-4 py-3 text-sm text-zinc-400">{rule.priority}</td>
                     <td className="max-w-[180px] truncate px-4 py-3 text-sm text-zinc-400">
                       {rule.conditions.from ? (
-                        <span className="font-mono text-xs">
-                          {rule.conditions.from}
-                        </span>
+                        <span className="font-mono text-xs">{rule.conditions.from}</span>
                       ) : (
                         <span className="text-zinc-600 italic">any</span>
                       )}
@@ -2679,11 +2529,7 @@ export default function MuxRulesPage() {
                         {/* Test button (T-2169) */}
                         <button
                           type="button"
-                          onClick={() =>
-                            setTestingRule(
-                              testingRule?.id === rule.id ? null : rule,
-                            )
-                          }
+                          onClick={() => setTestingRule(testingRule?.id === rule.id ? null : rule)}
                           className={`rounded p-1.5 transition-colors ${
                             testingRule?.id === rule.id
                               ? 'bg-sky-900/30 text-sky-300'
@@ -2743,9 +2589,7 @@ export default function MuxRulesPage() {
       )}
 
       {/* Accounts section */}
-      {!loading && !muxDown && (
-        <AccountsSection accounts={accounts} onRefresh={fetchAll} />
-      )}
+      {!loading && !muxDown && <AccountsSection accounts={accounts} onRefresh={fetchAll} />}
     </div>
   )
 }

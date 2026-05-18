@@ -87,7 +87,7 @@ export function usePluginUpdates() {
   }>(
     '/api/plugins/updates',
     fetcher,
-    { refreshInterval: 300000 }, // 5 minutes
+    { refreshInterval: 300000 } // 5 minutes
   )
 
   return {

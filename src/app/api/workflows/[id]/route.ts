@@ -10,20 +10,14 @@ interface RouteParams {
  * GET /api/workflows/[id]
  * Get a single workflow by ID
  */
-export async function GET(
-  request: NextRequest,
-  { params }: RouteParams,
-): Promise<NextResponse> {
+export async function GET(request: NextRequest, { params }: RouteParams): Promise<NextResponse> {
   try {
     const { id } = await params
 
     const workflow = await workflowsApi.getWorkflowById(id)
 
     if (!workflow) {
-      return NextResponse.json(
-        { success: false, error: 'Workflow not found' },
-        { status: 404 },
-      )
+      return NextResponse.json({ success: false, error: 'Workflow not found' }, { status: 404 })
     }
 
     return NextResponse.json({
@@ -34,10 +28,9 @@ export async function GET(
     return NextResponse.json(
       {
         success: false,
-        error:
-          error instanceof Error ? error.message : 'Failed to get workflow',
+        error: error instanceof Error ? error.message : 'Failed to get workflow',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -46,10 +39,7 @@ export async function GET(
  * PATCH /api/workflows/[id]
  * Update a workflow
  */
-export async function PATCH(
-  request: NextRequest,
-  { params }: RouteParams,
-): Promise<NextResponse> {
+export async function PATCH(request: NextRequest, { params }: RouteParams): Promise<NextResponse> {
   const authError = await requireAuth(request)
   if (authError) return authError
 
@@ -71,10 +61,7 @@ export async function PATCH(
     })
 
     if (!workflow) {
-      return NextResponse.json(
-        { success: false, error: 'Workflow not found' },
-        { status: 404 },
-      )
+      return NextResponse.json({ success: false, error: 'Workflow not found' }, { status: 404 })
     }
 
     return NextResponse.json({
@@ -85,10 +72,9 @@ export async function PATCH(
     return NextResponse.json(
       {
         success: false,
-        error:
-          error instanceof Error ? error.message : 'Failed to update workflow',
+        error: error instanceof Error ? error.message : 'Failed to update workflow',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -97,10 +83,7 @@ export async function PATCH(
  * DELETE /api/workflows/[id]
  * Delete a workflow
  */
-export async function DELETE(
-  request: NextRequest,
-  { params }: RouteParams,
-): Promise<NextResponse> {
+export async function DELETE(request: NextRequest, { params }: RouteParams): Promise<NextResponse> {
   const authError = await requireAuth(request)
   if (authError) return authError
 
@@ -110,10 +93,7 @@ export async function DELETE(
     const deleted = await workflowsApi.deleteWorkflow(id)
 
     if (!deleted) {
-      return NextResponse.json(
-        { success: false, error: 'Workflow not found' },
-        { status: 404 },
-      )
+      return NextResponse.json({ success: false, error: 'Workflow not found' }, { status: 404 })
     }
 
     return NextResponse.json({
@@ -124,10 +104,9 @@ export async function DELETE(
     return NextResponse.json(
       {
         success: false,
-        error:
-          error instanceof Error ? error.message : 'Failed to delete workflow',
+        error: error instanceof Error ? error.message : 'Failed to delete workflow',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

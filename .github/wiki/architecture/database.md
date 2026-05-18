@@ -227,7 +227,7 @@ export async function getAdminPasswordHash(): Promise<string | null> {
 export async function createSession(
   userId: string,
   ip?: string,
-  userAgent?: string,
+  userAgent?: string
 ): Promise<string> {
   const sessions = db.getCollection('sessions')
   const token = crypto.randomBytes(32).toString('hex')

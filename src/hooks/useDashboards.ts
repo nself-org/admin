@@ -6,12 +6,7 @@
  */
 'use client'
 
-import type {
-  Dashboard,
-  DashboardStats,
-  Widget,
-  WidgetTemplate,
-} from '@/types/dashboard'
+import type { Dashboard, DashboardStats, Widget, WidgetTemplate } from '@/types/dashboard'
 import { useCallback, useState } from 'react'
 import useSWR from 'swr'
 import useSWRMutation from 'swr/mutation'
@@ -27,10 +22,7 @@ const fetcher = async <T>(url: string): Promise<T> => {
   return data.data
 }
 
-async function postFetcher<T>(
-  url: string,
-  { arg }: { arg: T },
-): Promise<unknown> {
+async function postFetcher<T>(url: string, { arg }: { arg: T }): Promise<unknown> {
   const response = await fetch(url, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -41,10 +33,7 @@ async function postFetcher<T>(
   return data.data
 }
 
-async function _putFetcher<T>(
-  url: string,
-  { arg }: { arg: T },
-): Promise<unknown> {
+async function _putFetcher<T>(url: string, { arg }: { arg: T }): Promise<unknown> {
   const response = await fetch(url, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
@@ -98,7 +87,7 @@ export function useDashboard(id: string) {
     {
       refreshInterval: 30000,
       revalidateOnFocus: false,
-    },
+    }
   )
 
   return {
@@ -148,7 +137,7 @@ export function useDashboardStats() {
     {
       refreshInterval: 60000,
       revalidateOnFocus: false,
-    },
+    }
   )
 
   return {
@@ -173,7 +162,7 @@ export function useCreateDashboard() {
 
   const { trigger, isMutating } = useSWRMutation(
     '/api/dashboards',
-    postFetcher<Omit<Dashboard, 'id' | 'createdAt' | 'updatedAt'>>,
+    postFetcher<Omit<Dashboard, 'id' | 'createdAt' | 'updatedAt'>>
   )
 
   const create = useCallback(
@@ -184,15 +173,14 @@ export function useCreateDashboard() {
         const result = await trigger(input)
         return result as Dashboard
       } catch (err) {
-        const message =
-          err instanceof Error ? err.message : 'Failed to create dashboard'
+        const message = err instanceof Error ? err.message : 'Failed to create dashboard'
         setError(message)
         throw err
       } finally {
         setIsLoading(false)
       }
     },
-    [trigger],
+    [trigger]
   )
 
   return {
@@ -210,10 +198,7 @@ export function useUpdateDashboard() {
   const [error, setError] = useState<string | null>(null)
 
   const update = useCallback(
-    async (
-      id: string,
-      updates: Partial<Omit<Dashboard, 'id' | 'createdAt' | 'createdBy'>>,
-    ) => {
+    async (id: string, updates: Partial<Omit<Dashboard, 'id' | 'createdAt' | 'createdBy'>>) => {
       setIsLoading(true)
       setError(null)
       try {
@@ -226,15 +211,14 @@ export function useUpdateDashboard() {
         if (!data.success) throw new Error(data.error || 'Failed to update')
         return data.data as Dashboard
       } catch (err) {
-        const message =
-          err instanceof Error ? err.message : 'Failed to update dashboard'
+        const message = err instanceof Error ? err.message : 'Failed to update dashboard'
         setError(message)
         throw err
       } finally {
         setIsLoading(false)
       }
     },
-    [],
+    []
   )
 
   return {
@@ -258,8 +242,7 @@ export function useDeleteDashboard() {
       await deleteFetcher(`/api/dashboards/${id}`)
       return true
     } catch (err) {
-      const message =
-        err instanceof Error ? err.message : 'Failed to delete dashboard'
+      const message = err instanceof Error ? err.message : 'Failed to delete dashboard'
       setError(message)
       throw err
     } finally {
@@ -294,8 +277,7 @@ export function useCloneDashboard() {
       if (!data.success) throw new Error(data.error || 'Failed to clone')
       return data.data as Dashboard
     } catch (err) {
-      const message =
-        err instanceof Error ? err.message : 'Failed to clone dashboard'
+      const message = err instanceof Error ? err.message : 'Failed to clone dashboard'
       setError(message)
       throw err
     } finally {
@@ -321,30 +303,26 @@ export function useAddWidget() {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  const add = useCallback(
-    async (dashboardId: string, widget: Omit<Widget, 'id'>) => {
-      setIsLoading(true)
-      setError(null)
-      try {
-        const response = await fetch(`/api/dashboards/${dashboardId}/widgets`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(widget),
-        })
-        const data = await response.json()
-        if (!data.success) throw new Error(data.error || 'Failed to add widget')
-        return data.data as Widget
-      } catch (err) {
-        const message =
-          err instanceof Error ? err.message : 'Failed to add widget'
-        setError(message)
-        throw err
-      } finally {
-        setIsLoading(false)
-      }
-    },
-    [],
-  )
+  const add = useCallback(async (dashboardId: string, widget: Omit<Widget, 'id'>) => {
+    setIsLoading(true)
+    setError(null)
+    try {
+      const response = await fetch(`/api/dashboards/${dashboardId}/widgets`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(widget),
+      })
+      const data = await response.json()
+      if (!data.success) throw new Error(data.error || 'Failed to add widget')
+      return data.data as Widget
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Failed to add widget'
+      setError(message)
+      throw err
+    } finally {
+      setIsLoading(false)
+    }
+  }, [])
 
   return {
     add,
@@ -361,36 +339,27 @@ export function useUpdateWidget() {
   const [error, setError] = useState<string | null>(null)
 
   const update = useCallback(
-    async (
-      dashboardId: string,
-      widgetId: string,
-      updates: Partial<Omit<Widget, 'id'>>,
-    ) => {
+    async (dashboardId: string, widgetId: string, updates: Partial<Omit<Widget, 'id'>>) => {
       setIsLoading(true)
       setError(null)
       try {
-        const response = await fetch(
-          `/api/dashboards/${dashboardId}/widgets/${widgetId}`,
-          {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(updates),
-          },
-        )
+        const response = await fetch(`/api/dashboards/${dashboardId}/widgets/${widgetId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(updates),
+        })
         const data = await response.json()
-        if (!data.success)
-          throw new Error(data.error || 'Failed to update widget')
+        if (!data.success) throw new Error(data.error || 'Failed to update widget')
         return data.data as Widget
       } catch (err) {
-        const message =
-          err instanceof Error ? err.message : 'Failed to update widget'
+        const message = err instanceof Error ? err.message : 'Failed to update widget'
         setError(message)
         throw err
       } finally {
         setIsLoading(false)
       }
     },
-    [],
+    []
   )
 
   return {
@@ -414,8 +383,7 @@ export function useRemoveWidget() {
       await deleteFetcher(`/api/dashboards/${dashboardId}/widgets/${widgetId}`)
       return true
     } catch (err) {
-      const message =
-        err instanceof Error ? err.message : 'Failed to remove widget'
+      const message = err instanceof Error ? err.message : 'Failed to remove widget'
       setError(message)
       throw err
     } finally {

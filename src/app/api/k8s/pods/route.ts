@@ -23,14 +23,11 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     if (allNamespaces) args.push('--all-namespaces')
     if (selector) args.push(`--selector=${selector}`)
 
-    const { stdout } = await execAsync(
-      `${nselfPath} ${args.join(' ')} --json`,
-      {
-        cwd: projectPath,
-        env: { ...process.env, PATH: getEnhancedPath() },
-        timeout: 60000,
-      },
-    )
+    const { stdout } = await execAsync(`${nselfPath} ${args.join(' ')} --json`, {
+      cwd: projectPath,
+      env: { ...process.env, PATH: getEnhancedPath() },
+      timeout: 60000,
+    })
 
     const result = JSON.parse(stdout)
 
@@ -45,7 +42,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     logger.error('Failed to list pods', { error: err.message })
     return NextResponse.json(
       { success: false, error: 'Failed to list pods', details: err.message },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

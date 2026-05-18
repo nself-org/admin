@@ -77,13 +77,7 @@ const INITIAL_STEPS: PromotionStep[] = [
 // Confirm modal — requires typing PROMOTE TO PROD
 // ---------------------------------------------------------------------------
 
-function ConfirmModal({
-  onConfirm,
-  onCancel,
-}: {
-  onConfirm: () => void
-  onCancel: () => void
-}) {
+function ConfirmModal({ onConfirm, onCancel }: { onConfirm: () => void; onCancel: () => void }) {
   const [input, setInput] = useState('')
   const ok = input === 'PROMOTE TO PROD'
 
@@ -105,10 +99,7 @@ function ConfirmModal({
             <ShieldAlert className="h-5 w-5 text-red-400" />
           </div>
           <div>
-            <h2
-              id="promote-title"
-              className="text-nself-text text-base font-semibold"
-            >
+            <h2 id="promote-title" className="text-nself-text text-base font-semibold">
               Promote staging to production
             </h2>
             <p className="text-nself-text-muted mt-1 text-sm">
@@ -119,11 +110,8 @@ function ConfirmModal({
 
         <div className="mb-4 rounded-lg border border-red-500/30 bg-red-500/10 px-4 py-3">
           <p className="text-xs font-medium text-red-300">
-            Type{' '}
-            <span className="rounded bg-red-500/20 px-1 font-mono">
-              PROMOTE TO PROD
-            </span>{' '}
-            to confirm.
+            Type <span className="rounded bg-red-500/20 px-1 font-mono">PROMOTE TO PROD</span> to
+            confirm.
           </p>
         </div>
 
@@ -246,13 +234,9 @@ function StepRow({ step }: { step: PromotionStep }) {
         {icon}
         <span className={`flex-1 text-sm ${tone}`}>{step.label}</span>
       </div>
-      <p className="text-nself-text-muted mt-0.5 pl-6 text-xs">
-        {step.description}
-      </p>
+      <p className="text-nself-text-muted mt-0.5 pl-6 text-xs">{step.description}</p>
       {step.detail !== undefined && (
-        <p className="text-nself-text-muted mt-1 pl-6 font-mono text-xs">
-          {step.detail}
-        </p>
+        <p className="text-nself-text-muted mt-1 pl-6 font-mono text-xs">{step.detail}</p>
       )}
     </li>
   )
@@ -276,9 +260,7 @@ export function PromotionPanel() {
       ...prev,
       status: 'previewing',
       error: null,
-      steps: INITIAL_STEPS.map((s) =>
-        s.stage === 'diff' ? { ...s, status: 'running' } : s,
-      ),
+      steps: INITIAL_STEPS.map((s) => (s.stage === 'diff' ? { ...s, status: 'running' } : s)),
     }))
 
     try {
@@ -296,9 +278,7 @@ export function PromotionPanel() {
         ...prev,
         status: 'ready',
         diff,
-        steps: prev.steps.map((s) =>
-          s.stage === 'diff' ? { ...s, status: 'done' } : s,
-        ),
+        steps: prev.steps.map((s) => (s.stage === 'diff' ? { ...s, status: 'done' } : s)),
       }))
     } catch (err) {
       const msg = err instanceof Error ? err.message : 'Failed to compute diff.'
@@ -307,7 +287,7 @@ export function PromotionPanel() {
         status: 'failed',
         error: msg,
         steps: prev.steps.map((s) =>
-          s.stage === 'diff' ? { ...s, status: 'failed', detail: msg } : s,
+          s.stage === 'diff' ? { ...s, status: 'failed', detail: msg } : s
         ),
       }))
     }
@@ -319,9 +299,7 @@ export function PromotionPanel() {
       ...prev,
       status: 'running',
       error: null,
-      steps: prev.steps.map((s) =>
-        s.stage === 'preflight' ? { ...s, status: 'running' } : s,
-      ),
+      steps: prev.steps.map((s) => (s.stage === 'preflight' ? { ...s, status: 'running' } : s)),
     }))
 
     try {
@@ -353,10 +331,7 @@ export function PromotionPanel() {
   return (
     <>
       {showConfirm && (
-        <ConfirmModal
-          onConfirm={executePromotion}
-          onCancel={() => setShowConfirm(false)}
-        />
+        <ConfirmModal onConfirm={executePromotion} onCancel={() => setShowConfirm(false)} />
       )}
 
       <div className="glass-card space-y-4 p-6">
@@ -369,8 +344,7 @@ export function PromotionPanel() {
               Staging → Production Promotion
             </h2>
             <p className="text-nself-text-muted text-xs">
-              Preview the diff, run preflight, then promote the current staging
-              build to prod.
+              Preview the diff, run preflight, then promote the current staging build to prod.
             </p>
           </div>
         </div>
@@ -409,9 +383,7 @@ export function PromotionPanel() {
           <button
             type="button"
             onClick={previewDiff}
-            disabled={
-              state.status === 'previewing' || state.status === 'running'
-            }
+            disabled={state.status === 'previewing' || state.status === 'running'}
             className="border-nself-border text-nself-text-muted hover:border-nself-primary hover:text-nself-text flex-1 rounded-lg border px-4 py-2 text-sm font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-50"
           >
             {state.status === 'previewing' ? 'Previewing…' : 'Preview Diff'}

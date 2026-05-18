@@ -107,17 +107,11 @@ export default function TenantSwitcher({
   }
 
   if (error) {
-    return (
-      <div className={`text-sm text-red-600 ${className}`}>Error: {error}</div>
-    )
+    return <div className={`text-sm text-red-600 ${className}`}>Error: {error}</div>
   }
 
   if (tenants.length === 0) {
-    return (
-      <div className={`text-sm text-gray-500 ${className}`}>
-        No tenants available
-      </div>
-    )
+    return <div className={`text-sm text-gray-500 ${className}`}>No tenants available</div>
   }
 
   return (
@@ -127,20 +121,13 @@ export default function TenantSwitcher({
         className="flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:outline-none"
       >
         <Building2 className="h-4 w-4" />
-        <span className="max-w-[150px] truncate">
-          {currentTenant?.name || 'Select Tenant'}
-        </span>
-        <ChevronDown
-          className={`h-4 w-4 transition-transform ${isOpen ? 'rotate-180' : ''}`}
-        />
+        <span className="max-w-[150px] truncate">{currentTenant?.name || 'Select Tenant'}</span>
+        <ChevronDown className={`h-4 w-4 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
       </button>
 
       {isOpen && (
         <>
-          <div
-            className="fixed inset-0 z-10"
-            onClick={() => setIsOpen(false)}
-          />
+          <div className="fixed inset-0 z-10" onClick={() => setIsOpen(false)} />
           <div className="absolute right-0 z-20 mt-2 w-64 origin-top-right rounded-lg border border-gray-200 bg-white shadow-lg">
             <div className="p-2">
               <div className="mb-2 px-3 py-2 text-xs font-semibold text-gray-500 uppercase">
@@ -159,9 +146,7 @@ export default function TenantSwitcher({
                       <div className="text-xs text-gray-500">{tenant.slug}</div>
                     </div>
                   </div>
-                  {currentTenant?.id === tenant.id && (
-                    <Check className="h-4 w-4 text-blue-600" />
-                  )}
+                  {currentTenant?.id === tenant.id && <Check className="h-4 w-4 text-blue-600" />}
                 </button>
               ))}
             </div>

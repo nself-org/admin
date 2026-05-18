@@ -6,10 +6,7 @@ interface CardGridSkeletonProps {
   columns?: 2 | 3 | 4
 }
 
-export function CardGridSkeleton({
-  cards = 9,
-  columns = 3,
-}: CardGridSkeletonProps) {
+export function CardGridSkeleton({ cards = 9, columns = 3 }: CardGridSkeletonProps) {
   const gridCols = {
     2: 'md:grid-cols-2',
     3: 'md:grid-cols-2 lg:grid-cols-3',
@@ -17,10 +14,7 @@ export function CardGridSkeleton({
   }
 
   return (
-    <div
-      className={`grid grid-cols-1 gap-6 ${gridCols[columns]}`}
-      aria-label="Loading cards..."
-    >
+    <div className={`grid grid-cols-1 gap-6 ${gridCols[columns]}`} aria-label="Loading cards...">
       {Array.from({ length: cards }).map((_, i) => (
         <Card key={i}>
           <CardHeader>

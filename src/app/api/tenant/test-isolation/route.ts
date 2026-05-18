@@ -5,10 +5,7 @@ import {
   listTenants,
 } from '@/lib/database'
 import { requireAuth } from '@/lib/require-auth'
-import {
-  cleanupTestData,
-  generateTestTenantHierarchy,
-} from '@/lib/tenant/tenant-test-data'
+import { cleanupTestData, generateTestTenantHierarchy } from '@/lib/tenant/tenant-test-data'
 import { NextRequest, NextResponse } from 'next/server'
 
 /**
@@ -43,7 +40,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to generate test data',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -124,7 +121,7 @@ export async function GET(): Promise<NextResponse> {
         error: 'Failed to verify tenant isolation',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -150,7 +147,7 @@ export async function DELETE(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to clean up test data',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

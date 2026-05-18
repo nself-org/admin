@@ -78,9 +78,7 @@ async function initReportCollections() {
 // Template Operations
 // ============================================================================
 
-export async function getTemplates(
-  tenantId?: string,
-): Promise<ReportTemplate[]> {
+export async function getTemplates(tenantId?: string): Promise<ReportTemplate[]> {
   await initReportCollections()
 
   let query: any = {}
@@ -109,7 +107,7 @@ export async function getTemplateById(id: string): Promise<ReportTemplate> {
 }
 
 export async function createTemplate(
-  input: Omit<ReportTemplate, 'id' | 'createdAt' | 'updatedAt'>,
+  input: Omit<ReportTemplate, 'id' | 'createdAt' | 'updatedAt'>
 ): Promise<ReportTemplate> {
   await initReportCollections()
 
@@ -133,7 +131,7 @@ export async function createTemplate(
 
 export async function updateTemplate(
   id: string,
-  updates: Partial<ReportTemplate>,
+  updates: Partial<ReportTemplate>
 ): Promise<ReportTemplate> {
   await initReportCollections()
 
@@ -146,11 +144,7 @@ export async function updateTemplate(
 
   reportTemplatesCollection?.update(template)
 
-  await addAuditLog(
-    'report_template_updated',
-    { id, name: template.name },
-    true,
-  )
+  await addAuditLog('report_template_updated', { id, name: template.name }, true)
 
   return {
     ...template,
@@ -166,11 +160,7 @@ export async function deleteTemplate(id: string): Promise<void> {
 
   reportTemplatesCollection?.remove(template)
 
-  await addAuditLog(
-    'report_template_deleted',
-    { id, name: template.name },
-    true,
-  )
+  await addAuditLog('report_template_deleted', { id, name: template.name }, true)
 }
 
 // ============================================================================
@@ -178,7 +168,7 @@ export async function deleteTemplate(id: string): Promise<void> {
 // ============================================================================
 
 export async function generateReport(
-  input: GenerateReportInput & { createdBy: string },
+  input: GenerateReportInput & { createdBy: string }
 ): Promise<ReportExecution> {
   await initReportCollections()
 
@@ -207,7 +197,7 @@ export async function generateReport(
   await addAuditLog(
     'report_generation_started',
     { templateId: input.templateId, format: input.format },
-    true,
+    true
   )
 
   return {
@@ -219,7 +209,7 @@ export async function generateReport(
 async function executeReportGeneration(
   executionId: string,
   template: ReportTemplate,
-  input: GenerateReportInput,
+  input: GenerateReportInput
 ): Promise<void> {
   try {
     // Collect data based on template data source
@@ -235,11 +225,7 @@ async function executeReportGeneration(
       fileSize: JSON.stringify(data).length,
     })
 
-    await addAuditLog(
-      'report_generation_completed',
-      { executionId, rowCount: data.length },
-      true,
-    )
+    await addAuditLog('report_generation_completed', { executionId, rowCount: data.length }, true)
   } catch (error) {
     await updateExecution(executionId, {
       status: 'failed',
@@ -252,15 +238,12 @@ async function executeReportGeneration(
         executionId,
         error: error instanceof Error ? error.message : 'Unknown error',
       },
-      false,
+      false
     )
   }
 }
 
-async function updateExecution(
-  id: string,
-  updates: Partial<ReportExecution>,
-): Promise<void> {
+async function updateExecution(id: string, updates: Partial<ReportExecution>): Promise<void> {
   await initReportCollections()
 
   const execution = reportExecutionsCollection?.get(parseInt(id))
@@ -277,7 +260,7 @@ async function updateExecution(
 async function collectReportData(
   template: ReportTemplate,
   filters?: ReportFilter[],
-  sort?: ReportSort[],
+  sort?: ReportSort[]
 ): Promise<any[]> {
   // Route to appropriate data collector based on template
   switch (template.id) {
@@ -307,7 +290,7 @@ async function collectReportData(
 
 async function collectServiceHealthData(
   _filters?: ReportFilter[],
-  _sort?: ReportSort[],
+  _sort?: ReportSort[]
 ): Promise<any[]> {
   // Collect real service health data from Docker containers
   try {
@@ -331,15 +314,14 @@ async function collectServiceHealthData(
         (log: AuditLogItem) =>
           log.action === 'service_health_check' &&
           log.details?.service === service.name &&
-          log.details?.responseTime,
+          log.details?.responseTime
       )
 
       const avgResponseTime =
         serviceChecks.length > 0
           ? serviceChecks.reduce(
-              (sum: number, log: AuditLogItem) =>
-                sum + (log.details?.responseTime || 0),
-              0,
+              (sum: number, log: AuditLogItem) => sum + (log.details?.responseTime || 0),
+              0
             ) / serviceChecks.length
           : 0
 
@@ -347,16 +329,11 @@ async function collectServiceHealthData(
       const serviceOps = auditLogs.filter(
         (log: AuditLogItem) =>
           log.details?.service === service.name &&
-          ['service_start', 'service_stop', 'service_restart'].includes(
-            log.action,
-          ),
+          ['service_start', 'service_stop', 'service_restart'].includes(log.action)
       )
 
-      const failedOps = serviceOps.filter(
-        (log: AuditLogItem) => !log.success,
-      ).length
-      const errorRate =
-        serviceOps.length > 0 ? (failedOps / serviceOps.length) * 100 : 0
+      const failedOps = serviceOps.filter((log: AuditLogItem) => !log.success).length
+      const errorRate = serviceOps.length > 0 ? (failedOps / serviceOps.length) * 100 : 0
 
       return {
         name: service.name,
@@ -375,7 +352,7 @@ async function collectServiceHealthData(
 
 async function collectUserActivityData(
   filters?: ReportFilter[],
-  _sort?: ReportSort[],
+  _sort?: ReportSort[]
 ): Promise<any[]> {
   // Collect from audit logs
   const filterObj: any = {}
@@ -404,16 +381,13 @@ async function collectUserActivityData(
 
 async function collectDatabasePerformanceData(
   _filters?: ReportFilter[],
-  _sort?: ReportSort[],
+  _sort?: ReportSort[]
 ): Promise<any[]> {
   // Collect database metrics
   try {
-    const response = await fetch(
-      'http://localhost:3021/api/database/overview',
-      {
-        method: 'GET',
-      },
-    )
+    const response = await fetch('http://localhost:3021/api/database/overview', {
+      method: 'GET',
+    })
 
     if (!response.ok) {
       return []
@@ -442,7 +416,7 @@ async function collectDatabasePerformanceData(
 
 async function collectSecurityAuditData(
   _filters?: ReportFilter[],
-  _sort?: ReportSort[],
+  _sort?: ReportSort[]
 ): Promise<any[]> {
   // Collect security-related audit logs
   const logs = await getAuditLogs(1000, 0)
@@ -456,7 +430,7 @@ async function collectSecurityAuditData(
       'session_created',
       'session_deleted',
       'unauthorized_access',
-    ].includes(log.action),
+    ].includes(log.action)
   )
 
   return securityEvents.map((log: AuditLogItem) => ({
@@ -473,7 +447,7 @@ async function collectSecurityAuditData(
 
 async function collectResourceUsageData(
   _filters?: ReportFilter[],
-  _sort?: ReportSort[],
+  _sort?: ReportSort[]
 ): Promise<any[]> {
   // Collect system resource metrics
   try {
@@ -506,7 +480,7 @@ async function collectResourceUsageData(
 
 async function collectApiUsageData(
   _filters?: ReportFilter[],
-  _sort?: ReportSort[],
+  _sort?: ReportSort[]
 ): Promise<any[]> {
   // Collect API usage from audit logs
   const logs = await getAuditLogs(10000, 0)
@@ -558,12 +532,8 @@ async function collectApiUsageData(
     endpoint: stats.endpoint,
     method: stats.method,
     totalRequests: stats.totalRequests,
-    avgResponseTime:
-      stats.totalRequests > 0
-        ? stats.totalResponseTime / stats.totalRequests
-        : 0,
-    errorRate:
-      stats.totalRequests > 0 ? (stats.errors / stats.totalRequests) * 100 : 0,
+    avgResponseTime: stats.totalRequests > 0 ? stats.totalResponseTime / stats.totalRequests : 0,
+    errorRate: stats.totalRequests > 0 ? (stats.errors / stats.totalRequests) * 100 : 0,
     status2xx: stats.status2xx,
     status4xx: stats.status4xx,
     status5xx: stats.status5xx,
@@ -573,7 +543,7 @@ async function collectApiUsageData(
 async function collectFromDataSource(
   dataSource: ReportTemplate['dataSource'],
   _filters?: ReportFilter[],
-  _sort?: ReportSort[],
+  _sort?: ReportSort[]
 ): Promise<any[]> {
   // Generic data source handler
   if (dataSource.type === 'api' && dataSource.endpoint) {
@@ -621,10 +591,7 @@ export async function getExecutions(options?: {
     query.status = options.status
   }
 
-  let chain = reportExecutionsCollection
-    ?.chain()
-    .find(query)
-    .simplesort('startedAt', true) // Sort by startedAt descending
+  let chain = reportExecutionsCollection?.chain().find(query).simplesort('startedAt', true) // Sort by startedAt descending
 
   if (options?.offset) {
     chain = chain?.offset(options.offset)
@@ -668,11 +635,7 @@ export async function getExecutionFile(id: string): Promise<{
   // For now, return JSON data
   // In a real implementation, this would retrieve the actual file from storage
   const template = await getTemplateById(execution.reportId)
-  const reportData = await collectReportData(
-    template,
-    execution.filters,
-    undefined,
-  )
+  const reportData = await collectReportData(template, execution.filters, undefined)
 
   const json = JSON.stringify(reportData, null, 2)
   const encoder = new TextEncoder()
@@ -688,8 +651,7 @@ export async function getExecutionFile(id: string): Promise<{
       extension = 'pdf'
       break
     case 'excel':
-      contentType =
-        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+      contentType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
       extension = 'xlsx'
       break
     case 'csv':
@@ -715,9 +677,7 @@ export async function getExecutionFile(id: string): Promise<{
 // Schedule Operations
 // ============================================================================
 
-export async function getSchedules(
-  reportId: string,
-): Promise<ReportSchedule[]> {
+export async function getSchedules(reportId: string): Promise<ReportSchedule[]> {
   await initReportCollections()
 
   const schedules = reportSchedulesCollection?.find({ reportId }) || []
@@ -742,7 +702,7 @@ export async function getScheduleById(id: string): Promise<ReportSchedule> {
 
 export async function createSchedule(
   reportId: string,
-  input: Omit<ReportSchedule, 'id' | 'reportId'>,
+  input: Omit<ReportSchedule, 'id' | 'reportId'>
 ): Promise<ReportSchedule> {
   await initReportCollections()
 
@@ -764,7 +724,7 @@ export async function createSchedule(
 
 export async function updateSchedule(
   id: string,
-  updates: Partial<ReportSchedule>,
+  updates: Partial<ReportSchedule>
 ): Promise<ReportSchedule> {
   await initReportCollections()
 
@@ -836,10 +796,7 @@ export async function getReportStats(): Promise<ReportStats> {
 
   // Get recent executions
   const recentExecutions = executions
-    .sort(
-      (a, b) =>
-        new Date(b.startedAt).getTime() - new Date(a.startedAt).getTime(),
-    )
+    .sort((a, b) => new Date(b.startedAt).getTime() - new Date(a.startedAt).getTime())
     .slice(0, 5)
     .map((e) => ({
       ...e,
@@ -932,8 +889,7 @@ export async function seedDefaultTemplates(): Promise<void> {
     },
     {
       name: 'User Activity Report',
-      description:
-        'Detailed analysis of user activity including logins, actions, and session data',
+      description: 'Detailed analysis of user activity including logins, actions, and session data',
       category: 'security',
       dataSource: {
         type: 'database' as const,

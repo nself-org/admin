@@ -12,7 +12,7 @@ test.describe('Initial Setup Flow', () => {
     // server that has no password set.
     test.skip(
       !!process.env.CI,
-      'Skipped in CI: globalSetup pre-sets the admin password before tests run',
+      'Skipped in CI: globalSetup pre-sets the admin password before tests run'
     )
 
     await loginPage.goto()
@@ -37,10 +37,7 @@ test.describe('Initial Setup Flow', () => {
     await loginPage.expectLoginSuccess()
   })
 
-  test('should navigate to dashboard after login', async ({
-    loginPage,
-    dashboardPage,
-  }) => {
+  test('should navigate to dashboard after login', async ({ loginPage, dashboardPage }) => {
     await loginPage.goto()
     await loginPage.login(TEST_PASSWORD)
 
@@ -74,8 +71,7 @@ test.describe('Initial Setup Flow', () => {
     await loginPage.goto()
 
     // Check ARIA labels
-    const passwordLabel =
-      await loginPage.passwordInput.getAttribute('aria-label')
+    const passwordLabel = await loginPage.passwordInput.getAttribute('aria-label')
     expect(passwordLabel).toBeTruthy()
 
     // Test keyboard navigation.

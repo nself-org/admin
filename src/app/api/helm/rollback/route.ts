@@ -23,7 +23,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     if (!name) {
       return NextResponse.json(
         { success: false, error: 'Release name is required' },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -34,14 +34,11 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     if (wait) args.push('--wait')
     if (timeout) args.push(`--timeout=${timeout}`)
 
-    const { stdout } = await execAsync(
-      `${nselfPath} ${args.join(' ')} --json`,
-      {
-        cwd: projectPath,
-        env: { ...process.env, PATH: getEnhancedPath() },
-        timeout: 300000,
-      },
-    )
+    const { stdout } = await execAsync(`${nselfPath} ${args.join(' ')} --json`, {
+      cwd: projectPath,
+      env: { ...process.env, PATH: getEnhancedPath() },
+      timeout: 300000,
+    })
 
     const result = JSON.parse(stdout)
 
@@ -62,7 +59,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to rollback helm release',
         details: err.message,
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

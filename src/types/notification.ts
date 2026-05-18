@@ -1,17 +1,7 @@
 // Notification types for v0.7.0
 
-export type NotificationType =
-  | 'info'
-  | 'success'
-  | 'warning'
-  | 'error'
-  | 'system'
-export type NotificationChannel =
-  | 'in_app'
-  | 'email'
-  | 'push'
-  | 'slack'
-  | 'webhook'
+export type NotificationType = 'info' | 'success' | 'warning' | 'error' | 'system'
+export type NotificationChannel = 'in_app' | 'email' | 'push' | 'slack' | 'webhook'
 export type NotificationPriority = 'low' | 'normal' | 'high' | 'urgent'
 
 export interface Notification {

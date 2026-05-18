@@ -22,11 +22,7 @@ export function GlassCard({
   glow = false,
   elevated = false,
 }: GlassCardProps) {
-  const base = elevated
-    ? 'glass-card-elevated'
-    : glow
-      ? 'glass-card-glow'
-      : 'glass-card'
+  const base = elevated ? 'glass-card-elevated' : glow ? 'glass-card-glow' : 'glass-card'
 
   return <div className={`${base} ${className}`}>{children}</div>
 }

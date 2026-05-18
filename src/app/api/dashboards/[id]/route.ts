@@ -6,10 +6,7 @@ interface RouteParams {
   params: Promise<{ id: string }>
 }
 
-export async function GET(
-  request: NextRequest,
-  { params }: RouteParams,
-): Promise<NextResponse> {
+export async function GET(request: NextRequest, { params }: RouteParams): Promise<NextResponse> {
   try {
     const { id } = await params
 
@@ -19,7 +16,7 @@ export async function GET(
           success: false,
           error: 'Dashboard ID is required',
         },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -31,7 +28,7 @@ export async function GET(
           success: false,
           error: 'Dashboard not found',
         },
-        { status: 404 },
+        { status: 404 }
       )
     }
 
@@ -43,18 +40,14 @@ export async function GET(
     return NextResponse.json(
       {
         success: false,
-        error:
-          error instanceof Error ? error.message : 'Failed to fetch dashboard',
+        error: error instanceof Error ? error.message : 'Failed to fetch dashboard',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
 
-export async function PATCH(
-  request: NextRequest,
-  { params }: RouteParams,
-): Promise<NextResponse> {
+export async function PATCH(request: NextRequest, { params }: RouteParams): Promise<NextResponse> {
   const authError = await requireAuth(request)
   if (authError) return authError
 
@@ -67,7 +60,7 @@ export async function PATCH(
           success: false,
           error: 'Dashboard ID is required',
         },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -80,7 +73,7 @@ export async function PATCH(
           success: false,
           error: 'Dashboard not found',
         },
-        { status: 404 },
+        { status: 404 }
       )
     }
 
@@ -92,18 +85,14 @@ export async function PATCH(
     return NextResponse.json(
       {
         success: false,
-        error:
-          error instanceof Error ? error.message : 'Failed to update dashboard',
+        error: error instanceof Error ? error.message : 'Failed to update dashboard',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
 
-export async function DELETE(
-  request: NextRequest,
-  { params }: RouteParams,
-): Promise<NextResponse> {
+export async function DELETE(request: NextRequest, { params }: RouteParams): Promise<NextResponse> {
   const authError = await requireAuth(request)
   if (authError) return authError
 
@@ -116,7 +105,7 @@ export async function DELETE(
           success: false,
           error: 'Dashboard ID is required',
         },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -128,7 +117,7 @@ export async function DELETE(
           success: false,
           error: 'Dashboard not found',
         },
-        { status: 404 },
+        { status: 404 }
       )
     }
 
@@ -140,10 +129,9 @@ export async function DELETE(
     return NextResponse.json(
       {
         success: false,
-        error:
-          error instanceof Error ? error.message : 'Failed to delete dashboard',
+        error: error instanceof Error ? error.message : 'Failed to delete dashboard',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

@@ -3,12 +3,7 @@
 import { FormSkeleton } from '@/components/skeletons'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import {
@@ -187,35 +182,48 @@ export default function VaultPage() {
 
   if (pageState === 'unauth') {
     return (
-      <div className="flex flex-col items-center justify-center py-24 gap-4">
-        <AlertCircle className="h-10 w-10 text-destructive" />
+      <div className="flex flex-col items-center justify-center gap-4 py-24">
+        <AlertCircle className="text-destructive h-10 w-10" />
         <p className="text-lg font-medium">Not authenticated</p>
-        <p className="text-sm text-muted-foreground">Please log in to manage Vault configuration.</p>
-        <Button variant="outline" onClick={() => { window.location.href = '/login' }}>Go to Login</Button>
+        <p className="text-muted-foreground text-sm">
+          Please log in to manage Vault configuration.
+        </p>
+        <Button
+          variant="outline"
+          onClick={() => {
+            window.location.href = '/login'
+          }}
+        >
+          Go to Login
+        </Button>
       </div>
     )
   }
 
   if (pageState === 'offline') {
     return (
-      <div className="flex flex-col items-center justify-center py-24 gap-4">
-        <WifiOff className="h-10 w-10 text-muted-foreground" />
+      <div className="flex flex-col items-center justify-center gap-4 py-24">
+        <WifiOff className="text-muted-foreground h-10 w-10" />
         <p className="text-lg font-medium">Cannot connect to admin API</p>
-        <p className="text-sm text-muted-foreground">{offlineMessage}</p>
-        <Button variant="outline" onClick={fetchStatus}>Retry</Button>
+        <p className="text-muted-foreground text-sm">{offlineMessage}</p>
+        <Button variant="outline" onClick={fetchStatus}>
+          Retry
+        </Button>
       </div>
     )
   }
 
   if (pageState === 'loading') {
     return (
-      <div className="space-y-6 max-w-4xl">
+      <div className="max-w-4xl space-y-6">
         <div>
-          <h1 className="text-2xl font-bold flex items-center gap-2">
+          <h1 className="flex items-center gap-2 text-2xl font-bold">
             <Shield className="h-6 w-6" />
             Vault Integration
           </h1>
-          <p className="text-sm text-muted-foreground mt-1">Manage HashiCorp Vault for centralized secrets management.</p>
+          <p className="text-muted-foreground mt-1 text-sm">
+            Manage HashiCorp Vault for centralized secrets management.
+          </p>
         </div>
         <FormSkeleton />
       </div>
@@ -223,13 +231,13 @@ export default function VaultPage() {
   }
 
   return (
-    <div className="space-y-6 max-w-4xl">
+    <div className="max-w-4xl space-y-6">
       <div>
-        <h1 className="text-2xl font-bold flex items-center gap-2">
+        <h1 className="flex items-center gap-2 text-2xl font-bold">
           <Shield className="h-6 w-6" />
           Vault Integration
         </h1>
-        <p className="text-sm text-muted-foreground mt-1">
+        <p className="text-muted-foreground mt-1 text-sm">
           Manage HashiCorp Vault for centralized secrets management.
         </p>
       </div>
@@ -244,7 +252,9 @@ export default function VaultPage() {
       {actionSuccess && (
         <Alert className="border-green-500 bg-green-50 dark:bg-green-950">
           <CheckCircle className="h-4 w-4 text-green-600" />
-          <AlertDescription className="text-green-700 dark:text-green-300">{actionSuccess}</AlertDescription>
+          <AlertDescription className="text-green-700 dark:text-green-300">
+            {actionSuccess}
+          </AlertDescription>
         </Alert>
       )}
 
@@ -257,7 +267,7 @@ export default function VaultPage() {
               Vault Status
             </CardTitle>
             <Button variant="ghost" size="sm" onClick={fetchStatus}>
-              <RefreshCw className="h-4 w-4 mr-1" />
+              <RefreshCw className="mr-1 h-4 w-4" />
               Refresh
             </Button>
           </div>
@@ -274,26 +284,46 @@ export default function VaultPage() {
 
             <div className="rounded-lg border border-zinc-200 p-4 dark:border-zinc-700">
               <div className="mb-2 text-sm text-zinc-600 dark:text-zinc-400">Initialized</div>
-              <div className={`flex items-center gap-2 font-semibold ${
-                status?.initialized ? 'text-green-600 dark:text-green-400' : 'text-zinc-500 dark:text-zinc-400'
-              }`}>
+              <div
+                className={`flex items-center gap-2 font-semibold ${
+                  status?.initialized
+                    ? 'text-green-600 dark:text-green-400'
+                    : 'text-zinc-500 dark:text-zinc-400'
+                }`}
+              >
                 {status?.initialized ? (
-                  <><CheckCircle className="h-5 w-5" />Yes</>
+                  <>
+                    <CheckCircle className="h-5 w-5" />
+                    Yes
+                  </>
                 ) : (
-                  <><AlertCircle className="h-5 w-5" />No</>
+                  <>
+                    <AlertCircle className="h-5 w-5" />
+                    No
+                  </>
                 )}
               </div>
             </div>
 
             <div className="rounded-lg border border-zinc-200 p-4 dark:border-zinc-700">
               <div className="mb-2 text-sm text-zinc-600 dark:text-zinc-400">Seal Status</div>
-              <div className={`flex items-center gap-2 font-semibold ${
-                status?.sealed ? 'text-yellow-600 dark:text-yellow-400' : 'text-green-600 dark:text-green-400'
-              }`}>
+              <div
+                className={`flex items-center gap-2 font-semibold ${
+                  status?.sealed
+                    ? 'text-yellow-600 dark:text-yellow-400'
+                    : 'text-green-600 dark:text-green-400'
+                }`}
+              >
                 {status?.sealed ? (
-                  <><Lock className="h-5 w-5" />Sealed</>
+                  <>
+                    <Lock className="h-5 w-5" />
+                    Sealed
+                  </>
                 ) : (
-                  <><Unlock className="h-5 w-5" />Unsealed</>
+                  <>
+                    <Unlock className="h-5 w-5" />
+                    Unsealed
+                  </>
                 )}
               </div>
             </div>
@@ -333,29 +363,33 @@ export default function VaultPage() {
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <p className="text-sm text-muted-foreground">
-            Initialize a new Vault instance. This sets up the encryption keys and prepares Vault for use.
-            Only needs to be done once per Vault cluster.
+          <p className="text-muted-foreground text-sm">
+            Initialize a new Vault instance. This sets up the encryption keys and prepares Vault for
+            use. Only needs to be done once per Vault cluster.
           </p>
 
           {!status?.initialized && (
             <Alert>
               <AlertCircle className="h-4 w-4" />
               <AlertDescription>
-                Initialization generates unseal keys and a root token. Store these securely — they cannot be recovered if lost.
+                Initialization generates unseal keys and a root token. Store these securely — they
+                cannot be recovered if lost.
               </AlertDescription>
             </Alert>
           )}
 
           <div className="flex flex-wrap items-center gap-3">
-            <Button
-              onClick={handleInit}
-              disabled={initializing || status?.initialized === true}
-            >
+            <Button onClick={handleInit} disabled={initializing || status?.initialized === true}>
               {initializing ? (
-                <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Initializing...</>
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Initializing...
+                </>
               ) : (
-                <><Key className="mr-2 h-4 w-4" />Initialize Vault</>
+                <>
+                  <Key className="mr-2 h-4 w-4" />
+                  Initialize Vault
+                </>
               )}
             </Button>
 
@@ -378,7 +412,7 @@ export default function VaultPage() {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-sm text-muted-foreground mb-4">
+          <p className="text-muted-foreground mb-4 text-sm">
             Configure the connection to your HashiCorp Vault server.
           </p>
 
@@ -389,10 +423,13 @@ export default function VaultPage() {
                 id="vault-url"
                 type="url"
                 value={vaultUrl}
-                onChange={(e) => { setVaultUrl(e.target.value); setIsDirty(true) }}
+                onChange={(e) => {
+                  setVaultUrl(e.target.value)
+                  setIsDirty(true)
+                }}
                 placeholder="http://127.0.0.1:8200"
               />
-              <p className="text-xs text-muted-foreground">
+              <p className="text-muted-foreground text-xs">
                 The URL of your Vault server (e.g., http://127.0.0.1:8200)
               </p>
             </div>
@@ -401,35 +438,43 @@ export default function VaultPage() {
               {/* SECURITY: token field is write-only — never pre-populated with stored value */}
               <Label htmlFor="vault-token">
                 Access Token
-                <span className="ml-2 text-xs font-normal text-muted-foreground">(write-only — leave blank to keep existing)</span>
+                <span className="text-muted-foreground ml-2 text-xs font-normal">
+                  (write-only — leave blank to keep existing)
+                </span>
               </Label>
               <Input
                 id="vault-token"
                 type="password"
                 value={vaultToken}
-                onChange={(e) => { setVaultToken(e.target.value); setIsDirty(true) }}
+                onChange={(e) => {
+                  setVaultToken(e.target.value)
+                  setIsDirty(true)
+                }}
                 placeholder="hvs.xxxxxxxxxxxxx"
                 autoComplete="new-password"
               />
-              <p className="text-xs text-muted-foreground">
-                Root token or service token with appropriate policies.
-                Leave blank to keep the currently stored token.
+              <p className="text-muted-foreground text-xs">
+                Root token or service token with appropriate policies. Leave blank to keep the
+                currently stored token.
               </p>
             </div>
 
             <div className="space-y-2">
               <Label htmlFor="vault-namespace">
                 Namespace
-                <span className="ml-2 text-xs font-normal text-muted-foreground">(optional)</span>
+                <span className="text-muted-foreground ml-2 text-xs font-normal">(optional)</span>
               </Label>
               <Input
                 id="vault-namespace"
                 type="text"
                 value={vaultNamespace}
-                onChange={(e) => { setVaultNamespace(e.target.value); setIsDirty(true) }}
+                onChange={(e) => {
+                  setVaultNamespace(e.target.value)
+                  setIsDirty(true)
+                }}
                 placeholder="admin"
               />
-              <p className="text-xs text-muted-foreground">
+              <p className="text-muted-foreground text-xs">
                 Vault Enterprise namespace (leave empty for open-source Vault)
               </p>
             </div>
@@ -437,9 +482,15 @@ export default function VaultPage() {
             <div className="flex items-center gap-3">
               <Button type="submit" disabled={configuring || !vaultUrl || !isDirty}>
                 {configuring ? (
-                  <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Saving...</>
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Saving...
+                  </>
                 ) : (
-                  <><CheckCircle className="mr-2 h-4 w-4" />Save Configuration</>
+                  <>
+                    <CheckCircle className="mr-2 h-4 w-4" />
+                    Save Configuration
+                  </>
                 )}
               </Button>
 
@@ -447,7 +498,7 @@ export default function VaultPage() {
                 href="https://developer.hashicorp.com/vault/docs"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground"
+                className="text-muted-foreground hover:text-foreground flex items-center gap-1 text-sm"
               >
                 <ExternalLink className="h-4 w-4" />
                 Vault Documentation

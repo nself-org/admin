@@ -2,14 +2,7 @@
 
 import { HeroPattern } from '@/components/HeroPattern'
 import { ChartSkeleton } from '@/components/skeletons'
-import {
-  ArrowLeft,
-  BarChart3,
-  CheckCircle,
-  ExternalLink,
-  Settings,
-  XCircle,
-} from 'lucide-react'
+import { ArrowLeft, BarChart3, CheckCircle, ExternalLink, Settings, XCircle } from 'lucide-react'
 import Link from 'next/link'
 import { Suspense, useCallback, useEffect, useState } from 'react'
 
@@ -72,12 +65,10 @@ function GrafanaContent() {
               Grafana status not available
             </h3>
             <p className="text-zinc-600 dark:text-zinc-400">
-              Grafana status is not exposed via the Admin API. Use the CLI to manage
-              Grafana directly.
+              Grafana status is not exposed via the Admin API. Use the CLI to manage Grafana
+              directly.
             </p>
-            <p className="mt-4 font-mono text-sm text-orange-500">
-              nself monitor grafana
-            </p>
+            <p className="mt-4 font-mono text-sm text-orange-500">nself monitor grafana</p>
           </div>
         </div>
       </>
@@ -140,12 +131,9 @@ function GrafanaContent() {
                 Grafana Status
               </h3>
               <p className="text-zinc-600 dark:text-zinc-400">
-                {status?.running ? 'Running' : 'Not Running'} - Version{' '}
-                {status?.version}
+                {status?.running ? 'Running' : 'Not Running'} - Version {status?.version}
               </p>
-              {status?.url && (
-                <p className="font-mono text-sm text-zinc-500">{status.url}</p>
-              )}
+              {status?.url && <p className="font-mono text-sm text-zinc-500">{status.url}</p>}
             </div>
           </div>
         </div>
@@ -168,12 +156,8 @@ function GrafanaContent() {
                 className="flex items-center justify-between rounded-lg border border-zinc-200 p-4 transition-colors hover:border-orange-500 hover:bg-orange-50 dark:border-zinc-700 dark:hover:border-orange-500 dark:hover:bg-orange-900/20"
               >
                 <div>
-                  <p className="font-medium text-zinc-900 dark:text-white">
-                    {dashboard.name}
-                  </p>
-                  <p className="font-mono text-sm text-zinc-500">
-                    {dashboard.uid}
-                  </p>
+                  <p className="font-medium text-zinc-900 dark:text-white">{dashboard.name}</p>
+                  <p className="font-mono text-sm text-zinc-500">{dashboard.uid}</p>
                 </div>
                 <ExternalLink className="h-5 w-5 text-zinc-400" />
               </a>
@@ -202,9 +186,7 @@ function GrafanaContent() {
                     }`}
                   />
                   <div>
-                    <p className="font-medium text-zinc-900 dark:text-white">
-                      {ds.name}
-                    </p>
+                    <p className="font-medium text-zinc-900 dark:text-white">{ds.name}</p>
                     <p className="text-sm text-zinc-500">{ds.type}</p>
                   </div>
                 </div>
@@ -229,19 +211,15 @@ function GrafanaContent() {
           </h3>
           <div className="space-y-2 font-mono text-sm">
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-orange-500">nself monitor grafana</span> -
-              Open Grafana dashboard
+              <span className="text-orange-500">nself monitor grafana</span> - Open Grafana
+              dashboard
             </p>
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-orange-500">
-                nself monitor grafana --status
-              </span>{' '}
-              - Check Grafana status
+              <span className="text-orange-500">nself monitor grafana --status</span> - Check
+              Grafana status
             </p>
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-orange-500">
-                nself monitor grafana --import dashboard.json
-              </span>{' '}
+              <span className="text-orange-500">nself monitor grafana --import dashboard.json</span>{' '}
               - Import dashboard
             </p>
           </div>

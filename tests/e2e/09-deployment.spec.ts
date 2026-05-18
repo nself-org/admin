@@ -12,10 +12,7 @@ test.describe('Deployment Flow', () => {
     await expect(deploymentPage.page).toHaveURL(/\/deployment/)
   })
 
-  test('should select environment (staging)', async ({
-    deploymentPage,
-    page,
-  }) => {
+  test('should select environment (staging)', async ({ deploymentPage, page }) => {
     await deploymentPage.gotoStaging()
 
     // Should be on staging deployment page
@@ -23,10 +20,7 @@ test.describe('Deployment Flow', () => {
     await expect(deploymentPage.pageTitle).toBeVisible()
   })
 
-  test('should configure deployment settings', async ({
-    deploymentPage,
-    page,
-  }) => {
+  test('should configure deployment settings', async ({ deploymentPage, page }) => {
     await deploymentPage.gotoStaging()
 
     // Configure deployment options
@@ -69,10 +63,7 @@ test.describe('Deployment Flow', () => {
     }
   })
 
-  test.skip('should verify deployment success', async ({
-    deploymentPage,
-    page,
-  }) => {
+  test.skip('should verify deployment success', async ({ deploymentPage, page }) => {
     // Skipped: requires a running nself backend; deploy button is disabled in CI.
     await deploymentPage.gotoStaging()
 
@@ -81,10 +72,9 @@ test.describe('Deployment Flow', () => {
 
       // Wait for deployment to complete
       // Note: This might take a while in real scenarios
-      await expect(deploymentPage.deploymentStatus).toContainText(
-        /success|complete|deployed/i,
-        { timeout: 120000 },
-      )
+      await expect(deploymentPage.deploymentStatus).toContainText(/success|complete|deployed/i, {
+        timeout: 120000,
+      })
     }
   })
 
@@ -100,10 +90,7 @@ test.describe('Deployment Flow', () => {
     }
   })
 
-  test.skip('should support production deployment', async ({
-    deploymentPage,
-    page,
-  }) => {
+  test.skip('should support production deployment', async ({ deploymentPage, page }) => {
     // Skipped: /deployment/prod page fetches /api/deploy/production which hangs
     // without a running nself backend, causing goto() to timeout.
     await deploymentPage.gotoProduction()
@@ -153,10 +140,7 @@ test.describe('Deployment Flow', () => {
     }
   })
 
-  test('should show environment variables', async ({
-    deploymentPage,
-    page,
-  }) => {
+  test('should show environment variables', async ({ deploymentPage, page }) => {
     await deploymentPage.gotoStaging()
 
     // Look for environment variables section
@@ -197,8 +181,7 @@ test.describe('Deployment Flow', () => {
 
     // Deploy button should have proper ARIA attributes
     if (await deploymentPage.deployButton.isVisible()) {
-      const ariaLabel =
-        await deploymentPage.deployButton.getAttribute('aria-label')
+      const ariaLabel = await deploymentPage.deployButton.getAttribute('aria-label')
       const text = await deploymentPage.deployButton.textContent()
 
       expect(ariaLabel || text).toBeTruthy()

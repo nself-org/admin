@@ -3,13 +3,7 @@
 import { PageShell } from '@/components/PageShell'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Progress } from '@/components/ui/progress'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import {
@@ -252,16 +246,12 @@ function PostgreSQLContent() {
                   <Activity className="h-5 w-5 text-blue-600 dark:text-blue-400" />
                 </div>
                 <div>
-                  <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                    Connections
-                  </p>
+                  <p className="text-sm text-zinc-500 dark:text-zinc-400">Connections</p>
                   <p className="text-2xl font-bold">
                     {stats.connections.active}/{stats.connections.max}
                   </p>
                   <Progress
-                    value={
-                      (stats.connections.active / stats.connections.max) * 100
-                    }
+                    value={(stats.connections.active / stats.connections.max) * 100}
                     className="mt-2"
                   />
                 </div>
@@ -276,16 +266,9 @@ function PostgreSQLContent() {
                   <TrendingUp className="h-5 w-5 text-green-600 dark:text-green-400" />
                 </div>
                 <div>
-                  <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                    Cache Hit Ratio
-                  </p>
-                  <p className="text-2xl font-bold">
-                    {stats.performance.hitRatio}%
-                  </p>
-                  <Progress
-                    value={stats.performance.hitRatio}
-                    className="mt-2"
-                  />
+                  <p className="text-sm text-zinc-500 dark:text-zinc-400">Cache Hit Ratio</p>
+                  <p className="text-2xl font-bold">{stats.performance.hitRatio}%</p>
+                  <Progress value={stats.performance.hitRatio} className="mt-2" />
                 </div>
               </div>
             </CardContent>
@@ -298,9 +281,7 @@ function PostgreSQLContent() {
                   <HardDrive className="h-5 w-5 text-sky-500 dark:text-sky-400" />
                 </div>
                 <div>
-                  <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                    Database Size
-                  </p>
+                  <p className="text-sm text-zinc-500 dark:text-zinc-400">Database Size</p>
                   <p className="text-2xl font-bold">{stats.size}</p>
                   <p className="text-xs text-zinc-500">{stats.tables} tables</p>
                 </div>
@@ -315,14 +296,10 @@ function PostgreSQLContent() {
                   <Server className="h-5 w-5 text-amber-600 dark:text-amber-400" />
                 </div>
                 <div>
-                  <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                    Status
-                  </p>
+                  <p className="text-sm text-zinc-500 dark:text-zinc-400">Status</p>
                   <div className="flex items-center gap-2">
                     <CheckCircle className="h-4 w-4 text-green-500" />
-                    <span className="text-lg font-bold capitalize">
-                      {stats.status}
-                    </span>
+                    <span className="text-lg font-bold capitalize">{stats.status}</span>
                   </div>
                 </div>
               </div>
@@ -349,9 +326,7 @@ function PostgreSQLContent() {
                 <Database className="h-4 w-4" />
                 Connection Information
               </CardTitle>
-              <CardDescription>
-                Database connection details and status
-              </CardDescription>
+              <CardDescription>Database connection details and status</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-2 gap-4">
@@ -381,9 +356,7 @@ function PostgreSQLContent() {
                 <Database className="h-4 w-4" />
                 Database Tables
               </CardTitle>
-              <CardDescription>
-                Tables in {selectedDatabase} database
-              </CardDescription>
+              <CardDescription>Tables in {selectedDatabase} database</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-2">
@@ -417,10 +390,7 @@ function PostgreSQLContent() {
             <CardHeader>
               <div className="flex items-center justify-between">
                 <CardTitle>SQL Query Console</CardTitle>
-                <Select
-                  value={selectedDatabase}
-                  onValueChange={setSelectedDatabase}
-                >
+                <Select value={selectedDatabase} onValueChange={setSelectedDatabase}>
                   <SelectTrigger className="w-[200px]">
                     <SelectValue />
                   </SelectTrigger>
@@ -468,17 +438,14 @@ function PostgreSQLContent() {
                           Query Error
                         </p>
                       </div>
-                      <p className="mt-1 text-sm text-red-700">
-                        {queryResult.error}
-                      </p>
+                      <p className="mt-1 text-sm text-red-700">{queryResult.error}</p>
                     </div>
                   ) : (
                     <>
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2 text-sm text-zinc-500">
                           <Clock className="h-4 w-4" />
-                          {queryResult.rowCount} rows •{' '}
-                          {queryResult.executionTime}s
+                          {queryResult.rowCount} rows • {queryResult.executionTime}s
                         </div>
                         <Button variant="outline" size="sm">
                           <Download className="mr-2 h-4 w-4" />
@@ -491,10 +458,7 @@ function PostgreSQLContent() {
                           <thead className="sticky top-0 bg-zinc-50 dark:bg-zinc-800">
                             <tr className="border-b">
                               {queryResult.columns.map((col) => (
-                                <th
-                                  key={col}
-                                  className="p-2 text-left text-sm font-medium"
-                                >
+                                <th key={col} className="p-2 text-left text-sm font-medium">
                                   {col}
                                 </th>
                               ))}
@@ -507,10 +471,7 @@ function PostgreSQLContent() {
                                 className="border-b hover:bg-zinc-50 dark:hover:bg-zinc-800/50"
                               >
                                 {queryResult.columns.map((col) => (
-                                  <td
-                                    key={col}
-                                    className="p-2 font-mono text-sm"
-                                  >
+                                  <td key={col} className="p-2 font-mono text-sm">
                                     {row[col]}
                                   </td>
                                 ))}
@@ -535,17 +496,13 @@ function PostgreSQLContent() {
                 <Zap className="h-4 w-4" />
                 Slow Queries
               </CardTitle>
-              <CardDescription>
-                Queries taking longer than 1 second
-              </CardDescription>
+              <CardDescription>Queries taking longer than 1 second</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-3">
                 {slowQueries.map((q, i) => (
                   <div key={i} className="rounded-lg border p-3">
-                    <pre className="mb-2 overflow-x-auto font-mono text-sm">
-                      {q.query}
-                    </pre>
+                    <pre className="mb-2 overflow-x-auto font-mono text-sm">{q.query}</pre>
                     <div className="flex gap-4 text-sm text-zinc-500">
                       <span>Duration: {q.duration}</span>
                       <span>Calls: {q.calls}</span>
@@ -567,9 +524,7 @@ function PostgreSQLContent() {
                     <HardDrive className="h-4 w-4" />
                     Database Backups
                   </CardTitle>
-                  <CardDescription>
-                    Manage database backups and restore points
-                  </CardDescription>
+                  <CardDescription>Manage database backups and restore points</CardDescription>
                 </div>
                 <Button onClick={createBackup} disabled={creatingBackup}>
                   {creatingBackup ? (
@@ -598,13 +553,7 @@ function PostgreSQLContent() {
                       </div>
                     </div>
                     <div className="flex items-center gap-2">
-                      <Badge
-                        variant={
-                          backup.status === 'completed'
-                            ? 'default'
-                            : 'destructive'
-                        }
-                      >
+                      <Badge variant={backup.status === 'completed' ? 'default' : 'destructive'}>
                         {backup.status}
                       </Badge>
                       <Button variant="outline" size="sm">
@@ -627,9 +576,7 @@ function PostgreSQLContent() {
                 <Settings className="h-4 w-4" />
                 PostgreSQL Configuration
               </CardTitle>
-              <CardDescription>
-                View database configuration (read-only for safety)
-              </CardDescription>
+              <CardDescription>View database configuration (read-only for safety)</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="rounded-lg bg-zinc-50 p-4 dark:bg-zinc-900">
@@ -640,8 +587,7 @@ effective_cache_size = 4GB
 work_mem = 4MB`}</pre>
               </div>
               <p className="mt-3 text-sm text-zinc-500">
-                Configuration is read-only. Use <code>nself db config</code> to
-                modify settings.
+                Configuration is read-only. Use <code>nself db config</code> to modify settings.
               </p>
             </CardContent>
           </Card>

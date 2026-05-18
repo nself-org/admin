@@ -100,11 +100,7 @@ This directory contains standalone components for the Config Env Editor (`/confi
 **Usage**:
 
 ```tsx
-<SecretInput
-  value={secretValue}
-  onChange={setSecretValue}
-  placeholder="Enter API key..."
-/>
+<SecretInput value={secretValue} onChange={setSecretValue} placeholder="Enter API key..." />
 ```
 
 ---

@@ -13,10 +13,7 @@ const AUTH_URL = process.env.NSELF_AUTH_URL || ''
 export async function GET(request: NextRequest): Promise<NextResponse> {
   const token = request.cookies.get('nself-session')?.value
   if (!token || !(await validateSessionToken(token))) {
-    return NextResponse.json(
-      { success: false, error: 'Unauthorized' },
-      { status: 401 },
-    )
+    return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 })
   }
 
   if (!AUTH_URL) {
@@ -39,7 +36,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     if (!upstream.ok) {
       return NextResponse.json(
         { success: false, error: 'Failed to fetch licenses' },
-        { status: upstream.status },
+        { status: upstream.status }
       )
     }
 
@@ -52,7 +49,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         error: 'Auth service unavailable',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 503 },
+      { status: 503 }
     )
   }
 }

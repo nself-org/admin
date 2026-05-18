@@ -26,8 +26,7 @@ function initializeWebSocketServer(req: NextRequest): void {
   }
 
   // Get the server from the request socket
-  const socket = (req as unknown as { socket: { server: HTTPServer } }).socket
-    ?.server
+  const socket = (req as unknown as { socket: { server: HTTPServer } }).socket?.server
 
   if (!socket) {
     console.warn('Could not access HTTP server from request')
@@ -72,7 +71,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to get WebSocket status',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -88,10 +87,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     // Reject oversized request bodies (64 KB limit)
     const contentLength = request.headers.get('content-length')
     if (contentLength && parseInt(contentLength, 10) > 65536) {
-      return NextResponse.json(
-        { success: false, error: 'Payload too large' },
-        { status: 413 },
-      )
+      return NextResponse.json({ success: false, error: 'Payload too large' }, { status: 413 })
     }
 
     const body = await request.json()
@@ -103,21 +99,18 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           success: false,
           error: 'Event type is required and must be a string',
         },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
     if (room !== undefined && (typeof room !== 'string' || room.length > 128)) {
-      return NextResponse.json(
-        { success: false, error: 'Invalid room ID' },
-        { status: 400 },
-      )
+      return NextResponse.json({ success: false, error: 'Invalid room ID' }, { status: 400 })
     }
 
     if (data !== undefined && typeof data !== 'object') {
       return NextResponse.json(
         { success: false, error: 'Event data must be an object' },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -141,7 +134,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to emit event',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

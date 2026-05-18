@@ -13,7 +13,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     if (!provider) {
       return NextResponse.json(
         { success: false, error: 'Provider query parameter is required' },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -30,7 +30,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
           error: `Failed to get config for provider: ${provider}`,
           details: result.error || result.stderr || 'Unknown error',
         },
-        { status: 500 },
+        { status: 500 }
       )
     }
 
@@ -45,7 +45,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to get OAuth provider config',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -66,21 +66,18 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     if (!provider || typeof provider !== 'string') {
       return NextResponse.json(
         { success: false, error: 'Provider name is required' },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
     if (!clientId || typeof clientId !== 'string') {
-      return NextResponse.json(
-        { success: false, error: 'Client ID is required' },
-        { status: 400 },
-      )
+      return NextResponse.json({ success: false, error: 'Client ID is required' }, { status: 400 })
     }
 
     if (!clientSecret || typeof clientSecret !== 'string') {
       return NextResponse.json(
         { success: false, error: 'Client Secret is required' },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -105,7 +102,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           error: `Failed to configure provider: ${provider}`,
           details: result.error || result.stderr || 'Unknown error',
         },
-        { status: 500 },
+        { status: 500 }
       )
     }
 
@@ -120,7 +117,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to configure OAuth provider',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

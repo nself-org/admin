@@ -217,9 +217,7 @@ function WebhookForm({
             <input
               type="text"
               value={formData.name}
-              onChange={(e) =>
-                setFormData({ ...formData, name: e.target.value })
-              }
+              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
               placeholder="My Webhook"
               className="w-full rounded-lg border border-zinc-200 bg-white px-3 py-2 dark:border-zinc-700 dark:bg-zinc-900"
             />
@@ -231,9 +229,7 @@ function WebhookForm({
             </label>
             <select
               value={formData.method}
-              onChange={(e) =>
-                setFormData({ ...formData, method: e.target.value as any })
-              }
+              onChange={(e) => setFormData({ ...formData, method: e.target.value as any })}
               className="w-full rounded-lg border border-zinc-200 bg-white px-3 py-2 dark:border-zinc-700 dark:bg-zinc-900"
             >
               <option value="POST">POST</option>
@@ -278,9 +274,7 @@ function WebhookForm({
                     onChange={(e) => {
                       const events = e.target.checked
                         ? [...(formData.events || []), event.id]
-                        : (formData.events || []).filter(
-                            (id) => id !== event.id,
-                          )
+                        : (formData.events || []).filter((id) => id !== event.id)
                       setFormData({ ...formData, events })
                     }}
                     className="mt-1 h-4 w-4 rounded text-blue-600"
@@ -288,9 +282,7 @@ function WebhookForm({
                   <Icon className="mt-0.5 h-4 w-4 text-zinc-500" />
                   <div className="flex-1">
                     <div className="text-sm font-medium">{event.label}</div>
-                    <div className="text-xs text-zinc-500">
-                      {event.description}
-                    </div>
+                    <div className="text-xs text-zinc-500">{event.description}</div>
                   </div>
                 </label>
               )
@@ -301,9 +293,7 @@ function WebhookForm({
         {/* Headers */}
         <div>
           <div className="mb-3 flex items-center justify-between">
-            <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
-              Headers
-            </label>
+            <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">Headers</label>
             <Button onClick={addHeader} variant="outline">
               <Plus className="mr-1 h-4 w-4" />
               Add Header
@@ -343,9 +333,7 @@ function WebhookForm({
             <input
               type={showSecret ? 'text' : 'password'}
               value={formData.secret}
-              onChange={(e) =>
-                setFormData({ ...formData, secret: e.target.value })
-              }
+              onChange={(e) => setFormData({ ...formData, secret: e.target.value })}
               placeholder="Webhook secret for signature verification"
               className="w-full rounded-lg border border-zinc-200 bg-white px-3 py-2 pr-10 dark:border-zinc-700 dark:bg-zinc-900"
             />
@@ -354,11 +342,7 @@ function WebhookForm({
               onClick={() => setShowSecret(!showSecret)}
               className="absolute top-1/2 right-3 -translate-y-1/2"
             >
-              {showSecret ? (
-                <EyeOff className="h-4 w-4" />
-              ) : (
-                <Eye className="h-4 w-4" />
-              )}
+              {showSecret ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
             </button>
           </div>
         </div>
@@ -374,9 +358,7 @@ function WebhookForm({
               min="1"
               max="300"
               value={formData.timeout}
-              onChange={(e) =>
-                setFormData({ ...formData, timeout: parseInt(e.target.value) })
-              }
+              onChange={(e) => setFormData({ ...formData, timeout: parseInt(e.target.value) })}
               className="w-full rounded-lg border border-zinc-200 bg-white px-3 py-2 dark:border-zinc-700 dark:bg-zinc-900"
             />
           </div>
@@ -409,9 +391,7 @@ function WebhookForm({
             type="checkbox"
             id="enabled"
             checked={formData.enabled}
-            onChange={(e) =>
-              setFormData({ ...formData, enabled: e.target.checked })
-            }
+            onChange={(e) => setFormData({ ...formData, enabled: e.target.checked })}
             className="h-4 w-4 rounded text-blue-600"
           />
           <label htmlFor="enabled" className="text-sm font-medium">
@@ -420,9 +400,7 @@ function WebhookForm({
         </div>
 
         <div className="flex gap-3">
-          <Button onClick={() => onSave(formData)}>
-            {webhook ? 'Update' : 'Create'} Webhook
-          </Button>
+          <Button onClick={() => onSave(formData)}>{webhook ? 'Update' : 'Create'} Webhook</Button>
           <Button variant="outline" onClick={onCancel}>
             Cancel
           </Button>
@@ -456,12 +434,8 @@ function WebhookCard({
               className={`h-3 w-3 rounded-full ${webhook.enabled ? 'bg-green-500' : 'bg-gray-400'}`}
             />
             <div>
-              <h3 className="font-semibold text-zinc-900 dark:text-white">
-                {webhook.name}
-              </h3>
-              <p className="text-sm break-all text-zinc-600 dark:text-zinc-400">
-                {webhook.url}
-              </p>
+              <h3 className="font-semibold text-zinc-900 dark:text-white">{webhook.name}</h3>
+              <p className="text-sm break-all text-zinc-600 dark:text-zinc-400">{webhook.url}</p>
             </div>
           </div>
 
@@ -494,9 +468,7 @@ function WebhookCard({
               <span className="text-xs text-zinc-500">Total Deliveries</span>
               <Activity className="h-3 w-3 text-blue-500" />
             </div>
-            <div className="text-lg font-semibold">
-              {webhook.totalDeliveries.toLocaleString()}
-            </div>
+            <div className="text-lg font-semibold">{webhook.totalDeliveries.toLocaleString()}</div>
           </div>
         </div>
 
@@ -540,11 +512,7 @@ function WebhookCard({
               variant="outline"
               className={webhook.enabled ? 'text-red-600' : 'text-green-600'}
             >
-              {webhook.enabled ? (
-                <Pause className="h-4 w-4" />
-              ) : (
-                <Play className="h-4 w-4" />
-              )}
+              {webhook.enabled ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
             </Button>
           </div>
         </div>
@@ -552,15 +520,10 @@ function WebhookCard({
         {showDetails && (
           <div className="mt-4 space-y-3 border-t border-zinc-200 pt-4 dark:border-zinc-700">
             <div>
-              <p className="mb-1 text-xs font-medium text-zinc-600 dark:text-zinc-400">
-                Headers
-              </p>
+              <p className="mb-1 text-xs font-medium text-zinc-600 dark:text-zinc-400">Headers</p>
               <div className="space-y-1">
                 {Object.entries(webhook.headers).map(([key, value]) => (
-                  <p
-                    key={key}
-                    className="font-mono text-xs text-zinc-600 dark:text-zinc-400"
-                  >
+                  <p key={key} className="font-mono text-xs text-zinc-600 dark:text-zinc-400">
                     {key}: {value}
                   </p>
                 ))}
@@ -572,8 +535,7 @@ function WebhookCard({
                 Retry Policy
               </p>
               <p className="text-xs text-zinc-600 dark:text-zinc-400">
-                Max retries: {webhook.retryPolicy.maxRetries}, Timeout:{' '}
-                {webhook.timeout}s
+                Max retries: {webhook.retryPolicy.maxRetries}, Timeout: {webhook.timeout}s
               </p>
             </div>
 
@@ -718,7 +680,7 @@ function PayloadTemplatesSection() {
           },
         },
         null,
-        2,
+        2
       ),
     },
   ])
@@ -731,10 +693,7 @@ function PayloadTemplatesSection() {
           <Code className="h-5 w-5" />
           Payload Templates
         </h3>
-        <Button
-          onClick={() => setShowTemplateForm(true)}
-          className="flex items-center gap-2"
-        >
+        <Button onClick={() => setShowTemplateForm(true)} className="flex items-center gap-2">
           <Plus className="h-4 w-4" />
           New Template
         </Button>
@@ -749,9 +708,7 @@ function PayloadTemplatesSection() {
             <div className="mb-2 flex items-center justify-between">
               <div>
                 <h4 className="font-medium">{template.name}</h4>
-                <p className="text-sm text-zinc-600 dark:text-zinc-400">
-                  {template.description}
-                </p>
+                <p className="text-sm text-zinc-600 dark:text-zinc-400">{template.description}</p>
               </div>
               <div className="flex items-center gap-2">
                 <span className="rounded bg-blue-100 px-2 py-1 text-xs text-blue-700 dark:bg-blue-900/20 dark:text-blue-400">
@@ -846,9 +803,7 @@ function WebhooksContent() {
 
   const [_loading, setLoading] = useState(false)
   const [showForm, setShowForm] = useState(false)
-  const [editingWebhook, setEditingWebhook] = useState<
-    WebhookEndpoint | undefined
-  >()
+  const [editingWebhook, setEditingWebhook] = useState<WebhookEndpoint | undefined>()
   const [filter, setFilter] = useState('all')
   const [searchQuery, setSearchQuery] = useState('')
   const [activeTab, setActiveTab] = useUrlState<string>('tab', 'webhooks')
@@ -883,9 +838,7 @@ function WebhooksContent() {
 
         if (response.ok) {
           setWebhooks(
-            webhooks.map((w) =>
-              w.id === editingWebhook.id ? { ...w, ...webhookData } : w,
-            ),
+            webhooks.map((w) => (w.id === editingWebhook.id ? { ...w, ...webhookData } : w))
           )
         }
       } else {
@@ -934,11 +887,7 @@ function WebhooksContent() {
       })
 
       if (response.ok) {
-        setWebhooks(
-          webhooks.map((w) =>
-            w.id === id ? { ...w, enabled: !w.enabled } : w,
-          ),
-        )
+        setWebhooks(webhooks.map((w) => (w.id === id ? { ...w, enabled: !w.enabled } : w)))
       }
     } catch (error) {
       console.error('[Webhooks] Error toggling webhook:', error)
@@ -978,10 +927,7 @@ function WebhooksContent() {
               </p>
             </div>
 
-            <Button
-              onClick={() => setShowForm(true)}
-              className="flex items-center gap-2"
-            >
+            <Button onClick={() => setShowForm(true)} className="flex items-center gap-2">
               <Plus className="h-4 w-4" />
               Create Webhook
             </Button>
@@ -1101,9 +1047,7 @@ function WebhooksContent() {
             {deliveries.length === 0 && (
               <div className="py-12 text-center">
                 <Activity className="mx-auto mb-4 h-12 w-12 text-zinc-400" />
-                <p className="text-zinc-600 dark:text-zinc-400">
-                  No deliveries yet
-                </p>
+                <p className="text-zinc-600 dark:text-zinc-400">No deliveries yet</p>
               </div>
             )}
           </div>

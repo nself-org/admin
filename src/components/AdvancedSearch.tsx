@@ -1,28 +1,14 @@
 'use client'
 
 import { Dialog, DialogBackdrop, DialogPanel } from '@headlessui/react'
-import {
-  Activity,
-  Calendar,
-  Filter,
-  Search as SearchIcon,
-  Type,
-  X,
-} from 'lucide-react'
+import { Activity, Calendar, Filter, Search as SearchIcon, Type, X } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { Button } from './Button'
 
 type SearchResult = {
   id: string
-  type:
-    | 'log'
-    | 'audit'
-    | 'config'
-    | 'service'
-    | 'database'
-    | 'navigation'
-    | 'file'
+  type: 'log' | 'audit' | 'config' | 'service' | 'database' | 'navigation' | 'file'
   title: string
   description: string
   content?: string
@@ -139,10 +125,8 @@ export function AdvancedSearch() {
       const params = new URLSearchParams({ q: query })
 
       if (filters.types.length > 0) params.set('types', filters.types.join(','))
-      if (filters.services.length > 0)
-        params.set('services', filters.services.join(','))
-      if (filters.levels.length > 0)
-        params.set('levels', filters.levels.join(','))
+      if (filters.services.length > 0) params.set('services', filters.services.join(','))
+      if (filters.levels.length > 0) params.set('levels', filters.levels.join(','))
       if (filters.dateFrom) params.set('dateFrom', filters.dateFrom)
       if (filters.dateTo) params.set('dateTo', filters.dateTo)
       if (filters.regex) params.set('regex', 'true')
@@ -166,7 +150,7 @@ export function AdvancedSearch() {
   const loadSuggestions = useCallback(async () => {
     try {
       const response = await fetch(
-        `/api/search?action=suggestions&q=${encodeURIComponent(query)}&limit=5`,
+        `/api/search?action=suggestions&q=${encodeURIComponent(query)}&limit=5`
       )
       const data = await response.json()
       setSuggestions(data.suggestions || [])
@@ -214,12 +198,12 @@ export function AdvancedSearch() {
         handleClose()
       }
     },
-    [router, handleClose],
+    [router, handleClose]
   )
 
   const toggleFilter = (
     category: keyof Pick<SearchFilters, 'types' | 'services' | 'levels'>,
-    value: string,
+    value: string
   ) => {
     setFilters((prev) => {
       const current = prev[category]
@@ -268,11 +252,7 @@ export function AdvancedSearch() {
         </kbd>
       </button>
 
-      <Dialog
-        open={isOpen}
-        onClose={handleClose}
-        className="fixed inset-0 z-50"
-      >
+      <Dialog open={isOpen} onClose={handleClose} className="fixed inset-0 z-50">
         <DialogBackdrop className="fixed inset-0 bg-zinc-400/25 backdrop-blur-sm dark:bg-black/40" />
         <div className="fixed inset-0 overflow-y-auto px-4 py-4 sm:px-6 sm:py-20 md:py-32 lg:px-8 lg:py-[10vh]">
           <DialogPanel className="mx-auto max-w-3xl transform-gpu overflow-hidden rounded-xl bg-white shadow-2xl dark:bg-zinc-900 dark:ring-1 dark:ring-zinc-800">
@@ -345,22 +325,20 @@ export function AdvancedSearch() {
                         Services
                       </div>
                       <div className="flex flex-wrap gap-2">
-                        {availableFilters.services
-                          .slice(0, 10)
-                          .map((service) => (
-                            <button
-                              key={service}
-                              type="button"
-                              onClick={() => toggleFilter('services', service)}
-                              className={`rounded-full px-3 py-1 text-xs font-medium transition ${
-                                filters.services.includes(service)
-                                  ? 'bg-blue-600 text-white'
-                                  : 'bg-white text-zinc-700 ring-1 ring-zinc-200 hover:bg-zinc-50 dark:bg-zinc-800 dark:text-zinc-300 dark:ring-zinc-700 dark:hover:bg-zinc-700'
-                              }`}
-                            >
-                              {service}
-                            </button>
-                          ))}
+                        {availableFilters.services.slice(0, 10).map((service) => (
+                          <button
+                            key={service}
+                            type="button"
+                            onClick={() => toggleFilter('services', service)}
+                            className={`rounded-full px-3 py-1 text-xs font-medium transition ${
+                              filters.services.includes(service)
+                                ? 'bg-blue-600 text-white'
+                                : 'bg-white text-zinc-700 ring-1 ring-zinc-200 hover:bg-zinc-50 dark:bg-zinc-800 dark:text-zinc-300 dark:ring-zinc-700 dark:hover:bg-zinc-700'
+                            }`}
+                          >
+                            {service}
+                          </button>
+                        ))}
                       </div>
                     </div>
                   )}
@@ -458,11 +436,7 @@ export function AdvancedSearch() {
                   </div>
 
                   {hasActiveFilters && (
-                    <Button
-                      onClick={clearFilters}
-                      variant="secondary"
-                      className="w-full text-xs"
-                    >
+                    <Button onClick={clearFilters} variant="secondary" className="w-full text-xs">
                       <X className="mr-1 h-3.5 w-3.5" />
                       Clear All Filters
                     </Button>

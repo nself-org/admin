@@ -29,10 +29,12 @@ interface HealthData {
 }
 
 function statusIcon(status: ServiceHealth['status'], size = 'h-4 w-4') {
-  if (status === 'healthy') return <CheckCircle className={`${size} text-green-400 flex-shrink-0`} />
-  if (status === 'degraded') return <AlertTriangle className={`${size} text-yellow-400 flex-shrink-0`} />
-  if (status === 'unhealthy') return <XCircle className={`${size} text-red-400 flex-shrink-0`} />
-  return <Clock className={`${size} text-gray-500 flex-shrink-0`} />
+  if (status === 'healthy')
+    return <CheckCircle className={`${size} flex-shrink-0 text-green-400`} />
+  if (status === 'degraded')
+    return <AlertTriangle className={`${size} flex-shrink-0 text-yellow-400`} />
+  if (status === 'unhealthy') return <XCircle className={`${size} flex-shrink-0 text-red-400`} />
+  return <Clock className={`${size} flex-shrink-0 text-gray-500`} />
 }
 
 function statusColor(status: ServiceHealth['status']) {
@@ -52,32 +54,36 @@ function statusBg(status: ServiceHealth['status']) {
 function overallBanner(overall: HealthData['overall']) {
   if (overall === 'healthy') {
     return (
-      <div className="flex items-center gap-3 p-4 rounded-lg bg-green-500/10 border border-green-500/30">
-        <CheckCircle className="h-5 w-5 text-green-400 flex-shrink-0" />
+      <div className="flex items-center gap-3 rounded-lg border border-green-500/30 bg-green-500/10 p-4">
+        <CheckCircle className="h-5 w-5 flex-shrink-0 text-green-400" />
         <div>
           <p className="font-semibold text-green-400">All systems healthy</p>
-          <p className="text-sm text-gray-400 mt-0.5">Every service is operating within normal parameters.</p>
+          <p className="mt-0.5 text-sm text-gray-400">
+            Every service is operating within normal parameters.
+          </p>
         </div>
       </div>
     )
   }
   if (overall === 'degraded') {
     return (
-      <div className="flex items-center gap-3 p-4 rounded-lg bg-yellow-500/10 border border-yellow-500/30">
-        <AlertTriangle className="h-5 w-5 text-yellow-400 flex-shrink-0" />
+      <div className="flex items-center gap-3 rounded-lg border border-yellow-500/30 bg-yellow-500/10 p-4">
+        <AlertTriangle className="h-5 w-5 flex-shrink-0 text-yellow-400" />
         <div>
           <p className="font-semibold text-yellow-400">Some services degraded</p>
-          <p className="text-sm text-gray-400 mt-0.5">One or more services are experiencing issues.</p>
+          <p className="mt-0.5 text-sm text-gray-400">
+            One or more services are experiencing issues.
+          </p>
         </div>
       </div>
     )
   }
   return (
-    <div className="flex items-center gap-3 p-4 rounded-lg bg-red-500/10 border border-red-500/30">
-      <XCircle className="h-5 w-5 text-red-400 flex-shrink-0" />
+    <div className="flex items-center gap-3 rounded-lg border border-red-500/30 bg-red-500/10 p-4">
+      <XCircle className="h-5 w-5 flex-shrink-0 text-red-400" />
       <div>
         <p className="font-semibold text-red-400">Services unhealthy</p>
-        <p className="text-sm text-gray-400 mt-0.5">Critical services are down or unreachable.</p>
+        <p className="mt-0.5 text-sm text-gray-400">Critical services are down or unreachable.</p>
       </div>
     </div>
   )
@@ -131,18 +137,18 @@ function HealthContent() {
   // State 5: offline
   if (offline) {
     return (
-      <div className="p-6 space-y-4">
-        <div className="flex items-center gap-3 p-4 rounded-lg bg-yellow-500/10 border border-yellow-500/30">
-          <WifiOff className="h-5 w-5 text-yellow-500 flex-shrink-0" />
+      <div className="space-y-4 p-6">
+        <div className="flex items-center gap-3 rounded-lg border border-yellow-500/30 bg-yellow-500/10 p-4">
+          <WifiOff className="h-5 w-5 flex-shrink-0 text-yellow-500" />
           <div>
             <p className="font-medium text-yellow-400">Cannot reach backend</p>
-            <p className="text-sm text-gray-400 mt-0.5">
+            <p className="mt-0.5 text-sm text-gray-400">
               Health data requires a running nself stack.
             </p>
           </div>
         </div>
         <Button onClick={fetchHealth} disabled={loading} variant="secondary" size="sm">
-          <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
+          <RefreshCw className={`mr-2 h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
           Retry
         </Button>
       </div>
@@ -152,16 +158,16 @@ function HealthContent() {
   // State 4: error
   if (error && !data) {
     return (
-      <div className="p-6 space-y-4">
-        <div className="flex items-center gap-3 p-4 rounded-lg bg-red-500/10 border border-red-500/30">
-          <AlertTriangle className="h-5 w-5 text-red-400 flex-shrink-0" />
+      <div className="space-y-4 p-6">
+        <div className="flex items-center gap-3 rounded-lg border border-red-500/30 bg-red-500/10 p-4">
+          <AlertTriangle className="h-5 w-5 flex-shrink-0 text-red-400" />
           <div>
             <p className="font-medium text-red-400">Failed to load health data</p>
-            <p className="text-sm text-gray-400 mt-0.5">{error}</p>
+            <p className="mt-0.5 text-sm text-gray-400">{error}</p>
           </div>
         </div>
         <Button onClick={fetchHealth} disabled={loading} variant="secondary" size="sm">
-          <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
+          <RefreshCw className={`mr-2 h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
           Retry
         </Button>
       </div>
@@ -172,10 +178,16 @@ function HealthContent() {
   if (!data) {
     return (
       <div className="p-6 text-center text-gray-400">
-        <CheckCircle className="h-8 w-8 mx-auto mb-2 opacity-50" />
+        <CheckCircle className="mx-auto mb-2 h-8 w-8 opacity-50" />
         <p>No health data available.</p>
-        <Button onClick={fetchHealth} disabled={loading} variant="secondary" size="sm" className="mt-3">
-          <RefreshCw className="h-4 w-4 mr-2" />
+        <Button
+          onClick={fetchHealth}
+          disabled={loading}
+          variant="secondary"
+          size="sm"
+          className="mt-3"
+        >
+          <RefreshCw className="mr-2 h-4 w-4" />
           Load Health
         </Button>
       </div>
@@ -188,17 +200,15 @@ function HealthContent() {
 
   // States 6+7: success
   return (
-    <div className="p-6 space-y-6">
+    <div className="space-y-6 p-6">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-xl font-semibold text-white">Service Health</h2>
-          <p className="text-sm text-gray-400 mt-1">
-            {data.services.length} services monitored
-          </p>
+          <p className="mt-1 text-sm text-gray-400">{data.services.length} services monitored</p>
         </div>
         <Button onClick={fetchHealth} disabled={loading} variant="secondary" size="sm">
-          <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
+          <RefreshCw className={`mr-2 h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
           {loading ? 'Checking…' : 'Refresh'}
         </Button>
       </div>
@@ -210,28 +220,25 @@ function HealthContent() {
       <div className="grid grid-cols-3 gap-3">
         <div className="rounded-lg border border-green-500/20 bg-green-500/5 p-3 text-center">
           <p className="text-2xl font-bold text-green-400">{healthy}</p>
-          <p className="text-xs text-gray-400 mt-0.5">Healthy</p>
+          <p className="mt-0.5 text-xs text-gray-400">Healthy</p>
         </div>
         <div className="rounded-lg border border-yellow-500/20 bg-yellow-500/5 p-3 text-center">
           <p className="text-2xl font-bold text-yellow-400">{degraded}</p>
-          <p className="text-xs text-gray-400 mt-0.5">Degraded</p>
+          <p className="mt-0.5 text-xs text-gray-400">Degraded</p>
         </div>
         <div className="rounded-lg border border-red-500/20 bg-red-500/5 p-3 text-center">
           <p className="text-2xl font-bold text-red-400">{unhealthy}</p>
-          <p className="text-xs text-gray-400 mt-0.5">Unhealthy</p>
+          <p className="mt-0.5 text-xs text-gray-400">Unhealthy</p>
         </div>
       </div>
 
       {/* Service list */}
       <div className="space-y-2">
         {data.services.map((svc) => (
-          <div
-            key={svc.name}
-            className={`rounded-lg border p-3 ${statusBg(svc.status)}`}
-          >
+          <div key={svc.name} className={`rounded-lg border p-3 ${statusBg(svc.status)}`}>
             <div className="flex items-center gap-3">
               {statusIcon(svc.status)}
-              <div className="flex-1 min-w-0">
+              <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-2">
                   <span className="text-sm font-medium text-white capitalize">{svc.name}</span>
                   <span className={`text-xs capitalize ${statusColor(svc.status)}`}>
@@ -239,15 +246,13 @@ function HealthContent() {
                   </span>
                 </div>
                 {svc.message && (
-                  <p className="text-xs text-gray-400 mt-0.5 truncate">{svc.message}</p>
+                  <p className="mt-0.5 truncate text-xs text-gray-400">{svc.message}</p>
                 )}
               </div>
-              <div className="text-right text-xs text-gray-500 flex-shrink-0 space-y-0.5">
-                {svc.latencyMs !== undefined && (
-                  <p>{svc.latencyMs}ms</p>
-                )}
+              <div className="flex-shrink-0 space-y-0.5 text-right text-xs text-gray-500">
+                {svc.latencyMs !== undefined && <p>{svc.latencyMs}ms</p>}
                 {svc.uptime !== undefined && (
-                  <p className="flex items-center gap-1 justify-end">
+                  <p className="flex items-center justify-end gap-1">
                     <Loader2 className="h-3 w-3" />
                     {svc.uptime.toFixed(2)}%
                   </p>

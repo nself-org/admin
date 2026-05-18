@@ -35,20 +35,10 @@ export function LogoIcon(props: React.ComponentPropsWithoutRef<'svg'>) {
       <defs>
         <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
           <stop offset="0%" style={{ stopColor: '#0066CC', stopOpacity: 1 }} />
-          <stop
-            offset="100%"
-            style={{ stopColor: '#4A9EFF', stopOpacity: 1 }}
-          />
+          <stop offset="100%" style={{ stopColor: '#4A9EFF', stopOpacity: 1 }} />
         </linearGradient>
       </defs>
-      <rect
-        x="32"
-        y="32"
-        width="448"
-        height="448"
-        rx="64"
-        fill="url(#gradient)"
-      />
+      <rect x="32" y="32" width="448" height="448" rx="64" fill="url(#gradient)" />
       <path
         d="M128 192 L224 256 L128 320"
         stroke="white"

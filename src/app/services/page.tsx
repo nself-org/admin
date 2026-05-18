@@ -17,10 +17,8 @@ const ServiceCard = dynamic(
       default: mod.ServiceCard,
     })),
   {
-    loading: () => (
-      <div className="h-48 animate-pulse rounded-lg bg-zinc-200 dark:bg-zinc-800" />
-    ),
-  },
+    loading: () => <div className="h-48 animate-pulse rounded-lg bg-zinc-200 dark:bg-zinc-800" />,
+  }
 )
 
 const _ServiceListView = dynamic(
@@ -29,10 +27,8 @@ const _ServiceListView = dynamic(
       default: mod.ServiceListView,
     })),
   {
-    loading: () => (
-      <div className="h-96 animate-pulse rounded-lg bg-zinc-200 dark:bg-zinc-800" />
-    ),
-  },
+    loading: () => <div className="h-96 animate-pulse rounded-lg bg-zinc-200 dark:bg-zinc-800" />,
+  }
 )
 
 interface Container {
@@ -104,40 +100,24 @@ function getCategoryColors(category: 'required' | 'optional' | 'user') {
 }
 
 // Unified service categorization and ordering
-function getServiceCategory(
-  name: string | undefined,
-): 'required' | 'optional' | 'user' {
+function getServiceCategory(name: string | undefined): 'required' | 'optional' | 'user' {
   if (!name) return 'user'
   const lowerName = String(name).toLowerCase()
 
   // Required services (core stack)
-  if (['postgres', 'postgresql'].some((n) => lowerName.includes(n)))
-    return 'required'
-  if (['hasura', 'graphql'].some((n) => lowerName.includes(n)))
-    return 'required'
-  if (
-    ['auth'].some((n) => lowerName.includes(n)) &&
-    !lowerName.includes('alert')
-  )
-    return 'required'
-  if (
-    ['nginx', 'proxy'].some((n) => lowerName.includes(n)) &&
-    !lowerName.includes('haproxy')
-  )
+  if (['postgres', 'postgresql'].some((n) => lowerName.includes(n))) return 'required'
+  if (['hasura', 'graphql'].some((n) => lowerName.includes(n))) return 'required'
+  if (['auth'].some((n) => lowerName.includes(n)) && !lowerName.includes('alert')) return 'required'
+  if (['nginx', 'proxy'].some((n) => lowerName.includes(n)) && !lowerName.includes('haproxy'))
     return 'required'
 
   // Optional services (infrastructure)
   if (['minio', 'storage'].some((n) => lowerName.includes(n))) return 'optional'
-  if (
-    ['mailpit', 'mail'].some((n) => lowerName.includes(n)) &&
-    !lowerName.includes('bullmq')
-  )
+  if (['mailpit', 'mail'].some((n) => lowerName.includes(n)) && !lowerName.includes('bullmq'))
     return 'optional'
   if (['redis', 'cache'].some((n) => lowerName.includes(n))) return 'optional'
   if (
-    ['grafana', 'prometheus', 'loki', 'jaeger', 'alertmanager'].some((n) =>
-      lowerName.includes(n),
-    )
+    ['grafana', 'prometheus', 'loki', 'jaeger', 'alertmanager'].some((n) => lowerName.includes(n))
   )
     return 'optional'
 
@@ -278,9 +258,7 @@ function getHealthText(health: string): string {
   return health?.charAt(0).toUpperCase() + health?.slice(1) || 'Unknown'
 }
 
-function getServiceDisplayName(
-  container: Container | ContainerStats | any,
-): string {
+function getServiceDisplayName(container: Container | ContainerStats | any): string {
   const nameMap: Record<string, string> = {
     nself_postgres: 'PostgreSQL',
     nself_hasura: 'Hasura GraphQL',
@@ -339,34 +317,24 @@ function EnhancedListView({
       let comparison = 0
       switch (sortColumn) {
         case 'name':
-          comparison = getServiceDisplayName(a).localeCompare(
-            getServiceDisplayName(b),
-          )
+          comparison = getServiceDisplayName(a).localeCompare(getServiceDisplayName(b))
           break
         case 'status':
-          comparison = (a.health || 'stopped').localeCompare(
-            b.health || 'stopped',
-          )
+          comparison = (a.health || 'stopped').localeCompare(b.health || 'stopped')
           break
         case 'cpu':
-          comparison =
-            (a.stats?.cpu.percentage || 0) - (b.stats?.cpu.percentage || 0)
+          comparison = (a.stats?.cpu.percentage || 0) - (b.stats?.cpu.percentage || 0)
           break
         case 'memory':
-          comparison =
-            (a.stats?.memory.usage || 0) - (b.stats?.memory.usage || 0)
+          comparison = (a.stats?.memory.usage || 0) - (b.stats?.memory.usage || 0)
           break
         case 'disk': {
           const diskA =
             a.stats?.disk?.used ||
-            (a.stats?.blockIO
-              ? a.stats.blockIO.read + a.stats.blockIO.write
-              : 0)
+            (a.stats?.blockIO ? a.stats.blockIO.read + a.stats.blockIO.write : 0)
           const diskB =
             b.stats?.disk?.used ||
-            (b.stats?.blockIO
-              ? b.stats.blockIO.read + b.stats.blockIO.write
-              : 0)
+            (b.stats?.blockIO ? b.stats.blockIO.read + b.stats.blockIO.write : 0)
           comparison = diskA - diskB
           break
         }
@@ -384,9 +352,7 @@ function EnhancedListView({
 
   const SortIcon = ({ column }: { column: typeof sortColumn }) => {
     if (sortColumn !== column) {
-      return (
-        <Icons.ArrowUp className="h-3 w-3 text-zinc-400 opacity-0 group-hover:opacity-100" />
-      )
+      return <Icons.ArrowUp className="h-3 w-3 text-zinc-400 opacity-0 group-hover:opacity-100" />
     }
     return sortDirection === 'asc' ? (
       <Icons.ArrowUp className="h-3 w-3 text-blue-500" />
@@ -397,14 +363,12 @@ function EnhancedListView({
 
   // Group by category for visual separation
   const requiredContainers = sortedContainers.filter(
-    (c) => getServiceCategory(c.name) === 'required',
+    (c) => getServiceCategory(c.name) === 'required'
   )
   const optionalContainers = sortedContainers.filter(
-    (c) => getServiceCategory(c.name) === 'optional',
+    (c) => getServiceCategory(c.name) === 'optional'
   )
-  const userContainers = sortedContainers.filter(
-    (c) => getServiceCategory(c.name) === 'user',
-  )
+  const userContainers = sortedContainers.filter((c) => getServiceCategory(c.name) === 'user')
 
   // Function to get service icon
   function getServiceIcon(name: string | undefined): any {
@@ -414,8 +378,7 @@ function EnhancedListView({
     if (lowerName.includes('postgres')) return serviceIcons.database
     if (lowerName.includes('hasura')) return serviceIcons.graphql
     if (lowerName.includes('auth')) return serviceIcons.auth
-    if (lowerName.includes('minio') || lowerName.includes('storage'))
-      return serviceIcons.storage
+    if (lowerName.includes('minio') || lowerName.includes('storage')) return serviceIcons.storage
     if (lowerName.includes('redis')) return serviceIcons.cache
     if (lowerName.includes('nginx')) return serviceIcons.proxy
     if (lowerName.includes('mailpit')) return serviceIcons.email
@@ -427,8 +390,7 @@ function EnhancedListView({
     if (lowerName.includes('nestjs')) return serviceIcons.nestjs
     if (lowerName.includes('bullmq')) return serviceIcons.queue
     if (lowerName.includes('python')) return serviceIcons.python
-    if (lowerName.includes('golang') || lowerName.includes('go-'))
-      return serviceIcons.golang
+    if (lowerName.includes('golang') || lowerName.includes('go-')) return serviceIcons.golang
 
     return serviceIcons.default
   }
@@ -500,10 +462,7 @@ function EnhancedListView({
     }, [container.created, container.state])
 
     return (
-      <tr
-        key={container.id}
-        className="hover:bg-zinc-50 dark:hover:bg-zinc-800/50"
-      >
+      <tr key={container.id} className="hover:bg-zinc-50 dark:hover:bg-zinc-800/50">
         <td className="px-4 py-3">
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-2">
@@ -511,9 +470,7 @@ function EnhancedListView({
               <Icon className={`h-5 w-5 ${categoryColors.icon}`} />
             </div>
             <div>
-              <div className="text-sm font-medium text-zinc-900 dark:text-white">
-                {displayName}
-              </div>
+              <div className="text-sm font-medium text-zinc-900 dark:text-white">{displayName}</div>
               <div className="text-xs text-zinc-500">{container.name}</div>
             </div>
           </div>
@@ -522,9 +479,7 @@ function EnhancedListView({
           <div>
             <span className={`text-sm ${config.textColor}`}>{config.text}</span>
             {container.state === 'running' && (
-              <div className="mt-0.5 text-xs text-zinc-500">
-                Uptime: {uptime}
-              </div>
+              <div className="mt-0.5 text-xs text-zinc-500">Uptime: {uptime}</div>
             )}
           </div>
         </td>
@@ -540,8 +495,7 @@ function EnhancedListView({
         <td className="px-4 py-3 text-center">
           {container.stats ? (
             <span className="text-sm text-zinc-600 dark:text-zinc-400">
-              {(container.stats.memory.usage / (1024 * 1024 * 1024)).toFixed(1)}
-              G
+              {(container.stats.memory.usage / (1024 * 1024 * 1024)).toFixed(1)}G
             </span>
           ) : (
             <span className="text-sm text-zinc-400">-</span>
@@ -557,12 +511,9 @@ function EnhancedListView({
                     ? `${gb.toFixed(1)}G`
                     : `${(container.stats.disk.used / (1024 * 1024)).toFixed(0)}M`
                 } else if (container.stats?.blockIO) {
-                  const total =
-                    container.stats.blockIO.read + container.stats.blockIO.write
+                  const total = container.stats.blockIO.read + container.stats.blockIO.write
                   const gb = total / (1024 * 1024 * 1024)
-                  return gb >= 1
-                    ? `${gb.toFixed(1)}G`
-                    : `${(total / (1024 * 1024)).toFixed(0)}M`
+                  return gb >= 1 ? `${gb.toFixed(1)}G` : `${(total / (1024 * 1024)).toFixed(0)}M`
                 }
                 return '-'
               })()}
@@ -680,9 +631,7 @@ function EnhancedListView({
               </button>
             </th>
             <th className="px-4 py-3 text-right">
-              <span className="text-xs font-medium text-zinc-600 dark:text-zinc-400">
-                Actions
-              </span>
+              <span className="text-xs font-medium text-zinc-600 dark:text-zinc-400">Actions</span>
             </th>
           </tr>
         </thead>
@@ -690,10 +639,7 @@ function EnhancedListView({
           {requiredContainers.length > 0 && (
             <>
               <tr>
-                <td
-                  colSpan={7}
-                  className="bg-blue-50/50 px-4 py-2 dark:bg-blue-900/10"
-                >
+                <td colSpan={7} className="bg-blue-50/50 px-4 py-2 dark:bg-blue-900/10">
                   <span className="text-xs font-medium text-blue-700 dark:text-blue-400">
                     Required Services
                   </span>
@@ -708,10 +654,7 @@ function EnhancedListView({
           {optionalContainers.length > 0 && (
             <>
               <tr>
-                <td
-                  colSpan={7}
-                  className="bg-sky-50/50 px-4 py-2 dark:bg-sky-900/10"
-                >
+                <td colSpan={7} className="bg-sky-50/50 px-4 py-2 dark:bg-sky-900/10">
                   <span className="text-xs font-medium text-sky-600 dark:text-sky-400">
                     Optional Services
                   </span>
@@ -726,10 +669,7 @@ function EnhancedListView({
           {userContainers.length > 0 && (
             <>
               <tr>
-                <td
-                  colSpan={7}
-                  className="bg-orange-50/50 px-4 py-2 dark:bg-orange-900/10"
-                >
+                <td colSpan={7} className="bg-orange-50/50 px-4 py-2 dark:bg-orange-900/10">
                   <span className="text-xs font-medium text-orange-700 dark:text-orange-400">
                     Custom Services
                   </span>
@@ -769,7 +709,7 @@ function MetricCard({
       mouseX.set(event.clientX - rect.left)
       mouseY.set(event.clientY - rect.top)
     },
-    [mouseX, mouseY],
+    [mouseX, mouseY]
   )
 
   return (
@@ -803,15 +743,11 @@ function MetricCard({
         </div>
 
         <div className="mt-4">
-          <h3 className="text-sm font-medium text-zinc-600 dark:text-zinc-400">
-            {title}
-          </h3>
+          <h3 className="text-sm font-medium text-zinc-600 dark:text-zinc-400">{title}</h3>
           <p className="mt-1 text-3xl font-semibold tracking-tight text-zinc-900 dark:text-white">
             {value}
           </p>
-          <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-500">
-            {description}
-          </p>
+          <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-500">{description}</p>
         </div>
       </div>
     </motion.div>
@@ -826,23 +762,11 @@ function TreeView({
   containers: Container[]
   onAction: (action: string, containerId: string) => void
 }) {
-  const requiredServices = containers.filter(
-    (c) => getServiceCategory(c.name) === 'required',
-  )
-  const optionalServices = containers.filter(
-    (c) => getServiceCategory(c.name) === 'optional',
-  )
-  const userServices = containers.filter(
-    (c) => getServiceCategory(c.name) === 'user',
-  )
+  const requiredServices = containers.filter((c) => getServiceCategory(c.name) === 'required')
+  const optionalServices = containers.filter((c) => getServiceCategory(c.name) === 'optional')
+  const userServices = containers.filter((c) => getServiceCategory(c.name) === 'user')
 
-  const TreeNode = ({
-    container,
-    indent = 0,
-  }: {
-    container: Container
-    indent?: number
-  }) => {
+  const TreeNode = ({ container, indent = 0 }: { container: Container; indent?: number }) => {
     const categoryColors = getCategoryColors(getServiceCategory(container.name))
     const Icon = getServiceIcon(container.name)
     const displayName = getServiceDisplayName(container)
@@ -856,9 +780,7 @@ function TreeView({
         <div className={`h-2 w-2 rounded-full ${config.dotColor}`} />
         <Icon className={`h-5 w-5 ${categoryColors.icon}`} />
         <div className="flex-1">
-          <div className="text-sm font-medium text-zinc-900 dark:text-white">
-            {displayName}
-          </div>
+          <div className="text-sm font-medium text-zinc-900 dark:text-white">{displayName}</div>
           <div className="text-xs text-zinc-500">{container.name}</div>
         </div>
         <span className={`text-sm ${config.textColor}`}>{config.text}</span>
@@ -945,8 +867,7 @@ function TreeView({
     if (lowerName.includes('postgres')) return serviceIcons.database
     if (lowerName.includes('hasura')) return serviceIcons.graphql
     if (lowerName.includes('auth')) return serviceIcons.auth
-    if (lowerName.includes('minio') || lowerName.includes('storage'))
-      return serviceIcons.storage
+    if (lowerName.includes('minio') || lowerName.includes('storage')) return serviceIcons.storage
     if (lowerName.includes('redis')) return serviceIcons.cache
     if (lowerName.includes('nginx')) return serviceIcons.proxy
     if (lowerName.includes('mailpit')) return serviceIcons.email
@@ -958,8 +879,7 @@ function TreeView({
     if (lowerName.includes('nestjs')) return serviceIcons.nestjs
     if (lowerName.includes('bullmq')) return serviceIcons.queue
     if (lowerName.includes('python')) return serviceIcons.python
-    if (lowerName.includes('golang') || lowerName.includes('go-'))
-      return serviceIcons.golang
+    if (lowerName.includes('golang') || lowerName.includes('go-')) return serviceIcons.golang
 
     return serviceIcons.default
   }
@@ -1011,25 +931,16 @@ function TreeView({
 function ServicesContent() {
   // Read from store - instant, never blocks
   const storeContainers = useProjectStore((state) => state.containerStats)
-  const isLoadingContainers = useProjectStore(
-    (state) => state.isLoadingContainers,
-  )
-  const fetchContainerStats = useProjectStore(
-    (state) => state.fetchContainerStats,
-  )
-  const containers = useMemo(
-    () => storeContainers || ([] as Container[]),
-    [storeContainers],
-  )
+  const isLoadingContainers = useProjectStore((state) => state.isLoadingContainers)
+  const fetchContainerStats = useProjectStore((state) => state.fetchContainerStats)
+  const containers = useMemo(() => storeContainers || ([] as Container[]), [storeContainers])
 
   const [error, setError] = useState<string | null>(null)
   const [viewMode, setViewMode] = useState<'grid' | 'list' | 'tree'>('grid')
   const [filter, setFilter] = useState<string>('all')
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedContainers, setSelectedContainers] = useState<string[]>([])
-  const [sortBy, setSortBy] = useState<'default' | 'name' | 'status' | 'cpu'>(
-    'default',
-  )
+  const [sortBy, setSortBy] = useState<'default' | 'name' | 'status' | 'cpu'>('default')
 
   // Fetch container stats on mount and set up auto-refresh
   useEffect(() => {
@@ -1126,9 +1037,7 @@ function ServicesContent() {
     return [...filteredContainers].sort((a, b) => {
       switch (sortBy) {
         case 'name':
-          return getServiceDisplayName(a).localeCompare(
-            getServiceDisplayName(b),
-          )
+          return getServiceDisplayName(a).localeCompare(getServiceDisplayName(b))
         case 'status':
           return (a.state || '').localeCompare(b.state || '')
         case 'cpu':
@@ -1157,7 +1066,7 @@ function ServicesContent() {
 
   const toggleSelectContainer = (id: string) => {
     setSelectedContainers((prev) =>
-      prev.includes(id) ? prev.filter((cid) => cid !== id) : [...prev, id],
+      prev.includes(id) ? prev.filter((cid) => cid !== id) : [...prev, id]
     )
   }
 
@@ -1198,8 +1107,7 @@ function ServicesContent() {
             title="Total Services"
             value={stats.total}
             percentage={
-              typeof stats.running === 'number' &&
-              typeof stats.total === 'number'
+              typeof stats.running === 'number' && typeof stats.total === 'number'
                 ? (stats.running / stats.total) * 100
                 : undefined
             }
@@ -1211,8 +1119,7 @@ function ServicesContent() {
             title="Running"
             value={stats.running}
             percentage={
-              typeof stats.running === 'number' &&
-              typeof stats.total === 'number'
+              typeof stats.running === 'number' && typeof stats.total === 'number'
                 ? (stats.running / stats.total) * 100
                 : undefined
             }
@@ -1224,8 +1131,7 @@ function ServicesContent() {
             title="Health Status"
             value={`${stats.healthy}/${stats.total}`}
             percentage={
-              typeof stats.healthy === 'number' &&
-              typeof stats.total === 'number'
+              typeof stats.healthy === 'number' && typeof stats.total === 'number'
                 ? (stats.healthy / stats.total) * 100
                 : undefined
             }
@@ -1281,9 +1187,7 @@ function ServicesContent() {
           {/* Sort */}
           <select
             value={sortBy}
-            onChange={(e) =>
-              setSortBy(e.target.value as 'default' | 'name' | 'status' | 'cpu')
-            }
+            onChange={(e) => setSortBy(e.target.value as 'default' | 'name' | 'status' | 'cpu')}
             className="rounded-lg border border-zinc-200 bg-white px-4 py-2 text-sm transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none dark:border-zinc-700 dark:bg-zinc-800 dark:focus:border-blue-400"
           >
             <option value="default">Sort: Default</option>
@@ -1302,9 +1206,7 @@ function ServicesContent() {
             className="flex items-center gap-2"
             disabled={isLoadingContainers}
           >
-            <Icons.RefreshCw
-              className={`h-4 w-4 ${isLoadingContainers ? 'animate-spin' : ''}`}
-            />
+            <Icons.RefreshCw className={`h-4 w-4 ${isLoadingContainers ? 'animate-spin' : ''}`} />
             <span className="hidden sm:inline">Refresh</span>
           </Button>
 
@@ -1397,10 +1299,7 @@ function ServicesContent() {
                 'Try adjusting your search or filter criteria'
               ) : (
                 <>
-                  Run{' '}
-                  <code className="rounded bg-zinc-200 px-1 dark:bg-zinc-700">
-                    nself init
-                  </code>{' '}
+                  Run <code className="rounded bg-zinc-200 px-1 dark:bg-zinc-700">nself init</code>{' '}
                   to set up your project and start services
                 </>
               )}
@@ -1441,15 +1340,9 @@ function ServicesContent() {
             ))}
           </div>
         ) : viewMode === 'list' ? (
-          <EnhancedListView
-            containers={sortedContainers}
-            onAction={handleContainerAction}
-          />
+          <EnhancedListView containers={sortedContainers} onAction={handleContainerAction} />
         ) : (
-          <TreeView
-            containers={sortedContainers}
-            onAction={handleContainerAction}
-          />
+          <TreeView containers={sortedContainers} onAction={handleContainerAction} />
         )}
       </DataSection>
     </PageShell>

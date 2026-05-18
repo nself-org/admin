@@ -165,9 +165,7 @@ export default function RulesPage() {
           <div className="flex items-start gap-3">
             <AlertCircle className="mt-0.5 h-5 w-5 shrink-0 text-yellow-400" />
             <div>
-              <p className="font-medium text-yellow-300">
-                nself-mux is not running
-              </p>
+              <p className="font-medium text-yellow-300">nself-mux is not running</p>
               <p className="mt-1 text-sm text-yellow-400/80">
                 Install and start the mux plugin to manage email routing rules.
               </p>
@@ -237,16 +235,11 @@ export default function RulesPage() {
             },
             {
               label: 'Avg priority',
-              value: Math.round(
-                rules.reduce((sum, r) => sum + r.priority, 0) / rules.length,
-              ),
+              value: Math.round(rules.reduce((sum, r) => sum + r.priority, 0) / rules.length),
               color: 'text-sky-400',
             },
           ].map(({ label, value, color }) => (
-            <div
-              key={label}
-              className="rounded-xl border border-zinc-700/50 bg-zinc-800/50 p-4"
-            >
+            <div key={label} className="rounded-xl border border-zinc-700/50 bg-zinc-800/50 p-4">
               <p className="text-xs text-zinc-500">{label}</p>
               <p className={`mt-1 text-2xl font-semibold ${color}`}>{value}</p>
             </div>

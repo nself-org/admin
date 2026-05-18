@@ -12,10 +12,7 @@ interface WorkflowListProps {
   onEditClick?: (workflowId: string) => void
 }
 
-export function WorkflowList({
-  onCreateClick,
-  onEditClick,
-}: WorkflowListProps) {
+export function WorkflowList({ onCreateClick, onEditClick }: WorkflowListProps) {
   const { workflows, isLoading, isError, error } = useWorkflows()
 
   if (isLoading) {
@@ -46,9 +43,7 @@ export function WorkflowList({
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h3 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">
-          Workflows
-        </h3>
+        <h3 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">Workflows</h3>
         <Button onClick={onCreateClick}>
           <Plus className="mr-2 h-4 w-4" />
           New Workflow

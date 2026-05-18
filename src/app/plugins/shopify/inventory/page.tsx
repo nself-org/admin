@@ -53,8 +53,7 @@ function InventoryRow({ level }: { level: ShopifyInventoryLevel }) {
   const status = getStockStatus(level)
   const StatusIcon = status.icon
 
-  const _totalQuantity =
-    level.available + level.incoming + level.committed + level.reserved
+  const _totalQuantity = level.available + level.incoming + level.committed + level.reserved
 
   return (
     <tr className="border-b border-zinc-700/50 hover:bg-zinc-800/50">
@@ -62,9 +61,7 @@ function InventoryRow({ level }: { level: ShopifyInventoryLevel }) {
         <div>
           <p className="font-medium text-white">{level.productTitle}</p>
           <p className="text-sm text-zinc-500">{level.variantTitle}</p>
-          {level.sku && (
-            <p className="text-xs text-zinc-600">SKU: {level.sku}</p>
-          )}
+          {level.sku && <p className="text-xs text-zinc-600">SKU: {level.sku}</p>}
         </div>
       </td>
       <td className="px-4 py-3">
@@ -82,9 +79,7 @@ function InventoryRow({ level }: { level: ShopifyInventoryLevel }) {
         </span>
       </td>
       <td className="px-4 py-3">
-        <span className={`text-lg font-bold ${status.color}`}>
-          {level.available}
-        </span>
+        <span className={`text-lg font-bold ${status.color}`}>{level.available}</span>
       </td>
       <td className="px-4 py-3">
         {level.incoming > 0 ? (
@@ -108,11 +103,7 @@ function InventoryRow({ level }: { level: ShopifyInventoryLevel }) {
         {level.reserved > 0 ? level.reserved : '-'}
       </td>
       <td className="px-4 py-3 text-sm text-zinc-400">
-        {level.damaged > 0 ? (
-          <span className="text-red-400">{level.damaged}</span>
-        ) : (
-          '-'
-        )}
+        {level.damaged > 0 ? <span className="text-red-400">{level.damaged}</span> : '-'}
       </td>
     </tr>
   )
@@ -135,7 +126,7 @@ function ShopifyInventoryContent() {
   }>(
     `/api/plugins/shopify/inventory?page=${page}&pageSize=${pageSize}&search=${searchQuery}&stock=${stockFilter}`,
     fetcher,
-    { refreshInterval: 60000 },
+    { refreshInterval: 60000 }
   )
 
   const handleSync = async () => {
@@ -207,9 +198,7 @@ function ShopifyInventoryContent() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-semibold text-white">Inventory</h1>
-          <p className="text-sm text-zinc-400">
-            {total.toLocaleString()} inventory items
-          </p>
+          <p className="text-sm text-zinc-400">{total.toLocaleString()} inventory items</p>
         </div>
         <button
           onClick={handleSync}
@@ -227,27 +216,21 @@ function ShopifyInventoryContent() {
             <span className="text-sm text-zinc-400">In Stock</span>
             <CheckCircle className="h-5 w-5 text-emerald-400" />
           </div>
-          <p className="mt-2 text-2xl font-bold text-emerald-400">
-            {stats.inStock}
-          </p>
+          <p className="mt-2 text-2xl font-bold text-emerald-400">{stats.inStock}</p>
         </div>
         <div className="rounded-xl border border-zinc-700/50 bg-zinc-800/50 p-4">
           <div className="flex items-center justify-between">
             <span className="text-sm text-zinc-400">Low Stock</span>
             <AlertTriangle className="h-5 w-5 text-yellow-400" />
           </div>
-          <p className="mt-2 text-2xl font-bold text-yellow-400">
-            {stats.lowStock}
-          </p>
+          <p className="mt-2 text-2xl font-bold text-yellow-400">{stats.lowStock}</p>
         </div>
         <div className="rounded-xl border border-zinc-700/50 bg-zinc-800/50 p-4">
           <div className="flex items-center justify-between">
             <span className="text-sm text-zinc-400">Out of Stock</span>
             <XCircle className="h-5 w-5 text-red-400" />
           </div>
-          <p className="mt-2 text-2xl font-bold text-red-400">
-            {stats.outOfStock}
-          </p>
+          <p className="mt-2 text-2xl font-bold text-red-400">{stats.outOfStock}</p>
         </div>
       </div>
 
@@ -342,8 +325,7 @@ function ShopifyInventoryContent() {
       {totalPages > 1 && (
         <div className="flex items-center justify-between">
           <p className="text-sm text-zinc-400">
-            Showing {(page - 1) * pageSize + 1} to{' '}
-            {Math.min(page * pageSize, total)} of {total}
+            Showing {(page - 1) * pageSize + 1} to {Math.min(page * pageSize, total)} of {total}
           </p>
           <div className="flex items-center gap-2">
             <button

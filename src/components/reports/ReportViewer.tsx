@@ -13,11 +13,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import {
-  useDownloadReport,
-  useReportExecution,
-  useReportTemplate,
-} from '@/hooks/useReports'
+import { useDownloadReport, useReportExecution, useReportTemplate } from '@/hooks/useReports'
 import type { ReportColumn, ReportFormat, ReportStatus } from '@/types/report'
 import {
   AlertCircle,
@@ -65,20 +61,9 @@ const statusLabels: Record<ReportStatus, string> = {
   expired: 'Expired',
 }
 
-export function ReportViewer({
-  executionId,
-  onSchedule,
-  onShare,
-  previewData,
-}: ReportViewerProps) {
-  const {
-    execution,
-    isLoading: isLoadingExecution,
-    refresh,
-  } = useReportExecution(executionId)
-  const { template, isLoading: isLoadingTemplate } = useReportTemplate(
-    execution?.reportId,
-  )
+export function ReportViewer({ executionId, onSchedule, onShare, previewData }: ReportViewerProps) {
+  const { execution, isLoading: isLoadingExecution, refresh } = useReportExecution(executionId)
+  const { template, isLoading: isLoadingTemplate } = useReportTemplate(execution?.reportId)
   const { download, isDownloading } = useDownloadReport()
 
   const isLoading = isLoadingExecution || isLoadingTemplate
@@ -103,8 +88,7 @@ export function ReportViewer({
 
   const formatDuration = (start?: string, end?: string): string => {
     if (!start || !end) return 'N/A'
-    const duration =
-      (new Date(end).getTime() - new Date(start).getTime()) / 1000
+    const duration = (new Date(end).getTime() - new Date(start).getTime()) / 1000
     if (duration < 60) return `${duration.toFixed(1)}s`
     return `${Math.floor(duration / 60)}m ${Math.floor(duration % 60)}s`
   }
@@ -115,10 +99,7 @@ export function ReportViewer({
     await download(executionId, filename)
   }
 
-  const formatCellValue = (
-    value: unknown,
-    column: ReportColumn,
-  ): React.ReactNode => {
+  const formatCellValue = (value: unknown, column: ReportColumn): React.ReactNode => {
     if (value === null || value === undefined) return '-'
 
     switch (column.type) {
@@ -154,8 +135,7 @@ export function ReportViewer({
         <AlertCircle className="h-4 w-4" />
         <AlertTitle>Report not found</AlertTitle>
         <AlertDescription>
-          The report execution could not be found. It may have been deleted or
-          expired.
+          The report execution could not be found. It may have been deleted or expired.
         </AlertDescription>
       </Alert>
     )
@@ -167,9 +147,7 @@ export function ReportViewer({
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div>
           <div className="flex items-center gap-3">
-            <h2 className="text-xl font-semibold text-white">
-              {template?.name || 'Report'}
-            </h2>
+            <h2 className="text-xl font-semibold text-white">{template?.name || 'Report'}</h2>
             <Badge className={`${statusColors[execution.status]} text-white`}>
               {statusLabels[execution.status]}
             </Badge>
@@ -179,33 +157,18 @@ export function ReportViewer({
           )}
         </div>
         <div className="flex items-center gap-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => refresh()}
-            className="gap-1"
-          >
+          <Button variant="outline" size="sm" onClick={() => refresh()} className="gap-1">
             <RefreshCw className="h-3.5 w-3.5" />
             Refresh
           </Button>
           {onSchedule && (
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={onSchedule}
-              className="gap-1"
-            >
+            <Button variant="outline" size="sm" onClick={onSchedule} className="gap-1">
               <Clock className="h-3.5 w-3.5" />
               Schedule
             </Button>
           )}
           {onShare && (
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={onShare}
-              className="gap-1"
-            >
+            <Button variant="outline" size="sm" onClick={onShare} className="gap-1">
               <Share2 className="h-3.5 w-3.5" />
               Share
             </Button>
@@ -225,9 +188,7 @@ export function ReportViewer({
                 {formatIcons[execution.format]}
                 Format
               </div>
-              <p className="font-medium text-white">
-                {execution.format.toUpperCase()}
-              </p>
+              <p className="font-medium text-white">{execution.format.toUpperCase()}</p>
             </div>
             <div className="space-y-1">
               <div className="flex items-center gap-1.5 text-xs text-zinc-500">
@@ -243,9 +204,7 @@ export function ReportViewer({
                 <Calendar className="h-3.5 w-3.5" />
                 Created
               </div>
-              <p className="font-medium text-white">
-                {formatDate(execution.startedAt)}
-              </p>
+              <p className="font-medium text-white">{formatDate(execution.startedAt)}</p>
             </div>
             <div className="space-y-1">
               <div className="flex items-center gap-1.5 text-xs text-zinc-500">
@@ -275,8 +234,8 @@ export function ReportViewer({
           <AlertCircle className="h-4 w-4" />
           <AlertTitle>Report expired</AlertTitle>
           <AlertDescription>
-            This report has expired and the file is no longer available for
-            download. Please generate a new report.
+            This report has expired and the file is no longer available for download. Please
+            generate a new report.
           </AlertDescription>
         </Alert>
       )}
@@ -286,9 +245,7 @@ export function ReportViewer({
         <Card className="border-zinc-700/50 bg-zinc-800/50">
           <CardHeader className="pb-3">
             <div className="flex items-center justify-between">
-              <CardTitle className="text-base text-white">
-                Data Preview
-              </CardTitle>
+              <CardTitle className="text-base text-white">Data Preview</CardTitle>
               <span className="text-xs text-zinc-500">
                 Showing first {Math.min(previewData.length, 10)} rows
               </span>
@@ -312,10 +269,7 @@ export function ReportViewer({
                 </TableHeader>
                 <TableBody>
                   {previewData.slice(0, 10).map((row, rowIndex) => (
-                    <TableRow
-                      key={rowIndex}
-                      className="border-zinc-700 hover:bg-zinc-800/50"
-                    >
+                    <TableRow key={rowIndex} className="border-zinc-700 hover:bg-zinc-800/50">
                       {template.columns.map((column) => (
                         <TableCell key={column.id} className="text-white">
                           {formatCellValue(row[column.field], column)}
@@ -342,8 +296,7 @@ export function ReportViewer({
                 <p className="font-medium text-white">Report Ready</p>
                 <p className="text-sm text-zinc-500">
                   {formatFileSize(execution.fileSize)}
-                  {execution.expiresAt &&
-                    ` - Expires ${formatDate(execution.expiresAt)}`}
+                  {execution.expiresAt && ` - Expires ${formatDate(execution.expiresAt)}`}
                 </p>
               </div>
             </div>

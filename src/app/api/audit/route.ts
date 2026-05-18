@@ -18,9 +18,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     }
     if (limit) {
       const rawLimit = parseInt(limit, 10)
-      const clampedLimit = isNaN(rawLimit)
-        ? 50
-        : Math.max(1, Math.min(rawLimit, 1000))
+      const clampedLimit = isNaN(rawLimit) ? 50 : Math.max(1, Math.min(rawLimit, 1000))
       args.push(`--limit=${clampedLimit}`)
     }
 
@@ -33,7 +31,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
           error: 'Failed to retrieve audit log',
           details: result.error || result.stderr || 'Unknown error',
         },
-        { status: 500 },
+        { status: 500 }
       )
     }
 
@@ -48,7 +46,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to retrieve audit log',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

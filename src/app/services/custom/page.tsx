@@ -109,11 +109,23 @@ function CustomContent() {
   }
 
   return (
-    <PageShell title="Custom Services" description="Manage custom user services registered with nSelf.">
+    <PageShell
+      title="Custom Services"
+      description="Manage custom user services registered with nSelf."
+    >
       <div className="space-y-6">
         <div className="flex items-center gap-3">
-          <Button variant="outline" size="sm" onClick={() => void fetchServices()} disabled={loading}>
-            {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <RefreshCw className="h-4 w-4" />}
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => void fetchServices()}
+            disabled={loading}
+          >
+            {loading ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <RefreshCw className="h-4 w-4" />
+            )}
             Refresh
           </Button>
           {actionSuccess && (
@@ -131,7 +143,7 @@ function CustomContent() {
         {error && (
           <Card className="border-destructive">
             <CardContent className="pt-6">
-              <div className="flex items-start gap-2 text-destructive">
+              <div className="text-destructive flex items-start gap-2">
                 <XCircle className="h-5 w-5 shrink-0" />
                 <div>
                   <p className="font-medium">Failed to load custom services</p>
@@ -144,7 +156,7 @@ function CustomContent() {
 
         {!loading && !error && services.length === 0 && (
           <Card>
-            <CardContent className="pt-6 text-center text-muted-foreground">
+            <CardContent className="text-muted-foreground pt-6 text-center">
               No custom services registered.
             </CardContent>
           </Card>
@@ -154,11 +166,15 @@ function CustomContent() {
           <Card className="border-destructive bg-red-50 dark:bg-red-950/20">
             <CardContent className="pt-4">
               <div className="flex items-start gap-2">
-                <AlertTriangle className="h-5 w-5 shrink-0 text-destructive" />
+                <AlertTriangle className="text-destructive h-5 w-5 shrink-0" />
                 <div className="flex-1">
-                  <p className="font-medium text-destructive">Stop {confirmStop}?</p>
+                  <p className="text-destructive font-medium">Stop {confirmStop}?</p>
                   <div className="mt-3 flex gap-2">
-                    <Button size="sm" variant="destructive" onClick={() => void runAction('stop', confirmStop)}>
+                    <Button
+                      size="sm"
+                      variant="destructive"
+                      onClick={() => void runAction('stop', confirmStop)}
+                    >
                       Confirm Stop
                     </Button>
                     <Button size="sm" variant="outline" onClick={() => setConfirmStop(null)}>
@@ -208,7 +224,7 @@ function CustomContent() {
                             size="sm"
                             onClick={() => setConfirmStop(svc.name)}
                             disabled={!!busy || !!activeAction}
-                            className="h-7 gap-1 text-xs text-destructive hover:text-destructive"
+                            className="text-destructive hover:text-destructive h-7 gap-1 text-xs"
                           >
                             {busy && activeAction?.startsWith('stop') ? (
                               <Loader2 className="h-3 w-3 animate-spin" />
@@ -237,7 +253,7 @@ function CustomContent() {
                     </CardTitle>
                   </CardHeader>
                   {(svc.uptime ?? svc.port) && (
-                    <CardContent className="flex gap-6 pt-0 text-xs text-muted-foreground">
+                    <CardContent className="text-muted-foreground flex gap-6 pt-0 text-xs">
                       {svc.uptime && <span>Uptime: {svc.uptime}</span>}
                       {svc.port && <span>Port: {svc.port}</span>}
                     </CardContent>
@@ -251,12 +267,12 @@ function CustomContent() {
         {output && (
           <Card>
             <CardHeader>
-              <CardTitle className="text-sm font-mono text-muted-foreground">
+              <CardTitle className="text-muted-foreground font-mono text-sm">
                 nself service ps --type custom
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <pre className="overflow-x-auto rounded bg-muted p-4 text-xs">{output}</pre>
+              <pre className="bg-muted overflow-x-auto rounded p-4 text-xs">{output}</pre>
             </CardContent>
           </Card>
         )}

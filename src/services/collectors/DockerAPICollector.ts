@@ -90,9 +90,7 @@ export class DockerAPICollector extends EventEmitter {
     }
 
     // Fallback to standard location
-    console.warn(
-      '[DockerAPI] Docker socket not found at common locations, using default',
-    )
+    console.warn('[DockerAPI] Docker socket not found at common locations, using default')
     return '/var/run/docker.sock'
   }
 
@@ -211,9 +209,7 @@ export class DockerAPICollector extends EventEmitter {
       for (const container of containers) {
         const stats: ContainerStats = {
           id: container.Id,
-          name:
-            container.Names[0]?.replace(/^\//, '') ||
-            container.Id.substring(0, 12),
+          name: container.Names[0]?.replace(/^\//, '') || container.Id.substring(0, 12),
           status: this.mapContainerState(container.State),
           health: this.mapHealthStatus(container.Status),
           cpu: 0,
@@ -372,10 +368,7 @@ export class DockerAPICollector extends EventEmitter {
         this.statsStreams.delete(containerId)
       })
     } catch (error) {
-      console.warn(
-        `[DockerAPICollector] Error starting stats stream for ${containerId}:`,
-        error,
-      )
+      console.warn(`[DockerAPICollector] Error starting stats stream for ${containerId}:`, error)
     }
   }
 
@@ -406,14 +399,10 @@ export class DockerAPICollector extends EventEmitter {
 
     // Calculate CPU percentage
     const cpuDelta =
-      rawStats.cpu_stats.cpu_usage.total_usage -
-      rawStats.precpu_stats.cpu_usage.total_usage
-    const systemDelta =
-      rawStats.cpu_stats.system_cpu_usage -
-      rawStats.precpu_stats.system_cpu_usage
+      rawStats.cpu_stats.cpu_usage.total_usage - rawStats.precpu_stats.cpu_usage.total_usage
+    const systemDelta = rawStats.cpu_stats.system_cpu_usage - rawStats.precpu_stats.system_cpu_usage
     const cpuCount = rawStats.cpu_stats.online_cpus || 1
-    const cpuPercent =
-      systemDelta > 0 ? (cpuDelta / systemDelta) * cpuCount * 100 : 0
+    const cpuPercent = systemDelta > 0 ? (cpuDelta / systemDelta) * cpuCount * 100 : 0
 
     // Calculate memory
     const memUsage = rawStats.memory_stats.usage || 0

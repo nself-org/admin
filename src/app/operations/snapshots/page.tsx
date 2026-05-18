@@ -13,13 +13,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import {
-  CheckCircle,
-  Database,
-  Loader2,
-  RefreshCw,
-  XCircle,
-} from 'lucide-react'
+import { CheckCircle, Database, Loader2, RefreshCw, XCircle } from 'lucide-react'
 import { Suspense, useCallback, useEffect, useState } from 'react'
 
 interface Snapshot {
@@ -117,12 +111,30 @@ function SnapshotsContent() {
     <PageShell title="Snapshots" description="Manage nSelf stack backups and snapshots.">
       <div className="space-y-6">
         <div className="flex items-center gap-3">
-          <Button variant="outline" size="sm" onClick={() => void fetchSnapshots()} disabled={loading}>
-            {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <RefreshCw className="h-4 w-4" />}
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => void fetchSnapshots()}
+            disabled={loading}
+          >
+            {loading ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <RefreshCw className="h-4 w-4" />
+            )}
             Refresh
           </Button>
-          <Button size="sm" onClick={() => void createSnapshot()} disabled={actionInProgress || loading} className="gap-2">
-            {actionInProgress ? <Loader2 className="h-4 w-4 animate-spin" /> : <Database className="h-4 w-4" />}
+          <Button
+            size="sm"
+            onClick={() => void createSnapshot()}
+            disabled={actionInProgress || loading}
+            className="gap-2"
+          >
+            {actionInProgress ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <Database className="h-4 w-4" />
+            )}
             {actionInProgress ? 'Creating…' : 'Create Snapshot'}
           </Button>
           {actionSuccess && (
@@ -140,7 +152,7 @@ function SnapshotsContent() {
         {error && (
           <Card className="border-destructive">
             <CardContent className="pt-6">
-              <div className="flex items-start gap-2 text-destructive">
+              <div className="text-destructive flex items-start gap-2">
                 <XCircle className="h-5 w-5 shrink-0" />
                 <div>
                   <p className="font-medium">Failed to load snapshots</p>
@@ -153,7 +165,7 @@ function SnapshotsContent() {
 
         {!loading && !error && snapshots.length === 0 && (
           <Card>
-            <CardContent className="pt-6 text-center text-muted-foreground">
+            <CardContent className="text-muted-foreground pt-6 text-center">
               No snapshots found. Create one to get started.
             </CardContent>
           </Card>
@@ -184,7 +196,13 @@ function SnapshotsContent() {
                       <TableCell>{snap.size}</TableCell>
                       <TableCell>{snap.created}</TableCell>
                       <TableCell>
-                        <Badge variant={snap.status === 'ok' || snap.status === 'complete' ? 'default' : 'secondary'}>
+                        <Badge
+                          variant={
+                            snap.status === 'ok' || snap.status === 'complete'
+                              ? 'default'
+                              : 'secondary'
+                          }
+                        >
                           {snap.status}
                         </Badge>
                       </TableCell>
@@ -199,10 +217,12 @@ function SnapshotsContent() {
         {output && (
           <Card>
             <CardHeader>
-              <CardTitle className="text-sm font-mono text-muted-foreground">nself backup list</CardTitle>
+              <CardTitle className="text-muted-foreground font-mono text-sm">
+                nself backup list
+              </CardTitle>
             </CardHeader>
             <CardContent>
-              <pre className="overflow-x-auto rounded bg-muted p-4 text-xs">{output}</pre>
+              <pre className="bg-muted overflow-x-auto rounded p-4 text-xs">{output}</pre>
             </CardContent>
           </Card>
         )}

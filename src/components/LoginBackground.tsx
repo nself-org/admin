@@ -36,18 +36,9 @@ export function LoginBackground() {
             />
 
             {/* Animated glowing lines effect */}
-            <svg
-              className="absolute inset-0 h-full w-full"
-              xmlns="http://www.w3.org/2000/svg"
-            >
+            <svg className="absolute inset-0 h-full w-full" xmlns="http://www.w3.org/2000/svg">
               <defs>
-                <linearGradient
-                  id="glow-gradient"
-                  x1="0%"
-                  y1="0%"
-                  x2="100%"
-                  y2="100%"
-                >
+                <linearGradient id="glow-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
                   <stop offset="0%" stopColor="#0066CC" stopOpacity="0" />
                   <stop offset="50%" stopColor="#4A9EFF" stopOpacity="0.6" />
                   <stop offset="100%" stopColor="#0066CC" stopOpacity="0" />

@@ -24,9 +24,7 @@ const DEFAULT_POLL_MS = 5 * 60 * 1000 // 5 minutes
  * that have a newer version available. Callers can toast when
  * `updates.length > 0` transitions from zero.
  */
-export function usePluginUpdates(
-  pollMs: number = DEFAULT_POLL_MS,
-): UsePluginUpdatesResult {
+export function usePluginUpdates(pollMs: number = DEFAULT_POLL_MS): UsePluginUpdatesResult {
   const [updates, setUpdates] = useState<PluginUpdate[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)

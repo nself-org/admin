@@ -43,12 +43,9 @@ interface DockerStatsResponse {
 }
 
 function HealthIcon({ health }: { health: ContainerInfo['health'] }) {
-  if (health === 'healthy')
-    return <CheckCircle2 className="h-4 w-4 text-green-400" />
-  if (health === 'unhealthy')
-    return <XCircle className="h-4 w-4 text-red-400" />
-  if (health === 'starting')
-    return <Loader2 className="h-4 w-4 animate-spin text-amber-400" />
+  if (health === 'healthy') return <CheckCircle2 className="h-4 w-4 text-green-400" />
+  if (health === 'unhealthy') return <XCircle className="h-4 w-4 text-red-400" />
+  if (health === 'starting') return <Loader2 className="h-4 w-4 animate-spin text-amber-400" />
   return <CircleHelp className="text-nself-text-muted h-4 w-4" />
 }
 
@@ -78,9 +75,7 @@ export default function DockerStatsPage() {
       if (json.error !== undefined) setError(json.error)
       setData(json)
     } catch (err) {
-      setError(
-        err instanceof Error ? err.message : 'Failed to load docker stats.',
-      )
+      setError(err instanceof Error ? err.message : 'Failed to load docker stats.')
     } finally {
       setLoading(false)
     }
@@ -94,9 +89,7 @@ export default function DockerStatsPage() {
     <div className="mx-auto max-w-5xl space-y-4 p-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="nself-gradient-text text-xl font-semibold">
-            Docker Health &amp; Limits
-          </h1>
+          <h1 className="nself-gradient-text text-xl font-semibold">Docker Health &amp; Limits</h1>
           <p className="text-nself-text-muted text-xs">
             Every container&apos;s healthcheck config and resource constraints
           </p>
@@ -130,9 +123,7 @@ export default function DockerStatsPage() {
       ) : data.containers.length === 0 ? (
         <div className="glass-card p-8 text-center">
           <Box className="text-nself-text-muted mx-auto mb-2 h-6 w-6" />
-          <p className="text-nself-text-muted text-sm">
-            No containers running.
-          </p>
+          <p className="text-nself-text-muted text-sm">No containers running.</p>
         </div>
       ) : (
         <div className="glass-card overflow-x-auto p-4">
@@ -154,8 +145,7 @@ export default function DockerStatsPage() {
             <tbody>
               {data.containers.map((c) => {
                 const cpuQuota =
-                  c.resources.cpuQuota !== null &&
-                  c.resources.cpuPeriod !== null
+                  c.resources.cpuQuota !== null && c.resources.cpuPeriod !== null
                     ? `${(c.resources.cpuQuota / c.resources.cpuPeriod).toFixed(2)} cores`
                     : c.resources.cpuShares !== null
                       ? `${c.resources.cpuShares} shares`
@@ -166,12 +156,8 @@ export default function DockerStatsPage() {
                       <div className="flex items-center gap-2">
                         <Box className="text-nself-primary h-3 w-3" />
                         <div>
-                          <p className="text-nself-text font-medium">
-                            {c.name}
-                          </p>
-                          <p className="text-nself-text-muted font-mono text-xs">
-                            {c.image}
-                          </p>
+                          <p className="text-nself-text font-medium">{c.name}</p>
+                          <p className="text-nself-text-muted font-mono text-xs">{c.image}</p>
                         </div>
                       </div>
                     </td>
@@ -192,9 +178,7 @@ export default function DockerStatsPage() {
                           {c.health}
                         </span>
                       </div>
-                      <p className="text-nself-text-muted mt-0.5 text-xs">
-                        {c.status}
-                      </p>
+                      <p className="text-nself-text-muted mt-0.5 text-xs">{c.status}</p>
                     </td>
                     <td className="text-nself-text-muted py-2 pr-4 text-xs">
                       {c.healthCheck === null ? (

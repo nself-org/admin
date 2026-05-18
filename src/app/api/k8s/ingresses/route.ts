@@ -21,14 +21,11 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     if (namespace) args.push(`--namespace=${namespace}`)
     if (allNamespaces) args.push('--all-namespaces')
 
-    const { stdout } = await execAsync(
-      `${nselfPath} ${args.join(' ')} --json`,
-      {
-        cwd: projectPath,
-        env: { ...process.env, PATH: getEnhancedPath() },
-        timeout: 60000,
-      },
-    )
+    const { stdout } = await execAsync(`${nselfPath} ${args.join(' ')} --json`, {
+      cwd: projectPath,
+      env: { ...process.env, PATH: getEnhancedPath() },
+      timeout: 60000,
+    })
 
     const result = JSON.parse(stdout)
 
@@ -47,7 +44,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to list ingresses',
         details: err.message,
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

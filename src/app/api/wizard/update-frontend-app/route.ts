@@ -45,15 +45,12 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
         // Remote schema for Hasura
         if (app.remoteSchemaUrl) {
-          envUpdates[`FRONTEND_APP_${num}_REMOTE_SCHEMA_URL`] =
-            app.remoteSchemaUrl
+          envUpdates[`FRONTEND_APP_${num}_REMOTE_SCHEMA_URL`] = app.remoteSchemaUrl
           // Auto-generate schema name if not provided
           if (!app.remoteSchemaName && app.tablePrefix) {
-            envUpdates[`FRONTEND_APP_${num}_REMOTE_SCHEMA_NAME`] =
-              `${app.tablePrefix}_schema`
+            envUpdates[`FRONTEND_APP_${num}_REMOTE_SCHEMA_NAME`] = `${app.tablePrefix}_schema`
           } else if (app.remoteSchemaName) {
-            envUpdates[`FRONTEND_APP_${num}_REMOTE_SCHEMA_NAME`] =
-              app.remoteSchemaName
+            envUpdates[`FRONTEND_APP_${num}_REMOTE_SCHEMA_NAME`] = app.remoteSchemaName
           }
         }
       })
@@ -96,9 +93,6 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     })
   } catch (error) {
     console.error('Error updating frontend apps:', error)
-    return NextResponse.json(
-      { error: 'Failed to update configuration' },
-      { status: 500 },
-    )
+    return NextResponse.json({ error: 'Failed to update configuration' }, { status: 500 })
   }
 }

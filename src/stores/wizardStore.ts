@@ -168,19 +168,16 @@ export const useWizardStore = create<WizardState>()((set, get) => ({
 
     // Map env variables to state
     if (envData.PROJECT_NAME) state.projectName = envData.PROJECT_NAME
-    if (envData.PROJECT_DESCRIPTION)
-      state.projectDescription = envData.PROJECT_DESCRIPTION
+    if (envData.PROJECT_DESCRIPTION) state.projectDescription = envData.PROJECT_DESCRIPTION
     if (envData.ENV) state.environment = envData.ENV
     if (envData.BASE_DOMAIN) state.domain = envData.BASE_DOMAIN
     if (envData.POSTGRES_DB) state.databaseName = envData.POSTGRES_DB
     if (envData.POSTGRES_USER) state.databaseUser = envData.POSTGRES_USER
-    if (envData.POSTGRES_PASSWORD)
-      state.databasePassword = envData.POSTGRES_PASSWORD
+    if (envData.POSTGRES_PASSWORD) state.databasePassword = envData.POSTGRES_PASSWORD
     if (envData.HASURA_GRAPHQL_ADMIN_SECRET)
       state.hasuraAdminSecret = envData.HASURA_GRAPHQL_ADMIN_SECRET
     if (envData.HASURA_JWT_KEY) state.jwtSecret = envData.HASURA_JWT_KEY
-    if (envData.BACKUP_ENABLED)
-      state.backupEnabled = envData.BACKUP_ENABLED === 'true'
+    if (envData.BACKUP_ENABLED) state.backupEnabled = envData.BACKUP_ENABLED === 'true'
     if (envData.BACKUP_SCHEDULE) state.backupSchedule = envData.BACKUP_SCHEDULE
     if (envData.ADMIN_EMAIL) state.adminEmail = envData.ADMIN_EMAIL
 
@@ -191,11 +188,7 @@ export const useWizardStore = create<WizardState>()((set, get) => ({
     const nginxConfig: Record<string, any> = {}
 
     Object.keys(envData).forEach((key) => {
-      if (
-        key.startsWith('POSTGRES_') &&
-        key !== 'POSTGRES_DB' &&
-        key !== 'POSTGRES_PASSWORD'
-      ) {
+      if (key.startsWith('POSTGRES_') && key !== 'POSTGRES_DB' && key !== 'POSTGRES_PASSWORD') {
         postgresqlConfig[key] = envData[key]
       } else if (key.startsWith('HASURA_')) {
         hasuraConfig[key] = envData[key]
@@ -215,8 +208,7 @@ export const useWizardStore = create<WizardState>()((set, get) => ({
     state.optionalServices = {
       nadmin: envData.NSELF_ADMIN_ENABLED === 'true',
       redis: envData.REDIS_ENABLED === 'true',
-      minio:
-        envData.STORAGE_ENABLED === 'true' || envData.MINIO_ENABLED === 'true',
+      minio: envData.STORAGE_ENABLED === 'true' || envData.MINIO_ENABLED === 'true',
       mlflow: envData.MLFLOW_ENABLED === 'true',
       mailpit: envData.MAILPIT_ENABLED === 'true',
       search: envData.SEARCH_ENABLED === 'true',
@@ -225,12 +217,9 @@ export const useWizardStore = create<WizardState>()((set, get) => ({
     }
 
     if (envData.MINIO_ROOT_USER) state.minioRootUser = envData.MINIO_ROOT_USER
-    if (envData.MINIO_ROOT_PASSWORD)
-      state.minioRootPassword = envData.MINIO_ROOT_PASSWORD
-    if (envData.MEILI_MASTER_KEY)
-      state.meiliMasterKey = envData.MEILI_MASTER_KEY
-    if (envData.GRAFANA_ADMIN_PASSWORD)
-      state.grafanaAdminPassword = envData.GRAFANA_ADMIN_PASSWORD
+    if (envData.MINIO_ROOT_PASSWORD) state.minioRootPassword = envData.MINIO_ROOT_PASSWORD
+    if (envData.MEILI_MASTER_KEY) state.meiliMasterKey = envData.MEILI_MASTER_KEY
+    if (envData.GRAFANA_ADMIN_PASSWORD) state.grafanaAdminPassword = envData.GRAFANA_ADMIN_PASSWORD
 
     // Load custom services
     const customServices: CustomService[] = []

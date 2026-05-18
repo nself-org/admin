@@ -20,10 +20,7 @@ export async function GET(_request: NextRequest): Promise<NextResponse> {
     })
   } catch (error) {
     console.error('Error checking password setup:', error)
-    return NextResponse.json(
-      { error: 'Failed to check password setup' },
-      { status: 500 },
-    )
+    return NextResponse.json({ error: 'Failed to check password setup' }, { status: 500 })
   }
 }
 
@@ -32,10 +29,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     const { password } = await request.json()
 
     if (!password) {
-      return NextResponse.json(
-        { error: 'Password is required' },
-        { status: 400 },
-      )
+      return NextResponse.json({ error: 'Password is required' }, { status: 400 })
     }
 
     const isDev = await isDevMode()
@@ -80,16 +74,10 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         message: 'Password set successfully',
       })
     } else {
-      return NextResponse.json(
-        { error: result.error || 'Failed to set password' },
-        { status: 400 },
-      )
+      return NextResponse.json({ error: result.error || 'Failed to set password' }, { status: 400 })
     }
   } catch (error) {
     console.error('Error setting password:', error)
-    return NextResponse.json(
-      { error: 'Failed to set password' },
-      { status: 500 },
-    )
+    return NextResponse.json({ error: 'Failed to set password' }, { status: 500 })
   }
 }

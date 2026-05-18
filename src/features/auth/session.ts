@@ -3,11 +3,7 @@
  * Wraps keychain retrieval, API-based refresh, and session revocation.
  */
 
-import {
-  clearKeychain,
-  retrieveTokenFromKeychain,
-  storeTokenInKeychain,
-} from './pairing'
+import { clearKeychain, retrieveTokenFromKeychain, storeTokenInKeychain } from './pairing'
 import type { AuthToken, PairingError } from './types'
 
 const REVOKE_ENDPOINT = '/api/auth/pairing'
@@ -18,7 +14,7 @@ const REFRESH_BUFFER_MS = 5 * 60 * 1000
 function makePairingError(
   message: string,
   code: PairingError['code'],
-  details?: string,
+  details?: string
 ): PairingError {
   const err = new Error(message) as PairingError
   err.code = code
@@ -86,7 +82,7 @@ export async function refreshSession(token: AuthToken): Promise<AuthToken> {
     throw makePairingError(
       'Network error during token refresh',
       'REFRESH_FAILED',
-      err instanceof Error ? err.message : String(err),
+      err instanceof Error ? err.message : String(err)
     )
   }
 
@@ -95,7 +91,7 @@ export async function refreshSession(token: AuthToken): Promise<AuthToken> {
     throw makePairingError(
       `Token refresh failed with status ${response.status}`,
       'REFRESH_FAILED',
-      body,
+      body
     )
   }
 

@@ -30,10 +30,7 @@ function parseEnvFile(content: string): Record<string, string> {
 }
 
 /** Write/update specific env keys in-place, preserving unrelated lines. */
-async function writeEnvKeys(
-  filePath: string,
-  updates: Record<string, string>,
-): Promise<void> {
+async function writeEnvKeys(filePath: string, updates: Record<string, string>): Promise<void> {
   let content = ''
   try {
     content = await fs.readFile(filePath, 'utf-8')
@@ -106,7 +103,10 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     // Structured docker config
     const docker = {
       services: {
-        postgres: { version: vars['POSTGRES_VERSION'] || '15', port: vars['POSTGRES_PORT'] || '5432' },
+        postgres: {
+          version: vars['POSTGRES_VERSION'] || '15',
+          port: vars['POSTGRES_PORT'] || '5432',
+        },
         hasura: { version: vars['HASURA_VERSION'] || 'latest' },
         auth: { version: vars['AUTH_VERSION'] || 'latest', port: vars['AUTH_PORT'] || '4000' },
         storage: { version: vars['STORAGE_VERSION'] || 'latest' },
@@ -131,7 +131,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     console.error('[docker/route] GET error:', error)
     return NextResponse.json(
       { success: false, error: 'Failed to read Docker configuration' },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -147,7 +147,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     if (!updates || typeof updates !== 'object') {
       return NextResponse.json(
         { success: false, error: 'updates object is required' },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -170,7 +170,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       if (!allowedKeyPatterns.some((re) => re.test(key))) {
         return NextResponse.json(
           { success: false, error: `Key "${key}" is not a docker configuration key` },
-          { status: 400 },
+          { status: 400 }
         )
       }
     }
@@ -180,7 +180,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       if (typeof val !== 'string' || val.includes('\n') || val.includes('\r')) {
         return NextResponse.json(
           { success: false, error: `Invalid value for key "${key}"` },
-          { status: 400 },
+          { status: 400 }
         )
       }
     }
@@ -202,7 +202,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     console.error('[docker/route] POST error:', error)
     return NextResponse.json(
       { success: false, error: 'Failed to save Docker configuration' },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

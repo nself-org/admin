@@ -35,7 +35,7 @@ export async function GET(): Promise<NextResponse> {
       const getCpuUsage = async () => {
         try {
           const { stdout } = await execAsync(
-            "top -l 1 -n 0 | grep 'CPU usage' | awk '{print $3}' | sed 's/%//'",
+            "top -l 1 -n 0 | grep 'CPU usage' | awk '{print $3}' | sed 's/%//'"
           )
           return parseFloat(stdout.trim()) || 0
         } catch {
@@ -62,7 +62,7 @@ export async function GET(): Promise<NextResponse> {
       const getDiskUsage = async () => {
         try {
           const { stdout } = await execAsync(
-            "df -h / | tail -1 | awk '{print $2 \" \" $3 \" \" $5}' | sed 's/G//g' | sed 's/%//'",
+            "df -h / | tail -1 | awk '{print $2 \" \" $3 \" \" $5}' | sed 's/G//g' | sed 's/%//'"
           )
           const parts = stdout.trim().split(' ')
           const total = parseFloat(parts[0]) || 100
@@ -79,7 +79,7 @@ export async function GET(): Promise<NextResponse> {
       const getNetworkSpeed = async () => {
         try {
           const { stdout: wifiInfo } = await execAsync(
-            "system_profiler SPAirPortDataType 2>/dev/null | grep 'Transmit Rate:' | head -1 | awk '{print $3}'",
+            "system_profiler SPAirPortDataType 2>/dev/null | grep 'Transmit Rate:' | head -1 | awk '{print $3}'"
           )
           const wifiRate = parseInt(wifiInfo.trim())
           if (wifiRate && wifiRate > 0) {
@@ -91,16 +91,10 @@ export async function GET(): Promise<NextResponse> {
         return 1000
       }
 
-      return Promise.all([
-        getCpuUsage(),
-        getMemoryUsage(),
-        getDiskUsage(),
-        getNetworkSpeed(),
-      ])
+      return Promise.all([getCpuUsage(), getMemoryUsage(), getDiskUsage(), getNetworkSpeed()])
     }
 
-    const [systemCpu, systemMemory, systemDisk, maxSpeed] =
-      await getSystemMetrics()
+    const [systemCpu, systemMemory, systemDisk, maxSpeed] = await getSystemMetrics()
 
     // Get current network bytes from docker stats
     let currentNetworkRx = 0
@@ -109,7 +103,7 @@ export async function GET(): Promise<NextResponse> {
     try {
       // Get network stats from all running containers
       const { stdout } = await execAsync(
-        `docker stats --no-stream --format "table {{.NetIO}}" | tail -n +2 | awk -F'/' '{print $1 " " $2}'`,
+        `docker stats --no-stream --format "table {{.NetIO}}" | tail -n +2 | awk -F'/' '{print $1 " " $2}'`
       )
       const lines = stdout
         .trim()
@@ -151,10 +145,8 @@ export async function GET(): Promise<NextResponse> {
       const timeDeltaSeconds = (now - lastNetworkSnapshot.timestamp) / 1000
       if (timeDeltaSeconds > 0) {
         // Calculate bytes per second, then convert to Mbps
-        const rxBytesPerSecond =
-          (currentNetworkRx - lastNetworkSnapshot.rx) / timeDeltaSeconds
-        const txBytesPerSecond =
-          (currentNetworkTx - lastNetworkSnapshot.tx) / timeDeltaSeconds
+        const rxBytesPerSecond = (currentNetworkRx - lastNetworkSnapshot.rx) / timeDeltaSeconds
+        const txBytesPerSecond = (currentNetworkTx - lastNetworkSnapshot.tx) / timeDeltaSeconds
 
         // Convert to Mbps (megabits per second)
         networkRxRate = Math.max(0, (rxBytesPerSecond * 8) / (1024 * 1024))
@@ -226,8 +218,7 @@ export async function GET(): Promise<NextResponse> {
           } else if (sizeStr.includes('kB')) {
             sizeInGB = parseFloat(sizeStr.replace('kB', '')) / (1024 * 1024)
           } else if (sizeStr.includes('B')) {
-            sizeInGB =
-              parseFloat(sizeStr.replace('B', '')) / (1024 * 1024 * 1024)
+            sizeInGB = parseFloat(sizeStr.replace('B', '')) / (1024 * 1024 * 1024)
           }
 
           totalUsed += sizeInGB
@@ -246,7 +237,7 @@ export async function GET(): Promise<NextResponse> {
       // Fallback: use simpler parsing (only Containers and Volumes)
       try {
         const { stdout } = await execAsync(
-          "docker system df | grep -E 'Containers|Volumes' | awk '{print $4}'",
+          "docker system df | grep -E 'Containers|Volumes' | awk '{print $4}'"
         )
         const lines = stdout.trim().split('\n')
         let totalUsed = 0
@@ -293,12 +284,9 @@ export async function GET(): Promise<NextResponse> {
       {
         success: false,
         error: 'Failed to fetch system metrics',
-        details:
-          error instanceof Error
-            ? error?.message || 'Unknown error'
-            : 'Unknown error',
+        details: error instanceof Error ? error?.message || 'Unknown error' : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

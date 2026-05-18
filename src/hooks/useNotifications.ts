@@ -1,10 +1,6 @@
 'use client'
 
-import type {
-  Notification,
-  NotificationPreferences,
-  NotificationStats,
-} from '@/types/notification'
+import type { Notification, NotificationPreferences, NotificationStats } from '@/types/notification'
 import useSWR from 'swr'
 import useSWRMutation from 'swr/mutation'
 
@@ -28,7 +24,7 @@ const fetcher = async <T>(url: string): Promise<T> => {
 // Mutation fetcher for POST/PUT/DELETE requests
 async function mutationFetcher<T>(
   url: string,
-  { arg }: { arg?: Record<string, unknown> },
+  { arg }: { arg?: Record<string, unknown> }
 ): Promise<T> {
   const res = await fetch(url, {
     method: 'POST',
@@ -61,10 +57,7 @@ async function deleteFetcher<T>(url: string): Promise<T> {
 }
 
 // PUT mutation fetcher
-async function putFetcher<T>(
-  url: string,
-  { arg }: { arg: Record<string, unknown> },
-): Promise<T> {
+async function putFetcher<T>(url: string, { arg }: { arg: Record<string, unknown> }): Promise<T> {
   const res = await fetch(url, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
@@ -122,11 +115,9 @@ export function useNotifications(options: UseNotificationsOptions = {}) {
   const queryString = params.toString()
   const url = `/api/notifications${queryString ? `?${queryString}` : ''}`
 
-  const { data, error, isLoading, mutate } = useSWR<NotificationsResponse>(
-    url,
-    fetcher,
-    { refreshInterval: 30000 },
-  )
+  const { data, error, isLoading, mutate } = useSWR<NotificationsResponse>(url, fetcher, {
+    refreshInterval: 30000,
+  })
 
   return {
     notifications: data?.notifications ?? [],
@@ -145,7 +136,7 @@ export function useNotification(id: string | null) {
   const { data, error, isLoading, mutate } = useSWR<NotificationResponse>(
     id ? `/api/notifications/${id}` : null,
     fetcher,
-    { refreshInterval: 30000 },
+    { refreshInterval: 30000 }
   )
 
   return {
@@ -164,7 +155,7 @@ export function useNotificationPreferences() {
   const { data, error, isLoading, mutate } = useSWR<PreferencesResponse>(
     `/api/notifications/preferences`,
     fetcher,
-    { refreshInterval: 60000 },
+    { refreshInterval: 60000 }
   )
 
   return {
@@ -183,7 +174,7 @@ export function useNotificationStats() {
   const { data, error, isLoading, mutate } = useSWR<StatsResponse>(
     `/api/notifications/stats`,
     fetcher,
-    { refreshInterval: 30000 },
+    { refreshInterval: 30000 }
   )
 
   return {
@@ -279,9 +270,7 @@ export function useUpdatePreferences() {
   })
 
   return {
-    updatePreferences: async (
-      preferences: Partial<NotificationPreferences>,
-    ) => {
+    updatePreferences: async (preferences: Partial<NotificationPreferences>) => {
       const result = await trigger(preferences)
       return result?.preferences
     },
@@ -294,9 +283,7 @@ export function useUpdatePreferences() {
  * Combined hook for common notification operations
  * Provides all notification data and mutations in one hook
  */
-export function useNotificationsWithActions(
-  options: UseNotificationsOptions = {},
-) {
+export function useNotificationsWithActions(options: UseNotificationsOptions = {}) {
   const notifications = useNotifications(options)
   const stats = useNotificationStats()
   const markAsRead = useMarkAsRead()

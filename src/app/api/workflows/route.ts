@@ -31,10 +31,9 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     return NextResponse.json(
       {
         success: false,
-        error:
-          error instanceof Error ? error.message : 'Failed to get workflows',
+        error: error instanceof Error ? error.message : 'Failed to get workflows',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -53,7 +52,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     if (!body.name) {
       return NextResponse.json(
         { success: false, error: 'Workflow name is required' },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -77,16 +76,15 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         success: true,
         workflow,
       },
-      { status: 201 },
+      { status: 201 }
     )
   } catch (error) {
     return NextResponse.json(
       {
         success: false,
-        error:
-          error instanceof Error ? error.message : 'Failed to create workflow',
+        error: error instanceof Error ? error.message : 'Failed to create workflow',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

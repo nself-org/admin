@@ -160,9 +160,7 @@ try {
 import { errorLogging } from '@/lib/error-logging'
 
 const stats = errorLogging.getStats()
-console.log(
-  `Tracked: ${stats.totalTracked}, Rate Limited: ${stats.openLimitedErrors}`,
-)
+console.log(`Tracked: ${stats.totalTracked}, Rate Limited: ${stats.openLimitedErrors}`)
 ```
 
 ---

@@ -71,18 +71,16 @@ async function runAudit() {
                   values: ['wcag2a', 'wcag2aa'],
                 },
               },
-              (_err, results) => resolve(results),
+              (_err, results) => resolve(results)
             )
           })
         })
 
         const violations = axeResults.violations || []
         const critical = violations.filter(
-          (v) => v.impact === 'critical' || v.impact === 'serious',
+          (v) => v.impact === 'critical' || v.impact === 'serious'
         ).length
-        const warnings = violations.filter(
-          (v) => v.impact === 'moderate',
-        ).length
+        const warnings = violations.filter((v) => v.impact === 'moderate').length
         const notices = violations.filter((v) => v.impact === 'minor').length
 
         totalIssues += violations.length

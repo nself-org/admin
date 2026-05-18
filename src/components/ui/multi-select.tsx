@@ -2,14 +2,7 @@
 
 import { cn } from '@/lib/utils'
 import * as Popover from '@radix-ui/react-popover'
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from 'cmdk'
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from 'cmdk'
 import { Check, X } from 'lucide-react'
 import * as React from 'react'
 import { Badge } from './badge'
@@ -100,9 +93,7 @@ export function MultiSelect({
         >
           <div className="flex flex-wrap gap-1">
             {selectedOptions.length === 0 && (
-              <span className="text-zinc-500 dark:text-zinc-400">
-                {placeholder}
-              </span>
+              <span className="text-zinc-500 dark:text-zinc-400">{placeholder}</span>
             )}
             {selectedOptions.slice(0, maxItems).map((option) => (
               <Badge key={option.value} variant="secondary" className="gap-1">
@@ -121,9 +112,7 @@ export function MultiSelect({
               </Badge>
             ))}
             {selectedOptions.length > maxItems && (
-              <Badge variant="secondary">
-                +{selectedOptions.length - maxItems} more
-              </Badge>
+              <Badge variant="secondary">+{selectedOptions.length - maxItems} more</Badge>
             )}
           </div>
         </Button>
@@ -166,12 +155,7 @@ export function MultiSelect({
           </Command>
           {value.length > 0 && (
             <div className="border-t border-zinc-200 p-2 dark:border-zinc-800">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={clearAll}
-                className="w-full"
-              >
+              <Button variant="ghost" size="sm" onClick={clearAll} className="w-full">
                 Clear all
               </Button>
             </div>

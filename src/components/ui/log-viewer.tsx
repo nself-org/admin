@@ -22,9 +22,7 @@ import { ScrollArea } from './scroll-area'
  */
 export interface LogViewerProps {
   /** Log entries (array of strings or objects with timestamp/message) */
-  logs:
-    | string[]
-    | Array<{ timestamp?: string; level?: string; message: string }>
+  logs: string[] | Array<{ timestamp?: string; level?: string; message: string }>
   /** Title for the log viewer */
   title?: string
   /** Enable live mode (auto-scroll to bottom) */
@@ -63,9 +61,7 @@ export function LogViewer({
   })
 
   const filteredLogs = searchTerm
-    ? normalizedLogs.filter((log) =>
-        log.message.toLowerCase().includes(searchTerm.toLowerCase()),
-      )
+    ? normalizedLogs.filter((log) => log.message.toLowerCase().includes(searchTerm.toLowerCase()))
     : normalizedLogs
 
   useEffect(() => {
@@ -94,8 +90,7 @@ export function LogViewer({
     if (!level) return ''
     const l = level.toLowerCase()
     if (l === 'error' || l === 'fatal') return 'text-red-500 dark:text-red-400'
-    if (l === 'warn' || l === 'warning')
-      return 'text-yellow-500 dark:text-yellow-400'
+    if (l === 'warn' || l === 'warning') return 'text-yellow-500 dark:text-yellow-400'
     if (l === 'info') return 'text-blue-500 dark:text-blue-400'
     if (l === 'debug') return 'text-zinc-500 dark:text-zinc-400'
     return 'text-green-500 dark:text-green-400'
@@ -105,7 +100,7 @@ export function LogViewer({
     <div
       className={cn(
         'flex flex-col rounded-lg border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900',
-        className,
+        className
       )}
     >
       {/* Header */}
@@ -176,25 +171,16 @@ export function LogViewer({
             </div>
           ) : (
             filteredLogs.map((log, index) => (
-              <div
-                key={index}
-                className="mb-1 flex gap-2 break-all whitespace-pre-wrap"
-              >
+              <div key={index} className="mb-1 flex gap-2 break-all whitespace-pre-wrap">
                 {log.timestamp && (
-                  <span className="text-zinc-500 dark:text-zinc-400">
-                    [{log.timestamp}]
-                  </span>
+                  <span className="text-zinc-500 dark:text-zinc-400">[{log.timestamp}]</span>
                 )}
                 {log.level && (
-                  <span
-                    className={cn('font-semibold', getLevelColor(log.level))}
-                  >
+                  <span className={cn('font-semibold', getLevelColor(log.level))}>
                     {log.level.toUpperCase()}
                   </span>
                 )}
-                <span className="flex-1 text-zinc-900 dark:text-zinc-100">
-                  {log.message}
-                </span>
+                <span className="flex-1 text-zinc-900 dark:text-zinc-100">{log.message}</span>
               </div>
             ))
           )}

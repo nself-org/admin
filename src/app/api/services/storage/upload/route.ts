@@ -15,16 +15,13 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     }
 
     if (!filePath) {
-      return NextResponse.json(
-        { success: false, error: 'File path is required' },
-        { status: 400 },
-      )
+      return NextResponse.json({ success: false, error: 'File path is required' }, { status: 400 })
     }
 
     if (!bucket) {
       return NextResponse.json(
         { success: false, error: 'Bucket name is required' },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -36,16 +33,11 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           error:
             'Invalid bucket name. Only letters, numbers, dots, hyphens, and underscores are allowed.',
         },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
-    const args = [
-      'storage',
-      'upload',
-      `--file=${filePath}`,
-      `--bucket=${bucket}`,
-    ]
+    const args = ['storage', 'upload', `--file=${filePath}`, `--bucket=${bucket}`]
     if (destination) {
       args.push(`--destination=${destination}`)
     }
@@ -59,7 +51,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           error: 'Failed to upload file',
           details: result.error || result.stderr || 'Unknown error',
         },
-        { status: 500 },
+        { status: 500 }
       )
     }
 
@@ -74,7 +66,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to upload file',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

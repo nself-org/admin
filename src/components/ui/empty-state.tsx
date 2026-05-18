@@ -55,7 +55,7 @@ export function EmptyState({
     <div
       className={cn(
         'flex flex-col items-center justify-center rounded-lg border-2 border-dashed border-zinc-200 p-12 text-center dark:border-zinc-800',
-        className,
+        className
       )}
       {...props}
     >
@@ -64,21 +64,14 @@ export function EmptyState({
           <Icon className="h-8 w-8 text-zinc-400 dark:text-zinc-500" />
         </div>
       )}
-      <h3 className="mb-2 text-lg font-semibold text-zinc-900 dark:text-zinc-50">
-        {title}
-      </h3>
+      <h3 className="mb-2 text-lg font-semibold text-zinc-900 dark:text-zinc-50">{title}</h3>
       {description && (
-        <p className="mb-6 max-w-sm text-sm text-zinc-500 dark:text-zinc-400">
-          {description}
-        </p>
+        <p className="mb-6 max-w-sm text-sm text-zinc-500 dark:text-zinc-400">{description}</p>
       )}
       {(action || secondaryAction) && (
         <div className="flex gap-3">
           {action && (
-            <Button
-              variant={action.variant || 'default'}
-              onClick={action.onClick}
-            >
+            <Button variant={action.variant || 'default'} onClick={action.onClick}>
               {action.label}
             </Button>
           )}

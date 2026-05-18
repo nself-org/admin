@@ -15,9 +15,7 @@ const execFileAsync = promisify(execFile)
  *
  * Delegates to: nself ssl bootstrap (if available) or runs mkcert directly
  */
-export async function POST(
-  request: NextRequest,
-): Promise<Response | NextResponse> {
+export async function POST(request: NextRequest): Promise<Response | NextResponse> {
   const authError = await requireAuth(request)
   if (authError) return authError
 
@@ -42,7 +40,7 @@ export async function POST(
             'After installing, run: mkcert -install',
           ],
         },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -51,14 +49,10 @@ export async function POST(
       const nselfPath = await findNselfPath()
       await fs.access(nselfPath)
 
-      const { stdout, stderr } = await execFileAsync(
-        nselfPath,
-        ['ssl', 'bootstrap'],
-        {
-          cwd: projectPath,
-          timeout: 60000,
-        },
-      )
+      const { stdout, stderr } = await execFileAsync(nselfPath, ['ssl', 'bootstrap'], {
+        cwd: projectPath,
+        timeout: 60000,
+      })
 
       return NextResponse.json({
         success: true,
@@ -90,24 +84,15 @@ export async function POST(
     await fs.mkdir(sslDir, { recursive: true })
 
     // Generate certificates with mkcert
-    const domains = [
-      'localhost',
-      '*.localhost',
-      baseDomain,
-      `*.${baseDomain}`,
-      '127.0.0.1',
-      '::1',
-    ]
+    const domains = ['localhost', '*.localhost', baseDomain, `*.${baseDomain}`, '127.0.0.1', '::1']
 
     const certPath = path.join(sslDir, 'fullchain.pem')
     const keyPath = path.join(sslDir, 'privkey.pem')
 
     return new Promise<Response>((resolve) => {
-      const mkcert = spawn(
-        'mkcert',
-        ['-cert-file', certPath, '-key-file', keyPath, ...domains],
-        { cwd: projectPath },
-      )
+      const mkcert = spawn('mkcert', ['-cert-file', certPath, '-key-file', keyPath, ...domains], {
+        cwd: projectPath,
+      })
 
       let stdout = ''
       let stderr = ''
@@ -128,10 +113,7 @@ export async function POST(
             let envContent = await fs.readFile(envPath, 'utf-8')
 
             if (envContent.match(/^SSL_MODE=/m)) {
-              envContent = envContent.replace(
-                /^SSL_MODE=.+$/m,
-                'SSL_MODE=local',
-              )
+              envContent = envContent.replace(/^SSL_MODE=.+$/m, 'SSL_MODE=local')
             } else {
               envContent += '\nSSL_MODE=local\n'
             }
@@ -152,7 +134,7 @@ export async function POST(
                 output: stdout || stderr,
                 message: 'SSL certificates generated successfully',
               },
-            }),
+            })
           )
         } else {
           resolve(
@@ -162,8 +144,8 @@ export async function POST(
                 error: 'Failed to generate certificates',
                 details: stderr || stdout,
               },
-              { status: 500 },
-            ),
+              { status: 500 }
+            )
           )
         }
       })
@@ -175,8 +157,8 @@ export async function POST(
               success: false,
               error: `mkcert execution failed: ${err.message}`,
             },
-            { status: 500 },
-          ),
+            { status: 500 }
+          )
         )
       })
     })
@@ -187,7 +169,7 @@ export async function POST(
         success: false,
         error: 'Failed to generate SSL certificates',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

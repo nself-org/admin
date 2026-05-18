@@ -20,7 +20,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
             error: 'Tables are required',
             code: ErrorCode.VALIDATION_ERROR,
           },
-          { status: 400 },
+          { status: 400 }
         )
       }
 
@@ -83,7 +83,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
             error: 'Tables are required',
             code: ErrorCode.VALIDATION_ERROR,
           },
-          { status: 400 },
+          { status: 400 }
         )
       }
 
@@ -149,7 +149,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         error: 'Invalid action',
         code: ErrorCode.VALIDATION_ERROR,
       },
-      { status: 400 },
+      { status: 400 }
     )
   } catch (error) {
     return NextResponse.json(
@@ -159,7 +159,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         details: error instanceof Error ? error.message : 'Unknown error',
         code: ErrorCode.QUERY_ERROR,
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

@@ -30,9 +30,8 @@ function AuthContent() {
               Auth data not available
             </h3>
             <p className="text-zinc-600 dark:text-zinc-400">
-              Auth service data is not exposed via the Admin API in
-              single-operator mode. Use the CLI to manage users and tokens
-              directly.
+              Auth service data is not exposed via the Admin API in single-operator mode. Use the
+              CLI to manage users and tokens directly.
             </p>
             <p className="mt-4 font-mono text-sm text-green-500">nself auth</p>
           </div>
@@ -43,22 +42,18 @@ function AuthContent() {
             </h3>
             <div className="space-y-2 font-mono text-sm">
               <p className="text-zinc-600 dark:text-zinc-400">
-                <span className="text-green-500">nself auth status</span> -
-                Show auth service status
+                <span className="text-green-500">nself auth status</span> - Show auth service status
               </p>
               <p className="text-zinc-600 dark:text-zinc-400">
-                <span className="text-green-500">nself auth users</span> - List
-                users
+                <span className="text-green-500">nself auth users</span> - List users
               </p>
               <p className="text-zinc-600 dark:text-zinc-400">
-                <span className="text-green-500">
-                  nself auth token --user=email@example.com
-                </span>{' '}
-                - Generate a token
+                <span className="text-green-500">nself auth token --user=email@example.com</span> -
+                Generate a token
               </p>
               <p className="text-zinc-600 dark:text-zinc-400">
-                <span className="text-green-500">nself auth config</span> -
-                View or update auth configuration
+                <span className="text-green-500">nself auth config</span> - View or update auth
+                configuration
               </p>
             </div>
           </div>

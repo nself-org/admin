@@ -97,7 +97,7 @@ export function CodeEditor({
     <div
       className={cn(
         'overflow-hidden rounded-md border border-zinc-200 dark:border-zinc-800',
-        className,
+        className
       )}
     >
       <Editor

@@ -67,17 +67,14 @@ const categoryDescriptions: Record<CloudProviderCategory, string> = {
   edge: 'Edge computing and CDN-focused providers',
 }
 
-
 function ProvidersContent() {
   const [searchQuery, setSearchQuery] = useState('')
-  const [selectedCategory, setSelectedCategory] = useState<
-    CloudProviderCategory | 'all'
-  >('all')
+  const [selectedCategory, setSelectedCategory] = useState<CloudProviderCategory | 'all'>('all')
 
   const { data, isLoading, mutate } = useSWR<{ providers: CloudProvider[] }>(
     '/api/cloud/providers',
     fetcher,
-    { refreshInterval: 60000 },
+    { refreshInterval: 60000 }
   )
 
   const providers = data?.providers ?? []
@@ -94,8 +91,7 @@ function ProvidersContent() {
     const matchesSearch =
       p.displayName.toLowerCase().includes(searchQuery.toLowerCase()) ||
       p.name.toLowerCase().includes(searchQuery.toLowerCase())
-    const matchesCategory =
-      selectedCategory === 'all' || p.category === selectedCategory
+    const matchesCategory = selectedCategory === 'all' || p.category === selectedCategory
     return matchesSearch && matchesCategory
   })
 
@@ -104,7 +100,7 @@ function ProvidersContent() {
       acc[category] = filteredProviders.filter((p) => p.category === category)
       return acc
     },
-    {} as Record<CloudProviderCategory, CloudProvider[]>,
+    {} as Record<CloudProviderCategory, CloudProvider[]>
   )
 
   const configuredCount = providers.filter((p) => p.configured).length
@@ -114,9 +110,7 @@ function ProvidersContent() {
       <div className="space-y-6">
         <div>
           <h1 className="text-2xl font-semibold text-white">Cloud Providers</h1>
-          <p className="text-sm text-zinc-400">
-            Configure cloud provider credentials
-          </p>
+          <p className="text-sm text-zinc-400">Configure cloud provider credentials</p>
         </div>
         <div className="grid animate-pulse grid-cols-1 gap-4 md:grid-cols-3">
           {[1, 2, 3, 4, 5, 6].map((i) => (
@@ -202,12 +196,8 @@ function ProvidersContent() {
           return (
             <div key={category} className="space-y-4">
               <div>
-                <h2 className="text-lg font-semibold text-white capitalize">
-                  {category}
-                </h2>
-                <p className="text-sm text-zinc-400">
-                  {categoryDescriptions[category]}
-                </p>
+                <h2 className="text-lg font-semibold text-white capitalize">{category}</h2>
+                <p className="text-sm text-zinc-400">{categoryDescriptions[category]}</p>
               </div>
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {categoryProviders.map((provider) => (
@@ -229,9 +219,7 @@ function ProvidersContent() {
         <div className="flex flex-col items-center justify-center rounded-lg border border-zinc-700/50 bg-zinc-800/50 p-12 text-center">
           <Cloud className="mb-4 h-12 w-12 text-zinc-500" />
           <p className="text-lg text-zinc-400">No providers found</p>
-          <p className="text-sm text-zinc-500">
-            Try adjusting your search or filter
-          </p>
+          <p className="text-sm text-zinc-500">Try adjusting your search or filter</p>
         </div>
       )}
     </div>
@@ -247,8 +235,7 @@ function ProviderCard({ provider }: { provider: CloudProvider }) {
       <div className="flex items-start justify-between">
         <div className="flex items-center gap-3">
           <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-zinc-700 font-semibold text-white">
-            {providerLogos[provider.name] ||
-              provider.name.slice(0, 2).toUpperCase()}
+            {providerLogos[provider.name] || provider.name.slice(0, 2).toUpperCase()}
           </div>
           <div>
             <h3 className="font-medium text-white group-hover:text-emerald-400">
@@ -272,10 +259,7 @@ function ProviderCard({ provider }: { provider: CloudProvider }) {
 
       <div className="mt-4 flex flex-wrap gap-1">
         {provider.features.slice(0, 3).map((feature) => (
-          <span
-            key={feature}
-            className="rounded bg-zinc-700/50 px-2 py-0.5 text-xs text-zinc-400"
-          >
+          <span key={feature} className="rounded bg-zinc-700/50 px-2 py-0.5 text-xs text-zinc-400">
             {feature}
           </span>
         ))}
@@ -287,11 +271,7 @@ function ProviderCard({ provider }: { provider: CloudProvider }) {
       </div>
 
       <div className="mt-4 flex items-center justify-between">
-        <span
-          className={`text-sm ${
-            provider.configured ? 'text-emerald-400' : 'text-zinc-500'
-          }`}
-        >
+        <span className={`text-sm ${provider.configured ? 'text-emerald-400' : 'text-zinc-500'}`}>
           {provider.configured ? 'Configured' : 'Not configured'}
         </span>
         <div className="flex items-center gap-2">

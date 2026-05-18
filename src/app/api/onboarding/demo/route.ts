@@ -41,9 +41,7 @@ function runNselfDemo(): Promise<{
         resolve({ success: true, output })
       } else {
         const errText =
-          stderrChunks.join('').trim() ||
-          output.trim() ||
-          `Process exited with code ${code}`
+          stderrChunks.join('').trim() || output.trim() || `Process exited with code ${code}`
         resolve({ success: false, output, error: errText })
       }
     })
@@ -70,7 +68,7 @@ export async function POST(request: NextRequest) {
         error: 'Demo creation failed',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

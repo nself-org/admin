@@ -19,7 +19,7 @@ const allSearchResults: SearchResult[] = navigation.flatMap((group) =>
     title: `${link.title}`,
     url: link.href,
     description: `${group.title} > ${link.title}`,
-  })),
+  }))
 )
 
 export function Search() {
@@ -52,7 +52,7 @@ export function Search() {
       const filtered = allSearchResults.filter(
         (result) =>
           result.title.toLowerCase().includes(query.toLowerCase()) ||
-          result.description?.toLowerCase().includes(query.toLowerCase()),
+          result.description?.toLowerCase().includes(query.toLowerCase())
       )
       setResults(filtered.slice(0, 10)) // Limit to 10 results
     } else {
@@ -71,7 +71,7 @@ export function Search() {
       router.push(url)
       handleClose()
     },
-    [router, handleClose],
+    [router, handleClose]
   )
 
   return (
@@ -91,11 +91,7 @@ export function Search() {
         </kbd>
       </button>
 
-      <Dialog
-        open={isOpen}
-        onClose={handleClose}
-        className="fixed inset-0 z-50"
-      >
+      <Dialog open={isOpen} onClose={handleClose} className="fixed inset-0 z-50">
         <DialogBackdrop className="fixed inset-0 bg-zinc-400/25 backdrop-blur-sm dark:bg-black/40" />
         <div className="fixed inset-0 overflow-y-auto px-4 py-4 sm:px-6 sm:py-20 md:py-32 lg:px-8 lg:py-[15vh]">
           <DialogPanel className="mx-auto max-w-xl transform-gpu overflow-hidden rounded-xl bg-white shadow-xl dark:bg-zinc-900 dark:ring-1 dark:ring-zinc-800">

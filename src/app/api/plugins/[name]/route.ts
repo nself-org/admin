@@ -19,10 +19,7 @@ interface RouteContext {
   params: Promise<{ name: string }>
 }
 
-export async function GET(
-  request: NextRequest,
-  context: RouteContext,
-): Promise<NextResponse> {
+export async function GET(request: NextRequest, context: RouteContext): Promise<NextResponse> {
   const startTime = Date.now()
   const { name } = await context.params
 
@@ -31,21 +28,18 @@ export async function GET(
     if (!/^[a-zA-Z0-9_-]+$/.test(name)) {
       return NextResponse.json(
         { success: false, error: 'Invalid plugin name format' },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
     const projectPath = getProjectPath()
     const nselfPath = await findNselfPath()
 
-    const { stdout, stderr } = await execAsync(
-      `${nselfPath} plugin status ${name} --json`,
-      {
-        cwd: projectPath,
-        env: { ...process.env, PATH: getEnhancedPath() },
-        timeout: 30000,
-      },
-    )
+    const { stdout, stderr } = await execAsync(`${nselfPath} plugin status ${name} --json`, {
+      cwd: projectPath,
+      env: { ...process.env, PATH: getEnhancedPath() },
+      timeout: 30000,
+    })
 
     if (stderr && !stdout) {
       logger.warn('Plugin status returned stderr', { name, stderr })
@@ -58,7 +52,7 @@ export async function GET(
       logger.warn('Failed to parse plugin status JSON', { name })
       return NextResponse.json(
         { success: false, error: 'Failed to parse plugin status' },
-        { status: 500 },
+        { status: 500 }
       )
     }
 
@@ -73,13 +67,10 @@ export async function GET(
     logger.error('Failed to get plugin status', { name, error: err.message })
 
     // Check if plugin not found
-    if (
-      err.message?.includes('not found') ||
-      err.message?.includes('not installed')
-    ) {
+    if (err.message?.includes('not found') || err.message?.includes('not installed')) {
       return NextResponse.json(
         { success: false, error: `Plugin ${name} not found` },
-        { status: 404 },
+        { status: 404 }
       )
     }
 
@@ -89,15 +80,12 @@ export async function GET(
         error: 'Failed to get plugin status',
         details: err.message || 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
 
-export async function DELETE(
-  request: NextRequest,
-  context: RouteContext,
-): Promise<NextResponse> {
+export async function DELETE(request: NextRequest, context: RouteContext): Promise<NextResponse> {
   const authError = await requireAuth(request)
   if (authError) return authError
 
@@ -109,7 +97,7 @@ export async function DELETE(
     if (!/^[a-zA-Z0-9_-]+$/.test(name)) {
       return NextResponse.json(
         { success: false, error: 'Invalid plugin name format' },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -118,14 +106,11 @@ export async function DELETE(
 
     logger.info('Removing plugin', { name })
 
-    const { stdout, stderr } = await execAsync(
-      `${nselfPath} plugin remove ${name}`,
-      {
-        cwd: projectPath,
-        env: { ...process.env, PATH: getEnhancedPath() },
-        timeout: 60000,
-      },
-    )
+    const { stdout, stderr } = await execAsync(`${nselfPath} plugin remove ${name}`, {
+      cwd: projectPath,
+      env: { ...process.env, PATH: getEnhancedPath() },
+      timeout: 60000,
+    })
 
     logger.cli(`plugin remove ${name}`, true, Date.now() - startTime)
     logger.api('DELETE', `/api/plugins/${name}`, 200, Date.now() - startTime)
@@ -146,7 +131,7 @@ export async function DELETE(
         details: err.message || 'Unknown error',
         output: err.stdout || err.stderr,
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

@@ -1,8 +1,8 @@
 import { nselfInit } from '@/lib/nselfCLI'
 import { getProjectPath } from '@/lib/paths'
 import { requireAuth } from '@/lib/require-auth'
-import { basename } from 'path'
 import { NextRequest, NextResponse } from 'next/server'
+import { basename } from 'path'
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
   const authError = await requireAuth(request)
@@ -36,7 +36,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           details: errorMsg || 'Unknown error',
           output: result.stdout,
         },
-        { status: 500 },
+        { status: 500 }
       )
     }
 
@@ -56,7 +56,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to initialize project',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

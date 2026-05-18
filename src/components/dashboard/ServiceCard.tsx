@@ -19,13 +19,7 @@ import { Button } from '../ui/button'
 export interface ServiceCardData {
   name: string
   displayName: string
-  status:
-    | 'running'
-    | 'stopped'
-    | 'starting'
-    | 'stopping'
-    | 'unhealthy'
-    | 'error'
+  status: 'running' | 'stopped' | 'starting' | 'stopping' | 'unhealthy' | 'error'
   health?: 'healthy' | 'unhealthy' | 'pending'
   cpu?: number
   memory?: number
@@ -59,10 +53,7 @@ export function ServiceCard({
     if (service.health === 'unhealthy' || service.status === 'error') {
       return 'border-red-500/50 bg-red-50/50 dark:bg-red-950/20'
     }
-    if (
-      service.status === 'running' &&
-      (service.health === 'healthy' || !service.health)
-    ) {
+    if (service.status === 'running' && (service.health === 'healthy' || !service.health)) {
       return 'border-green-500/50 bg-green-50/50 dark:bg-green-950/20'
     }
     if (service.status === 'starting' || service.status === 'stopping') {
@@ -84,18 +75,12 @@ export function ServiceCard({
     }
     if (service.health === 'unhealthy' || service.status === 'error') {
       return (
-        <motion.div
-          animate={{ scale: [1, 1.2, 1] }}
-          transition={{ duration: 1, repeat: Infinity }}
-        >
+        <motion.div animate={{ scale: [1, 1.2, 1] }} transition={{ duration: 1, repeat: Infinity }}>
           <AlertCircle className="h-4 w-4 text-red-600 dark:text-red-400" />
         </motion.div>
       )
     }
-    if (
-      service.status === 'running' &&
-      (service.health === 'healthy' || !service.health)
-    ) {
+    if (service.status === 'running' && (service.health === 'healthy' || !service.health)) {
       return (
         <motion.div
           animate={{ opacity: [1, 0.5, 1] }}
@@ -123,13 +108,9 @@ export function ServiceCard({
 
   const canStart = service.status === 'stopped'
   const canStop =
-    service.status === 'running' ||
-    service.status === 'unhealthy' ||
-    service.status === 'error'
+    service.status === 'running' || service.status === 'unhealthy' || service.status === 'error'
   const canRestart =
-    service.status === 'running' ||
-    service.status === 'unhealthy' ||
-    service.status === 'error'
+    service.status === 'running' || service.status === 'unhealthy' || service.status === 'error'
 
   return (
     <motion.div
@@ -143,9 +124,7 @@ export function ServiceCard({
         <div className="flex-1">
           <div className="mb-1 flex items-center gap-2">
             <span aria-hidden="true">{getStatusIcon()}</span>
-            <h3 className="font-semibold text-zinc-900 dark:text-white">
-              {service.displayName}
-            </h3>
+            <h3 className="font-semibold text-zinc-900 dark:text-white">{service.displayName}</h3>
           </div>
           <div className="flex items-center gap-2 text-xs text-zinc-600 dark:text-zinc-400">
             <span className="capitalize">
@@ -213,9 +192,7 @@ export function ServiceCard({
         <div className="mb-3 grid grid-cols-2 gap-2">
           {service.cpu !== undefined && (
             <div className="rounded bg-white/50 p-2 dark:bg-zinc-800/50">
-              <div className="mb-1 text-xs text-zinc-600 dark:text-zinc-400">
-                CPU
-              </div>
+              <div className="mb-1 text-xs text-zinc-600 dark:text-zinc-400">CPU</div>
               <div className="font-semibold text-zinc-900 dark:text-white">
                 {service.cpu.toFixed(1)}%
               </div>
@@ -223,9 +200,7 @@ export function ServiceCard({
           )}
           {service.memory !== undefined && (
             <div className="rounded bg-white/50 p-2 dark:bg-zinc-800/50">
-              <div className="mb-1 text-xs text-zinc-600 dark:text-zinc-400">
-                Memory
-              </div>
+              <div className="mb-1 text-xs text-zinc-600 dark:text-zinc-400">Memory</div>
               <div className="font-semibold text-zinc-900 dark:text-white">
                 {service.memory.toFixed(1)}%
               </div>
@@ -283,9 +258,7 @@ export function ServiceCard({
             <Button
               size="sm"
               variant="ghost"
-              onClick={() =>
-                window.open(`http://localhost:${service.port}`, '_blank')
-              }
+              onClick={() => window.open(`http://localhost:${service.port}`, '_blank')}
               className="justify-start"
             >
               <Pause className="mr-2 h-4 w-4" />
@@ -297,9 +270,7 @@ export function ServiceCard({
 
       {/* Port Badge */}
       {service.port && !expanded && (
-        <div className="mt-2 text-xs text-zinc-600 dark:text-zinc-400">
-          Port: {service.port}
-        </div>
+        <div className="mt-2 text-xs text-zinc-600 dark:text-zinc-400">Port: {service.port}</div>
       )}
     </motion.div>
   )

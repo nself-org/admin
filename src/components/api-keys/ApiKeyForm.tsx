@@ -59,21 +59,15 @@ export function ApiKeyForm({
   onCancel,
 }: ApiKeyFormProps) {
   const [name, setName] = useState(initialValues?.name || '')
-  const [description, setDescription] = useState(
-    initialValues?.description || '',
-  )
-  const [scope, setScope] = useState<ApiKeyScope>(
-    initialValues?.scope || 'read',
-  )
+  const [description, setDescription] = useState(initialValues?.description || '')
+  const [scope, setScope] = useState<ApiKeyScope>(initialValues?.scope || 'read')
   const [rateLimit, setRateLimit] = useState(
-    initialValues?.rateLimit || { requests: 1000, window: 60 },
+    initialValues?.rateLimit || { requests: 1000, window: 60 }
   )
-  const [allowedIps, setAllowedIps] = useState<string[]>(
-    initialValues?.allowedIps || [],
-  )
+  const [allowedIps, setAllowedIps] = useState<string[]>(initialValues?.allowedIps || [])
   const [newIp, setNewIp] = useState('')
   const [expiresAt, setExpiresAt] = useState<Date | undefined>(
-    initialValues?.expiresAt ? new Date(initialValues.expiresAt) : undefined,
+    initialValues?.expiresAt ? new Date(initialValues.expiresAt) : undefined
   )
   const [errors, setErrors] = useState<Record<string, string>>({})
 
@@ -93,8 +87,7 @@ export function ApiKeyForm({
     }
 
     if (rateLimit.requests > 0 && rateLimit.window <= 0) {
-      newErrors.rateLimit =
-        'Window must be greater than 0 when rate limit is set'
+      newErrors.rateLimit = 'Window must be greater than 0 when rate limit is set'
     }
 
     // Validate IP addresses
@@ -139,9 +132,7 @@ export function ApiKeyForm({
     setAllowedIps(allowedIps.filter((ip) => ip !== ipToRemove))
   }
 
-  const handleRateLimitPreset = (
-    preset: (typeof RATE_LIMIT_PRESETS)[number],
-  ) => {
+  const handleRateLimitPreset = (preset: (typeof RATE_LIMIT_PRESETS)[number]) => {
     setRateLimit({ requests: preset.requests, window: preset.window })
   }
 
@@ -173,22 +164,15 @@ export function ApiKeyForm({
           rows={3}
           disabled={isLoading}
         />
-        {errors.description && (
-          <p className="text-sm text-red-500">{errors.description}</p>
-        )}
-        <p className="text-xs text-zinc-500">
-          {description.length}/200 characters
-        </p>
+        {errors.description && <p className="text-sm text-red-500">{errors.description}</p>}
+        <p className="text-xs text-zinc-500">{description.length}/200 characters</p>
       </div>
 
       {/* Scope */}
       <div className="space-y-2">
         <Label>Scope</Label>
         <div className="relative">
-          <Select
-            value={scope}
-            onValueChange={(value) => setScope(value as ApiKeyScope)}
-          >
+          <Select value={scope} onValueChange={(value) => setScope(value as ApiKeyScope)}>
             <SelectTrigger disabled={isLoading}>
               <SelectValue placeholder="Select scope" />
             </SelectTrigger>
@@ -197,9 +181,7 @@ export function ApiKeyForm({
                 <SelectItem key={option.value} value={option.value}>
                   <div className="flex flex-col">
                     <span>{option.label}</span>
-                    <span className="text-xs text-zinc-500">
-                      {option.description}
-                    </span>
+                    <span className="text-xs text-zinc-500">{option.description}</span>
                   </div>
                 </SelectItem>
               ))}
@@ -217,8 +199,7 @@ export function ApiKeyForm({
               key={preset.label}
               type="button"
               variant={
-                rateLimit.requests === preset.requests &&
-                rateLimit.window === preset.window
+                rateLimit.requests === preset.requests && rateLimit.window === preset.window
                   ? 'default'
                   : 'outline'
               }
@@ -268,17 +249,14 @@ export function ApiKeyForm({
             />
           </div>
         </div>
-        {errors.rateLimit && (
-          <p className="text-sm text-red-500">{errors.rateLimit}</p>
-        )}
+        {errors.rateLimit && <p className="text-sm text-red-500">{errors.rateLimit}</p>}
       </div>
 
       {/* IP Whitelist */}
       <div className="space-y-2">
         <Label>IP Whitelist</Label>
         <p className="text-xs text-zinc-500">
-          Leave empty to allow all IPs. CIDR notation supported (e.g.,
-          192.168.1.0/24)
+          Leave empty to allow all IPs. CIDR notation supported (e.g., 192.168.1.0/24)
         </p>
         <div className="flex gap-2">
           <Input
@@ -293,12 +271,7 @@ export function ApiKeyForm({
               }
             }}
           />
-          <Button
-            type="button"
-            variant="outline"
-            onClick={addIp}
-            disabled={isLoading}
-          >
+          <Button type="button" variant="outline" onClick={addIp} disabled={isLoading}>
             <Plus className="h-4 w-4" />
           </Button>
         </div>
@@ -322,9 +295,7 @@ export function ApiKeyForm({
             ))}
           </div>
         )}
-        {errors.allowedIps && (
-          <p className="text-sm text-red-500">{errors.allowedIps}</p>
-        )}
+        {errors.allowedIps && <p className="text-sm text-red-500">{errors.allowedIps}</p>}
       </div>
 
       {/* Expiration */}
@@ -354,12 +325,7 @@ export function ApiKeyForm({
       {/* Form Actions */}
       <div className="flex justify-end gap-3 border-t pt-4">
         {onCancel && (
-          <Button
-            type="button"
-            variant="outline"
-            onClick={onCancel}
-            disabled={isLoading}
-          >
+          <Button type="button" variant="outline" onClick={onCancel} disabled={isLoading}>
             Cancel
           </Button>
         )}

@@ -28,10 +28,9 @@ async function handleSSO(request: NextRequest): Promise<NextResponse> {
     return NextResponse.json(
       {
         success: false,
-        error:
-          'SSO login disabled. Set NSELF_ADMIN_SSO_HEADER_ENABLED=true to enable.',
+        error: 'SSO login disabled. Set NSELF_ADMIN_SSO_HEADER_ENABLED=true to enable.',
       },
-      { status: 403 },
+      { status: 403 }
     )
   }
 
@@ -43,15 +42,13 @@ async function handleSSO(request: NextRequest): Promise<NextResponse> {
         success: false,
         error: `SSO header "${config.headerName}" absent or invalid.`,
       },
-      { status: 403 },
+      { status: 403 }
     )
   }
 
   try {
     const ip =
-      request.headers.get('x-forwarded-for') ||
-      request.headers.get('x-real-ip') ||
-      'unknown'
+      request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown'
     const userAgent = request.headers.get('user-agent') || undefined
 
     // Create a 8-hour session (SSO sessions are short-lived; proxy renews them)
@@ -81,14 +78,8 @@ async function handleSSO(request: NextRequest): Promise<NextResponse> {
 
     return response
   } catch (error) {
-    console.error(
-      'SSO login error:',
-      error instanceof Error ? error.message : 'Unknown error',
-    )
-    return NextResponse.json(
-      { success: false, error: 'SSO login failed' },
-      { status: 500 },
-    )
+    console.error('SSO login error:', error instanceof Error ? error.message : 'Unknown error')
+    return NextResponse.json({ success: false, error: 'SSO login failed' }, { status: 500 })
   }
 }
 

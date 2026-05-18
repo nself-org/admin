@@ -1,12 +1,7 @@
 // Activity library for nself-admin
 // Real-time event aggregation from audit logs, sessions, and system operations
 
-import {
-  addAuditLog,
-  getAllSessions,
-  getAuditLogs,
-  type AuditLogItem,
-} from '@/lib/database'
+import { addAuditLog, getAllSessions, getAuditLogs, type AuditLogItem } from '@/lib/database'
 import type {
   Activity,
   ActivityAction,
@@ -32,7 +27,7 @@ export async function logActivity(
   resourceName: string,
   metadata?: Record<string, unknown>,
   ipAddress?: string,
-  userAgent?: string,
+  userAgent?: string
 ): Promise<void> {
   await addAuditLog(
     action,
@@ -46,7 +41,7 @@ export async function logActivity(
       userAgent,
     },
     true,
-    actor.id,
+    actor.id
   )
 }
 
@@ -58,7 +53,7 @@ export async function logServiceAction(
   serviceName: string,
   userId: string = 'admin',
   metadata?: Record<string, unknown>,
-  ipAddress?: string,
+  ipAddress?: string
 ): Promise<void> {
   await logActivity(
     {
@@ -71,7 +66,7 @@ export async function logServiceAction(
     `svc-${serviceName}`,
     serviceName,
     metadata,
-    ipAddress,
+    ipAddress
   )
 }
 
@@ -83,7 +78,7 @@ export async function logDeployment(
   version: string,
   userId: string = 'admin',
   metadata?: Record<string, unknown>,
-  ipAddress?: string,
+  ipAddress?: string
 ): Promise<void> {
   await logActivity(
     {
@@ -100,7 +95,7 @@ export async function logDeployment(
       environment,
       ...metadata,
     },
-    ipAddress,
+    ipAddress
   )
 }
 
@@ -111,7 +106,7 @@ export async function logConfigChange(
   configName: string,
   changes: Array<{ field: string; oldValue: unknown; newValue: unknown }>,
   userId: string = 'admin',
-  ipAddress?: string,
+  ipAddress?: string
 ): Promise<void> {
   await addAuditLog(
     'config_changed',
@@ -128,7 +123,7 @@ export async function logConfigChange(
       ipAddress,
     },
     true,
-    userId,
+    userId
   )
 }
 
@@ -140,7 +135,7 @@ export async function logBackupAction(
   backupId: string,
   backupName: string,
   metadata?: Record<string, unknown>,
-  userId?: string,
+  userId?: string
 ): Promise<void> {
   const actor: ActivityActor = userId
     ? {
@@ -165,7 +160,7 @@ export async function logDatabaseAction(
   operation: string,
   userId: string = 'admin',
   metadata?: Record<string, unknown>,
-  ipAddress?: string,
+  ipAddress?: string
 ): Promise<void> {
   await logActivity(
     {
@@ -178,7 +173,7 @@ export async function logDatabaseAction(
     `db-${operation}`,
     operation,
     metadata,
-    ipAddress,
+    ipAddress
   )
 }
 
@@ -196,8 +191,7 @@ function auditLogToActivity(log: AuditLogItem): Activity | null {
   const actor: ActivityActor = details.actor || {
     id: log.userId || 'system',
     type: details.actor?.type || (log.userId ? 'user' : 'system'),
-    name:
-      details.actor?.name || (log.userId === 'admin' ? 'Admin User' : 'System'),
+    name: details.actor?.name || (log.userId === 'admin' ? 'Admin User' : 'System'),
     email: details.actor?.email,
   }
 
@@ -357,18 +351,14 @@ function matchesFilter(activity: Activity, filter: ActivityFilter): boolean {
   }
 
   if (filter.action) {
-    const actions = Array.isArray(filter.action)
-      ? filter.action
-      : [filter.action]
+    const actions = Array.isArray(filter.action) ? filter.action : [filter.action]
     if (!actions.includes(activity.action)) {
       return false
     }
   }
 
   if (filter.resourceType) {
-    const types = Array.isArray(filter.resourceType)
-      ? filter.resourceType
-      : [filter.resourceType]
+    const types = Array.isArray(filter.resourceType) ? filter.resourceType : [filter.resourceType]
     if (!types.includes(activity.resource.type)) {
       return false
     }
@@ -404,8 +394,7 @@ function matchesFilter(activity: Activity, filter: ActivityFilter): boolean {
       activity.actor.name.toLowerCase().includes(searchLower) ||
       activity.resource.name.toLowerCase().includes(searchLower) ||
       activity.action.toLowerCase().includes(searchLower) ||
-      (activity.actor.email &&
-        activity.actor.email.toLowerCase().includes(searchLower))
+      (activity.actor.email && activity.actor.email.toLowerCase().includes(searchLower))
     if (!matchesSearch) {
       return false
     }
@@ -417,10 +406,7 @@ function matchesFilter(activity: Activity, filter: ActivityFilter): boolean {
 /**
  * Generate timeline for activity stats
  */
-function generateTimeline(
-  activities: Activity[],
-  days: number,
-): { date: string; count: number }[] {
+function generateTimeline(activities: Activity[], days: number): { date: string; count: number }[] {
   const timeline: { date: string; count: number }[] = []
   const now = new Date()
 
@@ -447,9 +433,7 @@ function generateTimeline(
 /**
  * Get activity feed with filtering and pagination
  */
-export async function getActivityFeed(
-  options: ActivityFeedOptions = {},
-): Promise<{
+export async function getActivityFeed(options: ActivityFeedOptions = {}): Promise<{
   activities: Activity[]
   total: number
   hasMore: boolean
@@ -467,13 +451,11 @@ export async function getActivityFeed(
     .filter((activity): activity is Activity => activity !== null)
 
   // Filter activities
-  let filtered = allActivities.filter((activity) =>
-    matchesFilter(activity, filter),
-  )
+  let filtered = allActivities.filter((activity) => matchesFilter(activity, filter))
 
   // Sort by timestamp (newest first)
   filtered = filtered.sort(
-    (a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime(),
+    (a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
   )
 
   const total = filtered.length
@@ -508,9 +490,7 @@ export async function getActivityById(id: string): Promise<Activity | null> {
 /**
  * Get activity statistics
  */
-export async function getActivityStats(
-  tenantId?: string,
-): Promise<ActivityStats> {
+export async function getActivityStats(tenantId?: string): Promise<ActivityStats> {
   const now = new Date()
   const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate())
   const weekStart = new Date(todayStart)
@@ -532,15 +512,9 @@ export async function getActivityStats(
   }
 
   // Count activities by time period
-  const totalToday = activities.filter(
-    (a) => new Date(a.timestamp) >= todayStart,
-  ).length
-  const totalWeek = activities.filter(
-    (a) => new Date(a.timestamp) >= weekStart,
-  ).length
-  const totalMonth = activities.filter(
-    (a) => new Date(a.timestamp) >= monthStart,
-  ).length
+  const totalToday = activities.filter((a) => new Date(a.timestamp) >= todayStart).length
+  const totalWeek = activities.filter((a) => new Date(a.timestamp) >= weekStart).length
+  const totalMonth = activities.filter((a) => new Date(a.timestamp) >= monthStart).length
 
   // Count by action
   const byAction = {} as Record<ActivityAction, number>
@@ -587,20 +561,15 @@ export async function getActivityStats(
  */
 export async function getActivityForResource(
   resourceType: ActivityResourceType,
-  resourceId: string,
+  resourceId: string
 ): Promise<Activity[]> {
   const auditLogs = await getAuditLogs(1000, 0)
 
   return auditLogs
     .map((log) => auditLogToActivity(log))
     .filter((activity): activity is Activity => activity !== null)
-    .filter(
-      (a) => a.resource.type === resourceType && a.resource.id === resourceId,
-    )
-    .sort(
-      (a, b) =>
-        new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime(),
-    )
+    .filter((a) => a.resource.type === resourceType && a.resource.id === resourceId)
+    .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
 }
 
 /**
@@ -613,10 +582,7 @@ export async function getActivityByActor(actorId: string): Promise<Activity[]> {
     .map((log) => auditLogToActivity(log))
     .filter((activity): activity is Activity => activity !== null)
     .filter((a) => a.actor.id === actorId)
-    .sort(
-      (a, b) =>
-        new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime(),
-    )
+    .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
 }
 
 /**
@@ -635,14 +601,10 @@ export async function searchActivity(query: string): Promise<Activity[]> {
         a.resource.name.toLowerCase().includes(queryLower) ||
         a.action.toLowerCase().includes(queryLower) ||
         (a.actor.email && a.actor.email.toLowerCase().includes(queryLower)) ||
-        (a.metadata &&
-          JSON.stringify(a.metadata).toLowerCase().includes(queryLower))
+        (a.metadata && JSON.stringify(a.metadata).toLowerCase().includes(queryLower))
       )
     })
-    .sort(
-      (a, b) =>
-        new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime(),
-    )
+    .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
 }
 
 /**
@@ -650,7 +612,7 @@ export async function searchActivity(query: string): Promise<Activity[]> {
  */
 export async function exportActivity(
   filter: ActivityFilter,
-  format: 'json' | 'csv',
+  format: 'json' | 'csv'
 ): Promise<string> {
   const auditLogs = await getAuditLogs(1000, 0)
 
@@ -660,7 +622,7 @@ export async function exportActivity(
     .filter((activity) => matchesFilter(activity, filter))
 
   const sorted = filtered.sort(
-    (a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime(),
+    (a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
   )
 
   if (format === 'json') {
@@ -694,10 +656,9 @@ export async function exportActivity(
     a.ipAddress || '',
   ])
 
-  const csvContent = [
-    headers.join(','),
-    ...rows.map((row) => row.map(escapeCSV).join(',')),
-  ].join('\n')
+  const csvContent = [headers.join(','), ...rows.map((row) => row.map(escapeCSV).join(','))].join(
+    '\n'
+  )
 
   return csvContent
 }
@@ -715,9 +676,7 @@ function escapeCSV(value: string): string {
 /**
  * Get recent sessions as activities
  */
-export async function getSessionActivities(
-  userId: string = 'admin',
-): Promise<Activity[]> {
+export async function getSessionActivities(userId: string = 'admin'): Promise<Activity[]> {
   const sessions = await getAllSessions(userId)
 
   return sessions.map((session) => ({

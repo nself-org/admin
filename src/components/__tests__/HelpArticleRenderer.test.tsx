@@ -96,9 +96,7 @@ describe('react-markdown + rehype-sanitize wiring', () => {
   it('renders without dangerouslySetInnerHTML', () => {
     // Verify the mocked ReactMarkdown renders children as text (no raw HTML).
     const { container } = render(
-      <ReactMarkdown rehypePlugins={[rehypeSanitize]}>
-        {'Hello **world**'}
-      </ReactMarkdown>,
+      <ReactMarkdown rehypePlugins={[rehypeSanitize]}>{'Hello **world**'}</ReactMarkdown>
     )
     // Mock renders children as-is into a div — no dangerouslySetInnerHTML.
     expect(container.querySelector('[data-testid="markdown"]')).not.toBeNull()
@@ -108,11 +106,7 @@ describe('react-markdown + rehype-sanitize wiring', () => {
   it('passes rehypeSanitize as a plugin', () => {
     // Confirm rehypeSanitize is provided as a plugin so the real component
     // benefits from AST-level sanitization in production.
-    render(
-      <ReactMarkdown rehypePlugins={[rehypeSanitize]}>
-        {'content'}
-      </ReactMarkdown>,
-    )
+    render(<ReactMarkdown rehypePlugins={[rehypeSanitize]}>{'content'}</ReactMarkdown>)
     // rehypeSanitize factory should have been called (imported and resolved)
     expect(rehypeSanitize).toBeDefined()
   })
@@ -122,9 +116,7 @@ describe('react-markdown + rehype-sanitize wiring', () => {
     // the raw string but never calls innerHTML or dangerouslySetInnerHTML.
     const dangerous = '<script>alert(1)</script>'
     const { container } = render(
-      <ReactMarkdown rehypePlugins={[rehypeSanitize]}>
-        {dangerous}
-      </ReactMarkdown>,
+      <ReactMarkdown rehypePlugins={[rehypeSanitize]}>{dangerous}</ReactMarkdown>
     )
     // The mock wraps in a div with data-testid; no <script> element in DOM.
     expect(container.querySelector('script')).toBeNull()

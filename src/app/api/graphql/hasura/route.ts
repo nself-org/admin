@@ -1,8 +1,7 @@
 import { requireAuth } from '@/lib/require-auth'
 import { NextRequest, NextResponse } from 'next/server'
 
-const HASURA_ENDPOINT =
-  process.env.HASURA_GRAPHQL_ENDPOINT || 'http://localhost:8080/v1/graphql'
+const HASURA_ENDPOINT = process.env.HASURA_GRAPHQL_ENDPOINT || 'http://localhost:8080/v1/graphql'
 
 // SECURITY: No fallback secret - must be configured via environment
 const HASURA_ADMIN_SECRET = process.env.HASURA_GRAPHQL_ADMIN_SECRET
@@ -19,7 +18,7 @@ if (
 ) {
   throw new Error(
     'FATAL: dev-stub HASURA_GRAPHQL_ADMIN_SECRET detected in production. ' +
-      'Set a secure secret in your .env.secrets file before starting in production.',
+      'Set a secure secret in your .env.secrets file before starting in production.'
   )
 }
 
@@ -52,16 +51,13 @@ function isQueryAllowed(query: string): { allowed: boolean; reason?: string } {
     if (pattern.test(query)) {
       return {
         allowed: false,
-        reason:
-          'Mutation and write operations are not allowed via this endpoint',
+        reason: 'Mutation and write operations are not allowed via this endpoint',
       }
     }
   }
 
   // Must match at least one allowed pattern
-  const isAllowed = ALLOWED_QUERY_PATTERNS.some((pattern) =>
-    pattern.test(query),
-  )
+  const isAllowed = ALLOWED_QUERY_PATTERNS.some((pattern) => pattern.test(query))
   if (!isAllowed) {
     return {
       allowed: false,
@@ -93,7 +89,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       default:
         return NextResponse.json(
           { success: false, error: `Unknown action: ${action}` },
-          { status: 400 },
+          { status: 400 }
         )
     }
   } catch (error: unknown) {
@@ -104,7 +100,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         error: 'Hasura operation failed',
         details: message,
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -124,10 +120,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     } else if (action === 'metadata') {
       return await updateMetadata(body.metadata)
     } else {
-      return NextResponse.json(
-        { success: false, error: 'Invalid action' },
-        { status: 400 },
-      )
+      return NextResponse.json({ success: false, error: 'Invalid action' }, { status: 400 })
     }
   } catch (error: unknown) {
     const message = error instanceof Error ? error.message : 'Unknown error'
@@ -137,28 +130,25 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         error: 'Hasura operation failed',
         details: message,
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
 
 async function getMetadata() {
-  const response = await fetch(
-    `${HASURA_ENDPOINT.replace('/v1/graphql', '/v1/metadata')}`,
-    {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        ...(HASURA_ADMIN_SECRET && {
-          'X-Hasura-Admin-Secret': HASURA_ADMIN_SECRET,
-        }),
-      },
-      body: JSON.stringify({
-        type: 'export_metadata',
-        args: {},
+  const response = await fetch(`${HASURA_ENDPOINT.replace('/v1/graphql', '/v1/metadata')}`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      ...(HASURA_ADMIN_SECRET && {
+        'X-Hasura-Admin-Secret': HASURA_ADMIN_SECRET,
       }),
     },
-  )
+    body: JSON.stringify({
+      type: 'export_metadata',
+      args: {},
+    }),
+  })
 
   const data = await response.json()
 
@@ -291,7 +281,7 @@ async function getTables() {
         ...table,
         columns: colData.data?.information_schema_columns || [],
       }
-    }),
+    })
   )
 
   return NextResponse.json({
@@ -305,22 +295,19 @@ async function getTables() {
 }
 
 async function getPermissions() {
-  const response = await fetch(
-    `${HASURA_ENDPOINT.replace('/v1/graphql', '/v1/metadata')}`,
-    {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        ...(HASURA_ADMIN_SECRET && {
-          'X-Hasura-Admin-Secret': HASURA_ADMIN_SECRET,
-        }),
-      },
-      body: JSON.stringify({
-        type: 'export_metadata',
-        args: {},
+  const response = await fetch(`${HASURA_ENDPOINT.replace('/v1/graphql', '/v1/metadata')}`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      ...(HASURA_ADMIN_SECRET && {
+        'X-Hasura-Admin-Secret': HASURA_ADMIN_SECRET,
       }),
     },
-  )
+    body: JSON.stringify({
+      type: 'export_metadata',
+      args: {},
+    }),
+  })
 
   const data = await response.json()
 
@@ -374,22 +361,19 @@ async function getPermissions() {
 }
 
 async function getRelationships() {
-  const response = await fetch(
-    `${HASURA_ENDPOINT.replace('/v1/graphql', '/v1/metadata')}`,
-    {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        ...(HASURA_ADMIN_SECRET && {
-          'X-Hasura-Admin-Secret': HASURA_ADMIN_SECRET,
-        }),
-      },
-      body: JSON.stringify({
-        type: 'export_metadata',
-        args: {},
+  const response = await fetch(`${HASURA_ENDPOINT.replace('/v1/graphql', '/v1/metadata')}`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      ...(HASURA_ADMIN_SECRET && {
+        'X-Hasura-Admin-Secret': HASURA_ADMIN_SECRET,
       }),
     },
-  )
+    body: JSON.stringify({
+      type: 'export_metadata',
+      args: {},
+    }),
+  })
 
   const data = await response.json()
 
@@ -465,14 +449,10 @@ async function getStats() {
   const stats = {
     tables: tables.length,
     customTypes: types.filter((t: TypeInfo) => !t.name.startsWith('__')).length,
-    queryFields:
-      types.find((t: TypeInfo) => t.name === 'query_root')?.fields?.length || 0,
-    mutationFields:
-      types.find((t: TypeInfo) => t.name === 'mutation_root')?.fields?.length ||
-      0,
+    queryFields: types.find((t: TypeInfo) => t.name === 'query_root')?.fields?.length || 0,
+    mutationFields: types.find((t: TypeInfo) => t.name === 'mutation_root')?.fields?.length || 0,
     subscriptionFields:
-      types.find((t: TypeInfo) => t.name === 'subscription_root')?.fields
-        ?.length || 0,
+      types.find((t: TypeInfo) => t.name === 'subscription_root')?.fields?.length || 0,
     roles: [
       ...new Set(
         tables.flatMap((t: TableInfo) => {
@@ -485,7 +465,7 @@ async function getStats() {
             }
           })
           return permissions
-        }),
+        })
       ),
     ].length,
     timestamp: new Date().toISOString(),
@@ -502,24 +482,18 @@ async function executeGraphQL(query: string, variables?: unknown) {
   if (!HASURA_ADMIN_SECRET) {
     return NextResponse.json(
       { success: false, error: 'Hasura admin secret not configured' },
-      { status: 500 },
+      { status: 500 }
     )
   }
 
   if (!query) {
-    return NextResponse.json(
-      { success: false, error: 'Query is required' },
-      { status: 400 },
-    )
+    return NextResponse.json({ success: false, error: 'Query is required' }, { status: 400 })
   }
 
   // SECURITY: Validate query is read-only
   const validation = isQueryAllowed(query)
   if (!validation.allowed) {
-    return NextResponse.json(
-      { success: false, error: validation.reason },
-      { status: 403 },
-    )
+    return NextResponse.json({ success: false, error: validation.reason }, { status: 403 })
   }
 
   const response = await fetch(HASURA_ENDPOINT, {
@@ -649,9 +623,8 @@ async function updateMetadata(_metadata: unknown) {
   return NextResponse.json(
     {
       success: false,
-      error:
-        'Metadata updates are disabled for security. Use Hasura console directly.',
+      error: 'Metadata updates are disabled for security. Use Hasura console directly.',
     },
-    { status: 403 },
+    { status: 403 }
   )
 }

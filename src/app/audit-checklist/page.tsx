@@ -55,21 +55,15 @@ export default function AuditChecklistPage() {
     load()
   }, [load])
 
-  const categories =
-    report === null
-      ? []
-      : Array.from(new Set(report.items.map((i) => i.category)))
+  const categories = report === null ? [] : Array.from(new Set(report.items.map((i) => i.category)))
 
   return (
     <div className="mx-auto max-w-4xl space-y-4 p-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="nself-gradient-text text-xl font-semibold">
-            Dog-food Audit Checklist
-          </h1>
+          <h1 className="nself-gradient-text text-xl font-semibold">Dog-food Audit Checklist</h1>
           <p className="text-nself-text-muted text-xs">
-            Continuous audit of nSelf-first-doctrine + doc-sync-ritual across
-            the project
+            Continuous audit of nSelf-first-doctrine + doc-sync-ritual across the project
           </p>
         </div>
         <button
@@ -99,27 +93,19 @@ export default function AuditChecklistPage() {
           <div className="glass-card grid grid-cols-4 gap-4 p-4 text-center">
             <div>
               <p className="text-nself-text-muted text-xs">Passed</p>
-              <p className="text-2xl font-semibold text-green-400">
-                {report.score.pass}
-              </p>
+              <p className="text-2xl font-semibold text-green-400">{report.score.pass}</p>
             </div>
             <div>
               <p className="text-nself-text-muted text-xs">Warnings</p>
-              <p className="text-2xl font-semibold text-amber-400">
-                {report.score.warn}
-              </p>
+              <p className="text-2xl font-semibold text-amber-400">{report.score.warn}</p>
             </div>
             <div>
               <p className="text-nself-text-muted text-xs">Failures</p>
-              <p className="text-2xl font-semibold text-red-400">
-                {report.score.fail}
-              </p>
+              <p className="text-2xl font-semibold text-red-400">{report.score.fail}</p>
             </div>
             <div>
               <p className="text-nself-text-muted text-xs">Total</p>
-              <p className="text-nself-text text-2xl font-semibold">
-                {report.score.total}
-              </p>
+              <p className="text-nself-text text-2xl font-semibold">{report.score.total}</p>
             </div>
           </div>
 
@@ -127,9 +113,7 @@ export default function AuditChecklistPage() {
             const items = report.items.filter((i) => i.category === cat)
             return (
               <div key={cat} className="glass-card p-4">
-                <h2 className="text-nself-text mb-3 text-sm font-semibold">
-                  {cat}
-                </h2>
+                <h2 className="text-nself-text mb-3 text-sm font-semibold">{cat}</h2>
                 <ul className="space-y-2">
                   {items.map((item) => (
                     <li
@@ -140,12 +124,8 @@ export default function AuditChecklistPage() {
                         <StatusIcon status={item.status} />
                       </div>
                       <div className="min-w-0 flex-1">
-                        <p className="text-nself-text text-sm font-medium">
-                          {item.title}
-                        </p>
-                        <p className="text-nself-text-muted text-xs">
-                          {item.description}
-                        </p>
+                        <p className="text-nself-text text-sm font-medium">{item.title}</p>
+                        <p className="text-nself-text-muted text-xs">{item.description}</p>
                         {item.detail !== undefined && (
                           <p className="text-nself-text-muted mt-1 font-mono text-xs">
                             {item.detail}

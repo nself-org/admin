@@ -4,10 +4,7 @@
  */
 
 import { EventEmitter } from 'events'
-import {
-  type ContainerStats,
-  type DockerSystemInfo,
-} from './collectors/DockerAPICollector'
+import { type ContainerStats, type DockerSystemInfo } from './collectors/DockerAPICollector'
 import { getGlobalDockerCollector } from './globalCollectors'
 import { getHasuraCollector, type HasuraStats } from './HasuraCollector'
 import { getPostgresCollector, type PostgresStats } from './PostgresCollector'
@@ -144,11 +141,7 @@ export class CollectionOrchestrator extends EventEmitter {
    * Load service data (Postgres, Hasura, Redis)
    */
   private async loadServiceData() {
-    const tasks = [
-      this.loadPostgresData(),
-      this.loadHasuraData(),
-      this.loadRedisData(),
-    ]
+    const tasks = [this.loadPostgresData(), this.loadHasuraData(), this.loadRedisData()]
 
     await Promise.allSettled(tasks)
   }
@@ -201,7 +194,7 @@ export class CollectionOrchestrator extends EventEmitter {
       'postgres',
       setInterval(() => {
         if (this.isRunning) this.loadPostgresData()
-      }, 5000),
+      }, 5000)
     )
 
     // Update Hasura every 10 seconds
@@ -209,7 +202,7 @@ export class CollectionOrchestrator extends EventEmitter {
       'hasura',
       setInterval(() => {
         if (this.isRunning) this.loadHasuraData()
-      }, 10000),
+      }, 10000)
     )
 
     // Update Redis every 5 seconds
@@ -217,7 +210,7 @@ export class CollectionOrchestrator extends EventEmitter {
       'redis',
       setInterval(() => {
         if (this.isRunning) this.loadRedisData()
-      }, 5000),
+      }, 5000)
     )
   }
 
@@ -225,9 +218,7 @@ export class CollectionOrchestrator extends EventEmitter {
    * Update container in state
    */
   private updateContainerInState(updatedContainer: ContainerStats) {
-    const index = this.state.docker.containers.findIndex(
-      (c) => c.id === updatedContainer.id,
-    )
+    const index = this.state.docker.containers.findIndex((c) => c.id === updatedContainer.id)
     if (index >= 0) {
       this.state.docker.containers[index] = updatedContainer
     } else {
@@ -260,10 +251,7 @@ export class CollectionOrchestrator extends EventEmitter {
       totalMemory: {
         used: Math.round(totalMemUsed * 100) / 100,
         total: Math.round(totalMemLimit * 100) / 100,
-        percentage:
-          totalMemLimit > 0
-            ? Math.round((totalMemUsed / totalMemLimit) * 100)
-            : 0,
+        percentage: totalMemLimit > 0 ? Math.round((totalMemUsed / totalMemLimit) * 100) : 0,
       },
       totalNetwork: {
         rx: Math.round(totalRx * 10) / 10,

@@ -3,13 +3,7 @@
 import { PageShell } from '@/components/PageShell'
 import { ServiceDetailSkeleton } from '@/components/skeletons'
 import { Button } from '@/components/ui/button'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import {
   Select,
@@ -203,9 +197,7 @@ function SearchEngineContent() {
   // Render
   // ---------------------------------------------------------------------------
 
-  const currentEngineInfo = SEARCH_ENGINES.find(
-    (e) => e.value === selectedEngine,
-  )
+  const currentEngineInfo = SEARCH_ENGINES.find((e) => e.value === selectedEngine)
 
   return (
     <PageShell
@@ -221,19 +213,14 @@ function SearchEngineContent() {
                 <Settings className="h-5 w-5" />
                 Engine Selection
               </CardTitle>
-              <CardDescription>
-                Choose and initialize your search engine backend.
-              </CardDescription>
+              <CardDescription>Choose and initialize your search engine backend.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div>
                 <label className="mb-2 block text-sm font-medium text-zinc-700 dark:text-zinc-300">
                   Search Engine
                 </label>
-                <Select
-                  value={selectedEngine}
-                  onValueChange={setSelectedEngine}
-                >
+                <Select value={selectedEngine} onValueChange={setSelectedEngine}>
                   <SelectTrigger>
                     <SelectValue placeholder="Select engine" />
                   </SelectTrigger>
@@ -246,16 +233,10 @@ function SearchEngineContent() {
                   </SelectContent>
                 </Select>
                 {currentEngineInfo && (
-                  <p className="mt-2 text-xs text-zinc-500">
-                    {currentEngineInfo.description}
-                  </p>
+                  <p className="mt-2 text-xs text-zinc-500">{currentEngineInfo.description}</p>
                 )}
               </div>
-              <Button
-                onClick={handleInit}
-                disabled={loading}
-                className="w-full"
-              >
+              <Button onClick={handleInit} disabled={loading} className="w-full">
                 {loading ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -278,26 +259,19 @@ function SearchEngineContent() {
                 <Database className="h-5 w-5" />
                 Index Management
               </CardTitle>
-              <CardDescription>
-                Build and rebuild search indexes for your data.
-              </CardDescription>
+              <CardDescription>Build and rebuild search indexes for your data.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="rounded-lg border border-zinc-200 bg-zinc-50 p-4 dark:border-zinc-700 dark:bg-zinc-800/50">
                 <div className="flex items-center gap-2 text-sm text-zinc-600 dark:text-zinc-400">
                   <CheckCircle className="h-4 w-4" />
                   <span>
-                    Indexes data from your database into the search engine for
-                    fast full-text search.
+                    Indexes data from your database into the search engine for fast full-text
+                    search.
                   </span>
                 </div>
               </div>
-              <Button
-                onClick={handleIndex}
-                disabled={loading}
-                variant="outline"
-                className="w-full"
-              >
+              <Button onClick={handleIndex} disabled={loading} variant="outline" className="w-full">
                 {loading ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -346,10 +320,7 @@ function SearchEngineContent() {
                 placeholder="Enter search query..."
                 className="flex-1 rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm shadow-sm placeholder:text-zinc-400 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none dark:border-zinc-600 dark:bg-zinc-800 dark:text-white dark:placeholder:text-zinc-500"
               />
-              <Button
-                onClick={handleQuery}
-                disabled={loading || !testQuery.trim()}
-              >
+              <Button onClick={handleQuery} disabled={loading || !testQuery.trim()}>
                 {loading ? (
                   <Loader2 className="h-4 w-4 animate-spin" />
                 ) : (
@@ -403,8 +374,7 @@ function SearchEngineContent() {
             )}
             <ScrollArea className="h-48 w-full rounded-md border border-zinc-200 bg-zinc-950 p-4 dark:border-zinc-700">
               <pre className="font-mono text-sm text-green-400">
-                {output ||
-                  'No output yet. Initialize an engine to get started.'}
+                {output || 'No output yet. Initialize an engine to get started.'}
               </pre>
             </ScrollArea>
           </CardContent>

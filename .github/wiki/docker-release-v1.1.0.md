@@ -9,10 +9,10 @@
 
 Publish the following tags to Docker Hub on release day:
 
-| Tag | Target |
-|-----|--------|
-| `nself/nself-admin:1.1.0` | Exact version (primary) |
-| `nself/nself-admin:1.1` | Minor version alias |
+| Tag                        | Target                         |
+| -------------------------- | ------------------------------ |
+| `nself/nself-admin:1.1.0`  | Exact version (primary)        |
+| `nself/nself-admin:1.1`    | Minor version alias            |
 | `nself/nself-admin:latest` | Always points to latest stable |
 
 ## Automation

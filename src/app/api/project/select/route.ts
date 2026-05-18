@@ -15,10 +15,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
     body = await request.json()
   } catch {
-    return NextResponse.json(
-      { success: false, error: 'Invalid JSON body' },
-      { status: 400 },
-    )
+    return NextResponse.json({ success: false, error: 'Invalid JSON body' }, { status: 400 })
   }
 
   const { id } = body as Record<string, unknown>
@@ -26,7 +23,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   if (typeof id !== 'string' || id.trim().length === 0) {
     return NextResponse.json(
       { success: false, error: 'id must be a non-empty string' },
-      { status: 400 },
+      { status: 400 }
     )
   }
 
@@ -42,7 +39,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           error: pickerErr.message,
           code: pickerErr.code,
         },
-        { status: 404 },
+        { status: 404 }
       )
     }
     return NextResponse.json(
@@ -51,7 +48,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to select project',
         details: err instanceof Error ? err.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

@@ -137,9 +137,7 @@ export default function InitStep5() {
 
   const addApp = () => {
     const nextPort =
-      frontendApps.length > 0
-        ? Math.max(...frontendApps.map((a) => a.localPort)) + 1
-        : 3001
+      frontendApps.length > 0 ? Math.max(...frontendApps.map((a) => a.localPort)) + 1 : 3001
 
     const appNum = frontendApps.length + 1
     const displayName = `App ${appNum}`
@@ -246,10 +244,7 @@ export default function InitStep5() {
 
           {/* App card skeletons */}
           {[...Array(2)].map((_, i) => (
-            <div
-              key={i}
-              className="rounded-lg border border-zinc-200 p-4 dark:border-zinc-700"
-            >
+            <div key={i} className="rounded-lg border border-zinc-200 p-4 dark:border-zinc-700">
               <div className="mb-3 flex items-center justify-between">
                 <div className="flex items-center space-x-2">
                   <div className="h-5 w-5 animate-pulse rounded bg-zinc-200 dark:bg-zinc-700"></div>
@@ -302,9 +297,7 @@ export default function InitStep5() {
               Frontend Apps Configuration
             </span>
             {autoSaving && (
-              <span className="text-xs text-blue-600 dark:text-blue-400">
-                (Auto-saving...)
-              </span>
+              <span className="text-xs text-blue-600 dark:text-blue-400">(Auto-saving...)</span>
             )}
           </div>
           {showInfoBox ? (
@@ -318,9 +311,8 @@ export default function InitStep5() {
           <div className="mt-2 rounded-lg border border-blue-200 bg-blue-50 p-4 dark:border-blue-800 dark:bg-blue-900/20">
             <div className="space-y-3 text-xs text-blue-700 dark:text-blue-400">
               <p>
-                Configure external frontend applications that will consume your
-                nself backend. Each app gets its own table namespace, nginx
-                routing, and optional Hasura remote schema.
+                Configure external frontend applications that will consume your nself backend. Each
+                app gets its own table namespace, nginx routing, and optional Hasura remote schema.
               </p>
 
               <div>
@@ -329,27 +321,22 @@ export default function InitStep5() {
                 </p>
                 <ul className="ml-4 space-y-0.5">
                   <li>
-                    • <strong>Table Namespace:</strong> Isolated database tables
-                    with prefix
+                    • <strong>Table Namespace:</strong> Isolated database tables with prefix
                   </li>
                   <li>
-                    • <strong>Nginx Routing:</strong> Automatic subdomain
-                    configuration
+                    • <strong>Nginx Routing:</strong> Automatic subdomain configuration
                   </li>
                   <li>
-                    • <strong>Local Port:</strong> Development server port
-                    assignment
+                    • <strong>Local Port:</strong> Development server port assignment
                   </li>
                   <li>
-                    • <strong>Remote Schema:</strong> Optional GraphQL endpoint
-                    for Hasura integration
+                    • <strong>Remote Schema:</strong> Optional GraphQL endpoint for Hasura
+                    integration
                   </li>
                 </ul>
               </div>
 
-              <p className="text-xs italic">
-                Changes are saved automatically as you type.
-              </p>
+              <p className="text-xs italic">Changes are saved automatically as you type.</p>
             </div>
           </div>
         )}
@@ -420,9 +407,7 @@ export default function InitStep5() {
                 <input
                   type="text"
                   value={app.systemName || ''}
-                  onChange={(e) =>
-                    updateApp(index, 'systemName', e.target.value)
-                  }
+                  onChange={(e) => updateApp(index, 'systemName', e.target.value)}
                   className="focus:ring-opacity-20 w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 focus:ring-2 focus:ring-blue-500 focus:outline-none dark:border-zinc-600 dark:bg-zinc-800 dark:text-white"
                   placeholder="todo_tracker"
                 />
@@ -438,9 +423,7 @@ export default function InitStep5() {
                 <input
                   type="text"
                   value={app.tablePrefix}
-                  onChange={(e) =>
-                    updateApp(index, 'tablePrefix', e.target.value)
-                  }
+                  onChange={(e) => updateApp(index, 'tablePrefix', e.target.value)}
                   className="focus:ring-opacity-20 w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 focus:ring-2 focus:ring-blue-500 focus:outline-none dark:border-zinc-600 dark:bg-zinc-800 dark:text-white"
                   placeholder="app"
                 />
@@ -482,9 +465,7 @@ export default function InitStep5() {
                 <UrlInput
                   value={app.productionUrl || ''}
                   onChange={(value) => updateApp(index, 'productionUrl', value)}
-                  onError={(error) =>
-                    updateApp(index, 'productionUrlError', error)
-                  }
+                  onError={(error) => updateApp(index, 'productionUrlError', error)}
                   environment={environment}
                   baseDomain={baseDomain}
                   placeholder={`app${index + 1}`}
@@ -494,8 +475,7 @@ export default function InitStep5() {
                   app.productionUrl &&
                   (environment === 'development' || environment === 'dev') && (
                     <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-600">
-                      Routes localhost:{app.localPort} → {app.productionUrl}.
-                      {baseDomain}
+                      Routes localhost:{app.localPort} → {app.productionUrl}.{baseDomain}
                     </p>
                   )}
               </div>
@@ -511,12 +491,8 @@ export default function InitStep5() {
                 </label>
                 <UrlInput
                   value={app.remoteSchemaUrl || ''}
-                  onChange={(value) =>
-                    updateApp(index, 'remoteSchemaUrl', value)
-                  }
-                  onError={(error) =>
-                    updateApp(index, 'remoteSchemaUrlError', error)
-                  }
+                  onChange={(value) => updateApp(index, 'remoteSchemaUrl', value)}
+                  onError={(error) => updateApp(index, 'remoteSchemaUrlError', error)}
                   environment={environment}
                   baseDomain={baseDomain}
                   placeholder="api"
@@ -535,9 +511,7 @@ export default function InitStep5() {
         {frontendApps.length === 0 && (
           <div className="rounded-lg border-2 border-dashed border-zinc-300 py-8 text-center dark:border-zinc-700">
             <Globe className="mx-auto mb-3 h-12 w-12 text-zinc-400" />
-            <p className="mb-4 text-zinc-600 dark:text-zinc-400">
-              No frontend apps configured yet
-            </p>
+            <p className="mb-4 text-zinc-600 dark:text-zinc-400">No frontend apps configured yet</p>
             <button
               onClick={addApp}
               className="inline-flex items-center justify-center gap-0.5 overflow-hidden rounded-full bg-blue-600 px-3 py-1 text-sm font-medium text-white transition hover:bg-blue-700 dark:bg-blue-500/10 dark:text-blue-400 dark:ring-1 dark:ring-blue-400/20 dark:ring-inset dark:hover:bg-blue-400/10 dark:hover:text-blue-300 dark:hover:ring-blue-300"

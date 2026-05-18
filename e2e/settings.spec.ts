@@ -17,9 +17,7 @@ test.beforeAll(async ({ playwright }) => {
 })
 
 test.describe('Settings UI', () => {
-  test('Settings page loads and displays configuration sections', async ({
-    page,
-  }) => {
+  test('Settings page loads and displays configuration sections', async ({ page }) => {
     test.skip(!adminReachable, 'nAdmin not reachable')
 
     const resp = await page.goto('/settings')
@@ -28,7 +26,7 @@ test.describe('Settings UI', () => {
     // Should have multiple tabs or sections for General, Environment, Security
     await expect(page.locator('main').first()).toBeVisible()
     await expect(
-      page.locator('text=/General|Environment|Security|API Keys/i').first(),
+      page.locator('text=/General|Environment|Security|API Keys/i').first()
     ).toBeVisible()
   })
 

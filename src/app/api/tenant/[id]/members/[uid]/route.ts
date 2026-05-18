@@ -6,10 +6,7 @@ interface RouteParams {
   params: Promise<{ id: string; uid: string }>
 }
 
-export async function GET(
-  request: NextRequest,
-  { params }: RouteParams,
-): Promise<NextResponse> {
+export async function GET(request: NextRequest, { params }: RouteParams): Promise<NextResponse> {
   try {
     const { id, uid } = await params
     const result = await executeNselfCommand('tenant', [
@@ -27,7 +24,7 @@ export async function GET(
           error: 'Failed to get member',
           details: result.error || result.stderr || 'Unknown error',
         },
-        { status: 500 },
+        { status: 500 }
       )
     }
 
@@ -35,10 +32,7 @@ export async function GET(
     try {
       member = JSON.parse(result.stdout || '{}')
     } catch {
-      return NextResponse.json(
-        { success: false, error: 'Invalid member data' },
-        { status: 500 },
-      )
+      return NextResponse.json({ success: false, error: 'Invalid member data' }, { status: 500 })
     }
 
     return NextResponse.json({
@@ -52,15 +46,12 @@ export async function GET(
         error: 'Failed to get member',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
 
-export async function PUT(
-  request: NextRequest,
-  { params }: RouteParams,
-): Promise<NextResponse> {
+export async function PUT(request: NextRequest, { params }: RouteParams): Promise<NextResponse> {
   const authError = await requireAuth(request)
   if (authError) return authError
 
@@ -76,7 +67,7 @@ export async function PUT(
           error: 'Invalid role',
           details: 'A role is required',
         },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -95,7 +86,7 @@ export async function PUT(
           error: 'Failed to update member role',
           details: result.error || result.stderr || 'Unknown error',
         },
-        { status: 500 },
+        { status: 500 }
       )
     }
 
@@ -110,15 +101,12 @@ export async function PUT(
         error: 'Failed to update member role',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
 
-export async function DELETE(
-  request: NextRequest,
-  { params }: RouteParams,
-): Promise<NextResponse> {
+export async function DELETE(request: NextRequest, { params }: RouteParams): Promise<NextResponse> {
   const authError = await requireAuth(request)
   if (authError) return authError
 
@@ -138,7 +126,7 @@ export async function DELETE(
           error: 'Failed to remove member',
           details: result.error || result.stderr || 'Unknown error',
         },
-        { status: 500 },
+        { status: 500 }
       )
     }
 
@@ -153,7 +141,7 @@ export async function DELETE(
         error: 'Failed to remove member',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

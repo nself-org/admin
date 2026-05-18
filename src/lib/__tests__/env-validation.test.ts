@@ -150,9 +150,7 @@ describe('Environment Validation', () => {
       process.env.ADMIN_PASSWORD = 'weak'
 
       // Mock process.exit to prevent test from exiting
-      const mockExit = jest
-        .spyOn(process, 'exit')
-        .mockImplementation(() => undefined as never)
+      const mockExit = jest.spyOn(process, 'exit').mockImplementation(() => undefined as never)
 
       // Mock console.error to suppress error output
       const mockError = jest.spyOn(console, 'error').mockImplementation()
@@ -188,9 +186,7 @@ describe('Environment Validation', () => {
       })
       process.env.ADMIN_PASSWORD = 'Short1@'
 
-      const mockExit = jest
-        .spyOn(process, 'exit')
-        .mockImplementation(() => undefined as never)
+      const mockExit = jest.spyOn(process, 'exit').mockImplementation(() => undefined as never)
       const mockError = jest.spyOn(console, 'error').mockImplementation()
 
       expect(() => validateEnv()).toThrow()
@@ -213,9 +209,7 @@ describe('Environment Validation', () => {
         'NoSpecialChar123',
       ]
 
-      const mockExit = jest
-        .spyOn(process, 'exit')
-        .mockImplementation(() => undefined as never)
+      const mockExit = jest.spyOn(process, 'exit').mockImplementation(() => undefined as never)
       const mockError = jest.spyOn(console, 'error').mockImplementation()
 
       weakPasswords.forEach((password) => {
@@ -236,9 +230,7 @@ describe('Environment Validation', () => {
 
       const commonPasswords = ['admin123', 'changeme', 'password', 'default']
 
-      const mockExit = jest
-        .spyOn(process, 'exit')
-        .mockImplementation(() => undefined as never)
+      const mockExit = jest.spyOn(process, 'exit').mockImplementation(() => undefined as never)
       const mockError = jest.spyOn(console, 'error').mockImplementation()
 
       commonPasswords.forEach((password) => {
@@ -361,9 +353,7 @@ describe('Environment Validation', () => {
     it('should exit on validation error in production', () => {
       process.env.PORT = 'invalid-port'
 
-      const mockExit = jest
-        .spyOn(process, 'exit')
-        .mockImplementation(() => undefined as never)
+      const mockExit = jest.spyOn(process, 'exit').mockImplementation(() => undefined as never)
 
       expect(() => validateEnv()).toThrow()
 
@@ -373,9 +363,7 @@ describe('Environment Validation', () => {
     it('should exit on weak password in production', () => {
       process.env.ADMIN_PASSWORD = 'admin123'
 
-      const mockExit = jest
-        .spyOn(process, 'exit')
-        .mockImplementation(() => undefined as never)
+      const mockExit = jest.spyOn(process, 'exit').mockImplementation(() => undefined as never)
       const mockError = jest.spyOn(console, 'error').mockImplementation()
 
       expect(() => validateEnv()).toThrow()

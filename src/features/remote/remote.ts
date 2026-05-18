@@ -29,10 +29,7 @@ const EMPTY_STORE: RemoteConnectionsStore = {
 // Internal helpers
 // ---------------------------------------------------------------------------
 
-function makeRemoteError(
-  message: string,
-  code: RemoteError['code'],
-): RemoteError {
+function makeRemoteError(message: string, code: RemoteError['code']): RemoteError {
   const err = new Error(message) as RemoteError
   err.code = code
   return err
@@ -63,10 +60,7 @@ export async function loadConnections(): Promise<RemoteConnectionsStore> {
       parsed.version !== 1 ||
       !Array.isArray(parsed.connections)
     ) {
-      throw makeRemoteError(
-        'remote-connections.json has an unexpected structure',
-        'PARSE_ERROR',
-      )
+      throw makeRemoteError('remote-connections.json has an unexpected structure', 'PARSE_ERROR')
     }
     return parsed
   } catch (err) {
@@ -79,7 +73,7 @@ export async function loadConnections(): Promise<RemoteConnectionsStore> {
     }
     throw makeRemoteError(
       `Failed to load remote connections: ${(err as Error).message}`,
-      'IO_ERROR',
+      'IO_ERROR'
     )
   }
 }
@@ -105,7 +99,7 @@ async function saveStore(store: RemoteConnectionsStore): Promise<void> {
     }
     throw makeRemoteError(
       `Failed to save remote connections: ${(err as Error).message}`,
-      'IO_ERROR',
+      'IO_ERROR'
     )
   }
 }
@@ -118,9 +112,7 @@ async function saveStore(store: RemoteConnectionsStore): Promise<void> {
  * Adds a new connection to the store. Generates a UUID for the id field.
  * Returns the saved connection (including the assigned id).
  */
-export async function addConnection(
-  conn: Omit<RemoteConnection, 'id'>,
-): Promise<RemoteConnection> {
+export async function addConnection(conn: Omit<RemoteConnection, 'id'>): Promise<RemoteConnection> {
   const store = await loadConnections()
 
   const entry: RemoteConnection = {
@@ -187,9 +179,7 @@ export async function getActiveConnection(): Promise<RemoteConnection | null> {
  * For API mode: fetches `<apiEndpoint>/api/health` with a 5 s timeout and
  * checks for a 2xx response.
  */
-export async function testConnection(
-  conn: RemoteConnection,
-): Promise<TestConnectionResult> {
+export async function testConnection(conn: RemoteConnection): Promise<TestConnectionResult> {
   const start = Date.now()
 
   if (conn.mode === 'ssh') {
@@ -198,10 +188,7 @@ export async function testConnection(
   return testAPI(conn, start)
 }
 
-async function testSSH(
-  conn: RemoteConnection,
-  start: number,
-): Promise<TestConnectionResult> {
+async function testSSH(conn: RemoteConnection, start: number): Promise<TestConnectionResult> {
   const { spawn } = await import('child_process')
 
   return new Promise((resolve) => {
@@ -254,10 +241,7 @@ async function testSSH(
   })
 }
 
-async function testAPI(
-  conn: RemoteConnection,
-  start: number,
-): Promise<TestConnectionResult> {
+async function testAPI(conn: RemoteConnection, start: number): Promise<TestConnectionResult> {
   const url = `${conn.apiEndpoint}/api/health`
 
   try {

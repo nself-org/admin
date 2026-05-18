@@ -19,9 +19,7 @@ export function extractRequestInfo(request: Request): {
   userAgent?: string
 } {
   const ipAddress =
-    request.headers.get('x-forwarded-for') ||
-    request.headers.get('x-real-ip') ||
-    undefined
+    request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || undefined
 
   const userAgent = request.headers.get('user-agent') || undefined
 
@@ -38,7 +36,7 @@ export async function logApiActivity(
   resourceId: string,
   resourceName: string,
   userId: string = 'admin',
-  metadata?: Record<string, unknown>,
+  metadata?: Record<string, unknown>
 ): Promise<void> {
   const { ipAddress, userAgent } = extractRequestInfo(request)
 
@@ -54,7 +52,7 @@ export async function logApiActivity(
     resourceName,
     metadata,
     ipAddress,
-    userAgent,
+    userAgent
   )
 }
 
@@ -65,7 +63,7 @@ export async function logServiceStart(
   request: Request,
   serviceName: string,
   userId?: string,
-  metadata?: Record<string, unknown>,
+  metadata?: Record<string, unknown>
 ): Promise<void> {
   const { ipAddress } = extractRequestInfo(request)
   await logServiceAction('started', serviceName, userId, metadata, ipAddress)
@@ -78,7 +76,7 @@ export async function logServiceStop(
   request: Request,
   serviceName: string,
   userId?: string,
-  metadata?: Record<string, unknown>,
+  metadata?: Record<string, unknown>
 ): Promise<void> {
   const { ipAddress } = extractRequestInfo(request)
   await logServiceAction('stopped', serviceName, userId, metadata, ipAddress)
@@ -91,7 +89,7 @@ export async function logServiceRestart(
   request: Request,
   serviceName: string,
   userId?: string,
-  metadata?: Record<string, unknown>,
+  metadata?: Record<string, unknown>
 ): Promise<void> {
   const { ipAddress } = extractRequestInfo(request)
   await logServiceAction('restarted', serviceName, userId, metadata, ipAddress)
@@ -105,7 +103,7 @@ export async function logDeploymentEvent(
   environment: string,
   version: string,
   userId?: string,
-  metadata?: Record<string, unknown>,
+  metadata?: Record<string, unknown>
 ): Promise<void> {
   const { ipAddress } = extractRequestInfo(request)
   await logDeployment(environment, version, userId, metadata, ipAddress)
@@ -118,7 +116,7 @@ export async function logConfigurationChange(
   request: Request,
   configName: string,
   changes: Array<{ field: string; oldValue: unknown; newValue: unknown }>,
-  userId?: string,
+  userId?: string
 ): Promise<void> {
   const { ipAddress } = extractRequestInfo(request)
   await logConfigChange(configName, changes, userId, ipAddress)
@@ -131,15 +129,9 @@ export async function logBackupCreation(
   backupId: string,
   backupName: string,
   metadata?: Record<string, unknown>,
-  userId?: string,
+  userId?: string
 ): Promise<void> {
-  await logBackupAction(
-    'backup_created',
-    backupId,
-    backupName,
-    metadata,
-    userId,
-  )
+  await logBackupAction('backup_created', backupId, backupName, metadata, userId)
 }
 
 /**
@@ -149,15 +141,9 @@ export async function logBackupRestore(
   backupId: string,
   backupName: string,
   metadata?: Record<string, unknown>,
-  userId?: string,
+  userId?: string
 ): Promise<void> {
-  await logBackupAction(
-    'backup_restored',
-    backupId,
-    backupName,
-    metadata,
-    userId,
-  )
+  await logBackupAction('backup_restored', backupId, backupName, metadata, userId)
 }
 
 /**
@@ -168,7 +154,7 @@ export async function logDatabaseOperation(
   operation: string,
   action: ActivityAction = 'updated',
   userId?: string,
-  metadata?: Record<string, unknown>,
+  metadata?: Record<string, unknown>
 ): Promise<void> {
   const { ipAddress } = extractRequestInfo(request)
   await logDatabaseAction(action, operation, userId, metadata, ipAddress)
@@ -182,17 +168,9 @@ export async function logSecretAccess(
   secretId: string,
   secretName: string,
   userId?: string,
-  metadata?: Record<string, unknown>,
+  metadata?: Record<string, unknown>
 ): Promise<void> {
-  await logApiActivity(
-    request,
-    'secret_accessed',
-    'secret',
-    secretId,
-    secretName,
-    userId,
-    metadata,
-  )
+  await logApiActivity(request, 'secret_accessed', 'secret', secretId, secretName, userId, metadata)
 }
 
 /**
@@ -203,17 +181,9 @@ export async function logSecretCreation(
   secretId: string,
   secretName: string,
   userId?: string,
-  metadata?: Record<string, unknown>,
+  metadata?: Record<string, unknown>
 ): Promise<void> {
-  await logApiActivity(
-    request,
-    'created',
-    'secret',
-    secretId,
-    secretName,
-    userId,
-    metadata,
-  )
+  await logApiActivity(request, 'created', 'secret', secretId, secretName, userId, metadata)
 }
 
 /**
@@ -224,17 +194,9 @@ export async function logSecretDeletion(
   secretId: string,
   secretName: string,
   userId?: string,
-  metadata?: Record<string, unknown>,
+  metadata?: Record<string, unknown>
 ): Promise<void> {
-  await logApiActivity(
-    request,
-    'deleted',
-    'secret',
-    secretId,
-    secretName,
-    userId,
-    metadata,
-  )
+  await logApiActivity(request, 'deleted', 'secret', secretId, secretName, userId, metadata)
 }
 
 // Export all functions

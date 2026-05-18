@@ -32,14 +32,11 @@ interface LicenseValidateResponse {
 }
 
 /** Fetch plugin metadata from the public registry. Returns null on error. */
-async function fetchPluginMeta(
-  pluginName: string,
-): Promise<PluginMetadata | null> {
+async function fetchPluginMeta(pluginName: string): Promise<PluginMetadata | null> {
   try {
-    const res = await fetch(
-      `https://plugins.nself.org/plugins/${encodeURIComponent(pluginName)}`,
-      { signal: AbortSignal.timeout(8000) },
-    )
+    const res = await fetch(`https://plugins.nself.org/plugins/${encodeURIComponent(pluginName)}`, {
+      signal: AbortSignal.timeout(8000),
+    })
     if (!res.ok) return null
     return (await res.json()) as PluginMetadata
   } catch {
@@ -62,10 +59,7 @@ async function validateLicenseKey(licenseKey: string): Promise<boolean> {
   }
 }
 
-export async function POST(
-  request: NextRequest,
-  context: RouteContext,
-): Promise<NextResponse> {
+export async function POST(request: NextRequest, context: RouteContext): Promise<NextResponse> {
   const authError = await requireAuth(request)
   if (authError) return authError
 
@@ -76,7 +70,7 @@ export async function POST(
   if (!PLUGIN_NAME_RE.test(name)) {
     return NextResponse.json(
       { success: false, error: 'Invalid plugin name format' },
-      { status: 400 },
+      { status: 400 }
     )
   }
 
@@ -98,7 +92,7 @@ export async function POST(
             licenseRequired: true,
             upgradeUrl: 'https://nself.org/pricing',
           },
-          { status: 402 },
+          { status: 402 }
         )
       }
 
@@ -114,7 +108,7 @@ export async function POST(
             licenseRequired: true,
             upgradeUrl: 'https://nself.org/pricing',
           },
-          { status: 402 },
+          { status: 402 }
         )
       }
     }
@@ -124,23 +118,14 @@ export async function POST(
 
     logger.info('Installing plugin', { name, pro: isPro })
 
-    const { stdout, stderr } = await execFileAsync(
-      nselfPath,
-      ['plugin', 'install', name],
-      {
-        cwd: projectPath,
-        env: { ...process.env, PATH: getEnhancedPath() },
-        timeout: 120000,
-      },
-    )
+    const { stdout, stderr } = await execFileAsync(nselfPath, ['plugin', 'install', name], {
+      cwd: projectPath,
+      env: { ...process.env, PATH: getEnhancedPath() },
+      timeout: 120000,
+    })
 
     logger.cli(`plugin install ${name}`, true, Date.now() - startTime)
-    logger.api(
-      'POST',
-      `/api/plugins/${name}/install`,
-      200,
-      Date.now() - startTime,
-    )
+    logger.api('POST', `/api/plugins/${name}/install`, 200, Date.now() - startTime)
 
     return NextResponse.json({
       success: true,
@@ -159,15 +144,12 @@ export async function POST(
         details: err.message ?? 'Unknown error',
         output: err.stdout ?? err.stderr,
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
 
-export async function DELETE(
-  request: NextRequest,
-  context: RouteContext,
-): Promise<NextResponse> {
+export async function DELETE(request: NextRequest, context: RouteContext): Promise<NextResponse> {
   const startTime = Date.now()
   const { name } = await context.params
 
@@ -175,7 +157,7 @@ export async function DELETE(
   if (!PLUGIN_NAME_RE.test(name)) {
     return NextResponse.json(
       { success: false, error: 'Invalid plugin name format' },
-      { status: 400 },
+      { status: 400 }
     )
   }
 
@@ -185,23 +167,14 @@ export async function DELETE(
 
     logger.info('Removing plugin', { name })
 
-    const { stdout, stderr } = await execFileAsync(
-      nselfPath,
-      ['plugin', 'remove', name],
-      {
-        cwd: projectPath,
-        env: { ...process.env, PATH: getEnhancedPath() },
-        timeout: 60000,
-      },
-    )
+    const { stdout, stderr } = await execFileAsync(nselfPath, ['plugin', 'remove', name], {
+      cwd: projectPath,
+      env: { ...process.env, PATH: getEnhancedPath() },
+      timeout: 60000,
+    })
 
     logger.cli(`plugin remove ${name}`, true, Date.now() - startTime)
-    logger.api(
-      'DELETE',
-      `/api/plugins/${name}/install`,
-      200,
-      Date.now() - startTime,
-    )
+    logger.api('DELETE', `/api/plugins/${name}/install`, 200, Date.now() - startTime)
 
     return NextResponse.json({
       success: true,
@@ -220,7 +193,7 @@ export async function DELETE(
         details: err.message ?? 'Unknown error',
         output: err.stdout ?? err.stderr,
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

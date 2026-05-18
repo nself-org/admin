@@ -1,13 +1,6 @@
 'use client'
 
-import {
-  AlertCircle,
-  CheckCircle,
-  Link,
-  Loader2,
-  RefreshCw,
-  XCircle,
-} from 'lucide-react'
+import { AlertCircle, CheckCircle, Link, Loader2, RefreshCw, XCircle } from 'lucide-react'
 import { useEffect, useState } from 'react'
 
 const MUX_API = 'http://127.0.0.1:3711'
@@ -45,8 +38,7 @@ function RoutingMap({ rules }: { rules: MuxRule[] }) {
   const forwardRules = rules.filter(
     (r) =>
       r.action &&
-      (Object.keys(r.action)[0] === 'forward_to' ||
-        Object.keys(r.action)[0] === 'forward_action'),
+      (Object.keys(r.action)[0] === 'forward_to' || Object.keys(r.action)[0] === 'forward_action')
   )
 
   if (forwardRules.length === 0) {
@@ -56,10 +48,7 @@ function RoutingMap({ rules }: { rules: MuxRule[] }) {
         <p className="text-sm text-zinc-500">
           No forwarding rules configured. Routing map shows rules with{' '}
           <span className="font-mono text-xs text-zinc-400">forward_to</span> or{' '}
-          <span className="font-mono text-xs text-zinc-400">
-            forward_action
-          </span>{' '}
-          actions.
+          <span className="font-mono text-xs text-zinc-400">forward_action</span> actions.
         </p>
       </div>
     )
@@ -94,23 +83,13 @@ function RoutingMap({ rules }: { rules: MuxRule[] }) {
           <tbody>
             {forwardRules.map((rule) => {
               const actionType = Object.keys(rule.action)[0] as string
-              const actionCfg = rule.action[actionType] as Record<
-                string,
-                unknown
-              >
+              const actionCfg = rule.action[actionType] as Record<string, unknown>
               const dest =
-                actionType === 'forward_to'
-                  ? (actionCfg?.url as string)
-                  : (actionCfg?.to as string)
+                actionType === 'forward_to' ? (actionCfg?.url as string) : (actionCfg?.to as string)
 
               return (
-                <tr
-                  key={rule.id}
-                  className="border-b border-zinc-700/50 last:border-0"
-                >
-                  <td className="px-4 py-3 text-sm font-medium text-white">
-                    {rule.name}
-                  </td>
+                <tr key={rule.id} className="border-b border-zinc-700/50 last:border-0">
+                  <td className="px-4 py-3 text-sm font-medium text-white">{rule.name}</td>
                   <td className="px-4 py-3 font-mono text-sm text-zinc-400">
                     {rule.conditions.from ?? (
                       <span className="text-zinc-600 italic">any sender</span>
@@ -224,9 +203,7 @@ export default function MuxRunsPage() {
           <div className="flex items-start gap-3">
             <AlertCircle className="mt-0.5 h-5 w-5 shrink-0 text-yellow-400" />
             <div>
-              <p className="font-medium text-yellow-300">
-                nself-mux is not running
-              </p>
+              <p className="font-medium text-yellow-300">nself-mux is not running</p>
               <p className="mt-1 text-sm text-yellow-400/80">
                 Start the mux plugin to view run history.
               </p>
@@ -248,7 +225,7 @@ export default function MuxRunsPage() {
           runs
             .filter((r) => r.duration_ms != null)
             .reduce((sum, r) => sum + (r.duration_ms ?? 0), 0) /
-            Math.max(runs.filter((r) => r.duration_ms != null).length, 1),
+            Math.max(runs.filter((r) => r.duration_ms != null).length, 1)
         )
       : 0
 
@@ -258,9 +235,7 @@ export default function MuxRunsPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-semibold text-white">Mux Runs</h1>
-          <p className="mt-1 text-sm text-zinc-400">
-            Recent rule executions and routing map
-          </p>
+          <p className="mt-1 text-sm text-zinc-400">Recent rule executions and routing map</p>
         </div>
         <button
           type="button"
@@ -286,10 +261,7 @@ export default function MuxRunsPage() {
             { label: 'Errors', value: errorRuns, color: 'text-red-400' },
             { label: 'Shadow', value: shadowRuns, color: 'text-yellow-400' },
           ].map(({ label, value, color }) => (
-            <div
-              key={label}
-              className="rounded-xl border border-zinc-700/50 bg-zinc-800/50 p-4"
-            >
+            <div key={label} className="rounded-xl border border-zinc-700/50 bg-zinc-800/50 p-4">
               <p className="text-xs text-zinc-500">{label}</p>
               <p className={`mt-1 text-2xl font-semibold ${color}`}>{value}</p>
             </div>
@@ -304,10 +276,7 @@ export default function MuxRunsPage() {
       {loading && (
         <div className="space-y-3">
           {[1, 2, 3, 4].map((n) => (
-            <div
-              key={n}
-              className="h-12 animate-pulse rounded-xl bg-zinc-800/50"
-            />
+            <div key={n} className="h-12 animate-pulse rounded-xl bg-zinc-800/50" />
           ))}
         </div>
       )}
@@ -370,9 +339,7 @@ export default function MuxRunsPage() {
                       <td className="max-w-[140px] truncate px-4 py-3 text-xs text-zinc-400">
                         {run.gmail_address ?? '—'}
                       </td>
-                      <td className="px-4 py-3 text-sm text-zinc-200">
-                        {run.rule_name}
-                      </td>
+                      <td className="px-4 py-3 text-sm text-zinc-200">{run.rule_name}</td>
                       <td className="px-4 py-3">
                         <span className="rounded-full bg-zinc-700/50 px-2 py-0.5 font-mono text-xs text-zinc-300">
                           {run.handler}
@@ -380,10 +347,7 @@ export default function MuxRunsPage() {
                       </td>
                       <td className="px-4 py-3">
                         <div className="space-y-1">
-                          <ResultBadge
-                            result={run.result}
-                            shadow={run.shadow_mode}
-                          />
+                          <ResultBadge result={run.result} shadow={run.shadow_mode} />
                           {run.error_msg && (
                             <p className="max-w-[200px] truncate text-xs text-red-400/80">
                               {run.error_msg}

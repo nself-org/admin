@@ -133,12 +133,8 @@ describe('generateForwardDDL (re-export)', () => {
 
   it('contains indexes for indexed columns', () => {
     const ddl = generateForwardDDL(canvasState)
-    expect(ddl).toContain(
-      'CREATE INDEX IF NOT EXISTS "idx_order_items_order_id"',
-    )
-    expect(ddl).toContain(
-      'CREATE UNIQUE INDEX IF NOT EXISTS "idx_order_items_sku"',
-    )
+    expect(ddl).toContain('CREATE INDEX IF NOT EXISTS "idx_order_items_order_id"')
+    expect(ddl).toContain('CREATE UNIQUE INDEX IF NOT EXISTS "idx_order_items_sku"')
   })
 })
 

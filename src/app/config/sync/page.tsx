@@ -2,13 +2,7 @@
 
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import {
   Select,
@@ -71,8 +65,7 @@ export default function ConfigSyncPage() {
       }
 
       const data = await response.json()
-      const output =
-        data.data?.output || data.data?.stderr || data.error || data.details
+      const output = data.data?.output || data.data?.stderr || data.error || data.details
       setLastOutput(output || JSON.stringify(data, null, 2))
 
       if (data.success) {
@@ -103,8 +96,7 @@ export default function ConfigSyncPage() {
       }
 
       const data = await response.json()
-      const output =
-        data.data?.output || data.data?.stderr || data.error || data.details
+      const output = data.data?.output || data.data?.stderr || data.error || data.details
       setLastOutput(output || JSON.stringify(data, null, 2))
       setActionState(data.success ? 'success' : 'error')
       if (!data.success) setErrorMessage(output || 'Status check failed')
@@ -117,34 +109,43 @@ export default function ConfigSyncPage() {
 
   if (actionState === 'unauth') {
     return (
-      <div className="flex flex-col items-center justify-center py-24 gap-4">
-        <AlertCircle className="h-10 w-10 text-destructive" />
+      <div className="flex flex-col items-center justify-center gap-4 py-24">
+        <AlertCircle className="text-destructive h-10 w-10" />
         <p className="text-lg font-medium">Not authenticated</p>
-        <p className="text-sm text-muted-foreground">Please log in to manage config sync.</p>
-        <Button variant="outline" onClick={() => { window.location.href = '/login' }}>Go to Login</Button>
+        <p className="text-muted-foreground text-sm">Please log in to manage config sync.</p>
+        <Button
+          variant="outline"
+          onClick={() => {
+            window.location.href = '/login'
+          }}
+        >
+          Go to Login
+        </Button>
       </div>
     )
   }
 
   if (actionState === 'offline') {
     return (
-      <div className="flex flex-col items-center justify-center py-24 gap-4">
-        <WifiOff className="h-10 w-10 text-muted-foreground" />
+      <div className="flex flex-col items-center justify-center gap-4 py-24">
+        <WifiOff className="text-muted-foreground h-10 w-10" />
         <p className="text-lg font-medium">Cannot connect to admin API</p>
-        <p className="text-sm text-muted-foreground">{errorMessage}</p>
-        <Button variant="outline" onClick={() => setActionState('idle')}>Retry</Button>
+        <p className="text-muted-foreground text-sm">{errorMessage}</p>
+        <Button variant="outline" onClick={() => setActionState('idle')}>
+          Retry
+        </Button>
       </div>
     )
   }
 
   return (
-    <div className="space-y-6 max-w-4xl">
+    <div className="max-w-4xl space-y-6">
       <div>
-        <h1 className="text-2xl font-bold flex items-center gap-2">
+        <h1 className="flex items-center gap-2 text-2xl font-bold">
           <RefreshCw className="h-6 w-6" />
           Config Sync
         </h1>
-        <p className="text-sm text-muted-foreground mt-1">
+        <p className="text-muted-foreground mt-1 text-sm">
           Synchronize configuration between environments using the nself CLI.
         </p>
       </div>
@@ -155,17 +156,15 @@ export default function ConfigSyncPage() {
         <AlertTitle>nself CLI Integration</AlertTitle>
         <AlertDescription>
           This page executes{' '}
-          <code className="rounded bg-muted px-1 text-xs">
-            nself config sync
-          </code>{' '}
-          to synchronize environment configuration files between environments.
+          <code className="bg-muted rounded px-1 text-xs">nself config sync</code> to synchronize
+          environment configuration files between environments.
         </AlertDescription>
       </Alert>
 
       {actionState === 'success' && lastSyncTime && (
         <Alert className="border-green-500 bg-green-50 dark:bg-green-950">
           <CheckCircle className="h-4 w-4 text-green-600" />
-          <AlertDescription className="text-green-700 dark:text-green-300 flex items-center gap-2">
+          <AlertDescription className="flex items-center gap-2 text-green-700 dark:text-green-300">
             <Clock className="h-3 w-3" />
             Last sync: {new Date(lastSyncTime).toLocaleString()}
           </AlertDescription>
@@ -207,9 +206,7 @@ export default function ConfigSyncPage() {
                       <SelectItem key={env.value} value={env.value}>
                         <div className="flex items-center gap-2">
                           <span>{env.label}</span>
-                          <span className="text-xs text-zinc-500">
-                            ({env.description})
-                          </span>
+                          <span className="text-xs text-zinc-500">({env.description})</span>
                         </div>
                       </SelectItem>
                     ))}
@@ -232,9 +229,7 @@ export default function ConfigSyncPage() {
                       <SelectItem key={env.value} value={env.value}>
                         <div className="flex items-center gap-2">
                           <span>{env.label}</span>
-                          <span className="text-xs text-zinc-500">
-                            ({env.description})
-                          </span>
+                          <span className="text-xs text-zinc-500">({env.description})</span>
                         </div>
                       </SelectItem>
                     ))}
@@ -270,11 +265,7 @@ export default function ConfigSyncPage() {
                 )}
               </Button>
 
-              <Button
-                variant="outline"
-                onClick={checkStatus}
-                disabled={actionState === 'running'}
-              >
+              <Button variant="outline" onClick={checkStatus} disabled={actionState === 'running'}>
                 Check Status
               </Button>
             </div>

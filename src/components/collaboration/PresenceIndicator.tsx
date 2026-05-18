@@ -14,11 +14,7 @@ interface PresenceIndicatorProps {
   className?: string
 }
 
-export function PresenceIndicator({
-  roomId,
-  currentPage,
-  className = '',
-}: PresenceIndicatorProps) {
+export function PresenceIndicator({ roomId, currentPage, className = '' }: PresenceIndicatorProps) {
   const { onlineUsers, isConnected, updatePresence } = usePresence(roomId)
 
   // Update presence on mount and page change
@@ -35,7 +31,7 @@ export function PresenceIndicator({
         () => {
           updatePresence('away', currentPage)
         },
-        5 * 60 * 1000,
+        5 * 60 * 1000
       )
     }
 

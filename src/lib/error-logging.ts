@@ -45,9 +45,7 @@ class ErrorLoggingService {
     const timestamps = this.errorTimestamps.get(fingerprint) || []
 
     // Remove old timestamps outside the window
-    const recentTimestamps = timestamps.filter(
-      (t) => now - t < this.RATE_LIMIT_WINDOW,
-    )
+    const recentTimestamps = timestamps.filter((t) => now - t < this.RATE_LIMIT_WINDOW)
 
     if (recentTimestamps.length >= this.MAX_ERRORS_PER_MINUTE) {
       return false
@@ -63,17 +61,13 @@ class ErrorLoggingService {
   /**
    * Create a serializable error report
    */
-  private createErrorReport(
-    error: Error,
-    errorInfo?: React.ErrorInfo,
-  ): ErrorReport {
+  private createErrorReport(error: Error, errorInfo?: React.ErrorInfo): ErrorReport {
     return {
       message: error.message,
       stack: error.stack,
       componentStack: errorInfo?.componentStack,
       timestamp: new Date().toISOString(),
-      userAgent:
-        typeof navigator !== 'undefined' ? navigator.userAgent : undefined,
+      userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : undefined,
       url: typeof window !== 'undefined' ? window.location.href : undefined,
     }
   }
@@ -81,11 +75,7 @@ class ErrorLoggingService {
   /**
    * Log error to console (always in dev, conditionally in prod)
    */
-  private logToConsole(
-    error: Error,
-    errorInfo?: React.ErrorInfo,
-    reported = false,
-  ): void {
+  private logToConsole(error: Error, errorInfo?: React.ErrorInfo, reported = false): void {
     if (!this.isLoggingEnabled()) {
       return
     }
@@ -244,9 +234,6 @@ export const errorLogging = new ErrorLoggingService()
  * Main export function for error boundary
  * Usage: reportError(error, errorInfo)
  */
-export async function reportError(
-  error: Error,
-  errorInfo?: React.ErrorInfo,
-): Promise<void> {
+export async function reportError(error: Error, errorInfo?: React.ErrorInfo): Promise<void> {
   return errorLogging.reportError(error, errorInfo)
 }

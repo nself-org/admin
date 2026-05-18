@@ -82,10 +82,8 @@ export function useCostEstimate(provider: string, size: ServerSize) {
     success: boolean
     estimate: CostEstimate
   }>(
-    provider && size
-      ? `/api/cloud/cost/estimate?provider=${provider}&size=${size}`
-      : null,
-    fetcher,
+    provider && size ? `/api/cloud/cost/estimate?provider=${provider}&size=${size}` : null,
+    fetcher
   )
 
   return {

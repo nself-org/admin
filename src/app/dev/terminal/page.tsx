@@ -70,7 +70,7 @@ function TerminalContent() {
       setOutput((prev) => [...prev, { id: nextId(), type, text, code }])
       scrollBottom()
     },
-    [scrollBottom],
+    [scrollBottom]
   )
 
   const fetchAllowed = useCallback(async () => {
@@ -112,9 +112,7 @@ function TerminalContent() {
       if (!trimmed || running) return
 
       // Parse: strip leading "nself " prefix if user typed it
-      const withoutPrefix = trimmed.startsWith('nself ')
-        ? trimmed.slice(6).trim()
-        : trimmed
+      const withoutPrefix = trimmed.startsWith('nself ') ? trimmed.slice(6).trim() : trimmed
 
       const parts = withoutPrefix.split(/\s+/)
       const command = parts[0]
@@ -202,7 +200,7 @@ function TerminalContent() {
         inputRef.current?.focus()
       }
     },
-    [running, addLine],
+    [running, addLine]
   )
 
   const handleKeyDown = useCallback(
@@ -231,7 +229,7 @@ function TerminalContent() {
         addLine('info', '^C')
       }
     },
-    [input, runCommand, addLine],
+    [input, runCommand, addLine]
   )
 
   // State 1: Initial skeleton
@@ -240,18 +238,18 @@ function TerminalContent() {
   // State 5: Offline
   if (offline) {
     return (
-      <div className="p-6 space-y-4">
-        <div className="flex items-center gap-3 p-4 rounded-lg bg-yellow-500/10 border border-yellow-500/30">
-          <WifiOff className="h-5 w-5 text-yellow-500 flex-shrink-0" />
+      <div className="space-y-4 p-6">
+        <div className="flex items-center gap-3 rounded-lg border border-yellow-500/30 bg-yellow-500/10 p-4">
+          <WifiOff className="h-5 w-5 flex-shrink-0 text-yellow-500" />
           <div>
             <p className="font-medium text-yellow-400">Cannot reach nself CLI</p>
-            <p className="text-sm text-gray-400 mt-0.5">
+            <p className="mt-0.5 text-sm text-gray-400">
               Verify the nself binary is installed and on PATH.
             </p>
           </div>
         </div>
         <Button onClick={fetchAllowed} disabled={loading} variant="secondary" size="sm">
-          <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
+          <RefreshCw className={`mr-2 h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
           Retry
         </Button>
       </div>
@@ -261,16 +259,16 @@ function TerminalContent() {
   // State 4: Error
   if (error && !allowedData) {
     return (
-      <div className="p-6 space-y-4">
-        <div className="flex items-center gap-3 p-4 rounded-lg bg-red-500/10 border border-red-500/30">
-          <AlertTriangle className="h-5 w-5 text-red-400 flex-shrink-0" />
+      <div className="space-y-4 p-6">
+        <div className="flex items-center gap-3 rounded-lg border border-red-500/30 bg-red-500/10 p-4">
+          <AlertTriangle className="h-5 w-5 flex-shrink-0 text-red-400" />
           <div>
             <p className="font-medium text-red-400">Failed to load terminal</p>
-            <p className="text-sm text-gray-400 mt-0.5">{error}</p>
+            <p className="mt-0.5 text-sm text-gray-400">{error}</p>
           </div>
         </div>
         <Button onClick={fetchAllowed} disabled={loading} variant="secondary" size="sm">
-          <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
+          <RefreshCw className={`mr-2 h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
           Retry
         </Button>
       </div>
@@ -281,10 +279,16 @@ function TerminalContent() {
   if (!allowedData) {
     return (
       <div className="p-6 text-center text-gray-400">
-        <Terminal className="h-8 w-8 mx-auto mb-2 opacity-50" />
+        <Terminal className="mx-auto mb-2 h-8 w-8 opacity-50" />
         <p>Terminal not available.</p>
-        <Button onClick={fetchAllowed} disabled={loading} variant="secondary" size="sm" className="mt-3">
-          <RefreshCw className="h-4 w-4 mr-2" />
+        <Button
+          onClick={fetchAllowed}
+          disabled={loading}
+          variant="secondary"
+          size="sm"
+          className="mt-3"
+        >
+          <RefreshCw className="mr-2 h-4 w-4" />
           Load Terminal
         </Button>
       </div>
@@ -293,26 +297,28 @@ function TerminalContent() {
 
   // States 6 + 7: Success
   return (
-    <div className="p-6 space-y-4">
+    <div className="space-y-4 p-6">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-xl font-semibold text-white">nself Terminal</h2>
-          <p className="text-sm text-gray-400 mt-1">
+          <p className="mt-1 text-sm text-gray-400">
             {allowedData.allowed.length} allowed commands &mdash; nself prefix only
           </p>
         </div>
         <div className="flex items-center gap-2">
           <button
             onClick={() => setShowCommands((v) => !v)}
-            className="flex items-center gap-1 text-xs text-gray-500 hover:text-gray-300 transition-colors"
+            className="flex items-center gap-1 text-xs text-gray-500 transition-colors hover:text-gray-300"
           >
             Commands
-            <ChevronDown className={`h-3 w-3 transition-transform ${showCommands ? 'rotate-180' : ''}`} />
+            <ChevronDown
+              className={`h-3 w-3 transition-transform ${showCommands ? 'rotate-180' : ''}`}
+            />
           </button>
           <Button onClick={fetchAllowed} disabled={loading} variant="secondary" size="sm">
             {/* State 2: Refresh spinner */}
-            <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
+            <RefreshCw className={`mr-2 h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
             {loading ? 'Loading…' : 'Refresh'}
           </Button>
         </div>
@@ -321,7 +327,7 @@ function TerminalContent() {
       {/* Allowed commands panel */}
       {showCommands && (
         <div className="rounded-lg border border-white/10 bg-white/5 p-4">
-          <p className="text-xs text-gray-400 mb-3">
+          <p className="mb-3 text-xs text-gray-400">
             Only nself sub-commands from this list are permitted:
           </p>
           <div className="flex flex-wrap gap-2">
@@ -332,7 +338,7 @@ function TerminalContent() {
                   setInput(`nself ${cmd}`)
                   inputRef.current?.focus()
                 }}
-                className="px-2 py-0.5 rounded bg-white/10 text-xs font-mono text-sky-400 hover:bg-white/20 transition-colors"
+                className="rounded bg-white/10 px-2 py-0.5 font-mono text-xs text-sky-400 transition-colors hover:bg-white/20"
               >
                 nself {cmd}
               </button>
@@ -342,19 +348,17 @@ function TerminalContent() {
       )}
 
       {/* Output panel */}
-      <div className="rounded-lg border border-white/10 overflow-hidden">
-        <div className="flex items-center justify-between px-4 py-2 bg-white/5 border-b border-white/10">
+      <div className="overflow-hidden rounded-lg border border-white/10">
+        <div className="flex items-center justify-between border-b border-white/10 bg-white/5 px-4 py-2">
           <div className="flex items-center gap-2">
             <Terminal className="h-4 w-4 text-gray-500" />
-            <span className="text-xs font-mono text-gray-400">output</span>
-            {running && (
-              <span className="text-xs text-yellow-400 animate-pulse">running…</span>
-            )}
+            <span className="font-mono text-xs text-gray-400">output</span>
+            {running && <span className="animate-pulse text-xs text-yellow-400">running…</span>}
           </div>
           <button
             onClick={() => setOutput([])}
             disabled={running}
-            className="flex items-center gap-1 text-xs text-gray-600 hover:text-gray-400 transition-colors disabled:opacity-30"
+            className="flex items-center gap-1 text-xs text-gray-600 transition-colors hover:text-gray-400 disabled:opacity-30"
           >
             <Trash2 className="h-3 w-3" />
             Clear
@@ -363,7 +367,7 @@ function TerminalContent() {
 
         <div
           ref={outputRef}
-          className="bg-gray-950 font-mono text-xs p-4 h-72 overflow-y-auto space-y-0.5"
+          className="h-72 space-y-0.5 overflow-y-auto bg-gray-950 p-4 font-mono text-xs"
           onClick={() => inputRef.current?.focus()}
         >
           {output.length === 0 ? (
@@ -397,8 +401,8 @@ function TerminalContent() {
         </div>
 
         {/* Input row */}
-        <div className="flex items-center gap-2 px-4 py-3 bg-white/[0.03] border-t border-white/10">
-          <span className="text-xs font-mono text-sky-500 flex-shrink-0">$</span>
+        <div className="flex items-center gap-2 border-t border-white/10 bg-white/[0.03] px-4 py-3">
+          <span className="flex-shrink-0 font-mono text-xs text-sky-500">$</span>
           <input
             ref={inputRef}
             type="text"
@@ -409,12 +413,12 @@ function TerminalContent() {
             placeholder="nself status"
             spellCheck={false}
             autoComplete="off"
-            className="flex-1 bg-transparent text-xs font-mono text-gray-200 placeholder-gray-600 focus:outline-none disabled:opacity-50"
+            className="flex-1 bg-transparent font-mono text-xs text-gray-200 placeholder-gray-600 focus:outline-none disabled:opacity-50"
           />
           <button
             onClick={() => runCommand(input)}
             disabled={running || !input.trim()}
-            className="flex items-center gap-1 text-xs text-gray-500 hover:text-sky-400 transition-colors disabled:opacity-30"
+            className="flex items-center gap-1 text-xs text-gray-500 transition-colors hover:text-sky-400 disabled:opacity-30"
           >
             <Send className="h-3 w-3" />
           </button>

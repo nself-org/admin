@@ -63,26 +63,20 @@ const actionColors: Record<ActivityAction, string> = {
   deleted: 'bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300',
   viewed: 'bg-zinc-100 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300',
   started: 'bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300',
-  stopped:
-    'bg-orange-100 text-orange-700 dark:bg-orange-900 dark:text-orange-300',
-  restarted:
-    'bg-yellow-100 text-yellow-700 dark:bg-yellow-900 dark:text-yellow-300',
+  stopped: 'bg-orange-100 text-orange-700 dark:bg-orange-900 dark:text-orange-300',
+  restarted: 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900 dark:text-yellow-300',
   deployed: 'bg-sky-100 text-sky-700 dark:bg-sky-900 dark:text-sky-300',
   rollback: 'bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300',
   login: 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300',
   logout: 'bg-zinc-100 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300',
-  password_changed:
-    'bg-yellow-100 text-yellow-700 dark:bg-yellow-900 dark:text-yellow-300',
+  password_changed: 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900 dark:text-yellow-300',
   invited: 'bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300',
   removed: 'bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300',
   role_changed: 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300',
-  backup_created:
-    'bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300',
+  backup_created: 'bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300',
   backup_restored: 'bg-sky-100 text-sky-700 dark:bg-sky-900 dark:text-sky-300',
-  config_changed:
-    'bg-yellow-100 text-yellow-700 dark:bg-yellow-900 dark:text-yellow-300',
-  secret_accessed:
-    'bg-orange-100 text-orange-700 dark:bg-orange-900 dark:text-orange-300',
+  config_changed: 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900 dark:text-yellow-300',
+  secret_accessed: 'bg-orange-100 text-orange-700 dark:bg-orange-900 dark:text-orange-300',
 }
 
 /** Map action types to display verbs */
@@ -189,9 +183,7 @@ function ChangeDiff({ change }: { change: ActivityChange }) {
 
   return (
     <div className="rounded-md border border-zinc-200 bg-zinc-50 p-2 text-xs dark:border-zinc-700 dark:bg-zinc-800">
-      <div className="mb-1 font-medium text-zinc-700 dark:text-zinc-300">
-        {change.field}
-      </div>
+      <div className="mb-1 font-medium text-zinc-700 dark:text-zinc-300">{change.field}</div>
       <div className="flex items-center gap-2">
         <span className="rounded bg-red-100 px-1.5 py-0.5 text-red-700 line-through dark:bg-red-900 dark:text-red-300">
           {formatValue(change.oldValue)}
@@ -227,13 +219,11 @@ export function ActivityItem({
       <div
         className={cn(
           'flex items-center gap-2 text-sm text-zinc-600 dark:text-zinc-400',
-          className,
+          className
         )}
       >
         <ActionIcon className="h-3.5 w-3.5" />
-        <span className="font-medium text-zinc-900 dark:text-zinc-50">
-          {activity.actor.name}
-        </span>
+        <span className="font-medium text-zinc-900 dark:text-zinc-50">{activity.actor.name}</span>
         <span>{actionVerbs[activity.action]}</span>
         <span className="font-medium text-zinc-900 dark:text-zinc-50">
           {activity.resource.name}
@@ -247,7 +237,7 @@ export function ActivityItem({
     <div
       className={cn(
         'rounded-lg border border-zinc-200 bg-white p-4 dark:border-zinc-800 dark:bg-zinc-950',
-        className,
+        className
       )}
     >
       <div className="flex items-start gap-3">
@@ -277,10 +267,7 @@ export function ActivityItem({
             <span className="font-medium text-zinc-900 dark:text-zinc-50">
               {activity.actor.name}
             </span>
-            <Badge
-              variant="secondary"
-              className={cn('text-xs', actionColors[activity.action])}
-            >
+            <Badge variant="secondary" className={cn('text-xs', actionColors[activity.action])}>
               {actionVerbs[activity.action]}
             </Badge>
             {activity.resource.url ? (

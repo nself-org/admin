@@ -28,7 +28,7 @@ export async function GET(): Promise<NextResponse> {
           error: 'Failed to list OAuth providers',
           details: result.error || result.stderr || 'Unknown error',
         },
-        { status: 500 },
+        { status: 500 }
       )
     }
 
@@ -43,7 +43,7 @@ export async function GET(): Promise<NextResponse> {
         error: 'Failed to list OAuth providers',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -64,7 +64,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     if (!provider || typeof provider !== 'string') {
       return NextResponse.json(
         { success: false, error: 'Provider name is required' },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -74,7 +74,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           success: false,
           error: `Invalid provider: ${provider}. Valid providers: ${VALID_PROVIDERS.join(', ')}`,
         },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -91,7 +91,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           error: `Failed to install provider: ${provider}`,
           details: result.error || result.stderr || 'Unknown error',
         },
-        { status: 500 },
+        { status: 500 }
       )
     }
 
@@ -106,7 +106,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to install OAuth provider',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

@@ -6,18 +6,10 @@ interface RouteParams {
   params: Promise<{ id: string }>
 }
 
-export async function GET(
-  request: NextRequest,
-  { params }: RouteParams,
-): Promise<NextResponse> {
+export async function GET(request: NextRequest, { params }: RouteParams): Promise<NextResponse> {
   try {
     const { id } = await params
-    const result = await executeNselfCommand('tenant', [
-      'org',
-      'show',
-      id,
-      '--json',
-    ])
+    const result = await executeNselfCommand('tenant', ['org', 'show', id, '--json'])
 
     if (!result.success) {
       return NextResponse.json(
@@ -26,7 +18,7 @@ export async function GET(
           error: 'Failed to get organization',
           details: result.error || result.stderr || 'Unknown error',
         },
-        { status: 500 },
+        { status: 500 }
       )
     }
 
@@ -36,7 +28,7 @@ export async function GET(
     } catch {
       return NextResponse.json(
         { success: false, error: 'Invalid organization data' },
-        { status: 500 },
+        { status: 500 }
       )
     }
 
@@ -51,15 +43,12 @@ export async function GET(
         error: 'Failed to get organization',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
 
-export async function PUT(
-  request: NextRequest,
-  { params }: RouteParams,
-): Promise<NextResponse> {
+export async function PUT(request: NextRequest, { params }: RouteParams): Promise<NextResponse> {
   const authError = await requireAuth(request)
   if (authError) return authError
 
@@ -82,7 +71,7 @@ export async function PUT(
           error: 'Failed to update organization',
           details: result.error || result.stderr || 'Unknown error',
         },
-        { status: 500 },
+        { status: 500 }
       )
     }
 
@@ -97,26 +86,18 @@ export async function PUT(
         error: 'Failed to update organization',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
 
-export async function DELETE(
-  request: NextRequest,
-  { params }: RouteParams,
-): Promise<NextResponse> {
+export async function DELETE(request: NextRequest, { params }: RouteParams): Promise<NextResponse> {
   const authError = await requireAuth(request)
   if (authError) return authError
 
   try {
     const { id } = await params
-    const result = await executeNselfCommand('tenant', [
-      'org',
-      'delete',
-      id,
-      '--confirm',
-    ])
+    const result = await executeNselfCommand('tenant', ['org', 'delete', id, '--confirm'])
 
     if (!result.success) {
       return NextResponse.json(
@@ -125,7 +106,7 @@ export async function DELETE(
           error: 'Failed to delete organization',
           details: result.error || result.stderr || 'Unknown error',
         },
-        { status: 500 },
+        { status: 500 }
       )
     }
 
@@ -140,7 +121,7 @@ export async function DELETE(
         error: 'Failed to delete organization',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

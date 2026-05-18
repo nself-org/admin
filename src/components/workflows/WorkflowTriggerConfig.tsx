@@ -1,13 +1,7 @@
 'use client'
 
 import { Button } from '@/components/ui/button'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import {
@@ -20,15 +14,7 @@ import {
 import { Switch } from '@/components/ui/switch'
 import { Textarea } from '@/components/ui/textarea'
 import type { TriggerType, WorkflowTrigger } from '@/types/workflow'
-import {
-  Calendar,
-  Globe,
-  Play,
-  Trash2,
-  Webhook,
-  Workflow,
-  Zap,
-} from 'lucide-react'
+import { Calendar, Globe, Play, Trash2, Webhook, Workflow, Zap } from 'lucide-react'
 import * as React from 'react'
 
 interface WorkflowTriggerConfigProps {
@@ -57,10 +43,7 @@ const triggerTypes: {
   },
 ]
 
-export function WorkflowTriggerConfig({
-  triggers,
-  onChange,
-}: WorkflowTriggerConfigProps) {
+export function WorkflowTriggerConfig({ triggers, onChange }: WorkflowTriggerConfigProps) {
   const addTrigger = (type: TriggerType) => {
     const newTrigger: WorkflowTrigger = {
       id: `trigger-${Date.now()}`,
@@ -97,8 +80,7 @@ export function WorkflowTriggerConfig({
                 }
               />
               <p className="text-xs text-zinc-500 dark:text-zinc-400">
-                Use cron syntax (e.g., &quot;0 0 * * *&quot; for daily at
-                midnight)
+                Use cron syntax (e.g., &quot;0 0 * * *&quot; for daily at midnight)
               </p>
             </div>
             <div className="space-y-2">
@@ -117,9 +99,7 @@ export function WorkflowTriggerConfig({
                 <SelectContent>
                   <SelectItem value="UTC">UTC</SelectItem>
                   <SelectItem value="America/New_York">Eastern Time</SelectItem>
-                  <SelectItem value="America/Los_Angeles">
-                    Pacific Time
-                  </SelectItem>
+                  <SelectItem value="America/Los_Angeles">Pacific Time</SelectItem>
                   <SelectItem value="Europe/London">London</SelectItem>
                   <SelectItem value="Asia/Tokyo">Tokyo</SelectItem>
                 </SelectContent>
@@ -212,16 +192,10 @@ export function WorkflowTriggerConfig({
               <Label>Filter Expression (optional)</Label>
               <Textarea
                 placeholder='{ "user.role": "admin" }'
-                value={
-                  trigger.config.filter
-                    ? JSON.stringify(trigger.config.filter, null, 2)
-                    : ''
-                }
+                value={trigger.config.filter ? JSON.stringify(trigger.config.filter, null, 2) : ''}
                 onChange={(e) => {
                   try {
-                    const filter = e.target.value
-                      ? JSON.parse(e.target.value)
-                      : undefined
+                    const filter = e.target.value ? JSON.parse(e.target.value) : undefined
                     updateTrigger(trigger.id, {
                       config: { ...trigger.config, filter },
                     })
@@ -240,8 +214,7 @@ export function WorkflowTriggerConfig({
         return (
           <p className="text-sm text-zinc-500 dark:text-zinc-400">
             This trigger can be activated{' '}
-            {trigger.type === 'manual' ? 'manually from the UI' : 'via the API'}
-            .
+            {trigger.type === 'manual' ? 'manually from the UI' : 'via the API'}.
           </p>
         )
 
@@ -253,9 +226,7 @@ export function WorkflowTriggerConfig({
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h3 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">
-          Triggers
-        </h3>
+        <h3 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">Triggers</h3>
       </div>
 
       {triggers.length === 0 ? (
@@ -281,9 +252,7 @@ export function WorkflowTriggerConfig({
                       <CardTitle className="text-base">
                         <Input
                           value={trigger.name}
-                          onChange={(e) =>
-                            updateTrigger(trigger.id, { name: e.target.value })
-                          }
+                          onChange={(e) => updateTrigger(trigger.id, { name: e.target.value })}
                           className="h-auto border-0 p-0 text-base font-semibold shadow-none focus-visible:ring-0"
                         />
                       </CardTitle>
@@ -295,9 +264,7 @@ export function WorkflowTriggerConfig({
                   <div className="flex items-center gap-2">
                     <Switch
                       checked={trigger.enabled}
-                      onCheckedChange={(checked) =>
-                        updateTrigger(trigger.id, { enabled: checked })
-                      }
+                      onCheckedChange={(checked) => updateTrigger(trigger.id, { enabled: checked })}
                     />
                     <Button
                       variant="ghost"
@@ -319,12 +286,7 @@ export function WorkflowTriggerConfig({
       {/* Add trigger dropdown */}
       <div className="flex flex-wrap gap-2">
         {triggerTypes.map(({ type, label, icon }) => (
-          <Button
-            key={type}
-            variant="outline"
-            size="sm"
-            onClick={() => addTrigger(type)}
-          >
+          <Button key={type} variant="outline" size="sm" onClick={() => addTrigger(type)}>
             {icon}
             <span className="ml-2">{label}</span>
           </Button>

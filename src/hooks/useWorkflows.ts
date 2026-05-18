@@ -24,10 +24,7 @@ const fetcher = async (url: string) => {
   return data.data
 }
 
-async function postFetcher<T>(
-  url: string,
-  { arg }: { arg: T },
-): Promise<unknown> {
+async function postFetcher<T>(url: string, { arg }: { arg: T }): Promise<unknown> {
   const response = await fetch(url, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -38,10 +35,7 @@ async function postFetcher<T>(
   return data.data
 }
 
-async function putFetcher<T>(
-  url: string,
-  { arg }: { arg: T },
-): Promise<unknown> {
+async function putFetcher<T>(url: string, { arg }: { arg: T }): Promise<unknown> {
   const response = await fetch(url, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
@@ -145,7 +139,7 @@ export function useWorkflow(id?: string) {
   const { data, error, isLoading, mutate } = useSWR<Workflow>(
     id ? `/api/workflows/${id}` : null,
     fetcher,
-    { refreshInterval: 10000 },
+    { refreshInterval: 10000 }
   )
 
   return {
@@ -160,10 +154,7 @@ export function useWorkflow(id?: string) {
 /**
  * Hook to fetch workflow executions
  */
-export function useWorkflowExecutions(
-  workflowId?: string,
-  options?: ExecutionListOptions,
-) {
+export function useWorkflowExecutions(workflowId?: string, options?: ExecutionListOptions) {
   const queryParams = new URLSearchParams()
   if (workflowId) queryParams.set('workflowId', workflowId)
   if (options?.status) queryParams.set('status', options.status)
@@ -194,7 +185,7 @@ export function useWorkflowExecution(executionId?: string) {
   const { data, error, isLoading, mutate } = useSWR<WorkflowExecution>(
     executionId ? `/api/workflows/executions/${executionId}` : null,
     fetcher,
-    { refreshInterval: 2000 },
+    { refreshInterval: 2000 }
   )
 
   return {
@@ -213,7 +204,7 @@ export function useWorkflowStats() {
   const { data, error, isLoading, mutate } = useSWR<WorkflowStats>(
     '/api/workflows/stats',
     fetcher,
-    { refreshInterval: 30000 },
+    { refreshInterval: 30000 }
   )
 
   return {
@@ -233,11 +224,9 @@ export function useActionTemplates(category?: string) {
     ? `/api/workflows/templates?category=${encodeURIComponent(category)}`
     : '/api/workflows/templates'
 
-  const { data, error, isLoading, mutate } = useSWR<ActionTemplate[]>(
-    url,
-    fetcher,
-    { refreshInterval: 60000 },
-  )
+  const { data, error, isLoading, mutate } = useSWR<ActionTemplate[]>(url, fetcher, {
+    refreshInterval: 60000,
+  })
 
   return {
     templates: data ?? [],
@@ -263,11 +252,9 @@ export function useCreateWorkflow() {
     postFetcher<CreateWorkflowInput>,
     {
       onError: (err) => {
-        setError(
-          err instanceof Error ? err.message : 'Failed to create workflow',
-        )
+        setError(err instanceof Error ? err.message : 'Failed to create workflow')
       },
-    },
+    }
   )
 
   const create = useCallback(
@@ -276,7 +263,7 @@ export function useCreateWorkflow() {
       const result = await trigger(input)
       return result as Workflow
     },
-    [trigger],
+    [trigger]
   )
 
   return {
@@ -297,11 +284,9 @@ export function useUpdateWorkflow(workflowId?: string) {
     putFetcher<UpdateWorkflowInput>,
     {
       onError: (err) => {
-        setError(
-          err instanceof Error ? err.message : 'Failed to update workflow',
-        )
+        setError(err instanceof Error ? err.message : 'Failed to update workflow')
       },
-    },
+    }
   )
 
   const update = useCallback(
@@ -311,7 +296,7 @@ export function useUpdateWorkflow(workflowId?: string) {
       const result = await trigger(input)
       return result as Workflow
     },
-    [workflowId, trigger],
+    [workflowId, trigger]
   )
 
   return {
@@ -334,8 +319,7 @@ export function useDeleteWorkflow() {
     try {
       await deleteFetcher(`/api/workflows/${workflowId}`)
     } catch (err) {
-      const message =
-        err instanceof Error ? err.message : 'Failed to delete workflow'
+      const message = err instanceof Error ? err.message : 'Failed to delete workflow'
       setError(message)
       throw err
     } finally {
@@ -357,29 +341,24 @@ export function useActivateWorkflow() {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  const activate = useCallback(
-    async (workflowId: string): Promise<Workflow> => {
-      setIsLoading(true)
-      setError(null)
-      try {
-        const response = await fetch(`/api/workflows/${workflowId}/activate`, {
-          method: 'POST',
-        })
-        const data = await response.json()
-        if (!data.success)
-          throw new Error(data.error || 'Failed to activate workflow')
-        return data.data as Workflow
-      } catch (err) {
-        const message =
-          err instanceof Error ? err.message : 'Failed to activate workflow'
-        setError(message)
-        throw err
-      } finally {
-        setIsLoading(false)
-      }
-    },
-    [],
-  )
+  const activate = useCallback(async (workflowId: string): Promise<Workflow> => {
+    setIsLoading(true)
+    setError(null)
+    try {
+      const response = await fetch(`/api/workflows/${workflowId}/activate`, {
+        method: 'POST',
+      })
+      const data = await response.json()
+      if (!data.success) throw new Error(data.error || 'Failed to activate workflow')
+      return data.data as Workflow
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Failed to activate workflow'
+      setError(message)
+      throw err
+    } finally {
+      setIsLoading(false)
+    }
+  }, [])
 
   return {
     activate,
@@ -403,12 +382,10 @@ export function usePauseWorkflow() {
         method: 'POST',
       })
       const data = await response.json()
-      if (!data.success)
-        throw new Error(data.error || 'Failed to pause workflow')
+      if (!data.success) throw new Error(data.error || 'Failed to pause workflow')
       return data.data as Workflow
     } catch (err) {
-      const message =
-        err instanceof Error ? err.message : 'Failed to pause workflow'
+      const message = err instanceof Error ? err.message : 'Failed to pause workflow'
       setError(message)
       throw err
     } finally {
@@ -430,38 +407,30 @@ export function useExecuteWorkflow() {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  const execute = useCallback(
-    async (input: ExecuteWorkflowInput): Promise<WorkflowExecution> => {
-      setIsLoading(true)
-      setError(null)
-      try {
-        const response = await fetch(
-          `/api/workflows/${input.workflowId}/execute`,
-          {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              input: input.input,
-              variables: input.variables,
-              async: input.async,
-            }),
-          },
-        )
-        const data = await response.json()
-        if (!data.success)
-          throw new Error(data.error || 'Failed to execute workflow')
-        return data.data as WorkflowExecution
-      } catch (err) {
-        const message =
-          err instanceof Error ? err.message : 'Failed to execute workflow'
-        setError(message)
-        throw err
-      } finally {
-        setIsLoading(false)
-      }
-    },
-    [],
-  )
+  const execute = useCallback(async (input: ExecuteWorkflowInput): Promise<WorkflowExecution> => {
+    setIsLoading(true)
+    setError(null)
+    try {
+      const response = await fetch(`/api/workflows/${input.workflowId}/execute`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          input: input.input,
+          variables: input.variables,
+          async: input.async,
+        }),
+      })
+      const data = await response.json()
+      if (!data.success) throw new Error(data.error || 'Failed to execute workflow')
+      return data.data as WorkflowExecution
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Failed to execute workflow'
+      setError(message)
+      throw err
+    } finally {
+      setIsLoading(false)
+    }
+  }, [])
 
   return {
     execute,
@@ -477,30 +446,24 @@ export function useCancelExecution() {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  const cancel = useCallback(
-    async (executionId: string): Promise<WorkflowExecution> => {
-      setIsLoading(true)
-      setError(null)
-      try {
-        const response = await fetch(
-          `/api/workflows/executions/${executionId}/cancel`,
-          { method: 'POST' },
-        )
-        const data = await response.json()
-        if (!data.success)
-          throw new Error(data.error || 'Failed to cancel execution')
-        return data.data as WorkflowExecution
-      } catch (err) {
-        const message =
-          err instanceof Error ? err.message : 'Failed to cancel execution'
-        setError(message)
-        throw err
-      } finally {
-        setIsLoading(false)
-      }
-    },
-    [],
-  )
+  const cancel = useCallback(async (executionId: string): Promise<WorkflowExecution> => {
+    setIsLoading(true)
+    setError(null)
+    try {
+      const response = await fetch(`/api/workflows/executions/${executionId}/cancel`, {
+        method: 'POST',
+      })
+      const data = await response.json()
+      if (!data.success) throw new Error(data.error || 'Failed to cancel execution')
+      return data.data as WorkflowExecution
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Failed to cancel execution'
+      setError(message)
+      throw err
+    } finally {
+      setIsLoading(false)
+    }
+  }, [])
 
   return {
     cancel,
@@ -516,31 +479,26 @@ export function useDuplicateWorkflow() {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  const duplicate = useCallback(
-    async (workflowId: string, newName?: string): Promise<Workflow> => {
-      setIsLoading(true)
-      setError(null)
-      try {
-        const response = await fetch(`/api/workflows/${workflowId}/duplicate`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ name: newName }),
-        })
-        const data = await response.json()
-        if (!data.success)
-          throw new Error(data.error || 'Failed to duplicate workflow')
-        return data.data as Workflow
-      } catch (err) {
-        const message =
-          err instanceof Error ? err.message : 'Failed to duplicate workflow'
-        setError(message)
-        throw err
-      } finally {
-        setIsLoading(false)
-      }
-    },
-    [],
-  )
+  const duplicate = useCallback(async (workflowId: string, newName?: string): Promise<Workflow> => {
+    setIsLoading(true)
+    setError(null)
+    try {
+      const response = await fetch(`/api/workflows/${workflowId}/duplicate`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: newName }),
+      })
+      const data = await response.json()
+      if (!data.success) throw new Error(data.error || 'Failed to duplicate workflow')
+      return data.data as Workflow
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Failed to duplicate workflow'
+      setError(message)
+      throw err
+    } finally {
+      setIsLoading(false)
+    }
+  }, [])
 
   return {
     duplicate,
@@ -564,12 +522,10 @@ export function useArchiveWorkflow() {
         method: 'POST',
       })
       const data = await response.json()
-      if (!data.success)
-        throw new Error(data.error || 'Failed to archive workflow')
+      if (!data.success) throw new Error(data.error || 'Failed to archive workflow')
       return data.data as Workflow
     } catch (err) {
-      const message =
-        err instanceof Error ? err.message : 'Failed to archive workflow'
+      const message = err instanceof Error ? err.message : 'Failed to archive workflow'
       setError(message)
       throw err
     } finally {

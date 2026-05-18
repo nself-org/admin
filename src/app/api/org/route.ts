@@ -4,11 +4,7 @@ import { NextRequest, NextResponse } from 'next/server'
 
 export async function GET(): Promise<NextResponse> {
   try {
-    const result = await executeNselfCommand('tenant', [
-      'org',
-      'list',
-      '--json',
-    ])
+    const result = await executeNselfCommand('tenant', ['org', 'list', '--json'])
 
     if (!result.success) {
       return NextResponse.json(
@@ -17,7 +13,7 @@ export async function GET(): Promise<NextResponse> {
           error: 'Failed to list organizations',
           details: result.error || result.stderr || 'Unknown error',
         },
-        { status: 500 },
+        { status: 500 }
       )
     }
 
@@ -39,7 +35,7 @@ export async function GET(): Promise<NextResponse> {
         error: 'Failed to list organizations',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -59,7 +55,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           error: 'Invalid organization name',
           details: 'An organization name is required',
         },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -76,7 +72,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           error: 'Failed to create organization',
           details: result.error || result.stderr || 'Unknown error',
         },
-        { status: 500 },
+        { status: 500 }
       )
     }
 
@@ -98,7 +94,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to create organization',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

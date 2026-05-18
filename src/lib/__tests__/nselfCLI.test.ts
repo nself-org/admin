@@ -62,9 +62,7 @@ describe('nself CLI Module', () => {
     })
 
     it('should reject invalid commands', async () => {
-      const result = await nselfCLI.executeNselfCommand(
-        'invalid-command' as 'status',
-      )
+      const result = await nselfCLI.executeNselfCommand('invalid-command' as 'status')
       expect(result.success).toBe(false)
       expect(result.error).toContain('Invalid nself command')
     })
@@ -76,7 +74,7 @@ describe('nself CLI Module', () => {
         ['logs', 'postgres', '-n100'],
         expect.objectContaining({
           cwd: '/test/project',
-        }),
+        })
       )
     })
 
@@ -92,7 +90,7 @@ describe('nself CLI Module', () => {
       expect(mockExecFile).toHaveBeenCalledWith(
         '/usr/local/bin/nself',
         ['status', 'valid'],
-        expect.any(Object),
+        expect.any(Object)
       )
     })
 
@@ -139,7 +137,7 @@ describe('nself CLI Module', () => {
         expect.objectContaining({
           timeout: 5000,
           cwd: '/custom/path',
-        }),
+        })
       )
     })
   })
@@ -151,7 +149,7 @@ describe('nself CLI Module', () => {
       expect(mockExecFile).toHaveBeenCalledWith(
         '/usr/local/bin/nself',
         ['status'],
-        expect.any(Object),
+        expect.any(Object)
       )
     })
 
@@ -161,7 +159,7 @@ describe('nself CLI Module', () => {
       expect(mockExecFile).toHaveBeenCalledWith(
         '/usr/local/bin/nself',
         ['start'],
-        expect.any(Object),
+        expect.any(Object)
       )
     })
 
@@ -171,7 +169,7 @@ describe('nself CLI Module', () => {
       expect(mockExecFile).toHaveBeenCalledWith(
         '/usr/local/bin/nself',
         ['stop'],
-        expect.any(Object),
+        expect.any(Object)
       )
     })
 
@@ -181,7 +179,7 @@ describe('nself CLI Module', () => {
       expect(mockExecFile).toHaveBeenCalledWith(
         '/usr/local/bin/nself',
         ['restart'],
-        expect.any(Object),
+        expect.any(Object)
       )
     })
 
@@ -191,7 +189,7 @@ describe('nself CLI Module', () => {
       expect(mockExecFile).toHaveBeenCalledWith(
         '/usr/local/bin/nself',
         ['doctor'],
-        expect.any(Object),
+        expect.any(Object)
       )
     })
 
@@ -201,7 +199,7 @@ describe('nself CLI Module', () => {
       expect(mockExecFile).toHaveBeenCalledWith(
         '/usr/local/bin/nself',
         ['doctor', '--fix'],
-        expect.any(Object),
+        expect.any(Object)
       )
     })
   })
@@ -213,7 +211,7 @@ describe('nself CLI Module', () => {
       expect(mockExecFile).toHaveBeenCalledWith(
         '/usr/local/bin/nself',
         ['logs'],
-        expect.any(Object),
+        expect.any(Object)
       )
     })
 
@@ -223,7 +221,7 @@ describe('nself CLI Module', () => {
       expect(mockExecFile).toHaveBeenCalledWith(
         '/usr/local/bin/nself',
         ['logs', 'postgres'],
-        expect.any(Object),
+        expect.any(Object)
       )
     })
 
@@ -233,7 +231,7 @@ describe('nself CLI Module', () => {
       expect(mockExecFile).toHaveBeenCalledWith(
         '/usr/local/bin/nself',
         ['logs', 'postgres', '-n100'],
-        expect.any(Object),
+        expect.any(Object)
       )
     })
   })
@@ -245,7 +243,7 @@ describe('nself CLI Module', () => {
       expect(mockExecFile).toHaveBeenCalledWith(
         '/usr/local/bin/nself',
         ['backup'],
-        expect.any(Object),
+        expect.any(Object)
       )
     })
 
@@ -255,7 +253,7 @@ describe('nself CLI Module', () => {
       expect(mockExecFile).toHaveBeenCalledWith(
         '/usr/local/bin/nself',
         ['backup', '--output', '/tmp/backup.tar.gz'],
-        expect.any(Object),
+        expect.any(Object)
       )
     })
 
@@ -265,7 +263,7 @@ describe('nself CLI Module', () => {
       expect(mockExecFile).toHaveBeenCalledWith(
         '/usr/local/bin/nself',
         ['restore', '/tmp/backup.tar.gz'],
-        expect.any(Object),
+        expect.any(Object)
       )
     })
   })
@@ -277,7 +275,7 @@ describe('nself CLI Module', () => {
       expect(mockExecFile).toHaveBeenCalledWith(
         '/usr/local/bin/nself',
         ['config', 'get', 'key'],
-        expect.any(Object),
+        expect.any(Object)
       )
     })
 
@@ -287,7 +285,7 @@ describe('nself CLI Module', () => {
       expect(mockExecFile).toHaveBeenCalledWith(
         '/usr/local/bin/nself',
         ['config', 'set', 'key', 'value'],
-        expect.any(Object),
+        expect.any(Object)
       )
     })
   })
@@ -299,7 +297,7 @@ describe('nself CLI Module', () => {
       expect(mockExecFile).toHaveBeenCalledWith(
         '/usr/local/bin/nself',
         ['db', 'query', 'SELECT * FROM users'],
-        expect.any(Object),
+        expect.any(Object)
       )
     })
 
@@ -309,7 +307,7 @@ describe('nself CLI Module', () => {
       expect(mockExecFile).toHaveBeenCalledWith(
         '/usr/local/bin/nself',
         ['db', 'sync'],
-        expect.any(Object),
+        expect.any(Object)
       )
     })
 
@@ -319,7 +317,7 @@ describe('nself CLI Module', () => {
       expect(mockExecFile).toHaveBeenCalledWith(
         '/usr/local/bin/nself',
         ['db', 'seed'],
-        expect.any(Object),
+        expect.any(Object)
       )
     })
 
@@ -329,7 +327,7 @@ describe('nself CLI Module', () => {
       expect(mockExecFile).toHaveBeenCalledWith(
         '/usr/local/bin/nself',
         ['db', 'seed', '--force'],
-        expect.any(Object),
+        expect.any(Object)
       )
     })
 
@@ -339,7 +337,7 @@ describe('nself CLI Module', () => {
       expect(mockExecFile).toHaveBeenCalledWith(
         '/usr/local/bin/nself',
         ['db', 'migrate'],
-        expect.any(Object),
+        expect.any(Object)
       )
     })
 
@@ -349,7 +347,7 @@ describe('nself CLI Module', () => {
       expect(mockExecFile).toHaveBeenCalledWith(
         '/usr/local/bin/nself',
         ['db', 'migrate', '--target', 'v2.0.0'],
-        expect.any(Object),
+        expect.any(Object)
       )
     })
 
@@ -359,7 +357,7 @@ describe('nself CLI Module', () => {
       expect(mockExecFile).toHaveBeenCalledWith(
         '/usr/local/bin/nself',
         ['db', 'backup'],
-        expect.any(Object),
+        expect.any(Object)
       )
     })
 
@@ -369,7 +367,7 @@ describe('nself CLI Module', () => {
       expect(mockExecFile).toHaveBeenCalledWith(
         '/usr/local/bin/nself',
         ['db', 'backup', '--output', '/tmp/db-backup.sql'],
-        expect.any(Object),
+        expect.any(Object)
       )
     })
 
@@ -379,7 +377,7 @@ describe('nself CLI Module', () => {
       expect(mockExecFile).toHaveBeenCalledWith(
         '/usr/local/bin/nself',
         ['db', 'restore', '/tmp/db-backup.sql'],
-        expect.any(Object),
+        expect.any(Object)
       )
     })
 
@@ -389,7 +387,7 @@ describe('nself CLI Module', () => {
       expect(mockExecFile).toHaveBeenCalledWith(
         '/usr/local/bin/nself',
         ['db', 'reset'],
-        expect.any(Object),
+        expect.any(Object)
       )
     })
 
@@ -399,7 +397,7 @@ describe('nself CLI Module', () => {
       expect(mockExecFile).toHaveBeenCalledWith(
         '/usr/local/bin/nself',
         ['db', 'reset', '--force'],
-        expect.any(Object),
+        expect.any(Object)
       )
     })
 
@@ -409,7 +407,7 @@ describe('nself CLI Module', () => {
       expect(mockExecFile).toHaveBeenCalledWith(
         '/usr/local/bin/nself',
         ['db', 'analyze'],
-        expect.any(Object),
+        expect.any(Object)
       )
     })
   })
@@ -421,7 +419,7 @@ describe('nself CLI Module', () => {
       expect(mockExecFile).toHaveBeenCalledWith(
         '/usr/local/bin/nself',
         ['deploy', 'staging'],
-        expect.any(Object),
+        expect.any(Object)
       )
     })
 
@@ -434,7 +432,7 @@ describe('nself CLI Module', () => {
       expect(mockExecFile).toHaveBeenCalledWith(
         '/usr/local/bin/nself',
         ['deploy', 'production', '--branch', 'main', '--tag', 'v1.0.0'],
-        expect.any(Object),
+        expect.any(Object)
       )
     })
 
@@ -444,7 +442,7 @@ describe('nself CLI Module', () => {
       expect(mockExecFile).toHaveBeenCalledWith(
         '/usr/local/bin/nself',
         ['deploy', 'staging'],
-        expect.any(Object),
+        expect.any(Object)
       )
     })
 
@@ -454,7 +452,7 @@ describe('nself CLI Module', () => {
       expect(mockExecFile).toHaveBeenCalledWith(
         '/usr/local/bin/nself',
         ['deploy', 'production'],
-        expect.any(Object),
+        expect.any(Object)
       )
     })
   })
@@ -466,7 +464,7 @@ describe('nself CLI Module', () => {
       expect(mockExecFile).toHaveBeenCalledWith(
         '/usr/local/bin/nself',
         ['ssl', 'generate'],
-        expect.any(Object),
+        expect.any(Object)
       )
     })
 
@@ -476,7 +474,7 @@ describe('nself CLI Module', () => {
       expect(mockExecFile).toHaveBeenCalledWith(
         '/usr/local/bin/nself',
         ['ssl', 'generate', '--domain', 'example.com'],
-        expect.any(Object),
+        expect.any(Object)
       )
     })
 
@@ -486,7 +484,7 @@ describe('nself CLI Module', () => {
       expect(mockExecFile).toHaveBeenCalledWith(
         '/usr/local/bin/nself',
         ['ssl', 'trust'],
-        expect.any(Object),
+        expect.any(Object)
       )
     })
   })
@@ -498,7 +496,7 @@ describe('nself CLI Module', () => {
       expect(mockExecFile).toHaveBeenCalledWith(
         '/usr/local/bin/nself',
         ['build'],
-        expect.any(Object),
+        expect.any(Object)
       )
     })
 
@@ -508,7 +506,7 @@ describe('nself CLI Module', () => {
       expect(mockExecFile).toHaveBeenCalledWith(
         '/usr/local/bin/nself',
         ['build', '--force'],
-        expect.any(Object),
+        expect.any(Object)
       )
     })
 
@@ -518,7 +516,7 @@ describe('nself CLI Module', () => {
       expect(mockExecFile).toHaveBeenCalledWith(
         '/usr/local/bin/nself',
         ['init'],
-        expect.any(Object),
+        expect.any(Object)
       )
     })
 
@@ -528,7 +526,7 @@ describe('nself CLI Module', () => {
       expect(mockExecFile).toHaveBeenCalledWith(
         '/usr/local/bin/nself',
         ['init', '--full'],
-        expect.any(Object),
+        expect.any(Object)
       )
     })
   })
@@ -540,7 +538,7 @@ describe('nself CLI Module', () => {
       expect(mockExecFile).toHaveBeenCalledWith(
         '/usr/local/bin/nself',
         ['update'],
-        expect.any(Object),
+        expect.any(Object)
       )
     })
 
@@ -550,7 +548,7 @@ describe('nself CLI Module', () => {
       expect(mockExecFile).toHaveBeenCalledWith(
         '/usr/local/bin/nself',
         ['version'],
-        expect.any(Object),
+        expect.any(Object)
       )
     })
 
@@ -560,7 +558,7 @@ describe('nself CLI Module', () => {
       expect(mockExecFile).toHaveBeenCalledWith(
         '/usr/local/bin/nself',
         ['help'],
-        expect.any(Object),
+        expect.any(Object)
       )
     })
 
@@ -570,7 +568,7 @@ describe('nself CLI Module', () => {
       expect(mockExecFile).toHaveBeenCalledWith(
         '/usr/local/bin/nself',
         ['help', 'build'],
-        expect.any(Object),
+        expect.any(Object)
       )
     })
 
@@ -580,7 +578,7 @@ describe('nself CLI Module', () => {
       expect(mockExecFile).toHaveBeenCalledWith(
         '/usr/local/bin/nself',
         ['monitor'],
-        expect.any(Object),
+        expect.any(Object)
       )
     })
 
@@ -590,7 +588,7 @@ describe('nself CLI Module', () => {
       expect(mockExecFile).toHaveBeenCalledWith(
         '/usr/local/bin/nself',
         ['monitor', '--enable'],
-        expect.any(Object),
+        expect.any(Object)
       )
     })
 
@@ -600,7 +598,7 @@ describe('nself CLI Module', () => {
       expect(mockExecFile).toHaveBeenCalledWith(
         '/usr/local/bin/nself',
         ['urls'],
-        expect.any(Object),
+        expect.any(Object)
       )
     })
 
@@ -610,7 +608,7 @@ describe('nself CLI Module', () => {
       expect(mockExecFile).toHaveBeenCalledWith(
         '/usr/local/bin/nself',
         ['urls', '--format', 'json'],
-        expect.any(Object),
+        expect.any(Object)
       )
     })
 
@@ -620,7 +618,7 @@ describe('nself CLI Module', () => {
       expect(mockExecFile).toHaveBeenCalledWith(
         '/usr/local/bin/nself',
         ['secrets', 'generate'],
-        expect.any(Object),
+        expect.any(Object)
       )
     })
 
@@ -630,7 +628,7 @@ describe('nself CLI Module', () => {
       expect(mockExecFile).toHaveBeenCalledWith(
         '/usr/local/bin/nself',
         ['secrets', 'rotate', 'postgres'],
-        expect.any(Object),
+        expect.any(Object)
       )
     })
 
@@ -640,7 +638,7 @@ describe('nself CLI Module', () => {
       expect(mockExecFile).toHaveBeenCalledWith(
         '/usr/local/bin/nself',
         ['export', '--format', 'compose'],
-        expect.any(Object),
+        expect.any(Object)
       )
     })
 
@@ -650,7 +648,7 @@ describe('nself CLI Module', () => {
       expect(mockExecFile).toHaveBeenCalledWith(
         '/usr/local/bin/nself',
         ['export', '--format', 'kubernetes', '--output', '/tmp/k8s.yaml'],
-        expect.any(Object),
+        expect.any(Object)
       )
     })
 
@@ -660,7 +658,7 @@ describe('nself CLI Module', () => {
       expect(mockExecFile).toHaveBeenCalledWith(
         '/usr/local/bin/nself',
         ['scale', 'api', '3'],
-        expect.any(Object),
+        expect.any(Object)
       )
     })
 
@@ -670,7 +668,7 @@ describe('nself CLI Module', () => {
       expect(mockExecFile).toHaveBeenCalledWith(
         '/usr/local/bin/nself',
         ['health', '--all'],
-        expect.any(Object),
+        expect.any(Object)
       )
     })
 
@@ -680,7 +678,7 @@ describe('nself CLI Module', () => {
       expect(mockExecFile).toHaveBeenCalledWith(
         '/usr/local/bin/nself',
         ['health', 'postgres'],
-        expect.any(Object),
+        expect.any(Object)
       )
     })
   })
@@ -802,7 +800,7 @@ describe('nself CLI Module', () => {
       expect(mockExecFile).toHaveBeenCalledWith(
         '/usr/local/bin/nself',
         ['status'],
-        expect.any(Object),
+        expect.any(Object)
       )
     })
   })

@@ -49,11 +49,7 @@ export function LicenseActivateButton({
         ref={buttonRef}
         onClick={handleClick}
         disabled={loading || status === 'expired'}
-        aria-label={
-          isActive
-            ? `Deactivate license ${keyPrefix}`
-            : `Activate license ${keyPrefix}`
-        }
+        aria-label={isActive ? `Deactivate license ${keyPrefix}` : `Activate license ${keyPrefix}`}
         className={`inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 disabled:cursor-not-allowed disabled:opacity-50 ${
           isActive
             ? 'bg-red-50 text-red-700 hover:bg-red-100 focus-visible:outline-red-500 dark:bg-red-900/20 dark:text-red-400 dark:hover:bg-red-900/40'
@@ -71,11 +67,7 @@ export function LicenseActivateButton({
       </button>
 
       {error && (
-        <span
-          role="alert"
-          aria-live="assertive"
-          className="text-xs text-red-600 dark:text-red-400"
-        >
+        <span role="alert" aria-live="assertive" className="text-xs text-red-600 dark:text-red-400">
           {error}
         </span>
       )}

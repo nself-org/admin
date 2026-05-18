@@ -8,24 +8,24 @@
 export {
   createNotification,
   createSystemNotification,
+  deleteNotification,
   getNotification,
+  getNotificationStats,
   getNotifications,
+  getPreferences,
   markAsRead,
   updateNotification,
-  deleteNotification,
-  getNotificationStats,
-  getPreferences,
   updatePreferences,
 } from '../notifications'
 
 export type {
-  Notification,
-  NotificationPreferences,
-  NotificationStats,
-  NotificationType,
-  NotificationPriority,
-  NotificationCategory,
   CreateNotificationInput,
   GetNotificationsOptions,
   GetNotificationsResult,
+  Notification,
+  NotificationCategory,
+  NotificationPreferences,
+  NotificationPriority,
+  NotificationStats,
+  NotificationType,
 } from '../notifications'

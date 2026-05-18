@@ -183,9 +183,7 @@ Use this checklist when adding new features or pages:
 **Example:**
 
 ```tsx
-<button className="focus-visible:ring-2 focus-visible:ring-blue-500 ...">
-  Click me
-</button>
+<button className="focus-visible:ring-2 focus-visible:ring-blue-500 ...">Click me</button>
 ```
 
 ---

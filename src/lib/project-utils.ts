@@ -53,10 +53,7 @@ export async function checkProjectStatus(): Promise<{
     // Check if any project containers are running
     // This is a simplified check - in production you'd want to be more specific
     const projectContainers = runningContainers.filter(
-      (name) =>
-        name.includes('nself') ||
-        name.includes('postgres') ||
-        name.includes('hasura'),
+      (name) => name.includes('nself') || name.includes('postgres') || name.includes('hasura')
     )
 
     if (projectContainers.length > 0) {
@@ -97,9 +94,7 @@ export async function getProjectServices(): Promise<{
   }
 
   try {
-    const { stdout } = await execAsync(
-      `docker-compose -f "${dockerComposePath}" config --services`,
-    )
+    const { stdout } = await execAsync(`docker-compose -f "${dockerComposePath}" config --services`)
     const services = stdout.split('\n').filter((s) => s.trim())
 
     // Cache the result
@@ -124,9 +119,7 @@ export async function getRunningContainers(): Promise<number> {
   }
 
   try {
-    const { stdout } = await execAsync(
-      'docker ps --format "{{.Names}}" | wc -l',
-    )
+    const { stdout } = await execAsync('docker ps --format "{{.Names}}" | wc -l')
     const count = parseInt(stdout.trim()) || 0
 
     // Cache for 10 seconds
@@ -192,7 +185,7 @@ export async function getDockerStatus(): Promise<{
 }> {
   try {
     const { stdout } = await execAsync(
-      'docker ps --format "table {{.ID}}\t{{.Names}}\t{{.State}}\t{{.Status}}"',
+      'docker ps --format "table {{.ID}}\t{{.Names}}\t{{.State}}\t{{.Status}}"'
     )
     const lines = stdout
       .split('\n')

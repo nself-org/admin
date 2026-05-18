@@ -165,12 +165,8 @@ function StatsOverview({ stats }: { stats: HasuraStats }) {
       <div className="rounded-lg border border-zinc-200 bg-white p-4 dark:border-zinc-700 dark:bg-zinc-800">
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-sm text-zinc-600 dark:text-zinc-400">
-              Queries/min
-            </p>
-            <p className="text-2xl font-bold">
-              {stats.totalQueries.toLocaleString()}
-            </p>
+            <p className="text-sm text-zinc-600 dark:text-zinc-400">Queries/min</p>
+            <p className="text-2xl font-bold">{stats.totalQueries.toLocaleString()}</p>
           </div>
           <BarChart3 className="h-6 w-6 text-blue-500" />
         </div>
@@ -179,9 +175,7 @@ function StatsOverview({ stats }: { stats: HasuraStats }) {
       <div className="rounded-lg border border-zinc-200 bg-white p-4 dark:border-zinc-700 dark:bg-zinc-800">
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-sm text-zinc-600 dark:text-zinc-400">
-              Avg Response
-            </p>
+            <p className="text-sm text-zinc-600 dark:text-zinc-400">Avg Response</p>
             <p className="text-2xl font-bold">{stats.avgResponseTime}ms</p>
           </div>
           <Clock className="h-6 w-6 text-green-500" />
@@ -191,9 +185,7 @@ function StatsOverview({ stats }: { stats: HasuraStats }) {
       <div className="rounded-lg border border-zinc-200 bg-white p-4 dark:border-zinc-700 dark:bg-zinc-800">
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-sm text-zinc-600 dark:text-zinc-400">
-              Cache Hit Rate
-            </p>
+            <p className="text-sm text-zinc-600 dark:text-zinc-400">Cache Hit Rate</p>
             <p className="text-2xl font-bold">{stats.cacheHitRatio}%</p>
           </div>
           <TrendingUp className="h-6 w-6 text-sky-500" />
@@ -203,9 +195,7 @@ function StatsOverview({ stats }: { stats: HasuraStats }) {
       <div className="rounded-lg border border-zinc-200 bg-white p-4 dark:border-zinc-700 dark:bg-zinc-800">
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-sm text-zinc-600 dark:text-zinc-400">
-              Active Subs
-            </p>
+            <p className="text-sm text-zinc-600 dark:text-zinc-400">Active Subs</p>
             <p className="text-2xl font-bold">{stats.subscriptions}</p>
           </div>
           <Activity className="h-6 w-6 text-orange-500" />
@@ -234,9 +224,7 @@ query GetUsers {
   const [headers, setHeaders] = useState('{}')
   const [result, setResult] = useState<Record<string, unknown> | null>(null)
   const [loading, setLoading] = useState(false)
-  const [activeTab, setActiveTab] = useState<'query' | 'variables' | 'headers'>(
-    'query',
-  )
+  const [activeTab, setActiveTab] = useState<'query' | 'variables' | 'headers'>('query')
 
   const executeQuery = async () => {
     setLoading(true)
@@ -346,9 +334,7 @@ query GetUsers {
           <h4 className="mb-2 text-sm font-medium">Result</h4>
           <div className="h-96 overflow-auto rounded-lg border border-zinc-200 dark:border-zinc-700">
             {result ? (
-              <pre className="p-3 text-sm">
-                {JSON.stringify(result, null, 2)}
-              </pre>
+              <pre className="p-3 text-sm">{JSON.stringify(result, null, 2)}</pre>
             ) : (
               <div className="flex h-full items-center justify-center text-zinc-500">
                 Execute a query to see results
@@ -367,9 +353,7 @@ function SchemaManagement({ schema }: { schema: GraphQLSchema }) {
   const [filter, setFilter] = useState<'all' | 'tracked' | 'untracked'>('all')
 
   const filteredTables = schema.tables.filter((table) => {
-    const matchesSearch = table.name
-      .toLowerCase()
-      .includes(searchTerm.toLowerCase())
+    const matchesSearch = table.name.toLowerCase().includes(searchTerm.toLowerCase())
     const matchesFilter =
       filter === 'all' ||
       (filter === 'tracked' && table.isTracked) ||
@@ -434,8 +418,7 @@ function SchemaManagement({ schema }: { schema: GraphQLSchema }) {
                         {table.schema}.{table.name}
                       </div>
                       <div className="text-xs text-zinc-500">
-                        {table.columns.length} columns •{' '}
-                        {table.rowCount.toLocaleString()} rows
+                        {table.columns.length} columns • {table.rowCount.toLocaleString()} rows
                       </div>
                     </div>
                   </div>
@@ -486,11 +469,7 @@ function SchemaManagement({ schema }: { schema: GraphQLSchema }) {
               <h4 className="text-lg font-semibold">
                 {selectedTable.schema}.{selectedTable.name}
               </h4>
-              <Button
-                variant="outline"
-                onClick={() => setSelectedTable(null)}
-                className="text-xs"
-              >
+              <Button variant="outline" onClick={() => setSelectedTable(null)} className="text-xs">
                 Close
               </Button>
             </div>
@@ -525,9 +504,7 @@ function SchemaManagement({ schema }: { schema: GraphQLSchema }) {
                               <AlertCircle className="h-4 w-4 text-red-500" />
                             )}
                           </td>
-                          <td className="py-2 font-mono text-xs">
-                            {column.default || '-'}
-                          </td>
+                          <td className="py-2 font-mono text-xs">{column.default || '-'}</td>
                         </tr>
                       ))}
                     </tbody>
@@ -621,7 +598,7 @@ function PermissionsMatrix({ tables }: { tables: SchemaTable[] }) {
                   </td>
                   {permissions.map((perm) => {
                     const hasPermission = table.permissions.some(
-                      (p) => p.role === selectedRole && p.permission === perm,
+                      (p) => p.role === selectedRole && p.permission === perm
                     )
                     return (
                       <td key={perm} className="px-2 py-3 text-center">
@@ -632,9 +609,7 @@ function PermissionsMatrix({ tables }: { tables: SchemaTable[] }) {
                               : 'border-zinc-300 dark:border-zinc-600'
                           }`}
                         >
-                          {hasPermission && (
-                            <CheckCircle className="mx-auto h-4 w-4 text-white" />
-                          )}
+                          {hasPermission && <CheckCircle className="mx-auto h-4 w-4 text-white" />}
                         </button>
                       </td>
                     )
@@ -655,9 +630,7 @@ function PermissionsMatrix({ tables }: { tables: SchemaTable[] }) {
 }
 
 function EventTriggers({ triggers }: { triggers: EventTrigger[] }) {
-  const [selectedTrigger, setSelectedTrigger] = useState<EventTrigger | null>(
-    null,
-  )
+  const [selectedTrigger, setSelectedTrigger] = useState<EventTrigger | null>(null)
 
   return (
     <div className="space-y-6">
@@ -794,19 +767,12 @@ function EventTriggers({ triggers }: { triggers: EventTrigger[] }) {
               <div>
                 <label className="text-sm font-medium">Headers</label>
                 <div className="mt-2 space-y-1">
-                  {Object.entries(selectedTrigger.headers).map(
-                    ([key, value]) => (
-                      <div
-                        key={key}
-                        className="flex items-center gap-2 text-sm"
-                      >
-                        <span className="font-mono text-zinc-600 dark:text-zinc-400">
-                          {key}:
-                        </span>
-                        <span className="font-mono">{value}</span>
-                      </div>
-                    ),
-                  )}
+                  {Object.entries(selectedTrigger.headers).map(([key, value]) => (
+                    <div key={key} className="flex items-center gap-2 text-sm">
+                      <span className="font-mono text-zinc-600 dark:text-zinc-400">{key}:</span>
+                      <span className="font-mono">{value}</span>
+                    </div>
+                  ))}
                 </div>
               </div>
             )}
@@ -824,9 +790,7 @@ function ActionsAndRemoteSchemas({
   actions: Action[]
   remoteSchemas: RemoteSchema[]
 }) {
-  const [activeSection, setActiveSection] = useState<'actions' | 'remote'>(
-    'actions',
-  )
+  const [activeSection, setActiveSection] = useState<'actions' | 'remote'>('actions')
 
   return (
     <div className="space-y-6">
@@ -888,9 +852,7 @@ function ActionsAndRemoteSchemas({
                   </div>
 
                   <div className="flex items-center gap-2">
-                    <span className="text-xs text-zinc-500">
-                      {action.permissions.length} roles
-                    </span>
+                    <span className="text-xs text-zinc-500">{action.permissions.length} roles</span>
                     <Button variant="outline" className="text-xs">
                       <Edit className="h-3 w-3" />
                     </Button>
@@ -925,9 +887,7 @@ function ActionsAndRemoteSchemas({
                     <Globe className="h-4 w-4 text-green-500" />
                     <div>
                       <div className="text-sm font-medium">{schema.name}</div>
-                      <div className="font-mono text-xs text-zinc-500">
-                        {schema.url}
-                      </div>
+                      <div className="font-mono text-xs text-zinc-500">{schema.url}</div>
                     </div>
 
                     {schema.status === 'connected' && (
@@ -948,9 +908,7 @@ function ActionsAndRemoteSchemas({
                   </div>
 
                   <div className="flex items-center gap-2">
-                    <span className="text-xs text-zinc-500">
-                      Sync: {schema.lastSync}
-                    </span>
+                    <span className="text-xs text-zinc-500">Sync: {schema.lastSync}</span>
                     <Button variant="outline" className="text-xs">
                       <RefreshCw className="h-3 w-3" />
                     </Button>
@@ -969,9 +927,7 @@ function ActionsAndRemoteSchemas({
 }
 
 function QueryMetrics({ metrics }: { metrics: QueryMetric[] }) {
-  const [sortBy, setSortBy] = useState<'executions' | 'time' | 'errors'>(
-    'executions',
-  )
+  const [sortBy, setSortBy] = useState<'executions' | 'time' | 'errors'>('executions')
 
   const sortedMetrics = [...metrics].sort((a, b) => {
     switch (sortBy) {
@@ -1012,10 +968,7 @@ function QueryMetrics({ metrics }: { metrics: QueryMetric[] }) {
       <div className="p-4">
         <div className="space-y-3">
           {sortedMetrics.map((metric, i) => (
-            <div
-              key={i}
-              className="rounded-lg border border-zinc-200 p-3 dark:border-zinc-700"
-            >
+            <div key={i} className="rounded-lg border border-zinc-200 p-3 dark:border-zinc-700">
               <div className="mb-2 flex items-start justify-between">
                 <div className="flex items-center gap-2">
                   <span
@@ -1037,15 +990,11 @@ function QueryMetrics({ metrics }: { metrics: QueryMetric[] }) {
                 <div className="flex items-center gap-4 text-sm">
                   <div className="text-right">
                     <div className="text-xs text-zinc-500">Executions</div>
-                    <div className="font-medium">
-                      {metric.totalExecutions.toLocaleString()}
-                    </div>
+                    <div className="font-medium">{metric.totalExecutions.toLocaleString()}</div>
                   </div>
                   <div className="text-right">
                     <div className="text-xs text-zinc-500">Avg Time</div>
-                    <div className="font-medium">
-                      {metric.avgExecutionTime}ms
-                    </div>
+                    <div className="font-medium">{metric.avgExecutionTime}ms</div>
                   </div>
                   <div className="text-right">
                     <div className="text-xs text-zinc-500">Error Rate</div>
@@ -1059,9 +1008,7 @@ function QueryMetrics({ metrics }: { metrics: QueryMetric[] }) {
               </div>
 
               <pre className="overflow-x-auto rounded bg-zinc-50 p-2 font-mono text-xs dark:bg-zinc-900">
-                {metric.query.length > 200
-                  ? metric.query.substring(0, 200) + '...'
-                  : metric.query}
+                {metric.query.length > 200 ? metric.query.substring(0, 200) + '...' : metric.query}
               </pre>
             </div>
           ))}
@@ -1076,7 +1023,7 @@ function HasuraContent() {
 
   const { data, error, mutate } = useSWR<{ success: boolean; data: HasuraStats }>(
     '/api/services/hasura',
-    fetcher,
+    fetcher
   )
 
   const stats: HasuraStats = data?.data ?? {
@@ -1137,8 +1084,7 @@ function HasuraContent() {
                 Hasura GraphQL
               </h1>
               <p className="mt-1 text-zinc-600 dark:text-zinc-400">
-                GraphQL API management, schema design, and performance
-                monitoring
+                GraphQL API management, schema design, and performance monitoring
               </p>
             </div>
             <div className="flex items-center gap-2">
@@ -1182,15 +1128,10 @@ function HasuraContent() {
         {/* Tab Content */}
         {activeTab === 'console' && <GraphQLConsole />}
         {activeTab === 'schema' && <SchemaManagement schema={schema} />}
-        {activeTab === 'permissions' && (
-          <PermissionsMatrix tables={schema.tables} />
-        )}
+        {activeTab === 'permissions' && <PermissionsMatrix tables={schema.tables} />}
         {activeTab === 'events' && <EventTriggers triggers={eventTriggers} />}
         {activeTab === 'actions' && (
-          <ActionsAndRemoteSchemas
-            actions={actions}
-            remoteSchemas={remoteSchemas}
-          />
+          <ActionsAndRemoteSchemas actions={actions} remoteSchemas={remoteSchemas} />
         )}
         {activeTab === 'metrics' && <QueryMetrics metrics={queryMetrics} />}
       </div>

@@ -111,15 +111,7 @@ services:
       - NODE_ENV=production
       - PORT=3021
     healthcheck:
-      test:
-        [
-          'CMD',
-          'wget',
-          '--quiet',
-          '--tries=1',
-          '--spider',
-          'http://localhost:3021/api/health',
-        ]
+      test: ['CMD', 'wget', '--quiet', '--tries=1', '--spider', 'http://localhost:3021/api/health']
       interval: 30s
       timeout: 10s
       retries: 3
@@ -470,15 +462,7 @@ Add to `docker-compose.yml`:
 
 ```yaml
 healthcheck:
-  test:
-    [
-      'CMD',
-      'wget',
-      '--quiet',
-      '--tries=1',
-      '--spider',
-      'http://localhost:3021/api/health',
-    ]
+  test: ['CMD', 'wget', '--quiet', '--tries=1', '--spider', 'http://localhost:3021/api/health']
   interval: 30s
   timeout: 10s
   retries: 3

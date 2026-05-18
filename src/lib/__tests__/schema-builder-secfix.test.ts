@@ -47,21 +47,15 @@ describe('validateColumnType — allowlist (R1)', () => {
 
   // ── injection PoC rejection ──
   it('rejects SQL injection via type: semicolon DDL append', () => {
-    expect(() => validateColumnType('text; DROP TABLE users; --')).toThrow(
-      /Invalid column type/,
-    )
+    expect(() => validateColumnType('text; DROP TABLE users; --')).toThrow(/Invalid column type/)
   })
 
   it('rejects OS-command injection via type: backtick', () => {
-    expect(() => validateColumnType('text`touch /tmp/pwned`')).toThrow(
-      /Invalid column type/,
-    )
+    expect(() => validateColumnType('text`touch /tmp/pwned`')).toThrow(/Invalid column type/)
   })
 
   it('rejects unknown type that passes regex', () => {
-    expect(() => validateColumnType('eviltype')).toThrow(
-      /Unrecognized column type/,
-    )
+    expect(() => validateColumnType('eviltype')).toThrow(/Unrecognized column type/)
   })
 
   it('rejects type starting with digit', () => {
@@ -90,13 +84,13 @@ describe('emitDefaultClause — typed model (R2)', () => {
 
   it('emits function call for gen_random_uuid', () => {
     expect(emitDefaultClause({ kind: 'function', name: 'gen_random_uuid' })).toBe(
-      'gen_random_uuid()',
+      'gen_random_uuid()'
     )
   })
 
   it('emits function call for uuid_generate_v4', () => {
     expect(emitDefaultClause({ kind: 'function', name: 'uuid_generate_v4' })).toBe(
-      'uuid_generate_v4()',
+      'uuid_generate_v4()'
     )
   })
 
@@ -116,9 +110,7 @@ describe('emitDefaultClause — typed model (R2)', () => {
   })
 
   it('rejects NaN numeric literal', () => {
-    expect(() => emitDefaultClause({ kind: 'literal', value: NaN })).toThrow(
-      /finite number/,
-    )
+    expect(() => emitDefaultClause({ kind: 'literal', value: NaN })).toThrow(/finite number/)
   })
 })
 
@@ -127,7 +119,7 @@ describe('emitDefaultClause — typed model (R2)', () => {
 describe('coerceStringDefault — injection payloads (R2)', () => {
   // ── injection PoC rejection via coerce + emit ──
   it('injection payload: semicolon DDL → dollar-quoted literal (safe)', () => {
-    const cd = coerceStringDefault("0; DROP TABLE x; --")
+    const cd = coerceStringDefault('0; DROP TABLE x; --')
     // coerced to literal string — dollar-quoted, no SQL execution risk
     expect(cd.kind).toBe('literal')
     const emitted = emitDefaultClause(cd)
@@ -278,7 +270,7 @@ describe('generateCreateTable — hardened (R1 + R2)', () => {
 // this via a value.includes('$nself_default_$') fallback to single-quote-doubling.
 // This test proves the fallback fires and the output is not breakable.
 
-describe("emitDefaultClause — dollar-quote-tag-breakout (R4/secfix2 T-B)", () => {
+describe('emitDefaultClause — dollar-quote-tag-breakout (R4/secfix2 T-B)', () => {
   it('falls back to single-quote-doubling when value contains the dollar-quote tag', () => {
     // Craft a string whose value contains the exact delimiter the emitter uses.
     // If NOT handled, emitDefaultClause would produce:

@@ -20,9 +20,7 @@ function RollbackContent() {
   const [actionLoading, setActionLoading] = useState(false)
   const [deployments, setDeployments] = useState<Deployment[]>([])
   const [rollbackInfo, setRollbackInfo] = useState<RollbackInfo | null>(null)
-  const [selectedDeployment, setSelectedDeployment] = useState<string | null>(
-    null,
-  )
+  const [selectedDeployment, setSelectedDeployment] = useState<string | null>(null)
   const [confirmRollback, setConfirmRollback] = useState(false)
 
   const fetchDeployments = useCallback(async () => {
@@ -112,15 +110,12 @@ function RollbackContent() {
         <div className="mb-8 rounded-xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-zinc-700 dark:bg-zinc-800">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                Current Production Version
-              </p>
+              <p className="text-sm text-zinc-500 dark:text-zinc-400">Current Production Version</p>
               <p className="text-2xl font-bold text-zinc-900 dark:text-white">
                 {deployments[0]?.version}
               </p>
               <p className="text-sm text-zinc-500">
-                Deployed{' '}
-                {new Date(deployments[0]?.completedAt || '').toLocaleString()}
+                Deployed {new Date(deployments[0]?.completedAt || '').toLocaleString()}
               </p>
             </div>
             <div className="flex items-center gap-2">
@@ -141,8 +136,7 @@ function RollbackContent() {
             </div>
             <div className="mb-4 space-y-2">
               <p className="text-zinc-700 dark:text-zinc-300">
-                You are about to rollback from{' '}
-                <strong>{rollbackInfo.currentVersion}</strong> to{' '}
+                You are about to rollback from <strong>{rollbackInfo.currentVersion}</strong> to{' '}
                 <strong>{rollbackInfo.targetVersion}</strong>
               </p>
               <p className="text-sm text-zinc-600 dark:text-zinc-400">
@@ -260,20 +254,18 @@ function RollbackContent() {
           </h3>
           <div className="space-y-2 font-mono text-sm">
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-red-500">nself rollback</span> - Rollback to
-              previous version
+              <span className="text-red-500">nself rollback</span> - Rollback to previous version
             </p>
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-red-500">nself rollback --to=v1.2.4</span> -
-              Rollback to specific version
+              <span className="text-red-500">nself rollback --to=v1.2.4</span> - Rollback to
+              specific version
             </p>
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-red-500">nself rollback --dry-run</span> -
-              Preview rollback changes
+              <span className="text-red-500">nself rollback --dry-run</span> - Preview rollback
+              changes
             </p>
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-red-500">nself deployments</span> - List
-              deployment history
+              <span className="text-red-500">nself deployments</span> - List deployment history
             </p>
           </div>
         </div>

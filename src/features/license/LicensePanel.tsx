@@ -11,11 +11,7 @@ import {
   Trash2,
 } from 'lucide-react'
 import { useCallback, useEffect, useRef, useState } from 'react'
-import type {
-  LicenseSetResult,
-  LicenseStatus,
-  LicenseValidateResult,
-} from './types'
+import type { LicenseSetResult, LicenseStatus, LicenseValidateResult } from './types'
 
 // ---------------------------------------------------------------------------
 // API helpers
@@ -75,8 +71,7 @@ interface TierBadgeProps {
 function TierBadge({ tier }: TierBadgeProps) {
   const isOwner = tier.toLowerCase().includes('owner')
   const isEnterprise =
-    tier.toLowerCase().includes('enterprise') ||
-    tier.toLowerCase().includes('business')
+    tier.toLowerCase().includes('enterprise') || tier.toLowerCase().includes('business')
 
   const className = isOwner
     ? 'bg-yellow-500/20 text-yellow-300 border-yellow-500/40'
@@ -106,14 +101,7 @@ interface KeyRowProps {
   valid: boolean
 }
 
-function KeyRow({
-  maskedKey,
-  displayName,
-  tier,
-  plugins,
-  expiresAt,
-  valid,
-}: KeyRowProps) {
+function KeyRow({ maskedKey, displayName, tier, plugins, expiresAt, valid }: KeyRowProps) {
   return (
     <div className="glass-card-elevated space-y-2 px-4 py-3">
       <div className="flex flex-wrap items-center gap-2">
@@ -136,9 +124,7 @@ function KeyRow({
             Expires: <span className="text-nself-text">{expiresAt}</span>
           </span>
         )}
-        {expiresAt === null && (
-          <span className="text-green-400/80">No expiry</span>
-        )}
+        {expiresAt === null && <span className="text-green-400/80">No expiry</span>}
       </div>
       {plugins.length > 0 && (
         <div className="flex flex-wrap gap-1">
@@ -173,12 +159,9 @@ function EmptyLicenseState() {
         <Shield className="text-nself-primary h-7 w-7" />
       </div>
       <div className="space-y-1">
-        <p className="text-nself-text text-sm font-semibold">
-          No license configured
-        </p>
+        <p className="text-nself-text text-sm font-semibold">No license configured</p>
         <p className="text-nself-text-muted max-w-xs text-xs">
-          The free tier includes 25 MIT plugins. Add a license key to unlock
-          premium plugin bundles.
+          The free tier includes 25 MIT plugins. Add a license key to unlock premium plugin bundles.
         </p>
       </div>
       <a
@@ -217,9 +200,7 @@ function ValidateNotice({ result }: ValidateNoticeProps) {
         <AlertCircle className="mt-0.5 h-4 w-4 flex-shrink-0" />
       )}
       <div className="min-w-0 space-y-0.5">
-        <p className="font-semibold">
-          {result.valid ? 'License valid' : 'License invalid'}
-        </p>
+        <p className="font-semibold">{result.valid ? 'License valid' : 'License invalid'}</p>
         <p className="text-xs opacity-80">{result.message}</p>
         {result.valid && result.tier && (
           <p className="text-xs opacity-80">
@@ -247,8 +228,7 @@ export function LicensePanel() {
   const [activateSuccess, setActivateSuccess] = useState<string | null>(null)
 
   const [validating, setValidating] = useState(false)
-  const [validateResult, setValidateResult] =
-    useState<LicenseValidateResult | null>(null)
+  const [validateResult, setValidateResult] = useState<LicenseValidateResult | null>(null)
   const [validateError, setValidateError] = useState<string | null>(null)
 
   const [clearing, setClearing] = useState(false)
@@ -258,14 +238,11 @@ export function LicensePanel() {
   const flashTimeouts = useRef<ReturnType<typeof setTimeout>[]>([])
 
   const scheduleFlashClear = useCallback(
-    (
-      setter: React.Dispatch<React.SetStateAction<string | null>>,
-      delayMs: number,
-    ) => {
+    (setter: React.Dispatch<React.SetStateAction<string | null>>, delayMs: number) => {
       const id = setTimeout(() => setter(null), delayMs)
       flashTimeouts.current.push(id)
     },
-    [],
+    []
   )
 
   // ---------------------------------------------------------------------------
@@ -279,9 +256,7 @@ export function LicensePanel() {
       const data = await fetchLicenseStatus()
       setStatus(data)
     } catch (err) {
-      setFetchError(
-        err instanceof Error ? err.message : 'Failed to load license status',
-      )
+      setFetchError(err instanceof Error ? err.message : 'Failed to load license status')
     } finally {
       setLoading(false)
     }
@@ -336,9 +311,7 @@ export function LicensePanel() {
       const result = await apiValidateLicense()
       setValidateResult(result)
     } catch (err) {
-      setValidateError(
-        err instanceof Error ? err.message : 'Validation request failed.',
-      )
+      setValidateError(err instanceof Error ? err.message : 'Validation request failed.')
       scheduleFlashClear(setValidateError, 6000)
     } finally {
       setValidating(false)
@@ -364,9 +337,7 @@ export function LicensePanel() {
       setValidateResult(null)
       await loadStatus()
     } catch (err) {
-      setClearError(
-        err instanceof Error ? err.message : 'Failed to clear license keys.',
-      )
+      setClearError(err instanceof Error ? err.message : 'Failed to clear license keys.')
       scheduleFlashClear(setClearError, 6000)
     } finally {
       setClearing(false)
@@ -393,14 +364,8 @@ export function LicensePanel() {
     return (
       <div className="glass-card p-6 text-center">
         <AlertCircle className="mx-auto mb-3 h-8 w-8 text-red-400" />
-        <p className="text-sm text-red-400">
-          {fetchError ?? 'Failed to load license status'}
-        </p>
-        <button
-          type="button"
-          onClick={loadStatus}
-          className="nself-btn-primary mt-4 text-sm"
-        >
+        <p className="text-sm text-red-400">{fetchError ?? 'Failed to load license status'}</p>
+        <button type="button" onClick={loadStatus} className="nself-btn-primary mt-4 text-sm">
           Retry
         </button>
       </div>
@@ -435,8 +400,8 @@ export function LicensePanel() {
           <div className="flex items-start gap-3 rounded-lg border border-yellow-500/30 bg-yellow-500/10 px-4 py-3 text-sm text-yellow-300">
             <AlertCircle className="mt-0.5 h-4 w-4 flex-shrink-0" />
             <p>
-              One or more license keys are invalid or expired. Affected plugins
-              will not load until a valid key is configured.
+              One or more license keys are invalid or expired. Affected plugins will not load until
+              a valid key is configured.
             </p>
           </div>
         )}

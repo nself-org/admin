@@ -126,9 +126,7 @@ describe('generateCreateTable', () => {
   it('generates CREATE TABLE with columns', () => {
     const ddl = generateCreateTable(usersTable)
     expect(ddl).toContain('CREATE TABLE IF NOT EXISTS "users"')
-    expect(ddl).toContain(
-      '"id" uuid NOT NULL DEFAULT gen_random_uuid() PRIMARY KEY',
-    )
+    expect(ddl).toContain('"id" uuid NOT NULL DEFAULT gen_random_uuid() PRIMARY KEY')
     expect(ddl).toContain('"email" varchar(255) NOT NULL')
     expect(ddl).toContain('"created_at" timestamptz NOT NULL DEFAULT now()')
   })

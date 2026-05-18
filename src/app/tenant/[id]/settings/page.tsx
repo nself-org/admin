@@ -38,9 +38,7 @@ export default function TenantSettingsPage() {
     try {
       await update({ settings })
     } catch (err) {
-      setSaveError(
-        err instanceof Error ? err.message : 'Failed to save settings',
-      )
+      setSaveError(err instanceof Error ? err.message : 'Failed to save settings')
     } finally {
       setSaving(false)
     }
@@ -56,9 +54,7 @@ export default function TenantSettingsPage() {
           <ArrowLeft className="h-4 w-4" /> Back to Tenant
         </Link>
         <h1 className="mt-4 text-2xl font-semibold text-white">Settings</h1>
-        <p className="text-sm text-zinc-400">
-          Configure tenant behavior and limits
-        </p>
+        <p className="text-sm text-zinc-400">Configure tenant behavior and limits</p>
       </div>
 
       {(error || saveError) && (
@@ -74,9 +70,7 @@ export default function TenantSettingsPage() {
           <label className="flex items-center justify-between">
             <div>
               <span className="text-sm text-white">Allow Public Signup</span>
-              <p className="text-xs text-zinc-500">
-                Allow users to self-register
-              </p>
+              <p className="text-xs text-zinc-500">Allow users to self-register</p>
             </div>
             <input
               type="checkbox"
@@ -93,12 +87,8 @@ export default function TenantSettingsPage() {
 
           <label className="flex items-center justify-between">
             <div>
-              <span className="text-sm text-white">
-                Require Email Verification
-              </span>
-              <p className="text-xs text-zinc-500">
-                Users must verify email before access
-              </p>
+              <span className="text-sm text-white">Require Email Verification</span>
+              <p className="text-xs text-zinc-500">Users must verify email before access</p>
             </div>
             <input
               type="checkbox"
@@ -118,9 +108,7 @@ export default function TenantSettingsPage() {
           <h2 className="mb-4 text-lg font-medium text-white">Limits</h2>
 
           <div>
-            <label className="mb-2 block text-sm text-zinc-400">
-              Maximum Members
-            </label>
+            <label className="mb-2 block text-sm text-zinc-400">Maximum Members</label>
             <input
               type="number"
               value={settings.maxMembers}

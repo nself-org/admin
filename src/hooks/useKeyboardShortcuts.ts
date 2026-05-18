@@ -27,9 +27,7 @@ const globalShortcuts: ShortcutDefinition[] = [
     ctrl: true,
     handler: () => {
       // Focus search
-      const searchInput = document.querySelector(
-        '[data-search-input]',
-      ) as HTMLInputElement
+      const searchInput = document.querySelector('[data-search-input]') as HTMLInputElement
       searchInput?.focus()
     },
     description: 'Focus search',
@@ -82,23 +80,19 @@ export function useKeyboardShortcuts(shortcuts: ShortcutDefinition[] = []) {
         description: 'Go to Logs',
       },
     ],
-    [router],
+    [router]
   )
 
   const allShortcuts = useMemo(
     () => [...globalShortcuts, ...navigationShortcuts, ...shortcuts],
-    [shortcuts, navigationShortcuts],
+    [shortcuts, navigationShortcuts]
   )
 
   const handleKeyDown = useCallback(
     (event: KeyboardEvent) => {
       // Ignore if user is typing in an input
       const target = event.target as HTMLElement
-      if (
-        target.tagName === 'INPUT' ||
-        target.tagName === 'TEXTAREA' ||
-        target.isContentEditable
-      ) {
+      if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable) {
         // Allow Escape key even in inputs
         if (event.key !== 'Escape') {
           return
@@ -120,7 +114,7 @@ export function useKeyboardShortcuts(shortcuts: ShortcutDefinition[] = []) {
         matchingShortcut.handler()
       }
     },
-    [allShortcuts],
+    [allShortcuts]
   )
 
   useEffect(() => {

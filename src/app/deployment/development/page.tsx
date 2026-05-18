@@ -39,11 +39,7 @@ function DevelopmentEnvironmentContent() {
   } | null>(null)
 
   const handleServiceToggle = (serviceId: string) => {
-    setServices(
-      services.map((s) =>
-        s.id === serviceId ? { ...s, enabled: !s.enabled } : s,
-      ),
-    )
+    setServices(services.map((s) => (s.id === serviceId ? { ...s, enabled: !s.enabled } : s)))
   }
 
   const handleAddEnvVar = () => {
@@ -54,11 +50,7 @@ function DevelopmentEnvironmentContent() {
     setEnvVariables(envVariables.filter((_, i) => i !== index))
   }
 
-  const handleEnvVarChange = (
-    index: number,
-    field: keyof EnvVariable,
-    value: string | boolean,
-  ) => {
+  const handleEnvVarChange = (index: number, field: keyof EnvVariable, value: string | boolean) => {
     const updated = [...envVariables]
     updated[index] = { ...updated[index], [field]: value }
     setEnvVariables(updated)
@@ -214,9 +206,7 @@ function DevelopmentEnvironmentContent() {
 
         {/* Service Selection */}
         <div className="mt-6 rounded-xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-zinc-700 dark:bg-zinc-800">
-          <h2 className="mb-4 text-lg font-semibold text-zinc-900 dark:text-white">
-            Services
-          </h2>
+          <h2 className="mb-4 text-lg font-semibold text-zinc-900 dark:text-white">Services</h2>
           <p className="mb-4 text-sm text-zinc-600 dark:text-zinc-400">
             Select which services to run in your development environment
           </p>
@@ -237,9 +227,7 @@ function DevelopmentEnvironmentContent() {
                     onChange={() => handleServiceToggle(service.id)}
                     className="h-4 w-4 rounded border-zinc-300 text-blue-600 focus:ring-blue-500"
                   />
-                  <span className="font-medium text-zinc-900 dark:text-white">
-                    {service.name}
-                  </span>
+                  <span className="font-medium text-zinc-900 dark:text-white">{service.name}</span>
                 </label>
               </div>
             ))}
@@ -265,18 +253,14 @@ function DevelopmentEnvironmentContent() {
                 <input
                   type="text"
                   value={envVar.key}
-                  onChange={(e) =>
-                    handleEnvVarChange(index, 'key', e.target.value)
-                  }
+                  onChange={(e) => handleEnvVarChange(index, 'key', e.target.value)}
                   placeholder="KEY"
                   className="flex-1 rounded-lg border border-zinc-300 bg-white px-4 py-2 font-mono text-sm text-zinc-900 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none dark:border-zinc-600 dark:bg-zinc-800 dark:text-white"
                 />
                 <input
                   type={envVar.isSecret ? 'password' : 'text'}
                   value={envVar.value}
-                  onChange={(e) =>
-                    handleEnvVarChange(index, 'value', e.target.value)
-                  }
+                  onChange={(e) => handleEnvVarChange(index, 'value', e.target.value)}
                   placeholder="value"
                   className="flex-1 rounded-lg border border-zinc-300 bg-white px-4 py-2 font-mono text-sm text-zinc-900 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none dark:border-zinc-600 dark:bg-zinc-800 dark:text-white"
                 />
@@ -284,14 +268,10 @@ function DevelopmentEnvironmentContent() {
                   <input
                     type="checkbox"
                     checked={envVar.isSecret}
-                    onChange={(e) =>
-                      handleEnvVarChange(index, 'isSecret', e.target.checked)
-                    }
+                    onChange={(e) => handleEnvVarChange(index, 'isSecret', e.target.checked)}
                     className="h-4 w-4 rounded border-zinc-300 text-blue-600 focus:ring-blue-500"
                   />
-                  <span className="text-sm text-zinc-600 dark:text-zinc-400">
-                    Secret
-                  </span>
+                  <span className="text-sm text-zinc-600 dark:text-zinc-400">Secret</span>
                 </label>
                 <button
                   onClick={() => handleRemoveEnvVar(index)}

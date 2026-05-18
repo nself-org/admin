@@ -4,13 +4,7 @@ import { PageShell } from '@/components/PageShell'
 import { ServiceDetailSkeleton } from '@/components/skeletons'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import {
   Table,
   TableBody,
@@ -191,9 +185,7 @@ function NginxContent() {
           <Server className="h-6 w-6 text-indigo-500" aria-hidden="true" />
           <div>
             <h1 className="text-xl font-semibold text-white">Nginx</h1>
-            <p className="text-sm text-gray-400">
-              Reverse proxy and SSL terminator
-            </p>
+            <p className="text-sm text-gray-400">Reverse proxy and SSL terminator</p>
           </div>
           {data && statusBadge(data.status)}
         </div>
@@ -219,21 +211,16 @@ function NginxContent() {
 
       {/* ── State rendering ── */}
 
-      {uiState === 'loading' && (
-        <ServiceDetailSkeleton aria-label="Loading Nginx data" />
-      )}
+      {uiState === 'loading' && <ServiceDetailSkeleton aria-label="Loading Nginx data" />}
 
       {uiState === 'empty' && (
         <Card className="border-dashed border-gray-700 bg-[#0F0F1A]">
           <CardContent className="flex flex-col items-center justify-center py-12">
-            <Globe
-              className="mb-4 h-12 w-12 text-gray-500"
-              aria-hidden="true"
-            />
+            <Globe className="mb-4 h-12 w-12 text-gray-500" aria-hidden="true" />
             <p className="text-gray-400">No routes configured yet.</p>
             <p className="mt-1 text-sm text-gray-500">
-              Add routes via <code className="text-indigo-400">nself urls</code>{' '}
-              or edit <code className="text-indigo-400">nginx/conf.d/</code>.
+              Add routes via <code className="text-indigo-400">nself urls</code> or edit{' '}
+              <code className="text-indigo-400">nginx/conf.d/</code>.
             </p>
           </CardContent>
         </Card>
@@ -244,17 +231,10 @@ function NginxContent() {
           <CardContent className="flex items-center gap-3 py-6">
             <XCircle className="h-6 w-6 text-red-400" aria-hidden="true" />
             <div>
-              <p className="font-medium text-red-300">
-                Failed to load Nginx data
-              </p>
+              <p className="font-medium text-red-300">Failed to load Nginx data</p>
               <p className="text-sm text-gray-400">{error}</p>
             </div>
-            <Button
-              variant="outline"
-              size="sm"
-              className="ml-auto"
-              onClick={fetchData}
-            >
+            <Button variant="outline" size="sm" className="ml-auto" onClick={fetchData}>
               Retry
             </Button>
           </CardContent>
@@ -264,14 +244,10 @@ function NginxContent() {
       {uiState === 'offline' && (
         <Card className="border-gray-700 bg-[#0F0F1A]">
           <CardContent className="flex flex-col items-center justify-center py-12">
-            <AlertCircle
-              className="mb-4 h-12 w-12 text-yellow-500"
-              aria-hidden="true"
-            />
+            <AlertCircle className="mb-4 h-12 w-12 text-yellow-500" aria-hidden="true" />
             <p className="font-medium text-yellow-300">Nginx is offline</p>
             <p className="mt-1 text-sm text-gray-400">
-              Run <code className="text-indigo-400">nself start</code> to bring
-              Nginx online.
+              Run <code className="text-indigo-400">nself start</code> to bring Nginx online.
             </p>
           </CardContent>
         </Card>
@@ -281,9 +257,7 @@ function NginxContent() {
         <Card className="border-yellow-800 bg-[#0F0F1A]">
           <CardContent className="flex items-center gap-3 py-6">
             <ShieldOff className="h-6 w-6 text-yellow-400" aria-hidden="true" />
-            <p className="text-yellow-300">
-              Permission denied. Check your nSelf Admin session.
-            </p>
+            <p className="text-yellow-300">Permission denied. Check your nSelf Admin session.</p>
           </CardContent>
         </Card>
       )}
@@ -291,13 +265,8 @@ function NginxContent() {
       {uiState === 'rate-limited' && (
         <Card className="border-orange-800 bg-[#0F0F1A]">
           <CardContent className="flex items-center gap-3 py-6">
-            <AlertCircle
-              className="h-6 w-6 text-orange-400"
-              aria-hidden="true"
-            />
-            <p className="text-orange-300">
-              Rate limited. Please wait and retry.
-            </p>
+            <AlertCircle className="h-6 w-6 text-orange-400" aria-hidden="true" />
+            <p className="text-orange-300">Rate limited. Please wait and retry.</p>
           </CardContent>
         </Card>
       )}
@@ -328,23 +297,15 @@ function NginxContent() {
                 <TableBody>
                   {data.routes.map((r) => (
                     <TableRow key={r.server}>
-                      <TableCell className="font-mono text-sm text-white">
-                        {r.server}
-                      </TableCell>
+                      <TableCell className="font-mono text-sm text-white">{r.server}</TableCell>
                       <TableCell className="font-mono text-sm text-gray-300">
                         {r.upstream}
                       </TableCell>
                       <TableCell>
                         {r.ssl ? (
-                          <Lock
-                            className="h-4 w-4 text-green-400"
-                            aria-label="SSL enabled"
-                          />
+                          <Lock className="h-4 w-4 text-green-400" aria-label="SSL enabled" />
                         ) : (
-                          <ShieldOff
-                            className="h-4 w-4 text-gray-500"
-                            aria-label="SSL disabled"
-                          />
+                          <ShieldOff className="h-4 w-4 text-gray-500" aria-label="SSL disabled" />
                         )}
                       </TableCell>
                     </TableRow>
@@ -364,9 +325,7 @@ function NginxContent() {
             </CardHeader>
             <CardContent>
               {data.sslCerts.length === 0 ? (
-                <p className="text-sm text-gray-500">
-                  No SSL certificates found.
-                </p>
+                <p className="text-sm text-gray-500">No SSL certificates found.</p>
               ) : (
                 <Table aria-label="SSL certificates">
                   <TableHeader>
@@ -380,21 +339,13 @@ function NginxContent() {
                   <TableBody>
                     {data.sslCerts.map((c) => (
                       <TableRow key={c.domain}>
-                        <TableCell className="font-mono text-sm text-white">
-                          {c.domain}
-                        </TableCell>
-                        <TableCell className="text-sm text-gray-300">
-                          {c.expiry}
-                        </TableCell>
-                        <TableCell className="text-sm text-gray-400">
-                          {c.issuer}
-                        </TableCell>
+                        <TableCell className="font-mono text-sm text-white">{c.domain}</TableCell>
+                        <TableCell className="text-sm text-gray-300">{c.expiry}</TableCell>
+                        <TableCell className="text-sm text-gray-400">{c.issuer}</TableCell>
                         <TableCell>
                           <span
                             className={
-                              c.daysRemaining < 14
-                                ? 'font-semibold text-red-400'
-                                : 'text-gray-300'
+                              c.daysRemaining < 14 ? 'font-semibold text-red-400' : 'text-gray-300'
                             }
                           >
                             {c.daysRemaining}
@@ -412,10 +363,7 @@ function NginxContent() {
           <Card className="border-gray-700 bg-[#0F0F1A]">
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-white">
-                <FileText
-                  className="h-5 w-5 text-indigo-400"
-                  aria-hidden="true"
-                />
+                <FileText className="h-5 w-5 text-indigo-400" aria-hidden="true" />
                 conf.d Files
               </CardTitle>
               <CardDescription className="text-gray-400">
@@ -424,20 +372,13 @@ function NginxContent() {
             </CardHeader>
             <CardContent>
               {data.confDFiles.length === 0 ? (
-                <p className="text-sm text-gray-500">
-                  No conf.d fragments found.
-                </p>
+                <p className="text-sm text-gray-500">No conf.d fragments found.</p>
               ) : (
                 <ul className="space-y-1" aria-label="conf.d file list">
                   {data.confDFiles.map((f) => (
                     <li key={f} className="flex items-center gap-2">
-                      <FileText
-                        className="h-4 w-4 text-gray-500"
-                        aria-hidden="true"
-                      />
-                      <span className="font-mono text-sm text-gray-300">
-                        {f}
-                      </span>
+                      <FileText className="h-4 w-4 text-gray-500" aria-hidden="true" />
+                      <span className="font-mono text-sm text-gray-300">{f}</span>
                     </li>
                   ))}
                 </ul>

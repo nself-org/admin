@@ -28,18 +28,12 @@ export function GlobalCommandPalette() {
   const [query, setQuery] = React.useState('')
 
   const filtered = query
-    ? NAV_ITEMS.filter((item) =>
-        item.label.toLowerCase().includes(query.toLowerCase()),
-      )
+    ? NAV_ITEMS.filter((item) => item.label.toLowerCase().includes(query.toLowerCase()))
     : NAV_ITEMS
 
   return (
     <CommandPalette>
-      <CommandPaletteInput
-        placeholder="Search pages..."
-        value={query}
-        onValueChange={setQuery}
-      />
+      <CommandPaletteInput placeholder="Search pages..." value={query} onValueChange={setQuery} />
       <CommandPaletteList>
         {filtered.length === 0 ? (
           <CommandPaletteEmpty>No results found.</CommandPaletteEmpty>

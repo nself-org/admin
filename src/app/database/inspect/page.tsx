@@ -4,13 +4,7 @@ import { FormSkeleton } from '@/components/skeletons'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Progress } from '@/components/ui/progress'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
@@ -167,9 +161,7 @@ function DatabaseInspectContent() {
     return (
       <div className="space-y-6 p-6">
         <div>
-          <h1 className="text-2xl font-bold text-zinc-900 dark:text-white">
-            Database Inspector
-          </h1>
+          <h1 className="text-2xl font-bold text-zinc-900 dark:text-white">Database Inspector</h1>
           <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
             Analyze and monitor your PostgreSQL database performance
           </p>
@@ -184,9 +176,7 @@ function DatabaseInspectContent() {
   return (
     <div className="space-y-6 p-6">
       <div>
-        <h1 className="text-2xl font-bold text-zinc-900 dark:text-white">
-          Database Inspector
-        </h1>
+        <h1 className="text-2xl font-bold text-zinc-900 dark:text-white">Database Inspector</h1>
         <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
           Analyze and monitor your PostgreSQL database performance
         </p>
@@ -197,8 +187,8 @@ function DatabaseInspectContent() {
           <Database className="h-4 w-4" />
           <AlertTitle>Database Inspection Tools</AlertTitle>
           <AlertDescription>
-            Real-time analysis of your database performance, table sizes, cache
-            efficiency, index usage, and active locks.
+            Real-time analysis of your database performance, table sizes, cache efficiency, index
+            usage, and active locks.
           </AlertDescription>
         </Alert>
 
@@ -231,15 +221,8 @@ function DatabaseInspectContent() {
               </TabsTrigger>
             </TabsList>
 
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={fetchInspectData}
-              disabled={isRefreshing}
-            >
-              <RefreshCw
-                className={`mr-2 h-4 w-4 ${isRefreshing ? 'animate-spin' : ''}`}
-              />
+            <Button variant="outline" size="sm" onClick={fetchInspectData} disabled={isRefreshing}>
+              <RefreshCw className={`mr-2 h-4 w-4 ${isRefreshing ? 'animate-spin' : ''}`} />
               Refresh
             </Button>
           </div>
@@ -251,12 +234,8 @@ function DatabaseInspectContent() {
                 <CardContent className="pt-6">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm font-medium text-zinc-500">
-                        Database Size
-                      </p>
-                      <p className="mt-1 text-2xl font-bold">
-                        {overview?.size}
-                      </p>
+                      <p className="text-sm font-medium text-zinc-500">Database Size</p>
+                      <p className="mt-1 text-2xl font-bold">{overview?.size}</p>
                     </div>
                     <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-blue-500/10">
                       <HardDrive className="h-6 w-6 text-blue-500" />
@@ -268,9 +247,7 @@ function DatabaseInspectContent() {
                 <CardContent className="pt-6">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm font-medium text-zinc-500">
-                        Tables / Indexes
-                      </p>
+                      <p className="text-sm font-medium text-zinc-500">Tables / Indexes</p>
                       <p className="mt-1 text-2xl font-bold">
                         {overview?.tableCount} / {overview?.indexCount}
                       </p>
@@ -285,12 +262,9 @@ function DatabaseInspectContent() {
                 <CardContent className="pt-6">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm font-medium text-zinc-500">
-                        Connections
-                      </p>
+                      <p className="text-sm font-medium text-zinc-500">Connections</p>
                       <p className="mt-1 text-2xl font-bold">
-                        {overview?.activeConnections} /{' '}
-                        {overview?.maxConnections}
+                        {overview?.activeConnections} / {overview?.maxConnections}
                       </p>
                     </div>
                     <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-amber-500/10">
@@ -303,9 +277,7 @@ function DatabaseInspectContent() {
                 <CardContent className="pt-6">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm font-medium text-zinc-500">
-                        Cache Hit Ratio
-                      </p>
+                      <p className="text-sm font-medium text-zinc-500">Cache Hit Ratio</p>
                       <p className="mt-1 text-2xl font-bold text-emerald-500">
                         {overview?.cacheHitRatio}%
                       </p>
@@ -332,16 +304,12 @@ function DatabaseInspectContent() {
                       <div key={table.name} className="space-y-2">
                         <div className="flex items-center justify-between text-sm">
                           <span className="font-medium">{table.name}</span>
-                          <span className="text-zinc-500">
-                            {table.totalSize}
-                          </span>
+                          <span className="text-zinc-500">{table.totalSize}</span>
                         </div>
                         <Progress
                           value={
                             (parseInt(table.totalSize) /
-                              Math.max(
-                                ...tableSizes.map((t) => parseInt(t.totalSize)),
-                              )) *
+                              Math.max(...tableSizes.map((t) => parseInt(t.totalSize)))) *
                             100
                           }
                           className="h-2"
@@ -363,28 +331,18 @@ function DatabaseInspectContent() {
                   <div className="space-y-3">
                     <div className="flex items-center justify-between rounded-lg bg-zinc-50 p-3 dark:bg-zinc-800/50">
                       <span className="text-sm text-zinc-500">Version</span>
-                      <span className="text-sm font-medium">
-                        {overview?.version}
-                      </span>
+                      <span className="text-sm font-medium">{overview?.version}</span>
                     </div>
                     <div className="flex items-center justify-between rounded-lg bg-zinc-50 p-3 dark:bg-zinc-800/50">
                       <span className="text-sm text-zinc-500">Uptime</span>
-                      <span className="text-sm font-medium">
-                        {overview?.uptime}
-                      </span>
+                      <span className="text-sm font-medium">{overview?.uptime}</span>
                     </div>
                     <div className="flex items-center justify-between rounded-lg bg-zinc-50 p-3 dark:bg-zinc-800/50">
-                      <span className="text-sm text-zinc-500">
-                        Active Locks
-                      </span>
-                      <span className="text-sm font-medium">
-                        {locks.length}
-                      </span>
+                      <span className="text-sm text-zinc-500">Active Locks</span>
+                      <span className="text-sm font-medium">{locks.length}</span>
                     </div>
                     <div className="flex items-center justify-between rounded-lg bg-zinc-50 p-3 dark:bg-zinc-800/50">
-                      <span className="text-sm text-zinc-500">
-                        Unused Indexes
-                      </span>
+                      <span className="text-sm text-zinc-500">Unused Indexes</span>
                       <span className="text-sm font-medium text-amber-500">
                         {indexUsage.filter((i) => i.usage === 'unused').length}
                       </span>
@@ -403,9 +361,7 @@ function DatabaseInspectContent() {
                   <Table2 className="h-5 w-5" />
                   Table Sizes
                 </CardTitle>
-                <CardDescription>
-                  Storage breakdown for each table in your database
-                </CardDescription>
+                <CardDescription>Storage breakdown for each table in your database</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="overflow-x-auto">
@@ -434,10 +390,7 @@ function DatabaseInspectContent() {
                     </thead>
                     <tbody className="divide-y dark:divide-zinc-700">
                       {tableSizes.map((table) => (
-                        <tr
-                          key={table.name}
-                          className="hover:bg-zinc-50 dark:hover:bg-zinc-800/50"
-                        >
+                        <tr key={table.name} className="hover:bg-zinc-50 dark:hover:bg-zinc-800/50">
                           <td className="px-4 py-3">
                             <div className="flex items-center gap-2">
                               <Table2 className="h-4 w-4 text-zinc-400" />
@@ -449,9 +402,7 @@ function DatabaseInspectContent() {
                           <td className="px-4 py-3 text-right font-mono text-sm">
                             {formatNumber(table.rows)}
                           </td>
-                          <td className="px-4 py-3 text-right font-medium">
-                            {table.totalSize}
-                          </td>
+                          <td className="px-4 py-3 text-right font-medium">{table.totalSize}</td>
                           <td className="px-4 py-3 text-right text-sm text-zinc-500">
                             {table.dataSize}
                           </td>
@@ -479,9 +430,7 @@ function DatabaseInspectContent() {
                     <Zap className="h-5 w-5" />
                     Cache Hit Ratio
                   </CardTitle>
-                  <CardDescription>
-                    Higher is better. Aim for &gt;99% in production
-                  </CardDescription>
+                  <CardDescription>Higher is better. Aim for &gt;99% in production</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="flex flex-col items-center justify-center py-8">
@@ -547,9 +496,8 @@ function DatabaseInspectContent() {
                 <AlertTriangle className="h-4 w-4" />
                 <AlertTitle>Unused Indexes Detected</AlertTitle>
                 <AlertDescription>
-                  You have{' '}
-                  {indexUsage.filter((i) => i.usage === 'unused').length} unused
-                  indexes. Consider dropping them to improve write performance.
+                  You have {indexUsage.filter((i) => i.usage === 'unused').length} unused indexes.
+                  Consider dropping them to improve write performance.
                 </AlertDescription>
               </Alert>
             )}
@@ -591,18 +539,11 @@ function DatabaseInspectContent() {
                     </thead>
                     <tbody className="divide-y dark:divide-zinc-700">
                       {indexUsage.map((index) => (
-                        <tr
-                          key={index.name}
-                          className="hover:bg-zinc-50 dark:hover:bg-zinc-800/50"
-                        >
+                        <tr key={index.name} className="hover:bg-zinc-50 dark:hover:bg-zinc-800/50">
                           <td className="px-4 py-3">
-                            <span className="font-mono text-sm">
-                              {index.name}
-                            </span>
+                            <span className="font-mono text-sm">{index.name}</span>
                           </td>
-                          <td className="px-4 py-3 text-sm text-zinc-500">
-                            {index.table}
-                          </td>
+                          <td className="px-4 py-3 text-sm text-zinc-500">{index.table}</td>
                           <td className="px-4 py-3 text-right font-mono text-sm">
                             {formatNumber(index.scans)}
                           </td>
@@ -613,10 +554,7 @@ function DatabaseInspectContent() {
                             {formatNumber(index.rowsFetched)}
                           </td>
                           <td className="px-4 py-3 text-right">
-                            <Badge
-                              variant="outline"
-                              className={getUsageColor(index.usage)}
-                            >
+                            <Badge variant="outline" className={getUsageColor(index.usage)}>
                               {index.usage}
                             </Badge>
                           </td>
@@ -638,18 +576,14 @@ function DatabaseInspectContent() {
                   Slow Queries
                 </CardTitle>
                 <CardDescription>
-                  Queries with the highest total execution time (requires
-                  pg_stat_statements)
+                  Queries with the highest total execution time (requires pg_stat_statements)
                 </CardDescription>
               </CardHeader>
               <CardContent>
                 <ScrollArea className="h-96">
                   <div className="space-y-4">
                     {slowQueries.map((query, index) => (
-                      <div
-                        key={index}
-                        className="rounded-lg border p-4 dark:border-zinc-700"
-                      >
+                      <div key={index} className="rounded-lg border p-4 dark:border-zinc-700">
                         <div className="flex items-start justify-between gap-4">
                           <pre className="flex-1 overflow-x-auto rounded bg-zinc-950 p-3 font-mono text-xs text-zinc-300">
                             {query.query}
@@ -658,27 +592,19 @@ function DatabaseInspectContent() {
                         <div className="mt-3 flex flex-wrap gap-4 text-sm">
                           <div>
                             <span className="text-zinc-500">Calls:</span>{' '}
-                            <span className="font-medium">
-                              {formatNumber(query.calls)}
-                            </span>
+                            <span className="font-medium">{formatNumber(query.calls)}</span>
                           </div>
                           <div>
                             <span className="text-zinc-500">Total Time:</span>{' '}
-                            <span className="font-medium">
-                              {query.totalTime.toFixed(2)} ms
-                            </span>
+                            <span className="font-medium">{query.totalTime.toFixed(2)} ms</span>
                           </div>
                           <div>
                             <span className="text-zinc-500">Mean Time:</span>{' '}
-                            <span className="font-medium">
-                              {query.meanTime.toFixed(2)} ms
-                            </span>
+                            <span className="font-medium">{query.meanTime.toFixed(2)} ms</span>
                           </div>
                           <div>
                             <span className="text-zinc-500">Rows:</span>{' '}
-                            <span className="font-medium">
-                              {formatNumber(query.rows)}
-                            </span>
+                            <span className="font-medium">{formatNumber(query.rows)}</span>
                           </div>
                         </div>
                       </div>
@@ -697,9 +623,7 @@ function DatabaseInspectContent() {
                   <Lock className="h-5 w-5" />
                   Active Locks
                 </CardTitle>
-                <CardDescription>
-                  Currently held and pending database locks
-                </CardDescription>
+                <CardDescription>Currently held and pending database locks</CardDescription>
               </CardHeader>
               <CardContent>
                 {locks.length === 0 ? (
@@ -734,20 +658,13 @@ function DatabaseInspectContent() {
                       </thead>
                       <tbody className="divide-y dark:divide-zinc-700">
                         {locks.map((lock) => (
-                          <tr
-                            key={lock.pid}
-                            className="hover:bg-zinc-50 dark:hover:bg-zinc-800/50"
-                          >
-                            <td className="px-4 py-3 font-mono text-sm">
-                              {lock.pid}
-                            </td>
+                          <tr key={lock.pid} className="hover:bg-zinc-50 dark:hover:bg-zinc-800/50">
+                            <td className="px-4 py-3 font-mono text-sm">{lock.pid}</td>
                             <td className="px-4 py-3 text-sm">{lock.type}</td>
                             <td className="px-4 py-3">
                               <Badge variant="outline">{lock.mode}</Badge>
                             </td>
-                            <td className="px-4 py-3 text-sm">
-                              {lock.relation}
-                            </td>
+                            <td className="px-4 py-3 text-sm">{lock.relation}</td>
                             <td className="px-4 py-3">
                               {lock.granted ? (
                                 <Badge
@@ -757,17 +674,12 @@ function DatabaseInspectContent() {
                                   Yes
                                 </Badge>
                               ) : (
-                                <Badge
-                                  variant="outline"
-                                  className="bg-red-500/10 text-red-500"
-                                >
+                                <Badge variant="outline" className="bg-red-500/10 text-red-500">
                                   Waiting
                                 </Badge>
                               )}
                             </td>
-                            <td className="px-4 py-3 font-mono text-sm">
-                              {lock.duration}
-                            </td>
+                            <td className="px-4 py-3 font-mono text-sm">{lock.duration}</td>
                           </tr>
                         ))}
                       </tbody>

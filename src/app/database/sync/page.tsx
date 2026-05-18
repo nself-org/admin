@@ -4,13 +4,7 @@ import { FormSkeleton } from '@/components/skeletons'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import {
   Select,
@@ -94,9 +88,7 @@ function DatabaseSyncContent() {
   return (
     <div className="space-y-6 p-6">
       <div>
-        <h1 className="text-2xl font-bold text-zinc-900 dark:text-white">
-          Sync Database
-        </h1>
+        <h1 className="text-2xl font-bold text-zinc-900 dark:text-white">Sync Database</h1>
         <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
           Synchronize database between environments using{' '}
           <code className="rounded bg-zinc-100 px-1 py-0.5 text-xs dark:bg-zinc-800">
@@ -110,18 +102,16 @@ function DatabaseSyncContent() {
           <AlertTitle>nself CLI Integration</AlertTitle>
           <AlertDescription>
             This page executes{' '}
-            <code className="rounded bg-zinc-100 px-1 dark:bg-zinc-800">
-              nself db sync
-            </code>{' '}
-            to synchronize your database between environments.
+            <code className="rounded bg-zinc-100 px-1 dark:bg-zinc-800">nself db sync</code> to
+            synchronize your database between environments.
           </AlertDescription>
         </Alert>
 
         <Alert variant="destructive">
           <AlertTitle>Warning: Data Override</AlertTitle>
           <AlertDescription>
-            Database sync will overwrite data in the target environment. Always
-            backup your target database before syncing.
+            Database sync will overwrite data in the target environment. Always backup your target
+            database before syncing.
           </AlertDescription>
         </Alert>
 
@@ -132,28 +122,19 @@ function DatabaseSyncContent() {
                 <ArrowLeftRight className="h-5 w-5 text-blue-600" />
                 <CardTitle>Database Sync</CardTitle>
               </div>
-              <CardDescription>
-                Copy database data between environments
-              </CardDescription>
+              <CardDescription>Copy database data between environments</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="space-y-4">
                 <div className="space-y-2">
                   <label className="text-sm font-medium">Sync Direction</label>
-                  <Select
-                    value={syncDirection}
-                    onValueChange={setSyncDirection}
-                  >
+                  <Select value={syncDirection} onValueChange={setSyncDirection}>
                     <SelectTrigger>
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="pull">
-                        Pull (Remote → Local)
-                      </SelectItem>
-                      <SelectItem value="push">
-                        Push (Local → Remote)
-                      </SelectItem>
+                      <SelectItem value="pull">Pull (Remote → Local)</SelectItem>
+                      <SelectItem value="push">Push (Local → Remote)</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -263,15 +244,11 @@ function DatabaseSyncContent() {
         <Card>
           <CardHeader>
             <CardTitle>Sync History</CardTitle>
-            <CardDescription>
-              History of sync operations from this session
-            </CardDescription>
+            <CardDescription>History of sync operations from this session</CardDescription>
           </CardHeader>
           <CardContent>
             {syncResults.length === 0 ? (
-              <div className="py-8 text-center text-zinc-500">
-                No sync operations performed yet
-              </div>
+              <div className="py-8 text-center text-zinc-500">No sync operations performed yet</div>
             ) : (
               <div className="space-y-3">
                 {syncResults.map((result, index) => (
@@ -290,9 +267,7 @@ function DatabaseSyncContent() {
                           <ArrowLeftRight className="h-4 w-4" />
                           {result.direction || 'Database Sync'}
                         </div>
-                        <div className="text-sm text-zinc-500">
-                          {result.timestamp}
-                        </div>
+                        <div className="text-sm text-zinc-500">{result.timestamp}</div>
                       </div>
                     </div>
                     <Badge variant={result.success ? 'default' : 'destructive'}>

@@ -4,13 +4,7 @@ import { PageShell } from '@/components/PageShell'
 import { FormSkeleton } from '@/components/skeletons'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Progress } from '@/components/ui/progress'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Gauge, Loader2, RefreshCw, RotateCcw, Terminal } from 'lucide-react'
@@ -78,12 +72,8 @@ function RateLimitsContent() {
   const [statusOutput, setStatusOutput] = useState<string | null>(null)
   const [cliOutput, setCliOutput] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
-  const [resettingEndpoint, setResettingEndpoint] = useState<string | null>(
-    null,
-  )
-  const [lastCommand, setLastCommand] = useState<string>(
-    'nself auth rate-limit config',
-  )
+  const [resettingEndpoint, setResettingEndpoint] = useState<string | null>(null)
+  const [lastCommand, setLastCommand] = useState<string>('nself auth rate-limit config')
 
   // Fetch rate limit configuration
   const fetchConfig = useCallback(async () => {
@@ -139,7 +129,7 @@ function RateLimitsContent() {
     setLastCommand(
       endpoint
         ? `nself auth rate-limit reset --endpoint=${endpoint}`
-        : 'nself auth rate-limit reset',
+        : 'nself auth rate-limit reset'
     )
     try {
       const res = await fetch('/api/auth/rate-limit/reset', {
@@ -226,15 +216,11 @@ function RateLimitsContent() {
             <Card>
               <CardHeader className="pb-3">
                 <CardTitle className="text-base">Configuration</CardTitle>
-                <CardDescription>
-                  Current rate limit configuration from CLI
-                </CardDescription>
+                <CardDescription>Current rate limit configuration from CLI</CardDescription>
               </CardHeader>
               <CardContent>
                 <ScrollArea className="h-32">
-                  <pre className="text-xs text-zinc-700 dark:text-zinc-300">
-                    {configOutput}
-                  </pre>
+                  <pre className="text-xs text-zinc-700 dark:text-zinc-300">{configOutput}</pre>
                 </ScrollArea>
               </CardContent>
             </Card>
@@ -243,15 +229,11 @@ function RateLimitsContent() {
             <Card>
               <CardHeader className="pb-3">
                 <CardTitle className="text-base">Live Status</CardTitle>
-                <CardDescription>
-                  Current usage across all endpoints
-                </CardDescription>
+                <CardDescription>Current usage across all endpoints</CardDescription>
               </CardHeader>
               <CardContent>
                 <ScrollArea className="h-32">
-                  <pre className="text-xs text-zinc-700 dark:text-zinc-300">
-                    {statusOutput}
-                  </pre>
+                  <pre className="text-xs text-zinc-700 dark:text-zinc-300">{statusOutput}</pre>
                 </ScrollArea>
               </CardContent>
             </Card>
@@ -262,10 +244,7 @@ function RateLimitsContent() {
       {/* Endpoint Category Cards */}
       <div className="mb-6 grid grid-cols-1 gap-4 md:grid-cols-2">
         {ENDPOINT_CATEGORIES.map((cat) => {
-          const percent = getUsagePercent(
-            cat.currentUsage,
-            cat.requestsPerMinute,
-          )
+          const percent = getUsagePercent(cat.currentUsage, cat.requestsPerMinute)
           const colorClass = getUsageColor(percent)
           const isResetting = resettingEndpoint === cat.key
 
@@ -296,17 +275,13 @@ function RateLimitsContent() {
                 <div className="space-y-3">
                   {/* Limits info */}
                   <div className="flex justify-between text-sm">
-                    <span className="text-zinc-600 dark:text-zinc-400">
-                      Requests/min
-                    </span>
+                    <span className="text-zinc-600 dark:text-zinc-400">Requests/min</span>
                     <span className="font-medium text-zinc-900 dark:text-zinc-100">
                       {cat.requestsPerMinute}
                     </span>
                   </div>
                   <div className="flex justify-between text-sm">
-                    <span className="text-zinc-600 dark:text-zinc-400">
-                      Burst limit
-                    </span>
+                    <span className="text-zinc-600 dark:text-zinc-400">Burst limit</span>
                     <span className="font-medium text-zinc-900 dark:text-zinc-100">
                       {cat.burst}
                     </span>
@@ -315,9 +290,7 @@ function RateLimitsContent() {
                   {/* Usage bar */}
                   <div className="space-y-1">
                     <div className="flex justify-between text-sm">
-                      <span className="text-zinc-600 dark:text-zinc-400">
-                        Current usage
-                      </span>
+                      <span className="text-zinc-600 dark:text-zinc-400">Current usage</span>
                       <span className={`font-medium ${colorClass}`}>
                         {cat.currentUsage}/{cat.requestsPerMinute}
                       </span>
@@ -338,26 +311,18 @@ function RateLimitsContent() {
             <Terminal className="h-4 w-4 text-zinc-500" />
             <CardTitle className="text-base">CLI Command</CardTitle>
           </div>
-          <CardDescription>
-            Command executed against the nself CLI
-          </CardDescription>
+          <CardDescription>Command executed against the nself CLI</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="rounded-lg bg-zinc-950 p-4">
-            <div className="mb-2 font-mono text-sm text-emerald-400">
-              $ {lastCommand}
-            </div>
+            <div className="mb-2 font-mono text-sm text-emerald-400">$ {lastCommand}</div>
             {cliOutput && (
               <ScrollArea className="max-h-48">
-                <pre className="font-mono text-xs text-zinc-300">
-                  {cliOutput}
-                </pre>
+                <pre className="font-mono text-xs text-zinc-300">{cliOutput}</pre>
               </ScrollArea>
             )}
             {!cliOutput && (
-              <p className="font-mono text-xs text-zinc-500">
-                Run a command to see output here
-              </p>
+              <p className="font-mono text-xs text-zinc-500">Run a command to see output here</p>
             )}
           </div>
         </CardContent>

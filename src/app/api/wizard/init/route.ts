@@ -1,8 +1,4 @@
-import {
-  envFileExists,
-  envToWizardConfig,
-  readEnvFile,
-} from '@/lib/env-handler'
+import { envFileExists, envToWizardConfig, readEnvFile } from '@/lib/env-handler'
 import { findNselfPath, getEnhancedPath } from '@/lib/nself-path'
 import { getProjectPath } from '@/lib/paths'
 import { exec } from 'child_process'
@@ -40,17 +36,14 @@ export async function GET(_request: NextRequest): Promise<NextResponse> {
     const nselfPath = await findNselfPath()
 
     // Run nself init --full to create all env files
-    const { stdout: _stdout, stderr } = await execAsync(
-      `${nselfPath} init --full`,
-      {
-        cwd: projectPath,
-        env: {
-          ...process.env,
-          PATH: getEnhancedPath(),
-        },
-        timeout: 30000,
+    const { stdout: _stdout, stderr } = await execAsync(`${nselfPath} init --full`, {
+      cwd: projectPath,
+      env: {
+        ...process.env,
+        PATH: getEnhancedPath(),
       },
-    )
+      timeout: 30000,
+    })
 
     if (stderr && !stderr.includes('warning')) {
       console.error('nself init stderr:', stderr)
@@ -75,7 +68,7 @@ export async function GET(_request: NextRequest): Promise<NextResponse> {
         success: false,
         error: 'Failed to read .env.local after init',
       },
-      { status: 500 },
+      { status: 500 }
     )
   } catch (error) {
     console.error('Error in wizard init:', error)
@@ -85,7 +78,7 @@ export async function GET(_request: NextRequest): Promise<NextResponse> {
         error: 'Failed to initialize wizard',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

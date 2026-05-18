@@ -20,10 +20,9 @@ test.describe('Build Project Flow', () => {
       await buildPage.preCheckButton.click()
 
       // Wait for pre-check to complete
-      await buildPage.page.waitForSelector(
-        '[data-testid*="check"]:has-text("complete")',
-        { timeout: 30000 },
-      )
+      await buildPage.page.waitForSelector('[data-testid*="check"]:has-text("complete")', {
+        timeout: 30000,
+      })
     }
   })
 
@@ -36,10 +35,7 @@ test.describe('Build Project Flow', () => {
     await buildPage.expectBuildLogsVisible()
   })
 
-  test.skip('should view build logs in real-time', async ({
-    buildPage,
-    page,
-  }) => {
+  test.skip('should view build logs in real-time', async ({ buildPage, page }) => {
     // Skipped: requires a running nself CLI installation.
     await buildPage.goto()
     await buildPage.runBuild()
@@ -58,10 +54,7 @@ test.describe('Build Project Flow', () => {
     await expect(errorAlert).toBeAttached()
   })
 
-  test.skip('should show build progress indicator', async ({
-    buildPage,
-    page,
-  }) => {
+  test.skip('should show build progress indicator', async ({ buildPage, page }) => {
     // Skipped: requires a running nself CLI installation. runBuild() triggers
     // an API call to nself which times out in CI (no nself binary installed).
     await buildPage.goto()
@@ -106,9 +99,7 @@ test.describe('Build Project Flow', () => {
     // Verify something on the page received focus (a button, link, or input).
     // Avoid evaluating specific button locators by name — the build page may
     // render different buttons depending on pre-build check results.
-    const focusedTag = await page.evaluate(
-      () => document.activeElement?.tagName ?? '',
-    )
+    const focusedTag = await page.evaluate(() => document.activeElement?.tagName ?? '')
     expect(['BUTTON', 'A', 'INPUT', 'SELECT', 'TEXTAREA']).toContain(focusedTag)
   })
 
@@ -130,9 +121,7 @@ test.describe('Build Project Flow', () => {
     const cancelButton = page.locator('button:has-text("Cancel")')
     if (await cancelButton.isVisible()) {
       await cancelButton.click()
-      await expect(page.locator('[data-testid="build-status"]')).toContainText(
-        /cancel/i,
-      )
+      await expect(page.locator('[data-testid="build-status"]')).toContainText(/cancel/i)
     }
   })
 })

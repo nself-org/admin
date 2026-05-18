@@ -6,8 +6,7 @@ import { loadEnvironmentVariables } from './env-loader'
 const SALT_ROUNDS = 12 // Increased for better security
 const TOKEN_EXPIRY_HOURS = 24
 const MIN_PASSWORD_LENGTH = 12 // Strong password requirement
-const PASSWORD_COMPLEXITY_REGEX =
-  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/
+const PASSWORD_COMPLEXITY_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/
 
 // List of common weak passwords to reject
 const WEAK_PASSWORDS = [
@@ -42,15 +41,11 @@ export function validatePassword(password: string): {
   const errors: string[] = []
 
   if (password.length < MIN_PASSWORD_LENGTH) {
-    errors.push(
-      `Password must be at least ${MIN_PASSWORD_LENGTH} characters long`,
-    )
+    errors.push(`Password must be at least ${MIN_PASSWORD_LENGTH} characters long`)
   }
 
   if (!PASSWORD_COMPLEXITY_REGEX.test(password)) {
-    errors.push(
-      'Password must contain uppercase, lowercase, number, and special character',
-    )
+    errors.push('Password must contain uppercase, lowercase, number, and special character')
   }
 
   if (WEAK_PASSWORDS.includes(password.toLowerCase())) {
@@ -79,7 +74,7 @@ export async function hashPassword(password: string): Promise<string> {
   if (process.env.NODE_ENV !== 'production') {
     if (password.length >= 4) {
       console.warn(
-        '⚠️ Weak password accepted in development mode. Use a strong password in production!',
+        '⚠️ Weak password accepted in development mode. Use a strong password in production!'
       )
       return bcrypt.hash(password, SALT_ROUNDS)
     }
@@ -94,10 +89,7 @@ export async function hashPassword(password: string): Promise<string> {
   return bcrypt.hash(password, SALT_ROUNDS)
 }
 
-export async function verifyPassword(
-  password: string,
-  hash: string,
-): Promise<boolean> {
+export async function verifyPassword(password: string, hash: string): Promise<boolean> {
   return bcrypt.compare(password, hash)
 }
 
@@ -105,9 +97,7 @@ export async function verifyPassword(
 export function generateToken(): string {
   const array = new Uint8Array(32)
   crypto.getRandomValues(array)
-  return Array.from(array, (byte) => byte.toString(16).padStart(2, '0')).join(
-    '',
-  )
+  return Array.from(array, (byte) => byte.toString(16).padStart(2, '0')).join('')
 }
 
 // Session token with expiry
@@ -149,15 +139,12 @@ export function generateSecurePassword(length: number = 16): string {
 
 // Hash the admin password on first setup
 export async function getAdminPasswordHash(): Promise<string> {
-  const { adminPassword, adminPasswordHash, isDevEnv } =
-    loadEnvironmentVariables()
+  const { adminPassword, adminPasswordHash, isDevEnv } = loadEnvironmentVariables()
 
   // Check if password is set
   if (!adminPassword && !adminPasswordHash) {
     // This shouldn't happen - password should be set via setup flow
-    throw new Error(
-      'No admin password configured. Please set up your password.',
-    )
+    throw new Error('No admin password configured. Please set up your password.')
   }
 
   // If we have a hash, return it

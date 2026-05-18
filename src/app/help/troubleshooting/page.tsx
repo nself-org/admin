@@ -88,11 +88,7 @@ const commonIssues: Issue[] = [
       'Restart database: nself restart postgres',
       'Check Docker network: docker network ls',
     ],
-    relatedCommands: [
-      'nself status',
-      'nself restart postgres',
-      'nself db reset',
-    ],
+    relatedCommands: ['nself status', 'nself restart postgres', 'nself db reset'],
     severity: 'high',
   },
   {
@@ -115,11 +111,7 @@ const commonIssues: Issue[] = [
   {
     id: 'slow-performance',
     title: 'Slow Service Performance',
-    symptoms: [
-      'Services respond slowly',
-      'High CPU/memory usage',
-      'Timeout errors',
-    ],
+    symptoms: ['Services respond slowly', 'High CPU/memory usage', 'Timeout errors'],
     solutions: [
       'Allocate more resources to Docker',
       'Check for resource-heavy queries',
@@ -136,18 +128,15 @@ function TroubleshootingContent() {
   const [selectedSeverity, setSelectedSeverity] = React.useState<string>('all')
 
   const troubleshootingArticles = helpArticlesArray.filter(
-    (a: HelpArticle) => a.category === 'troubleshooting',
+    (a: HelpArticle) => a.category === 'troubleshooting'
   )
 
   const filteredIssues = commonIssues.filter((issue) => {
     const matchesSearch =
       searchQuery === '' ||
       issue.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      issue.symptoms.some((s) =>
-        s.toLowerCase().includes(searchQuery.toLowerCase()),
-      )
-    const matchesSeverity =
-      selectedSeverity === 'all' || issue.severity === selectedSeverity
+      issue.symptoms.some((s) => s.toLowerCase().includes(searchQuery.toLowerCase()))
+    const matchesSeverity = selectedSeverity === 'all' || issue.severity === selectedSeverity
     return matchesSearch && matchesSeverity
   })
 
@@ -239,9 +228,7 @@ function TroubleshootingContent() {
                   <div className="flex items-center gap-3">
                     <AlertCircle className="h-5 w-5 text-red-500" />
                     <span>{issue.title}</span>
-                    <Badge className={getSeverityColor(issue.severity)}>
-                      {issue.severity}
-                    </Badge>
+                    <Badge className={getSeverityColor(issue.severity)}>{issue.severity}</Badge>
                   </div>
                 ),
                 content: (
@@ -266,9 +253,7 @@ function TroubleshootingContent() {
 
                     {issue.relatedCommands.length > 0 && (
                       <div>
-                        <h4 className="mb-2 font-semibold">
-                          Related Commands:
-                        </h4>
+                        <h4 className="mb-2 font-semibold">Related Commands:</h4>
                         <div className="flex flex-wrap gap-2">
                           {issue.relatedCommands.map((cmd, i) => (
                             <code
@@ -289,9 +274,7 @@ function TroubleshootingContent() {
 
           {/* Related Articles */}
           <div>
-            <h2 className="mb-4 text-xl font-semibold">
-              Troubleshooting Articles
-            </h2>
+            <h2 className="mb-4 text-xl font-semibold">Troubleshooting Articles</h2>
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
               {troubleshootingArticles.map((article) => (
                 <Link key={article.id} href={`/help/article/${article.id}`}>

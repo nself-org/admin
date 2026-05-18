@@ -54,7 +54,7 @@ export async function GET(_request: NextRequest): Promise<NextResponse> {
         error: 'Failed to list schema jobs',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -96,7 +96,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
             'DDL must be generated from a validated schema canvas. ' +
             'Supply a `canvas` field (CanvasState) — raw `forwardDDL`/`reverseDDL` are not accepted.',
         },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -113,21 +113,15 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           success: false,
           error: 'No DDL to emit — canvas is empty or forwardDDL is missing',
         },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
     const label = body.name ?? `migration_${Date.now()}`
 
     // Emit formatted SQL file bodies
-    const forwardSql = emitMigrationFile(
-      body.canvas ?? { tables: [], relationships: [] },
-      label,
-    )
-    const reverseSql = emitRollbackFile(
-      body.canvas ?? { tables: [], relationships: [] },
-      label,
-    )
+    const forwardSql = emitMigrationFile(body.canvas ?? { tables: [], relationships: [] }, label)
+    const reverseSql = emitRollbackFile(body.canvas ?? { tables: [], relationships: [] }, label)
 
     // Emit-only mode: return DDL without persisting
     if (emitOnly || body.emitOnly) {
@@ -168,7 +162,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         forwardSql,
         reverseSql,
       },
-      { status: 201 },
+      { status: 201 }
     )
   } catch (error) {
     return NextResponse.json(
@@ -177,7 +171,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to create schema job',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

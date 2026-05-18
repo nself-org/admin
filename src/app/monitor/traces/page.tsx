@@ -2,14 +2,7 @@
 
 import { HeroPattern } from '@/components/HeroPattern'
 import { ChartSkeleton } from '@/components/skeletons'
-import {
-  ArrowLeft,
-  ChevronDown,
-  ChevronRight,
-  Clock,
-  GitBranch,
-  Search,
-} from 'lucide-react'
+import { ArrowLeft, ChevronDown, ChevronRight, Clock, GitBranch, Search } from 'lucide-react'
 import Link from 'next/link'
 import { Suspense, useCallback, useEffect, useState } from 'react'
 
@@ -70,10 +63,7 @@ function TracesContent() {
     const leftPercent = (span.startTime / totalDuration) * 100
 
     return (
-      <div
-        key={span.id}
-        className="border-l-2 border-zinc-200 dark:border-zinc-700"
-      >
+      <div key={span.id} className="border-l-2 border-zinc-200 dark:border-zinc-700">
         <div
           className={`flex items-center gap-2 py-2 hover:bg-zinc-50 dark:hover:bg-zinc-700/50 ${
             depth > 0 ? 'ml-4' : ''
@@ -92,9 +82,7 @@ function TracesContent() {
           )}
           <div className="flex-1">
             <div className="mb-1 flex items-center gap-2">
-              <span className="font-medium text-zinc-900 dark:text-white">
-                {span.name}
-              </span>
+              <span className="font-medium text-zinc-900 dark:text-white">{span.name}</span>
               <span className="rounded bg-zinc-100 px-2 py-0.5 text-xs text-zinc-600 dark:bg-zinc-700 dark:text-zinc-400">
                 {span.service}
               </span>
@@ -120,9 +108,7 @@ function TracesContent() {
         </div>
         {hasChildren && isExpanded && (
           <div className="ml-4">
-            {span.children!.map((child) =>
-              renderSpan(child, depth + 1, totalDuration),
-            )}
+            {span.children!.map((child) => renderSpan(child, depth + 1, totalDuration))}
           </div>
         )}
       </div>
@@ -131,11 +117,7 @@ function TracesContent() {
 
   const filteredTraces = traces.filter((t) => {
     if (filterService !== 'all' && t.service !== filterService) return false
-    if (
-      searchQuery &&
-      !t.name.toLowerCase().includes(searchQuery.toLowerCase())
-    )
-      return false
+    if (searchQuery && !t.name.toLowerCase().includes(searchQuery.toLowerCase())) return false
     return true
   })
 
@@ -177,8 +159,8 @@ function TracesContent() {
               Trace data not available
             </h3>
             <p className="text-zinc-600 dark:text-zinc-400">
-              Distributed trace data is not exposed via the Admin API. Use the CLI
-              to view traces directly.
+              Distributed trace data is not exposed via the Admin API. Use the CLI to view traces
+              directly.
             </p>
             <p className="mt-4 font-mono text-sm text-sky-500">nself traces</p>
           </div>
@@ -252,9 +234,7 @@ function TracesContent() {
                   }`}
                 >
                   <div className="mb-2 flex items-center justify-between">
-                    <span className="font-medium text-zinc-900 dark:text-white">
-                      {trace.name}
-                    </span>
+                    <span className="font-medium text-zinc-900 dark:text-white">{trace.name}</span>
                     <span
                       className={`rounded-full px-2 py-0.5 text-xs font-medium ${
                         trace.status === 'ok'
@@ -293,9 +273,7 @@ function TracesContent() {
                     <span className="font-medium text-zinc-900 dark:text-white">
                       {selectedTrace.name}
                     </span>
-                    <span className="text-sm text-zinc-500">
-                      Total: {selectedTrace.duration}ms
-                    </span>
+                    <span className="text-sm text-zinc-500">Total: {selectedTrace.duration}ms</span>
                   </div>
                   <div className="flex items-center gap-4 text-sm text-zinc-500">
                     <span>Service: {selectedTrace.service}</span>
@@ -304,9 +282,7 @@ function TracesContent() {
                 </div>
 
                 <div className="space-y-1">
-                  {selectedTrace.spans.map((span) =>
-                    renderSpan(span, 0, selectedTrace.duration),
-                  )}
+                  {selectedTrace.spans.map((span) => renderSpan(span, 0, selectedTrace.duration))}
                 </div>
               </div>
             ) : (
@@ -324,18 +300,14 @@ function TracesContent() {
           </h3>
           <div className="space-y-2 font-mono text-sm">
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-sky-500">nself traces</span> - List recent
-              traces
+              <span className="text-sky-500">nself traces</span> - List recent traces
             </p>
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-sky-500">nself traces --id=trace-id</span> -
-              View trace details
+              <span className="text-sky-500">nself traces --id=trace-id</span> - View trace details
             </p>
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-sky-500">
-                nself traces --service=hasura
-              </span>{' '}
-              - Filter by service
+              <span className="text-sky-500">nself traces --service=hasura</span> - Filter by
+              service
             </p>
           </div>
         </div>

@@ -98,7 +98,7 @@ export function WorkflowNode({
     <div
       className={cn(
         'absolute w-[200px] cursor-move rounded-lg border bg-white shadow-sm transition-shadow hover:shadow-md dark:border-zinc-800 dark:bg-zinc-950',
-        selected && 'ring-2 ring-blue-500',
+        selected && 'ring-2 ring-blue-500'
       )}
       style={{
         left: action.position.x,
@@ -127,7 +127,7 @@ export function WorkflowNode({
           <div
             className={cn(
               'flex h-6 w-6 items-center justify-center rounded text-white',
-              actionColors[action.type],
+              actionColors[action.type]
             )}
           >
             {actionIcons[action.type]}
@@ -151,7 +151,7 @@ export function WorkflowNode({
       <div
         className={cn(
           'absolute -top-2 -right-2 flex gap-1 transition-opacity',
-          showActions ? 'opacity-100' : 'opacity-0',
+          showActions ? 'opacity-100' : 'opacity-0'
         )}
       >
         <button

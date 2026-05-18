@@ -13,11 +13,7 @@ interface ReportTemplateListProps {
   selectedId?: string
 }
 
-export function ReportTemplateList({
-  category,
-  onSelect,
-  selectedId,
-}: ReportTemplateListProps) {
+export function ReportTemplateList({ category, onSelect, selectedId }: ReportTemplateListProps) {
   const { templates, isLoading } = useReportTemplates(category)
   const [searchQuery, setSearchQuery] = useState('')
 
@@ -29,7 +25,7 @@ export function ReportTemplateList({
       (template) =>
         template.name.toLowerCase().includes(query) ||
         template.description?.toLowerCase().includes(query) ||
-        template.category.toLowerCase().includes(query),
+        template.category.toLowerCase().includes(query)
     )
   }, [templates, searchQuery])
 

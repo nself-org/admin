@@ -26,7 +26,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           details: result.error || result.stderr || 'Unknown error',
           output: result.stdout,
         },
-        { status: 500 },
+        { status: 500 }
       )
     }
 
@@ -39,7 +39,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       {
         cwd: projectPath,
         timeout: 10000,
-      },
+      }
     )
 
     const containerLines = psOutput.split('\n').filter((line) => line.trim())
@@ -68,7 +68,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
             const { stdout: logOutput } = await execFileAsync(
               'docker',
               ['logs', name, '--tail', '10'],
-              { timeout: 5000 },
+              { timeout: 5000 }
             )
             logs = logOutput.split('\n').filter((l) => l.trim())
           } catch {
@@ -83,12 +83,10 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           restarts: parseInt(restarts) || 0,
           logs,
         }
-      }),
+      })
     )
 
-    const filteredContainers = containers.filter((c) =>
-      c.name.includes('my_project'),
-    )
+    const filteredContainers = containers.filter((c) => c.name.includes('my_project'))
 
     // Parse nself doctor output for system checks
     const systemChecks = []
@@ -137,42 +135,36 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     }
 
     // Determine overall status
-    const runningCount = filteredContainers.filter(
-      (c) => c.status === 'running',
-    ).length
+    const runningCount = filteredContainers.filter((c) => c.status === 'running').length
     const totalCount = filteredContainers.length
     let overall: 'healthy' | 'partial' | 'critical' = 'healthy'
 
     if (runningCount === 0) {
       overall = 'critical'
       recommendations.push(
-        'No services are running. Click "Auto Fix Issues" or run "nself start" to start all services.',
+        'No services are running. Click "Auto Fix Issues" or run "nself start" to start all services.'
       )
     } else if (runningCount < totalCount) {
       overall = 'partial'
       const stoppedServices = filteredContainers
         .filter((c) => c.status !== 'running')
         .map((c) => c.name.replace('my_project_', ''))
-      recommendations.push(
-        `The following services are not running: ${stoppedServices.join(', ')}`,
-      )
+      recommendations.push(`The following services are not running: ${stoppedServices.join(', ')}`)
 
       // Check for specific issues
       const nginxIssue = filteredContainers.find(
-        (c) => c.name.includes('nginx') && c.status === 'restarting',
+        (c) => c.name.includes('nginx') && c.status === 'restarting'
       )
       if (nginxIssue) {
         recommendations.push(
-          'Nginx is restarting. Check nginx configuration files for syntax errors.',
+          'Nginx is restarting. Check nginx configuration files for syntax errors.'
         )
       }
     }
 
     // Add recommendations based on system checks
     if (systemChecks.some((c) => c.status === 'fail')) {
-      recommendations.push(
-        'Some system checks failed. Review the system checks panel for details.',
-      )
+      recommendations.push('Some system checks failed. Review the system checks panel for details.')
     }
 
     return NextResponse.json({
@@ -188,7 +180,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to run diagnostics',
         message: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

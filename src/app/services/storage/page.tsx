@@ -4,13 +4,7 @@ import { PageShell } from '@/components/PageShell'
 import { ServiceDetailSkeleton } from '@/components/skeletons'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { ScrollArea } from '@/components/ui/scroll-area'
@@ -161,9 +155,7 @@ function StorageContent() {
       const data = await res.json()
 
       if (!data.success) {
-        setError(
-          data.details || data.error || 'Failed to get storage configuration',
-        )
+        setError(data.details || data.error || 'Failed to get storage configuration')
         setOutput(data.details || data.error || '')
         return
       }
@@ -184,9 +176,7 @@ function StorageContent() {
     setInitLoading(true)
     setError(null)
     const bucketArg = initBucket ? ` --bucket=${initBucket}` : ''
-    setLastCommand(
-      `nself service storage init --provider=${initProvider}${bucketArg}`,
-    )
+    setLastCommand(`nself service storage init --provider=${initProvider}${bucketArg}`)
 
     try {
       const res = await fetch('/api/services/storage/init', {
@@ -222,11 +212,9 @@ function StorageContent() {
 
     setUploadLoading(true)
     setError(null)
-    const destArg = uploadDestination
-      ? ` --destination=${uploadDestination}`
-      : ''
+    const destArg = uploadDestination ? ` --destination=${uploadDestination}` : ''
     setLastCommand(
-      `nself service storage upload --file=${uploadFile} --bucket=${uploadBucket}${destArg}`,
+      `nself service storage upload --file=${uploadFile} --bucket=${uploadBucket}${destArg}`
     )
 
     try {
@@ -347,9 +335,7 @@ function StorageContent() {
                   <HardDrive className="h-5 w-5 text-blue-600 dark:text-blue-400" />
                 </div>
                 <div>
-                  <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                    Status
-                  </p>
+                  <p className="text-sm text-zinc-500 dark:text-zinc-400">Status</p>
                   <p className="text-lg font-semibold text-zinc-900 dark:text-white">
                     {storageStatus ? 'Active' : 'Unknown'}
                   </p>
@@ -364,12 +350,8 @@ function StorageContent() {
                   <Database className="h-5 w-5 text-green-600 dark:text-green-400" />
                 </div>
                 <div>
-                  <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                    Provider
-                  </p>
-                  <p className="text-lg font-semibold text-zinc-900 dark:text-white">
-                    MinIO
-                  </p>
+                  <p className="text-sm text-zinc-500 dark:text-zinc-400">Provider</p>
+                  <p className="text-lg font-semibold text-zinc-900 dark:text-white">MinIO</p>
                 </div>
               </div>
             </CardContent>
@@ -381,9 +363,7 @@ function StorageContent() {
                   <FolderOpen className="h-5 w-5 text-sky-500 dark:text-sky-400" />
                 </div>
                 <div>
-                  <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                    Objects
-                  </p>
+                  <p className="text-sm text-zinc-500 dark:text-zinc-400">Objects</p>
                   <p className="text-lg font-semibold text-zinc-900 dark:text-white">
                     {files.length}
                   </p>
@@ -398,18 +378,12 @@ function StorageContent() {
                   <TestTube className="h-5 w-5 text-amber-600 dark:text-amber-400" />
                 </div>
                 <div>
-                  <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                    Connection
-                  </p>
+                  <p className="text-sm text-zinc-500 dark:text-zinc-400">Connection</p>
                   <p className="text-lg font-semibold text-zinc-900 dark:text-white">
                     {testResult === 'pass' ? (
-                      <span className="text-green-600 dark:text-green-400">
-                        Healthy
-                      </span>
+                      <span className="text-green-600 dark:text-green-400">Healthy</span>
                     ) : testResult === 'fail' ? (
-                      <span className="text-red-600 dark:text-red-400">
-                        Failed
-                      </span>
+                      <span className="text-red-600 dark:text-red-400">Failed</span>
                     ) : (
                       'Untested'
                     )}
@@ -422,12 +396,7 @@ function StorageContent() {
 
         {/* Quick Actions */}
         <div className="flex flex-wrap gap-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={fetchStatus}
-            disabled={statusLoading}
-          >
+          <Button variant="outline" size="sm" onClick={fetchStatus} disabled={statusLoading}>
             {statusLoading ? (
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
             ) : (
@@ -435,21 +404,11 @@ function StorageContent() {
             )}
             Refresh Status
           </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={fetchConfig}
-            disabled={loading}
-          >
+          <Button variant="outline" size="sm" onClick={fetchConfig} disabled={loading}>
             <Settings className="mr-2 h-4 w-4" />
             View Config
           </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handleTest}
-            disabled={testLoading}
-          >
+          <Button variant="outline" size="sm" onClick={handleTest} disabled={testLoading}>
             {testLoading ? (
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
             ) : (
@@ -515,9 +474,7 @@ function StorageContent() {
               <Upload className="h-5 w-5" />
               Upload File
             </CardTitle>
-            <CardDescription>
-              Upload a file to a storage bucket.
-            </CardDescription>
+            <CardDescription>Upload a file to a storage bucket.</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
@@ -547,9 +504,7 @@ function StorageContent() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="upload-dest">
-                    Destination Path (optional)
-                  </Label>
+                  <Label htmlFor="upload-dest">Destination Path (optional)</Label>
                   <Input
                     id="upload-dest"
                     placeholder="uploads/file.txt"
@@ -560,9 +515,7 @@ function StorageContent() {
               </div>
               <Button
                 onClick={handleUpload}
-                disabled={
-                  uploadLoading || !uploadFile.trim() || !uploadBucket.trim()
-                }
+                disabled={uploadLoading || !uploadFile.trim() || !uploadBucket.trim()}
               >
                 {uploadLoading ? (
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -584,16 +537,9 @@ function StorageContent() {
                   <FolderOpen className="h-5 w-5" />
                   File Browser
                 </CardTitle>
-                <CardDescription>
-                  Browse and manage files in storage buckets.
-                </CardDescription>
+                <CardDescription>Browse and manage files in storage buckets.</CardDescription>
               </div>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handleListFiles}
-                disabled={loading}
-              >
+              <Button variant="outline" size="sm" onClick={handleListFiles} disabled={loading}>
                 {loading ? (
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 ) : (

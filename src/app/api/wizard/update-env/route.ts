@@ -8,14 +8,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
   try {
     const body = await request.json()
-    const {
-      config,
-      step,
-      customServices,
-      userServices,
-      frontendApps,
-      environment,
-    } = body
+    const { config, step, customServices, userServices, frontendApps, environment } = body
 
     // Convert wizard config to env variables based on the step
     let envUpdates: Record<string, string> = {}
@@ -33,13 +26,9 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           BASE_DOMAIN: config.domain || 'local.nself.org',
           POSTGRES_DB: config.databaseName || 'nself', // Respect user input, default to 'nself'
           POSTGRES_PASSWORD: config.databasePassword || 'nself-dev-password',
-          POSTGRES_USER:
-            config.postgresUser || config.databaseUser || 'postgres', // Respect user input, default to 'postgres'
-          HASURA_GRAPHQL_ADMIN_SECRET:
-            config.hasuraAdminSecret || 'hasura-admin-secret-dev', // Full name per spec
-          HASURA_JWT_KEY:
-            config.jwtSecret ||
-            'development-secret-key-minimum-32-characters-long', // Per spec v1.0
+          POSTGRES_USER: config.postgresUser || config.databaseUser || 'postgres', // Respect user input, default to 'postgres'
+          HASURA_GRAPHQL_ADMIN_SECRET: config.hasuraAdminSecret || 'hasura-admin-secret-dev', // Full name per spec
+          HASURA_JWT_KEY: config.jwtSecret || 'development-secret-key-minimum-32-characters-long', // Per spec v1.0
           HASURA_JWT_TYPE: 'HS256', // Per spec v1.0
           BACKUP_ENABLED: config.backupEnabled ? 'true' : 'false',
           BACKUP_SCHEDULE: config.backupSchedule || '0 2 * * *',
@@ -147,35 +136,27 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
             POSTGRES_ENABLED: 'true',
             HASURA_ENABLED: 'true',
             AUTH_ENABLED: 'true',
-            STORAGE_ENABLED:
-              config.optionalServices.minio !== false ? 'true' : 'false', // Default true per spec
+            STORAGE_ENABLED: config.optionalServices.minio !== false ? 'true' : 'false', // Default true per spec
             // Optional services (in order: nself-admin, redis, minio, mlflow, mail, search, monitoring)
             NSELF_ADMIN_ENABLED:
-              config.optionalServices.nadmin || config.optionalServices.admin
-                ? 'true'
-                : 'false',
+              config.optionalServices.nadmin || config.optionalServices.admin ? 'true' : 'false',
             REDIS_ENABLED: config.optionalServices.redis ? 'true' : 'false',
             MLFLOW_ENABLED: config.optionalServices.mlflow ? 'true' : 'false',
             MAILPIT_ENABLED:
-              config.optionalServices.mail?.enabled ||
-              config.optionalServices.mailpit
+              config.optionalServices.mail?.enabled || config.optionalServices.mailpit
                 ? 'true'
                 : 'false',
             SEARCH_ENABLED: config.optionalServices.search ? 'true' : 'false',
-            FUNCTIONS_ENABLED: config.optionalServices.functions
-              ? 'true'
-              : 'false',
+            FUNCTIONS_ENABLED: config.optionalServices.functions ? 'true' : 'false',
           }
 
           // Add service credentials when services are enabled
           if (config.optionalServices.minio !== false) {
             envUpdates.MINIO_ROOT_USER = config.minioRootUser || 'minioadmin'
-            envUpdates.MINIO_ROOT_PASSWORD =
-              config.minioRootPassword || 'minioadmin-password'
+            envUpdates.MINIO_ROOT_PASSWORD = config.minioRootPassword || 'minioadmin-password'
           }
           if (config.optionalServices.search) {
-            envUpdates.MEILI_MASTER_KEY =
-              config.meiliMasterKey || 'meilisearch-master-key-32-chars'
+            envUpdates.MEILI_MASTER_KEY = config.meiliMasterKey || 'meilisearch-master-key-32-chars'
           }
           // Monitoring bundle - includes all monitoring services
           if (config.optionalServices.monitoring) {
@@ -221,11 +202,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         // Update custom services
         envUpdates = {}
         const services =
-          customServices ||
-          userServices ||
-          config?.customServices ||
-          config?.userServices ||
-          []
+          customServices || userServices || config?.customServices || config?.userServices || []
         // Always set SERVICES_ENABLED based on whether we have services
         envUpdates.SERVICES_ENABLED = services.length > 0 ? 'true' : 'false'
 
@@ -257,11 +234,8 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           config.frontendApps.forEach((app: any, index: number) => {
             const num = index + 1
             envUpdates[`FRONTEND_APP_${num}_NAME`] = app.name
-            envUpdates[`FRONTEND_APP_${num}_FRAMEWORK`] =
-              app.framework || 'nextjs'
-            envUpdates[`FRONTEND_APP_${num}_PORT`] = String(
-              app.port || 3000 + num,
-            )
+            envUpdates[`FRONTEND_APP_${num}_FRAMEWORK`] = app.framework || 'nextjs'
+            envUpdates[`FRONTEND_APP_${num}_PORT`] = String(app.port || 3000 + num)
           })
         } else {
           envUpdates.FRONTEND_APP_COUNT = '0'
@@ -276,19 +250,14 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           config.frontendApps.forEach((app: any, index: number) => {
             const num = index + 1
             // Save all frontend app fields
-            if (app.displayName)
-              envUpdates[`FRONTEND_APP_${num}_DISPLAY_NAME`] = app.displayName
-            if (app.systemName)
-              envUpdates[`FRONTEND_APP_${num}_SYSTEM_NAME`] = app.systemName
-            if (app.tablePrefix)
-              envUpdates[`FRONTEND_APP_${num}_TABLE_PREFIX`] = app.tablePrefix
-            if (app.port)
-              envUpdates[`FRONTEND_APP_${num}_PORT`] = String(app.port)
+            if (app.displayName) envUpdates[`FRONTEND_APP_${num}_DISPLAY_NAME`] = app.displayName
+            if (app.systemName) envUpdates[`FRONTEND_APP_${num}_SYSTEM_NAME`] = app.systemName
+            if (app.tablePrefix) envUpdates[`FRONTEND_APP_${num}_TABLE_PREFIX`] = app.tablePrefix
+            if (app.port) envUpdates[`FRONTEND_APP_${num}_PORT`] = String(app.port)
             if (app.route) envUpdates[`FRONTEND_APP_${num}_ROUTE`] = app.route
             // Legacy fields for backward compatibility
             if (app.name) envUpdates[`FRONTEND_APP_${num}_NAME`] = app.name
-            if (app.framework)
-              envUpdates[`FRONTEND_APP_${num}_FRAMEWORK`] = app.framework
+            if (app.framework) envUpdates[`FRONTEND_APP_${num}_FRAMEWORK`] = app.framework
           })
         } else {
           envUpdates.FRONTEND_APP_COUNT = '0'
@@ -350,11 +319,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
           // Clear entries after the last service to handle deletion
           // Only clear up to 10 entries after the last service to prevent excessive writes
-          for (
-            let i = services.length + 1;
-            i <= Math.min(services.length + 10, 20);
-            i++
-          ) {
+          for (let i = services.length + 1; i <= Math.min(services.length + 10, 20); i++) {
             envUpdates[`CS_${i}`] = ''
           }
         }
@@ -364,26 +329,18 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           envUpdates.FRONTEND_APP_COUNT = String(frontendApps.length)
           frontendApps.forEach((app: any, index: number) => {
             const num = index + 1
-            if (app.displayName)
-              envUpdates[`FRONTEND_APP_${num}_DISPLAY_NAME`] = app.displayName
-            if (app.systemName)
-              envUpdates[`FRONTEND_APP_${num}_SYSTEM_NAME`] = app.systemName
-            if (app.tablePrefix)
-              envUpdates[`FRONTEND_APP_${num}_TABLE_PREFIX`] = app.tablePrefix
-            if (app.localPort)
-              envUpdates[`FRONTEND_APP_${num}_PORT`] = String(app.localPort)
-            if (app.productionUrl)
-              envUpdates[`FRONTEND_APP_${num}_ROUTE`] = app.productionUrl
+            if (app.displayName) envUpdates[`FRONTEND_APP_${num}_DISPLAY_NAME`] = app.displayName
+            if (app.systemName) envUpdates[`FRONTEND_APP_${num}_SYSTEM_NAME`] = app.systemName
+            if (app.tablePrefix) envUpdates[`FRONTEND_APP_${num}_TABLE_PREFIX`] = app.tablePrefix
+            if (app.localPort) envUpdates[`FRONTEND_APP_${num}_PORT`] = String(app.localPort)
+            if (app.productionUrl) envUpdates[`FRONTEND_APP_${num}_ROUTE`] = app.productionUrl
             if (app.remoteSchemaUrl) {
-              envUpdates[`FRONTEND_APP_${num}_REMOTE_SCHEMA_URL`] =
-                app.remoteSchemaUrl
+              envUpdates[`FRONTEND_APP_${num}_REMOTE_SCHEMA_URL`] = app.remoteSchemaUrl
               // Auto-generate schema name if needed
               if (!app.remoteSchemaName && app.tablePrefix) {
-                envUpdates[`FRONTEND_APP_${num}_REMOTE_SCHEMA_NAME`] =
-                  `${app.tablePrefix}_schema`
+                envUpdates[`FRONTEND_APP_${num}_REMOTE_SCHEMA_NAME`] = `${app.tablePrefix}_schema`
               } else if (app.remoteSchemaName) {
-                envUpdates[`FRONTEND_APP_${num}_REMOTE_SCHEMA_NAME`] =
-                  app.remoteSchemaName
+                envUpdates[`FRONTEND_APP_${num}_REMOTE_SCHEMA_NAME`] = app.remoteSchemaName
               }
             }
           })
@@ -442,7 +399,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         error: `Failed to update environment file`,
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

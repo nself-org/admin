@@ -33,9 +33,7 @@ export function ResultsTable({ result }: ResultsTableProps) {
   const exportCSV = () => {
     const csvContent = [
       result.columns.join(','),
-      ...result.rows.map((row) =>
-        row.map((cell) => JSON.stringify(cell)).join(','),
-      ),
+      ...result.rows.map((row) => row.map((cell) => JSON.stringify(cell)).join(',')),
     ].join('\n')
 
     const blob = new Blob([csvContent], { type: 'text/csv' })
@@ -72,10 +70,7 @@ export function ResultsTable({ result }: ResultsTableProps) {
   const copyToClipboard = () => {
     const text =
       viewMode === 'table'
-        ? [
-            result.columns.join('\t'),
-            ...result.rows.map((row) => row.join('\t')),
-          ].join('\n')
+        ? [result.columns.join('\t'), ...result.rows.map((row) => row.join('\t'))].join('\n')
         : JSON.stringify(
             result.rows.map((row) => {
               const obj: Record<string, any> = {}
@@ -85,7 +80,7 @@ export function ResultsTable({ result }: ResultsTableProps) {
               return obj
             }),
             null,
-            2,
+            2
           )
 
     navigator.clipboard.writeText(text)
@@ -152,10 +147,7 @@ export function ResultsTable({ result }: ResultsTableProps) {
                   </thead>
                   <tbody>
                     {currentRows.map((row, rowIndex) => (
-                      <tr
-                        key={rowIndex}
-                        className="hover:bg-zinc-50 dark:hover:bg-zinc-800/50"
-                      >
+                      <tr key={rowIndex} className="hover:bg-zinc-50 dark:hover:bg-zinc-800/50">
                         {row.map((cell, cellIndex) => (
                           <td
                             key={cellIndex}
@@ -178,9 +170,8 @@ export function ResultsTable({ result }: ResultsTableProps) {
             {totalPages > 1 && (
               <div className="mt-4 flex items-center justify-between">
                 <div className="text-sm text-zinc-600 dark:text-zinc-400">
-                  Showing {startIndex + 1} to{' '}
-                  {Math.min(endIndex, result.rowCount)} of {result.rowCount}{' '}
-                  rows
+                  Showing {startIndex + 1} to {Math.min(endIndex, result.rowCount)} of{' '}
+                  {result.rowCount} rows
                 </div>
                 <div className="flex items-center gap-2">
                   <Button
@@ -198,9 +189,7 @@ export function ResultsTable({ result }: ResultsTableProps) {
                     variant="outline"
                     size="sm"
                     disabled={currentPage === totalPages}
-                    onClick={() =>
-                      setCurrentPage((p) => Math.min(totalPages, p + 1))
-                    }
+                    onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
                   >
                     Next
                   </Button>
@@ -222,7 +211,7 @@ export function ResultsTable({ result }: ResultsTableProps) {
                       return obj
                     }),
                     null,
-                    2,
+                    2
                   )}
                 </code>
               </pre>

@@ -5,9 +5,7 @@ interface ServiceDetailSkeletonProps {
   tabs?: number
 }
 
-export function ServiceDetailSkeleton({
-  tabs = 4,
-}: ServiceDetailSkeletonProps) {
+export function ServiceDetailSkeleton({ tabs = 4 }: ServiceDetailSkeletonProps) {
   return (
     <div className="space-y-6" aria-label="Loading service details...">
       {/* Header with status */}

@@ -24,8 +24,7 @@ export function ResourceSparkline({
   maxValue = 100,
   currentValue,
 }: ResourceSparklineProps) {
-  const displayValue =
-    currentValue ?? (data.length > 0 ? data[data.length - 1].value : 0)
+  const displayValue = currentValue ?? (data.length > 0 ? data[data.length - 1].value : 0)
   const percentageUsed = maxValue > 0 ? (displayValue / maxValue) * 100 : 0
 
   const getColorByUsage = (percentage: number) => {
@@ -71,9 +70,7 @@ export function ResourceSparkline({
     <div className="rounded-lg border border-zinc-200 bg-white p-3 dark:border-zinc-700 dark:bg-zinc-900/50">
       {/* Header */}
       <div className="mb-2 flex items-center justify-between">
-        <span className="text-xs font-medium text-zinc-600 dark:text-zinc-400">
-          {label}
-        </span>
+        <span className="text-xs font-medium text-zinc-600 dark:text-zinc-400">{label}</span>
         <span className="text-lg font-bold" style={{ color: currentColor }}>
           {displayValue.toFixed(1)}
           {unit}
@@ -85,13 +82,7 @@ export function ResourceSparkline({
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart data={data}>
             <defs>
-              <linearGradient
-                id={`gradient-${label}`}
-                x1="0"
-                y1="0"
-                x2="0"
-                y2="1"
-              >
+              <linearGradient id={`gradient-${label}`} x1="0" y1="0" x2="0" y2="1">
                 <stop offset="0%" stopColor={currentColor} stopOpacity={0.3} />
                 <stop offset="95%" stopColor={currentColor} stopOpacity={0} />
               </linearGradient>

@@ -5,10 +5,7 @@ import { EmptyState } from '@/components/ui/empty-state'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useActivityFeed } from '@/hooks/useActivity'
 import { cn } from '@/lib/utils'
-import type {
-  ActivityResourceType,
-  ActivityFilter as FilterType,
-} from '@/types/activity'
+import type { ActivityResourceType, ActivityFilter as FilterType } from '@/types/activity'
 import { Activity, AlertCircle, Loader2, RefreshCw } from 'lucide-react'
 import * as React from 'react'
 import { ActivityFilter } from './ActivityFilter'
@@ -79,16 +76,15 @@ export function ActivityFeed({
       resourceType: resourceType || filter.resourceType,
       resourceId: resourceId || filter.resourceId,
     }),
-    [filter, resourceType, resourceId],
+    [filter, resourceType, resourceId]
   )
 
-  const { activities, total, hasMore, isLoading, isError, error, refresh } =
-    useActivityFeed({
-      filter: mergedFilter,
-      limit,
-      offset,
-      includeChanges,
-    })
+  const { activities, total, hasMore, isLoading, isError, error, refresh } = useActivityFeed({
+    filter: mergedFilter,
+    limit,
+    offset,
+    includeChanges,
+  })
 
   const loadMore = () => {
     setOffset((prev) => prev + limit)
@@ -110,18 +106,9 @@ export function ActivityFeed({
       {showFilter && (
         <div className="flex items-center gap-2">
           <div className="flex-1">
-            <ActivityFilter
-              value={filter}
-              onChange={handleFilterChange}
-              compact={compact}
-            />
+            <ActivityFilter value={filter} onChange={handleFilterChange} compact={compact} />
           </div>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handleRefresh}
-            disabled={isLoading}
-          >
+          <Button variant="outline" size="sm" onClick={handleRefresh} disabled={isLoading}>
             <RefreshCw className={cn('h-4 w-4', isLoading && 'animate-spin')} />
           </Button>
         </div>
@@ -139,21 +126,10 @@ export function ActivityFeed({
         <div className="rounded-lg border border-red-200 bg-red-50 p-4 dark:border-red-800 dark:bg-red-950">
           <div className="flex items-center gap-2 text-red-600 dark:text-red-400">
             <AlertCircle className="h-4 w-4" />
-            <span className="text-sm font-medium">
-              Failed to load activities
-            </span>
+            <span className="text-sm font-medium">Failed to load activities</span>
           </div>
-          {error && (
-            <p className="mt-1 text-sm text-red-500 dark:text-red-400">
-              {error}
-            </p>
-          )}
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handleRefresh}
-            className="mt-2"
-          >
+          {error && <p className="mt-1 text-sm text-red-500 dark:text-red-400">{error}</p>}
+          <Button variant="outline" size="sm" onClick={handleRefresh} className="mt-2">
             Try again
           </Button>
         </div>

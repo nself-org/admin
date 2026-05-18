@@ -52,12 +52,19 @@ test.describe('/system/urls', () => {
 
   test('error state: shows error message on 500', async ({ page }) => {
     await page.route('**/api/nself/urls', (route) =>
-      route.fulfill({ status: 500, contentType: 'application/json', body: JSON.stringify({ error: 'Internal error' }) }),
+      route.fulfill({
+        status: 500,
+        contentType: 'application/json',
+        body: JSON.stringify({ error: 'Internal error' }),
+      })
     )
     await page.goto('/system/urls')
     await page.waitForLoadState('networkidle')
     // Error or offline state shown (depends on message content)
-    const hasError = await page.getByText(/failed|error|retry/i).first().isVisible()
+    const hasError = await page
+      .getByText(/failed|error|retry/i)
+      .first()
+      .isVisible()
     expect(hasError).toBe(true)
   })
 
@@ -66,7 +73,10 @@ test.describe('/system/urls', () => {
     await page.goto('/system/urls')
     await page.waitForLoadState('networkidle')
     const isAtLogin = page.url().includes('/login')
-    const hasUnauthContent = await page.getByText(/not authenticated|sign in|login/i).first().isVisible()
+    const hasUnauthContent = await page
+      .getByText(/not authenticated|sign in|login/i)
+      .first()
+      .isVisible()
     expect(isAtLogin || hasUnauthContent).toBe(true)
   })
 
@@ -103,7 +113,10 @@ test.describe('/system/version', () => {
     })
     await page.goto('/system/version')
     await page.waitForLoadState('networkidle')
-    const hasVersion = await page.getByText(/1\.1\.1|version/i).first().isVisible()
+    const hasVersion = await page
+      .getByText(/1\.1\.1|version/i)
+      .first()
+      .isVisible()
     expect(hasVersion).toBe(true)
   })
 
@@ -118,7 +131,13 @@ test.describe('/system/version', () => {
     await page.context().clearCookies()
     await page.goto('/system/version')
     await page.waitForLoadState('networkidle')
-    expect(page.url().includes('/login') || await page.getByText(/login|sign in/i).first().isVisible()).toBe(true)
+    expect(
+      page.url().includes('/login') ||
+        (await page
+          .getByText(/login|sign in/i)
+          .first()
+          .isVisible())
+    ).toBe(true)
   })
 })
 
@@ -145,7 +164,10 @@ test.describe('/system/diagnostics', () => {
     })
     await page.goto('/system/diagnostics')
     await page.waitForLoadState('networkidle')
-    const hasDiag = await page.getByText(/CLI binary|Docker daemon|diagnostics/i).first().isVisible()
+    const hasDiag = await page
+      .getByText(/CLI binary|Docker daemon|diagnostics/i)
+      .first()
+      .isVisible()
     expect(hasDiag).toBe(true)
   })
 
@@ -192,7 +214,10 @@ test.describe('/system/trust', () => {
     })
     await page.goto('/system/trust')
     await page.waitForLoadState('networkidle')
-    const hasTrust = await page.getByText(/ssl|dns|port|trust/i).first().isVisible()
+    const hasTrust = await page
+      .getByText(/ssl|dns|port|trust/i)
+      .first()
+      .isVisible()
     expect(hasTrust).toBe(true)
   })
 
@@ -227,7 +252,10 @@ test.describe('/system/validate', () => {
     })
     await page.goto('/system/validate')
     await page.waitForLoadState('networkidle')
-    const hasVal = await page.getByText(/config|environment|validate|valid/i).first().isVisible()
+    const hasVal = await page
+      .getByText(/config|environment|validate|valid/i)
+      .first()
+      .isVisible()
     expect(hasVal).toBe(true)
   })
 
@@ -254,22 +282,45 @@ test.describe('/system/help', () => {
   test('success state: shows command list', async ({ page }) => {
     await mockApiEndpoint(page, '**/api/nself/help', {
       commands: [
-        { name: 'start', description: 'Start all services', usage: 'nself start', category: 'services' },
-        { name: 'stop', description: 'Stop all services', usage: 'nself stop', category: 'services' },
+        {
+          name: 'start',
+          description: 'Start all services',
+          usage: 'nself start',
+          category: 'services',
+        },
+        {
+          name: 'stop',
+          description: 'Stop all services',
+          usage: 'nself stop',
+          category: 'services',
+        },
       ],
       version: '1.1.1',
     })
     await page.goto('/system/help')
     await page.waitForLoadState('networkidle')
-    const hasCmd = await page.getByText(/start|stop|command/i).first().isVisible()
+    const hasCmd = await page
+      .getByText(/start|stop|command/i)
+      .first()
+      .isVisible()
     expect(hasCmd).toBe(true)
   })
 
   test('search box filters commands', async ({ page }) => {
     await mockApiEndpoint(page, '**/api/nself/help', {
       commands: [
-        { name: 'start', description: 'Start all services', usage: 'nself start', category: 'services' },
-        { name: 'status', description: 'Show system status', usage: 'nself status', category: 'info' },
+        {
+          name: 'start',
+          description: 'Start all services',
+          usage: 'nself start',
+          category: 'services',
+        },
+        {
+          name: 'status',
+          description: 'Show system status',
+          usage: 'nself status',
+          category: 'info',
+        },
       ],
       version: '1.1.1',
     })
@@ -293,6 +344,12 @@ test.describe('/system/help', () => {
     await page.context().clearCookies()
     await page.goto('/system/help')
     await page.waitForLoadState('networkidle')
-    expect(page.url().includes('/login') || await page.getByText(/login|sign in/i).first().isVisible()).toBe(true)
+    expect(
+      page.url().includes('/login') ||
+        (await page
+          .getByText(/login|sign in/i)
+          .first()
+          .isVisible())
+    ).toBe(true)
   })
 })

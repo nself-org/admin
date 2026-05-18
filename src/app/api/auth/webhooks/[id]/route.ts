@@ -10,7 +10,7 @@ const VALID_ID_PATTERN = /^[a-zA-Z0-9_-]+$/
  */
 export async function GET(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> },
+  { params }: { params: Promise<{ id: string }> }
 ): Promise<NextResponse> {
   try {
     const { id } = await params
@@ -18,7 +18,7 @@ export async function GET(
     if (!id || !VALID_ID_PATTERN.test(id)) {
       return NextResponse.json(
         { success: false, error: 'Invalid webhook ID format' },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -31,7 +31,7 @@ export async function GET(
           error: `Failed to fetch webhook: ${id}`,
           details: result.error || result.stderr || 'Unknown error',
         },
-        { status: 500 },
+        { status: 500 }
       )
     }
 
@@ -46,7 +46,7 @@ export async function GET(
         error: 'Failed to fetch webhook details',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -59,7 +59,7 @@ export async function GET(
  */
 export async function PATCH(
   _request: NextRequest,
-  { params }: { params: Promise<{ id: string }> },
+  { params }: { params: Promise<{ id: string }> }
 ): Promise<NextResponse> {
   const authError = await requireAuth(_request)
   if (authError) return authError
@@ -71,7 +71,7 @@ export async function PATCH(
       error: 'Enable/disable is not yet supported by the nself CLI',
       id,
     },
-    { status: 501 },
+    { status: 501 }
   )
 }
 
@@ -81,7 +81,7 @@ export async function PATCH(
  */
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> },
+  { params }: { params: Promise<{ id: string }> }
 ): Promise<NextResponse> {
   const authError = await requireAuth(request)
   if (authError) return authError
@@ -92,7 +92,7 @@ export async function DELETE(
     if (!id || !VALID_ID_PATTERN.test(id)) {
       return NextResponse.json(
         { success: false, error: 'Invalid webhook ID format' },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -105,7 +105,7 @@ export async function DELETE(
           error: `Failed to delete webhook: ${id}`,
           details: result.error || result.stderr || 'Unknown error',
         },
-        { status: 500 },
+        { status: 500 }
       )
     }
 
@@ -120,7 +120,7 @@ export async function DELETE(
         error: 'Failed to delete webhook',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

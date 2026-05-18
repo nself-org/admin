@@ -7,10 +7,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     const token = request.cookies.get('nself-session')?.value
 
     if (!token) {
-      return NextResponse.json(
-        { success: false, error: 'No session' },
-        { status: 401 },
-      )
+      return NextResponse.json({ success: false, error: 'No session' }, { status: 401 })
     }
 
     // Check if session exists and is valid in database
@@ -19,7 +16,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     if (!isValid) {
       return NextResponse.json(
         { success: false, error: 'Invalid or expired session' },
-        { status: 401 },
+        { status: 401 }
       )
     }
 
@@ -27,10 +24,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     const session = await getSession(token)
 
     if (!session) {
-      return NextResponse.json(
-        { success: false, error: 'Session not found' },
-        { status: 401 },
-      )
+      return NextResponse.json({ success: false, error: 'Session not found' }, { status: 401 })
     }
 
     // Session is valid
@@ -42,7 +36,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
   } catch (_error) {
     return NextResponse.json(
       { success: false, error: 'Authentication check failed' },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

@@ -24,7 +24,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
           error: 'Failed to list storage objects',
           details: result.error || result.stderr || 'Unknown error',
         },
-        { status: 500 },
+        { status: 500 }
       )
     }
 
@@ -39,7 +39,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to list storage objects',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

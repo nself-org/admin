@@ -105,8 +105,7 @@ export const defaultTemplates: any[] = [
     // Template ID will be assigned by database
     // id: 'tpl-2',
     name: 'User Activity Report',
-    description:
-      'Detailed analysis of user activity including logins, actions, and session data',
+    description: 'Detailed analysis of user activity including logins, actions, and session data',
     category: 'security',
     dataSource: { type: 'database', query: 'SELECT * FROM audit_log' },
     columns: [
@@ -295,9 +294,7 @@ export const defaultTemplates: any[] = [
         sortable: true,
       },
     ],
-    defaultFilters: [
-      { field: 'severity', operator: 'in', value: ['high', 'critical'] },
-    ],
+    defaultFilters: [{ field: 'severity', operator: 'in', value: ['high', 'critical'] }],
     defaultSort: [{ field: 'timestamp', direction: 'desc' }],
     visualization: { type: 'table' },
     createdBy: 'system',
@@ -528,9 +525,7 @@ export interface UpdateScheduleInput {
 /**
  * Get all report templates, optionally filtered by tenantId
  */
-export async function getTemplates(
-  tenantId?: string,
-): Promise<ReportTemplate[]> {
+export async function getTemplates(tenantId?: string): Promise<ReportTemplate[]> {
   const be = await getBackend()
   return be.getTemplates(tenantId)
 }
@@ -546,9 +541,7 @@ export async function getTemplateById(id: string): Promise<ReportTemplate> {
 /**
  * Create a new report template
  */
-export async function createTemplate(
-  input: CreateReportTemplateInput,
-): Promise<ReportTemplate> {
+export async function createTemplate(input: CreateReportTemplateInput): Promise<ReportTemplate> {
   const be = await getBackend()
   return be.createTemplate(input)
 }
@@ -558,7 +551,7 @@ export async function createTemplate(
  */
 export async function updateTemplate(
   id: string,
-  updates: UpdateReportTemplateInput,
+  updates: UpdateReportTemplateInput
 ): Promise<ReportTemplate> {
   const be = await getBackend()
   return be.updateTemplate(id, updates)
@@ -581,7 +574,7 @@ export async function deleteTemplate(id: string): Promise<void> {
  */
 export async function generateReport(
   input: GenerateReportInput,
-  createdBy: string,
+  createdBy: string
 ): Promise<ReportExecution> {
   const be = await getBackend()
   return be.generateReport({ ...input, createdBy })
@@ -599,7 +592,7 @@ export async function getExecutionById(id: string): Promise<ReportExecution> {
  * Get report executions, optionally filtered by options
  */
 export async function getExecutions(
-  options?: GetReportExecutionsOptions,
+  options?: GetReportExecutionsOptions
 ): Promise<ReportExecution[]> {
   const be = await getBackend()
   return be.getExecutions(options)
@@ -624,9 +617,7 @@ export async function getExecutionFile(id: string): Promise<{
 /**
  * Get schedules for a report
  */
-export async function getSchedules(
-  reportId: string,
-): Promise<ReportSchedule[]> {
+export async function getSchedules(reportId: string): Promise<ReportSchedule[]> {
   const be = await getBackend()
   return be.getSchedules(reportId)
 }
@@ -644,7 +635,7 @@ export async function getScheduleById(id: string): Promise<ReportSchedule> {
  */
 export async function createSchedule(
   reportId: string,
-  schedule: CreateScheduleInput,
+  schedule: CreateScheduleInput
 ): Promise<ReportSchedule> {
   const be = await getBackend()
   return be.createSchedule(reportId, schedule)
@@ -655,7 +646,7 @@ export async function createSchedule(
  */
 export async function updateSchedule(
   scheduleId: string,
-  updates: UpdateScheduleInput,
+  updates: UpdateScheduleInput
 ): Promise<ReportSchedule> {
   const be = await getBackend()
   return be.updateSchedule(scheduleId, updates)

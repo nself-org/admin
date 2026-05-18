@@ -28,9 +28,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 
     // GitHub search: issues only (exclude PRs) visible to this token
     const stateFilter = filter === 'open' ? 'state:open' : filter === 'closed' ? 'state:closed' : ''
-    const ghQ = encodeURIComponent(
-      `is:issue ${stateFilter} ${search ? search : ''}`.trim(),
-    )
+    const ghQ = encodeURIComponent(`is:issue ${stateFilter} ${search ? search : ''}`.trim())
     const sortParam = sort === 'updated' ? 'updated' : 'created'
 
     const resp = await fetch(
@@ -42,7 +40,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
           'X-GitHub-Api-Version': '2022-11-28',
         },
         signal: AbortSignal.timeout(15_000),
-      },
+      }
     )
 
     if (!resp.ok) {
@@ -52,12 +50,11 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
           error: `GitHub API returned ${resp.status}`,
           details: text.slice(0, 500),
         },
-        { status: 502 },
+        { status: 502 }
       )
     }
 
-    const data: { total_count: number; items: Array<Record<string, unknown>> } =
-      await resp.json()
+    const data: { total_count: number; items: Array<Record<string, unknown>> } = await resp.json()
 
     const issues: GitHubIssue[] = (data.items ?? []).map((item) => ({
       id: item.id as number,
@@ -66,8 +63,8 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       body: (item.body as string | null) ?? undefined,
       state: item.state as 'open' | 'closed',
       htmlUrl: item.html_url as string,
-      userId: (item.user as Record<string, unknown>)?.id as number ?? 0,
-      userLogin: (item.user as Record<string, unknown>)?.login as string ?? '',
+      userId: ((item.user as Record<string, unknown>)?.id as number) ?? 0,
+      userLogin: ((item.user as Record<string, unknown>)?.login as string) ?? '',
       labels: ((item.labels as Array<Record<string, string>>) ?? []).map((l) => l.name),
       assignees: ((item.assignees as Array<Record<string, string>>) ?? []).map((a) => a.login),
       milestone: (item.milestone as Record<string, string> | null)?.title ?? undefined,
@@ -89,7 +86,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to fetch issues',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

@@ -20,7 +20,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       if (!VALID_ID_PATTERN.test(id)) {
         return NextResponse.json(
           { success: false, error: 'Invalid webhook ID format' },
-          { status: 400 },
+          { status: 400 }
         )
       }
       args.push(`--id=${id}`)
@@ -34,7 +34,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
             success: false,
             error: 'Limit must be a number between 1 and 500',
           },
-          { status: 400 },
+          { status: 400 }
         )
       }
       args.push(`--limit=${limitNum}`)
@@ -49,7 +49,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
           error: 'Failed to fetch webhook logs',
           details: result.error || result.stderr || 'Unknown error',
         },
-        { status: 500 },
+        { status: 500 }
       )
     }
 
@@ -64,7 +64,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to fetch webhook logs',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

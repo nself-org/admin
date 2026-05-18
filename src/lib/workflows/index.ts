@@ -390,8 +390,7 @@ const actionTemplates: ActionTemplate[] = [
   {
     type: 'loop',
     name: 'Loop',
-    description:
-      'Iterate over an array or repeat actions a specified number of times',
+    description: 'Iterate over an array or repeat actions a specified number of times',
     icon: 'Repeat',
     category: 'control',
     configSchema: {
@@ -468,8 +467,7 @@ const actionTemplates: ActionTemplate[] = [
           type: 'code',
           label: 'Transform Expression',
           required: true,
-          placeholder:
-            'item => ({ id: item.id, name: item.name.toUpperCase() })',
+          placeholder: 'item => ({ id: item.id, name: item.name.toUpperCase() })',
         },
         outputKey: {
           type: 'string',
@@ -551,14 +549,14 @@ interface ActionExecutionContext {
 
 async function executeAction(
   action: WorkflowAction,
-  context: ActionExecutionContext,
+  context: ActionExecutionContext
 ): Promise<{ success: boolean; output?: unknown; error?: string }> {
   try {
     // Resolve template variables in config
     const resolvedConfig = resolveTemplateVariables(
       action.config,
       context.variables,
-      context.previousSteps,
+      context.previousSteps
     )
 
     switch (action.type) {
@@ -604,7 +602,7 @@ async function executeAction(
 function resolveTemplateVariables(
   config: Record<string, unknown>,
   variables: Record<string, unknown>,
-  previousSteps: WorkflowExecutionStep[],
+  previousSteps: WorkflowExecutionStep[]
 ): Record<string, unknown> {
   const resolved: Record<string, unknown> = {}
 
@@ -617,7 +615,7 @@ function resolveTemplateVariables(
       resolved[key] = resolveTemplateVariables(
         value as Record<string, unknown>,
         variables,
-        previousSteps,
+        previousSteps
       )
     } else {
       // eslint-disable-next-line security/detect-object-injection
@@ -631,7 +629,7 @@ function resolveTemplateVariables(
 function resolveStringTemplate(
   template: string,
   variables: Record<string, unknown>,
-  previousSteps: WorkflowExecutionStep[],
+  previousSteps: WorkflowExecutionStep[]
 ): string {
   return template.replace(/\{\{([^}]+)\}\}/g, (_match, path) => {
     const trimmedPath = path.trim()
@@ -677,7 +675,7 @@ function getNestedValue(obj: unknown, path: string): unknown {
 // Action executors
 
 async function executeCommandAction(
-  config: Record<string, unknown>,
+  config: Record<string, unknown>
 ): Promise<{ success: boolean; output?: unknown; error?: string }> {
   const command = String(config.command || '')
 
@@ -694,9 +692,7 @@ async function executeCommandAction(
     const result = await nselfCLI.executeNselfCommand(
       nselfCommand,
       args,
-      config.workingDirectory
-        ? { cwd: String(config.workingDirectory) }
-        : undefined,
+      config.workingDirectory ? { cwd: String(config.workingDirectory) } : undefined
     )
 
     return {
@@ -713,7 +709,7 @@ async function executeCommandAction(
 }
 
 async function executeHttpRequestAction(
-  config: Record<string, unknown>,
+  config: Record<string, unknown>
 ): Promise<{ success: boolean; output?: unknown; error?: string }> {
   const url = String(config.url || '')
   const method = String(config.method || 'GET')
@@ -729,13 +725,8 @@ async function executeHttpRequestAction(
 
     const response = await fetch(url, {
       method,
-      headers: config.headers
-        ? (config.headers as Record<string, string>)
-        : undefined,
-      body:
-        method !== 'GET' && config.body
-          ? JSON.stringify(config.body)
-          : undefined,
+      headers: config.headers ? (config.headers as Record<string, string>) : undefined,
+      body: method !== 'GET' && config.body ? JSON.stringify(config.body) : undefined,
       signal: controller.signal,
     })
 
@@ -769,7 +760,7 @@ async function executeHttpRequestAction(
 }
 
 async function executeEmailAction(
-  _config: Record<string, unknown>,
+  _config: Record<string, unknown>
 ): Promise<{ success: boolean; output?: unknown; error?: string }> {
   // Email would be sent via nself CLI or external service
   // For now, return success placeholder
@@ -780,7 +771,7 @@ async function executeEmailAction(
 }
 
 async function executeNotificationAction(
-  _config: Record<string, unknown>,
+  _config: Record<string, unknown>
 ): Promise<{ success: boolean; output?: unknown; error?: string }> {
   // Notifications would be sent to in-app system or push service
   return {
@@ -790,7 +781,7 @@ async function executeNotificationAction(
 }
 
 async function executeDatabaseQueryAction(
-  config: Record<string, unknown>,
+  config: Record<string, unknown>
 ): Promise<{ success: boolean; output?: unknown; error?: string }> {
   const queryType = String(config.queryType || 'graphql')
   const query = String(config.query || '')
@@ -816,7 +807,7 @@ async function executeDatabaseQueryAction(
 }
 
 async function executeDelayAction(
-  config: Record<string, unknown>,
+  config: Record<string, unknown>
 ): Promise<{ success: boolean; output?: unknown; error?: string }> {
   const duration = Number(config.duration || 1000)
   const unit = String(config.unit || 'ms')
@@ -833,7 +824,7 @@ async function executeDelayAction(
 
 function executeSetVariableAction(
   config: Record<string, unknown>,
-  context: ActionExecutionContext,
+  context: ActionExecutionContext
 ): { success: boolean; output?: unknown; error?: string } {
   const name = String(config.name || '')
   const value = config.value
@@ -892,7 +883,7 @@ function executeTransformDataAction(config: Record<string, unknown>): {
 
 function executeConditionAction(
   config: Record<string, unknown>,
-  _context: ActionExecutionContext,
+  _context: ActionExecutionContext
 ): { success: boolean; output?: unknown; error?: string } {
   try {
     const expression = String(config.expression || '')
@@ -912,8 +903,7 @@ function executeConditionAction(
   } catch (error) {
     return {
       success: false,
-      error:
-        error instanceof Error ? error.message : 'Condition evaluation failed',
+      error: error instanceof Error ? error.message : 'Condition evaluation failed',
     }
   }
 }
@@ -927,7 +917,7 @@ async function executeWorkflowInternal(
   input: unknown,
   variables: Record<string, unknown>,
   triggerType: TriggerType,
-  triggerId?: string,
+  triggerId?: string
 ): Promise<WorkflowExecution> {
   await ensureCollections()
 
@@ -999,13 +989,11 @@ async function executeWorkflowInternal(
     }
   } catch (error) {
     execution.status = 'failed'
-    execution.error =
-      error instanceof Error ? error.message : 'Workflow execution failed'
+    execution.error = error instanceof Error ? error.message : 'Workflow execution failed'
   } finally {
     execution.completedAt = getCurrentTimestamp()
     execution.duration =
-      new Date(execution.completedAt).getTime() -
-      new Date(execution.startedAt).getTime()
+      new Date(execution.completedAt).getTime() - new Date(execution.startedAt).getTime()
 
     // Update in database
     const existing = executionsCollection?.findOne({ id: execution.id })
@@ -1031,9 +1019,7 @@ export interface GetWorkflowsOptions {
   offset?: number
 }
 
-export async function getWorkflows(
-  options: GetWorkflowsOptions = {},
-): Promise<Workflow[]> {
+export async function getWorkflows(options: GetWorkflowsOptions = {}): Promise<Workflow[]> {
   await ensureCollections()
 
   let query: Record<string, unknown> = {}
@@ -1078,9 +1064,7 @@ export interface CreateWorkflowInput {
   createdBy: string
 }
 
-export async function createWorkflow(
-  input: CreateWorkflowInput,
-): Promise<Workflow> {
+export async function createWorkflow(input: CreateWorkflowInput): Promise<Workflow> {
   await ensureCollections()
 
   const now = getCurrentTimestamp()
@@ -1125,7 +1109,7 @@ export interface UpdateWorkflowInput {
 
 export async function updateWorkflow(
   id: string,
-  updates: UpdateWorkflowInput,
+  updates: UpdateWorkflowInput
 ): Promise<Workflow | null> {
   await ensureCollections()
 
@@ -1211,7 +1195,7 @@ export interface DuplicateWorkflowInput {
 
 export async function duplicateWorkflow(
   id: string,
-  input: DuplicateWorkflowInput,
+  input: DuplicateWorkflowInput
 ): Promise<Workflow | null> {
   const original = await getWorkflowById(id)
   if (!original) return null
@@ -1267,9 +1251,7 @@ export async function duplicateWorkflow(
 // Workflow Execution Operations
 // ============================================================================
 
-export async function executeWorkflow(
-  input: ExecuteWorkflowInput,
-): Promise<WorkflowExecution> {
+export async function executeWorkflow(input: ExecuteWorkflowInput): Promise<WorkflowExecution> {
   const workflow = await getWorkflowById(input.workflowId)
   if (!workflow) {
     throw new Error(`Workflow not found: ${input.workflowId}`)
@@ -1303,24 +1285,16 @@ export async function executeWorkflow(
 
     // Execute in background (non-blocking)
     setImmediate(() => {
-      executeWorkflowInternal(
-        workflow,
-        input.input,
-        input.variables || {},
-        'manual',
-      ).catch(console.error)
+      executeWorkflowInternal(workflow, input.input, input.variables || {}, 'manual').catch(
+        console.error
+      )
     })
 
     return execution
   }
 
   // Synchronous execution
-  return await executeWorkflowInternal(
-    workflow,
-    input.input,
-    input.variables || {},
-    'manual',
-  )
+  return await executeWorkflowInternal(workflow, input.input, input.variables || {}, 'manual')
 }
 
 export interface GetExecutionsOptions {
@@ -1333,7 +1307,7 @@ export interface GetExecutionsOptions {
 }
 
 export async function getWorkflowExecutions(
-  options: GetExecutionsOptions = {},
+  options: GetExecutionsOptions = {}
 ): Promise<WorkflowExecution[]> {
   await ensureCollections()
 
@@ -1362,16 +1336,12 @@ export async function getWorkflowExecutions(
   return result
 }
 
-export async function getWorkflowExecution(
-  executionId: string,
-): Promise<WorkflowExecution | null> {
+export async function getWorkflowExecution(executionId: string): Promise<WorkflowExecution | null> {
   await ensureCollections()
   return executionsCollection?.findOne({ id: executionId }) || null
 }
 
-export async function cancelExecution(
-  executionId: string,
-): Promise<WorkflowExecution | null> {
+export async function cancelExecution(executionId: string): Promise<WorkflowExecution | null> {
   await ensureCollections()
 
   const execution = executionsCollection?.findOne({ id: executionId })
@@ -1385,10 +1355,7 @@ export async function cancelExecution(
   execution.completedAt = getCurrentTimestamp()
   execution.steps = execution.steps.map((step) => ({
     ...step,
-    status:
-      step.status === 'running' || step.status === 'pending'
-        ? 'skipped'
-        : step.status,
+    status: step.status === 'running' || step.status === 'pending' ? 'skipped' : step.status,
   }))
 
   executionsCollection?.update(execution)
@@ -1408,9 +1375,7 @@ export async function getWorkflowStats(): Promise<WorkflowStats> {
   const allExecutions = executionsCollection?.find() || []
 
   const totalWorkflows = allWorkflows.length
-  const activeWorkflows = allWorkflows.filter(
-    (w) => w.status === 'active',
-  ).length
+  const activeWorkflows = allWorkflows.filter((w) => w.status === 'active').length
   const totalExecutions = allExecutions.length
 
   const executionsByStatus: Record<WorkflowExecutionStatus, number> = {
@@ -1426,9 +1391,7 @@ export async function getWorkflowStats(): Promise<WorkflowStats> {
     executionsByStatus[e.status]++
   })
 
-  const completedExecutions = allExecutions.filter(
-    (e) => e.status === 'completed' && e.duration,
-  )
+  const completedExecutions = allExecutions.filter((e) => e.status === 'completed' && e.duration)
   const averageDuration =
     completedExecutions.length > 0
       ? completedExecutions.reduce((sum, e) => sum + (e.duration || 0), 0) /
@@ -1436,7 +1399,7 @@ export async function getWorkflowStats(): Promise<WorkflowStats> {
       : 0
 
   const finishedExecutions = allExecutions.filter((e) =>
-    ['completed', 'failed', 'cancelled', 'timeout'].includes(e.status),
+    ['completed', 'failed', 'cancelled', 'timeout'].includes(e.status)
   )
   const successRate =
     finishedExecutions.length > 0
@@ -1447,10 +1410,7 @@ export async function getWorkflowStats(): Promise<WorkflowStats> {
     .sort((a, b) => b.startedAt.localeCompare(a.startedAt))
     .slice(0, 10)
 
-  const workflowExecutionCounts: Record<
-    string,
-    { count: number; successful: number }
-  > = {}
+  const workflowExecutionCounts: Record<string, { count: number; successful: number }> = {}
 
   allExecutions.forEach((e) => {
     if (!workflowExecutionCounts[e.workflowId]) {
@@ -1471,8 +1431,7 @@ export async function getWorkflowStats(): Promise<WorkflowStats> {
       return {
         workflow,
         executions: stats.count,
-        successRate:
-          stats.count > 0 ? (stats.successful / stats.count) * 100 : 0,
+        successRate: stats.count > 0 ? (stats.successful / stats.count) * 100 : 0,
       }
     })
     .sort((a, b) => b.executions - a.executions)
@@ -1498,14 +1457,12 @@ export async function getActionTemplates(): Promise<ActionTemplate[]> {
   return actionTemplates
 }
 
-export function getActionTemplateByType(
-  type: ActionType,
-): ActionTemplate | undefined {
+export function getActionTemplateByType(type: ActionType): ActionTemplate | undefined {
   return actionTemplates.find((t) => t.type === type)
 }
 
 export function getActionTemplatesByCategory(
-  category: ActionTemplate['category'],
+  category: ActionTemplate['category']
 ): ActionTemplate[] {
   return actionTemplates.filter((t) => t.category === category)
 }

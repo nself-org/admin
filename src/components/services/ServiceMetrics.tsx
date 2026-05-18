@@ -38,16 +38,14 @@ export function ServiceMetrics({
   timeRange = '1h',
   onTimeRangeChange,
 }: ServiceMetricsProps) {
-  const [selectedMetric, setSelectedMetric] = useState<
-    'cpu' | 'memory' | 'network' | 'requests'
-  >('cpu')
+  const [selectedMetric, setSelectedMetric] = useState<'cpu' | 'memory' | 'network' | 'requests'>(
+    'cpu'
+  )
 
   const renderSimpleChart = (data: MetricDataPoint[], label: string) => {
     if (data.length === 0) {
       return (
-        <div className="flex h-64 items-center justify-center text-zinc-500">
-          No data available
-        </div>
+        <div className="flex h-64 items-center justify-center text-zinc-500">No data available</div>
       )
     }
 
@@ -131,17 +129,13 @@ export function ServiceMetrics({
           <div className="rounded-lg border border-zinc-200 bg-green-50/50 p-4 dark:border-zinc-700 dark:bg-green-900/10">
             <div className="text-xs text-zinc-500">Network RX</div>
             <div className="text-2xl font-bold text-green-600 dark:text-green-400">
-              {networkData.rx[networkData.rx.length - 1]?.value.toFixed(2) ||
-                '0'}{' '}
-              MB/s
+              {networkData.rx[networkData.rx.length - 1]?.value.toFixed(2) || '0'} MB/s
             </div>
           </div>
           <div className="rounded-lg border border-zinc-200 bg-blue-50/50 p-4 dark:border-zinc-700 dark:bg-blue-900/10">
             <div className="text-xs text-zinc-500">Network TX</div>
             <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">
-              {networkData.tx[networkData.tx.length - 1]?.value.toFixed(2) ||
-                '0'}{' '}
-              MB/s
+              {networkData.tx[networkData.tx.length - 1]?.value.toFixed(2) || '0'} MB/s
             </div>
           </div>
         </div>
@@ -177,10 +171,7 @@ export function ServiceMetrics({
             {serviceName} Metrics
           </CardTitle>
           <div className="flex items-center gap-2">
-            <Select
-              value={selectedMetric}
-              onValueChange={(v) => setSelectedMetric(v as any)}
-            >
+            <Select value={selectedMetric} onValueChange={(v) => setSelectedMetric(v as any)}>
               <SelectTrigger className="w-[150px]">
                 <SelectValue placeholder="Select metric" />
               </SelectTrigger>
@@ -188,17 +179,13 @@ export function ServiceMetrics({
                 <SelectItem value="cpu">CPU Usage</SelectItem>
                 <SelectItem value="memory">Memory Usage</SelectItem>
                 <SelectItem value="network">Network I/O</SelectItem>
-                {requestRate && (
-                  <SelectItem value="requests">Request Rate</SelectItem>
-                )}
+                {requestRate && <SelectItem value="requests">Request Rate</SelectItem>}
               </SelectContent>
             </Select>
             {onTimeRangeChange && (
               <Select
                 value={timeRange}
-                onValueChange={(value) =>
-                  onTimeRangeChange(value as '1h' | '6h' | '24h' | '7d')
-                }
+                onValueChange={(value) => onTimeRangeChange(value as '1h' | '6h' | '24h' | '7d')}
               >
                 <SelectTrigger className="w-[100px]">
                   <SelectValue placeholder="Time range" />
@@ -215,9 +202,7 @@ export function ServiceMetrics({
         </div>
       </CardHeader>
       <CardContent>
-        {selectedMetric === 'network'
-          ? renderNetworkChart()
-          : renderSimpleChart(data, label)}
+        {selectedMetric === 'network' ? renderNetworkChart() : renderSimpleChart(data, label)}
       </CardContent>
     </Card>
   )

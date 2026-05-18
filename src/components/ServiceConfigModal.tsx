@@ -1,17 +1,7 @@
 'use client'
 
 import { Dialog, Transition } from '@headlessui/react'
-import {
-  Check,
-  ChevronDown,
-  ChevronUp,
-  Eye,
-  EyeOff,
-  Info,
-  Lock,
-  RefreshCw,
-  X,
-} from 'lucide-react'
+import { Check, ChevronDown, ChevronUp, Eye, EyeOff, Info, Lock, RefreshCw, X } from 'lucide-react'
 import { Fragment, useEffect, useState } from 'react'
 
 interface ServiceConfig {
@@ -152,8 +142,7 @@ const postgresExtensions: Extension[] = [
 
 // Generate a random secret of specified length
 const generateSecret = (length: number = 32) => {
-  const chars =
-    'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*'
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*'
   let result = ''
   for (let i = 0; i < length; i++) {
     result += chars.charAt(Math.floor(Math.random() * chars.length))
@@ -474,8 +463,7 @@ const serviceConfigs: Record<string, (initialConfig?: any) => ConfigField[]> = {
       label: 'Password',
       type: 'secret',
       placeholder: 'Leave empty for no password',
-      defaultValue:
-        initialConfig?.environment === 'dev' ? '' : generateSecret(24),
+      defaultValue: initialConfig?.environment === 'dev' ? '' : generateSecret(24),
       secretLength: 24,
       helperText: 'Leave empty for development, required for production',
     },
@@ -519,10 +507,7 @@ const serviceConfigs: Record<string, (initialConfig?: any) => ConfigField[]> = {
       label: 'Root Password',
       type: 'secret',
       placeholder: 'Minimum 8 characters',
-      defaultValue:
-        initialConfig?.environment === 'dev'
-          ? 'minioadmin'
-          : generateSecret(16),
+      defaultValue: initialConfig?.environment === 'dev' ? 'minioadmin' : generateSecret(16),
       secretLength: 16,
       helperText: 'Minimum 8 characters required',
     },
@@ -569,8 +554,7 @@ const serviceConfigs: Record<string, (initialConfig?: any) => ConfigField[]> = {
       label: 'Grafana Admin Password',
       type: 'secret',
       placeholder: 'Admin password',
-      defaultValue:
-        initialConfig?.environment === 'dev' ? 'admin' : generateSecret(16),
+      defaultValue: initialConfig?.environment === 'dev' ? 'admin' : generateSecret(16),
       secretLength: 16,
       helperText: 'Password for Grafana admin user',
     },
@@ -781,8 +765,7 @@ const serviceConfigs: Record<string, (initialConfig?: any) => ConfigField[]> = {
         type: 'email',
         placeholder: 'noreply@yourdomain.com',
         defaultValue:
-          initialConfig?.adminEmail ||
-          `noreply@${initialConfig?.baseDomain || 'yourdomain.com'}`,
+          initialConfig?.adminEmail || `noreply@${initialConfig?.baseDomain || 'yourdomain.com'}`,
         helpText: 'Default sender email address',
       },
       {
@@ -1017,8 +1000,7 @@ const serviceConfigs: Record<string, (initialConfig?: any) => ConfigField[]> = {
       placeholder: 'API key for search service',
       defaultValue: generateSecret(32),
       secretLength: 32,
-      condition: (config) =>
-        ['meilisearch', 'typesense'].includes(config.SEARCH_ENGINE as string),
+      condition: (config) => ['meilisearch', 'typesense'].includes(config.SEARCH_ENGINE as string),
       helpText: 'Required for MeiliSearch and Typesense',
     },
     {
@@ -1062,9 +1044,7 @@ export default function ServiceConfigModal({
   initialConfig,
 }: ServiceConfigModalProps) {
   const [localConfig, setLocalConfig] = useState<ServiceConfig>({})
-  const [showPasswords, setShowPasswords] = useState<Record<string, boolean>>(
-    {},
-  )
+  const [showPasswords, setShowPasswords] = useState<Record<string, boolean>>({})
   const [showAdvancedExtensions, setShowAdvancedExtensions] = useState(false)
   const [selectedExtensions, setSelectedExtensions] = useState<string[]>([])
 
@@ -1078,15 +1058,13 @@ export default function ServiceConfigModal({
           extensions
             .split(',')
             .map((e) => e.trim())
-            .filter(Boolean),
+            .filter(Boolean)
         )
       }
     }
   }, [isOpen, config, service])
 
-  const fields = serviceConfigs[service]
-    ? serviceConfigs[service](initialConfig)
-    : []
+  const fields = serviceConfigs[service] ? serviceConfigs[service](initialConfig) : []
 
   const handleChange = (key: string, value: any) => {
     setLocalConfig((prev) => ({
@@ -1148,11 +1126,7 @@ export default function ServiceConfigModal({
         <div className="relative">
           <input
             type="text"
-            value={
-              (localConfig[field.key] as string) ||
-              (field.defaultValue as string) ||
-              ''
-            }
+            value={(localConfig[field.key] as string) || (field.defaultValue as string) || ''}
             readOnly
             className="w-full cursor-not-allowed rounded-lg border border-zinc-300 bg-zinc-100 px-3 py-2 pr-10 text-zinc-700 dark:border-zinc-600 dark:bg-zinc-800/50 dark:text-zinc-300"
           />
@@ -1166,11 +1140,7 @@ export default function ServiceConfigModal({
         <div className="relative">
           <input
             type={showPasswords[field.key] ? 'text' : 'password'}
-            value={
-              (localConfig[field.key] as string) ||
-              (field.defaultValue as string) ||
-              ''
-            }
+            value={(localConfig[field.key] as string) || (field.defaultValue as string) || ''}
             onChange={(e) => handleChange(field.key, e.target.value)}
             placeholder={field.placeholder}
             className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 pr-20 text-zinc-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:outline-none dark:border-zinc-600 dark:bg-zinc-800 dark:text-white"
@@ -1178,9 +1148,7 @@ export default function ServiceConfigModal({
           <div className="absolute top-1/2 right-2 flex -translate-y-1/2 items-center gap-1">
             <button
               type="button"
-              onClick={() =>
-                handleGenerateSecret(field.key, field.secretLength)
-              }
+              onClick={() => handleGenerateSecret(field.key, field.secretLength)}
               className="p-1 text-zinc-500 transition-colors hover:text-blue-600 dark:hover:text-blue-400"
               title="Generate new secret"
             >
@@ -1204,11 +1172,9 @@ export default function ServiceConfigModal({
 
     if (field.type === 'extensions' && service === 'postgresql') {
       const coreExtensions = postgresExtensions.filter(
-        (e) => e.category === 'core' || e.category === 'popular',
+        (e) => e.category === 'core' || e.category === 'popular'
       )
-      const advancedExtensions = postgresExtensions.filter(
-        (e) => e.category === 'advanced',
-      )
+      const advancedExtensions = postgresExtensions.filter((e) => e.category === 'advanced')
 
       return (
         <div className="space-y-3">
@@ -1236,9 +1202,7 @@ export default function ServiceConfigModal({
                       </span>
                     )}
                   </div>
-                  <p className="text-xs text-zinc-600 dark:text-zinc-400">
-                    {ext.description}
-                  </p>
+                  <p className="text-xs text-zinc-600 dark:text-zinc-400">{ext.description}</p>
                 </div>
               </label>
             ))}
@@ -1283,9 +1247,7 @@ export default function ServiceConfigModal({
                         Advanced
                       </span>
                     </div>
-                    <p className="text-xs text-zinc-600 dark:text-zinc-400">
-                      {ext.description}
-                    </p>
+                    <p className="text-xs text-zinc-600 dark:text-zinc-400">{ext.description}</p>
                   </div>
                 </label>
               ))}
@@ -1310,11 +1272,7 @@ export default function ServiceConfigModal({
       return (
         <input
           type="checkbox"
-          checked={
-            (localConfig[field.key] as boolean) ||
-            (field.defaultValue as boolean) ||
-            false
-          }
+          checked={(localConfig[field.key] as boolean) || (field.defaultValue as boolean) || false}
           onChange={(e) => handleChange(field.key, e.target.checked)}
           className="h-4 w-4 rounded border-zinc-300 text-blue-600 focus:ring-blue-500 dark:border-zinc-600"
         />
@@ -1325,11 +1283,7 @@ export default function ServiceConfigModal({
       return (
         <input
           type="email"
-          value={
-            (localConfig[field.key] as string) ||
-            (field.defaultValue as string) ||
-            ''
-          }
+          value={(localConfig[field.key] as string) || (field.defaultValue as string) || ''}
           onChange={(e) => handleChange(field.key, e.target.value)}
           placeholder={field.placeholder || 'email@example.com'}
           className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-zinc-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:outline-none dark:border-zinc-600 dark:bg-zinc-800 dark:text-white"
@@ -1343,9 +1297,7 @@ export default function ServiceConfigModal({
           <input
             type="checkbox"
             checked={
-              (localConfig[field.key] as boolean) ||
-              (field.defaultValue as boolean) ||
-              false
+              (localConfig[field.key] as boolean) || (field.defaultValue as boolean) || false
             }
             onChange={(e) => handleChange(field.key, e.target.checked)}
             className="peer sr-only"
@@ -1358,10 +1310,7 @@ export default function ServiceConfigModal({
     if (field.type === 'select') {
       return (
         <select
-          value={
-            (localConfig[field.key] as string) ||
-            String(field.defaultValue || '')
-          }
+          value={(localConfig[field.key] as string) || String(field.defaultValue || '')}
           onChange={(e) => handleChange(field.key, e.target.value)}
           className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-zinc-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:outline-none dark:border-zinc-600 dark:bg-zinc-800 dark:text-white"
         >
@@ -1402,13 +1351,11 @@ export default function ServiceConfigModal({
     return (
       <input
         type={field.type}
-        value={
-          (localConfig[field.key] as string) || String(field.defaultValue || '')
-        }
+        value={(localConfig[field.key] as string) || String(field.defaultValue || '')}
         onChange={(e) =>
           handleChange(
             field.key,
-            field.type === 'number' ? parseInt(e.target.value) : e.target.value,
+            field.type === 'number' ? parseInt(e.target.value) : e.target.value
           )
         }
         placeholder={field.placeholder || `Enter ${field.label.toLowerCase()}`}
@@ -1444,10 +1391,7 @@ export default function ServiceConfigModal({
               leaveTo="opacity-0 scale-95"
             >
               <Dialog.Panel className="w-full max-w-4xl transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all dark:bg-zinc-900">
-                <Dialog.Title
-                  as="div"
-                  className="mb-6 flex items-center justify-between"
-                >
+                <Dialog.Title as="div" className="mb-6 flex items-center justify-between">
                   <h3 className="text-lg font-semibold text-zinc-900 dark:text-white">
                     Configure {getServiceTitle(service)}
                   </h3>
@@ -1461,17 +1405,12 @@ export default function ServiceConfigModal({
 
                 <div className="max-h-[65vh] space-y-4 overflow-y-auto pr-2">
                   {fields
-                    .filter(
-                      (field) =>
-                        !field.condition || field.condition(localConfig),
-                    )
+                    .filter((field) => !field.condition || field.condition(localConfig))
                     .map((field) => (
                       <div key={field.key}>
                         <label className="mb-1 block text-sm font-medium text-zinc-700 dark:text-zinc-300">
                           {field.label}
-                          {field.required && (
-                            <span className="ml-1 text-red-500">*</span>
-                          )}
+                          {field.required && <span className="ml-1 text-red-500">*</span>}
                         </label>
 
                         {renderField(field)}
@@ -1490,11 +1429,10 @@ export default function ServiceConfigModal({
                     <div className="mt-6 rounded-lg border border-blue-200 bg-blue-50 p-4 dark:border-blue-800 dark:bg-blue-900/20">
                       <p className="text-sm text-blue-800 dark:text-blue-200">
                         <Info className="mr-2 inline h-4 w-4" />
-                        <strong>Note:</strong> Email settings will be configured
-                        in the optional Mail service section. Frontend
-                        application URLs will be set up in the Frontend Apps
-                        configuration. These settings will automatically
-                        integrate with Auth service when configured.
+                        <strong>Note:</strong> Email settings will be configured in the optional
+                        Mail service section. Frontend application URLs will be set up in the
+                        Frontend Apps configuration. These settings will automatically integrate
+                        with Auth service when configured.
                       </p>
                     </div>
                   )}

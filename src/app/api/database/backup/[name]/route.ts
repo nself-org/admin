@@ -9,7 +9,7 @@ import path from 'path'
  */
 export async function GET(
   request: NextRequest,
-  { params }: { params: Promise<{ name: string }> },
+  { params }: { params: Promise<{ name: string }> }
 ): Promise<NextResponse> {
   const startTime = Date.now()
 
@@ -19,7 +19,7 @@ export async function GET(
     if (!name) {
       return NextResponse.json(
         { success: false, error: 'Backup name is required' },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -27,7 +27,7 @@ export async function GET(
     if (!isValidBackupFilename(name)) {
       return NextResponse.json(
         { success: false, error: 'Invalid backup filename' },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -62,10 +62,7 @@ export async function GET(
     }
 
     if (!backupPath || !fileStats) {
-      return NextResponse.json(
-        { success: false, error: 'Backup file not found' },
-        { status: 404 },
-      )
+      return NextResponse.json({ success: false, error: 'Backup file not found' }, { status: 404 })
     }
 
     // Create readable stream and return as response
@@ -85,16 +82,9 @@ export async function GET(
     })
 
     // Determine content type
-    const contentType = name.endsWith('.gz')
-      ? 'application/gzip'
-      : 'application/sql'
+    const contentType = name.endsWith('.gz') ? 'application/gzip' : 'application/sql'
 
-    logger.api(
-      'GET',
-      `/api/database/backup/${name}`,
-      200,
-      Date.now() - startTime,
-    )
+    logger.api('GET', `/api/database/backup/${name}`, 200, Date.now() - startTime)
 
     return new NextResponse(readableStream, {
       headers: {
@@ -114,7 +104,7 @@ export async function GET(
         error: 'Failed to download backup',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -124,7 +114,7 @@ export async function GET(
  */
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: Promise<{ name: string }> },
+  { params }: { params: Promise<{ name: string }> }
 ): Promise<NextResponse> {
   const authError = await requireAuth(request)
   if (authError) return authError
@@ -137,7 +127,7 @@ export async function DELETE(
     if (!name) {
       return NextResponse.json(
         { success: false, error: 'Backup name is required' },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -145,7 +135,7 @@ export async function DELETE(
     if (!isValidBackupFilename(name)) {
       return NextResponse.json(
         { success: false, error: 'Invalid backup filename' },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -178,20 +168,12 @@ export async function DELETE(
     }
 
     if (!backupPath) {
-      return NextResponse.json(
-        { success: false, error: 'Backup file not found' },
-        { status: 404 },
-      )
+      return NextResponse.json({ success: false, error: 'Backup file not found' }, { status: 404 })
     }
 
     await fs.unlink(backupPath)
 
-    logger.api(
-      'DELETE',
-      `/api/database/backup/${name}`,
-      200,
-      Date.now() - startTime,
-    )
+    logger.api('DELETE', `/api/database/backup/${name}`, 200, Date.now() - startTime)
     logger.info('Deleted backup file', { name, path: backupPath })
 
     return NextResponse.json({
@@ -212,7 +194,7 @@ export async function DELETE(
         error: 'Failed to delete backup',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -222,11 +204,7 @@ export async function DELETE(
  */
 function isValidBackupFilename(filename: string): boolean {
   // Must not contain path separators or parent directory references
-  if (
-    filename.includes('/') ||
-    filename.includes('\\') ||
-    filename.includes('..')
-  ) {
+  if (filename.includes('/') || filename.includes('\\') || filename.includes('..')) {
     return false
   }
 

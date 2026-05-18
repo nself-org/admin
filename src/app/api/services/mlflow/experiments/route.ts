@@ -7,10 +7,7 @@ import { NextResponse } from 'next/server'
  */
 export async function GET(): Promise<NextResponse> {
   try {
-    const result = await executeNselfCommand('service', [
-      'mlflow',
-      'experiments',
-    ])
+    const result = await executeNselfCommand('service', ['mlflow', 'experiments'])
 
     if (!result.success) {
       return NextResponse.json(
@@ -19,7 +16,7 @@ export async function GET(): Promise<NextResponse> {
           error: 'Failed to list MLflow experiments',
           details: result.error || result.stderr || 'Unknown error',
         },
-        { status: 500 },
+        { status: 500 }
       )
     }
 
@@ -34,7 +31,7 @@ export async function GET(): Promise<NextResponse> {
         error: 'Failed to list MLflow experiments',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

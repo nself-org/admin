@@ -4,15 +4,7 @@ import { ListSkeleton } from '@/components/skeletons'
 import { Card } from '@/components/ui/card'
 import { PageContent } from '@/components/ui/page-content'
 import { PageHeader } from '@/components/ui/page-header'
-import {
-  ExternalLink,
-  Github,
-  Mail,
-  MessageCircle,
-  Twitter,
-  Users,
-  Video,
-} from 'lucide-react'
+import { ExternalLink, Github, Mail, MessageCircle, Twitter, Users, Video } from 'lucide-react'
 import { Suspense } from 'react'
 
 function CommunityContent() {
@@ -34,12 +26,10 @@ function CommunityContent() {
                     <MessageCircle className="h-6 w-6 text-sky-500 dark:text-sky-400" />
                   </div>
                   <div className="flex-1">
-                    <h3 className="mb-2 text-lg font-semibold">
-                      Discord Community
-                    </h3>
+                    <h3 className="mb-2 text-lg font-semibold">Discord Community</h3>
                     <p className="mb-4 text-sm text-zinc-600 dark:text-zinc-400">
-                      Join our Discord server for real-time help, discussions,
-                      and to connect with other developers.
+                      Join our Discord server for real-time help, discussions, and to connect with
+                      other developers.
                     </p>
                     <a
                       href="https://discord.gg/nself"
@@ -59,12 +49,9 @@ function CommunityContent() {
                     <Github className="h-6 w-6 text-slate-600 dark:text-slate-400" />
                   </div>
                   <div className="flex-1">
-                    <h3 className="mb-2 text-lg font-semibold">
-                      GitHub Discussions
-                    </h3>
+                    <h3 className="mb-2 text-lg font-semibold">GitHub Discussions</h3>
                     <p className="mb-4 text-sm text-zinc-600 dark:text-zinc-400">
-                      Ask questions, share ideas, and discuss feature requests
-                      on GitHub.
+                      Ask questions, share ideas, and discuss feature requests on GitHub.
                     </p>
                     <a
                       href="https://github.com/nself-org/cli/discussions"
@@ -149,8 +136,8 @@ function CommunityContent() {
               <div className="flex-1">
                 <h3 className="mb-2 text-lg font-semibold">Office Hours</h3>
                 <p className="mb-4 text-zinc-600 dark:text-zinc-400">
-                  Join our weekly office hours every Friday at 10am PST for live
-                  Q&A sessions with the nself team.
+                  Join our weekly office hours every Friday at 10am PST for live Q&A sessions with
+                  the nself team.
                 </p>
                 <div className="flex flex-wrap gap-4">
                   <div>
@@ -178,9 +165,8 @@ function CommunityContent() {
             <Card className="p-6">
               <h3 className="mb-3 text-lg font-semibold">Help Build nself</h3>
               <p className="mb-4 text-zinc-600 dark:text-zinc-400">
-                nself is open source and welcomes contributions from the
-                community. Whether it's bug fixes, new features, documentation,
-                or examples - we appreciate all contributions.
+                nself is open source and welcomes contributions from the community. Whether it's bug
+                fixes, new features, documentation, or examples - we appreciate all contributions.
               </p>
               <div className="space-y-3">
                 <div>
@@ -209,8 +195,7 @@ function CommunityContent() {
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 text-blue-600 hover:underline dark:text-blue-400"
                 >
-                  Read Contributing Guidelines{' '}
-                  <ExternalLink className="h-4 w-4" />
+                  Read Contributing Guidelines <ExternalLink className="h-4 w-4" />
                 </a>
               </div>
             </Card>

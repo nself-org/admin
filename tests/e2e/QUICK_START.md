@@ -243,7 +243,7 @@ test(
   async ({ page }) => {
     // Your test
   },
-  { timeout: 60000 },
+  { timeout: 60000 }
 ) // 60 seconds
 
 // Or wait for specific element

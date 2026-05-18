@@ -108,14 +108,8 @@ export class PostgresCollector {
       this.validateContainerName(this.containerName)
       const { stdout } = await this.execWithTimeout(
         'docker',
-        [
-          'ps',
-          '--filter',
-          `name=${this.containerName}`,
-          '--format',
-          '{{.Status}}',
-        ],
-        2000,
+        ['ps', '--filter', `name=${this.containerName}`, '--format', '{{.Status}}'],
+        2000
       )
       return stdout.trim().toLowerCase().includes('up')
     } catch {
@@ -139,19 +133,8 @@ export class PostgresCollector {
 
       const { stdout } = await this.execWithTimeout(
         'docker',
-        [
-          'exec',
-          this.containerName,
-          'psql',
-          '-U',
-          'postgres',
-          '-d',
-          'nself',
-          '-t',
-          '-c',
-          query,
-        ],
-        5000,
+        ['exec', this.containerName, 'psql', '-U', 'postgres', '-d', 'nself', '-t', '-c', query],
+        5000
       )
 
       // Parse output (format: "active | idle | max")
@@ -191,17 +174,8 @@ export class PostgresCollector {
 
       const { stdout } = await this.execWithTimeout(
         'docker',
-        [
-          'exec',
-          this.containerName,
-          'psql',
-          '-U',
-          'postgres',
-          '-t',
-          '-c',
-          query,
-        ],
-        5000,
+        ['exec', this.containerName, 'psql', '-U', 'postgres', '-t', '-c', query],
+        5000
       )
 
       const lines = stdout
@@ -227,17 +201,8 @@ export class PostgresCollector {
       const totalQuery = `SELECT pg_size_pretty(sum(pg_database_size(datname))) FROM pg_database`
       const { stdout: totalOut } = await this.execWithTimeout(
         'docker',
-        [
-          'exec',
-          this.containerName,
-          'psql',
-          '-U',
-          'postgres',
-          '-t',
-          '-c',
-          totalQuery,
-        ],
-        5000,
+        ['exec', this.containerName, 'psql', '-U', 'postgres', '-t', '-c', totalQuery],
+        5000
       )
 
       return {
@@ -267,19 +232,8 @@ export class PostgresCollector {
 
       const { stdout } = await this.execWithTimeout(
         'docker',
-        [
-          'exec',
-          this.containerName,
-          'psql',
-          '-U',
-          'postgres',
-          '-d',
-          'nself',
-          '-t',
-          '-c',
-          query,
-        ],
-        5000,
+        ['exec', this.containerName, 'psql', '-U', 'postgres', '-d', 'nself', '-t', '-c', query],
+        5000
       )
 
       // Parse output
@@ -307,9 +261,7 @@ export class PostgresCollector {
   /**
    * Get empty stats with status
    */
-  private getEmptyStats(
-    status: 'healthy' | 'unhealthy' | 'stopped',
-  ): PostgresStats {
+  private getEmptyStats(status: 'healthy' | 'unhealthy' | 'stopped'): PostgresStats {
     return {
       status,
       connections: { active: 0, idle: 0, max: 100, percentage: 0 },
@@ -329,7 +281,7 @@ export class PostgresCollector {
   private execWithTimeout(
     bin: string,
     args: string[],
-    timeout: number,
+    timeout: number
   ): Promise<{ stdout: string; stderr: string }> {
     return new Promise((resolve, reject) => {
       const controller = new AbortController()

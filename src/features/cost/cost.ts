@@ -96,7 +96,7 @@ export function aggregateItems(items: CostLineItem[]): CostSnapshot {
  */
 export function buildComparison(
   current: CostProvider,
-  currentMonthlyUsd: number,
+  currentMonthlyUsd: number
 ): ProviderComparison {
   // Rough public-list-price multipliers, normalized to Hetzner = 1.0.
   const multipliers: Record<CostProvider, number> = {
@@ -116,9 +116,7 @@ export function buildComparison(
   }
 
   const hetznerMonthly = currentMonthlyUsd / multipliers[current]
-  const alternatives: ProviderEquivalent[] = (
-    Object.keys(multipliers) as CostProvider[]
-  )
+  const alternatives: ProviderEquivalent[] = (Object.keys(multipliers) as CostProvider[])
     .filter((p) => p !== current)
     .map((p) => {
       const monthly = hetznerMonthly * multipliers[p]
@@ -126,8 +124,7 @@ export function buildComparison(
         provider: p,
         label: labels[p],
         monthlyUsd: Math.round(monthly * 100) / 100,
-        deltaVsCurrentUsd:
-          Math.round((monthly - currentMonthlyUsd) * 100) / 100,
+        deltaVsCurrentUsd: Math.round((monthly - currentMonthlyUsd) * 100) / 100,
         notes:
           p === 'hetzner'
             ? 'Bare-metal pricing, EU-first'

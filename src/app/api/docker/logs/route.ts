@@ -9,8 +9,7 @@ const execFileAsync = promisify(execFile)
 const VALID_CONTAINER_ID = /^[a-zA-Z0-9][a-zA-Z0-9_.-]*$/
 const VALID_TAIL = /^\d{1,5}$/
 
-const VALID_SINCE =
-  /^(\d+[smhd]?|\d{4}-\d{2}-\d{2}(T\d{2}:\d{2}:\d{2}(Z|[+-]\d{2}:\d{2})?)?)$/
+const VALID_SINCE = /^(\d+[smhd]?|\d{4}-\d{2}-\d{2}(T\d{2}:\d{2}:\d{2}(Z|[+-]\d{2}:\d{2})?)?)$/
 
 function validateContainerId(id: string | null): string | null {
   if (!id) return null
@@ -32,18 +31,12 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     // Validate container ID
     const containerId = validateContainerId(containerIdRaw)
     if (!containerId) {
-      return NextResponse.json(
-        { error: 'Invalid or missing container ID' },
-        { status: 400 },
-      )
+      return NextResponse.json({ error: 'Invalid or missing container ID' }, { status: 400 })
     }
 
     // Validate tail parameter
     if (!VALID_TAIL.test(tailRaw)) {
-      return NextResponse.json(
-        { error: 'Invalid tail parameter' },
-        { status: 400 },
-      )
+      return NextResponse.json({ error: 'Invalid tail parameter' }, { status: 400 })
     }
     const tail = tailRaw
 
@@ -58,14 +51,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       const encoder = new TextEncoder()
       const stream = new ReadableStream({
         async start(controller) {
-          const args = [
-            'logs',
-            containerId,
-            '--tail',
-            tail,
-            '--follow',
-            '--timestamps',
-          ]
+          const args = ['logs', containerId, '--tail', tail, '--follow', '--timestamps']
 
           const dockerLogs = spawn('docker', args)
 
@@ -141,7 +127,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to fetch container logs',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -158,10 +144,7 @@ export async function DELETE(request: NextRequest): Promise<NextResponse> {
     // Validate container ID
     const containerId = validateContainerId(containerIdRaw)
     if (!containerId) {
-      return NextResponse.json(
-        { error: 'Invalid or missing container ID' },
-        { status: 400 },
-      )
+      return NextResponse.json({ error: 'Invalid or missing container ID' }, { status: 400 })
     }
 
     // Get log path using execFile with array arguments (safe)
@@ -177,13 +160,9 @@ export async function DELETE(request: NextRequest): Promise<NextResponse> {
       // and must not contain path traversal attempts
       if (
         logPath.includes('..') ||
-        (!logPath.startsWith('/var/lib/docker/') &&
-          !logPath.startsWith('/var/run/docker/'))
+        (!logPath.startsWith('/var/lib/docker/') && !logPath.startsWith('/var/run/docker/'))
       ) {
-        return NextResponse.json(
-          { error: 'Invalid log path detected' },
-          { status: 400 },
-        )
+        return NextResponse.json({ error: 'Invalid log path detected' }, { status: 400 })
       }
 
       // Use execFile with truncate (safe - validated path)
@@ -195,10 +174,7 @@ export async function DELETE(request: NextRequest): Promise<NextResponse> {
         container: containerId,
       })
     } else {
-      return NextResponse.json(
-        { error: 'Could not find log path for container' },
-        { status: 404 },
-      )
+      return NextResponse.json({ error: 'Could not find log path for container' }, { status: 404 })
     }
   } catch (error) {
     return NextResponse.json(
@@ -206,7 +182,7 @@ export async function DELETE(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to clear container logs',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

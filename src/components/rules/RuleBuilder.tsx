@@ -70,11 +70,7 @@ const SELECT =
   'rounded-lg border border-zinc-700 bg-zinc-900 px-2 py-1.5 text-sm text-white focus:border-sky-500 focus:outline-none'
 
 function Label({ children }: { children: React.ReactNode }) {
-  return (
-    <label className="mb-1 block text-xs font-medium text-zinc-400">
-      {children}
-    </label>
-  )
+  return <label className="mb-1 block text-xs font-medium text-zinc-400">{children}</label>
 }
 
 // ── Condition Row ──────────────────────────────────────────────────────────────
@@ -150,21 +146,12 @@ export interface RuleBuilderProps {
   saving?: boolean
 }
 
-export function RuleBuilder({
-  initial,
-  onSave,
-  onCancel,
-  saving = false,
-}: RuleBuilderProps) {
+export function RuleBuilder({ initial, onSave, onCancel, saving = false }: RuleBuilderProps) {
   const [name, setName] = useState(initial?.name ?? '')
   const [priority, setPriority] = useState(initial?.priority ?? 100)
-  const [action, setAction] = useState<ActionType>(
-    initial?.action ?? 'leave_inbox',
-  )
+  const [action, setAction] = useState<ActionType>(initial?.action ?? 'leave_inbox')
   const [enabled, setEnabled] = useState(initial?.enabled ?? true)
-  const [cooldownSecs, setCooldownSecs] = useState<number | undefined>(
-    initial?.cooldown_secs,
-  )
+  const [cooldownSecs, setCooldownSecs] = useState<number | undefined>(initial?.cooldown_secs)
   const [logicMode, setLogicMode] = useState<'AND' | 'OR'>('AND')
 
   // Parse initial conditions into rows
@@ -196,14 +183,10 @@ export function RuleBuilder({
   if (initialConditions.length === 0) {
     initialConditions.push({ field: 'from', operator: 'contains', value: '' })
   }
-  const [conditions, setConditions] =
-    useState<ConditionRow[]>(initialConditions)
+  const [conditions, setConditions] = useState<ConditionRow[]>(initialConditions)
 
   const addCondition = () => {
-    setConditions([
-      ...conditions,
-      { field: 'from', operator: 'contains', value: '' },
-    ])
+    setConditions([...conditions, { field: 'from', operator: 'contains', value: '' }])
   }
 
   const updateCondition = (idx: number, c: ConditionRow) => {
@@ -279,11 +262,7 @@ export function RuleBuilder({
             type="number"
             className={INPUT}
             value={cooldownSecs ?? ''}
-            onChange={(e) =>
-              setCooldownSecs(
-                e.target.value ? parseInt(e.target.value) : undefined,
-              )
-            }
+            onChange={(e) => setCooldownSecs(e.target.value ? parseInt(e.target.value) : undefined)}
             placeholder="300"
             min={0}
           />
@@ -293,16 +272,12 @@ export function RuleBuilder({
       {/* Conditions */}
       <div className="space-y-3 rounded-lg border border-zinc-700/50 p-4">
         <div className="flex items-center justify-between">
-          <p className="text-xs font-semibold tracking-wider text-zinc-500 uppercase">
-            Conditions
-          </p>
+          <p className="text-xs font-semibold tracking-wider text-zinc-500 uppercase">Conditions</p>
           <div className="flex items-center gap-1 rounded-md border border-zinc-700 bg-zinc-900 p-0.5 text-xs">
             <button
               type="button"
               className={`rounded px-2 py-0.5 ${
-                logicMode === 'AND'
-                  ? 'bg-sky-500 text-white'
-                  : 'text-zinc-400 hover:text-white'
+                logicMode === 'AND' ? 'bg-sky-500 text-white' : 'text-zinc-400 hover:text-white'
               }`}
               onClick={() => setLogicMode('AND')}
             >
@@ -311,9 +286,7 @@ export function RuleBuilder({
             <button
               type="button"
               className={`rounded px-2 py-0.5 ${
-                logicMode === 'OR'
-                  ? 'bg-sky-500 text-white'
-                  : 'text-zinc-400 hover:text-white'
+                logicMode === 'OR' ? 'bg-sky-500 text-white' : 'text-zinc-400 hover:text-white'
               }`}
               onClick={() => setLogicMode('OR')}
             >
@@ -326,9 +299,7 @@ export function RuleBuilder({
           {conditions.map((c, idx) => (
             <div key={idx}>
               {idx > 0 && (
-                <p className="mb-1 text-center text-xs font-medium text-sky-400">
-                  {logicMode}
-                </p>
+                <p className="mb-1 text-center text-xs font-medium text-sky-400">{logicMode}</p>
               )}
               <ConditionRowEditor
                 condition={c}
@@ -374,10 +345,7 @@ export function RuleBuilder({
           onChange={(e) => setEnabled(e.target.checked)}
           className="h-4 w-4 rounded border-zinc-600 bg-zinc-800 text-sky-500"
         />
-        <label
-          htmlFor="rule-enabled"
-          className="cursor-pointer text-sm text-zinc-300"
-        >
+        <label htmlFor="rule-enabled" className="cursor-pointer text-sm text-zinc-300">
           Enabled
         </label>
       </div>
@@ -396,11 +364,7 @@ export function RuleBuilder({
           disabled={saving}
           className="flex items-center gap-2 rounded-lg bg-sky-500 px-4 py-1.5 text-sm font-medium text-white transition-colors hover:bg-sky-400 disabled:opacity-50"
         >
-          {saving ? (
-            <Loader2 className="h-4 w-4 animate-spin" />
-          ) : (
-            <Save className="h-4 w-4" />
-          )}
+          {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
           {saving ? 'Saving...' : initial?.id ? 'Update Rule' : 'Create Rule'}
         </button>
       </div>

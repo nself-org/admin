@@ -93,9 +93,7 @@ function AzureContent() {
   const vmColumns: ColumnDef<AzureVM>[] = [
     {
       accessorKey: 'name',
-      header: ({ column }) => (
-        <SortableHeader column={column}>Name</SortableHeader>
-      ),
+      header: ({ column }) => <SortableHeader column={column}>Name</SortableHeader>,
     },
     {
       accessorKey: 'size',
@@ -128,9 +126,7 @@ function AzureContent() {
       accessorKey: 'publicIP',
       header: 'Public IP',
       cell: ({ row }) => (
-        <span className="font-mono text-sm">
-          {row.getValue('publicIP') || '-'}
-        </span>
+        <span className="font-mono text-sm">{row.getValue('publicIP') || '-'}</span>
       ),
     },
     {
@@ -146,9 +142,7 @@ function AzureContent() {
   const sqlColumns: ColumnDef<AzureSQL>[] = [
     {
       accessorKey: 'name',
-      header: ({ column }) => (
-        <SortableHeader column={column}>Database Name</SortableHeader>
-      ),
+      header: ({ column }) => <SortableHeader column={column}>Database Name</SortableHeader>,
     },
     {
       accessorKey: 'serverName',
@@ -189,9 +183,7 @@ function AzureContent() {
   const blobColumns: ColumnDef<BlobStorage>[] = [
     {
       accessorKey: 'name',
-      header: ({ column }) => (
-        <SortableHeader column={column}>Storage Account</SortableHeader>
-      ),
+      header: ({ column }) => <SortableHeader column={column}>Storage Account</SortableHeader>,
     },
     {
       accessorKey: 'location',
@@ -224,21 +216,16 @@ function AzureContent() {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold text-zinc-900 dark:text-white">
-          Microsoft Azure
-        </h1>
+        <h1 className="text-3xl font-bold text-zinc-900 dark:text-white">Microsoft Azure</h1>
         <p className="mt-2 text-zinc-600 dark:text-zinc-400">
-          Manage Azure resources and deploy to Virtual Machines, Azure SQL, and
-          Blob Storage
+          Manage Azure resources and deploy to Virtual Machines, Azure SQL, and Blob Storage
         </p>
       </div>
 
       {/* Connection Status */}
       <Card className="p-6">
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-lg font-semibold text-zinc-900 dark:text-white">
-            Azure Connection
-          </h2>
+          <h2 className="text-lg font-semibold text-zinc-900 dark:text-white">Azure Connection</h2>
           <div
             className={`flex items-center gap-2 rounded-full px-3 py-1 text-sm font-medium ${
               connected
@@ -309,13 +296,7 @@ function AzureContent() {
             <div className="flex gap-2">
               <Button
                 onClick={handleConnect}
-                disabled={
-                  !subscriptionId ||
-                  !clientId ||
-                  !clientSecret ||
-                  !tenantId ||
-                  loading
-                }
+                disabled={!subscriptionId || !clientId || !clientSecret || !tenantId || loading}
               >
                 {loading ? 'Connecting...' : 'Connect to Azure'}
               </Button>
@@ -325,9 +306,7 @@ function AzureContent() {
         ) : (
           <div className="space-y-3">
             <div className="flex items-center justify-between">
-              <span className="text-sm text-zinc-600 dark:text-zinc-400">
-                Subscription ID
-              </span>
+              <span className="text-sm text-zinc-600 dark:text-zinc-400">Subscription ID</span>
               <span className="font-mono text-sm text-zinc-900 dark:text-white">
                 {subscriptionId.substring(0, 8)}...
               </span>
@@ -349,12 +328,8 @@ function AzureContent() {
                   <Server className="h-5 w-5 text-blue-600 dark:text-blue-400" />
                 </div>
                 <div>
-                  <p className="text-sm text-zinc-600 dark:text-zinc-400">
-                    Virtual Machines
-                  </p>
-                  <p className="text-xl font-bold text-zinc-900 dark:text-white">
-                    {vms.length}
-                  </p>
+                  <p className="text-sm text-zinc-600 dark:text-zinc-400">Virtual Machines</p>
+                  <p className="text-xl font-bold text-zinc-900 dark:text-white">{vms.length}</p>
                 </div>
               </div>
             </Card>
@@ -365,9 +340,7 @@ function AzureContent() {
                   <Database className="h-5 w-5 text-sky-500 dark:text-sky-400" />
                 </div>
                 <div>
-                  <p className="text-sm text-zinc-600 dark:text-zinc-400">
-                    SQL Databases
-                  </p>
+                  <p className="text-sm text-zinc-600 dark:text-zinc-400">SQL Databases</p>
                   <p className="text-xl font-bold text-zinc-900 dark:text-white">
                     {sqlDatabases.length}
                   </p>
@@ -381,9 +354,7 @@ function AzureContent() {
                   <HardDrive className="h-5 w-5 text-green-600 dark:text-green-400" />
                 </div>
                 <div>
-                  <p className="text-sm text-zinc-600 dark:text-zinc-400">
-                    Blob Storage
-                  </p>
+                  <p className="text-sm text-zinc-600 dark:text-zinc-400">Blob Storage</p>
                   <p className="text-xl font-bold text-zinc-900 dark:text-white">
                     {blobStorage.length}
                   </p>
@@ -397,9 +368,7 @@ function AzureContent() {
                   <DollarSign className="h-5 w-5 text-amber-600 dark:text-amber-400" />
                 </div>
                 <div>
-                  <p className="text-sm text-zinc-600 dark:text-zinc-400">
-                    Monthly Cost
-                  </p>
+                  <p className="text-sm text-zinc-600 dark:text-zinc-400">Monthly Cost</p>
                   <p className="text-xl font-bold text-zinc-900 dark:text-white">
                     ${totalCost.toFixed(2)}
                   </p>
@@ -497,8 +466,7 @@ function AzureContent() {
                 Azure Not Connected
               </h3>
               <p className="text-sm text-yellow-700 dark:text-yellow-200">
-                Connect your Azure subscription to manage VMs, SQL databases,
-                and Blob Storage
+                Connect your Azure subscription to manage VMs, SQL databases, and Blob Storage
               </p>
             </div>
           </div>

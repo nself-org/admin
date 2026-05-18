@@ -149,11 +149,7 @@ function ReviewSection({ pluginName }: { pluginName: string }) {
         onClick={() => setOpen((v) => !v)}
         className="flex items-center gap-1 text-xs text-zinc-500 transition-colors hover:text-zinc-300"
       >
-        {open ? (
-          <ChevronUp className="h-3 w-3" />
-        ) : (
-          <ChevronDown className="h-3 w-3" />
-        )}
+        {open ? <ChevronUp className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />}
         Write a review
       </button>
 
@@ -254,9 +250,7 @@ function MarketplaceCard({
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h3 className="font-medium text-white capitalize">
-                {plugin.name}
-              </h3>
+              <h3 className="font-medium text-white capitalize">{plugin.name}</h3>
               {/* T08: bundle badge */}
               {hasBundle && (
                 <span className="rounded-full border border-indigo-500/30 bg-indigo-500/20 px-2 py-0.5 text-xs text-indigo-400">
@@ -290,16 +284,11 @@ function MarketplaceCard({
       </div>
 
       {/* T02: truncated description */}
-      <p className="mb-4 line-clamp-2 flex-1 text-sm text-zinc-400">
-        {plugin.description}
-      </p>
+      <p className="mb-4 line-clamp-2 flex-1 text-sm text-zinc-400">{plugin.description}</p>
 
       <div className="mb-4 flex flex-wrap gap-1">
         {plugin.tags.slice(0, 3).map((tag) => (
-          <span
-            key={tag}
-            className="rounded bg-zinc-700/50 px-2 py-0.5 text-xs text-zinc-400"
-          >
+          <span key={tag} className="rounded bg-zinc-700/50 px-2 py-0.5 text-xs text-zinc-400">
             {tag}
           </span>
         ))}
@@ -310,15 +299,11 @@ function MarketplaceCard({
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-1">
             <Star className="h-4 w-4 text-yellow-500" />
-            <span className="text-sm text-zinc-400">
-              {plugin.rating.toFixed(1)}
-            </span>
+            <span className="text-sm text-zinc-400">{plugin.rating.toFixed(1)}</span>
           </div>
           <div className="flex items-center gap-1">
             <Download className="h-4 w-4 text-zinc-500" />
-            <span className="text-sm text-zinc-400">
-              {plugin.downloads.toLocaleString()}
-            </span>
+            <span className="text-sm text-zinc-400">{plugin.downloads.toLocaleString()}</span>
           </div>
         </div>
         <span className="text-xs text-zinc-500">v{plugin.version}</span>
@@ -398,13 +383,9 @@ function MarketplaceContent() {
   const installParam = searchParams.get('install')
 
   const [searchQuery, setSearchQuery] = useState('')
-  const [selectedCategory, setSelectedCategory] = useState<
-    PluginCategory | 'all'
-  >('all')
+  const [selectedCategory, setSelectedCategory] = useState<PluginCategory | 'all'>('all')
   // T07: tier + bundle filters
-  const [selectedTier, setSelectedTier] = useState<'all' | 'free' | 'pro'>(
-    'all',
-  )
+  const [selectedTier, setSelectedTier] = useState<'all' | 'free' | 'pro'>('all')
   const [selectedBundle, setSelectedBundle] = useState<string>('all')
   const [sortBy, setSortBy] = useState<'popular' | 'recent' | 'name'>('popular')
   const [installing, setInstalling] = useState<string | null>(null)
@@ -433,10 +414,9 @@ function MarketplaceContent() {
     setInstalling(pluginName)
     setInstallRateLimited(null)
     try {
-      const response = await fetch(
-        `/api/plugins/${encodeURIComponent(pluginName)}/install`,
-        { method: 'POST' },
-      )
+      const response = await fetch(`/api/plugins/${encodeURIComponent(pluginName)}/install`, {
+        method: 'POST',
+      })
       if (response.status === 429) {
         const raw = response.headers.get('Retry-After')
         let retryAfterSeconds: number | null = null
@@ -466,10 +446,9 @@ function MarketplaceContent() {
   const handleUninstall = async (pluginName: string) => {
     setUninstalling(pluginName)
     try {
-      const response = await fetch(
-        `/api/plugins/${encodeURIComponent(pluginName)}/install`,
-        { method: 'DELETE' },
-      )
+      const response = await fetch(`/api/plugins/${encodeURIComponent(pluginName)}/install`, {
+        method: 'DELETE',
+      })
       if (response.ok) {
         mutateInstalled()
       }
@@ -481,9 +460,7 @@ function MarketplaceContent() {
   // Auto-install if install param is provided
   if (installParam && !installing && marketplaceData) {
     const plugin = marketplaceData.plugins.find((p) => p.name === installParam)
-    const isAlreadyInstalled = installedData?.plugins.some(
-      (p) => p.name === installParam,
-    )
+    const isAlreadyInstalled = installedData?.plugins.some((p) => p.name === installParam)
     if (plugin && !isAlreadyInstalled) {
       handleInstall(installParam)
     }
@@ -496,19 +473,14 @@ function MarketplaceContent() {
       const matchesSearch =
         plugin.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         plugin.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        plugin.tags.some((tag) =>
-          tag.toLowerCase().includes(searchQuery.toLowerCase()),
-        )
-      const matchesCategory =
-        selectedCategory === 'all' || plugin.category === selectedCategory
+        plugin.tags.some((tag) => tag.toLowerCase().includes(searchQuery.toLowerCase()))
+      const matchesCategory = selectedCategory === 'all' || plugin.category === selectedCategory
       // T07: tier filter (default free when tier absent)
       const effectiveTier = plugin.tier ?? 'free'
-      const matchesTier =
-        selectedTier === 'all' || effectiveTier === selectedTier
+      const matchesTier = selectedTier === 'all' || effectiveTier === selectedTier
       // T07: bundle filter
       const matchesBundle =
-        selectedBundle === 'all' ||
-        plugin.bundle?.toLowerCase() === selectedBundle
+        selectedBundle === 'all' || plugin.bundle?.toLowerCase() === selectedBundle
       return matchesSearch && matchesCategory && matchesTier && matchesBundle
     }) || []
 
@@ -536,19 +508,12 @@ function MarketplaceContent() {
           </Link>
         </div>
         <div>
-          <h1 className="text-2xl font-semibold text-white">
-            Plugin Marketplace
-          </h1>
-          <p className="text-sm text-zinc-400">
-            Browse and install third-party integrations
-          </p>
+          <h1 className="text-2xl font-semibold text-white">Plugin Marketplace</h1>
+          <p className="text-sm text-zinc-400">Browse and install third-party integrations</p>
         </div>
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
           {[1, 2, 3, 4, 5, 6].map((i) => (
-            <div
-              key={i}
-              className="h-64 animate-pulse rounded-lg bg-zinc-800/50"
-            />
+            <div key={i} className="h-64 animate-pulse rounded-lg bg-zinc-800/50" />
           ))}
         </div>
       </div>
@@ -568,12 +533,8 @@ function MarketplaceContent() {
           </Link>
         </div>
         <div>
-          <h1 className="text-2xl font-semibold text-white">
-            Plugin Marketplace
-          </h1>
-          <p className="text-sm text-zinc-400">
-            Browse and install third-party integrations
-          </p>
+          <h1 className="text-2xl font-semibold text-white">Plugin Marketplace</h1>
+          <p className="text-sm text-zinc-400">Browse and install third-party integrations</p>
         </div>
         <div className="rounded-lg border border-red-500/30 bg-red-900/20 p-4">
           <div className="flex items-center gap-3">
@@ -600,12 +561,8 @@ function MarketplaceContent() {
 
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-semibold text-white">
-            Plugin Marketplace
-          </h1>
-          <p className="text-sm text-zinc-400">
-            Browse and install third-party integrations
-          </p>
+          <h1 className="text-2xl font-semibold text-white">Plugin Marketplace</h1>
+          <p className="text-sm text-zinc-400">Browse and install third-party integrations</p>
         </div>
       </div>
 
@@ -628,9 +585,7 @@ function MarketplaceContent() {
           {/* Category filter */}
           <select
             value={selectedCategory}
-            onChange={(e) =>
-              setSelectedCategory(e.target.value as PluginCategory | 'all')
-            }
+            onChange={(e) => setSelectedCategory(e.target.value as PluginCategory | 'all')}
             className="rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2 text-sm text-white focus:border-emerald-500 focus:outline-none"
           >
             {categories.map((category) => (
@@ -643,9 +598,7 @@ function MarketplaceContent() {
           {/* T07: Tier filter */}
           <select
             value={selectedTier}
-            onChange={(e) =>
-              setSelectedTier(e.target.value as 'all' | 'free' | 'pro')
-            }
+            onChange={(e) => setSelectedTier(e.target.value as 'all' | 'free' | 'pro')}
             className="rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2 text-sm text-white focus:border-emerald-500 focus:outline-none"
           >
             <option value="all">All Tiers</option>
@@ -670,9 +623,7 @@ function MarketplaceContent() {
 
           <select
             value={sortBy}
-            onChange={(e) =>
-              setSortBy(e.target.value as 'popular' | 'recent' | 'name')
-            }
+            onChange={(e) => setSortBy(e.target.value as 'popular' | 'recent' | 'name')}
             className="rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2 text-sm text-white focus:border-emerald-500 focus:outline-none"
           >
             <option value="popular">Popular</option>
@@ -696,7 +647,7 @@ function MarketplaceContent() {
           <button
             type="button"
             onClick={() => setInstallRateLimited(null)}
-            className="flex-shrink-0 rounded border border-amber-600/50 px-2 py-1 text-xs hover:bg-amber-900/30 transition-colors"
+            className="flex-shrink-0 rounded border border-amber-600/50 px-2 py-1 text-xs transition-colors hover:bg-amber-900/30"
           >
             Dismiss
           </button>
@@ -731,12 +682,8 @@ function MarketplaceContent() {
       ) : (
         <div className="flex flex-col items-center justify-center rounded-xl border border-zinc-700/50 bg-zinc-800/30 py-16">
           <Search className="mb-4 h-12 w-12 text-zinc-600" />
-          <h3 className="mb-2 text-lg font-medium text-white">
-            No plugins found
-          </h3>
-          <p className="text-sm text-zinc-400">
-            Try adjusting your search or filter criteria
-          </p>
+          <h3 className="mb-2 text-lg font-medium text-white">No plugins found</h3>
+          <p className="text-sm text-zinc-400">Try adjusting your search or filter criteria</p>
         </div>
       )}
     </div>

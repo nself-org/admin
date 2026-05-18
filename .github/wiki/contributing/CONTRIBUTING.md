@@ -185,10 +185,7 @@ export async function POST(request: Request) {
 
     // Validate input
     if (!body.containerId) {
-      return NextResponse.json(
-        { success: false, error: 'Container ID required' },
-        { status: 400 },
-      )
+      return NextResponse.json({ success: false, error: 'Container ID required' }, { status: 400 })
     }
 
     // Perform action
@@ -199,10 +196,7 @@ export async function POST(request: Request) {
       data: result,
     })
   } catch (error) {
-    return NextResponse.json(
-      { success: false, error: error.message },
-      { status: 500 },
-    )
+    return NextResponse.json({ success: false, error: error.message }, { status: 500 })
   }
 }
 ```
@@ -308,9 +302,7 @@ describe('ServiceCard', () => {
  * console.log(status) // { running: true, uptime: 0 }
  * ```
  */
-export async function restartContainer(
-  containerId: string,
-): Promise<ContainerStatus> {
+export async function restartContainer(containerId: string): Promise<ContainerStatus> {
   // Implementation
 }
 ````

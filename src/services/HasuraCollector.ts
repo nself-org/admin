@@ -103,14 +103,8 @@ export class HasuraCollector {
       this.validateContainerName(this.containerName)
       const { stdout } = await this.execWithTimeout(
         'docker',
-        [
-          'ps',
-          '--filter',
-          `name=${this.containerName}`,
-          '--format',
-          '{{.Status}}',
-        ],
-        2000,
+        ['ps', '--filter', `name=${this.containerName}`, '--format', '{{.Status}}'],
+        2000
       )
       return stdout.trim().toLowerCase().includes('up')
     } catch {
@@ -148,7 +142,7 @@ export class HasuraCollector {
           'http://localhost:8080/v1/metadata',
         ],
         10000,
-        { maxBuffer: 10 * 1024 * 1024 },
+        { maxBuffer: 10 * 1024 * 1024 }
       )
 
       const metadata = JSON.parse(stdout)
@@ -160,8 +154,7 @@ export class HasuraCollector {
       let permissions = 0
       metadata.metadata?.sources?.[0]?.tables?.forEach((table: any) => {
         relationships +=
-          (table.object_relationships?.length || 0) +
-          (table.array_relationships?.length || 0)
+          (table.object_relationships?.length || 0) + (table.array_relationships?.length || 0)
         permissions +=
           (table.select_permissions?.length || 0) +
           (table.insert_permissions?.length || 0) +
@@ -171,12 +164,9 @@ export class HasuraCollector {
 
       const actions = metadata.metadata?.actions?.length || 0
       const eventTriggers =
-        metadata.metadata?.sources?.[0]?.tables?.reduce(
-          (acc: number, table: any) => {
-            return acc + (table.event_triggers?.length || 0)
-          },
-          0,
-        ) || 0
+        metadata.metadata?.sources?.[0]?.tables?.reduce((acc: number, table: any) => {
+          return acc + (table.event_triggers?.length || 0)
+        }, 0) || 0
       const cronTriggers = metadata.metadata?.cron_triggers?.length || 0
       const remoteSchemas = metadata.metadata?.remote_schemas?.length || 0
 
@@ -231,7 +221,7 @@ export class HasuraCollector {
           'http://localhost:8080/v1/metadata',
         ],
         5000,
-        { maxBuffer: 10 * 1024 * 1024 },
+        { maxBuffer: 10 * 1024 * 1024 }
       )
 
       const response = JSON.parse(stdout)
@@ -249,7 +239,7 @@ export class HasuraCollector {
           `X-Hasura-Admin-Secret: ${this.adminSecret}`,
           'http://localhost:8080/v1/version',
         ],
-        5000,
+        5000
       )
 
       let version = 'unknown'
@@ -277,9 +267,7 @@ export class HasuraCollector {
   /**
    * Get empty stats with status
    */
-  private getEmptyStats(
-    status: 'healthy' | 'unhealthy' | 'stopped',
-  ): HasuraStats {
+  private getEmptyStats(status: 'healthy' | 'unhealthy' | 'stopped'): HasuraStats {
     return {
       status,
       metadata: {
@@ -311,7 +299,7 @@ export class HasuraCollector {
     bin: string,
     args: string[],
     timeout: number,
-    options: { maxBuffer?: number } = {},
+    options: { maxBuffer?: number } = {}
   ): Promise<{ stdout: string; stderr: string }> {
     return new Promise((resolve, reject) => {
       const controller = new AbortController()

@@ -97,9 +97,7 @@ export default function FlagsPage() {
 
   const fetchFlags = async () => {
     try {
-      const url = typeFilter
-        ? `${FLAGS_API}/flags?type=${typeFilter}`
-        : `${FLAGS_API}/flags`
+      const url = typeFilter ? `${FLAGS_API}/flags?type=${typeFilter}` : `${FLAGS_API}/flags`
       const res = await fetch(url)
       if (res.status === 401 || res.status === 403) {
         setPermDenied(true)
@@ -174,9 +172,7 @@ export default function FlagsPage() {
           <div className="flex items-start gap-3">
             <AlertCircle className="mt-0.5 h-5 w-5 shrink-0 text-yellow-400" />
             <div>
-              <p className="font-medium text-yellow-300">
-                feature-flags plugin is not running
-              </p>
+              <p className="font-medium text-yellow-300">feature-flags plugin is not running</p>
               <p className="mt-1 text-sm text-yellow-400/80">
                 Install and start the plugin to manage feature flags.
               </p>
@@ -195,17 +191,13 @@ export default function FlagsPage() {
       <div className="space-y-6">
         <Header />
         <div className="rounded-xl border border-orange-500/30 bg-orange-900/20 p-6">
-          <p className="font-medium text-orange-300">
-            Rate limited — please wait a moment.
-          </p>
+          <p className="font-medium text-orange-300">Rate limited — please wait a moment.</p>
         </div>
       </div>
     )
   }
 
-  const filtered = typeFilter
-    ? flags.filter((f) => f.type === typeFilter)
-    : flags
+  const filtered = typeFilter ? flags.filter((f) => f.type === typeFilter) : flags
 
   return (
     <div className="space-y-6">
@@ -214,31 +206,26 @@ export default function FlagsPage() {
       {/* Filters */}
       <div className="flex items-center gap-3">
         <span className="text-sm text-zinc-400">Filter:</span>
-        {(['', 'release', 'ops', 'experiment', 'kill_switch'] as const).map(
-          (t) => (
-            <button
-              key={t}
-              onClick={() => setTypeFilter(t)}
-              className={`rounded-lg px-3 py-1.5 text-xs font-medium transition-colors ${
-                typeFilter === t
-                  ? 'bg-sky-500 text-white'
-                  : 'bg-zinc-800 text-zinc-400 hover:bg-zinc-700 hover:text-white'
-              }`}
-            >
-              {t === '' ? 'All' : TYPE_META[t].label}
-            </button>
-          ),
-        )}
+        {(['', 'release', 'ops', 'experiment', 'kill_switch'] as const).map((t) => (
+          <button
+            key={t}
+            onClick={() => setTypeFilter(t)}
+            className={`rounded-lg px-3 py-1.5 text-xs font-medium transition-colors ${
+              typeFilter === t
+                ? 'bg-sky-500 text-white'
+                : 'bg-zinc-800 text-zinc-400 hover:bg-zinc-700 hover:text-white'
+            }`}
+          >
+            {t === '' ? 'All' : TYPE_META[t].label}
+          </button>
+        ))}
       </div>
 
       {/* Loading skeleton */}
       {loading && (
         <div className="space-y-3">
           {[1, 2, 3].map((n) => (
-            <div
-              key={n}
-              className="h-14 animate-pulse rounded-xl bg-zinc-800/50"
-            />
+            <div key={n} className="h-14 animate-pulse rounded-xl bg-zinc-800/50" />
           ))}
         </div>
       )}
@@ -291,11 +278,7 @@ export default function FlagsPage() {
                     >
                       {flag.key}
                     </Link>
-                    {flag.name && (
-                      <div className="mt-0.5 text-xs text-zinc-500">
-                        {flag.name}
-                      </div>
-                    )}
+                    {flag.name && <div className="mt-0.5 text-xs text-zinc-500">{flag.name}</div>}
                   </td>
                   <td className="px-4 py-3">
                     <TypeBadge type={flag.type} />
@@ -322,9 +305,7 @@ export default function FlagsPage() {
                       {/* Toggle button */}
                       <button
                         onClick={() => handleToggle(flag)}
-                        disabled={
-                          toggling === flag.key || flag.type === 'kill_switch'
-                        }
+                        disabled={toggling === flag.key || flag.type === 'kill_switch'}
                         title={
                           flag.type === 'kill_switch'
                             ? 'Kill switches cannot be toggled from UI — use nself flag kill'
@@ -367,8 +348,8 @@ function Header() {
     <div>
       <h1 className="text-2xl font-semibold text-white">Feature Flags</h1>
       <p className="mt-1 text-sm text-zinc-400">
-        Manage feature flags via the nself feature-flags plugin. Toggle flags,
-        adjust rollout percentages, and review audit logs.
+        Manage feature flags via the nself feature-flags plugin. Toggle flags, adjust rollout
+        percentages, and review audit logs.
       </p>
     </div>
   )

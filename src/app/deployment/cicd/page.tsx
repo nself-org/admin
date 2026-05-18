@@ -5,7 +5,6 @@ import { HeroPattern } from '@/components/HeroPattern'
 import { FormSkeleton } from '@/components/skeletons'
 import {
   Activity,
-  AlertCircle,
   AlertTriangle,
   ArrowRight,
   Calendar,
@@ -120,13 +119,9 @@ function PipelineVisualizer({ pipeline }: { pipeline: Pipeline }) {
   return (
     <div className="rounded-lg border border-zinc-200 bg-white p-6 dark:border-zinc-700 dark:bg-zinc-800">
       <div className="mb-6 flex items-center justify-between">
-        <h3 className="text-lg font-semibold text-zinc-900 dark:text-white">
-          Pipeline Stages
-        </h3>
+        <h3 className="text-lg font-semibold text-zinc-900 dark:text-white">Pipeline Stages</h3>
         <div className="flex items-center gap-2">
-          <span className="text-sm text-zinc-500">
-            Build #{pipeline.buildNumber}
-          </span>
+          <span className="text-sm text-zinc-500">Build #{pipeline.buildNumber}</span>
           <Button variant="outline" className="text-xs">
             <Terminal className="mr-1 h-3 w-3" />
             View Logs
@@ -149,16 +144,10 @@ function PipelineVisualizer({ pipeline }: { pipeline: Pipeline }) {
                     : 'border-zinc-200 hover:bg-zinc-50 dark:border-zinc-700 dark:hover:bg-zinc-700/50'
                 }`}
               >
-                <div
-                  className={`h-3 w-3 rounded-full ${getStageColor(stage.status)}`}
-                />
+                <div className={`h-3 w-3 rounded-full ${getStageColor(stage.status)}`} />
                 <Icon className="h-4 w-4 text-zinc-600 dark:text-zinc-400" />
                 <span className="text-sm font-medium">{stage.name}</span>
-                {stage.duration && (
-                  <span className="text-xs text-zinc-500">
-                    {stage.duration}s
-                  </span>
-                )}
+                {stage.duration && <span className="text-xs text-zinc-500">{stage.duration}s</span>}
               </button>
               {!isLast && <ArrowRight className="mx-2 h-4 w-4 text-zinc-400" />}
             </div>
@@ -175,9 +164,7 @@ function PipelineVisualizer({ pipeline }: { pipeline: Pipeline }) {
             return (
               <div>
                 <div className="mb-3 flex items-center justify-between">
-                  <h4 className="font-medium text-zinc-900 dark:text-white">
-                    {stage.name} Stage
-                  </h4>
+                  <h4 className="font-medium text-zinc-900 dark:text-white">{stage.name} Stage</h4>
                   <div className="flex items-center gap-2">
                     <span
                       className={`rounded px-2 py-1 text-xs font-medium ${
@@ -190,13 +177,10 @@ function PipelineVisualizer({ pipeline }: { pipeline: Pipeline }) {
                               : 'bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-400'
                       }`}
                     >
-                      {stage.status.charAt(0).toUpperCase() +
-                        stage.status.slice(1)}
+                      {stage.status.charAt(0).toUpperCase() + stage.status.slice(1)}
                     </span>
                     {stage.duration && (
-                      <span className="text-sm text-zinc-500">
-                        Duration: {stage.duration}s
-                      </span>
+                      <span className="text-sm text-zinc-500">Duration: {stage.duration}s</span>
                     )}
                   </div>
                 </div>
@@ -227,9 +211,7 @@ function BuildStatusDashboard({ pipelines }: { pipelines: Pipeline[] }) {
     running: pipelines.filter((p) => p.status === 'running').length,
     successRate:
       pipelines.length > 0
-        ? (pipelines.filter((p) => p.status === 'success').length /
-            pipelines.length) *
-          100
+        ? (pipelines.filter((p) => p.status === 'success').length / pipelines.length) * 100
         : 0,
   }
 
@@ -238,9 +220,7 @@ function BuildStatusDashboard({ pipelines }: { pipelines: Pipeline[] }) {
       <div className="rounded-lg border border-zinc-200 bg-white p-4 dark:border-zinc-700 dark:bg-zinc-800">
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-sm text-zinc-600 dark:text-zinc-400">
-              Total Builds
-            </p>
+            <p className="text-sm text-zinc-600 dark:text-zinc-400">Total Builds</p>
             <p className="text-2xl font-bold">{stats.total}</p>
           </div>
           <MonitorPlay className="h-8 w-8 text-blue-500" />
@@ -280,12 +260,8 @@ function BuildStatusDashboard({ pipelines }: { pipelines: Pipeline[] }) {
       <div className="rounded-lg border border-zinc-200 bg-white p-4 dark:border-zinc-700 dark:bg-zinc-800">
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-sm text-zinc-600 dark:text-zinc-400">
-              Success Rate
-            </p>
-            <p className="text-2xl font-bold">
-              {stats.successRate.toFixed(1)}%
-            </p>
+            <p className="text-sm text-zinc-600 dark:text-zinc-400">Success Rate</p>
+            <p className="text-2xl font-bold">{stats.successRate.toFixed(1)}%</p>
           </div>
           <TrendingUp className="h-8 w-8 text-green-500" />
         </div>
@@ -297,10 +273,7 @@ function BuildStatusDashboard({ pipelines }: { pipelines: Pipeline[] }) {
 function DeploymentHistory({ deployments }: { deployments: Deployment[] }) {
   const [selectedEnvironment, setSelectedEnvironment] = useState<string>('all')
 
-  const environments = [
-    'all',
-    ...Array.from(new Set(deployments.map((d) => d.environment))),
-  ]
+  const environments = ['all', ...Array.from(new Set(deployments.map((d) => d.environment)))]
 
   const filteredDeployments =
     selectedEnvironment === 'all'
@@ -325,9 +298,7 @@ function DeploymentHistory({ deployments }: { deployments: Deployment[] }) {
           >
             {environments.map((env) => (
               <option key={env} value={env}>
-                {env === 'all'
-                  ? 'All Environments'
-                  : env.charAt(0).toUpperCase() + env.slice(1)}
+                {env === 'all' ? 'All Environments' : env.charAt(0).toUpperCase() + env.slice(1)}
               </option>
             ))}
           </select>
@@ -336,10 +307,7 @@ function DeploymentHistory({ deployments }: { deployments: Deployment[] }) {
 
       <div className="divide-y divide-zinc-200 dark:divide-zinc-700">
         {filteredDeployments.map((deployment) => (
-          <div
-            key={deployment.id}
-            className="p-6 hover:bg-zinc-50 dark:hover:bg-zinc-700/50"
-          >
+          <div key={deployment.id} className="p-6 hover:bg-zinc-50 dark:hover:bg-zinc-700/50">
             <div className="flex items-start justify-between">
               <div className="flex-1">
                 <div className="mb-2 flex items-center gap-3">
@@ -354,15 +322,12 @@ function DeploymentHistory({ deployments }: { deployments: Deployment[] }) {
                             : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400'
                     }`}
                   >
-                    {deployment.status.charAt(0).toUpperCase() +
-                      deployment.status.slice(1)}
+                    {deployment.status.charAt(0).toUpperCase() + deployment.status.slice(1)}
                   </span>
                   <span className="text-sm font-medium text-zinc-900 dark:text-white">
                     {deployment.pipeline} → {deployment.environment}
                   </span>
-                  <span className="text-sm text-zinc-500">
-                    v{deployment.version}
-                  </span>
+                  <span className="text-sm text-zinc-500">v{deployment.version}</span>
                 </div>
 
                 <div className="mb-2 text-sm text-zinc-600 dark:text-zinc-400">
@@ -390,17 +355,16 @@ function DeploymentHistory({ deployments }: { deployments: Deployment[] }) {
               </div>
 
               <div className="ml-4 flex items-center gap-2">
-                {deployment.rollbackAvailable &&
-                  deployment.status === 'deployed' && (
-                    <Button
-                      onClick={() => handleRollback(deployment.id)}
-                      variant="outline"
-                      className="text-xs"
-                    >
-                      <RotateCw className="mr-1 h-3 w-3" />
-                      Rollback
-                    </Button>
-                  )}
+                {deployment.rollbackAvailable && deployment.status === 'deployed' && (
+                  <Button
+                    onClick={() => handleRollback(deployment.id)}
+                    variant="outline"
+                    className="text-xs"
+                  >
+                    <RotateCw className="mr-1 h-3 w-3" />
+                    Rollback
+                  </Button>
+                )}
                 <Button variant="outline" className="text-xs">
                   <Eye className="mr-1 h-3 w-3" />
                   Details
@@ -422,9 +386,7 @@ function WebhookManagement({
   onWebhookUpdate: (webhook: WebhookConfig) => void
 }) {
   const [_isCreating, setIsCreating] = useState(false)
-  const [_editingWebhook, setEditingWebhook] = useState<WebhookConfig | null>(
-    null,
-  )
+  const [_editingWebhook, setEditingWebhook] = useState<WebhookConfig | null>(null)
 
   return (
     <div className="rounded-lg border border-zinc-200 bg-white dark:border-zinc-700 dark:bg-zinc-800">
@@ -446,9 +408,7 @@ function WebhookManagement({
             <div className="flex items-start justify-between">
               <div className="flex-1">
                 <div className="mb-2 flex items-center gap-3">
-                  <h4 className="font-medium text-zinc-900 dark:text-white">
-                    {webhook.name}
-                  </h4>
+                  <h4 className="font-medium text-zinc-900 dark:text-white">{webhook.name}</h4>
                   <span
                     className={`rounded px-2 py-1 text-xs font-medium ${
                       webhook.active
@@ -468,9 +428,7 @@ function WebhookManagement({
                   <span>{webhook.events.join(', ')}</span>
                   <span>{webhook.deliveries} deliveries</span>
                   {webhook.lastTriggered && (
-                    <span>
-                      Last: {new Date(webhook.lastTriggered).toLocaleString()}
-                    </span>
+                    <span>Last: {new Date(webhook.lastTriggered).toLocaleString()}</span>
                   )}
                 </div>
               </div>
@@ -505,9 +463,9 @@ function DeploymentCICDContent() {
   const pipelines = EMPTY_PIPELINES
   const deployments = EMPTY_DEPLOYMENTS
   const webhooks = EMPTY_WEBHOOKS
-  const [selectedTab, setSelectedTab] = useState<
-    'pipelines' | 'deployments' | 'webhooks'
-  >('pipelines')
+  const [selectedTab, setSelectedTab] = useState<'pipelines' | 'deployments' | 'webhooks'>(
+    'pipelines'
+  )
 
   const handlePipelineAction = async (_action: string, _pipelineId: string) => {
     // Pipeline action logic would go here
@@ -524,9 +482,7 @@ function DeploymentCICDContent() {
         <div className="mb-8">
           <div className="mb-6 flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold text-zinc-900 dark:text-white">
-                CI/CD Deployment
-              </h1>
+              <h1 className="text-3xl font-bold text-zinc-900 dark:text-white">CI/CD Deployment</h1>
               <p className="mt-1 text-zinc-600 dark:text-zinc-400">
                 Manage continuous integration and deployment pipelines
               </p>
@@ -608,8 +564,7 @@ function DeploymentCICDContent() {
                                     : 'bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-400'
                             }`}
                           >
-                            {pipeline.status.charAt(0).toUpperCase() +
-                              pipeline.status.slice(1)}
+                            {pipeline.status.charAt(0).toUpperCase() + pipeline.status.slice(1)}
                           </span>
                         </div>
 
@@ -624,9 +579,7 @@ function DeploymentCICDContent() {
                           </span>
                           <span className="flex items-center gap-1">
                             <Clock className="h-4 w-4" />
-                            {pipeline.duration > 0
-                              ? `${pipeline.duration}s`
-                              : 'Running...'}
+                            {pipeline.duration > 0 ? `${pipeline.duration}s` : 'Running...'}
                           </span>
                         </div>
 
@@ -645,9 +598,7 @@ function DeploymentCICDContent() {
 
                       <div className="ml-4 flex items-center gap-2">
                         <Button
-                          onClick={() =>
-                            handlePipelineAction('run', pipeline.id)
-                          }
+                          onClick={() => handlePipelineAction('run', pipeline.id)}
                           variant="outline"
                           className="text-sm"
                           disabled={pipeline.status === 'running'}
@@ -672,15 +623,10 @@ function DeploymentCICDContent() {
           </div>
         )}
 
-        {selectedTab === 'deployments' && (
-          <DeploymentHistory deployments={deployments} />
-        )}
+        {selectedTab === 'deployments' && <DeploymentHistory deployments={deployments} />}
 
         {selectedTab === 'webhooks' && (
-          <WebhookManagement
-            webhooks={webhooks}
-            onWebhookUpdate={handleWebhookUpdate}
-          />
+          <WebhookManagement webhooks={webhooks} onWebhookUpdate={handleWebhookUpdate} />
         )}
       </div>
     </>

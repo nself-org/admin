@@ -217,9 +217,7 @@ export async function GET() {
   } catch (error) {
     // Create ApiError if needed
     const apiError =
-      error instanceof ApiError
-        ? error
-        : new ApiError(ErrorCode.UNKNOWN_ERROR, 'Operation failed')
+      error instanceof ApiError ? error : new ApiError(ErrorCode.UNKNOWN_ERROR, 'Operation failed')
 
     // Return error response
     return NextResponse.json(createErrorResponse(apiError), {

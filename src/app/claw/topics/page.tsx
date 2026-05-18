@@ -135,14 +135,14 @@ export default function TopicsPage() {
         setDeletingId(null)
       }
     },
-    [confirmDeleteId],
+    [confirmDeleteId]
   )
 
   const filtered = topics.filter(
     (t) =>
       !search ||
       t.name.toLowerCase().includes(search.toLowerCase()) ||
-      t.slug.toLowerCase().includes(search.toLowerCase()),
+      t.slug.toLowerCase().includes(search.toLowerCase())
   )
 
   return (
@@ -151,9 +151,7 @@ export default function TopicsPage() {
       <div className="flex items-start justify-between">
         <div>
           <h1 className="text-xl font-semibold text-zinc-100">Topics</h1>
-          <p className="mt-0.5 text-sm text-zinc-500">
-            Auto-detected conversation topics
-          </p>
+          <p className="mt-0.5 text-sm text-zinc-500">Auto-detected conversation topics</p>
         </div>
         <div className="flex items-center gap-3">
           <StatusBadge status={pluginStatus} />
@@ -162,9 +160,7 @@ export default function TopicsPage() {
             disabled={refreshing}
             className="flex items-center gap-1.5 rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-1.5 text-xs font-medium text-zinc-300 transition-colors hover:border-zinc-600 hover:bg-zinc-700 disabled:opacity-50"
           >
-            <RefreshCw
-              className={`h-3 w-3 ${refreshing ? 'animate-spin' : ''}`}
-            />
+            <RefreshCw className={`h-3 w-3 ${refreshing ? 'animate-spin' : ''}`} />
             Refresh
           </button>
         </div>
@@ -175,9 +171,7 @@ export default function TopicsPage() {
         <div className="flex items-start gap-3 rounded-xl border border-amber-500/20 bg-amber-900/10 p-4">
           <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-amber-400" />
           <div>
-            <p className="text-sm font-medium text-amber-300">
-              claw plugin is not running
-            </p>
+            <p className="text-sm font-medium text-amber-300">claw plugin is not running</p>
             <p className="mt-0.5 text-xs text-amber-400/70">
               Install via:{' '}
               <code className="rounded bg-amber-900/30 px-1 font-mono">
@@ -215,19 +209,12 @@ export default function TopicsPage() {
       ) : (
         <div className="divide-y divide-zinc-800 rounded-xl border border-zinc-800 bg-zinc-900/40">
           {filtered.map((topic) => (
-            <div
-              key={topic.id}
-              className="flex items-center justify-between px-4 py-3"
-            >
+            <div key={topic.id} className="flex items-center justify-between px-4 py-3">
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-2">
                   <Tag className="h-4 w-4 shrink-0 text-sky-400" />
-                  <span className="truncate text-sm font-medium text-zinc-200">
-                    {topic.name}
-                  </span>
-                  <span className="hidden text-xs text-zinc-600 sm:block">
-                    {topic.slug}
-                  </span>
+                  <span className="truncate text-sm font-medium text-zinc-200">{topic.name}</span>
+                  <span className="hidden text-xs text-zinc-600 sm:block">{topic.slug}</span>
                 </div>
                 <p className="mt-0.5 pl-6 text-xs text-zinc-500">
                   {topic.message_count.toLocaleString()} messages ·{' '}

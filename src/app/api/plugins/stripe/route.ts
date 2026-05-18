@@ -23,8 +23,7 @@ export async function GET(_request: NextRequest): Promise<NextResponse> {
       return NextResponse.json({
         success: true,
         pluginInstalled: false,
-        message:
-          'Stripe plugin not installed. Run: nself plugin install stripe',
+        message: 'Stripe plugin not installed. Run: nself plugin install stripe',
         stats: null,
         counts: null,
       })
@@ -101,8 +100,7 @@ export async function GET(_request: NextRequest): Promise<NextResponse> {
 
     const data = result.data
     const totalRevenue = data?.revenue?.aggregate?.sum?.amount || 0
-    const activeSubscriptions =
-      data?.active_subscriptions_aggregate?.aggregate?.count || 0
+    const activeSubscriptions = data?.active_subscriptions_aggregate?.aggregate?.count || 0
     const totalCustomers = data?.customers_aggregate?.aggregate?.count || 0
 
     const stats: StripeStats = {
@@ -152,7 +150,7 @@ export async function GET(_request: NextRequest): Promise<NextResponse> {
         error: 'Failed to fetch Stripe data',
         details: err.message || 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

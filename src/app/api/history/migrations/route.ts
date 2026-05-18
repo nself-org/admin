@@ -23,14 +23,11 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     if (status) args.push(`--status=${status}`)
     if (since) args.push(`--since=${since}`)
 
-    const { stdout } = await execAsync(
-      `${nselfPath} ${args.join(' ')} --json`,
-      {
-        cwd: projectPath,
-        env: { ...process.env, PATH: getEnhancedPath() },
-        timeout: 60000,
-      },
-    )
+    const { stdout } = await execAsync(`${nselfPath} ${args.join(' ')} --json`, {
+      cwd: projectPath,
+      env: { ...process.env, PATH: getEnhancedPath() },
+      timeout: 60000,
+    })
 
     const result = JSON.parse(stdout)
 
@@ -52,7 +49,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to get migration history',
         details: err.message,
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

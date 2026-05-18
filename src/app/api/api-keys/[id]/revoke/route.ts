@@ -10,10 +10,7 @@ interface RouteParams {
  * POST /api/api-keys/[id]/revoke - Revoke an API key
  * This sets the key status to 'revoked', making it permanently unusable.
  */
-export async function POST(
-  request: NextRequest,
-  { params }: RouteParams,
-): Promise<NextResponse> {
+export async function POST(request: NextRequest, { params }: RouteParams): Promise<NextResponse> {
   const authError = await requireAuth(request)
   if (authError) return authError
 
@@ -22,10 +19,7 @@ export async function POST(
     const revoked = await apiKeysApi.revokeApiKey(id)
 
     if (!revoked) {
-      return NextResponse.json(
-        { success: false, error: 'API key not found' },
-        { status: 404 },
-      )
+      return NextResponse.json({ success: false, error: 'API key not found' }, { status: 404 })
     }
 
     return NextResponse.json({
@@ -39,7 +33,7 @@ export async function POST(
         error: 'Failed to revoke API key',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

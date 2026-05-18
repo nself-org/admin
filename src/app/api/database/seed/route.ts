@@ -23,9 +23,7 @@ export async function GET(): Promise<NextResponse> {
 
     // Read seed files
     const files = await fs.readdir(seedsDir)
-    const seedFiles = files.filter(
-      (f) => f.endsWith('.sql') || f.endsWith('.js'),
-    )
+    const seedFiles = files.filter((f) => f.endsWith('.sql') || f.endsWith('.js'))
 
     const seeds = seedFiles.map((file) => ({
       name: file,
@@ -45,7 +43,7 @@ export async function GET(): Promise<NextResponse> {
         details: error instanceof Error ? error.message : 'Unknown error',
         code: ErrorCode.DB_SEED_FAILED,
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -68,7 +66,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
             details: result.stderr || result.error,
             code: ErrorCode.DB_SEED_FAILED,
           },
-          { status: 500 },
+          { status: 500 }
         )
       }
 
@@ -91,7 +89,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
             error: 'Seed file is required',
             code: ErrorCode.VALIDATION_ERROR,
           },
-          { status: 400 },
+          { status: 400 }
         )
       }
 
@@ -119,7 +117,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
             error: 'Filename and content are required',
             code: ErrorCode.VALIDATION_ERROR,
           },
-          { status: 400 },
+          { status: 400 }
         )
       }
 
@@ -146,7 +144,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         error: 'Invalid action',
         code: ErrorCode.VALIDATION_ERROR,
       },
-      { status: 400 },
+      { status: 400 }
     )
   } catch (error) {
     return NextResponse.json(
@@ -156,7 +154,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         details: error instanceof Error ? error.message : 'Unknown error',
         code: ErrorCode.DB_SEED_FAILED,
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

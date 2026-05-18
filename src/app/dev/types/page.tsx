@@ -34,12 +34,26 @@ interface TablesData {
 }
 
 function pgToTs(pgType: string): string {
-  if (['integer', 'bigint', 'smallint', 'serial', 'bigserial', 'numeric', 'float', 'double precision', 'real'].includes(pgType)) return 'number'
+  if (
+    [
+      'integer',
+      'bigint',
+      'smallint',
+      'serial',
+      'bigserial',
+      'numeric',
+      'float',
+      'double precision',
+      'real',
+    ].includes(pgType)
+  )
+    return 'number'
   if (pgType === 'boolean') return 'boolean'
   if (pgType.endsWith('[]')) return `${pgToTs(pgType.slice(0, -2))}[]`
   if (pgType === 'jsonb' || pgType === 'json') return 'Record<string, unknown>'
   if (pgType === 'uuid') return 'string /* uuid */'
-  if (pgType === 'timestamp' || pgType === 'timestamptz' || pgType.startsWith('timestamp')) return 'string /* ISO 8601 */'
+  if (pgType === 'timestamp' || pgType === 'timestamptz' || pgType.startsWith('timestamp'))
+    return 'string /* ISO 8601 */'
   if (pgType === 'date') return 'string /* YYYY-MM-DD */'
   if (pgType === 'time' || pgType === 'timetz') return 'string /* HH:MM:SS */'
   return 'string'
@@ -49,7 +63,10 @@ function generateTableTypes(table: TableDef): string {
   const n = table.name.replace(/[_-](\w)/g, (_, c: string) => c.toUpperCase())
   const Name = n.charAt(0).toUpperCase() + n.slice(1)
   const cols = table.columns
-    .map((c) => `  /** ${c.type}${c.isPrimary ? ' PRIMARY KEY' : ''}${c.isUnique ? ' UNIQUE' : ''} */\n  ${c.name}${c.nullable ? '?' : ''}: ${pgToTs(c.type)}`)
+    .map(
+      (c) =>
+        `  /** ${c.type}${c.isPrimary ? ' PRIMARY KEY' : ''}${c.isUnique ? ' UNIQUE' : ''} */\n  ${c.name}${c.nullable ? '?' : ''}: ${pgToTs(c.type)}`
+    )
     .join('\n')
   return (
     `/** ${table.schema}.${table.name} */\nexport interface ${Name} {\n${cols}\n}\n\n` +
@@ -107,7 +124,7 @@ function TypesContent() {
     if (!search.trim()) return data.tables
     const q = search.toLowerCase()
     return data.tables.filter(
-      (t) => t.name.toLowerCase().includes(q) || t.schema.toLowerCase().includes(q),
+      (t) => t.name.toLowerCase().includes(q) || t.schema.toLowerCase().includes(q)
     )
   }, [data, search])
 
@@ -132,18 +149,18 @@ function TypesContent() {
   // State 5: offline
   if (offline) {
     return (
-      <div className="p-6 space-y-4">
-        <div className="flex items-center gap-3 p-4 rounded-lg bg-yellow-500/10 border border-yellow-500/30">
-          <WifiOff className="h-5 w-5 text-yellow-500 flex-shrink-0" />
+      <div className="space-y-4 p-6">
+        <div className="flex items-center gap-3 rounded-lg border border-yellow-500/30 bg-yellow-500/10 p-4">
+          <WifiOff className="h-5 w-5 flex-shrink-0 text-yellow-500" />
           <div>
             <p className="font-medium text-yellow-400">Cannot reach Hasura</p>
-            <p className="text-sm text-gray-400 mt-0.5">
+            <p className="mt-0.5 text-sm text-gray-400">
               Type generation requires a running nself stack with Hasura.
             </p>
           </div>
         </div>
         <Button onClick={fetchTables} disabled={loading} variant="secondary" size="sm">
-          <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
+          <RefreshCw className={`mr-2 h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
           Retry
         </Button>
       </div>
@@ -153,16 +170,16 @@ function TypesContent() {
   // State 4: error
   if (error && !data) {
     return (
-      <div className="p-6 space-y-4">
-        <div className="flex items-center gap-3 p-4 rounded-lg bg-red-500/10 border border-red-500/30">
-          <AlertTriangle className="h-5 w-5 text-red-400 flex-shrink-0" />
+      <div className="space-y-4 p-6">
+        <div className="flex items-center gap-3 rounded-lg border border-red-500/30 bg-red-500/10 p-4">
+          <AlertTriangle className="h-5 w-5 flex-shrink-0 text-red-400" />
           <div>
             <p className="font-medium text-red-400">Failed to load schema</p>
-            <p className="text-sm text-gray-400 mt-0.5">{error}</p>
+            <p className="mt-0.5 text-sm text-gray-400">{error}</p>
           </div>
         </div>
         <Button onClick={fetchTables} disabled={loading} variant="secondary" size="sm">
-          <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
+          <RefreshCw className={`mr-2 h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
           Retry
         </Button>
       </div>
@@ -173,10 +190,16 @@ function TypesContent() {
   if (!data) {
     return (
       <div className="p-6 text-center text-gray-400">
-        <FileCode className="h-8 w-8 mx-auto mb-2 opacity-50" />
+        <FileCode className="mx-auto mb-2 h-8 w-8 opacity-50" />
         <p>No schema available.</p>
-        <Button onClick={fetchTables} disabled={loading} variant="secondary" size="sm" className="mt-3">
-          <RefreshCw className="h-4 w-4 mr-2" />
+        <Button
+          onClick={fetchTables}
+          disabled={loading}
+          variant="secondary"
+          size="sm"
+          className="mt-3"
+        >
+          <RefreshCw className="mr-2 h-4 w-4" />
           Load Schema
         </Button>
       </div>
@@ -185,19 +208,19 @@ function TypesContent() {
 
   // States 6+7: success
   return (
-    <div className="p-6 space-y-6">
+    <div className="space-y-6 p-6">
       {/* Header */}
-      <div className="flex items-center justify-between flex-wrap gap-3">
+      <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h2 className="text-xl font-semibold text-white">TypeScript Types</h2>
-          <p className="text-sm text-gray-400 mt-1">
+          <p className="mt-1 text-sm text-gray-400">
             {data.tables.length} table{data.tables.length !== 1 ? 's' : ''} · generated from schema
           </p>
         </div>
         <div className="flex items-center gap-2">
           <button
             onClick={copyAll}
-            className="flex items-center gap-1.5 text-xs text-gray-400 hover:text-white transition-colors px-3 py-1.5 rounded-lg border border-white/10 hover:bg-white/5"
+            className="flex items-center gap-1.5 rounded-lg border border-white/10 px-3 py-1.5 text-xs text-gray-400 transition-colors hover:bg-white/5 hover:text-white"
           >
             {copied === '__all__' ? (
               <>
@@ -213,7 +236,7 @@ function TypesContent() {
           </button>
           <Button onClick={fetchTables} disabled={loading} variant="secondary" size="sm">
             {/* State 2: refresh spinner */}
-            <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
+            <RefreshCw className={`mr-2 h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
             {loading ? 'Loading…' : 'Refresh'}
           </Button>
         </div>
@@ -222,13 +245,13 @@ function TypesContent() {
       {/* Search */}
       {data.tables.length > 6 && (
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
+          <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-gray-500" />
           <input
             type="text"
             placeholder="Search tables…"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-9 pr-4 py-2 rounded-lg bg-white/5 border border-white/10 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-sky-500/50 transition-colors"
+            className="w-full rounded-lg border border-white/10 bg-white/5 py-2 pr-4 pl-9 text-sm text-white placeholder-gray-500 transition-colors focus:border-sky-500/50 focus:outline-none"
           />
         </div>
       )}
@@ -236,13 +259,13 @@ function TypesContent() {
       {/* Tables list */}
       {filtered.length === 0 ? (
         <div className="rounded-lg border border-white/10 bg-white/5 p-8 text-center">
-          <FileCode className="h-8 w-8 mx-auto mb-2 opacity-30 text-gray-400" />
+          <FileCode className="mx-auto mb-2 h-8 w-8 text-gray-400 opacity-30" />
           {search ? (
             <>
               <p className="text-gray-400">No tables match &ldquo;{search}&rdquo;</p>
               <button
                 onClick={() => setSearch('')}
-                className="text-xs text-sky-400 hover:text-sky-300 mt-2 transition-colors"
+                className="mt-2 text-xs text-sky-400 transition-colors hover:text-sky-300"
               >
                 Clear search
               </button>
@@ -257,25 +280,25 @@ function TypesContent() {
             const isExpanded = expanded[table.name]
             const generated = generateTableTypes(table)
             return (
-              <div key={table.name} className="rounded-lg border border-white/10 overflow-hidden">
+              <div key={table.name} className="overflow-hidden rounded-lg border border-white/10">
                 {/* Table row */}
                 <button
-                  className="w-full flex items-center gap-3 px-4 py-3 hover:bg-white/[0.02] transition-colors text-left"
+                  className="flex w-full items-center gap-3 px-4 py-3 text-left transition-colors hover:bg-white/[0.02]"
                   onClick={() =>
                     setExpanded((prev) => ({ ...prev, [table.name]: !prev[table.name] }))
                   }
                 >
                   {isExpanded ? (
-                    <ChevronDown className="h-4 w-4 text-gray-500 flex-shrink-0" />
+                    <ChevronDown className="h-4 w-4 flex-shrink-0 text-gray-500" />
                   ) : (
-                    <ChevronRight className="h-4 w-4 text-gray-500 flex-shrink-0" />
+                    <ChevronRight className="h-4 w-4 flex-shrink-0 text-gray-500" />
                   )}
-                  <FileCode className="h-4 w-4 text-sky-400 flex-shrink-0" />
-                  <div className="flex-1 min-w-0">
-                    <span className="text-sm font-mono text-white">{table.name}</span>
-                    <span className="text-xs text-gray-500 ml-2">{table.schema}</span>
+                  <FileCode className="h-4 w-4 flex-shrink-0 text-sky-400" />
+                  <div className="min-w-0 flex-1">
+                    <span className="font-mono text-sm text-white">{table.name}</span>
+                    <span className="ml-2 text-xs text-gray-500">{table.schema}</span>
                   </div>
-                  <div className="flex items-center gap-3 flex-shrink-0">
+                  <div className="flex flex-shrink-0 items-center gap-3">
                     <span className="text-xs text-gray-500">
                       {table.columns.length} col{table.columns.length !== 1 ? 's' : ''}
                     </span>
@@ -284,7 +307,7 @@ function TypesContent() {
                         e.stopPropagation()
                         copyType(table)
                       }}
-                      className="flex items-center gap-1 text-xs text-gray-500 hover:text-white transition-colors px-2 py-1 rounded hover:bg-white/10"
+                      className="flex items-center gap-1 rounded px-2 py-1 text-xs text-gray-500 transition-colors hover:bg-white/10 hover:text-white"
                     >
                       {copied === table.name ? (
                         <>
@@ -306,7 +329,7 @@ function TypesContent() {
                   <div className="border-t border-white/10">
                     {/* Columns */}
                     <div className="overflow-x-auto">
-                      <table className="w-full text-xs font-mono">
+                      <table className="w-full font-mono text-xs">
                         <thead className="bg-white/5">
                           <tr>
                             <th className="px-4 py-2 text-left text-gray-400">Column</th>
@@ -326,7 +349,9 @@ function TypesContent() {
                               </td>
                               <td className="px-4 py-1.5 text-gray-400">{col.type}</td>
                               <td className="px-4 py-1.5 text-sky-400">{pgToTs(col.type)}</td>
-                              <td className="px-4 py-1.5 text-gray-500">{col.nullable ? 'yes' : 'no'}</td>
+                              <td className="px-4 py-1.5 text-gray-500">
+                                {col.nullable ? 'yes' : 'no'}
+                              </td>
                             </tr>
                           ))}
                         </tbody>
@@ -335,10 +360,12 @@ function TypesContent() {
 
                     {/* Generated code */}
                     <div className="border-t border-white/10">
-                      <div className="flex items-center justify-between px-4 py-2 bg-black/20">
-                        <span className="text-xs text-gray-500 font-mono">Generated TypeScript</span>
+                      <div className="flex items-center justify-between bg-black/20 px-4 py-2">
+                        <span className="font-mono text-xs text-gray-500">
+                          Generated TypeScript
+                        </span>
                       </div>
-                      <pre className="px-4 py-3 text-xs text-gray-300 font-mono whitespace-pre overflow-auto max-h-64 bg-black/30">
+                      <pre className="max-h-64 overflow-auto bg-black/30 px-4 py-3 font-mono text-xs whitespace-pre text-gray-300">
                         {generated}
                       </pre>
                     </div>

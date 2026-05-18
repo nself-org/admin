@@ -49,17 +49,14 @@ export class ErrorBoundary extends Component<Props, State> {
               <p className="mb-4 text-sm text-red-700 dark:text-red-300">
                 {this.state.error?.message || 'An unexpected error occurred'}
               </p>
-              {process.env.NODE_ENV === 'development' &&
-                this.state.errorInfo && (
-                  <details className="mt-4 rounded bg-red-100 p-3 text-left text-xs dark:bg-red-900/30">
-                    <summary className="mb-2 cursor-pointer font-medium">
-                      Error Details
-                    </summary>
-                    <pre className="overflow-auto text-red-800 dark:text-red-200">
-                      {this.state.errorInfo.componentStack}
-                    </pre>
-                  </details>
-                )}
+              {process.env.NODE_ENV === 'development' && this.state.errorInfo && (
+                <details className="mt-4 rounded bg-red-100 p-3 text-left text-xs dark:bg-red-900/30">
+                  <summary className="mb-2 cursor-pointer font-medium">Error Details</summary>
+                  <pre className="overflow-auto text-red-800 dark:text-red-200">
+                    {this.state.errorInfo.componentStack}
+                  </pre>
+                </details>
+              )}
               <button
                 onClick={this.handleReset}
                 className="mt-4 rounded-lg bg-red-600 px-4 py-2 text-white transition-colors hover:bg-red-700"
@@ -79,7 +76,7 @@ export class ErrorBoundary extends Component<Props, State> {
 // Hook for functional components
 export function withErrorBoundary<P extends object>(
   Component: React.ComponentType<P>,
-  fallback?: ReactNode,
+  fallback?: ReactNode
 ) {
   return function WithErrorBoundary(props: P) {
     return (

@@ -33,9 +33,7 @@ interface SlowQuery {
 
 function QueriesContent() {
   const [searchQuery, setSearchQuery] = useState('')
-  const [sortBy, setSortBy] = useState<'avgTime' | 'calls' | 'totalTime'>(
-    'totalTime',
-  )
+  const [sortBy, setSortBy] = useState<'avgTime' | 'calls' | 'totalTime'>('totalTime')
   const [selectedQuery, setSelectedQuery] = useState<SlowQuery | null>(null)
 
   const { data, error, isLoading, mutate } = useSWR<{
@@ -53,8 +51,7 @@ function QueriesContent() {
     queries: queries.length,
     totalCalls: queries.reduce((acc, q) => acc + q.calls, 0),
     totalTime: queries.reduce((acc, q) => acc + q.totalTime, 0),
-    avgTime:
-      queries.reduce((acc, q) => acc + q.avgTime, 0) / queries.length || 0,
+    avgTime: queries.reduce((acc, q) => acc + q.avgTime, 0) / queries.length || 0,
   }
 
   if (error) {
@@ -66,9 +63,7 @@ function QueriesContent() {
             <div className="flex items-center gap-3">
               <AlertCircle className="h-5 w-5 text-red-400" />
               <p className="text-red-400">
-                {error instanceof Error
-                  ? error.message
-                  : 'Failed to load slow queries'}
+                {error instanceof Error ? error.message : 'Failed to load slow queries'}
               </p>
             </div>
           </div>
@@ -129,9 +124,7 @@ function QueriesContent() {
                 <Database className="h-5 w-5 text-blue-600 dark:text-blue-400" />
               </div>
               <div>
-                <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                  Slow Queries
-                </p>
+                <p className="text-sm text-zinc-500 dark:text-zinc-400">Slow Queries</p>
                 <p className="text-xl font-bold text-zinc-900 dark:text-white">
                   {totalStats.queries}
                 </p>
@@ -144,9 +137,7 @@ function QueriesContent() {
                 <TrendingUp className="h-5 w-5 text-sky-500 dark:text-sky-400" />
               </div>
               <div>
-                <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                  Total Calls
-                </p>
+                <p className="text-sm text-zinc-500 dark:text-zinc-400">Total Calls</p>
                 <p className="text-xl font-bold text-zinc-900 dark:text-white">
                   {totalStats.totalCalls.toLocaleString()}
                 </p>
@@ -159,9 +150,7 @@ function QueriesContent() {
                 <Clock className="h-5 w-5 text-orange-600 dark:text-orange-400" />
               </div>
               <div>
-                <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                  Total Time
-                </p>
+                <p className="text-sm text-zinc-500 dark:text-zinc-400">Total Time</p>
                 <p className="text-xl font-bold text-zinc-900 dark:text-white">
                   {(totalStats.totalTime / 1000).toFixed(1)}s
                 </p>
@@ -174,9 +163,7 @@ function QueriesContent() {
                 <Zap className="h-5 w-5 text-yellow-600 dark:text-yellow-400" />
               </div>
               <div>
-                <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                  Avg Time
-                </p>
+                <p className="text-sm text-zinc-500 dark:text-zinc-400">Avg Time</p>
                 <p className="text-xl font-bold text-zinc-900 dark:text-white">
                   {totalStats.avgTime.toFixed(1)}ms
                 </p>
@@ -199,9 +186,7 @@ function QueriesContent() {
           </div>
           <select
             value={sortBy}
-            onChange={(e) =>
-              setSortBy(e.target.value as 'avgTime' | 'calls' | 'totalTime')
-            }
+            onChange={(e) => setSortBy(e.target.value as 'avgTime' | 'calls' | 'totalTime')}
             className="rounded-lg border border-zinc-300 bg-white px-4 py-2 text-zinc-900 dark:border-zinc-600 dark:bg-zinc-800 dark:text-white"
           >
             <option value="totalTime">Sort by Total Time</option>
@@ -222,11 +207,7 @@ function QueriesContent() {
                   {query.query}
                 </pre>
                 <button
-                  onClick={() =>
-                    setSelectedQuery(
-                      selectedQuery?.id === query.id ? null : query,
-                    )
-                  }
+                  onClick={() => setSelectedQuery(selectedQuery?.id === query.id ? null : query)}
                   className="ml-4 text-sm text-blue-600 hover:underline dark:text-blue-400"
                 >
                   {selectedQuery?.id === query.id ? 'Hide' : 'Details'}
@@ -234,9 +215,7 @@ function QueriesContent() {
               </div>
               <div className="grid gap-4 md:grid-cols-5">
                 <div>
-                  <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                    Avg Time
-                  </p>
+                  <p className="text-sm text-zinc-500 dark:text-zinc-400">Avg Time</p>
                   <p
                     className={`font-medium ${
                       query.avgTime > 100
@@ -250,33 +229,25 @@ function QueriesContent() {
                   </p>
                 </div>
                 <div>
-                  <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                    Max Time
-                  </p>
+                  <p className="text-sm text-zinc-500 dark:text-zinc-400">Max Time</p>
                   <p className="font-medium text-zinc-900 dark:text-white">
                     {query.maxTime.toFixed(1)}ms
                   </p>
                 </div>
                 <div>
-                  <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                    Calls
-                  </p>
+                  <p className="text-sm text-zinc-500 dark:text-zinc-400">Calls</p>
                   <p className="font-medium text-zinc-900 dark:text-white">
                     {query.calls.toLocaleString()}
                   </p>
                 </div>
                 <div>
-                  <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                    Total Time
-                  </p>
+                  <p className="text-sm text-zinc-500 dark:text-zinc-400">Total Time</p>
                   <p className="font-medium text-zinc-900 dark:text-white">
                     {(query.totalTime / 1000).toFixed(1)}s
                   </p>
                 </div>
                 <div>
-                  <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                    Rows
-                  </p>
+                  <p className="text-sm text-zinc-500 dark:text-zinc-400">Rows</p>
                   <p className="font-medium text-zinc-900 dark:text-white">
                     {query.rows.toLocaleString()}
                   </p>
@@ -290,25 +261,19 @@ function QueriesContent() {
                   </h4>
                   <div className="grid gap-4 md:grid-cols-3">
                     <div>
-                      <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                        Shared Blocks Hit
-                      </p>
+                      <p className="text-sm text-zinc-500 dark:text-zinc-400">Shared Blocks Hit</p>
                       <p className="font-medium text-zinc-900 dark:text-white">
                         {query.shared_blks_hit.toLocaleString()}
                       </p>
                     </div>
                     <div>
-                      <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                        Shared Blocks Read
-                      </p>
+                      <p className="text-sm text-zinc-500 dark:text-zinc-400">Shared Blocks Read</p>
                       <p className="font-medium text-zinc-900 dark:text-white">
                         {query.shared_blks_read.toLocaleString()}
                       </p>
                     </div>
                     <div>
-                      <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                        Hit Ratio
-                      </p>
+                      <p className="text-sm text-zinc-500 dark:text-zinc-400">Hit Ratio</p>
                       <p className="font-medium text-zinc-900 dark:text-white">
                         {(
                           (query.shared_blks_hit /
@@ -326,15 +291,10 @@ function QueriesContent() {
                     </h5>
                     <ul className="space-y-1 text-sm text-zinc-600 dark:text-zinc-400">
                       {query.avgTime > 100 && (
-                        <li>
-                          Consider adding an index on frequently filtered
-                          columns
-                        </li>
+                        <li>Consider adding an index on frequently filtered columns</li>
                       )}
                       {query.shared_blks_read > query.shared_blks_hit * 0.1 && (
-                        <li>
-                          High disk reads - consider increasing shared_buffers
-                        </li>
+                        <li>High disk reads - consider increasing shared_buffers</li>
                       )}
                       {query.query.includes('SELECT *') && (
                         <li>Avoid SELECT * - specify only needed columns</li>
@@ -357,18 +317,14 @@ function QueriesContent() {
           </h3>
           <div className="space-y-2 font-mono text-sm">
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-blue-500">nself perf queries</span> - List
-              slow queries
+              <span className="text-blue-500">nself perf queries</span> - List slow queries
             </p>
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-blue-500">
-                nself perf queries --explain
-              </span>{' '}
-              - Show query plans
+              <span className="text-blue-500">nself perf queries --explain</span> - Show query plans
             </p>
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-blue-500">nself perf queries --reset</span>{' '}
-              - Reset query statistics
+              <span className="text-blue-500">nself perf queries --reset</span> - Reset query
+              statistics
             </p>
           </div>
         </div>

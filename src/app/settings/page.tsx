@@ -91,12 +91,8 @@ function SettingsSection({
         <div className="flex items-center gap-3">
           <Icon className="h-5 w-5 text-blue-500" />
           <div>
-            <h3 className="font-semibold text-zinc-900 dark:text-white">
-              {title}
-            </h3>
-            <p className="text-sm text-zinc-600 dark:text-zinc-400">
-              {description}
-            </p>
+            <h3 className="font-semibold text-zinc-900 dark:text-white">{title}</h3>
+            <p className="text-sm text-zinc-600 dark:text-zinc-400">{description}</p>
           </div>
         </div>
       </div>
@@ -146,9 +142,7 @@ function UserPreferencesSection() {
             </label>
             <select
               value={preferences.theme}
-              onChange={(e) =>
-                setPreferences({ ...preferences, theme: e.target.value as any })
-              }
+              onChange={(e) => setPreferences({ ...preferences, theme: e.target.value as any })}
               className="w-full rounded-lg border border-zinc-200 bg-white px-3 py-2 dark:border-zinc-700 dark:bg-zinc-900"
             >
               <option value="light">Light</option>
@@ -163,9 +157,7 @@ function UserPreferencesSection() {
             </label>
             <select
               value={preferences.language}
-              onChange={(e) =>
-                setPreferences({ ...preferences, language: e.target.value })
-              }
+              onChange={(e) => setPreferences({ ...preferences, language: e.target.value })}
               className="w-full rounded-lg border border-zinc-200 bg-white px-3 py-2 dark:border-zinc-700 dark:bg-zinc-900"
             >
               <option value="en">English</option>
@@ -181,9 +173,7 @@ function UserPreferencesSection() {
             </label>
             <select
               value={preferences.timezone}
-              onChange={(e) =>
-                setPreferences({ ...preferences, timezone: e.target.value })
-              }
+              onChange={(e) => setPreferences({ ...preferences, timezone: e.target.value })}
               className="w-full rounded-lg border border-zinc-200 bg-white px-3 py-2 dark:border-zinc-700 dark:bg-zinc-900"
             >
               <option value="UTC">UTC</option>
@@ -200,9 +190,7 @@ function UserPreferencesSection() {
             </label>
             <select
               value={preferences.dateFormat}
-              onChange={(e) =>
-                setPreferences({ ...preferences, dateFormat: e.target.value })
-              }
+              onChange={(e) => setPreferences({ ...preferences, dateFormat: e.target.value })}
               className="w-full rounded-lg border border-zinc-200 bg-white px-3 py-2 dark:border-zinc-700 dark:bg-zinc-900"
             >
               <option value="MM/DD/YYYY">MM/DD/YYYY</option>
@@ -218,9 +206,7 @@ function UserPreferencesSection() {
               <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
                 Auto Refresh
               </label>
-              <p className="text-xs text-zinc-500">
-                Automatically refresh dashboard data
-              </p>
+              <p className="text-xs text-zinc-500">Automatically refresh dashboard data</p>
             </div>
             <input
               type="checkbox"
@@ -257,16 +243,8 @@ function UserPreferencesSection() {
           )}
         </div>
 
-        <Button
-          onClick={handleSave}
-          disabled={saving}
-          className="flex items-center gap-2"
-        >
-          {saving ? (
-            <Loader2 className="h-4 w-4 animate-spin" />
-          ) : (
-            <Save className="h-4 w-4" />
-          )}
+        <Button onClick={handleSave} disabled={saving} className="flex items-center gap-2">
+          {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
           Save Preferences
         </Button>
       </div>
@@ -389,9 +367,7 @@ function NotificationSettingsSection() {
                         onChange={(e) => {
                           const events = e.target.checked
                             ? [...notifications.email.events, event.id]
-                            : notifications.email.events.filter(
-                                (id) => id !== event.id,
-                              )
+                            : notifications.email.events.filter((id) => id !== event.id)
                           setNotifications({
                             ...notifications,
                             email: { ...notifications.email, events },
@@ -401,9 +377,7 @@ function NotificationSettingsSection() {
                       />
                       <div>
                         <div className="text-sm font-medium">{event.label}</div>
-                        <div className="text-xs text-zinc-500">
-                          {event.description}
-                        </div>
+                        <div className="text-xs text-zinc-500">{event.description}</div>
                       </div>
                     </label>
                   ))}
@@ -447,9 +421,7 @@ function NotificationSettingsSection() {
                       onChange={(e) => {
                         const events = e.target.checked
                           ? [...notifications.push.events, event.id]
-                          : notifications.push.events.filter(
-                              (id) => id !== event.id,
-                            )
+                          : notifications.push.events.filter((id) => id !== event.id)
                         setNotifications({
                           ...notifications,
                           push: { ...notifications.push, events },
@@ -550,11 +522,7 @@ function APITokensSection() {
   const revokeToken = async (tokenId: string) => {
     try {
       await fetch(`/api/settings/tokens/${tokenId}`, { method: 'DELETE' })
-      setTokens(
-        tokens.map((t) =>
-          t.id === tokenId ? { ...t, status: 'revoked' as const } : t,
-        ),
-      )
+      setTokens(tokens.map((t) => (t.id === tokenId ? { ...t, status: 'revoked' as const } : t)))
     } catch (error) {
       console.error('[Settings] Error revoking token:', error)
     }
@@ -571,10 +539,7 @@ function APITokensSection() {
           <p className="text-sm text-zinc-600 dark:text-zinc-400">
             Create and manage API tokens for external integrations
           </p>
-          <Button
-            onClick={() => setShowCreateForm(true)}
-            className="flex items-center gap-2"
-          >
+          <Button onClick={() => setShowCreateForm(true)} className="flex items-center gap-2">
             <Plus className="h-4 w-4" />
             Create Token
           </Button>
@@ -591,9 +556,7 @@ function APITokensSection() {
                 <input
                   type="text"
                   value={newToken.name}
-                  onChange={(e) =>
-                    setNewToken({ ...newToken, name: e.target.value })
-                  }
+                  onChange={(e) => setNewToken({ ...newToken, name: e.target.value })}
                   placeholder="e.g., Mobile App, CI/CD Pipeline"
                   className="w-full rounded-lg border border-zinc-200 bg-white px-3 py-2 dark:border-zinc-700 dark:bg-zinc-900"
                 />
@@ -605,30 +568,21 @@ function APITokensSection() {
                 </label>
                 <div className="space-y-2">
                   {permissionOptions.map((permission) => (
-                    <label
-                      key={permission.id}
-                      className="flex items-start gap-3"
-                    >
+                    <label key={permission.id} className="flex items-start gap-3">
                       <input
                         type="checkbox"
                         checked={newToken.permissions.includes(permission.id)}
                         onChange={(e) => {
                           const permissions = e.target.checked
                             ? [...newToken.permissions, permission.id]
-                            : newToken.permissions.filter(
-                                (p) => p !== permission.id,
-                              )
+                            : newToken.permissions.filter((p) => p !== permission.id)
                           setNewToken({ ...newToken, permissions })
                         }}
                         className="mt-1 h-4 w-4 rounded text-blue-600"
                       />
                       <div>
-                        <div className="text-sm font-medium">
-                          {permission.label}
-                        </div>
-                        <div className="text-xs text-zinc-500">
-                          {permission.description}
-                        </div>
+                        <div className="text-sm font-medium">{permission.label}</div>
+                        <div className="text-xs text-zinc-500">{permission.description}</div>
                       </div>
                     </label>
                   ))}
@@ -642,10 +596,7 @@ function APITokensSection() {
                 >
                   Create Token
                 </Button>
-                <Button
-                  variant="outline"
-                  onClick={() => setShowCreateForm(false)}
-                >
+                <Button variant="outline" onClick={() => setShowCreateForm(false)}>
                   Cancel
                 </Button>
               </div>
@@ -674,13 +625,9 @@ function APITokensSection() {
                 </div>
                 <div className="space-y-1 text-sm text-zinc-600 dark:text-zinc-400">
                   <p>Permissions: {token.permissions.join(', ')}</p>
-                  <p>
-                    Created: {new Date(token.createdAt).toLocaleDateString()}
-                  </p>
+                  <p>Created: {new Date(token.createdAt).toLocaleDateString()}</p>
                   {token.lastUsed && (
-                    <p>
-                      Last used: {new Date(token.lastUsed).toLocaleDateString()}
-                    </p>
+                    <p>Last used: {new Date(token.lastUsed).toLocaleDateString()}</p>
                   )}
                 </div>
               </div>
@@ -805,10 +752,7 @@ function SecuritySettingsSection() {
           <p className="mb-4 text-sm text-zinc-600 dark:text-zinc-400">
             View and manage your active login sessions across devices
           </p>
-          <Button
-            variant="outline"
-            onClick={() => (window.location.href = '/settings/sessions')}
-          >
+          <Button variant="outline" onClick={() => (window.location.href = '/settings/sessions')}>
             <Smartphone className="mr-2 h-4 w-4" />
             View Active Sessions
           </Button>
@@ -1225,9 +1169,7 @@ function SettingsContent() {
         <div className="mb-8">
           <div className="mb-2 flex items-center gap-3">
             <Settings className="h-8 w-8 text-blue-500" />
-            <h1 className="text-3xl font-bold text-zinc-900 dark:text-white">
-              Settings
-            </h1>
+            <h1 className="text-3xl font-bold text-zinc-900 dark:text-white">Settings</h1>
           </div>
           <p className="text-zinc-600 dark:text-zinc-400">
             Configure your preferences, security, and integration settings

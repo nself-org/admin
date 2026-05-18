@@ -11,10 +11,7 @@ interface RouteParams {
  * Generates a new secure key while maintaining permissions and settings
  * Returns the new secret key (one-time only)
  */
-export async function POST(
-  request: NextRequest,
-  { params }: RouteParams,
-): Promise<NextResponse> {
+export async function POST(request: NextRequest, { params }: RouteParams): Promise<NextResponse> {
   const authError = await requireAuth(request)
   if (authError) return authError
 
@@ -26,8 +23,7 @@ export async function POST(
       success: true,
       key: result.key,
       secretKey: result.secretKey, // Only shown once!
-      message:
-        'API key rotated successfully. Save the new key - it will not be shown again.',
+      message: 'API key rotated successfully. Save the new key - it will not be shown again.',
     })
   } catch (error) {
     return NextResponse.json(
@@ -37,11 +33,8 @@ export async function POST(
         details: error instanceof Error ? error.message : 'Unknown error',
       },
       {
-        status:
-          error instanceof Error && error.message === 'API key not found'
-            ? 404
-            : 500,
-      },
+        status: error instanceof Error && error.message === 'API key not found' ? 404 : 500,
+      }
     )
   }
 }

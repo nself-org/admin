@@ -34,7 +34,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       default:
         return NextResponse.json(
           { success: false, error: `Unknown action: ${action}` },
-          { status: 400 },
+          { status: 400 }
         )
     }
   } catch (error) {
@@ -44,7 +44,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         error: 'Monitoring operation failed',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -68,7 +68,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       default:
         return NextResponse.json(
           { success: false, error: `Unknown action: ${action}` },
-          { status: 400 },
+          { status: 400 }
         )
     }
   } catch (error) {
@@ -78,7 +78,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         error: 'Monitoring operation failed',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -88,21 +88,18 @@ async function getMonitoringDashboard() {
     const projectPath = getProjectPath()
 
     // Get comprehensive system overview
-    const [systemMetrics, dockerStats, serviceHealth, resourceUsage] =
-      await Promise.all([
-        getSystemMetricsData(),
-        getDockerStatsData(),
-        getServiceHealthData(),
-        getResourceUsageData(),
-      ])
+    const [systemMetrics, dockerStats, serviceHealth, resourceUsage] = await Promise.all([
+      getSystemMetricsData(),
+      getDockerStatsData(),
+      getServiceHealthData(),
+      getResourceUsageData(),
+    ])
 
     // Get recent alerts
     const alerts = await getRecentAlerts()
 
     // Get service status from nself
-    const { stdout: nselfStatus } = await execAsync(
-      `cd ${projectPath} && nself status`,
-    )
+    const { stdout: nselfStatus } = await execAsync(`cd ${projectPath} && nself status`)
 
     return NextResponse.json({
       success: true,
@@ -125,7 +122,7 @@ async function getMonitoringDashboard() {
         error: 'Failed to get monitoring dashboard',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -156,7 +153,7 @@ async function getDetailedMetrics(timeRange: string) {
         error: 'Failed to get detailed metrics',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -170,7 +167,7 @@ async function getAllLogs(searchParams: URLSearchParams) {
 
     // Get logs from all services
     const { stdout: dockerLogs } = await execAsync(
-      `cd ${projectPath} && docker-compose logs --tail=${tail} --since=${since}`,
+      `cd ${projectPath} && docker-compose logs --tail=${tail} --since=${since}`
     )
 
     // Parse and format logs
@@ -192,7 +189,7 @@ async function getAllLogs(searchParams: URLSearchParams) {
         error: 'Failed to get logs',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -228,7 +225,7 @@ async function getServiceLogs(service: string, searchParams: URLSearchParams) {
         error: `Failed to get logs for service '${service}'`,
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -300,7 +297,7 @@ async function getActiveAlerts() {
         error: 'Failed to get active alerts',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -320,15 +317,13 @@ async function getSystemHealth() {
 
     // Get nself doctor output
     const { stdout: doctorOutput, stderr: doctorError } = await execAsync(
-      `cd ${projectPath} && nself doctor`,
+      `cd ${projectPath} && nself doctor`
     ).catch((error) => ({
       stdout: '',
       stderr: error instanceof Error ? error.message : 'Unknown error',
     }))
 
-    const overallHealth = healthChecks.every(
-      (check) => check.status === 'healthy',
-    )
+    const overallHealth = healthChecks.every((check) => check.status === 'healthy')
       ? 'healthy'
       : healthChecks.some((check) => check.status === 'critical')
         ? 'critical'
@@ -353,7 +348,7 @@ async function getSystemHealth() {
         error: 'Failed to get system health',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -384,7 +379,7 @@ async function getPerformanceMetrics(timeRange: string) {
         error: 'Failed to get performance metrics',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -415,7 +410,7 @@ async function getResourceUsage() {
         error: 'Failed to get resource usage',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -439,9 +434,7 @@ async function getServiceHealthData() {
   const projectPath = getProjectPath()
 
   try {
-    const { stdout } = await execAsync(
-      `cd ${projectPath} && docker-compose ps --format json`,
-    )
+    const { stdout } = await execAsync(`cd ${projectPath} && docker-compose ps --format json`)
 
     return JSON.parse(stdout)
   } catch {
@@ -461,7 +454,7 @@ async function getResourceUsageData() {
 async function getCurrentCpuUsage(): Promise<number> {
   try {
     const { stdout } = await execAsync(
-      "top -l 1 -n 0 | grep 'CPU usage' | awk '{print $3}' | sed 's/%//'",
+      "top -l 1 -n 0 | grep 'CPU usage' | awk '{print $3}' | sed 's/%//'"
     )
     return parseFloat(stdout.trim()) || 0
   } catch {
@@ -488,7 +481,7 @@ async function getCurrentMemoryUsage() {
 async function getCurrentDiskUsage() {
   try {
     const { stdout } = await execAsync(
-      "df -h / | tail -1 | awk '{print $2 \" \" $3 \" \" $5}' | sed 's/G//g' | sed 's/%//'",
+      "df -h / | tail -1 | awk '{print $2 \" \" $3 \" \" $5}' | sed 's/G//g' | sed 's/%//'"
     )
     const parts = stdout.trim().split(' ')
     const total = parseFloat(parts[0]) || 100
@@ -504,7 +497,7 @@ async function getCurrentDiskUsage() {
 async function getCurrentNetworkUsage() {
   try {
     const { stdout } = await execAsync(
-      "netstat -ib | grep -E 'en0|eth0' | head -1 | awk '{print $7 \" \" $10}'",
+      "netstat -ib | grep -E 'en0|eth0' | head -1 | awk '{print $7 \" \" $10}'"
     )
     const parts = stdout.trim().split(' ')
     const bytesIn = parseInt(parts[0]) || 0
@@ -554,14 +547,12 @@ async function checkDatabaseHealth() {
 
   try {
     const { stdout } = await execAsync(
-      `cd ${projectPath} && docker-compose exec postgres pg_isready -U postgres`,
+      `cd ${projectPath} && docker-compose exec postgres pg_isready -U postgres`
     )
 
     return {
       name: 'Database',
-      status: stdout.includes('accepting connections')
-        ? 'healthy'
-        : 'unhealthy',
+      status: stdout.includes('accepting connections') ? 'healthy' : 'unhealthy',
       message: stdout.trim(),
       timestamp: new Date().toISOString(),
     }
@@ -577,9 +568,7 @@ async function checkDatabaseHealth() {
 
 async function checkDockerHealth() {
   try {
-    const { stdout } = await execAsync(
-      'docker info --format "{{.ServerVersion}}"',
-    )
+    const { stdout } = await execAsync('docker info --format "{{.ServerVersion}}"')
 
     return {
       name: 'Docker',
@@ -603,11 +592,7 @@ async function checkDiskSpace() {
   return {
     name: 'Disk Space',
     status:
-      diskUsage.percentage > 90
-        ? 'critical'
-        : diskUsage.percentage > 80
-          ? 'warning'
-          : 'healthy',
+      diskUsage.percentage > 90 ? 'critical' : diskUsage.percentage > 80 ? 'warning' : 'healthy',
     message: `${diskUsage.percentage}% used (${diskUsage.used}GB / ${diskUsage.total}GB)`,
     timestamp: new Date().toISOString(),
   }
@@ -639,12 +624,7 @@ function parseNselfStatus(statusOutput: string) {
   const services = []
 
   for (const line of lines) {
-    if (
-      line.includes('✓') ||
-      line.includes('○') ||
-      line.includes('●') ||
-      line.includes('✗')
-    ) {
+    if (line.includes('✓') || line.includes('○') || line.includes('●') || line.includes('✗')) {
       const serviceName = line.replace(/[✓○●✗\s\x1b[\d;m]/g, '').trim()
       if (serviceName) {
         services.push({

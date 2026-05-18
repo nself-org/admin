@@ -100,7 +100,7 @@ describe('CampaignBuilder form validation', () => {
         expect.objectContaining({
           title: 'Hello World',
           body: 'Notification body text',
-        }),
+        })
       )
       expect(mockSend).toHaveBeenCalledWith('c123')
       expect(onSuccess).toHaveBeenCalled()
@@ -156,9 +156,7 @@ describe('CampaignBuilder form validation', () => {
     fillRequired('Scheduled', 'Body')
 
     // Switch to "later" schedule
-    const scheduleBtn = screen
-      .getAllByRole('button')
-      .find((btn) => btn.textContent === 'Schedule')!
+    const scheduleBtn = screen.getAllByRole('button').find((btn) => btn.textContent === 'Schedule')!
     fireEvent.click(scheduleBtn)
 
     const dateInput = document.querySelector('input[type="datetime-local"]')!
@@ -169,7 +167,7 @@ describe('CampaignBuilder form validation', () => {
 
     await waitFor(() => {
       expect(mockCreate).toHaveBeenCalledWith(
-        expect.objectContaining({ scheduledAt: '2099-01-01T12:00' }),
+        expect.objectContaining({ scheduledAt: '2099-01-01T12:00' })
       )
       // send should NOT be called for scheduled campaigns
       expect(mockSend).not.toHaveBeenCalled()

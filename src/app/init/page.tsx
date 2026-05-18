@@ -8,9 +8,9 @@ import { Suspense, useCallback, useEffect, useRef, useState } from 'react'
 
 function InitContent() {
   const router = useRouter()
-  const [status, setStatus] = useState<
-    'checking' | 'initializing' | 'ready' | 'built' | 'error'
-  >('checking')
+  const [status, setStatus] = useState<'checking' | 'initializing' | 'ready' | 'built' | 'error'>(
+    'checking'
+  )
   const [message, setMessage] = useState('Checking project status...')
   const [errorDetail, setErrorDetail] = useState<string>('')
   const hasChecked = useRef(false)
@@ -137,9 +137,7 @@ function InitContent() {
           </div>
 
           {/* Message */}
-          <h2 className="text-lg font-medium text-zinc-900 dark:text-white">
-            {message}
-          </h2>
+          <h2 className="text-lg font-medium text-zinc-900 dark:text-white">{message}</h2>
 
           {/* Error detail + Retry (ADM-T03) */}
           {status === 'error' && (
@@ -151,7 +149,7 @@ function InitContent() {
               )}
               <button
                 onClick={handleRetry}
-                className="inline-flex items-center gap-2 rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                className="inline-flex items-center gap-2 rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-none"
               >
                 Retry
               </button>

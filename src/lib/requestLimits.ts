@@ -19,7 +19,7 @@ export const RESPONSE_SIZE_LIMITS = {
  */
 export function checkRequestSize(
   request: NextRequest,
-  limit: number = REQUEST_SIZE_LIMITS.default,
+  limit: number = REQUEST_SIZE_LIMITS.default
 ): { valid: boolean; error?: string } {
   const contentLength = request.headers.get('content-length')
 
@@ -96,7 +96,7 @@ export function sizeLimitErrorResponse(limit: number): NextResponse {
         'Content-Type': 'application/json',
         'Retry-After': '3600', // Suggest retry after 1 hour
       },
-    },
+    }
   )
 }
 
@@ -131,15 +131,12 @@ export class SizeLimitedStream {
   }
 
   write(chunk: Uint8Array | string): boolean {
-    const chunkSize =
-      typeof chunk === 'string' ? Buffer.byteLength(chunk) : chunk.length
+    const chunkSize = typeof chunk === 'string' ? Buffer.byteLength(chunk) : chunk.length
 
     this.bytesWritten += chunkSize
 
     if (this.bytesWritten > this.maxSize) {
-      throw new Error(
-        `Response size limit exceeded: ${formatBytes(this.maxSize)}`,
-      )
+      throw new Error(`Response size limit exceeded: ${formatBytes(this.maxSize)}`)
     }
 
     return true

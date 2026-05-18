@@ -9,7 +9,7 @@ import { Suspense, useState } from 'react'
 function SystemMaintenanceContent() {
   const [maintenanceMode, setMaintenanceMode] = useState(false)
   const [message, setMessage] = useState(
-    'System is currently under maintenance. We will be back soon.',
+    'System is currently under maintenance. We will be back soon.'
   )
   const [scheduledStart, setScheduledStart] = useState('')
   const [scheduledEnd, setScheduledEnd] = useState('')
@@ -68,8 +68,8 @@ function SystemMaintenanceContent() {
                     Maintenance Mode Active
                   </h3>
                   <p className="text-sm text-yellow-800 dark:text-yellow-200">
-                    The system is currently in maintenance mode. Only
-                    whitelisted IP addresses can access the application.
+                    The system is currently in maintenance mode. Only whitelisted IP addresses can
+                    access the application.
                   </p>
                 </div>
               </div>
@@ -82,9 +82,7 @@ function SystemMaintenanceContent() {
             <h3 className="mb-4 text-lg font-semibold">Maintenance Message</h3>
             <div className="space-y-4">
               <div>
-                <label className="mb-2 block text-sm font-medium">
-                  Custom Message
-                </label>
+                <label className="mb-2 block text-sm font-medium">Custom Message</label>
                 <textarea
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
@@ -99,14 +97,10 @@ function SystemMaintenanceContent() {
           </div>
 
           <div className="rounded-lg border border-zinc-200 bg-white p-6 dark:border-zinc-700 dark:bg-zinc-800">
-            <h3 className="mb-4 text-lg font-semibold">
-              Schedule Maintenance Window
-            </h3>
+            <h3 className="mb-4 text-lg font-semibold">Schedule Maintenance Window</h3>
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="mb-2 block text-sm font-medium">
-                  Start Time
-                </label>
+                <label className="mb-2 block text-sm font-medium">Start Time</label>
                 <input
                   type="datetime-local"
                   value={scheduledStart}
@@ -115,9 +109,7 @@ function SystemMaintenanceContent() {
                 />
               </div>
               <div>
-                <label className="mb-2 block text-sm font-medium">
-                  End Time
-                </label>
+                <label className="mb-2 block text-sm font-medium">End Time</label>
                 <input
                   type="datetime-local"
                   value={scheduledEnd}
@@ -134,9 +126,7 @@ function SystemMaintenanceContent() {
               These IP addresses will have access during maintenance mode
             </p>
             <div className="rounded-lg border border-zinc-200 p-4 text-center dark:border-zinc-700">
-              <p className="text-sm text-zinc-500">
-                No IP addresses whitelisted yet
-              </p>
+              <p className="text-sm text-zinc-500">No IP addresses whitelisted yet</p>
             </div>
           </div>
 

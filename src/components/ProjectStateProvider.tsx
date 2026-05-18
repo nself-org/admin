@@ -11,13 +11,8 @@ interface ProjectStateProviderProps {
 }
 
 export function ProjectStateProvider({ children }: ProjectStateProviderProps) {
-  const {
-    projectSetup,
-    projectStatus,
-    isChecking,
-    checkProjectStatus,
-    stopBackgroundRefresh,
-  } = useProjectStore()
+  const { projectSetup, projectStatus, isChecking, checkProjectStatus, stopBackgroundRefresh } =
+    useProjectStore()
 
   useEffect(() => {
     // Initial check
@@ -49,9 +44,7 @@ export function ProjectStateProvider({ children }: ProjectStateProviderProps) {
           className="text-center"
         >
           <Loader2 className="mx-auto mb-4 h-12 w-12 animate-spin text-blue-500" />
-          <h2 className="mb-2 text-xl font-semibold">
-            Checking project status...
-          </h2>
+          <h2 className="mb-2 text-xl font-semibold">Checking project status...</h2>
           <p className="text-zinc-600 dark:text-zinc-400">
             Analyzing your nself project configuration
           </p>
@@ -81,12 +74,7 @@ export function ProjectStateProvider({ children }: ProjectStateProviderProps) {
   // Show main app content
   return (
     <AnimatePresence mode="wait">
-      <motion.div
-        key="app"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-      >
+      <motion.div key="app" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
         {children}
       </motion.div>
     </AnimatePresence>

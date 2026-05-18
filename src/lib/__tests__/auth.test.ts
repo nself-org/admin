@@ -14,9 +14,7 @@ describe('auth utilities', () => {
     it('rejects passwords shorter than minimum length', () => {
       const result = validatePassword('short')
       expect(result.valid).toBe(false)
-      expect(result.errors).toContain(
-        'Password must be at least 12 characters long',
-      )
+      expect(result.errors).toContain('Password must be at least 12 characters long')
     })
 
     it('rejects passwords without complexity requirements', () => {
@@ -28,9 +26,7 @@ describe('auth utilities', () => {
     it('rejects common weak passwords', () => {
       const result = validatePassword('password123')
       expect(result.valid).toBe(false)
-      expect(result.errors).toContain(
-        'Password is too common. Please choose a stronger password',
-      )
+      expect(result.errors).toContain('Password is too common. Please choose a stronger password')
     })
 
     it('rejects passwords with sequential characters', () => {
@@ -43,9 +39,7 @@ describe('auth utilities', () => {
       // Use a password with 4+ repeated characters but no sequential patterns
       const result = validatePassword('Aaaaabc!@XYZ9')
       expect(result.valid).toBe(false)
-      expect(result.errors).toContain(
-        'Password contains too many repeated characters',
-      )
+      expect(result.errors).toContain('Password contains too many repeated characters')
     })
 
     it('accepts strong passwords', () => {

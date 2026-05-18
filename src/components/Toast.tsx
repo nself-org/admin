@@ -58,7 +58,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
         }, duration)
       }
     },
-    [hideToast],
+    [hideToast]
   )
 
   return (
@@ -80,11 +80,7 @@ function ToastContainer({
     <div className="fixed right-4 bottom-4 z-50 space-y-2">
       <AnimatePresence>
         {toasts.map((toast) => (
-          <ToastItem
-            key={toast.id}
-            toast={toast}
-            onClose={() => hideToast(toast.id)}
-          />
+          <ToastItem key={toast.id} toast={toast} onClose={() => hideToast(toast.id)} />
         ))}
       </AnimatePresence>
     </div>
@@ -100,11 +96,9 @@ function ToastItem({ toast, onClose }: { toast: Toast; onClose: () => void }) {
   }
 
   const colors = {
-    success:
-      'bg-green-50 dark:bg-green-900/20 text-green-900 dark:text-green-100',
+    success: 'bg-green-50 dark:bg-green-900/20 text-green-900 dark:text-green-100',
     error: 'bg-red-50 dark:bg-red-900/20 text-red-900 dark:text-red-100',
-    warning:
-      'bg-yellow-50 dark:bg-yellow-900/20 text-yellow-900 dark:text-yellow-100',
+    warning: 'bg-yellow-50 dark:bg-yellow-900/20 text-yellow-900 dark:text-yellow-100',
     info: 'bg-blue-50 dark:bg-blue-900/20 text-blue-900 dark:text-blue-100',
   }
 
@@ -125,14 +119,10 @@ function ToastItem({ toast, onClose }: { toast: Toast; onClose: () => void }) {
       className={`max-w-md min-w-[300px] rounded-lg p-4 shadow-lg ${colors[toast.type]}`}
     >
       <div className="flex items-start">
-        <Icon
-          className={`h-5 w-5 ${iconColors[toast.type]} mt-0.5 flex-shrink-0`}
-        />
+        <Icon className={`h-5 w-5 ${iconColors[toast.type]} mt-0.5 flex-shrink-0`} />
         <div className="ml-3 flex-1">
           <p className="text-sm font-medium">{toast.title}</p>
-          {toast.message && (
-            <p className="mt-1 text-xs opacity-90">{toast.message}</p>
-          )}
+          {toast.message && <p className="mt-1 text-xs opacity-90">{toast.message}</p>}
           {toast.action && (
             <button
               onClick={toast.action.onClick}

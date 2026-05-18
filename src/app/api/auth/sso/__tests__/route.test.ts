@@ -102,18 +102,12 @@ describe('POST /api/auth/sso', () => {
     })
     await POST(req)
 
-    expect(createLoginSession).toHaveBeenCalledWith(
-      expect.any(String),
-      undefined,
-      false,
-    )
+    expect(createLoginSession).toHaveBeenCalledWith(expect.any(String), undefined, false)
   })
 
   it('returns 500 when createLoginSession throws', async () => {
     process.env.NSELF_ADMIN_SSO_HEADER_ENABLED = 'true'
-    ;(createLoginSession as jest.Mock).mockRejectedValue(
-      new Error('DB write failed'),
-    )
+    ;(createLoginSession as jest.Mock).mockRejectedValue(new Error('DB write failed'))
 
     const req = makeRequest({
       'CF-Access-Authenticated-User-Email': 'admin@example.com',

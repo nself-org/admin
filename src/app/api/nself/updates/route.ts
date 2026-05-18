@@ -56,13 +56,10 @@ export async function GET(): Promise<NextResponse> {
     let publishedAt: string | undefined
 
     try {
-      const ghRes = await fetch(
-        'https://api.github.com/repos/nself-org/cli/releases/latest',
-        {
-          headers: { 'User-Agent': 'nself-admin/1.0' },
-          signal: AbortSignal.timeout(8000),
-        },
-      )
+      const ghRes = await fetch('https://api.github.com/repos/nself-org/cli/releases/latest', {
+        headers: { 'User-Agent': 'nself-admin/1.0' },
+        signal: AbortSignal.timeout(8000),
+      })
       if (ghRes.ok) {
         const release: GithubRelease = await ghRes.json()
         latestVersion = normalizeVersion(release.tag_name)
@@ -92,7 +89,7 @@ export async function GET(): Promise<NextResponse> {
         error: 'Failed to check updates',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -123,7 +120,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         error: 'Update failed',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

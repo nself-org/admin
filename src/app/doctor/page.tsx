@@ -38,9 +38,7 @@ interface DoctorResult {
 function DoctorContent() {
   const [loading, setLoading] = useState(false)
   const [doctorResult, setDoctorResult] = useState<DoctorResult | null>(null)
-  const [selectedContainer, setSelectedContainer] = useState<string | null>(
-    null,
-  )
+  const [selectedContainer, setSelectedContainer] = useState<string | null>(null)
   const [fixingIssues, setFixingIssues] = useState(false)
 
   const runDiagnostics = async () => {
@@ -170,31 +168,19 @@ function DoctorContent() {
         <div className="flex items-center space-x-3">
           <HeartPulse className="h-8 w-8 text-blue-600 dark:text-blue-400" />
           <div>
-            <h1 className="text-2xl font-bold text-zinc-900 dark:text-white">
-              System Doctor
-            </h1>
+            <h1 className="text-2xl font-bold text-zinc-900 dark:text-white">System Doctor</h1>
             <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
               Diagnose and fix issues with your nself services
             </p>
           </div>
         </div>
         <div className="flex items-center space-x-3">
-          <Button
-            onClick={runDiagnostics}
-            variant="secondary"
-            disabled={loading}
-          >
-            <RefreshCw
-              className={`mr-2 h-4 w-4 ${loading ? 'animate-spin' : ''}`}
-            />
+          <Button onClick={runDiagnostics} variant="secondary" disabled={loading}>
+            <RefreshCw className={`mr-2 h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
             Run Diagnostics
           </Button>
           {doctorResult?.overall !== 'healthy' && (
-            <Button
-              onClick={fixIssues}
-              variant="primary"
-              disabled={fixingIssues}
-            >
+            <Button onClick={fixIssues} variant="primary" disabled={fixingIssues}>
               {fixingIssues ? (
                 <>
                   <RefreshCw className="mr-2 h-4 w-4 animate-spin" />
@@ -213,9 +199,7 @@ function DoctorContent() {
 
       {/* Overall Status */}
       {doctorResult && (
-        <div
-          className={`rounded-xl border-2 p-6 ${getOverallStatusColor(doctorResult.overall)}`}
-        >
+        <div className={`rounded-xl border-2 p-6 ${getOverallStatusColor(doctorResult.overall)}`}>
           <div className="flex items-center justify-between">
             <div>
               <h2 className="text-lg font-semibold">
@@ -227,11 +211,8 @@ function DoctorContent() {
                     : 'Critical Issues Detected'}
               </h2>
               <p className="mt-1 text-sm opacity-75">
-                {
-                  doctorResult.containers.filter((c) => c.status === 'running')
-                    .length
-                }{' '}
-                of {doctorResult.containers.length} containers running
+                {doctorResult.containers.filter((c) => c.status === 'running').length} of{' '}
+                {doctorResult.containers.length} containers running
               </p>
             </div>
             <div className="text-3xl">
@@ -319,9 +300,7 @@ function DoctorContent() {
                   {getStatusIcon(check.status)}
                   <div className="flex-1">
                     <p className="text-sm font-medium">{check.name}</p>
-                    <p className="mt-1 text-xs text-zinc-500">
-                      {check.message}
-                    </p>
+                    <p className="mt-1 text-xs text-zinc-500">{check.message}</p>
                   </div>
                 </div>
               ))}
@@ -340,9 +319,7 @@ function DoctorContent() {
             {doctorResult.recommendations.map((rec, index) => (
               <li key={index} className="flex items-start">
                 <span className="mr-2 text-blue-600 dark:text-blue-400">•</span>
-                <span className="text-sm text-blue-800 dark:text-blue-200">
-                  {rec}
-                </span>
+                <span className="text-sm text-blue-800 dark:text-blue-200">{rec}</span>
               </li>
             ))}
           </ul>

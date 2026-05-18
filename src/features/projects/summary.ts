@@ -10,11 +10,7 @@ import fs from 'fs/promises'
 import path from 'path'
 import { loadProjects } from '../project-picker/project-picker'
 import type { ProjectEntry } from '../project-picker/types'
-import type {
-  ProjectHealthStatus,
-  ProjectsDashboardResponse,
-  ProjectSummary,
-} from './types'
+import type { ProjectHealthStatus, ProjectsDashboardResponse, ProjectSummary } from './types'
 
 /**
  * Count docker-compose services defined in a project directory.
@@ -55,7 +51,7 @@ async function countComposeServices(projectPath: string): Promise<number> {
  * Actual runtime health comes from /api/health per project when connected.
  */
 async function probeHealth(
-  projectPath: string,
+  projectPath: string
 ): Promise<{ health: ProjectHealthStatus; running: number }> {
   try {
     const computed = path.join(projectPath, '.env.computed')
@@ -92,7 +88,7 @@ export async function buildDashboard(): Promise<ProjectsDashboardResponse> {
         lastCheckedAt: new Date().toISOString(),
         errorMessage: null,
       }
-    }),
+    })
   )
 
   return {

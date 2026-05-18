@@ -63,9 +63,7 @@ function MfaContent() {
       const json = await response.json()
       if (json.success) {
         setOutput(json.data.output || '')
-        setSuccess(
-          'MFA setup initiated. Enter the verification code to confirm.',
-        )
+        setSuccess('MFA setup initiated. Enter the verification code to confirm.')
         setStep('verify')
       } else {
         setError(json.details || json.error || 'Failed to enable MFA')
@@ -122,14 +120,10 @@ function MfaContent() {
         const codes = raw
           .split('\n')
           .map((line: string) => line.trim())
-          .filter(
-            (line: string) => /^[A-Za-z0-9-]+$/.test(line) && line.length >= 6,
-          )
+          .filter((line: string) => /^[A-Za-z0-9-]+$/.test(line) && line.length >= 6)
         setBackupCodes(codes)
       } else {
-        setError(
-          json.details || json.error || 'Failed to retrieve backup codes',
-        )
+        setError(json.details || json.error || 'Failed to retrieve backup codes')
       }
     } catch (_err) {
       setError('Failed to connect to MFA API')
@@ -223,9 +217,7 @@ function MfaContent() {
                       MFA Status
                     </h2>
                     <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                      {mfaEnabled
-                        ? 'MFA is currently enabled'
-                        : 'MFA is currently disabled'}
+                      {mfaEnabled ? 'MFA is currently enabled' : 'MFA is currently disabled'}
                     </p>
                   </div>
                 </div>
@@ -248,8 +240,7 @@ function MfaContent() {
                   Enable MFA
                 </h3>
                 <p className="mb-6 text-sm text-zinc-600 dark:text-zinc-400">
-                  Choose your preferred MFA method and enable two-factor
-                  authentication.
+                  Choose your preferred MFA method and enable two-factor authentication.
                 </p>
 
                 <div className="mb-6 grid gap-4 sm:grid-cols-2">
@@ -263,9 +254,7 @@ function MfaContent() {
                   >
                     <Smartphone
                       className={`mt-0.5 h-5 w-5 ${
-                        method === 'totp'
-                          ? 'text-blue-600 dark:text-blue-400'
-                          : 'text-zinc-400'
+                        method === 'totp' ? 'text-blue-600 dark:text-blue-400' : 'text-zinc-400'
                       }`}
                     />
                     <div>
@@ -287,9 +276,7 @@ function MfaContent() {
                   >
                     <Lock
                       className={`mt-0.5 h-5 w-5 ${
-                        method === 'sms'
-                          ? 'text-blue-600 dark:text-blue-400'
-                          : 'text-zinc-400'
+                        method === 'sms' ? 'text-blue-600 dark:text-blue-400' : 'text-zinc-400'
                       }`}
                     />
                     <div>
@@ -303,11 +290,7 @@ function MfaContent() {
                   </button>
                 </div>
 
-                <Button
-                  onClick={handleEnable}
-                  variant="primary"
-                  disabled={loading}
-                >
+                <Button onClick={handleEnable} variant="primary" disabled={loading}>
                   {loading ? (
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   ) : (
@@ -357,11 +340,7 @@ function MfaContent() {
                 </div>
 
                 <div className="flex gap-3">
-                  <Button
-                    onClick={handleVerify}
-                    variant="primary"
-                    disabled={loading}
-                  >
+                  <Button onClick={handleVerify} variant="primary" disabled={loading}>
                     {loading ? (
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                     ) : (
@@ -397,9 +376,8 @@ function MfaContent() {
                   <div className="flex items-start gap-2">
                     <AlertTriangle className="mt-0.5 h-4 w-4 flex-shrink-0 text-yellow-600 dark:text-yellow-400" />
                     <p className="text-xs text-yellow-700 dark:text-yellow-300">
-                      Save these backup codes in a secure location. Each code
-                      can only be used once. You will not be able to see them
-                      again.
+                      Save these backup codes in a secure location. Each code can only be used once.
+                      You will not be able to see them again.
                     </p>
                   </div>
                 </div>
@@ -445,15 +423,12 @@ function MfaContent() {
                   Disable MFA
                 </h3>
                 <p className="mb-4 text-sm text-zinc-600 dark:text-zinc-400">
-                  Removing MFA will reduce the security of your account. This
-                  action requires confirmation.
+                  Removing MFA will reduce the security of your account. This action requires
+                  confirmation.
                 </p>
 
                 {!confirmDisable ? (
-                  <Button
-                    onClick={() => setConfirmDisable(true)}
-                    variant="outline"
-                  >
+                  <Button onClick={() => setConfirmDisable(true)} variant="outline">
                     <ShieldOff className="mr-2 h-4 w-4" />
                     Disable MFA
                   </Button>
@@ -475,10 +450,7 @@ function MfaContent() {
                         )}
                         {loading ? 'Disabling...' : 'Confirm Disable'}
                       </button>
-                      <Button
-                        onClick={() => setConfirmDisable(false)}
-                        variant="secondary"
-                      >
+                      <Button onClick={() => setConfirmDisable(false)} variant="secondary">
                         Cancel
                       </Button>
                     </div>
@@ -518,9 +490,7 @@ function MfaContent() {
                 CLI Command
               </h3>
               <div className="rounded-lg bg-zinc-900 p-4">
-                <code className="font-mono text-xs text-green-400">
-                  $ {cliCommand()}
-                </code>
+                <code className="font-mono text-xs text-green-400">$ {cliCommand()}</code>
               </div>
             </div>
 
@@ -529,9 +499,7 @@ function MfaContent() {
               <div className="rounded-xl border border-red-200 bg-red-50 p-4 dark:border-red-800 dark:bg-red-900/20">
                 <div className="flex items-start gap-2">
                   <XCircle className="mt-0.5 h-4 w-4 flex-shrink-0 text-red-500" />
-                  <p className="text-sm text-red-700 dark:text-red-300">
-                    {error}
-                  </p>
+                  <p className="text-sm text-red-700 dark:text-red-300">{error}</p>
                 </div>
               </div>
             )}
@@ -539,9 +507,7 @@ function MfaContent() {
               <div className="rounded-xl border border-green-200 bg-green-50 p-4 dark:border-green-800 dark:bg-green-900/20">
                 <div className="flex items-start gap-2">
                   <CheckCircle className="mt-0.5 h-4 w-4 flex-shrink-0 text-green-500" />
-                  <p className="text-sm text-green-700 dark:text-green-300">
-                    {success}
-                  </p>
+                  <p className="text-sm text-green-700 dark:text-green-300">{success}</p>
                 </div>
               </div>
             )}

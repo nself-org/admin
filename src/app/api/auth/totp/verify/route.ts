@@ -23,11 +23,9 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       {
         status: 429,
         headers: {
-          'Retry-After': String(
-            Math.ceil((info.resetTime - Date.now()) / 1000),
-          ),
+          'Retry-After': String(Math.ceil((info.resetTime - Date.now()) / 1000)),
         },
-      },
+      }
     )
   }
 
@@ -36,10 +34,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     const code = body?.code
 
     if (!code || typeof code !== 'string') {
-      return NextResponse.json(
-        { success: false, error: 'code is required' },
-        { status: 400 },
-      )
+      return NextResponse.json({ success: false, error: 'code is required' }, { status: 400 })
     }
 
     const valid = await verifyTotpCode(code.trim())
@@ -57,7 +52,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     if (!valid) {
       return NextResponse.json(
         { success: false, error: 'Invalid or expired TOTP code' },
-        { status: 401 },
+        { status: 401 }
       )
     }
 
@@ -69,7 +64,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         error: 'TOTP verification failed',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

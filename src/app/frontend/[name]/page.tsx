@@ -180,13 +180,9 @@ function FrontendDetailContent() {
                 {getFrameworkIcon(app?.framework || '')}
               </div>
               <div>
-                <h1 className="text-3xl font-bold text-zinc-900 dark:text-white">
-                  {appName}
-                </h1>
+                <h1 className="text-3xl font-bold text-zinc-900 dark:text-white">{appName}</h1>
                 <div className="mt-1 flex items-center gap-3">
-                  <span className="text-zinc-500 dark:text-zinc-400">
-                    {app?.framework}
-                  </span>
+                  <span className="text-zinc-500 dark:text-zinc-400">{app?.framework}</span>
                   <span
                     className={`rounded-full px-2 py-0.5 text-xs font-medium capitalize ${
                       app?.status === 'running'
@@ -234,12 +230,8 @@ function FrontendDetailContent() {
             <div className="flex items-center gap-3">
               <GitBranch className="h-8 w-8 text-cyan-500" />
               <div>
-                <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                  Branch
-                </p>
-                <p className="text-lg font-bold text-zinc-900 dark:text-white">
-                  {app?.branch}
-                </p>
+                <p className="text-sm text-zinc-500 dark:text-zinc-400">Branch</p>
+                <p className="text-lg font-bold text-zinc-900 dark:text-white">{app?.branch}</p>
               </div>
             </div>
           </div>
@@ -247,9 +239,7 @@ function FrontendDetailContent() {
             <div className="flex items-center gap-3">
               <Activity className="h-8 w-8 text-green-500" />
               <div>
-                <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                  Requests/hr
-                </p>
+                <p className="text-sm text-zinc-500 dark:text-zinc-400">Requests/hr</p>
                 <p className="text-lg font-bold text-zinc-900 dark:text-white">
                   {app?.metrics?.requests.toLocaleString()}
                 </p>
@@ -260,9 +250,7 @@ function FrontendDetailContent() {
             <div className="flex items-center gap-3">
               <Zap className="h-8 w-8 text-yellow-500" />
               <div>
-                <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                  Latency
-                </p>
+                <p className="text-sm text-zinc-500 dark:text-zinc-400">Latency</p>
                 <p className="text-lg font-bold text-zinc-900 dark:text-white">
                   {app?.metrics?.latency}ms
                 </p>
@@ -273,12 +261,8 @@ function FrontendDetailContent() {
             <div className="flex items-center gap-3">
               <Clock className="h-8 w-8 text-blue-500" />
               <div>
-                <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                  Build Time
-                </p>
-                <p className="text-lg font-bold text-zinc-900 dark:text-white">
-                  {app?.buildTime}s
-                </p>
+                <p className="text-sm text-zinc-500 dark:text-zinc-400">Build Time</p>
+                <p className="text-lg font-bold text-zinc-900 dark:text-white">{app?.buildTime}s</p>
               </div>
             </div>
           </div>
@@ -310,12 +294,7 @@ function FrontendDetailContent() {
                 <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
                 <XAxis dataKey="time" stroke="#9CA3AF" fontSize={12} />
                 <YAxis yAxisId="left" stroke="#9CA3AF" fontSize={12} />
-                <YAxis
-                  yAxisId="right"
-                  orientation="right"
-                  stroke="#9CA3AF"
-                  fontSize={12}
-                />
+                <YAxis yAxisId="right" orientation="right" stroke="#9CA3AF" fontSize={12} />
                 <Tooltip
                   contentStyle={{
                     backgroundColor: '#18181B',
@@ -367,9 +346,7 @@ function FrontendDetailContent() {
                       <RefreshCw className="h-5 w-5 animate-spin text-blue-500" />
                     )}
                     <div>
-                      <p className="font-medium text-zinc-900 dark:text-white">
-                        {dep.version}
-                      </p>
+                      <p className="font-medium text-zinc-900 dark:text-white">{dep.version}</p>
                       <div className="flex items-center gap-2 text-xs text-zinc-500">
                         <GitCommit className="h-3 w-3" />
                         {dep.commit}
@@ -433,28 +410,18 @@ function FrontendDetailContent() {
           </h3>
           <div className="space-y-2 font-mono text-sm">
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-cyan-500">
-                nself frontend deploy {appName}
-              </span>{' '}
-              - Deploy this app
+              <span className="text-cyan-500">nself frontend deploy {appName}</span> - Deploy this
+              app
             </p>
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-cyan-500">
-                nself frontend logs {appName}
-              </span>{' '}
-              - View logs
+              <span className="text-cyan-500">nself frontend logs {appName}</span> - View logs
             </p>
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-cyan-500">
-                nself frontend restart {appName}
-              </span>{' '}
-              - Restart app
+              <span className="text-cyan-500">nself frontend restart {appName}</span> - Restart app
             </p>
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-cyan-500">
-                nself frontend env {appName} --set KEY=value
-              </span>{' '}
-              - Set env var
+              <span className="text-cyan-500">nself frontend env {appName} --set KEY=value</span> -
+              Set env var
             </p>
           </div>
         </div>

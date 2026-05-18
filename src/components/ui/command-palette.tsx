@@ -31,11 +31,7 @@ interface CommandPaletteProps {
   onOpenChange?: (open: boolean) => void
 }
 
-export function CommandPalette({
-  children,
-  open,
-  onOpenChange,
-}: CommandPaletteProps) {
+export function CommandPalette({ children, open, onOpenChange }: CommandPaletteProps) {
   const [internalOpen, setInternalOpen] = React.useState(false)
 
   const isOpen = open ?? internalOpen
@@ -46,7 +42,7 @@ export function CommandPalette({
       }
       onOpenChange?.(value)
     },
-    [open, onOpenChange],
+    [open, onOpenChange]
   )
 
   React.useEffect(() => {
@@ -63,10 +59,7 @@ export function CommandPalette({
 
   return (
     <Dialog open={isOpen} onOpenChange={handleOpenChange}>
-      <DialogContent
-        className="overflow-hidden p-0 shadow-lg"
-        data-testid="command-palette"
-      >
+      <DialogContent className="overflow-hidden p-0 shadow-lg" data-testid="command-palette">
         <Command className="[&_[cmdk-group-heading]]:text-muted-foreground [&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group]]:px-2 [&_[cmdk-group]:not([hidden])_~[cmdk-group]]:pt-0 [&_[cmdk-input-wrapper]_svg]:h-5 [&_[cmdk-input-wrapper]_svg]:w-5 [&_[cmdk-input]]:h-12 [&_[cmdk-item]]:px-2 [&_[cmdk-item]]:py-3 [&_[cmdk-item]_svg]:h-5 [&_[cmdk-item]_svg]:w-5">
           {children}
         </Command>
@@ -85,7 +78,7 @@ const CommandPaletteInput = React.forwardRef<
       ref={ref}
       className={cn(
         'placeholder:text-muted-foreground flex h-11 w-full rounded-md bg-transparent py-3 text-sm outline-none disabled:cursor-not-allowed disabled:opacity-50',
-        className,
+        className
       )}
       {...props}
     />
@@ -109,11 +102,7 @@ const CommandPaletteEmpty = React.forwardRef<
   React.ElementRef<typeof Command.Empty>,
   React.ComponentPropsWithoutRef<typeof Command.Empty>
 >((props, ref) => (
-  <Command.Empty
-    ref={ref}
-    className="text-muted-foreground py-6 text-center text-sm"
-    {...props}
-  />
+  <Command.Empty ref={ref} className="text-muted-foreground py-6 text-center text-sm" {...props} />
 ))
 CommandPaletteEmpty.displayName = 'CommandPaletteEmpty'
 
@@ -125,7 +114,7 @@ const CommandPaletteGroup = React.forwardRef<
     ref={ref}
     className={cn(
       'text-foreground [&_[cmdk-group-heading]]:text-muted-foreground overflow-hidden p-1 [&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:py-1.5 [&_[cmdk-group-heading]]:text-xs [&_[cmdk-group-heading]]:font-medium',
-      className,
+      className
     )}
     {...props}
   />
@@ -136,11 +125,7 @@ const CommandPaletteSeparator = React.forwardRef<
   React.ElementRef<typeof Command.Separator>,
   React.ComponentPropsWithoutRef<typeof Command.Separator>
 >(({ className, ...props }, ref) => (
-  <Command.Separator
-    ref={ref}
-    className={cn('bg-border -mx-1 h-px', className)}
-    {...props}
-  />
+  <Command.Separator ref={ref} className={cn('bg-border -mx-1 h-px', className)} {...props} />
 ))
 CommandPaletteSeparator.displayName = 'CommandPaletteSeparator'
 
@@ -152,23 +137,17 @@ const CommandPaletteItem = React.forwardRef<
     ref={ref}
     className={cn(
       'aria-selected:bg-accent aria-selected:text-accent-foreground relative flex cursor-default items-center rounded-sm px-2 py-1.5 text-sm outline-none select-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
-      className,
+      className
     )}
     {...props}
   />
 ))
 CommandPaletteItem.displayName = 'CommandPaletteItem'
 
-const CommandPaletteShortcut = ({
-  className,
-  ...props
-}: React.HTMLAttributes<HTMLSpanElement>) => {
+const CommandPaletteShortcut = ({ className, ...props }: React.HTMLAttributes<HTMLSpanElement>) => {
   return (
     <span
-      className={cn(
-        'text-muted-foreground ml-auto text-xs tracking-widest',
-        className,
-      )}
+      className={cn('text-muted-foreground ml-auto text-xs tracking-widest', className)}
       {...props}
     />
   )

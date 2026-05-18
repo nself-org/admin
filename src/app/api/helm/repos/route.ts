@@ -36,7 +36,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to list helm repos',
         details: err.message,
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -56,14 +56,14 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     if (!name) {
       return NextResponse.json(
         { success: false, error: 'Repository name is required' },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
     if (!url) {
       return NextResponse.json(
         { success: false, error: 'Repository URL is required' },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -71,14 +71,11 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     if (username) args.push(`--username=${username}`)
     if (password) args.push(`--password=${password}`)
 
-    const { stdout } = await execAsync(
-      `${nselfPath} ${args.join(' ')} --json`,
-      {
-        cwd: projectPath,
-        env: { ...process.env, PATH: getEnhancedPath() },
-        timeout: 60000,
-      },
-    )
+    const { stdout } = await execAsync(`${nselfPath} ${args.join(' ')} --json`, {
+      cwd: projectPath,
+      env: { ...process.env, PATH: getEnhancedPath() },
+      timeout: 60000,
+    })
 
     const result = JSON.parse(stdout)
 
@@ -98,7 +95,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to add helm repo',
         details: err.message,
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

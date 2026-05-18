@@ -36,7 +36,7 @@ export async function GET(_request: NextRequest): Promise<NextResponse> {
         error: 'Failed to list K8s clusters',
         details: err.message,
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

@@ -53,15 +53,9 @@ export default function Error({
               {error.name}: {error.message}
             </p>
             {error.stack && (
-              <pre className="max-h-48 overflow-auto text-xs text-zinc-400">
-                {error.stack}
-              </pre>
+              <pre className="max-h-48 overflow-auto text-xs text-zinc-400">{error.stack}</pre>
             )}
-            {error.digest && (
-              <p className="mt-2 text-xs text-zinc-500">
-                Digest: {error.digest}
-              </p>
-            )}
+            {error.digest && <p className="mt-2 text-xs text-zinc-500">Digest: {error.digest}</p>}
           </div>
         )}
 

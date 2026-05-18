@@ -38,10 +38,11 @@ function K8sLogsPageContent() {
   const [logsError, setLogsError] = useState<string | null>(null)
   const logsEndRef = useRef<HTMLDivElement>(null)
 
-  const { data: podData, error: podError, mutate: mutatePods } = useSWR<{ pods: K8sPod[] }>(
-    '/api/k8s/pods',
-    fetcher,
-  )
+  const {
+    data: podData,
+    error: podError,
+    mutate: mutatePods,
+  } = useSWR<{ pods: K8sPod[] }>('/api/k8s/pods', fetcher)
 
   const pods = podData?.pods ?? []
   const selectedPodData = pods.find((p) => p.name === selectedPod)
@@ -113,7 +114,7 @@ function K8sLogsPageContent() {
   const filteredLogs = logs.filter(
     (log) =>
       log.message.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      log.level.toLowerCase().includes(searchQuery.toLowerCase()),
+      log.level.toLowerCase().includes(searchQuery.toLowerCase())
   )
 
   const levelColors: Record<string, string> = {
@@ -140,7 +141,10 @@ function K8sLogsPageContent() {
     return (
       <div className="space-y-6">
         <div className="flex items-center gap-4">
-          <Link href="/k8s" className="rounded-lg border border-zinc-700 bg-zinc-800 p-2 hover:bg-zinc-700">
+          <Link
+            href="/k8s"
+            className="rounded-lg border border-zinc-700 bg-zinc-800 p-2 hover:bg-zinc-700"
+          >
             <ArrowLeft className="h-5 w-5" />
           </Link>
           <h1 className="text-2xl font-semibold text-white">Pod Logs</h1>
@@ -177,9 +181,7 @@ function K8sLogsPageContent() {
           </Link>
           <div>
             <h1 className="text-2xl font-semibold text-white">Pod Logs</h1>
-            <p className="text-sm text-zinc-400">
-              View and stream container logs
-            </p>
+            <p className="text-sm text-zinc-400">View and stream container logs</p>
           </div>
         </div>
 
@@ -235,9 +237,7 @@ function K8sLogsPageContent() {
 
         {selectedPodData && selectedPodData.containers.length > 1 && (
           <div className="w-64">
-            <label className="mb-1 block text-sm text-zinc-400">
-              Container
-            </label>
+            <label className="mb-1 block text-sm text-zinc-400">Container</label>
             <select
               value={selectedContainer}
               onChange={(e) => setSelectedContainer(e.target.value)}
@@ -313,9 +313,7 @@ function K8sLogsPageContent() {
                   <span className="shrink-0 text-zinc-500">
                     {new Date(log.timestamp).toLocaleTimeString()}
                   </span>
-                  <span
-                    className={`w-12 shrink-0 ${levelColors[log.level] || 'text-zinc-400'}`}
-                  >
+                  <span className={`w-12 shrink-0 ${levelColors[log.level] || 'text-zinc-400'}`}>
                     [{log.level}]
                   </span>
                   <span className="text-zinc-300">{log.message}</span>
@@ -337,8 +335,7 @@ function K8sLogsPageContent() {
           <h3 className="mb-2 text-sm font-medium text-zinc-400">Or use CLI</h3>
           <code className="block rounded bg-zinc-900 p-3 text-sm text-blue-400">
             kubectl logs -f {selectedPod}
-            {selectedContainer && ` -c ${selectedContainer}`}{' '}
-            --namespace=default
+            {selectedContainer && ` -c ${selectedContainer}`} --namespace=default
           </code>
         </div>
       )}

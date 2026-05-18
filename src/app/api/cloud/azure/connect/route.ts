@@ -46,13 +46,12 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   if (authError) return authError
 
   try {
-    const { subscriptionId, clientId, clientSecret, tenantId } =
-      await request.json()
+    const { subscriptionId, clientId, clientSecret, tenantId } = await request.json()
 
     if (!subscriptionId || !clientId || !clientSecret || !tenantId) {
       return NextResponse.json(
         { success: false, error: 'Missing required fields' },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -69,7 +68,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           error: result.error || 'Azure credential validation failed',
           configured: false,
         },
-        { status: 422 },
+        { status: 422 }
       )
     }
 
@@ -94,7 +93,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to connect to Azure',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

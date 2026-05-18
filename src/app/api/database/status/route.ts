@@ -50,9 +50,7 @@ export async function GET(_request: Request): Promise<NextResponse> {
     await client.connect()
 
     // Get database size
-    const sizeResult = await client.query(
-      'SELECT pg_database_size(current_database()) as size',
-    )
+    const sizeResult = await client.query('SELECT pg_database_size(current_database()) as size')
 
     // Get table count
     const tablesResult = await client.query(`
@@ -74,9 +72,7 @@ export async function GET(_request: Request): Promise<NextResponse> {
     const versionResult = await client.query('SELECT version()')
 
     // Get uptime
-    const uptimeResult = await client.query(
-      'SELECT NOW() - pg_postmaster_start_time() as uptime',
-    )
+    const uptimeResult = await client.query('SELECT NOW() - pg_postmaster_start_time() as uptime')
 
     await client.end()
 
@@ -84,9 +80,7 @@ export async function GET(_request: Request): Promise<NextResponse> {
       const sizes = ['B', 'KB', 'MB', 'GB', 'TB']
       if (bytes === 0) return '0 B'
       const i = Math.floor(Math.log(bytes) / Math.log(1024))
-      return (
-        Math.round((bytes / Math.pow(1024, i)) * 100) / 100 + ' ' + sizes[i]
-      )
+      return Math.round((bytes / Math.pow(1024, i)) * 100) / 100 + ' ' + sizes[i]
     }
 
     const formatUptime = (interval: unknown): string => {
@@ -137,7 +131,7 @@ export async function GET(_request: Request): Promise<NextResponse> {
         error: 'Failed to get database status',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

@@ -31,10 +31,7 @@ export async function getTenant(id: string): Promise<TenantDetailResponse> {
   return response.json()
 }
 
-export async function updateTenant(
-  id: string,
-  input: UpdateTenantInput,
-): Promise<Tenant> {
+export async function updateTenant(id: string, input: UpdateTenantInput): Promise<Tenant> {
   const response = await api.put(`${BASE_URL}/${id}`, input)
   const data = await response.json()
   if (!data.success) throw new Error(data.error || 'Failed to update tenant')

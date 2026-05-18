@@ -61,13 +61,9 @@ function CanvasRenderer({ frame }: { frame: CanvasFrame }) {
         <div className="mt-2 rounded-lg border border-sky-500/30 bg-sky-900/20 p-3">
           <div className="mb-1 flex items-center gap-1.5">
             <Layout className="h-3.5 w-3.5 text-sky-400" />
-            <span className="text-xs font-medium tracking-wide text-sky-300 uppercase">
-              Card
-            </span>
+            <span className="text-xs font-medium tracking-wide text-sky-300 uppercase">Card</span>
           </div>
-          {title && (
-            <p className="mb-1 text-sm font-medium text-white">{title}</p>
-          )}
+          {title && <p className="mb-1 text-sm font-medium text-white">{title}</p>}
           {body && <p className="text-sm text-zinc-300">{body}</p>}
         </div>
       )
@@ -79,13 +75,9 @@ function CanvasRenderer({ frame }: { frame: CanvasFrame }) {
         <div className="mt-2 rounded-lg border border-sky-500/30 bg-sky-900/20 p-3">
           <div className="mb-1 flex items-center gap-1.5">
             <Layout className="h-3.5 w-3.5 text-sky-400" />
-            <span className="text-xs font-medium tracking-wide text-sky-300 uppercase">
-              List
-            </span>
+            <span className="text-xs font-medium tracking-wide text-sky-300 uppercase">List</span>
           </div>
-          {title && (
-            <p className="mb-1 text-sm font-medium text-white">{title}</p>
-          )}
+          {title && <p className="mb-1 text-sm font-medium text-white">{title}</p>}
           <ul className="space-y-0.5 pl-3">
             {items.map((item, i) => (
               <li key={i} className="list-disc text-sm text-zinc-300">
@@ -103,13 +95,9 @@ function CanvasRenderer({ frame }: { frame: CanvasFrame }) {
         <div className="mt-2 rounded-lg border border-sky-500/30 bg-sky-900/20 p-3">
           <div className="mb-1 flex items-center gap-1.5">
             <Layout className="h-3.5 w-3.5 text-sky-400" />
-            <span className="text-xs font-medium tracking-wide text-sky-300 uppercase">
-              Form
-            </span>
+            <span className="text-xs font-medium tracking-wide text-sky-300 uppercase">Form</span>
           </div>
-          {title && (
-            <p className="mb-1 text-sm font-medium text-white">{title}</p>
-          )}
+          {title && <p className="mb-1 text-sm font-medium text-white">{title}</p>}
           <div className="space-y-1">
             {fields.map((field, i) => (
               <div key={i} className="flex items-center gap-2">
@@ -123,16 +111,12 @@ function CanvasRenderer({ frame }: { frame: CanvasFrame }) {
     }
     case 'chart': {
       const description =
-        (frame.data.description as string) ??
-        (frame.data.title as string) ??
-        'Chart'
+        (frame.data.description as string) ?? (frame.data.title as string) ?? 'Chart'
       return (
         <div className="mt-2 rounded-lg border border-sky-500/30 bg-sky-900/20 p-3">
           <div className="mb-1 flex items-center gap-1.5">
             <Layout className="h-3.5 w-3.5 text-sky-400" />
-            <span className="text-xs font-medium tracking-wide text-sky-300 uppercase">
-              Chart
-            </span>
+            <span className="text-xs font-medium tracking-wide text-sky-300 uppercase">Chart</span>
           </div>
           <p className="text-sm text-zinc-300">Chart: {description}</p>
         </div>
@@ -176,18 +160,14 @@ function ToolCallAccordion({ toolCall }: { toolCall: ToolCall }) {
       </summary>
       <div className="space-y-2 border-t border-zinc-700/50 px-3 py-2">
         <div>
-          <p className="mb-1 text-xs font-medium tracking-wide text-zinc-500 uppercase">
-            Args
-          </p>
+          <p className="mb-1 text-xs font-medium tracking-wide text-zinc-500 uppercase">Args</p>
           <pre className="overflow-auto rounded bg-zinc-950/50 p-2 text-xs text-zinc-300">
             {JSON.stringify(toolCall.args, null, 2)}
           </pre>
         </div>
         {toolCall.result !== undefined && (
           <div>
-            <p className="mb-1 text-xs font-medium tracking-wide text-zinc-500 uppercase">
-              Result
-            </p>
+            <p className="mb-1 text-xs font-medium tracking-wide text-zinc-500 uppercase">Result</p>
             <pre className="overflow-auto rounded bg-zinc-950/50 p-2 text-xs whitespace-pre-wrap text-zinc-300">
               {toolCall.result}
             </pre>
@@ -200,13 +180,7 @@ function ToolCallAccordion({ toolCall }: { toolCall: ToolCall }) {
 
 // ── Message bubble ─────────────────────────────────────────────────────────────
 
-function MessageBubble({
-  message,
-  isStreaming,
-}: {
-  message: ChatMessage
-  isStreaming?: boolean
-}) {
+function MessageBubble({ message, isStreaming }: { message: ChatMessage; isStreaming?: boolean }) {
   const isUser = message.role === 'user'
 
   // Parse canvas frames from content if present
@@ -256,14 +230,8 @@ function MessageBubble({
           }`}
         >
           {displayContent ||
-            (isStreaming ? null : (
-              <span className="text-zinc-500 italic">(no text)</span>
-            ))}
-          {isStreaming && (
-            <span className="ml-0.5 inline-block animate-pulse text-sky-400">
-              ▋
-            </span>
-          )}
+            (isStreaming ? null : <span className="text-zinc-500 italic">(no text)</span>)}
+          {isStreaming && <span className="ml-0.5 inline-block animate-pulse text-sky-400">▋</span>}
         </div>
 
         {/* Canvas frames */}
@@ -338,19 +306,14 @@ function SessionSidebar({
         {loading ? (
           <div className="space-y-1 p-2">
             {[1, 2, 3].map((n) => (
-              <div
-                key={n}
-                className="h-12 animate-pulse rounded-lg bg-zinc-800/50"
-              />
+              <div key={n} className="h-12 animate-pulse rounded-lg bg-zinc-800/50" />
             ))}
           </div>
         ) : sessions.length === 0 ? (
           <div className="flex flex-col items-center justify-center px-4 py-8 text-center">
             <Bot className="mb-2 h-6 w-6 text-zinc-600" />
             <p className="text-xs text-zinc-500">No sessions yet</p>
-            <p className="mt-0.5 text-xs text-zinc-600">
-              Start a new conversation
-            </p>
+            <p className="mt-0.5 text-xs text-zinc-600">Start a new conversation</p>
           </div>
         ) : (
           sessions.map((session) => {
@@ -359,9 +322,7 @@ function SessionSidebar({
               <div
                 key={session.id}
                 className={`group mx-1 my-0.5 flex cursor-pointer items-start justify-between gap-2 rounded-lg px-3 py-2.5 transition-colors ${
-                  isActive
-                    ? 'border border-sky-500/30 bg-sky-500/20'
-                    : 'hover:bg-zinc-800/50'
+                  isActive ? 'border border-sky-500/30 bg-sky-500/20' : 'hover:bg-zinc-800/50'
                 }`}
                 onClick={() => onSelect(session.id)}
               >
@@ -544,8 +505,7 @@ export default function ClawChatPage() {
                 fullText += delta
                 setStreamingText(fullText)
                 if (j.session_id) newSessionId = j.session_id
-                if (j.memories_used !== undefined)
-                  memoriesUsed = j.memories_used
+                if (j.memories_used !== undefined) memoriesUsed = j.memories_used
               } catch {
                 // skip non-JSON lines
               }
@@ -620,9 +580,7 @@ export default function ClawChatPage() {
           <div className="flex items-start gap-3">
             <AlertCircle className="mt-0.5 h-5 w-5 shrink-0 text-yellow-400" />
             <div>
-              <p className="font-medium text-yellow-300">
-                nself-claw is not running
-              </p>
+              <p className="font-medium text-yellow-300">nself-claw is not running</p>
               <p className="mt-1 text-sm text-yellow-400/80">
                 Install and start the claw plugin to use the chat interface.
               </p>
@@ -641,9 +599,7 @@ export default function ClawChatPage() {
       <div className="flex shrink-0 items-center justify-between border-b border-zinc-700/50 px-6 py-4">
         <div>
           <h1 className="text-2xl font-semibold text-white">ɳClaw Chat</h1>
-          <p className="mt-0.5 text-sm text-zinc-400">
-            AI assistant powered by nself-claw
-          </p>
+          <p className="mt-0.5 text-sm text-zinc-400">AI assistant powered by nself-claw</p>
         </div>
         <div className="flex items-center gap-3">
           {/* Memory recall indicator */}
@@ -693,9 +649,7 @@ export default function ClawChatPage() {
                   <Bot className="h-7 w-7 text-sky-400" />
                 </div>
                 <p className="text-base font-medium text-zinc-300">
-                  {currentSessionId
-                    ? 'Continue the conversation'
-                    : 'Start a conversation'}
+                  {currentSessionId ? 'Continue the conversation' : 'Start a conversation'}
                 </p>
                 <p className="mt-1 text-sm text-zinc-500">
                   Type a message below and press Enter to chat

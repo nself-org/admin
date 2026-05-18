@@ -1,15 +1,15 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
-import { AlertCircle, CheckCircle, Globe, Loader2, Save, WifiOff } from 'lucide-react'
+import { FormSkeleton } from '@/components/skeletons'
 import { Alert, AlertDescription } from '@/components/ui/alert'
+import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
-import { Badge } from '@/components/ui/badge'
-import { FormSkeleton } from '@/components/skeletons'
+import { AlertCircle, CheckCircle, Globe, Loader2, Save, WifiOff } from 'lucide-react'
+import { useCallback, useEffect, useState } from 'react'
 
 interface CorsConfig {
   allowedOrigins: string
@@ -62,7 +62,8 @@ function CorsContent() {
       setConfig(cors)
       setForm(cors)
       // If all values are empty/default, show empty state
-      const hasAnyValue = cors.allowedOrigins || (cors.hasuraCors && cors.hasuraCors !== '*') || cors.authClientUrl
+      const hasAnyValue =
+        cors.allowedOrigins || (cors.hasuraCors && cors.hasuraCors !== '*') || cors.authClientUrl
       setPageState(hasAnyValue ? 'success' : 'empty')
     } catch (_err) {
       // Network failure → offline
@@ -80,8 +81,8 @@ function CorsContent() {
     setForm(updated)
     setIsDirty(
       updated.allowedOrigins !== config.allowedOrigins ||
-      updated.hasuraCors !== config.hasuraCors ||
-      updated.authClientUrl !== config.authClientUrl
+        updated.hasuraCors !== config.hasuraCors ||
+        updated.authClientUrl !== config.authClientUrl
     )
     setSaveError(null)
     setSaveSuccess(false)
@@ -129,11 +130,18 @@ function CorsContent() {
   // ── State: unauth ──────────────────────────────────────────────────────────
   if (pageState === 'unauth') {
     return (
-      <div className="flex flex-col items-center justify-center py-24 gap-4">
-        <AlertCircle className="h-10 w-10 text-destructive" />
+      <div className="flex flex-col items-center justify-center gap-4 py-24">
+        <AlertCircle className="text-destructive h-10 w-10" />
         <p className="text-lg font-medium">Not authenticated</p>
-        <p className="text-sm text-muted-foreground">Please log in to manage CORS configuration.</p>
-        <Button variant="outline" onClick={() => { window.location.href = '/login' }}>Go to Login</Button>
+        <p className="text-muted-foreground text-sm">Please log in to manage CORS configuration.</p>
+        <Button
+          variant="outline"
+          onClick={() => {
+            window.location.href = '/login'
+          }}
+        >
+          Go to Login
+        </Button>
       </div>
     )
   }
@@ -141,11 +149,13 @@ function CorsContent() {
   // ── State: offline ─────────────────────────────────────────────────────────
   if (pageState === 'offline') {
     return (
-      <div className="flex flex-col items-center justify-center py-24 gap-4">
-        <WifiOff className="h-10 w-10 text-muted-foreground" />
+      <div className="flex flex-col items-center justify-center gap-4 py-24">
+        <WifiOff className="text-muted-foreground h-10 w-10" />
         <p className="text-lg font-medium">Cannot connect to admin API</p>
-        <p className="text-sm text-muted-foreground">{errorMessage}</p>
-        <Button variant="outline" onClick={load}>Retry</Button>
+        <p className="text-muted-foreground text-sm">{errorMessage}</p>
+        <Button variant="outline" onClick={load}>
+          Retry
+        </Button>
       </div>
     )
   }
@@ -153,11 +163,13 @@ function CorsContent() {
   // ── State: error ───────────────────────────────────────────────────────────
   if (pageState === 'error') {
     return (
-      <div className="flex flex-col items-center justify-center py-24 gap-4">
-        <AlertCircle className="h-10 w-10 text-destructive" />
+      <div className="flex flex-col items-center justify-center gap-4 py-24">
+        <AlertCircle className="text-destructive h-10 w-10" />
         <p className="text-lg font-medium">Failed to load CORS configuration</p>
-        <p className="text-sm text-muted-foreground">{errorMessage}</p>
-        <Button variant="outline" onClick={load}>Retry</Button>
+        <p className="text-muted-foreground text-sm">{errorMessage}</p>
+        <Button variant="outline" onClick={load}>
+          Retry
+        </Button>
       </div>
     )
   }
@@ -174,15 +186,15 @@ function CorsContent() {
     .filter(Boolean)
 
   return (
-    <div className="space-y-6 max-w-2xl">
+    <div className="max-w-2xl space-y-6">
       <div>
-        <h1 className="text-2xl font-bold flex items-center gap-2">
+        <h1 className="flex items-center gap-2 text-2xl font-bold">
           <Globe className="h-6 w-6" />
           CORS Configuration
         </h1>
-        <p className="text-sm text-muted-foreground mt-1">
-          Configure Cross-Origin Resource Sharing for Nginx, Hasura, and the Auth service.
-          Changes trigger <code className="text-xs bg-muted px-1 rounded">nself build</code> to apply.
+        <p className="text-muted-foreground mt-1 text-sm">
+          Configure Cross-Origin Resource Sharing for Nginx, Hasura, and the Auth service. Changes
+          trigger <code className="bg-muted rounded px-1 text-xs">nself build</code> to apply.
         </p>
       </div>
 
@@ -190,7 +202,8 @@ function CorsContent() {
         <Alert>
           <AlertCircle className="h-4 w-4" />
           <AlertDescription>
-            No CORS configuration found. Default values are shown. Save to write initial configuration.
+            No CORS configuration found. Default values are shown. Save to write initial
+            configuration.
           </AlertDescription>
         </Alert>
       )}
@@ -200,7 +213,7 @@ function CorsContent() {
           <CheckCircle className="h-4 w-4 text-green-600" />
           <AlertDescription className="text-green-700 dark:text-green-300">
             CORS configuration saved.
-            {buildStatus && <span className="block text-xs mt-1">{buildStatus}</span>}
+            {buildStatus && <span className="mt-1 block text-xs">{buildStatus}</span>}
           </AlertDescription>
         </Alert>
       )}
@@ -217,8 +230,9 @@ function CorsContent() {
         <CardHeader>
           <CardTitle className="text-base">Allowed Origins</CardTitle>
           <CardDescription>
-            Comma-separated list of origins permitted by Nginx CORS headers.
-            Use <code className="text-xs bg-muted px-1 rounded">*</code> to allow all origins (not recommended for production).
+            Comma-separated list of origins permitted by Nginx CORS headers. Use{' '}
+            <code className="bg-muted rounded px-1 text-xs">*</code> to allow all origins (not
+            recommended for production).
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -232,15 +246,15 @@ function CorsContent() {
               value={form.allowedOrigins}
               onChange={(e) => handleFormChange('allowedOrigins', e.target.value)}
             />
-            <p className="text-xs text-muted-foreground mt-1">
+            <p className="text-muted-foreground mt-1 text-xs">
               Each entry must be a valid http:// or https:// URL, or the wildcard *.
             </p>
           </div>
 
           {origins.length > 0 && (
             <div>
-              <Label className="text-xs text-muted-foreground">Parsed origins</Label>
-              <div className="flex flex-wrap gap-1 mt-1">
+              <Label className="text-muted-foreground text-xs">Parsed origins</Label>
+              <div className="mt-1 flex flex-wrap gap-1">
                 {origins.map((origin) => (
                   <Badge key={origin} variant="secondary" className="font-mono text-xs">
                     {origin}
@@ -258,8 +272,8 @@ function CorsContent() {
           <CardTitle className="text-base">Hasura GraphQL CORS</CardTitle>
           <CardDescription>
             CORS domain allowlist passed to Hasura via{' '}
-            <code className="text-xs bg-muted px-1 rounded">HASURA_GRAPHQL_CORS_DOMAIN</code>.
-            Use <code className="text-xs bg-muted px-1 rounded">*</code> during development.
+            <code className="bg-muted rounded px-1 text-xs">HASURA_GRAPHQL_CORS_DOMAIN</code>. Use{' '}
+            <code className="bg-muted rounded px-1 text-xs">*</code> during development.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -279,8 +293,8 @@ function CorsContent() {
         <CardHeader>
           <CardTitle className="text-base">Auth Client URL</CardTitle>
           <CardDescription>
-            The client URL the Auth service will allow redirects to.
-            Set to your frontend&apos;s base URL.
+            The client URL the Auth service will allow redirects to. Set to your frontend&apos;s
+            base URL.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -292,24 +306,18 @@ function CorsContent() {
             value={form.authClientUrl}
             onChange={(e) => handleFormChange('authClientUrl', e.target.value)}
           />
-          <p className="text-xs text-muted-foreground mt-1">
+          <p className="text-muted-foreground mt-1 text-xs">
             Must be a valid http:// or https:// URL.
           </p>
         </CardContent>
       </Card>
 
       <div className="flex items-center justify-between">
-        <Button
-          onClick={handleSave}
-          disabled={saving || !isDirty}
-          className="gap-2"
-        >
+        <Button onClick={handleSave} disabled={saving || !isDirty} className="gap-2">
           {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
           {saving ? 'Saving…' : 'Save & Apply'}
         </Button>
-        {isDirty && (
-          <span className="text-xs text-muted-foreground">You have unsaved changes</span>
-        )}
+        {isDirty && <span className="text-muted-foreground text-xs">You have unsaved changes</span>}
       </div>
     </div>
   )

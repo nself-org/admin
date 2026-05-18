@@ -85,61 +85,55 @@ export function useDashboardData() {
               lastUpdate: Date.now(),
             }
           })
-        },
+        }
       )
 
       // Subscribe to Docker stats updates
-      const unsubscribeStats = wsClient.on<DockerStatsEvent>(
-        EventType.DOCKER_STATS,
-        (event) => {
-          if (!isDockerStatsEvent(event)) return
+      const unsubscribeStats = wsClient.on<DockerStatsEvent>(EventType.DOCKER_STATS, (event) => {
+        if (!isDockerStatsEvent(event)) return
 
-          const timestamp = Date.now()
+        const timestamp = Date.now()
 
-          setData((prev) => {
-            // Update CPU history
-            const cpuHistory = [
-              ...prev.cpuHistory,
-              { timestamp, value: event.stats.cpu },
-            ].slice(-MAX_HISTORY_POINTS)
+        setData((prev) => {
+          // Update CPU history
+          const cpuHistory = [...prev.cpuHistory, { timestamp, value: event.stats.cpu }].slice(
+            -MAX_HISTORY_POINTS
+          )
 
-            // Update memory history
-            const memoryHistory = [
-              ...prev.memoryHistory,
-              { timestamp, value: event.stats.memoryPercent },
-            ].slice(-MAX_HISTORY_POINTS)
+          // Update memory history
+          const memoryHistory = [
+            ...prev.memoryHistory,
+            { timestamp, value: event.stats.memoryPercent },
+          ].slice(-MAX_HISTORY_POINTS)
 
-            // Update network history (combined rx + tx in Mbps)
-            const networkMbps =
-              ((event.stats.network.rx + event.stats.network.tx) * 8) / 1000000
-            const networkHistory = [
-              ...prev.networkHistory,
-              { timestamp, value: networkMbps },
-            ].slice(-MAX_HISTORY_POINTS)
+          // Update network history (combined rx + tx in Mbps)
+          const networkMbps = ((event.stats.network.rx + event.stats.network.tx) * 8) / 1000000
+          const networkHistory = [...prev.networkHistory, { timestamp, value: networkMbps }].slice(
+            -MAX_HISTORY_POINTS
+          )
 
-            // Update service with latest stats
-            const services = prev.services.map((service) => {
-              if (service.containerId === event.containerId) {
-                return {
-                  ...service,
-                  cpu: event.stats.cpu,
-                  memory: event.stats.memoryPercent,
-                }
+          // Update service with latest stats
+          const services = prev.services.map((service) => {
+            if (service.containerId === event.containerId) {
+              return {
+                ...service,
+                cpu: event.stats.cpu,
+                memory: event.stats.memoryPercent,
               }
-              return service
-            })
-
-            return {
-              ...prev,
-              services,
-              cpuHistory,
-              memoryHistory,
-              networkHistory,
-              lastUpdate: timestamp,
             }
+            return service
           })
-        },
-      )
+
+          return {
+            ...prev,
+            services,
+            cpuHistory,
+            memoryHistory,
+            networkHistory,
+            lastUpdate: timestamp,
+          }
+        })
+      })
 
       // Connect to WebSocket
       wsClient.connect()
@@ -152,9 +146,7 @@ export function useDashboardData() {
         wsClient?.disconnect()
       }
     } catch (err) {
-      setError(
-        err instanceof Error ? err.message : 'Failed to connect to WebSocket',
-      )
+      setError(err instanceof Error ? err.message : 'Failed to connect to WebSocket')
       console.error('WebSocket error:', err)
     }
   }, [])

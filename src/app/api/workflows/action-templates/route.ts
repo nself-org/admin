@@ -18,12 +18,9 @@ export async function GET(): Promise<NextResponse> {
     return NextResponse.json(
       {
         success: false,
-        error:
-          error instanceof Error
-            ? error.message
-            : 'Failed to get action templates',
+        error: error instanceof Error ? error.message : 'Failed to get action templates',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

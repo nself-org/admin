@@ -11,11 +11,7 @@ import {
   XCircle,
 } from 'lucide-react'
 import { useCallback, useEffect, useState } from 'react'
-import type {
-  ProjectHealthStatus,
-  ProjectsDashboardResponse,
-  ProjectSummary,
-} from './types'
+import type { ProjectHealthStatus, ProjectsDashboardResponse, ProjectSummary } from './types'
 
 interface HealthConfig {
   label: string
@@ -73,19 +69,14 @@ function SummaryCard({ summary }: { summary: ProjectSummary }) {
         </span>
       </div>
 
-      <p
-        className="text-nself-text-muted mb-3 truncate font-mono text-xs"
-        title={project.path}
-      >
+      <p className="text-nself-text-muted mb-3 truncate font-mono text-xs" title={project.path}>
         {project.path}
       </p>
 
       <div className="text-nself-text-muted flex items-center gap-2 text-xs">
         <Server className="h-3.5 w-3.5" />
         <span>{servicesLabel}</span>
-        <span className="ml-auto tracking-wide uppercase">
-          {project.activeEnv}
-        </span>
+        <span className="ml-auto tracking-wide uppercase">{project.activeEnv}</span>
       </div>
 
       {summary.errorMessage !== null && (
@@ -129,9 +120,7 @@ export function ProjectsDashboard() {
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="nself-gradient-text text-xl font-semibold">
-            Projects Dashboard
-          </h1>
+          <h1 className="nself-gradient-text text-xl font-semibold">Projects Dashboard</h1>
           <p className="text-nself-text-muted text-xs">
             Cross-project health and resource snapshot
           </p>

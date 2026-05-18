@@ -85,7 +85,7 @@ export function lockAccount(request: NextRequest): void {
  */
 export function isRateLimited(
   request: NextRequest,
-  type: 'auth' | 'api' | 'heavy' = 'api',
+  type: 'auth' | 'api' | 'heavy' = 'api'
 ): boolean {
   const clientId = getClientId(request)
   const key = `${type}:${clientId}`
@@ -99,10 +99,7 @@ export function isRateLimited(
 
   // Clean up old entries
   for (const [k, entry] of rateLimitStore.entries()) {
-    if (
-      entry.resetTime < now &&
-      (!entry.lockedUntil || entry.lockedUntil < now)
-    ) {
+    if (entry.resetTime < now && (!entry.lockedUntil || entry.lockedUntil < now)) {
       rateLimitStore.delete(k)
     }
   }
@@ -149,7 +146,7 @@ export function isRateLimited(
  */
 export function getRateLimitInfo(
   request: NextRequest,
-  type: 'auth' | 'api' | 'heavy' = 'api',
+  type: 'auth' | 'api' | 'heavy' = 'api'
 ): {
   remaining: number
   resetTime: number
@@ -182,7 +179,7 @@ export function getRateLimitInfo(
  */
 export function clearRateLimit(
   request: NextRequest,
-  type: 'auth' | 'api' | 'heavy' = 'auth',
+  type: 'auth' | 'api' | 'heavy' = 'auth'
 ): void {
   const clientId = getClientId(request)
   const key = `${type}:${clientId}`
@@ -200,10 +197,7 @@ export function clearAllRateLimits(): void {
  * Check if request is rate limited using a per-minute window.
  * type: 'auth_strict' (10/min) | 'wizard' (60/min)
  */
-export function isRateLimitedPerMin(
-  request: NextRequest,
-  type: 'auth_strict' | 'wizard',
-): boolean {
+export function isRateLimitedPerMin(request: NextRequest, type: 'auth_strict' | 'wizard'): boolean {
   const clientId = getClientId(request)
   const key = `permin:${type}:${clientId}`
   const now = Date.now()
@@ -211,10 +205,7 @@ export function isRateLimitedPerMin(
 
   // Clean stale entries
   for (const [k, entry] of rateLimitStore.entries()) {
-    if (
-      entry.resetTime < now &&
-      (!entry.lockedUntil || entry.lockedUntil < now)
-    ) {
+    if (entry.resetTime < now && (!entry.lockedUntil || entry.lockedUntil < now)) {
       rateLimitStore.delete(k)
     }
   }
@@ -246,7 +237,7 @@ export function isRateLimitedPerMin(
  */
 export function getRateLimitInfoPerMin(
   request: NextRequest,
-  type: 'auth_strict' | 'wizard',
+  type: 'auth_strict' | 'wizard'
 ): { remaining: number; resetTime: number; limit: number } {
   const clientId = getClientId(request)
   const key = `permin:${type}:${clientId}`

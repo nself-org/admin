@@ -19,9 +19,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         const fs = await import('fs/promises')
         const path = await import('path')
         const entries = await fs.readdir(backupDir)
-        const sqlFiles = entries.filter((f) =>
-          /\.(sql|sql\.gz|tar\.gz|backup)$/i.test(f),
-        )
+        const sqlFiles = entries.filter((f) => /\.(sql|sql\.gz|tar\.gz|backup)$/i.test(f))
         for (const filename of sqlFiles) {
           const fullPath = path.join(backupDir, filename)
           try {
@@ -60,7 +58,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         success: false,
         error: 'Failed to list backups',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -75,10 +73,9 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     return NextResponse.json(
       {
         success: false,
-        error:
-          'Rate limit exceeded. Please wait before creating another backup.',
+        error: 'Rate limit exceeded. Please wait before creating another backup.',
       },
-      { status: 429 },
+      { status: 429 }
     )
   }
 
@@ -95,17 +92,12 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
             error: 'Validation failed',
             details: validation.errors.format(),
           },
-          { status: 400 },
+          { status: 400 }
         )
       }
 
-      const {
-        includeDatabase,
-        includeFiles,
-        includeConfig,
-        compression,
-        encryptionKey,
-      } = validation.data
+      const { includeDatabase, includeFiles, includeConfig, compression, encryptionKey } =
+        validation.data
 
       // Build backup command arguments
       const args = []
@@ -129,7 +121,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
             error: 'Backup failed',
             details: result.error,
           },
-          { status: 500 },
+          { status: 500 }
         )
       }
 
@@ -152,7 +144,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
             error: 'Validation failed',
             details: validation.errors.format(),
           },
-          { status: 400 },
+          { status: 400 }
         )
       }
 
@@ -166,16 +158,13 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       const normalizedPath = pathModule.normalize(backupFile)
 
       // Ensure backup file is within /backups directory
-      if (
-        !normalizedPath.startsWith(backupsDir + '/') ||
-        normalizedPath.includes('..')
-      ) {
+      if (!normalizedPath.startsWith(backupsDir + '/') || normalizedPath.includes('..')) {
         return NextResponse.json(
           {
             success: false,
             error: 'Invalid backup path - must be within /backups directory',
           },
-          { status: 400 },
+          { status: 400 }
         )
       }
 
@@ -188,7 +177,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
             success: false,
             error: 'Backup file not found',
           },
-          { status: 404 },
+          { status: 404 }
         )
       }
 
@@ -201,7 +190,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
             error: 'Restore failed',
             details: result.error,
           },
-          { status: 500 },
+          { status: 500 }
         )
       }
 
@@ -232,7 +221,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
             success: false,
             error: 'Failed to schedule backup',
           },
-          { status: 500 },
+          { status: 500 }
         )
       }
 
@@ -247,10 +236,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       })
     }
 
-    return NextResponse.json(
-      { success: false, error: 'Invalid action' },
-      { status: 400 },
-    )
+    return NextResponse.json({ success: false, error: 'Invalid action' }, { status: 400 })
   } catch (error) {
     return NextResponse.json(
       {
@@ -258,7 +244,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         error: 'Backup operation failed',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -272,10 +258,7 @@ export async function DELETE(request: NextRequest): Promise<NextResponse> {
     const { backupFile } = await request.json()
 
     if (!backupFile) {
-      return NextResponse.json(
-        { success: false, error: 'Backup file required' },
-        { status: 400 },
-      )
+      return NextResponse.json({ success: false, error: 'Backup file required' }, { status: 400 })
     }
 
     // Security: Prevent path traversal attacks
@@ -293,10 +276,7 @@ export async function DELETE(request: NextRequest): Promise<NextResponse> {
       normalizedPath.includes('..') ||
       resolvedPath !== normalizedPath
     ) {
-      return NextResponse.json(
-        { success: false, error: 'Invalid backup path' },
-        { status: 400 },
-      )
+      return NextResponse.json({ success: false, error: 'Invalid backup path' }, { status: 400 })
     }
 
     // Only allow deletion of backup files (*.sql, *.sql.gz, *.tar.gz)
@@ -304,7 +284,7 @@ export async function DELETE(request: NextRequest): Promise<NextResponse> {
     if (!/^[a-zA-Z0-9_-]+\.(sql|sql\.gz|tar\.gz|backup)$/i.test(filename)) {
       return NextResponse.json(
         { success: false, error: 'Invalid backup file type' },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -320,7 +300,7 @@ export async function DELETE(request: NextRequest): Promise<NextResponse> {
         success: false,
         error: 'Failed to delete backup',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

@@ -1,10 +1,6 @@
 'use client'
 
-import {
-  ReportBuilder,
-  ReportExecutionStatus,
-  ReportScheduleForm,
-} from '@/components/reports'
+import { ReportBuilder, ReportExecutionStatus, ReportScheduleForm } from '@/components/reports'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -12,21 +8,9 @@ import { PageContent } from '@/components/ui/page-content'
 import { PageHeader } from '@/components/ui/page-header'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import {
-  useReportExecutions,
-  useReportSchedules,
-  useReportTemplate,
-} from '@/hooks/useReports'
+import { useReportExecutions, useReportSchedules, useReportTemplate } from '@/hooks/useReports'
 import { useUrlState } from '@/hooks/useUrlState'
-import {
-  AlertCircle,
-  ArrowLeft,
-  Calendar,
-  Clock,
-  FileText,
-  History,
-  Play,
-} from 'lucide-react'
+import { AlertCircle, ArrowLeft, Calendar, Clock, FileText, History, Play } from 'lucide-react'
 import Link from 'next/link'
 import { useParams, useRouter } from 'next/navigation'
 import { Suspense, useState } from 'react'
@@ -38,20 +22,12 @@ function ReportDetailContent() {
   const router = useRouter()
   const templateId = params.id as string
 
-  const {
-    template,
-    isLoading: isLoadingTemplate,
-    isError,
-  } = useReportTemplate(templateId)
-  const { executions, isLoading: isLoadingExecutions } =
-    useReportExecutions(templateId)
-  const { schedules, isLoading: isLoadingSchedules } =
-    useReportSchedules(templateId)
+  const { template, isLoading: isLoadingTemplate, isError } = useReportTemplate(templateId)
+  const { executions, isLoading: isLoadingExecutions } = useReportExecutions(templateId)
+  const { schedules, isLoading: isLoadingSchedules } = useReportSchedules(templateId)
 
   const [viewMode, setViewMode] = useState<ViewMode>('build')
-  const [activeExecutionId, setActiveExecutionId] = useState<string | null>(
-    null,
-  )
+  const [activeExecutionId, setActiveExecutionId] = useState<string | null>(null)
   const [activeTab, setActiveTab] = useUrlState<string>('tab', 'generate')
 
   const handleGenerated = (executionId: string) => {
@@ -113,8 +89,7 @@ function ReportDetailContent() {
             <AlertCircle className="h-4 w-4" />
             <AlertTitle>Template not found</AlertTitle>
             <AlertDescription>
-              The report template you are looking for does not exist or has been
-              deleted.
+              The report template you are looking for does not exist or has been deleted.
             </AlertDescription>
           </Alert>
         </PageContent>
@@ -146,17 +121,11 @@ function ReportDetailContent() {
       <PageContent>
         <Tabs value={activeTab} onValueChange={setActiveTab}>
           <TabsList className="mb-6 border-zinc-700 bg-zinc-800/50">
-            <TabsTrigger
-              value="generate"
-              className="gap-2 data-[state=active]:bg-zinc-700"
-            >
+            <TabsTrigger value="generate" className="gap-2 data-[state=active]:bg-zinc-700">
               <Play className="h-4 w-4" />
               Generate
             </TabsTrigger>
-            <TabsTrigger
-              value="history"
-              className="gap-2 data-[state=active]:bg-zinc-700"
-            >
+            <TabsTrigger value="history" className="gap-2 data-[state=active]:bg-zinc-700">
               <History className="h-4 w-4" />
               History
               {executions.length > 0 && (
@@ -165,10 +134,7 @@ function ReportDetailContent() {
                 </span>
               )}
             </TabsTrigger>
-            <TabsTrigger
-              value="schedules"
-              className="gap-2 data-[state=active]:bg-zinc-700"
-            >
+            <TabsTrigger value="schedules" className="gap-2 data-[state=active]:bg-zinc-700">
               <Calendar className="h-4 w-4" />
               Schedules
               {schedules.length > 0 && (
@@ -182,18 +148,13 @@ function ReportDetailContent() {
           {/* Generate Tab */}
           <TabsContent value="generate" className="mt-0">
             {viewMode === 'build' && (
-              <ReportBuilder
-                templateId={templateId}
-                onGenerated={handleGenerated}
-              />
+              <ReportBuilder templateId={templateId} onGenerated={handleGenerated} />
             )}
 
             {viewMode === 'execution' && activeExecutionId && (
               <div className="space-y-6">
                 <div className="flex items-center justify-between">
-                  <h2 className="text-lg font-semibold text-white">
-                    Report Generation
-                  </h2>
+                  <h2 className="text-lg font-semibold text-white">Report Generation</h2>
                   <Button
                     variant="outline"
                     size="sm"
@@ -277,9 +238,7 @@ function ReportDetailContent() {
                               {execution.rowCount !== undefined && (
                                 <>
                                   <span>-</span>
-                                  <span>
-                                    {execution.rowCount.toLocaleString()} rows
-                                  </span>
+                                  <span>{execution.rowCount.toLocaleString()} rows</span>
                                 </>
                               )}
                             </div>
@@ -304,9 +263,7 @@ function ReportDetailContent() {
                 ) : (
                   <div className="flex flex-col items-center justify-center py-12 text-center">
                     <FileText className="mb-4 h-12 w-12 text-zinc-600" />
-                    <h3 className="mb-2 text-lg font-medium text-white">
-                      No executions yet
-                    </h3>
+                    <h3 className="mb-2 text-lg font-medium text-white">No executions yet</h3>
                     <p className="mb-4 text-sm text-zinc-400">
                       Generate your first report to see execution history
                     </p>
@@ -327,9 +284,7 @@ function ReportDetailContent() {
           <TabsContent value="schedules" className="mt-0">
             <div className="space-y-6">
               <div className="flex items-center justify-between">
-                <h2 className="text-lg font-semibold text-white">
-                  Scheduled Reports
-                </h2>
+                <h2 className="text-lg font-semibold text-white">Scheduled Reports</h2>
                 <Button
                   onClick={() => {
                     setViewMode('schedule')
@@ -351,10 +306,7 @@ function ReportDetailContent() {
               ) : schedules.length > 0 ? (
                 <div className="space-y-4">
                   {schedules.map((schedule) => (
-                    <Card
-                      key={schedule.id}
-                      className="border-zinc-700/50 bg-zinc-800/50"
-                    >
+                    <Card key={schedule.id} className="border-zinc-700/50 bg-zinc-800/50">
                       <CardContent className="p-4">
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-3">
@@ -380,10 +332,7 @@ function ReportDetailContent() {
                                   <>
                                     <span>-</span>
                                     <span>
-                                      Next:{' '}
-                                      {new Date(
-                                        schedule.nextRun,
-                                      ).toLocaleDateString()}
+                                      Next: {new Date(schedule.nextRun).toLocaleDateString()}
                                     </span>
                                   </>
                                 )}
@@ -415,9 +364,7 @@ function ReportDetailContent() {
                 <Card className="border-zinc-700/50 bg-zinc-800/50">
                   <CardContent className="flex flex-col items-center justify-center py-12 text-center">
                     <Calendar className="mb-4 h-12 w-12 text-zinc-600" />
-                    <h3 className="mb-2 text-lg font-medium text-white">
-                      No schedules configured
-                    </h3>
+                    <h3 className="mb-2 text-lg font-medium text-white">No schedules configured</h3>
                     <p className="mb-4 text-sm text-zinc-400">
                       Set up automatic report generation on a schedule
                     </p>

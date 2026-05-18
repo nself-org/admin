@@ -18,10 +18,9 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     return NextResponse.json(
       {
         success: false,
-        error:
-          error instanceof Error ? error.message : 'Failed to list templates',
+        error: error instanceof Error ? error.message : 'Failed to list templates',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -36,34 +35,22 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
     // Validate required fields
     if (!body.name) {
-      return NextResponse.json(
-        { success: false, error: 'name is required' },
-        { status: 400 },
-      )
+      return NextResponse.json({ success: false, error: 'name is required' }, { status: 400 })
     }
     if (!body.category) {
-      return NextResponse.json(
-        { success: false, error: 'category is required' },
-        { status: 400 },
-      )
+      return NextResponse.json({ success: false, error: 'category is required' }, { status: 400 })
     }
     if (!body.dataSource) {
-      return NextResponse.json(
-        { success: false, error: 'dataSource is required' },
-        { status: 400 },
-      )
+      return NextResponse.json({ success: false, error: 'dataSource is required' }, { status: 400 })
     }
     if (!body.columns || !Array.isArray(body.columns)) {
       return NextResponse.json(
         { success: false, error: 'columns array is required' },
-        { status: 400 },
+        { status: 400 }
       )
     }
     if (!body.createdBy) {
-      return NextResponse.json(
-        { success: false, error: 'createdBy is required' },
-        { status: 400 },
-      )
+      return NextResponse.json({ success: false, error: 'createdBy is required' }, { status: 400 })
     }
 
     const template = await reports.createTemplate({
@@ -84,16 +71,15 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         success: true,
         data: template,
       },
-      { status: 201 },
+      { status: 201 }
     )
   } catch (error) {
     return NextResponse.json(
       {
         success: false,
-        error:
-          error instanceof Error ? error.message : 'Failed to create template',
+        error: error instanceof Error ? error.message : 'Failed to create template',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

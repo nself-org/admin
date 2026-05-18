@@ -80,9 +80,7 @@ function ServerCard({ server }: { server: ControlPlaneServer }) {
             {server.host} · {server.role}
           </p>
           {server.reason && server.reason.length > 0 && (
-            <p className="mt-1 text-xs text-amber-600 dark:text-amber-400">
-              {server.reason[0]}
-            </p>
+            <p className="mt-1 text-xs text-amber-600 dark:text-amber-400">{server.reason[0]}</p>
           )}
         </div>
         <CapabilityBadge capability={server.capability} />
@@ -94,14 +92,10 @@ function ServerCard({ server }: { server: ControlPlaneServer }) {
 // ── Partial-access banner ─────────────────────────────────────────────────────
 
 function PartialAccessBanner({ servers }: { servers: ControlPlaneServer[] }) {
-  const limited = servers.filter(
-    (s) => s.capability === 'read-only' || s.capability === 'hidden',
-  )
+  const limited = servers.filter((s) => s.capability === 'read-only' || s.capability === 'hidden')
   if (limited.length === 0) return null
 
-  const reasons = Array.from(
-    new Set(limited.flatMap((s) => s.reason ?? [])),
-  ).slice(0, 3)
+  const reasons = Array.from(new Set(limited.flatMap((s) => s.reason ?? []))).slice(0, 3)
 
   return (
     <div className="mb-6 rounded-xl border border-amber-200 bg-amber-50 p-4 dark:border-amber-800 dark:bg-amber-900/20">
@@ -122,8 +116,8 @@ function PartialAccessBanner({ servers }: { servers: ControlPlaneServer[] }) {
             </ul>
           )}
           <p className="mt-1 text-xs text-amber-600 dark:text-amber-500">
-            Run <code className="font-mono">nself env target probe</code> to
-            diagnose and fix access.
+            Run <code className="font-mono">nself env target probe</code> to diagnose and fix
+            access.
           </p>
         </div>
       </div>
@@ -167,8 +161,8 @@ function AddServerModal({ onClose, onAdded }: AddServerModalProps) {
       if (!dialog) return
       const focusable = Array.from(
         dialog.querySelectorAll<HTMLElement>(
-          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
-        ),
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        )
       ).filter((el) => !el.hasAttribute('disabled'))
       if (focusable.length === 0) return
       const first = focusable[0]
@@ -237,10 +231,7 @@ function AddServerModal({ onClose, onAdded }: AddServerModalProps) {
     >
       <div className="w-full max-w-md rounded-2xl border border-zinc-200 bg-white p-6 shadow-2xl dark:border-zinc-700 dark:bg-zinc-900">
         <div className="mb-4 flex items-center justify-between">
-          <h2
-            id="add-server-title"
-            className="text-lg font-semibold text-zinc-900 dark:text-white"
-          >
+          <h2 id="add-server-title" className="text-lg font-semibold text-zinc-900 dark:text-white">
             Add Server to Inventory
           </h2>
           <button
@@ -267,7 +258,7 @@ function AddServerModal({ onClose, onAdded }: AddServerModalProps) {
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="prod-01"
-              className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500 dark:border-zinc-600 dark:bg-zinc-800 dark:text-white"
+              className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 focus:border-sky-500 focus:ring-1 focus:ring-sky-500 focus:outline-none dark:border-zinc-600 dark:bg-zinc-800 dark:text-white"
             />
           </div>
           <div>
@@ -283,7 +274,7 @@ function AddServerModal({ onClose, onAdded }: AddServerModalProps) {
               value={host}
               onChange={(e) => setHost(e.target.value)}
               placeholder="5.75.235.42"
-              className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500 dark:border-zinc-600 dark:bg-zinc-800 dark:text-white"
+              className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 focus:border-sky-500 focus:ring-1 focus:ring-sky-500 focus:outline-none dark:border-zinc-600 dark:bg-zinc-800 dark:text-white"
             />
           </div>
           <div>
@@ -297,7 +288,7 @@ function AddServerModal({ onClose, onAdded }: AddServerModalProps) {
               id="add-server-role"
               value={role}
               onChange={(e) => setRole(e.target.value)}
-              className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500 dark:border-zinc-600 dark:bg-zinc-800 dark:text-white"
+              className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 focus:border-sky-500 focus:ring-1 focus:ring-sky-500 focus:outline-none dark:border-zinc-600 dark:bg-zinc-800 dark:text-white"
             >
               <option value="primary">primary</option>
               <option value="secondary">secondary</option>
@@ -310,15 +301,14 @@ function AddServerModal({ onClose, onAdded }: AddServerModalProps) {
               htmlFor="add-server-ssh-user"
               className="mb-1 block text-xs font-medium text-zinc-600 dark:text-zinc-400"
             >
-              SSH User{' '}
-              <span className="text-zinc-400">(optional)</span>
+              SSH User <span className="text-zinc-400">(optional)</span>
             </label>
             <input
               id="add-server-ssh-user"
               value={sshUser}
               onChange={(e) => setSshUser(e.target.value)}
               placeholder="deploy"
-              className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500 dark:border-zinc-600 dark:bg-zinc-800 dark:text-white"
+              className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 focus:border-sky-500 focus:ring-1 focus:ring-sky-500 focus:outline-none dark:border-zinc-600 dark:bg-zinc-800 dark:text-white"
             />
           </div>
           <div>
@@ -334,7 +324,7 @@ function AddServerModal({ onClose, onAdded }: AddServerModalProps) {
               value={sshKeyPath}
               onChange={(e) => setSshKeyPath(e.target.value)}
               placeholder="/home/user/.ssh/id_rsa"
-              className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500 dark:border-zinc-600 dark:bg-zinc-800 dark:text-white"
+              className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 focus:border-sky-500 focus:ring-1 focus:ring-sky-500 focus:outline-none dark:border-zinc-600 dark:bg-zinc-800 dark:text-white"
             />
           </div>
 
@@ -455,9 +445,8 @@ export default function EnvironmentsPage() {
               nself is not responding
             </h2>
             <p className="mt-2 max-w-sm text-sm text-zinc-500 dark:text-zinc-400">
-              The nself CLI could not be reached. Make sure{' '}
-              <code className="font-mono">nself</code> is installed and your
-              project is configured.
+              The nself CLI could not be reached. Make sure <code className="font-mono">nself</code>{' '}
+              is installed and your project is configured.
             </p>
             <button
               onClick={() => fetchInventory()}
@@ -494,7 +483,7 @@ export default function EnvironmentsPage() {
 
   const allServers = inventory?.environments.flatMap((e) => e.servers) ?? []
   const hasPartialAccess = allServers.some(
-    (s) => s.capability === 'read-only' || s.capability === 'hidden',
+    (s) => s.capability === 'read-only' || s.capability === 'hidden'
   )
 
   // ── Error state ────────────────────────────────────────────────────────────
@@ -579,15 +568,9 @@ export default function EnvironmentsPage() {
 
         <div className="grid gap-6 md:grid-cols-2">
           {inventory.environments.map((env) => {
-            const visibleServers = env.servers.filter(
-              (s) => s.capability !== 'hidden',
-            )
-            const allManage = visibleServers.every(
-              (s) => s.capability === 'manage',
-            )
-            const hasReadOnly = visibleServers.some(
-              (s) => s.capability === 'read-only',
-            )
+            const visibleServers = env.servers.filter((s) => s.capability !== 'hidden')
+            const allManage = visibleServers.every((s) => s.capability === 'manage')
+            const hasReadOnly = visibleServers.some((s) => s.capability === 'read-only')
 
             return (
               <div
@@ -606,7 +589,7 @@ export default function EnvironmentsPage() {
                       <Server className="h-5 w-5 text-white" aria-hidden="true" />
                     </div>
                     <div>
-                      <h3 className="font-semibold capitalize text-zinc-900 dark:text-white">
+                      <h3 className="font-semibold text-zinc-900 capitalize dark:text-white">
                         {env.name}
                       </h3>
                       <p className="text-xs text-zinc-500 dark:text-zinc-400">
@@ -628,7 +611,10 @@ export default function EnvironmentsPage() {
                         partial
                       </span>
                     )}
-                    <ChevronRight className="h-4 w-4 text-zinc-400 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
+                    <ChevronRight
+                      className="h-4 w-4 text-zinc-400 transition-transform group-hover:translate-x-0.5"
+                      aria-hidden="true"
+                    />
                   </div>
                 </Link>
 
@@ -653,40 +639,30 @@ export default function EnvironmentsPage() {
 
         {/* CLI reference */}
         <div className="mt-8 rounded-xl border border-zinc-200 bg-white p-5 shadow-sm dark:border-zinc-700 dark:bg-zinc-800">
-          <h3 className="mb-3 text-sm font-semibold text-zinc-900 dark:text-white">
-            CLI Commands
-          </h3>
+          <h3 className="mb-3 text-sm font-semibold text-zinc-900 dark:text-white">CLI Commands</h3>
           <div className="space-y-1 font-mono text-xs text-zinc-500 dark:text-zinc-400">
             <p>
-              <span className="text-sky-500">nself env target list</span> — list
-              inventory
+              <span className="text-sky-500">nself env target list</span> — list inventory
             </p>
             <p>
-              <span className="text-sky-500">nself env target probe</span> —
-              probe capability
+              <span className="text-sky-500">nself env target probe</span> — probe capability
             </p>
             <p>
               <span className="text-sky-500">
-                nself env target add &lt;name&gt; --host &lt;host&gt; --role
-                &lt;role&gt;
+                nself env target add &lt;name&gt; --host &lt;host&gt; --role &lt;role&gt;
               </span>{' '}
               — add server
             </p>
             <p>
-              <span className="text-sky-500">
-                nself deploy &lt;env&gt; --server &lt;name&gt;
-              </span>{' '}
-              — deploy to server
+              <span className="text-sky-500">nself deploy &lt;env&gt; --server &lt;name&gt;</span> —
+              deploy to server
             </p>
           </div>
         </div>
       </div>
 
       {showAddModal && (
-        <AddServerModal
-          onClose={() => setShowAddModal(false)}
-          onAdded={() => fetchInventory()}
-        />
+        <AddServerModal onClose={() => setShowAddModal(false)} onAdded={() => fetchInventory()} />
       )}
     </>
   )

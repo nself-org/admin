@@ -75,8 +75,8 @@ async function getContrastIssues(page: Page): Promise<string[]> {
     const issues: string[] = []
     const elements = Array.from(
       document.querySelectorAll<HTMLElement>(
-        'p, span, h1, h2, h3, h4, h5, h6, a, button, label, li',
-      ),
+        'p, span, h1, h2, h3, h4, h5, h6, a, button, label, li'
+      )
     )
 
     for (const el of elements) {
@@ -116,7 +116,7 @@ async function getContrastIssues(page: Page): Promise<string[]> {
       if (contrast < 3.0) {
         issues.push(
           `Low contrast (${contrast.toFixed(2)}:1) on: "${text.substring(0, 30)}" ` +
-            `[color: ${color}, bg: ${bgColor}]`,
+            `[color: ${color}, bg: ${bgColor}]`
         )
       }
     }
@@ -131,28 +131,19 @@ async function hasBrandColor(page: Page): Promise<boolean> {
       const allElements = Array.from(document.querySelectorAll('*'))
       for (const el of allElements) {
         const style = window.getComputedStyle(el)
-        for (const prop of [
-          'color',
-          'backgroundColor',
-          'borderColor',
-          'outlineColor',
-        ]) {
+        for (const prop of ['color', 'backgroundColor', 'borderColor', 'outlineColor']) {
           const val = style.getPropertyValue(prop)
           const match = val.match(/\d+/g)
           if (!match || match.length < 3) continue
           const [er, eg, eb] = match.map(Number) as [number, number, number]
-          if (
-            Math.abs(er - r) < 20 &&
-            Math.abs(eg - g) < 20 &&
-            Math.abs(eb - b) < 20
-          ) {
+          if (Math.abs(er - r) < 20 && Math.abs(eg - g) < 20 && Math.abs(eb - b) < 20) {
             return true
           }
         }
       }
       return false
     },
-    [BRAND_R, BRAND_G, BRAND_B],
+    [BRAND_R, BRAND_G, BRAND_B]
   )
 }
 
@@ -182,10 +173,7 @@ test.describe('T-0454: Admin dark/light mode', () => {
           await page.goto(adminPage.path, { timeout: 8_000 })
           await page.waitForLoadState('networkidle')
         } catch {
-          test.skip(
-            true,
-            `Admin not running on port 3021 or ${adminPage.path} not available`,
-          )
+          test.skip(true, `Admin not running on port 3021 or ${adminPage.path} not available`)
         }
       })
 
@@ -202,13 +190,13 @@ test.describe('T-0454: Admin dark/light mode', () => {
 
         if (issues.length > 0) {
           console.warn(
-            `[admin/${adminPage.name}] Light mode contrast issues:\n  ${issues.slice(0, 5).join('\n  ')}`,
+            `[admin/${adminPage.name}] Light mode contrast issues:\n  ${issues.slice(0, 5).join('\n  ')}`
           )
         }
 
         expect(
           issues,
-          `${adminPage.name} light mode: ${issues.length} contrast issues`,
+          `${adminPage.name} light mode: ${issues.length} contrast issues`
         ).toHaveLength(0)
       })
 
@@ -221,13 +209,10 @@ test.describe('T-0454: Admin dark/light mode', () => {
         await page.setViewportSize({ width: 1440, height: 900 })
         await page.waitForTimeout(300)
 
-        await expect(page).toHaveScreenshot(
-          `admin-${adminPage.name}-light.png`,
-          {
-            threshold: 0.001,
-            animations: 'disabled',
-          },
-        )
+        await expect(page).toHaveScreenshot(`admin-${adminPage.name}-light.png`, {
+          threshold: 0.001,
+          animations: 'disabled',
+        })
       })
 
       // -----------------------------------------------------------------------
@@ -242,13 +227,13 @@ test.describe('T-0454: Admin dark/light mode', () => {
 
         if (issues.length > 0) {
           console.warn(
-            `[admin/${adminPage.name}] Dark mode contrast issues:\n  ${issues.slice(0, 5).join('\n  ')}`,
+            `[admin/${adminPage.name}] Dark mode contrast issues:\n  ${issues.slice(0, 5).join('\n  ')}`
           )
         }
 
         expect(
           issues,
-          `${adminPage.name} dark mode: ${issues.length} contrast issues`,
+          `${adminPage.name} dark mode: ${issues.length} contrast issues`
         ).toHaveLength(0)
       })
 
@@ -262,13 +247,10 @@ test.describe('T-0454: Admin dark/light mode', () => {
         await page.setViewportSize({ width: 1440, height: 900 })
         await page.waitForTimeout(300)
 
-        await expect(page).toHaveScreenshot(
-          `admin-${adminPage.name}-dark.png`,
-          {
-            threshold: 0.001,
-            animations: 'disabled',
-          },
-        )
+        await expect(page).toHaveScreenshot(`admin-${adminPage.name}-dark.png`, {
+          threshold: 0.001,
+          animations: 'disabled',
+        })
       })
 
       // -----------------------------------------------------------------------
@@ -284,7 +266,7 @@ test.describe('T-0454: Admin dark/light mode', () => {
         if (!hasBrand) {
           console.warn(
             `[admin/${adminPage.name}] Brand color #6366F1 not found in light mode ` +
-              `— verify theme tokens include indigo primary`,
+              `— verify theme tokens include indigo primary`
           )
         }
 
@@ -305,7 +287,7 @@ test.describe('T-0454: Admin dark/light mode', () => {
         if (!hasBrand) {
           console.warn(
             `[admin/${adminPage.name}] Brand color #6366F1 not found in dark mode ` +
-              `— verify dark theme tokens include indigo primary`,
+              `— verify dark theme tokens include indigo primary`
           )
         }
 

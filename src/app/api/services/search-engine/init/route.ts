@@ -2,13 +2,7 @@ import { executeNselfCommand } from '@/lib/nselfCLI'
 import { requireAuth } from '@/lib/require-auth'
 import { NextRequest, NextResponse } from 'next/server'
 
-const ALLOWED_ENGINES = [
-  'meilisearch',
-  'typesense',
-  'sonic',
-  'elasticsearch',
-  'algolia',
-]
+const ALLOWED_ENGINES = ['meilisearch', 'typesense', 'sonic', 'elasticsearch', 'algolia']
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
   const authError = await requireAuth(request)
@@ -25,15 +19,13 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           error: 'Invalid search engine',
           details: `Engine must be one of: ${ALLOWED_ENGINES.join(', ')}`,
         },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
-    const result = await executeNselfCommand(
-      'service',
-      ['search', 'init', `--engine=${engine}`],
-      { timeout: 120000 },
-    )
+    const result = await executeNselfCommand('service', ['search', 'init', `--engine=${engine}`], {
+      timeout: 120000,
+    })
 
     if (!result.success) {
       return NextResponse.json(
@@ -42,7 +34,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           error: 'Search engine initialization failed',
           details: result.error || result.stderr || 'Unknown error',
         },
-        { status: 500 },
+        { status: 500 }
       )
     }
 
@@ -57,7 +49,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         error: 'Search engine initialization failed',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

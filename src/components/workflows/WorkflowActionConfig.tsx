@@ -1,13 +1,7 @@
 'use client'
 
 import { Button } from '@/components/ui/button'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import {
@@ -62,11 +56,7 @@ const actionIcons: Record<ActionType, React.ReactNode> = {
   workflow: <Workflow className="h-4 w-4" />,
 }
 
-export function WorkflowActionConfig({
-  action,
-  onChange,
-  onClose,
-}: WorkflowActionConfigProps) {
+export function WorkflowActionConfig({ action, onChange, onClose }: WorkflowActionConfigProps) {
   const updateConfig = (key: string, value: unknown) => {
     onChange({
       ...action,
@@ -111,16 +101,10 @@ export function WorkflowActionConfig({
               <Label>Headers (JSON)</Label>
               <Textarea
                 placeholder='{ "Authorization": "Bearer {{token}}" }'
-                value={
-                  action.config.headers
-                    ? JSON.stringify(action.config.headers, null, 2)
-                    : ''
-                }
+                value={action.config.headers ? JSON.stringify(action.config.headers, null, 2) : ''}
                 onChange={(e) => {
                   try {
-                    const headers = e.target.value
-                      ? JSON.parse(e.target.value)
-                      : undefined
+                    const headers = e.target.value ? JSON.parse(e.target.value) : undefined
                     updateConfig('headers', headers)
                   } catch (_error) {
                     // Invalid JSON
@@ -133,16 +117,10 @@ export function WorkflowActionConfig({
               <Label>Body (JSON)</Label>
               <Textarea
                 placeholder='{ "data": "{{input}}" }'
-                value={
-                  action.config.body
-                    ? JSON.stringify(action.config.body, null, 2)
-                    : ''
-                }
+                value={action.config.body ? JSON.stringify(action.config.body, null, 2) : ''}
                 onChange={(e) => {
                   try {
-                    const body = e.target.value
-                      ? JSON.parse(e.target.value)
-                      : undefined
+                    const body = e.target.value ? JSON.parse(e.target.value) : undefined
                     updateConfig('body', body)
                   } catch (_error) {
                     // Invalid JSON
@@ -249,16 +227,10 @@ export function WorkflowActionConfig({
               <Label>Parameters (JSON array)</Label>
               <Input
                 placeholder='["{{userId}}"]'
-                value={
-                  action.config.params
-                    ? JSON.stringify(action.config.params)
-                    : ''
-                }
+                value={action.config.params ? JSON.stringify(action.config.params) : ''}
                 onChange={(e) => {
                   try {
-                    const params = e.target.value
-                      ? JSON.parse(e.target.value)
-                      : undefined
+                    const params = e.target.value ? JSON.parse(e.target.value) : undefined
                     updateConfig('params', params)
                   } catch (_error) {
                     // Invalid JSON
@@ -293,16 +265,10 @@ export function WorkflowActionConfig({
               <Label>Environment Variables (JSON)</Label>
               <Textarea
                 placeholder='{ "NODE_ENV": "production" }'
-                value={
-                  action.config.env
-                    ? JSON.stringify(action.config.env, null, 2)
-                    : ''
-                }
+                value={action.config.env ? JSON.stringify(action.config.env, null, 2) : ''}
                 onChange={(e) => {
                   try {
-                    const env = e.target.value
-                      ? JSON.parse(e.target.value)
-                      : undefined
+                    const env = e.target.value ? JSON.parse(e.target.value) : undefined
                     updateConfig('env', env)
                   } catch (_error) {
                     // Invalid JSON
@@ -327,8 +293,7 @@ export function WorkflowActionConfig({
                 rows={5}
               />
               <p className="text-xs text-zinc-500 dark:text-zinc-400">
-                JavaScript expression. Use `input` to access the previous
-                step&apos;s output.
+                JavaScript expression. Use `input` to access the previous step&apos;s output.
               </p>
             </div>
           </div>
@@ -362,9 +327,7 @@ export function WorkflowActionConfig({
                   type="number"
                   placeholder="5"
                   value={(action.config.duration as number) || ''}
-                  onChange={(e) =>
-                    updateConfig('duration', parseInt(e.target.value) || 0)
-                  }
+                  onChange={(e) => updateConfig('duration', parseInt(e.target.value) || 0)}
                 />
               </div>
               <div className="space-y-2">
@@ -465,9 +428,7 @@ export function WorkflowActionConfig({
               <CardTitle className="text-base">
                 <Input
                   value={action.name}
-                  onChange={(e) =>
-                    onChange({ ...action, name: e.target.value })
-                  }
+                  onChange={(e) => onChange({ ...action, name: e.target.value })}
                   className="h-auto border-0 p-0 text-base font-semibold shadow-none focus-visible:ring-0"
                 />
               </CardTitle>
@@ -582,8 +543,7 @@ export function WorkflowActionConfig({
                         ...action.retryConfig,
                         maxRetries: action.retryConfig?.maxRetries || 3,
                         retryDelay: action.retryConfig?.retryDelay || 1000,
-                        backoffMultiplier:
-                          parseFloat(e.target.value) || undefined,
+                        backoffMultiplier: parseFloat(e.target.value) || undefined,
                       },
                     })
                   }

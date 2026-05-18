@@ -15,15 +15,7 @@ import {
 } from '@/components/ui/select'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Textarea } from '@/components/ui/textarea'
-import {
-  AlertCircle,
-  Copy,
-  Download,
-  FileText,
-  Filter,
-  PlayCircle,
-  RefreshCw,
-} from 'lucide-react'
+import { AlertCircle, Copy, Download, FileText, Filter, PlayCircle, RefreshCw } from 'lucide-react'
 import { Suspense, useState } from 'react'
 
 interface LogEntry {
@@ -105,8 +97,7 @@ function LokiContent() {
   const handleExport = () => {
     const logText = logs
       .map(
-        (log) =>
-          `[${log.timestamp}] [${log.level.toUpperCase()}] [${log.service}] ${log.message}`,
+        (log) => `[${log.timestamp}] [${log.level.toUpperCase()}] [${log.service}] ${log.message}`
       )
       .join('\n')
     const blob = new Blob([logText], { type: 'text/plain' })
@@ -126,12 +117,8 @@ function LokiContent() {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold text-zinc-900 dark:text-white">
-          Loki Logs
-        </h1>
-        <p className="mt-2 text-zinc-600 dark:text-zinc-400">
-          Query and stream logs using LogQL
-        </p>
+        <h1 className="text-3xl font-bold text-zinc-900 dark:text-white">Loki Logs</h1>
+        <p className="mt-2 text-zinc-600 dark:text-zinc-400">Query and stream logs using LogQL</p>
       </div>
 
       {/* Query Builder */}
@@ -201,12 +188,7 @@ function LokiContent() {
           <div>
             <div className="mb-2 flex items-center justify-between">
               <Label htmlFor="query">LogQL Query</Label>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={handleCopyQuery}
-                disabled={!query}
-              >
+              <Button variant="ghost" size="sm" onClick={handleCopyQuery} disabled={!query}>
                 <Copy className="mr-2 h-4 w-4" />
                 Copy
               </Button>
@@ -228,11 +210,7 @@ function LokiContent() {
               {loading ? 'Executing...' : 'Execute Query'}
             </Button>
             {logs.length > 0 && (
-              <Button
-                variant="outline"
-                onClick={handleExport}
-                disabled={loading}
-              >
+              <Button variant="outline" onClick={handleExport} disabled={loading}>
                 <Download className="mr-2 h-4 w-4" />
                 Export Logs
               </Button>
@@ -247,9 +225,7 @@ function LokiContent() {
           <div className="flex items-center gap-3">
             <AlertCircle className="h-5 w-5 text-red-600 dark:text-red-400" />
             <div className="flex-1">
-              <h3 className="font-medium text-red-900 dark:text-red-100">
-                Query Failed
-              </h3>
+              <h3 className="font-medium text-red-900 dark:text-red-100">Query Failed</h3>
               <p className="text-sm text-red-700 dark:text-red-200">{error}</p>
             </div>
             <Button variant="outline" onClick={handleExecuteQuery}>
@@ -269,12 +245,8 @@ function LokiContent() {
       ) : logs.length > 0 ? (
         <Card className="p-6">
           <div className="mb-4 flex items-center justify-between">
-            <h2 className="text-lg font-semibold text-zinc-900 dark:text-white">
-              Log Stream
-            </h2>
-            <span className="text-sm text-zinc-500 dark:text-zinc-400">
-              {logs.length} entries
-            </span>
+            <h2 className="text-lg font-semibold text-zinc-900 dark:text-white">Log Stream</h2>
+            <span className="text-sm text-zinc-500 dark:text-zinc-400">{logs.length} entries</span>
           </div>
 
           <LogViewer logs={logs} height="600px" />

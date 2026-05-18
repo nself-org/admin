@@ -48,11 +48,7 @@ export interface ControlPlaneInventory {
 
 export type Environment = 'local' | 'development' | 'staging' | 'production'
 
-export type DeploymentStrategy =
-  | 'standard'
-  | 'rolling'
-  | 'canary'
-  | 'blue-green'
+export type DeploymentStrategy = 'standard' | 'rolling' | 'canary' | 'blue-green'
 
 export interface EnvironmentInfo {
   name: Environment
@@ -83,12 +79,7 @@ export interface EnvironmentDiffEntry {
   local?: string
   staging?: string
   production?: string
-  status:
-    | 'same'
-    | 'different'
-    | 'missing_local'
-    | 'missing_staging'
-    | 'missing_production'
+  status: 'same' | 'different' | 'missing_local' | 'missing_staging' | 'missing_production'
   isSecret: boolean
 }
 
@@ -120,13 +111,7 @@ export interface Deployment {
   id: string
   environment: Environment
   strategy: DeploymentStrategy
-  status:
-    | 'pending'
-    | 'in_progress'
-    | 'success'
-    | 'failed'
-    | 'rolled_back'
-    | 'rolling_back'
+  status: 'pending' | 'in_progress' | 'success' | 'failed' | 'rolled_back' | 'rolling_back'
   version: string
   commit: string
   branch: string

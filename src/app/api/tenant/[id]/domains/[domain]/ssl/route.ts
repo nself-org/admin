@@ -7,10 +7,7 @@ interface RouteParams {
   params: Promise<{ id: string; domain: string }>
 }
 
-export async function POST(
-  request: NextRequest,
-  { params }: RouteParams,
-): Promise<NextResponse> {
+export async function POST(request: NextRequest, { params }: RouteParams): Promise<NextResponse> {
   const authError = await requireAuth(request)
   if (authError) return authError
 
@@ -32,7 +29,7 @@ export async function POST(
           error: 'Failed to provision SSL certificate',
           details: result.error || 'Unknown error',
         },
-        { status: 500 },
+        { status: 500 }
       )
     }
 
@@ -52,15 +49,12 @@ export async function POST(
         error: 'Failed to provision SSL certificate',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
 
-export async function GET(
-  request: NextRequest,
-  { params }: RouteParams,
-): Promise<NextResponse> {
+export async function GET(request: NextRequest, { params }: RouteParams): Promise<NextResponse> {
   try {
     const { id, domain } = await params
     const decodedDomain = decodeURIComponent(domain)
@@ -84,7 +78,7 @@ export async function GET(
         error: 'Failed to get SSL status',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

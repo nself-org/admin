@@ -1,12 +1,6 @@
 'use client'
 
-import {
-  AlertTriangle,
-  CheckCircle2,
-  Clock,
-  Loader2,
-  RefreshCw,
-} from 'lucide-react'
+import { AlertTriangle, CheckCircle2, Clock, Loader2, RefreshCw } from 'lucide-react'
 import { useCallback, useEffect, useState } from 'react'
 
 // Shape returned by GET /api/deprecation-registry.json on ping.nself.org
@@ -78,21 +72,18 @@ export default function APIVersioningPage() {
   }, [load])
 
   const filtered = registry?.plugins.filter((p) =>
-    p.name.toLowerCase().includes(search.toLowerCase()),
+    p.name.toLowerCase().includes(search.toLowerCase())
   )
 
   const totalDeprecated =
-    registry?.plugins.reduce((n, p) => n + p.deprecated_endpoints.length, 0) ??
-    0
+    registry?.plugins.reduce((n, p) => n + p.deprecated_endpoints.length, 0) ?? 0
 
   return (
     <div className="mx-auto max-w-5xl space-y-6 p-6">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="nself-gradient-text text-xl font-semibold">
-            API Versioning
-          </h1>
+          <h1 className="nself-gradient-text text-xl font-semibold">API Versioning</h1>
           <p className="text-nself-text-muted mt-1 text-sm">
             Plugin API versions and deprecation sunset calendar (G2&ndash;G11)
           </p>
@@ -115,28 +106,18 @@ export default function APIVersioningPage() {
       {registry && (
         <div className="grid grid-cols-3 gap-4">
           <div className="rounded-lg border border-white/10 bg-white/5 p-4">
-            <p className="text-nself-text-muted text-xs tracking-wide uppercase">
-              Plugins tracked
-            </p>
-            <p className="mt-1 text-2xl font-semibold text-white">
-              {registry.plugins.length}
-            </p>
+            <p className="text-nself-text-muted text-xs tracking-wide uppercase">Plugins tracked</p>
+            <p className="mt-1 text-2xl font-semibold text-white">{registry.plugins.length}</p>
           </div>
           <div className="rounded-lg border border-white/10 bg-white/5 p-4">
             <p className="text-nself-text-muted text-xs tracking-wide uppercase">
               Deprecated endpoints
             </p>
-            <p className="mt-1 text-2xl font-semibold text-amber-400">
-              {totalDeprecated}
-            </p>
+            <p className="mt-1 text-2xl font-semibold text-amber-400">{totalDeprecated}</p>
           </div>
           <div className="rounded-lg border border-white/10 bg-white/5 p-4">
-            <p className="text-nself-text-muted text-xs tracking-wide uppercase">
-              LTS window ends
-            </p>
-            <p className="mt-1 text-sm font-semibold text-white">
-              {registry.lts_window_end}
-            </p>
+            <p className="text-nself-text-muted text-xs tracking-wide uppercase">LTS window ends</p>
+            <p className="mt-1 text-sm font-semibold text-white">{registry.lts_window_end}</p>
           </div>
         </div>
       )}
@@ -183,49 +164,26 @@ export default function APIVersioningPage() {
               {filtered.map((plugin) => (
                 <>
                   <tr key={plugin.name} className="hover:bg-white/5">
-                    <td className="px-4 py-3 font-mono text-white">
-                      {plugin.name}
-                    </td>
-                    <td className="px-4 py-3 font-mono text-sky-400">
-                      v{plugin.api_version}
-                    </td>
+                    <td className="px-4 py-3 font-mono text-white">{plugin.name}</td>
+                    <td className="px-4 py-3 font-mono text-sky-400">v{plugin.api_version}</td>
                     <td className="px-4 py-3">
                       <StatusBadge count={plugin.deprecated_endpoints.length} />
                     </td>
                     <td className="px-4 py-3 text-white/50">
                       {plugin.deprecated_endpoints.length === 0
                         ? '—'
-                        : plugin.deprecated_endpoints
-                            .map((ep) => ep.path)
-                            .join(', ')}
+                        : plugin.deprecated_endpoints.map((ep) => ep.path).join(', ')}
                     </td>
                   </tr>
                   {plugin.deprecated_endpoints.map((ep) => (
-                    <tr
-                      key={`${plugin.name}-${ep.path}`}
-                      className="bg-amber-900/10"
-                    >
-                      <td
-                        className="px-4 py-2 pl-8 text-xs text-white/40"
-                        colSpan={1}
-                      />
-                      <td
-                        className="px-4 py-2 text-xs text-white/40"
-                        colSpan={3}
-                      >
-                        <span className="mr-3 font-mono text-amber-400">
-                          {ep.path}
-                        </span>
-                        <span className="mr-3">
-                          deprecated in v{ep.deprecated_in}
-                        </span>
-                        <span className="mr-3 text-red-400">
-                          removed in v{ep.removed_in}
-                        </span>
+                    <tr key={`${plugin.name}-${ep.path}`} className="bg-amber-900/10">
+                      <td className="px-4 py-2 pl-8 text-xs text-white/40" colSpan={1} />
+                      <td className="px-4 py-2 text-xs text-white/40" colSpan={3}>
+                        <span className="mr-3 font-mono text-amber-400">{ep.path}</span>
+                        <span className="mr-3">deprecated in v{ep.deprecated_in}</span>
+                        <span className="mr-3 text-red-400">removed in v{ep.removed_in}</span>
                         {ep.replacement && (
-                          <span className="mr-3 text-green-400">
-                            use: {ep.replacement}
-                          </span>
+                          <span className="mr-3 text-green-400">use: {ep.replacement}</span>
                         )}
                         {ep.sunset_header && (
                           <span className="inline-flex items-center gap-1 text-white/30">
@@ -244,9 +202,7 @@ export default function APIVersioningPage() {
       )}
 
       {filtered && filtered.length === 0 && !loading && (
-        <p className="text-sm text-white/40">
-          No plugins match &ldquo;{search}&rdquo;.
-        </p>
+        <p className="text-sm text-white/40">No plugins match &ldquo;{search}&rdquo;.</p>
       )}
 
       {/* Footer */}
@@ -263,9 +219,7 @@ export default function APIVersioningPage() {
             API versioning docs
           </a>
           {' · '}
-          <code className="rounded bg-white/5 px-1">
-            nself api changelog &lt;plugin&gt;
-          </code>
+          <code className="rounded bg-white/5 px-1">nself api changelog &lt;plugin&gt;</code>
         </p>
       )}
     </div>

@@ -8,10 +8,7 @@ interface RouteParams {
   params: Promise<{ id: string }>
 }
 
-export async function PUT(
-  request: NextRequest,
-  { params }: RouteParams,
-): Promise<NextResponse> {
+export async function PUT(request: NextRequest, { params }: RouteParams): Promise<NextResponse> {
   const authError = await requireAuth(request)
   if (authError) return authError
 
@@ -27,18 +24,12 @@ export async function PUT(
           error: 'No file provided',
           details: 'A logo file is required',
         },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
     // Validate MIME type — only allow image formats
-    const allowedTypes = [
-      'image/png',
-      'image/jpeg',
-      'image/webp',
-      'image/gif',
-      'image/svg+xml',
-    ]
+    const allowedTypes = ['image/png', 'image/jpeg', 'image/webp', 'image/gif', 'image/svg+xml']
     if (!allowedTypes.includes(file.type)) {
       return NextResponse.json(
         {
@@ -46,7 +37,7 @@ export async function PUT(
           error: 'Invalid file type',
           details: `Allowed types: ${allowedTypes.join(', ')}`,
         },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -59,7 +50,7 @@ export async function PUT(
           error: 'File too large',
           details: 'Logo must be 5 MB or smaller',
         },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -89,7 +80,7 @@ export async function PUT(
           error: 'Failed to update logo',
           details: result.error || result.stderr || 'Unknown error',
         },
-        { status: 500 },
+        { status: 500 }
       )
     }
 
@@ -106,7 +97,7 @@ export async function PUT(
         error: 'Failed to update logo',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

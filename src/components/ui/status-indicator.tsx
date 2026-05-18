@@ -54,36 +54,21 @@ export function StatusIndicator({
   }
 
   return (
-    <div
-      className={cn('flex items-center gap-2', className)}
-      role="status"
-      {...props}
-    >
+    <div className={cn('flex items-center gap-2', className)} role="status" {...props}>
       <div className="relative">
-        <div
-          className={cn(
-            'rounded-full',
-            statusColors[status],
-            sizeClasses[size],
-          )}
-        />
+        <div className={cn('rounded-full', statusColors[status], sizeClasses[size])} />
         {pulse && (
           <div
             className={cn(
               'absolute inset-0 animate-ping rounded-full',
               statusColors[status],
-              'opacity-75',
+              'opacity-75'
             )}
           />
         )}
       </div>
       {label && (
-        <span
-          className={cn(
-            'font-medium text-zinc-900 dark:text-zinc-50',
-            textSizes[size],
-          )}
-        >
+        <span className={cn('font-medium text-zinc-900 dark:text-zinc-50', textSizes[size])}>
           {label}
         </span>
       )}

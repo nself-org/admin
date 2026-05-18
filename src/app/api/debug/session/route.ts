@@ -1,17 +1,10 @@
-import {
-  getAdminPasswordHash,
-  getSession,
-  hasAdminPassword,
-} from '@/lib/database'
+import { getAdminPasswordHash, getSession, hasAdminPassword } from '@/lib/database'
 import { NextRequest, NextResponse } from 'next/server'
 
 export async function GET(request: NextRequest): Promise<NextResponse> {
   // This is a debug endpoint, only available in development
   if (process.env.NODE_ENV !== 'development') {
-    return NextResponse.json(
-      { error: 'Not available in production' },
-      { status: 404 },
-    )
+    return NextResponse.json({ error: 'Not available in production' }, { status: 404 })
   }
 
   const token = request.cookies.get('nself-session')?.value

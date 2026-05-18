@@ -29,7 +29,7 @@ const CLI_TIMEOUT_MS = 15_000
 function makeEnvSwitcherError(
   message: string,
   code: EnvSwitcherError['code'],
-  details?: string,
+  details?: string
 ): EnvSwitcherError {
   const err = new Error(message) as EnvSwitcherError
   err.code = code
@@ -41,7 +41,7 @@ function assertValidTarget(value: string): asserts value is EnvTarget {
   if (!VALID_TARGETS.has(value)) {
     throw makeEnvSwitcherError(
       `Invalid env target: "${value}". Must be one of: local, staging, prod`,
-      'INVALID_TARGET',
+      'INVALID_TARGET'
     )
   }
 }
@@ -67,13 +67,13 @@ async function runEnvCommand(args: string[]): Promise<string> {
       throw makeEnvSwitcherError(
         'nself CLI not found. Ensure nself is installed and on PATH.',
         'CLI_NOT_FOUND',
-        execErr.message,
+        execErr.message
       )
     }
     throw makeEnvSwitcherError(
       `nself env ${args.join(' ')} failed`,
       'SWITCH_FAILED',
-      execErr.stderr ?? execErr.message,
+      execErr.stderr ?? execErr.message
     )
   }
 }

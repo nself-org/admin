@@ -33,12 +33,7 @@ const plans: Plan[] = [
     name: 'Free',
     price: 0,
     interval: 'month',
-    features: [
-      'Up to 5 team members',
-      '1 team',
-      'Basic permissions',
-      'Community support',
-    ],
+    features: ['Up to 5 team members', '1 team', 'Basic permissions', 'Community support'],
   },
   {
     id: 'pro',
@@ -162,9 +157,7 @@ export default function OrgBillingPage() {
   const orgId = params.id as string
   const { org, isLoading: orgLoading, error: orgError } = useOrganization(orgId)
   const { data: billing, isLoading: billingLoading, error: billingError } = useBillingData()
-  const [billingInterval, setBillingInterval] = useState<'month' | 'year'>(
-    'month',
-  )
+  const [billingInterval, setBillingInterval] = useState<'month' | 'year'>('month')
   const [selectedPlan, setSelectedPlan] = useState<string | null>(null)
 
   if (orgLoading || billingLoading) return <DashboardSkeleton />
@@ -183,19 +176,18 @@ export default function OrgBillingPage() {
   const currentPlan: string | null = null
 
   // Next billing date from the active subscription's current_period_end (real data).
-  const nextBillingDate: string =
-    billing?.subscription?.currentPeriodEnd
-      ? new Date(billing.subscription.currentPeriodEnd).toLocaleDateString(
-          'en-US',
-          { year: 'numeric', month: 'short', day: 'numeric' },
-        )
-      : '—'
+  const nextBillingDate: string = billing?.subscription?.currentPeriodEnd
+    ? new Date(billing.subscription.currentPeriodEnd).toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+      })
+    : '—'
 
   // Monthly spend from active subscription amount (real data, stored in cents).
-  const monthlySpend: string =
-    billing?.subscription
-      ? formatCurrency(billing.subscription.amount, billing.subscription.currency)
-      : '—'
+  const monthlySpend: string = billing?.subscription
+    ? formatCurrency(billing.subscription.amount, billing.subscription.currency)
+    : '—'
 
   const getAdjustedPrice = (price: number) => {
     if (billingInterval === 'year') {
@@ -214,9 +206,7 @@ export default function OrgBillingPage() {
           <ArrowLeft className="h-4 w-4" /> Back to {org.name}
         </Link>
         <h1 className="mt-4 text-2xl font-semibold text-white">Billing</h1>
-        <p className="text-sm text-zinc-400">
-          Manage your subscription and billing information
-        </p>
+        <p className="text-sm text-zinc-400">Manage your subscription and billing information</p>
       </div>
 
       {/* Current Plan Overview */}
@@ -228,9 +218,7 @@ export default function OrgBillingPage() {
             </div>
             <div>
               <p className="text-sm text-zinc-400">Current Plan</p>
-              <p className="text-xl font-semibold text-white">
-                {currentPlan ?? 'Unknown'}
-              </p>
+              <p className="text-xl font-semibold text-white">{currentPlan ?? 'Unknown'}</p>
             </div>
           </div>
         </div>
@@ -268,9 +256,7 @@ export default function OrgBillingPage() {
             <button
               onClick={() => setBillingInterval('month')}
               className={`rounded-md px-4 py-1.5 text-sm transition-colors ${
-                billingInterval === 'month'
-                  ? 'bg-zinc-700 text-white'
-                  : 'text-zinc-400'
+                billingInterval === 'month' ? 'bg-zinc-700 text-white' : 'text-zinc-400'
               }`}
             >
               Monthly
@@ -278,9 +264,7 @@ export default function OrgBillingPage() {
             <button
               onClick={() => setBillingInterval('year')}
               className={`rounded-md px-4 py-1.5 text-sm transition-colors ${
-                billingInterval === 'year'
-                  ? 'bg-zinc-700 text-white'
-                  : 'text-zinc-400'
+                billingInterval === 'year' ? 'bg-zinc-700 text-white' : 'text-zinc-400'
               }`}
             >
               Yearly <span className="text-emerald-400">(Save 20%)</span>
@@ -356,9 +340,7 @@ export default function OrgBillingPage() {
       <div className="rounded-lg border border-zinc-700 bg-zinc-800/50 p-6">
         <div className="mb-4 flex items-center justify-between">
           <h2 className="text-lg font-medium text-white">Payment Method</h2>
-          <button className="text-sm text-emerald-400 hover:text-emerald-300">
-            Update
-          </button>
+          <button className="text-sm text-emerald-400 hover:text-emerald-300">Update</button>
         </div>
 
         <div className="flex items-center gap-4 rounded-lg border border-zinc-700 bg-zinc-900 p-4">
@@ -385,9 +367,7 @@ export default function OrgBillingPage() {
           )}
         </div>
 
-        {billingError && (
-          <p className="text-sm text-red-400">{billingError}</p>
-        )}
+        {billingError && <p className="text-sm text-red-400">{billingError}</p>}
 
         {!billingError && !billing?.pluginInstalled && (
           <p className="text-sm text-zinc-500">
@@ -431,9 +411,7 @@ export default function OrgBillingPage() {
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-2">
                         <Receipt className="h-4 w-4 text-zinc-500" />
-                        <span className="font-mono text-sm text-white">
-                          {invoice.id}
-                        </span>
+                        <span className="font-mono text-sm text-white">{invoice.id}</span>
                       </div>
                     </td>
                     <td className="px-4 py-3 text-sm text-zinc-400">

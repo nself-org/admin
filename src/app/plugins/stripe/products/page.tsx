@@ -29,13 +29,7 @@ function formatCurrency(amount: number, currency: string = 'USD') {
   }).format(amount / 100)
 }
 
-function ProductCard({
-  product,
-  prices,
-}: {
-  product: StripeProduct
-  prices: StripePrice[]
-}) {
+function ProductCard({ product, prices }: { product: StripeProduct; prices: StripePrice[] }) {
   const productPrices = prices.filter((p) => p.productId === product.id)
 
   return (
@@ -43,11 +37,7 @@ function ProductCard({
       {/* Product Image */}
       <div className="flex aspect-video items-center justify-center bg-zinc-900/50">
         {product.images.length > 0 ? (
-          <img
-            src={product.images[0]}
-            alt={product.name}
-            className="h-full w-full object-cover"
-          />
+          <img src={product.images[0]} alt={product.name} className="h-full w-full object-cover" />
         ) : (
           <ImageIcon className="h-12 w-12 text-zinc-700" />
         )}
@@ -62,9 +52,7 @@ function ProductCard({
           </div>
           <span
             className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs ${
-              product.active
-                ? 'bg-emerald-500/20 text-emerald-400'
-                : 'bg-zinc-500/20 text-zinc-400'
+              product.active ? 'bg-emerald-500/20 text-emerald-400' : 'bg-zinc-500/20 text-zinc-400'
             }`}
           >
             {product.active ? (
@@ -81,23 +69,16 @@ function ProductCard({
 
         {/* Description */}
         {product.description && (
-          <p className="mb-3 line-clamp-2 text-sm text-zinc-400">
-            {product.description}
-          </p>
+          <p className="mb-3 line-clamp-2 text-sm text-zinc-400">{product.description}</p>
         )}
 
         {/* Prices */}
         {productPrices.length > 0 && (
           <div className="mb-3 space-y-1">
             {productPrices.slice(0, 3).map((price) => (
-              <div
-                key={price.id}
-                className="flex items-center justify-between text-sm"
-              >
+              <div key={price.id} className="flex items-center justify-between text-sm">
                 <span className="text-zinc-400">
-                  {price.type === 'recurring'
-                    ? `${price.interval}ly`
-                    : 'One-time'}
+                  {price.type === 'recurring' ? `${price.interval}ly` : 'One-time'}
                 </span>
                 <span className="font-medium text-white">
                   {formatCurrency(price.unitAmount, price.currency)}
@@ -106,9 +87,7 @@ function ProductCard({
               </div>
             ))}
             {productPrices.length > 3 && (
-              <p className="text-xs text-zinc-500">
-                +{productPrices.length - 3} more prices
-              </p>
+              <p className="text-xs text-zinc-500">+{productPrices.length - 3} more prices</p>
             )}
           </div>
         )}
@@ -144,7 +123,7 @@ function StripeProductsContent() {
   }>(
     `/api/plugins/stripe/products?page=${page}&pageSize=${pageSize}&search=${searchQuery}`,
     fetcher,
-    { refreshInterval: 60000 },
+    { refreshInterval: 60000 }
   )
 
   const handleSync = async () => {
@@ -171,16 +150,11 @@ function StripeProductsContent() {
         </div>
         <div>
           <h1 className="text-2xl font-semibold text-white">Products</h1>
-          <p className="text-sm text-zinc-400">
-            View Stripe products and pricing
-          </p>
+          <p className="text-sm text-zinc-400">View Stripe products and pricing</p>
         </div>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {[1, 2, 3, 4, 5, 6].map((i) => (
-            <div
-              key={i}
-              className="h-64 animate-pulse rounded-lg bg-zinc-800/50"
-            />
+            <div key={i} className="h-64 animate-pulse rounded-lg bg-zinc-800/50" />
           ))}
         </div>
       </div>
@@ -225,9 +199,7 @@ function StripeProductsContent() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-semibold text-white">Products</h1>
-          <p className="text-sm text-zinc-400">
-            {total.toLocaleString()} total products
-          </p>
+          <p className="text-sm text-zinc-400">{total.toLocaleString()} total products</p>
         </div>
         <button
           onClick={handleSync}
@@ -271,8 +243,7 @@ function StripeProductsContent() {
       {totalPages > 1 && (
         <div className="flex items-center justify-between">
           <p className="text-sm text-zinc-400">
-            Showing {(page - 1) * pageSize + 1} to{' '}
-            {Math.min(page * pageSize, total)} of {total}
+            Showing {(page - 1) * pageSize + 1} to {Math.min(page * pageSize, total)} of {total}
           </p>
           <div className="flex items-center gap-2">
             <button

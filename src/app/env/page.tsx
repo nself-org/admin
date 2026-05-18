@@ -34,8 +34,7 @@ const ENV_DETAIL_DEFAULTS: Record<EnvTarget, Omit<EnvDetail, 'name'>> = {
 }
 
 function EnvDetailCard({ env }: { env: EnvDetail }) {
-  const rows: Array<{ icon: React.ReactNode; label: string; value: string }> =
-    []
+  const rows: Array<{ icon: React.ReactNode; label: string; value: string }> = []
 
   if (env.host) {
     rows.push({
@@ -77,9 +76,7 @@ function EnvDetailCard({ env }: { env: EnvDetail }) {
         {rows.map(({ icon, label, value }) => (
           <div key={label} className="flex items-center gap-2 text-sm">
             {icon}
-            <dt className="text-nself-text-muted w-24 flex-shrink-0">
-              {label}
-            </dt>
+            <dt className="text-nself-text-muted w-24 flex-shrink-0">{label}</dt>
             <dd className="text-nself-text font-mono text-xs">{value}</dd>
           </div>
         ))}
@@ -117,9 +114,7 @@ function CLIReference() {
           {' — '}switch to production
         </li>
         <li>
-          <span className="text-nself-primary">
-            nself env diff staging prod
-          </span>
+          <span className="text-nself-primary">nself env diff staging prod</span>
           {' — '}compare environments
         </li>
       </ul>
@@ -153,12 +148,10 @@ export default function EnvPage() {
     <div className="mx-auto max-w-2xl space-y-6 px-4 py-8">
       {/* Page header */}
       <div className="mb-2">
-        <h1 className="nself-gradient-text text-2xl font-bold">
-          Environment Control
-        </h1>
+        <h1 className="nself-gradient-text text-2xl font-bold">Environment Control</h1>
         <p className="text-nself-text-muted mt-1 text-sm">
-          Select the active deployment target. All CLI commands run against the
-          selected environment.
+          Select the active deployment target. All CLI commands run against the selected
+          environment.
         </p>
       </div>
 
@@ -176,10 +169,7 @@ export default function EnvPage() {
           </h3>
           <ul className="space-y-2">
             {switchHistory.map((r, i) => (
-              <li
-                key={i}
-                className="text-nself-text-muted flex items-center gap-2 text-xs"
-              >
+              <li key={i} className="text-nself-text-muted flex items-center gap-2 text-xs">
                 <span
                   className={`h-1.5 w-1.5 rounded-full ${r.success ? 'bg-green-400' : 'bg-red-400'}`}
                 />

@@ -42,8 +42,7 @@ export function useOrganization(orgId?: string) {
       const newOrg = await orgApi.create(input)
       return newOrg
     } catch (err) {
-      const message =
-        err instanceof Error ? err.message : 'Failed to create organization'
+      const message = err instanceof Error ? err.message : 'Failed to create organization'
       setError(message)
       throw err
     } finally {
@@ -61,15 +60,14 @@ export function useOrganization(orgId?: string) {
         mutateOrg(updated)
         return updated
       } catch (err) {
-        const message =
-          err instanceof Error ? err.message : 'Failed to update organization'
+        const message = err instanceof Error ? err.message : 'Failed to update organization'
         setError(message)
         throw err
       } finally {
         setIsLoading(false)
       }
     },
-    [orgId, mutateOrg],
+    [orgId, mutateOrg]
   )
 
   const remove = useCallback(async () => {
@@ -79,8 +77,7 @@ export function useOrganization(orgId?: string) {
     try {
       await orgApi.delete(orgId)
     } catch (err) {
-      const message =
-        err instanceof Error ? err.message : 'Failed to delete organization'
+      const message = err instanceof Error ? err.message : 'Failed to delete organization'
       setError(message)
       throw err
     } finally {
@@ -98,15 +95,14 @@ export function useOrganization(orgId?: string) {
         mutateMembers()
         return member
       } catch (err) {
-        const message =
-          err instanceof Error ? err.message : 'Failed to add member'
+        const message = err instanceof Error ? err.message : 'Failed to add member'
         setError(message)
         throw err
       } finally {
         setIsLoading(false)
       }
     },
-    [orgId, mutateMembers],
+    [orgId, mutateMembers]
   )
 
   const removeMember = useCallback(
@@ -118,15 +114,14 @@ export function useOrganization(orgId?: string) {
         await orgApi.members.remove(orgId, userId)
         mutateMembers()
       } catch (err) {
-        const message =
-          err instanceof Error ? err.message : 'Failed to remove member'
+        const message = err instanceof Error ? err.message : 'Failed to remove member'
         setError(message)
         throw err
       } finally {
         setIsLoading(false)
       }
     },
-    [orgId, mutateMembers],
+    [orgId, mutateMembers]
   )
 
   const updateMemberRole = useCallback(
@@ -139,15 +134,14 @@ export function useOrganization(orgId?: string) {
         mutateMembers()
         return updated
       } catch (err) {
-        const message =
-          err instanceof Error ? err.message : 'Failed to update member role'
+        const message = err instanceof Error ? err.message : 'Failed to update member role'
         setError(message)
         throw err
       } finally {
         setIsLoading(false)
       }
     },
-    [orgId, mutateMembers],
+    [orgId, mutateMembers]
   )
 
   const refresh = useCallback(() => {

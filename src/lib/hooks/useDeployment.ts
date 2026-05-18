@@ -52,10 +52,7 @@ export function useEnvironmentDiff(env1: string, env2: string) {
   const { data, error, isLoading } = useSWR<{
     success: boolean
     diff: EnvironmentDiff[]
-  }>(
-    env1 && env2 ? `/api/environments/diff?env1=${env1}&env2=${env2}` : null,
-    fetcher,
-  )
+  }>(env1 && env2 ? `/api/environments/diff?env1=${env1}&env2=${env2}` : null, fetcher)
 
   return {
     diff: data?.diff || [],

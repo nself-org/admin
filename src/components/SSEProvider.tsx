@@ -9,8 +9,7 @@ import { useSSEStream } from '@/hooks/useSSEStream'
 import { Circle, RefreshCw, WifiOff } from 'lucide-react'
 
 export function SSEProvider({ children }: { children: React.ReactNode }) {
-  const { connected, reconnecting, error, lastUpdate, reconnect } =
-    useSSEStream()
+  const { connected, reconnecting, error, lastUpdate, reconnect } = useSSEStream()
 
   return (
     <>
@@ -54,11 +53,7 @@ export function SSEProvider({ children }: { children: React.ReactNode }) {
                   : 'text-red-700 dark:text-red-300'
             }`}
           >
-            {connected
-              ? 'Connected'
-              : reconnecting
-                ? 'Reconnecting'
-                : 'Disconnected'}
+            {connected ? 'Connected' : reconnecting ? 'Reconnecting' : 'Disconnected'}
           </span>
         </button>
       </div>

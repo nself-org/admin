@@ -5,16 +5,8 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Progress } from '@/components/ui/progress'
 import { Skeleton } from '@/components/ui/skeleton'
-import {
-  useDownloadReport,
-  useGenerateReport,
-  useReportExecution,
-} from '@/hooks/useReports'
-import type {
-  GenerateReportInput,
-  ReportFormat,
-  ReportStatus,
-} from '@/types/report'
+import { useDownloadReport, useGenerateReport, useReportExecution } from '@/hooks/useReports'
+import type { GenerateReportInput, ReportFormat, ReportStatus } from '@/types/report'
 import {
   AlertCircle,
   CheckCircle2,
@@ -57,8 +49,7 @@ const statusConfig: Record<
   pending: {
     icon: <Clock className="h-8 w-8" />,
     title: 'Report Queued',
-    description:
-      'Your report is in the queue and will start generating shortly.',
+    description: 'Your report is in the queue and will start generating shortly.',
     color: 'text-zinc-400',
   },
   generating: {
@@ -82,8 +73,7 @@ const statusConfig: Record<
   expired: {
     icon: <AlertCircle className="h-8 w-8" />,
     title: 'Report Expired',
-    description:
-      'This report has expired. Please generate a new report to download.',
+    description: 'This report has expired. Please generate a new report to download.',
     color: 'text-amber-400',
   },
 }
@@ -99,9 +89,7 @@ export function ReportExecutionStatus({
   const { download, isDownloading } = useDownloadReport()
   const { generate, isGenerating } = useGenerateReport()
   const [progress, setProgress] = useState(0)
-  const [previousStatus, setPreviousStatus] = useState<ReportStatus | null>(
-    null,
-  )
+  const [previousStatus, setPreviousStatus] = useState<ReportStatus | null>(null)
 
   // Simulate progress for generating state
   useEffect(() => {
@@ -124,19 +112,11 @@ export function ReportExecutionStatus({
   useEffect(() => {
     if (!execution) return
 
-    if (
-      previousStatus !== 'completed' &&
-      execution.status === 'completed' &&
-      execution.fileUrl
-    ) {
+    if (previousStatus !== 'completed' && execution.status === 'completed' && execution.fileUrl) {
       onCompleted?.(execution.fileUrl)
     }
 
-    if (
-      previousStatus !== 'failed' &&
-      execution.status === 'failed' &&
-      execution.error
-    ) {
+    if (previousStatus !== 'failed' && execution.status === 'failed' && execution.error) {
       onFailed?.(execution.error)
     }
 
@@ -216,9 +196,7 @@ export function ReportExecutionStatus({
           {/* Status Title and Description */}
           <div>
             <h3 className="text-lg font-semibold text-white">{config.title}</h3>
-            <p className="mt-1 text-sm text-zinc-400">
-              {execution.error || config.description}
-            </p>
+            <p className="mt-1 text-sm text-zinc-400">{execution.error || config.description}</p>
           </div>
 
           {/* Progress Bar (for generating state) */}
@@ -242,9 +220,7 @@ export function ReportExecutionStatus({
                   {execution.format.toUpperCase()} Report
                 </p>
                 <div className="flex items-center gap-2 text-xs text-zinc-500">
-                  {execution.fileSize && (
-                    <span>{formatFileSize(execution.fileSize)}</span>
-                  )}
+                  {execution.fileSize && <span>{formatFileSize(execution.fileSize)}</span>}
                   {execution.rowCount !== undefined && (
                     <>
                       <span>-</span>
@@ -257,12 +233,9 @@ export function ReportExecutionStatus({
           )}
 
           {/* Duration (for completed or generating) */}
-          {(execution.status === 'completed' ||
-            execution.status === 'generating') && (
+          {(execution.status === 'completed' || execution.status === 'generating') && (
             <p className="text-xs text-zinc-500">
-              {execution.status === 'completed'
-                ? 'Generated in '
-                : 'Running for '}
+              {execution.status === 'completed' ? 'Generated in ' : 'Running for '}
               {formatDuration(execution.startedAt, execution.completedAt)}
             </p>
           )}
@@ -270,14 +243,8 @@ export function ReportExecutionStatus({
           {/* Actions */}
           <div className="flex items-center gap-3">
             {/* Refresh button for pending/generating */}
-            {(execution.status === 'pending' ||
-              execution.status === 'generating') && (
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => refresh()}
-                className="gap-1"
-              >
+            {(execution.status === 'pending' || execution.status === 'generating') && (
+              <Button variant="outline" size="sm" onClick={() => refresh()} className="gap-1">
                 <RefreshCw className="h-3.5 w-3.5" />
                 Refresh
               </Button>
@@ -305,8 +272,7 @@ export function ReportExecutionStatus({
             )}
 
             {/* Retry button for failed/expired */}
-            {(execution.status === 'failed' ||
-              execution.status === 'expired') &&
+            {(execution.status === 'failed' || execution.status === 'expired') &&
               (onRetry || retryInput) && (
                 <Button
                   onClick={handleRetry}

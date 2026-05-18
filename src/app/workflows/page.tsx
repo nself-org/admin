@@ -7,14 +7,7 @@ import { PageHeader } from '@/components/ui/page-header'
 import { Skeleton } from '@/components/ui/skeleton'
 import { WorkflowList } from '@/components/workflows'
 import { useWorkflows, useWorkflowStats } from '@/hooks/useWorkflows'
-import {
-  Activity,
-  CheckCircle,
-  Clock,
-  Plus,
-  TrendingUp,
-  Workflow,
-} from 'lucide-react'
+import { Activity, CheckCircle, Clock, Plus, TrendingUp, Workflow } from 'lucide-react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 
@@ -53,9 +46,7 @@ export default function WorkflowsPage() {
                 {isLoading ? (
                   <Skeleton className="mt-1 h-7 w-12" />
                 ) : (
-                  <p className="text-2xl font-bold">
-                    {stats?.totalWorkflows ?? workflows.length}
-                  </p>
+                  <p className="text-2xl font-bold">{stats?.totalWorkflows ?? workflows.length}</p>
                 )}
               </div>
             </div>
@@ -71,9 +62,7 @@ export default function WorkflowsPage() {
                 {isLoading ? (
                   <Skeleton className="mt-1 h-7 w-12" />
                 ) : (
-                  <p className="text-2xl font-bold">
-                    {stats?.activeWorkflows ?? 0}
-                  </p>
+                  <p className="text-2xl font-bold">{stats?.activeWorkflows ?? 0}</p>
                 )}
               </div>
             </div>
@@ -85,15 +74,11 @@ export default function WorkflowsPage() {
                 <Clock className="h-5 w-5 text-sky-500 dark:text-sky-400" />
               </div>
               <div>
-                <p className="text-muted-foreground text-sm">
-                  Total Executions
-                </p>
+                <p className="text-muted-foreground text-sm">Total Executions</p>
                 {isLoading ? (
                   <Skeleton className="mt-1 h-7 w-12" />
                 ) : (
-                  <p className="text-2xl font-bold">
-                    {stats?.totalExecutions ?? 0}
-                  </p>
+                  <p className="text-2xl font-bold">{stats?.totalExecutions ?? 0}</p>
                 )}
               </div>
             </div>
@@ -137,9 +122,7 @@ export default function WorkflowsPage() {
                   ) : (
                     <Clock className="h-3.5 w-3.5 text-zinc-400" />
                   )}
-                  <span className="font-mono text-xs">
-                    {execution.id.slice(0, 8)}
-                  </span>
+                  <span className="font-mono text-xs">{execution.id.slice(0, 8)}</span>
                   <span className="text-zinc-500 dark:text-zinc-400">
                     {new Date(execution.startedAt).toLocaleTimeString()}
                   </span>

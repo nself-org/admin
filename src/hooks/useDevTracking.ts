@@ -35,11 +35,7 @@ export function useDevTracking(componentName: string, props?: any) {
   useEffect(() => {
     renderCount.current++
 
-    if (
-      renderCount.current > 1 &&
-      typeof window !== 'undefined' &&
-      (window as any).devLogger
-    ) {
+    if (renderCount.current > 1 && typeof window !== 'undefined' && (window as any).devLogger) {
       const devLogger = (window as any).devLogger
       const renderTime = performance.now() - renderStart.current
 

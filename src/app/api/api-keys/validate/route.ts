@@ -20,10 +20,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     const body = await request.json()
 
     if (!body.key) {
-      return NextResponse.json(
-        { success: false, error: 'key is required' },
-        { status: 400 },
-      )
+      return NextResponse.json({ success: false, error: 'key is required' }, { status: 400 })
     }
 
     const result = await apiKeysApi.validateApiKey(body.key)
@@ -48,7 +45,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to validate API key',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

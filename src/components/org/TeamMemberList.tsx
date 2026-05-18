@@ -11,11 +11,7 @@ interface TeamMemberListProps {
   isLoading?: boolean
 }
 
-export function TeamMemberList({
-  members,
-  onRemove,
-  isLoading,
-}: TeamMemberListProps) {
+export function TeamMemberList({ members, onRemove, isLoading }: TeamMemberListProps) {
   const [openMenu, setOpenMenu] = useState<string | null>(null)
 
   if (members.length === 0) {
@@ -48,9 +44,7 @@ export function TeamMemberList({
 
           <div className="relative">
             <button
-              onClick={() =>
-                setOpenMenu(openMenu === member.id ? null : member.id)
-              }
+              onClick={() => setOpenMenu(openMenu === member.id ? null : member.id)}
               className="rounded p-1 text-zinc-400 hover:bg-zinc-700 hover:text-white"
             >
               <MoreHorizontal className="h-4 w-4" />

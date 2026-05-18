@@ -390,12 +390,8 @@ export const useCentralDataStore = create<CentralDataStore>()(
                   total: data.docker.system.containers.total,
                   running: data.docker.system.containers.running,
                   stopped: data.docker.system.containers.stopped,
-                  healthy: state.containers.filter(
-                    (c) => c.health === 'healthy',
-                  ).length,
-                  unhealthy: state.containers.filter(
-                    (c) => c.health === 'unhealthy',
-                  ).length,
+                  healthy: state.containers.filter((c) => c.health === 'healthy').length,
+                  unhealthy: state.containers.filter((c) => c.health === 'unhealthy').length,
                 },
               }
             }
@@ -486,19 +482,15 @@ export const useCentralDataStore = create<CentralDataStore>()(
         }),
 
       reset: () => set(() => initialState),
-    })),
-  ),
+    }))
+  )
 )
 
 // Selector hooks for common data needs
-export const useDockerMetrics = () =>
-  useCentralDataStore((state) => state.docker)
-export const useSystemMetrics = () =>
-  useCentralDataStore((state) => state.system)
-export const useContainers = () =>
-  useCentralDataStore((state) => state.containers)
-export const useServicesHealth = () =>
-  useCentralDataStore((state) => state.servicesHealth)
+export const useDockerMetrics = () => useCentralDataStore((state) => state.docker)
+export const useSystemMetrics = () => useCentralDataStore((state) => state.system)
+export const useContainers = () => useCentralDataStore((state) => state.containers)
+export const useServicesHealth = () => useCentralDataStore((state) => state.servicesHealth)
 export const useAlerts = () => useCentralDataStore((state) => state.alerts)
 export const useConnectionStatus = () =>
   useCentralDataStore((state) => ({

@@ -40,7 +40,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           error: 'Invalid request',
           details: validation.error.issues,
         },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -66,9 +66,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     return NextResponse.json({
       success: result.success,
       data: {
-        command: service
-          ? `nself ${command} --service ${service}`
-          : `nself ${command}`,
+        command: service ? `nself ${command} --service ${service}` : `nself ${command}`,
         output: result.stdout,
         error: result.stderr ?? result.error,
       },
@@ -78,12 +76,9 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       {
         success: false,
         error: 'Failed to execute Docker command',
-        details:
-          error instanceof Error
-            ? error?.message || 'Unknown error'
-            : 'Unknown error',
+        details: error instanceof Error ? error?.message || 'Unknown error' : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

@@ -24,27 +24,20 @@ function EnvironmentDiffContent() {
   const [targetEnv, setTargetEnv] = useState<Environment>('production')
   const [diff, setDiff] = useState<EnvironmentDiff | null>(null)
 
-  const environments: Environment[] = [
-    'local',
-    'development',
-    'staging',
-    'production',
-  ]
+  const environments: Environment[] = ['local', 'development', 'staging', 'production']
 
   const fetchDiff = useCallback(async () => {
     setComparing(true)
     setError(null)
     try {
       const res = await fetch(
-        `/api/environments/diff?source=${encodeURIComponent(sourceEnv)}&target=${encodeURIComponent(targetEnv)}`,
+        `/api/environments/diff?source=${encodeURIComponent(sourceEnv)}&target=${encodeURIComponent(targetEnv)}`
       )
       if (!res.ok) throw new Error(`HTTP ${res.status}`)
       const data = await res.json()
       setDiff(data.diff ?? null)
     } catch (err) {
-      setError(
-        err instanceof Error ? err.message : 'Failed to fetch environment diff',
-      )
+      setError(err instanceof Error ? err.message : 'Failed to fetch environment diff')
       setDiff(null)
     } finally {
       setComparing(false)
@@ -190,9 +183,7 @@ function EnvironmentDiffContent() {
             <div className="mb-8 grid gap-4 md:grid-cols-3">
               <div className="rounded-xl border border-zinc-200 bg-white p-4 shadow-sm dark:border-zinc-700 dark:bg-zinc-800">
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-zinc-500 dark:text-zinc-400">
-                    Variables
-                  </span>
+                  <span className="text-sm text-zinc-500 dark:text-zinc-400">Variables</span>
                   <div className="flex gap-2 text-xs">
                     <span className="rounded bg-green-100 px-2 py-0.5 text-green-700 dark:bg-green-900/30 dark:text-green-400">
                       +{diff.variables.added.length}
@@ -208,9 +199,7 @@ function EnvironmentDiffContent() {
               </div>
               <div className="rounded-xl border border-zinc-200 bg-white p-4 shadow-sm dark:border-zinc-700 dark:bg-zinc-800">
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-zinc-500 dark:text-zinc-400">
-                    Secrets
-                  </span>
+                  <span className="text-sm text-zinc-500 dark:text-zinc-400">Secrets</span>
                   <div className="flex gap-2 text-xs">
                     <span className="rounded bg-green-100 px-2 py-0.5 text-green-700 dark:bg-green-900/30 dark:text-green-400">
                       +{diff.secrets.added.length}
@@ -226,9 +215,7 @@ function EnvironmentDiffContent() {
               </div>
               <div className="rounded-xl border border-zinc-200 bg-white p-4 shadow-sm dark:border-zinc-700 dark:bg-zinc-800">
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-zinc-500 dark:text-zinc-400">
-                    Services
-                  </span>
+                  <span className="text-sm text-zinc-500 dark:text-zinc-400">Services</span>
                   <div className="flex gap-2 text-xs">
                     <span className="rounded bg-green-100 px-2 py-0.5 text-green-700 dark:bg-green-900/30 dark:text-green-400">
                       +{diff.services.added.length}
@@ -270,9 +257,7 @@ function EnvironmentDiffContent() {
                     className="flex items-center gap-3 rounded-lg bg-red-50 px-4 py-2 dark:bg-red-900/20"
                   >
                     <Minus className="h-4 w-4 text-red-600 dark:text-red-400" />
-                    <span className="font-mono text-sm text-red-700 dark:text-red-300">
-                      {key}
-                    </span>
+                    <span className="font-mono text-sm text-red-700 dark:text-red-300">{key}</span>
                     <span className="text-xs text-red-600 dark:text-red-400">
                       Missing in {sourceEnv}
                     </span>
@@ -291,17 +276,13 @@ function EnvironmentDiffContent() {
                     </div>
                     <div className="mt-1 ml-7 grid grid-cols-2 gap-4 text-sm">
                       <div>
-                        <span className="text-xs text-zinc-500">
-                          {sourceEnv}:
-                        </span>
+                        <span className="text-xs text-zinc-500">{sourceEnv}:</span>
                         <span className="ml-2 font-mono text-zinc-700 dark:text-zinc-300">
                           {change.sourceValue}
                         </span>
                       </div>
                       <div>
-                        <span className="text-xs text-zinc-500">
-                          {targetEnv}:
-                        </span>
+                        <span className="text-xs text-zinc-500">{targetEnv}:</span>
                         <span className="ml-2 font-mono text-zinc-700 dark:text-zinc-300">
                           {change.targetValue}
                         </span>
@@ -322,9 +303,7 @@ function EnvironmentDiffContent() {
 
             {/* Secrets Diff */}
             <div className="mb-8 rounded-xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-zinc-700 dark:bg-zinc-800">
-              <h3 className="mb-4 text-lg font-semibold text-zinc-900 dark:text-white">
-                Secrets
-              </h3>
+              <h3 className="mb-4 text-lg font-semibold text-zinc-900 dark:text-white">Secrets</h3>
               <div className="space-y-2">
                 {diff.secrets.added.map((key) => (
                   <div
@@ -343,9 +322,7 @@ function EnvironmentDiffContent() {
                     className="flex items-center gap-3 rounded-lg bg-red-50 px-4 py-2 dark:bg-red-900/20"
                   >
                     <Minus className="h-4 w-4 text-red-600 dark:text-red-400" />
-                    <span className="font-mono text-sm text-red-700 dark:text-red-300">
-                      {key}
-                    </span>
+                    <span className="font-mono text-sm text-red-700 dark:text-red-300">{key}</span>
                   </div>
                 ))}
                 {diff.secrets.changed.map((key) => (
@@ -375,9 +352,7 @@ function EnvironmentDiffContent() {
 
             {/* Services Diff */}
             <div className="mb-8 rounded-xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-zinc-700 dark:bg-zinc-800">
-              <h3 className="mb-4 text-lg font-semibold text-zinc-900 dark:text-white">
-                Services
-              </h3>
+              <h3 className="mb-4 text-lg font-semibold text-zinc-900 dark:text-white">Services</h3>
               <div className="space-y-2">
                 {diff.services.changed.map((service) => (
                   <div
@@ -424,16 +399,16 @@ function EnvironmentDiffContent() {
           </h3>
           <div className="space-y-2 font-mono text-sm">
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-sky-500">nself env diff staging prod</span>{' '}
-              - Compare staging to production
+              <span className="text-sky-500">nself env diff staging prod</span> - Compare staging to
+              production
             </p>
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-sky-500">nself env diff --full</span> - Show
-              all differences including unchanged
+              <span className="text-sky-500">nself env diff --full</span> - Show all differences
+              including unchanged
             </p>
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-sky-500">nself env sync staging prod</span>{' '}
-              - Sync staging config to production
+              <span className="text-sky-500">nself env sync staging prod</span> - Sync staging
+              config to production
             </p>
           </div>
         </div>

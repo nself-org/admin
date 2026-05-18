@@ -28,7 +28,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to get sync status',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -52,7 +52,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           success: false,
           error: 'Source and target environments are required',
         },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -62,7 +62,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           success: false,
           error: 'Source and target environments must be different',
         },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -73,14 +73,14 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           success: false,
           error: `Invalid environment. Allowed: ${allowedEnvs.join(', ')}`,
         },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
     const result = await executeNselfCommand(
       'config',
       ['sync', `--from=${source}`, `--to=${target}`],
-      { timeout: 30000 },
+      { timeout: 30000 }
     )
 
     return NextResponse.json({
@@ -102,7 +102,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         error: 'Config sync failed',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

@@ -13,7 +13,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     if (!name) {
       return NextResponse.json(
         { success: false, error: 'Device name is required' },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -25,7 +25,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           error:
             'Invalid device name. Only letters, numbers, hyphens, and underscores are allowed.',
         },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -43,7 +43,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           error: 'Failed to register device',
           details: result.error || result.stderr || 'Unknown error',
         },
-        { status: 500 },
+        { status: 500 }
       )
     }
 
@@ -58,7 +58,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to register device',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

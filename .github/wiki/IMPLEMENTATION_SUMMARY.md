@@ -57,7 +57,7 @@ export const GET = withApiKey(
     requiredScope: 'read',
     requiredResource: 'analytics',
     requiredAction: 'read',
-  },
+  }
 )
 ```
 
@@ -263,7 +263,7 @@ export const GET = withApiKey(
     requiredScope: 'read',
     checkRateLimit: true,
     trackUsage: true,
-  },
+  }
 )
 ```
 
@@ -283,14 +283,7 @@ if (!rateLimit.allowed) {
 }
 
 // Record usage
-await recordApiKeyUsage(
-  validation.key.id,
-  '/api/endpoint',
-  'GET',
-  200,
-  45,
-  clientIp,
-)
+await recordApiKeyUsage(validation.key.id, '/api/endpoint', 'GET', 200, 45, clientIp)
 ```
 
 ## Performance

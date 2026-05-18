@@ -8,9 +8,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     const { searchParams } = new URL(request.url)
     const reportId = searchParams.get('reportId') || undefined
     const status = searchParams.get('status') as ReportStatus | undefined
-    const limit = searchParams.get('limit')
-      ? parseInt(searchParams.get('limit')!, 10)
-      : undefined
+    const limit = searchParams.get('limit') ? parseInt(searchParams.get('limit')!, 10) : undefined
     const offset = searchParams.get('offset')
       ? parseInt(searchParams.get('offset')!, 10)
       : undefined
@@ -30,10 +28,9 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     return NextResponse.json(
       {
         success: false,
-        error:
-          error instanceof Error ? error.message : 'Failed to list executions',
+        error: error instanceof Error ? error.message : 'Failed to list executions',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

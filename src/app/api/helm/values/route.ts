@@ -22,7 +22,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     if (!release) {
       return NextResponse.json(
         { success: false, error: 'Release name is required' },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -30,14 +30,11 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     if (namespace) args.push(`--namespace=${namespace}`)
     if (all) args.push('--all')
 
-    const { stdout } = await execAsync(
-      `${nselfPath} ${args.join(' ')} --json`,
-      {
-        cwd: projectPath,
-        env: { ...process.env, PATH: getEnhancedPath() },
-        timeout: 60000,
-      },
-    )
+    const { stdout } = await execAsync(`${nselfPath} ${args.join(' ')} --json`, {
+      cwd: projectPath,
+      env: { ...process.env, PATH: getEnhancedPath() },
+      timeout: 60000,
+    })
 
     const result = JSON.parse(stdout)
 
@@ -57,7 +54,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to get helm values',
         details: err.message,
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -75,30 +72,21 @@ export async function PUT(request: NextRequest): Promise<NextResponse> {
     const { chart, values } = body
 
     if (!chart) {
-      return NextResponse.json(
-        { success: false, error: 'Chart path is required' },
-        { status: 400 },
-      )
+      return NextResponse.json({ success: false, error: 'Chart path is required' }, { status: 400 })
     }
 
     if (!values) {
-      return NextResponse.json(
-        { success: false, error: 'Values are required' },
-        { status: 400 },
-      )
+      return NextResponse.json({ success: false, error: 'Values are required' }, { status: 400 })
     }
 
     const args: string[] = ['helm', 'values', 'set', chart]
     args.push(`--values=${JSON.stringify(values)}`)
 
-    const { stdout } = await execAsync(
-      `${nselfPath} ${args.join(' ')} --json`,
-      {
-        cwd: projectPath,
-        env: { ...process.env, PATH: getEnhancedPath() },
-        timeout: 60000,
-      },
-    )
+    const { stdout } = await execAsync(`${nselfPath} ${args.join(' ')} --json`, {
+      cwd: projectPath,
+      env: { ...process.env, PATH: getEnhancedPath() },
+      timeout: 60000,
+    })
 
     const result = JSON.parse(stdout)
 
@@ -117,7 +105,7 @@ export async function PUT(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to update helm values',
         details: err.message,
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

@@ -94,7 +94,7 @@ export async function GET(): Promise<NextResponse> {
             status.certificates.expiresAt = expiryDate.toISOString()
             const now = new Date()
             const daysUntil = Math.floor(
-              (expiryDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24),
+              (expiryDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)
             )
             status.certificates.daysUntilExpiry = daysUntil
             status.certificates.isValid = daysUntil > 0
@@ -145,7 +145,7 @@ export async function GET(): Promise<NextResponse> {
         success: false,
         error: 'Failed to get SSL status',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

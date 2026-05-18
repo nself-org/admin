@@ -13,17 +13,16 @@ interface TenantListProps {
 
 export function TenantList({ tenants, isLoading }: TenantListProps) {
   const [searchQuery, setSearchQuery] = useState('')
-  const [statusFilter, setStatusFilter] = useState<
-    'all' | 'active' | 'suspended' | 'pending'
-  >('all')
+  const [statusFilter, setStatusFilter] = useState<'all' | 'active' | 'suspended' | 'pending'>(
+    'all'
+  )
 
   const filteredTenants = useMemo(() => {
     return tenants.filter((tenant) => {
       const matchesSearch =
         tenant.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         tenant.slug.toLowerCase().includes(searchQuery.toLowerCase())
-      const matchesStatus =
-        statusFilter === 'all' || tenant.status === statusFilter
+      const matchesStatus = statusFilter === 'all' || tenant.status === statusFilter
       return matchesSearch && matchesStatus
     })
   }, [tenants, searchQuery, statusFilter])
@@ -32,10 +31,7 @@ export function TenantList({ tenants, isLoading }: TenantListProps) {
     return (
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
         {[1, 2, 3].map((i) => (
-          <div
-            key={i}
-            className="h-32 animate-pulse rounded-xl bg-zinc-800/50"
-          />
+          <div key={i} className="h-32 animate-pulse rounded-xl bg-zinc-800/50" />
         ))}
       </div>
     )
@@ -56,9 +52,7 @@ export function TenantList({ tenants, isLoading }: TenantListProps) {
         </div>
         <select
           value={statusFilter}
-          onChange={(e) =>
-            setStatusFilter(e.target.value as typeof statusFilter)
-          }
+          onChange={(e) => setStatusFilter(e.target.value as typeof statusFilter)}
           className="rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2 text-sm text-white focus:border-emerald-500 focus:outline-none"
         >
           <option value="all">All Status</option>

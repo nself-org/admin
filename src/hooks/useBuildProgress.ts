@@ -18,13 +18,10 @@ export function useBuildProgress() {
     if (!connected) return
 
     // Subscribe to build progress updates
-    const unsubscribe = on<BuildProgressEvent>(
-      EventType.BUILD_PROGRESS,
-      (data) => {
-        setProgress(data)
-        setHistory((prev) => [...prev, data])
-      },
-    )
+    const unsubscribe = on<BuildProgressEvent>(EventType.BUILD_PROGRESS, (data) => {
+      setProgress(data)
+      setHistory((prev) => [...prev, data])
+    })
 
     return () => {
       unsubscribe()

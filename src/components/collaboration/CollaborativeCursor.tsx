@@ -25,10 +25,7 @@ export function CollaborativeCursor({ cursor }: CollaborativeCursorProps) {
       }}
     >
       {/* Cursor line */}
-      <div
-        className="h-5 w-0.5 animate-pulse"
-        style={{ backgroundColor: cursor.color }}
-      />
+      <div className="h-5 w-0.5 animate-pulse" style={{ backgroundColor: cursor.color }} />
 
       {/* User name label */}
       <div
@@ -54,9 +51,7 @@ interface CollaborativeSelectionProps {
   editorRef?: React.RefObject<HTMLTextAreaElement | null>
 }
 
-export function CollaborativeSelection({
-  selection,
-}: CollaborativeSelectionProps) {
+export function CollaborativeSelection({ selection }: CollaborativeSelectionProps) {
   // Calculate selection bounds
   const start = selection.selection.start
   const end = selection.selection.end

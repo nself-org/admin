@@ -26,9 +26,7 @@ const newPassword = process.argv[2] || 'admin123'
 const hash = bcrypt.hashSync(newPassword, 10)
 
 // Find and update the admin_password_hash entry
-const passwordEntry = configCollection.data.find(
-  (item) => item.key === 'admin_password_hash',
-)
+const passwordEntry = configCollection.data.find((item) => item.key === 'admin_password_hash')
 
 if (passwordEntry) {
   // Update existing password
@@ -55,6 +53,4 @@ if (passwordEntry) {
 fs.writeFileSync(dbPath, JSON.stringify(db, null, 2))
 
 console.log(`\n✅ Admin password has been reset to: ${newPassword}`)
-console.log(
-  '\nYou can now login with this password at http://localhost:3021/login',
-)
+console.log('\nYou can now login with this password at http://localhost:3021/login')

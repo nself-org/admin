@@ -2,13 +2,7 @@ import { cn } from '@/lib/utils'
 import * as React from 'react'
 
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?:
-    | 'default'
-    | 'destructive'
-    | 'outline'
-    | 'secondary'
-    | 'ghost'
-    | 'link'
+  variant?: 'default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link'
   size?: 'default' | 'sm' | 'lg' | 'icon'
 }
 
@@ -38,13 +32,13 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
             'h-11 rounded-md px-8': size === 'lg',
             'h-10 w-10': size === 'icon',
           },
-          className,
+          className
         )}
         ref={ref}
         {...props}
       />
     )
-  },
+  }
 )
 Button.displayName = 'Button'
 
@@ -69,15 +63,14 @@ export function buttonVariants({
         variant === 'secondary',
       'hover:bg-zinc-100 hover:text-zinc-900 dark:hover:bg-zinc-800 dark:hover:text-zinc-50':
         variant === 'ghost',
-      'text-zinc-900 underline-offset-4 hover:underline dark:text-zinc-50':
-        variant === 'link',
+      'text-zinc-900 underline-offset-4 hover:underline dark:text-zinc-50': variant === 'link',
     },
     {
       'h-10 px-4 py-2': size === 'default',
       'h-9 rounded-md px-3': size === 'sm',
       'h-11 rounded-md px-8': size === 'lg',
       'h-10 w-10': size === 'icon',
-    },
+    }
   )
 }
 

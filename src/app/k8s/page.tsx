@@ -46,16 +46,11 @@ function MetricCard({
     blue: 'from-blue-500/40 to-blue-400/30 ring-blue-400/60 bg-blue-500/20 text-blue-400',
     emerald:
       'from-emerald-500/40 to-emerald-400/30 ring-emerald-400/60 bg-emerald-500/20 text-emerald-400',
-    amber:
-      'from-amber-500/40 to-amber-400/30 ring-amber-400/60 bg-amber-500/20 text-amber-400',
+    amber: 'from-amber-500/40 to-amber-400/30 ring-amber-400/60 bg-amber-500/20 text-amber-400',
     sky: 'from-sky-500/40 to-sky-400/30 ring-sky-400/60 bg-sky-500/20 text-sky-400',
   }
 
-  function onMouseMove({
-    currentTarget,
-    clientX,
-    clientY,
-  }: React.MouseEvent<HTMLDivElement>) {
+  function onMouseMove({ currentTarget, clientX, clientY }: React.MouseEvent<HTMLDivElement>) {
     const { left, top } = currentTarget.getBoundingClientRect()
     mouseX.set(clientX - left)
     mouseY.set(clientY - top)
@@ -78,9 +73,7 @@ function MetricCard({
       />
       <div className="relative">
         <div className="flex items-center justify-between">
-          <h3 className="text-sm font-semibold text-zinc-900 dark:text-white">
-            {title}
-          </h3>
+          <h3 className="text-sm font-semibold text-zinc-900 dark:text-white">{title}</h3>
           <div
             className={`flex h-8 w-8 items-center justify-center rounded-full ${colorClasses[color].split(' ').slice(3, 5).join(' ')}`}
           >
@@ -88,9 +81,7 @@ function MetricCard({
           </div>
         </div>
         <div className="mt-4">
-          <div className="text-2xl font-bold text-zinc-900 dark:text-white">
-            {value}
-          </div>
+          <div className="text-2xl font-bold text-zinc-900 dark:text-white">{value}</div>
           {percentage !== undefined && (
             <div className="mt-2 h-2 rounded-full bg-zinc-200 dark:bg-zinc-800">
               <div
@@ -101,9 +92,7 @@ function MetricCard({
           )}
         </div>
         {description && (
-          <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
-            {description}
-          </p>
+          <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">{description}</p>
         )}
       </div>
     </div>
@@ -113,12 +102,7 @@ function MetricCard({
 function K8sContent() {
   const [_refreshing, setRefreshing] = useState(false)
 
-  const {
-    data,
-    error,
-    isLoading,
-    mutate,
-  } = useSWR<{
+  const { data, error, isLoading, mutate } = useSWR<{
     cluster?: K8sCluster
     deployments?: K8sDeployment[]
     pods?: K8sPod[]
@@ -174,17 +158,10 @@ function K8sContent() {
   const pods = data?.pods ?? []
 
   const runningPods = pods.filter((p) => p.status === 'Running').length
-  const totalReplicas = deployments.reduce(
-    (acc, d) => acc + d.replicas.desired,
-    0,
-  )
-  const readyReplicas = deployments.reduce(
-    (acc, d) => acc + d.replicas.ready,
-    0,
-  )
+  const totalReplicas = deployments.reduce((acc, d) => acc + d.replicas.desired, 0)
+  const readyReplicas = deployments.reduce((acc, d) => acc + d.replicas.ready, 0)
   const podRunPct = pods.length > 0 ? (runningPods / pods.length) * 100 : 0
-  const replicaReadyPct =
-    totalReplicas > 0 ? (readyReplicas / totalReplicas) * 100 : 0
+  const replicaReadyPct = totalReplicas > 0 ? (readyReplicas / totalReplicas) * 100 : 0
 
   const statusColors: Record<string, string> = {
     Running: 'bg-emerald-900/30 text-emerald-400',
@@ -212,16 +189,12 @@ function K8sContent() {
           <div className="flex items-center gap-4">
             <div
               className={`flex h-10 w-10 items-center justify-center rounded-lg ${
-                cluster.status === 'connected'
-                  ? 'bg-emerald-500/20'
-                  : 'bg-red-500/20'
+                cluster.status === 'connected' ? 'bg-emerald-500/20' : 'bg-red-500/20'
               }`}
             >
               <Box
                 className={`h-5 w-5 ${
-                  cluster.status === 'connected'
-                    ? 'text-emerald-400'
-                    : 'text-red-400'
+                  cluster.status === 'connected' ? 'text-emerald-400' : 'text-red-400'
                 }`}
               />
             </div>
@@ -235,15 +208,12 @@ function K8sContent() {
                       : 'bg-red-900/30 text-red-400'
                   }`}
                 >
-                  {cluster.status === 'connected' && (
-                    <CheckCircle className="h-3 w-3" />
-                  )}
+                  {cluster.status === 'connected' && <CheckCircle className="h-3 w-3" />}
                   {cluster.status}
                 </span>
               </div>
               <p className="text-sm text-zinc-400">
-                {cluster.platform.toUpperCase()} | v{cluster.version} |{' '}
-                {cluster.nodes} nodes
+                {cluster.platform.toUpperCase()} | v{cluster.version} | {cluster.nodes} nodes
               </p>
             </div>
           </div>
@@ -267,12 +237,8 @@ function K8sContent() {
       ) : (
         <div className="flex flex-col items-center justify-center rounded-lg border border-zinc-700/50 bg-zinc-800/50 p-12 text-center">
           <AlertCircle className="mb-4 h-12 w-12 text-amber-400" />
-          <p className="text-lg text-zinc-300">
-            No Kubernetes cluster connected
-          </p>
-          <p className="text-sm text-zinc-500">
-            Connect to a cluster or set up a new one
-          </p>
+          <p className="text-lg text-zinc-300">No Kubernetes cluster connected</p>
+          <p className="text-sm text-zinc-500">Connect to a cluster or set up a new one</p>
           <Link
             href="/k8s/setup"
             className="mt-4 inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-500"
@@ -376,10 +342,7 @@ function K8sContent() {
           <div className="rounded-lg border border-zinc-700/50 bg-zinc-800/50">
             <div className="flex items-center justify-between border-b border-zinc-700/50 p-4">
               <h2 className="text-lg font-semibold text-white">Deployments</h2>
-              <Link
-                href="/k8s/status"
-                className="text-sm text-blue-400 hover:text-blue-300"
-              >
+              <Link href="/k8s/status" className="text-sm text-blue-400 hover:text-blue-300">
                 View all
               </Link>
             </div>
@@ -407,9 +370,7 @@ function K8sContent() {
                       <td className="px-4 py-3">
                         <div className="flex items-center gap-3">
                           <Layers className="h-4 w-4 text-zinc-500" />
-                          <span className="font-medium text-white">
-                            {deployment.name}
-                          </span>
+                          <span className="font-medium text-white">{deployment.name}</span>
                         </div>
                       </td>
                       <td className="px-4 py-3">
@@ -419,21 +380,18 @@ function K8sContent() {
                       </td>
                       <td className="px-4 py-3">
                         <span className="text-sm text-zinc-400">
-                          {deployment.replicas.ready}/
-                          {deployment.replicas.desired}
+                          {deployment.replicas.ready}/{deployment.replicas.desired}
                         </span>
                       </td>
                       <td className="px-4 py-3">
                         <span
                           className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs ${
-                            deployment.replicas.ready ===
-                            deployment.replicas.desired
+                            deployment.replicas.ready === deployment.replicas.desired
                               ? 'bg-emerald-900/30 text-emerald-400'
                               : 'bg-amber-900/30 text-amber-400'
                           }`}
                         >
-                          {deployment.replicas.ready ===
-                          deployment.replicas.desired ? (
+                          {deployment.replicas.ready === deployment.replicas.desired ? (
                             <>
                               <CheckCircle className="h-3 w-3" /> Ready
                             </>
@@ -455,10 +413,7 @@ function K8sContent() {
           <div className="rounded-lg border border-zinc-700/50 bg-zinc-800/50">
             <div className="flex items-center justify-between border-b border-zinc-700/50 p-4">
               <h2 className="text-lg font-semibold text-white">Pods</h2>
-              <Link
-                href="/k8s/status"
-                className="text-sm text-blue-400 hover:text-blue-300"
-              >
+              <Link href="/k8s/status" className="text-sm text-blue-400 hover:text-blue-300">
                 View all
               </Link>
             </div>
@@ -489,14 +444,10 @@ function K8sContent() {
                       <td className="px-4 py-3">
                         <div className="flex items-center gap-3">
                           <Box className="h-4 w-4 text-zinc-500" />
-                          <span className="font-mono text-sm text-white">
-                            {pod.name}
-                          </span>
+                          <span className="font-mono text-sm text-white">{pod.name}</span>
                         </div>
                       </td>
-                      <td className="px-4 py-3 text-sm text-zinc-400">
-                        {pod.ready}
-                      </td>
+                      <td className="px-4 py-3 text-sm text-zinc-400">{pod.ready}</td>
                       <td className="px-4 py-3">
                         <span
                           className={`inline-flex rounded-full px-2 py-0.5 text-xs ${
@@ -506,12 +457,8 @@ function K8sContent() {
                           {pod.status}
                         </span>
                       </td>
-                      <td className="px-4 py-3 text-sm text-zinc-400">
-                        {pod.restarts}
-                      </td>
-                      <td className="px-4 py-3 text-sm text-zinc-400">
-                        {pod.age}
-                      </td>
+                      <td className="px-4 py-3 text-sm text-zinc-400">{pod.restarts}</td>
+                      <td className="px-4 py-3 text-sm text-zinc-400">{pod.age}</td>
                     </tr>
                   ))}
                 </tbody>

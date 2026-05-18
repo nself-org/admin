@@ -9,7 +9,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     if (!db) {
       return NextResponse.json(
         { success: false, error: 'Database not initialized' },
-        { status: 500 },
+        { status: 500 }
       )
     }
     let config = db.getCollection('config')
@@ -30,7 +30,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     console.error('Error getting wizard state:', error)
     return NextResponse.json(
       { success: false, error: 'Failed to get wizard state' },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -46,7 +46,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     if (!db) {
       return NextResponse.json(
         { success: false, error: 'Database not initialized' },
-        { status: 500 },
+        { status: 500 }
       )
     }
     let config = db.getCollection('config')
@@ -97,7 +97,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     console.error('Error saving wizard state:', error)
     return NextResponse.json(
       { success: false, error: 'Failed to save wizard state' },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -112,7 +112,7 @@ export async function DELETE(request: NextRequest): Promise<NextResponse> {
     if (!db) {
       return NextResponse.json(
         { success: false, error: 'Database not initialized' },
-        { status: 500 },
+        { status: 500 }
       )
     }
     let config = db.getCollection('config')
@@ -142,7 +142,7 @@ export async function DELETE(request: NextRequest): Promise<NextResponse> {
     console.error('Error clearing wizard state:', error)
     return NextResponse.json(
       { success: false, error: 'Failed to clear wizard state' },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

@@ -27,7 +27,7 @@ export async function GET(_request: NextRequest): Promise<NextResponse> {
         error: 'Failed to fetch API key stats',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

@@ -14,6 +14,6 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
   return NextResponse.json(
     { error: 'AWS cloud provisioning not yet available', status: 501 },
-    { status: 501 },
+    { status: 501 }
   )
 }

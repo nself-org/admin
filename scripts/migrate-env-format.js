@@ -38,12 +38,7 @@ async function migrateEnvFile(filePath) {
 
         if (name) {
           // Create CS_N format
-          const parts = [
-            name,
-            framework || 'custom',
-            port || 4000 + i - 1,
-            route,
-          ]
+          const parts = [name, framework || 'custom', port || 4000 + i - 1, route]
           env[`CS_${i}`] = parts.join(':')
 
           // Remove old format
@@ -75,12 +70,7 @@ async function migrateEnvFile(filePath) {
     }
 
     // Database
-    const db = [
-      'POSTGRES_DB',
-      'POSTGRES_USER',
-      'POSTGRES_PASSWORD',
-      'DATABASE_TYPE',
-    ]
+    const db = ['POSTGRES_DB', 'POSTGRES_USER', 'POSTGRES_PASSWORD', 'DATABASE_TYPE']
     const dbValues = db.filter((k) => env[k])
     if (dbValues.length > 0) {
       newLines.push('# Database')
@@ -136,8 +126,7 @@ async function migrateEnvFile(filePath) {
 }
 
 async function main() {
-  const projectPath =
-    process.env.NSELF_PROJECT_PATH || '/Users/admin/Sites/nself-project'
+  const projectPath = process.env.NSELF_PROJECT_PATH || '/Users/admin/Sites/nself-project'
 
   const files = [
     path.join(projectPath, '.env.dev'),

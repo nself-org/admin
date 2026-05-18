@@ -16,9 +16,7 @@ export function DiffViewer({ generation }: DiffViewerProps) {
 
   const hasMigration = Boolean(generation?.migration_sql)
   const hasPermissions = Boolean(generation?.permissions_json)
-  const hasUI = Boolean(
-    generation?.ui_files && Object.keys(generation.ui_files).length > 0,
-  )
+  const hasUI = Boolean(generation?.ui_files && Object.keys(generation.ui_files).length > 0)
 
   const getLayerContent = useCallback((): {
     value: string
@@ -52,9 +50,7 @@ export function DiffViewer({ generation }: DiffViewerProps) {
         return {
           value: files[firstKey] ?? '',
           language:
-            firstKey.endsWith('.tsx') || firstKey.endsWith('.ts')
-              ? 'typescript'
-              : 'javascript',
+            firstKey.endsWith('.tsx') || firstKey.endsWith('.ts') ? 'typescript' : 'javascript',
         }
       }
       default:
@@ -73,9 +69,7 @@ export function DiffViewer({ generation }: DiffViewerProps) {
       >
         <Code2 className="mb-2 h-8 w-8 opacity-40" aria-hidden="true" />
         <p className="text-sm">Generated code appears here</p>
-        <p className="mt-1 text-xs text-zinc-600">
-          Submit a feature request to generate code
-        </p>
+        <p className="mt-1 text-xs text-zinc-600">Submit a feature request to generate code</p>
       </section>
     )
   }
@@ -94,11 +88,7 @@ export function DiffViewer({ generation }: DiffViewerProps) {
   }
 
   return (
-    <section
-      role="region"
-      aria-label="Diff viewer"
-      className="flex h-full flex-col"
-    >
+    <section role="region" aria-label="Diff viewer" className="flex h-full flex-col">
       <h2 className="sr-only">Generated Code Diff</h2>
       <LayerTabs
         activeLayer={activeLayer}
@@ -132,10 +122,7 @@ export function DiffViewer({ generation }: DiffViewerProps) {
       >
         {generation.status === 'generating' && !value.trim() ? (
           <div className="flex h-full items-center justify-center gap-2 text-sm text-zinc-500">
-            <span
-              className="h-2 w-2 animate-pulse rounded-full bg-sky-500"
-              aria-hidden="true"
-            />
+            <span className="h-2 w-2 animate-pulse rounded-full bg-sky-500" aria-hidden="true" />
             Generating {activeLayer}...
           </div>
         ) : (

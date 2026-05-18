@@ -32,11 +32,6 @@ export interface EnvCredentials {
 
 /** Structured error thrown by env-switcher core logic. */
 export interface EnvSwitcherError extends Error {
-  code:
-    | 'CLI_NOT_FOUND'
-    | 'PARSE_ERROR'
-    | 'SWITCH_FAILED'
-    | 'INVALID_TARGET'
-    | 'NETWORK_ERROR'
+  code: 'CLI_NOT_FOUND' | 'PARSE_ERROR' | 'SWITCH_FAILED' | 'INVALID_TARGET' | 'NETWORK_ERROR'
   details?: string
 }

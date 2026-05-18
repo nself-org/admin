@@ -5,14 +5,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { ScrollArea } from '@/components/ui/scroll-area'
-import {
-  CheckCircle,
-  History,
-  Search,
-  Star,
-  Trash2,
-  XCircle,
-} from 'lucide-react'
+import { CheckCircle, History, Search, Star, Trash2, XCircle } from 'lucide-react'
 import { useState } from 'react'
 
 export interface QueryHistoryItem {
@@ -34,16 +27,11 @@ interface QueryHistoryProps {
   onToggleStar: (id: string) => void
 }
 
-export function QueryHistory({
-  history,
-  onLoad,
-  onDelete,
-  onToggleStar,
-}: QueryHistoryProps) {
+export function QueryHistory({ history, onLoad, onDelete, onToggleStar }: QueryHistoryProps) {
   const [searchTerm, setSearchTerm] = useState('')
 
   const filteredHistory = history.filter((item) =>
-    item.query.toLowerCase().includes(searchTerm.toLowerCase()),
+    item.query.toLowerCase().includes(searchTerm.toLowerCase())
   )
 
   const starredItems = filteredHistory.filter((item) => item.starred)
@@ -154,9 +142,7 @@ function HistoryItemCard({
           <div className="mt-1 flex items-center gap-4 text-xs text-zinc-600 dark:text-zinc-400">
             <span>{item.executionTime}ms</span>
             {item.rowCount !== undefined && <span>{item.rowCount} rows</span>}
-            {item.error && (
-              <span className="truncate text-red-500">{item.error}</span>
-            )}
+            {item.error && <span className="truncate text-red-500">{item.error}</span>}
           </div>
         </div>
         <div className="flex gap-1 opacity-0 transition-opacity group-hover:opacity-100">
@@ -168,9 +154,7 @@ function HistoryItemCard({
               onToggleStar(item.id)
             }}
           >
-            <Star
-              className={`h-4 w-4 ${item.starred ? 'fill-yellow-500 text-yellow-500' : ''}`}
-            />
+            <Star className={`h-4 w-4 ${item.starred ? 'fill-yellow-500 text-yellow-500' : ''}`} />
           </Button>
           <Button
             variant="ghost"

@@ -168,9 +168,7 @@ function HistoryContent() {
                 <Rocket className="h-5 w-5 text-sky-500 dark:text-sky-400" />
               </div>
               <div>
-                <p className="font-medium text-zinc-900 dark:text-white">
-                  Deployments
-                </p>
+                <p className="font-medium text-zinc-900 dark:text-white">Deployments</p>
                 <p className="text-sm text-zinc-500">Deployment history</p>
               </div>
             </div>
@@ -186,9 +184,7 @@ function HistoryContent() {
                 <Database className="h-5 w-5 text-green-600 dark:text-green-400" />
               </div>
               <div>
-                <p className="font-medium text-zinc-900 dark:text-white">
-                  Migrations
-                </p>
+                <p className="font-medium text-zinc-900 dark:text-white">Migrations</p>
                 <p className="text-sm text-zinc-500">Database changes</p>
               </div>
             </div>
@@ -204,9 +200,7 @@ function HistoryContent() {
                 <RefreshCw className="h-5 w-5 text-teal-600 dark:text-teal-400" />
               </div>
               <div>
-                <p className="font-medium text-zinc-900 dark:text-white">
-                  Sync History
-                </p>
+                <p className="font-medium text-zinc-900 dark:text-white">Sync History</p>
                 <p className="text-sm text-zinc-500">Environment syncs</p>
               </div>
             </div>
@@ -218,9 +212,7 @@ function HistoryContent() {
         <div className="mb-6 flex flex-wrap gap-4">
           <div className="flex items-center gap-2">
             <Filter className="h-4 w-4 text-zinc-500" />
-            <span className="text-sm text-zinc-600 dark:text-zinc-400">
-              Filters:
-            </span>
+            <span className="text-sm text-zinc-600 dark:text-zinc-400">Filters:</span>
           </div>
           <div className="relative">
             <select
@@ -232,9 +224,7 @@ function HistoryContent() {
                 <option key={type} value={type}>
                   {type === 'all'
                     ? 'All Types'
-                    : type
-                        .replace('_', ' ')
-                        .replace(/\b\w/g, (c) => c.toUpperCase())}
+                    : type.replace('_', ' ').replace(/\b\w/g, (c) => c.toUpperCase())}
                 </option>
               ))}
             </select>
@@ -247,9 +237,7 @@ function HistoryContent() {
               className="appearance-none rounded-lg border border-zinc-300 bg-white px-4 py-2 pr-10 text-sm text-zinc-900 focus:border-sky-500 focus:ring-1 focus:ring-sky-500 focus:outline-none dark:border-zinc-600 dark:bg-zinc-800 dark:text-white"
             >
               <option value="all">All Users</option>
-              <option value="developer@example.com">
-                developer@example.com
-              </option>
+              <option value="developer@example.com">developer@example.com</option>
               <option value="admin@example.com">admin@example.com</option>
               <option value="system">System</option>
             </select>
@@ -269,10 +257,7 @@ function HistoryContent() {
           ) : (
             <div className="divide-y divide-zinc-200 dark:divide-zinc-700">
               {history.map((entry) => (
-                <div
-                  key={entry.id}
-                  className="p-4 hover:bg-zinc-50 dark:hover:bg-zinc-700/50"
-                >
+                <div key={entry.id} className="p-4 hover:bg-zinc-50 dark:hover:bg-zinc-700/50">
                   <div className="flex items-start gap-4">
                     {getTypeIcon(entry.type)}
                     <div className="flex-1">
@@ -286,9 +271,7 @@ function HistoryContent() {
                           {entry.action}
                         </span>
                       </div>
-                      <p className="text-zinc-900 dark:text-white">
-                        {entry.description}
-                      </p>
+                      <p className="text-zinc-900 dark:text-white">{entry.description}</p>
                       <div className="mt-2 flex items-center gap-4 text-xs text-zinc-500 dark:text-zinc-400">
                         <span className="flex items-center gap-1">
                           <User className="h-3 w-3" />
@@ -299,9 +282,7 @@ function HistoryContent() {
                           {formatTimeAgo(entry.timestamp || '')}
                         </span>
                         <span className="text-zinc-400">
-                          {entry.timestamp
-                            ? new Date(entry.timestamp).toLocaleString()
-                            : ''}
+                          {entry.timestamp ? new Date(entry.timestamp).toLocaleString() : ''}
                         </span>
                       </div>
                     </div>
@@ -319,22 +300,16 @@ function HistoryContent() {
           </h3>
           <div className="space-y-2 font-mono text-sm">
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-sky-500">nself history</span> - View audit
-              history
+              <span className="text-sky-500">nself history</span> - View audit history
             </p>
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-sky-500">
-                nself history --type=deployment
-              </span>{' '}
-              - Filter by type
+              <span className="text-sky-500">nself history --type=deployment</span> - Filter by type
             </p>
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-sky-500">nself history --since=7d</span> -
-              Show last 7 days
+              <span className="text-sky-500">nself history --since=7d</span> - Show last 7 days
             </p>
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-sky-500">nself history --export=csv</span> -
-              Export history
+              <span className="text-sky-500">nself history --export=csv</span> - Export history
             </p>
           </div>
         </div>

@@ -13,10 +13,7 @@ interface RouteParams {
  *   - startDate?: string (ISO date)
  *   - endDate?: string (ISO date)
  */
-export async function GET(
-  request: NextRequest,
-  { params }: RouteParams,
-): Promise<NextResponse> {
+export async function GET(request: NextRequest, { params }: RouteParams): Promise<NextResponse> {
   try {
     const { id } = await params
     const searchParams = request.nextUrl.searchParams
@@ -31,24 +28,21 @@ export async function GET(
     if (isNaN(limit) || limit < 1 || limit > 1000) {
       return NextResponse.json(
         { success: false, error: 'Invalid limit. Must be between 1 and 1000' },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
     if (isNaN(offset) || offset < 0) {
       return NextResponse.json(
         { success: false, error: 'Invalid offset. Must be 0 or greater' },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
     // Verify the key exists
     const apiKey = await apiKeysApi.getApiKeyById(id)
     if (!apiKey) {
-      return NextResponse.json(
-        { success: false, error: 'API key not found' },
-        { status: 404 },
-      )
+      return NextResponse.json({ success: false, error: 'API key not found' }, { status: 404 })
     }
 
     const usage = await apiKeysApi.getApiKeyUsage(id, {
@@ -74,7 +68,7 @@ export async function GET(
         error: 'Failed to fetch API key usage',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

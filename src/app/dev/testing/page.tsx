@@ -190,14 +190,22 @@ function TestingContent() {
             for (const line of lines) {
               if (line.startsWith('event: ')) evType = line.slice(7)
               if (line.startsWith('data: ')) {
-                try { evData = JSON.parse(line.slice(6)) } catch { evData = line.slice(6) }
+                try {
+                  evData = JSON.parse(line.slice(6))
+                } catch {
+                  evData = line.slice(6)
+                }
               }
             }
             if (evType === 'stdout' || evType === 'stderr') {
               if (evData) outputLines.push(evData)
             }
             if (evType === 'exit') {
-              try { exitCode = JSON.parse(evData).code } catch { exitCode = 0 }
+              try {
+                exitCode = JSON.parse(evData).code
+              } catch {
+                exitCode = 0
+              }
             }
           }
         }
@@ -249,18 +257,18 @@ function TestingContent() {
   // State 5: offline
   if (offline) {
     return (
-      <div className="p-6 space-y-4">
-        <div className="flex items-center gap-3 p-4 rounded-lg bg-yellow-500/10 border border-yellow-500/30">
-          <WifiOff className="h-5 w-5 text-yellow-500 flex-shrink-0" />
+      <div className="space-y-4 p-6">
+        <div className="flex items-center gap-3 rounded-lg border border-yellow-500/30 bg-yellow-500/10 p-4">
+          <WifiOff className="h-5 w-5 flex-shrink-0 text-yellow-500" />
           <div>
             <p className="font-medium text-yellow-400">Cannot reach nself services</p>
-            <p className="text-sm text-gray-400 mt-0.5">
+            <p className="mt-0.5 text-sm text-gray-400">
               Testing utilities require a running nself stack.
             </p>
           </div>
         </div>
         <Button onClick={fetchStatus} disabled={loading} variant="secondary" size="sm">
-          <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
+          <RefreshCw className={`mr-2 h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
           Retry
         </Button>
       </div>
@@ -270,16 +278,16 @@ function TestingContent() {
   // State 4: error
   if (error && !data) {
     return (
-      <div className="p-6 space-y-4">
-        <div className="flex items-center gap-3 p-4 rounded-lg bg-red-500/10 border border-red-500/30">
-          <AlertTriangle className="h-5 w-5 text-red-400 flex-shrink-0" />
+      <div className="space-y-4 p-6">
+        <div className="flex items-center gap-3 rounded-lg border border-red-500/30 bg-red-500/10 p-4">
+          <AlertTriangle className="h-5 w-5 flex-shrink-0 text-red-400" />
           <div>
             <p className="font-medium text-red-400">Failed to load test suites</p>
-            <p className="text-sm text-gray-400 mt-0.5">{error}</p>
+            <p className="mt-0.5 text-sm text-gray-400">{error}</p>
           </div>
         </div>
         <Button onClick={fetchStatus} disabled={loading} variant="secondary" size="sm">
-          <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
+          <RefreshCw className={`mr-2 h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
           Retry
         </Button>
       </div>
@@ -290,10 +298,16 @@ function TestingContent() {
   if (!data) {
     return (
       <div className="p-6 text-center text-gray-400">
-        <Terminal className="h-8 w-8 mx-auto mb-2 opacity-50" />
+        <Terminal className="mx-auto mb-2 h-8 w-8 opacity-50" />
         <p>No test suites available.</p>
-        <Button onClick={fetchStatus} disabled={loading} variant="secondary" size="sm" className="mt-3">
-          <RefreshCw className="h-4 w-4 mr-2" />
+        <Button
+          onClick={fetchStatus}
+          disabled={loading}
+          variant="secondary"
+          size="sm"
+          className="mt-3"
+        >
+          <RefreshCw className="mr-2 h-4 w-4" />
           Load
         </Button>
       </div>
@@ -302,23 +316,25 @@ function TestingContent() {
 
   const suites = data.suites
   const totalPassed = Object.values(results).filter((r) => r.status === 'passed').length
-  const totalFailed = Object.values(results).filter((r) => r.status === 'failed' || r.status === 'error').length
+  const totalFailed = Object.values(results).filter(
+    (r) => r.status === 'failed' || r.status === 'error'
+  ).length
   const anyRunning = Object.values(results).some((r) => r.status === 'running')
 
   // States 6+7: success
   return (
-    <div className="p-6 space-y-6">
+    <div className="space-y-6 p-6">
       {/* Header */}
-      <div className="flex items-center justify-between flex-wrap gap-3">
+      <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h2 className="text-xl font-semibold text-white">Testing Utilities</h2>
-          <p className="text-sm text-gray-400 mt-1">
+          <p className="mt-1 text-sm text-gray-400">
             {suites.length} test suite{suites.length !== 1 ? 's' : ''} available
             {Object.keys(results).length > 0 && (
               <span className="ml-2">
                 {totalPassed > 0 && <span className="text-green-400">{totalPassed} passed</span>}
                 {totalFailed > 0 && (
-                  <span className={`text-red-400 ${totalPassed > 0 ? ' · ' : ''}`}>
+                  <span className={`text-red-400 ${totalPassed > 0 ? '·' : ''}`}>
                     {totalFailed} failed
                   </span>
                 )}
@@ -329,15 +345,15 @@ function TestingContent() {
         <div className="flex items-center gap-2">
           <Button onClick={runAll} disabled={runningAll || anyRunning} size="sm">
             {runningAll || anyRunning ? (
-              <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
             ) : (
-              <Terminal className="h-4 w-4 mr-2" />
+              <Terminal className="mr-2 h-4 w-4" />
             )}
             {runningAll ? 'Running…' : 'Run All'}
           </Button>
           <Button onClick={fetchStatus} disabled={loading} variant="secondary" size="sm">
             {/* State 2: refresh spinner */}
-            <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
+            <RefreshCw className={`mr-2 h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
             {loading ? 'Loading…' : 'Refresh'}
           </Button>
         </div>
@@ -350,40 +366,44 @@ function TestingContent() {
           const isRunning = result?.status === 'running'
           const isExpanded = expanded[suite.id]
           return (
-            <div key={suite.id} className="rounded-lg border border-white/10 overflow-hidden">
-              <div className="flex items-center gap-3 px-4 py-3 hover:bg-white/[0.02] transition-colors">
+            <div key={suite.id} className="overflow-hidden rounded-lg border border-white/10">
+              <div className="flex items-center gap-3 px-4 py-3 transition-colors hover:bg-white/[0.02]">
                 {/* Status icon */}
                 <div className="flex-shrink-0">
                   {!result && <Terminal className="h-4 w-4 text-gray-500" />}
-                  {result?.status === 'running' && <Loader2 className="h-4 w-4 text-sky-400 animate-spin" />}
-                  {result?.status === 'passed' && <CheckCircle className="h-4 w-4 text-green-400" />}
+                  {result?.status === 'running' && (
+                    <Loader2 className="h-4 w-4 animate-spin text-sky-400" />
+                  )}
+                  {result?.status === 'passed' && (
+                    <CheckCircle className="h-4 w-4 text-green-400" />
+                  )}
                   {(result?.status === 'failed' || result?.status === 'error') && (
                     <XCircle className="h-4 w-4 text-red-400" />
                   )}
                 </div>
 
                 {/* Info */}
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 flex-wrap">
+                <div className="min-w-0 flex-1">
+                  <div className="flex flex-wrap items-center gap-2">
                     <span className="text-sm font-medium text-white">{suite.name}</span>
                     <span
-                      className={`text-xs px-1.5 py-0.5 rounded border font-mono ${CATEGORY_STYLES[suite.category]}`}
+                      className={`rounded border px-1.5 py-0.5 font-mono text-xs ${CATEGORY_STYLES[suite.category]}`}
                     >
                       {suite.category}
                     </span>
                     {result && result.status !== 'running' && (
-                      <span className="text-xs text-gray-500 flex items-center gap-1">
+                      <span className="flex items-center gap-1 text-xs text-gray-500">
                         <Clock className="h-3 w-3" />
                         {result.durationMs}ms
                       </span>
                     )}
                   </div>
-                  <p className="text-xs text-gray-400 mt-0.5">{suite.description}</p>
-                  <code className="text-xs text-gray-600 font-mono">{suite.command}</code>
+                  <p className="mt-0.5 text-xs text-gray-400">{suite.description}</p>
+                  <code className="font-mono text-xs text-gray-600">{suite.command}</code>
                 </div>
 
                 {/* Actions */}
-                <div className="flex items-center gap-2 flex-shrink-0">
+                <div className="flex flex-shrink-0 items-center gap-2">
                   <Button
                     onClick={() => runSuite(suite)}
                     disabled={isRunning || runningAll}
@@ -402,7 +422,7 @@ function TestingContent() {
                       onClick={() =>
                         setExpanded((prev) => ({ ...prev, [suite.id]: !prev[suite.id] }))
                       }
-                      className="text-gray-500 hover:text-gray-300 transition-colors"
+                      className="text-gray-500 transition-colors hover:text-gray-300"
                     >
                       {isExpanded ? (
                         <ChevronDown className="h-4 w-4" />
@@ -417,7 +437,7 @@ function TestingContent() {
               {/* Output panel */}
               {result?.output && isExpanded && (
                 <div className="border-t border-white/10 bg-black/20 px-4 py-3">
-                  <pre className="text-xs text-gray-300 font-mono whitespace-pre-wrap overflow-auto max-h-48">
+                  <pre className="max-h-48 overflow-auto font-mono text-xs whitespace-pre-wrap text-gray-300">
                     {result.output}
                   </pre>
                 </div>

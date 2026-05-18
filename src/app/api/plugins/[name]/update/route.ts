@@ -17,10 +17,7 @@ interface RouteContext {
   params: Promise<{ name: string }>
 }
 
-export async function POST(
-  request: NextRequest,
-  context: RouteContext,
-): Promise<NextResponse> {
+export async function POST(request: NextRequest, context: RouteContext): Promise<NextResponse> {
   const authError = await requireAuth(request)
   if (authError) return authError
 
@@ -32,7 +29,7 @@ export async function POST(
     if (!/^[a-zA-Z0-9_-]+$/.test(name)) {
       return NextResponse.json(
         { success: false, error: 'Invalid plugin name format' },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -41,23 +38,14 @@ export async function POST(
 
     logger.info('Updating plugin', { name })
 
-    const { stdout, stderr } = await execFileAsync(
-      nselfPath,
-      ['plugin', 'update', name],
-      {
-        cwd: projectPath,
-        env: { ...process.env, PATH: getEnhancedPath() },
-        timeout: 120000, // 2 minute timeout for update operations
-      },
-    )
+    const { stdout, stderr } = await execFileAsync(nselfPath, ['plugin', 'update', name], {
+      cwd: projectPath,
+      env: { ...process.env, PATH: getEnhancedPath() },
+      timeout: 120000, // 2 minute timeout for update operations
+    })
 
     logger.cli(`plugin update ${name}`, true, Date.now() - startTime)
-    logger.api(
-      'POST',
-      `/api/plugins/${name}/update`,
-      200,
-      Date.now() - startTime,
-    )
+    logger.api('POST', `/api/plugins/${name}/update`, 200, Date.now() - startTime)
 
     return NextResponse.json({
       success: true,
@@ -75,7 +63,7 @@ export async function POST(
         details: err.message || 'Unknown error',
         output: err.stdout || err.stderr,
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

@@ -175,15 +175,11 @@ function RequestBuilder({
     <div className="rounded-lg border border-zinc-200 bg-white dark:border-zinc-700 dark:bg-zinc-800">
       <div className="border-b border-zinc-200 p-6 dark:border-zinc-700">
         <div className="mb-4 flex items-center gap-2">
-          <h2 className="text-lg font-semibold text-zinc-900 dark:text-white">
-            Request Builder
-          </h2>
+          <h2 className="text-lg font-semibold text-zinc-900 dark:text-white">Request Builder</h2>
           {environments.length > 0 && (
             <select
               value={request.environment || ''}
-              onChange={(e) =>
-                onRequestChange({ ...request, environment: e.target.value })
-              }
+              onChange={(e) => onRequestChange({ ...request, environment: e.target.value })}
               className="rounded border border-zinc-200 bg-white px-3 py-1 text-sm dark:border-zinc-700 dark:bg-zinc-800"
             >
               <option value="">No Environment</option>
@@ -218,9 +214,7 @@ function RequestBuilder({
             type="text"
             placeholder="https://api.example.com/endpoint"
             value={request.url}
-            onChange={(e) =>
-              onRequestChange({ ...request, url: e.target.value })
-            }
+            onChange={(e) => onRequestChange({ ...request, url: e.target.value })}
             className="flex-1 rounded border border-zinc-200 bg-white px-3 py-2 dark:border-zinc-700 dark:bg-zinc-800"
           />
 
@@ -241,11 +235,7 @@ function RequestBuilder({
           >
             <Lock className="h-4 w-4" />
             Authorization
-            {showAuth ? (
-              <ChevronDown className="h-3 w-3" />
-            ) : (
-              <ChevronRight className="h-3 w-3" />
-            )}
+            {showAuth ? <ChevronDown className="h-3 w-3" /> : <ChevronRight className="h-3 w-3" />}
           </button>
 
           <button
@@ -280,9 +270,7 @@ function RequestBuilder({
 
       {showAuth && (
         <div className="border-b border-zinc-200 bg-zinc-50 p-6 dark:border-zinc-700 dark:bg-zinc-900/50">
-          <h3 className="mb-3 font-medium text-zinc-900 dark:text-white">
-            Authorization
-          </h3>
+          <h3 className="mb-3 font-medium text-zinc-900 dark:text-white">Authorization</h3>
           <div className="space-y-4">
             <select
               value={request.auth?.type || 'none'}
@@ -399,9 +387,7 @@ function RequestBuilder({
       {showHeaders && (
         <div className="border-b border-zinc-200 bg-zinc-50 p-6 dark:border-zinc-700 dark:bg-zinc-900/50">
           <div className="mb-3 flex items-center justify-between">
-            <h3 className="font-medium text-zinc-900 dark:text-white">
-              Headers
-            </h3>
+            <h3 className="font-medium text-zinc-900 dark:text-white">Headers</h3>
             <Button onClick={addHeader} variant="outline" className="text-xs">
               <Plus className="mr-1 h-3 w-3" />
               Add Header
@@ -435,9 +421,7 @@ function RequestBuilder({
             ))}
 
             {Object.keys(request.headers).length === 0 && (
-              <div className="py-4 text-center text-zinc-500">
-                No headers added
-              </div>
+              <div className="py-4 text-center text-zinc-500">No headers added</div>
             )}
           </div>
         </div>
@@ -446,14 +430,10 @@ function RequestBuilder({
       {showBody && request.method !== 'GET' && request.method !== 'HEAD' && (
         <div className="bg-zinc-50 p-6 dark:bg-zinc-900/50">
           <div className="mb-3 flex items-center justify-between">
-            <h3 className="font-medium text-zinc-900 dark:text-white">
-              Request Body
-            </h3>
+            <h3 className="font-medium text-zinc-900 dark:text-white">Request Body</h3>
             <select
               value={request.bodyType}
-              onChange={(e) =>
-                onRequestChange({ ...request, bodyType: e.target.value as any })
-              }
+              onChange={(e) => onRequestChange({ ...request, bodyType: e.target.value as any })}
               className="rounded border border-zinc-200 bg-white px-3 py-1 text-sm dark:border-zinc-700 dark:bg-zinc-800"
             >
               <option value="none">None</option>
@@ -473,9 +453,7 @@ function RequestBuilder({
                     : 'Raw request body'
               }
               value={request.body || ''}
-              onChange={(e) =>
-                onRequestChange({ ...request, body: e.target.value })
-              }
+              onChange={(e) => onRequestChange({ ...request, body: e.target.value })}
               className="resize-vertical h-48 w-full rounded border border-zinc-200 bg-white px-3 py-2 font-mono text-sm dark:border-zinc-700 dark:bg-zinc-800"
             />
           )}
@@ -486,9 +464,7 @@ function RequestBuilder({
 }
 
 function ResponseViewer({ response }: { response: ApiResponse | null }) {
-  const [activeTab, setActiveTab] = useState<'body' | 'headers' | 'cookies'>(
-    'body',
-  )
+  const [activeTab, setActiveTab] = useState<'body' | 'headers' | 'cookies'>('body')
   const [bodyFormat, setBodyFormat] = useState<'pretty' | 'raw'>('pretty')
 
   if (!response) {
@@ -503,12 +479,9 @@ function ResponseViewer({ response }: { response: ApiResponse | null }) {
   }
 
   const getStatusColor = (status: number) => {
-    if (status >= 200 && status < 300)
-      return 'text-green-600 dark:text-green-400'
-    if (status >= 300 && status < 400)
-      return 'text-yellow-600 dark:text-yellow-400'
-    if (status >= 400 && status < 500)
-      return 'text-orange-600 dark:text-orange-400'
+    if (status >= 200 && status < 300) return 'text-green-600 dark:text-green-400'
+    if (status >= 300 && status < 400) return 'text-yellow-600 dark:text-yellow-400'
+    if (status >= 400 && status < 500) return 'text-orange-600 dark:text-orange-400'
     if (status >= 500) return 'text-red-600 dark:text-red-400'
     return 'text-zinc-600 dark:text-zinc-400'
   }
@@ -531,9 +504,7 @@ function ResponseViewer({ response }: { response: ApiResponse | null }) {
     <div className="rounded-lg border border-zinc-200 bg-white dark:border-zinc-700 dark:bg-zinc-800">
       <div className="border-b border-zinc-200 p-6 dark:border-zinc-700">
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-lg font-semibold text-zinc-900 dark:text-white">
-            Response
-          </h2>
+          <h2 className="text-lg font-semibold text-zinc-900 dark:text-white">Response</h2>
           <div className="flex items-center gap-4 text-sm">
             <span className={`font-medium ${getStatusColor(response.status)}`}>
               {response.status} {response.statusText}
@@ -595,9 +566,7 @@ function ResponseViewer({ response }: { response: ApiResponse | null }) {
               </Button>
               <select
                 value={bodyFormat}
-                onChange={(e) =>
-                  setBodyFormat(e.target.value as 'pretty' | 'raw')
-                }
+                onChange={(e) => setBodyFormat(e.target.value as 'pretty' | 'raw')}
                 className="rounded border border-zinc-200 bg-white px-2 py-1 text-xs dark:border-zinc-700 dark:bg-zinc-800"
               >
                 <option value="pretty">Pretty</option>
@@ -608,8 +577,7 @@ function ResponseViewer({ response }: { response: ApiResponse | null }) {
 
           <div className="max-h-96 overflow-auto rounded-lg bg-zinc-900 p-4 text-green-400">
             <pre className="font-mono text-sm whitespace-pre-wrap">
-              {bodyFormat === 'pretty' &&
-              response.headers['content-type']?.includes('json')
+              {bodyFormat === 'pretty' && response.headers['content-type']?.includes('json')
                 ? formatJson(response.body)
                 : response.body}
             </pre>
@@ -660,9 +628,7 @@ function CollectionManager({
   onRequestSelect: (request: ApiRequest) => void
   requests: ApiRequest[]
 }) {
-  const [expandedCollections, setExpandedCollections] = useState<Set<string>>(
-    new Set(),
-  )
+  const [expandedCollections, setExpandedCollections] = useState<Set<string>>(new Set())
 
   const toggleCollection = (collectionId: string) => {
     const newExpanded = new Set(expandedCollections)
@@ -695,9 +661,7 @@ function CollectionManager({
     <div className="rounded-lg border border-zinc-200 bg-white dark:border-zinc-700 dark:bg-zinc-800">
       <div className="border-b border-zinc-200 p-4 dark:border-zinc-700">
         <div className="flex items-center justify-between">
-          <h3 className="font-semibold text-zinc-900 dark:text-white">
-            Collections
-          </h3>
+          <h3 className="font-semibold text-zinc-900 dark:text-white">Collections</h3>
           <Button variant="outline" className="text-xs">
             <Plus className="mr-1 h-3 w-3" />
             New Collection
@@ -708,9 +672,7 @@ function CollectionManager({
       <div className="max-h-96 overflow-y-auto">
         {collections.map((collection) => {
           const isExpanded = expandedCollections.has(collection.id)
-          const collectionRequests = requests.filter((r) =>
-            collection.requests.includes(r.id),
-          )
+          const collectionRequests = requests.filter((r) => collection.requests.includes(r.id))
 
           return (
             <div
@@ -730,9 +692,7 @@ function CollectionManager({
                   <span className="font-medium text-zinc-900 dark:text-white">
                     {collection.name}
                   </span>
-                  <span className="text-xs text-zinc-500">
-                    ({collection.requests.length})
-                  </span>
+                  <span className="text-xs text-zinc-500">({collection.requests.length})</span>
                 </div>
                 {isExpanded ? (
                   <ChevronDown className="h-4 w-4 text-zinc-500" />
@@ -749,14 +709,10 @@ function CollectionManager({
                       onClick={() => onRequestSelect(request)}
                       className="flex w-full items-center gap-2 p-3 pl-12 text-left hover:bg-zinc-50 dark:hover:bg-zinc-700/50"
                     >
-                      <span
-                        className={`text-xs font-medium ${getMethodColor(request.method)}`}
-                      >
+                      <span className={`text-xs font-medium ${getMethodColor(request.method)}`}>
                         {request.method}
                       </span>
-                      <span className="text-sm text-zinc-900 dark:text-white">
-                        {request.name}
-                      </span>
+                      <span className="text-sm text-zinc-900 dark:text-white">{request.name}</span>
                     </button>
                   ))}
 
@@ -795,7 +751,7 @@ function RequestHistory({
     (request) =>
       request.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       request.url.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      request.method.toLowerCase().includes(searchQuery.toLowerCase()),
+      request.method.toLowerCase().includes(searchQuery.toLowerCase())
   )
 
   const getMethodColor = (method: string) => {
@@ -819,9 +775,7 @@ function RequestHistory({
     <div className="rounded-lg border border-zinc-200 bg-white dark:border-zinc-700 dark:bg-zinc-800">
       <div className="border-b border-zinc-200 p-4 dark:border-zinc-700">
         <div className="mb-3 flex items-center justify-between">
-          <h3 className="font-semibold text-zinc-900 dark:text-white">
-            Request History
-          </h3>
+          <h3 className="font-semibold text-zinc-900 dark:text-white">Request History</h3>
           <Button variant="outline" className="text-xs">
             <Trash2 className="mr-1 h-3 w-3" />
             Clear
@@ -856,9 +810,7 @@ function RequestHistory({
               <div className="truncate font-medium text-zinc-900 dark:text-white">
                 {request.name}
               </div>
-              <div className="truncate text-sm text-zinc-500">
-                {request.url}
-              </div>
+              <div className="truncate text-sm text-zinc-500">{request.url}</div>
             </div>
             <div className="text-xs text-zinc-500">
               {new Date(request.timestamp).toLocaleTimeString()}
@@ -891,14 +843,8 @@ function EnvironmentManager({
     <div className="rounded-lg border border-zinc-200 bg-white dark:border-zinc-700 dark:bg-zinc-800">
       <div className="border-b border-zinc-200 p-4 dark:border-zinc-700">
         <div className="flex items-center justify-between">
-          <h3 className="font-semibold text-zinc-900 dark:text-white">
-            Environments
-          </h3>
-          <Button
-            onClick={() => setIsCreating(true)}
-            variant="outline"
-            className="text-xs"
-          >
+          <h3 className="font-semibold text-zinc-900 dark:text-white">Environments</h3>
+          <Button onClick={() => setIsCreating(true)} variant="outline" className="text-xs">
             <Plus className="mr-1 h-3 w-3" />
             New Environment
           </Button>
@@ -912,9 +858,7 @@ function EnvironmentManager({
             className="mb-4 rounded-lg border border-zinc-200 p-3 dark:border-zinc-700"
           >
             <div className="mb-2 flex items-center justify-between">
-              <h4 className="font-medium text-zinc-900 dark:text-white">
-                {env.name}
-              </h4>
+              <h4 className="font-medium text-zinc-900 dark:text-white">{env.name}</h4>
               <div className="flex items-center gap-2">
                 <Button variant="outline" className="text-xs">
                   <Edit className="mr-1 h-3 w-3" />
@@ -963,17 +907,14 @@ function ApiExplorerContent() {
     timestamp: new Date().toISOString(),
   })
 
-  const [currentResponse, setCurrentResponse] = useState<ApiResponse | null>(
-    null,
-  )
+  const [currentResponse, setCurrentResponse] = useState<ApiResponse | null>(null)
   const [collections, setCollections] = useState<Collection[]>([])
   const [requestHistory, setRequestHistory] = useState<ApiRequest[]>([])
   const [environments, setEnvironments] = useState<Environment[]>([])
   const [loading, setLoading] = useState(false)
-  const [activeTab, setActiveTab] = useState<
-    'collections' | 'history' | 'environments' | 'docs'
-  >('collections')
-
+  const [activeTab, setActiveTab] = useState<'collections' | 'history' | 'environments' | 'docs'>(
+    'collections'
+  )
 
   const handleSendRequest = async (request: ApiRequest) => {
     setLoading(true)
@@ -988,7 +929,9 @@ function ApiExplorerContent() {
       const text = await res.text()
       const elapsed = Date.now() - start
       const responseHeaders: Record<string, string> = {}
-      res.headers.forEach((val, key) => { responseHeaders[key] = val })
+      res.headers.forEach((val, key) => {
+        responseHeaders[key] = val
+      })
       setCurrentResponse({
         status: res.status,
         statusText: res.statusText,
@@ -1036,9 +979,7 @@ function ApiExplorerContent() {
         <div className="mb-8">
           <div className="mb-6 flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold text-zinc-900 dark:text-white">
-                API Explorer
-              </h1>
+              <h1 className="text-3xl font-bold text-zinc-900 dark:text-white">API Explorer</h1>
               <p className="mt-1 text-zinc-600 dark:text-zinc-400">
                 Test and explore REST APIs with an intuitive interface
               </p>
@@ -1115,10 +1056,7 @@ function ApiExplorerContent() {
               )}
 
               {activeTab === 'history' && (
-                <RequestHistory
-                  history={requestHistory}
-                  onRequestSelect={handleRequestSelect}
-                />
+                <RequestHistory history={requestHistory} onRequestSelect={handleRequestSelect} />
               )}
 
               {activeTab === 'environments' && (
@@ -1160,9 +1098,7 @@ function ApiExplorerContent() {
                 <div className="rounded-lg border border-zinc-200 bg-white p-6 dark:border-zinc-700 dark:bg-zinc-800">
                   <div className="flex items-center justify-center">
                     <RefreshCw className="mr-3 h-6 w-6 animate-spin text-blue-500" />
-                    <span className="text-zinc-600 dark:text-zinc-400">
-                      Sending request...
-                    </span>
+                    <span className="text-zinc-600 dark:text-zinc-400">Sending request...</span>
                   </div>
                 </div>
               )}

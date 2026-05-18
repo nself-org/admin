@@ -22,10 +22,7 @@ interface RegistryResponse {
 function matchesQuery(cmd: CommandDef, query: string): boolean {
   if (!query) return true
   const q = query.toLowerCase()
-  return (
-    cmd.name.toLowerCase().includes(q) ||
-    cmd.description.toLowerCase().includes(q)
-  )
+  return cmd.name.toLowerCase().includes(q) || cmd.description.toLowerCase().includes(q)
 }
 
 // ---------------------------------------------------------------------------
@@ -61,9 +58,7 @@ function CommandItem({ command, selected, onClick }: CommandItemProps) {
         )}
       </span>
       {command.description && (
-        <span className="text-nself-text-muted mt-0.5 block text-xs">
-          {command.description}
-        </span>
+        <span className="text-nself-text-muted mt-0.5 block text-xs">{command.description}</span>
       )}
     </button>
   )
@@ -95,7 +90,7 @@ function CommandModal({ command, onClose, onRun }: CommandModalProps) {
     (e: React.MouseEvent<HTMLDivElement>) => {
       if (e.target === overlayRef.current) onClose()
     },
-    [onClose],
+    [onClose]
   )
 
   return (
@@ -173,7 +168,7 @@ export function CommandPalette({ onRun }: CommandPaletteProps) {
         onRun(selected.name, result)
       }
     },
-    [selected, onRun],
+    [selected, onRun]
   )
 
   return (
@@ -216,10 +211,7 @@ export function CommandPalette({ onRun }: CommandPaletteProps) {
       )}
 
       {!loading && fetchError === null && filtered.length > 0 && (
-        <div
-          className="flex flex-col gap-1 overflow-y-auto"
-          style={{ maxHeight: '28rem' }}
-        >
+        <div className="flex flex-col gap-1 overflow-y-auto" style={{ maxHeight: '28rem' }}>
           {filtered.map((cmd) => (
             <CommandItem
               key={cmd.name}
@@ -233,11 +225,7 @@ export function CommandPalette({ onRun }: CommandPaletteProps) {
 
       {/* Command modal */}
       {selected !== null && (
-        <CommandModal
-          command={selected}
-          onClose={() => setSelected(null)}
-          onRun={handleRun}
-        />
+        <CommandModal command={selected} onClose={() => setSelected(null)} onRun={handleRun} />
       )}
     </div>
   )

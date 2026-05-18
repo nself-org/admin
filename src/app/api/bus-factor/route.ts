@@ -48,10 +48,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
     body = (await request.json()) as PostBody
   } catch {
-    return NextResponse.json(
-      { success: false, error: 'Invalid JSON body' },
-      { status: 400 },
-    )
+    return NextResponse.json({ success: false, error: 'Invalid JSON body' }, { status: 400 })
   }
 
   const errors: string[] = []
@@ -66,7 +63,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   if (errors.length > 0) {
     return NextResponse.json(
       { success: false, error: 'Validation failed', details: errors },
-      { status: 400 },
+      { status: 400 }
     )
   }
 
@@ -74,7 +71,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   if (!account) {
     return NextResponse.json(
       { success: false, error: `Unknown accountId: ${body.accountId}` },
-      { status: 400 },
+      { status: 400 }
     )
   }
 
@@ -99,7 +96,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to record nomination',
         details: err instanceof Error ? err.message : String(err),
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

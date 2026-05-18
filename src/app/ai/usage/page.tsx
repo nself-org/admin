@@ -183,8 +183,7 @@ export default function AIUsagePage() {
     const header = 'Provider,Model,Tokens In,Tokens Out,Est. Cost (USD)\n'
     const body = rows
       .map(
-        (r) =>
-          `${r.provider},${r.model},${r.tokens_in},${r.tokens_out},${r.cost_usd.toFixed(6)}`,
+        (r) => `${r.provider},${r.model},${r.tokens_in},${r.tokens_out},${r.cost_usd.toFixed(6)}`
       )
       .join('\n')
     const csv = header + body
@@ -219,12 +218,10 @@ export default function AIUsagePage() {
     return (
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
         <div className="mx-4 w-full max-w-md rounded-xl border border-zinc-700 bg-zinc-900 p-6 shadow-2xl">
-          <h2 className="text-base font-semibold text-white">
-            Reset monthly counter?
-          </h2>
+          <h2 className="text-base font-semibold text-white">Reset monthly counter?</h2>
           <p className="mt-2 text-sm text-zinc-400">
-            This will clear the current month&apos;s token usage totals.
-            Historical data is not deleted — only the running counter is reset.
+            This will clear the current month&apos;s token usage totals. Historical data is not
+            deleted — only the running counter is reset.
           </p>
           <div className="mt-6 flex justify-end gap-3">
             <button
@@ -283,9 +280,7 @@ export default function AIUsagePage() {
           <div className="flex items-start gap-3">
             <AlertCircle className="mt-0.5 h-5 w-5 shrink-0 text-yellow-400" />
             <div>
-              <p className="font-medium text-yellow-300">
-                nself-ai is not running
-              </p>
+              <p className="font-medium text-yellow-300">nself-ai is not running</p>
               <p className="mt-1 text-sm text-yellow-400/80">
                 Usage data is unavailable while nself-ai is offline.
               </p>
@@ -304,9 +299,7 @@ export default function AIUsagePage() {
                 Tokens In
               </span>
             </div>
-            <p className="text-2xl font-semibold text-white">
-              {fmtTokens(totalTokensIn)}
-            </p>
+            <p className="text-2xl font-semibold text-white">{fmtTokens(totalTokensIn)}</p>
           </div>
           <div className="rounded-xl border border-zinc-700/50 bg-zinc-800/50 p-4">
             <div className="mb-2 flex items-center gap-2">
@@ -315,9 +308,7 @@ export default function AIUsagePage() {
                 Tokens Out
               </span>
             </div>
-            <p className="text-2xl font-semibold text-white">
-              {fmtTokens(totalTokensOut)}
-            </p>
+            <p className="text-2xl font-semibold text-white">{fmtTokens(totalTokensOut)}</p>
           </div>
           <div className="rounded-xl border border-zinc-700/50 bg-zinc-800/50 p-4">
             <div className="mb-2 flex items-center gap-2">
@@ -326,9 +317,7 @@ export default function AIUsagePage() {
                 Est. Cost
               </span>
             </div>
-            <p className="text-2xl font-semibold text-white">
-              {fmtCost(totalCost)}
-            </p>
+            <p className="text-2xl font-semibold text-white">{fmtCost(totalCost)}</p>
           </div>
         </div>
       )}
@@ -341,8 +330,7 @@ export default function AIUsagePage() {
             <div className="flex items-center gap-3">
               {usageData.last_reset && (
                 <span className="text-xs text-zinc-600">
-                  Last reset:{' '}
-                  {new Date(usageData.last_reset).toLocaleDateString()}
+                  Last reset: {new Date(usageData.last_reset).toLocaleDateString()}
                 </span>
               )}
               <button
@@ -364,12 +352,8 @@ export default function AIUsagePage() {
           {usageData.budget_usd ? (
             <div className="space-y-2">
               <div className="flex items-center justify-between text-sm">
-                <span className="text-zinc-400">
-                  {fmtCost(usageData.budget_used_usd)} used
-                </span>
-                <span className="text-zinc-500">
-                  {fmtCost(usageData.budget_usd)} limit
-                </span>
+                <span className="text-zinc-400">{fmtCost(usageData.budget_used_usd)} used</span>
+                <span className="text-zinc-500">{fmtCost(usageData.budget_usd)} limit</span>
               </div>
               <div className="h-3 w-full overflow-hidden rounded-full bg-zinc-700">
                 <div
@@ -390,9 +374,7 @@ export default function AIUsagePage() {
           ) : (
             <p className="text-sm text-zinc-400">
               Unlimited{' '}
-              <span className="text-xs text-zinc-600">
-                (no PLUGIN_AI_MONTHLY_BUDGET_USD set)
-              </span>
+              <span className="text-xs text-zinc-600">(no PLUGIN_AI_MONTHLY_BUDGET_USD set)</span>
             </p>
           )}
 
@@ -409,9 +391,7 @@ export default function AIUsagePage() {
               ) : (
                 <AlertCircle className="h-4 w-4 text-red-400" />
               )}
-              <p
-                className={`text-xs ${resetResult.ok ? 'text-green-300' : 'text-red-300'}`}
-              >
+              <p className={`text-xs ${resetResult.ok ? 'text-green-300' : 'text-red-300'}`}>
                 {resetResult.msg}
               </p>
             </div>
@@ -448,10 +428,7 @@ export default function AIUsagePage() {
         {loading ? (
           <div className="space-y-2 p-4">
             {[1, 2, 3].map((n) => (
-              <div
-                key={n}
-                className="h-12 animate-pulse rounded-lg bg-zinc-700/40"
-              />
+              <div key={n} className="h-12 animate-pulse rounded-lg bg-zinc-700/40" />
             ))}
           </div>
         ) : sortedRows.length === 0 ? (
@@ -464,13 +441,7 @@ export default function AIUsagePage() {
             <table className="w-full">
               <thead>
                 <tr className="border-b border-zinc-700/50">
-                  {[
-                    'Provider',
-                    'Model',
-                    'Tokens In',
-                    'Tokens Out',
-                    'Est. Cost',
-                  ].map((h) => (
+                  {['Provider', 'Model', 'Tokens In', 'Tokens Out', 'Est. Cost'].map((h) => (
                     <th
                       key={h}
                       className="px-5 py-3 text-left text-xs font-medium tracking-wide text-zinc-500 uppercase"
@@ -482,22 +453,13 @@ export default function AIUsagePage() {
               </thead>
               <tbody className="divide-y divide-zinc-700/50">
                 {sortedRows.map((row, i) => (
-                  <tr
-                    key={i}
-                    className="transition-colors hover:bg-zinc-700/20"
-                  >
+                  <tr key={i} className="transition-colors hover:bg-zinc-700/20">
                     <td className="px-5 py-3 text-sm font-medium text-zinc-200 capitalize">
                       {row.provider}
                     </td>
-                    <td className="px-5 py-3 font-mono text-xs text-zinc-400">
-                      {row.model}
-                    </td>
-                    <td className="px-5 py-3 text-sm text-zinc-300">
-                      {fmtTokens(row.tokens_in)}
-                    </td>
-                    <td className="px-5 py-3 text-sm text-zinc-300">
-                      {fmtTokens(row.tokens_out)}
-                    </td>
+                    <td className="px-5 py-3 font-mono text-xs text-zinc-400">{row.model}</td>
+                    <td className="px-5 py-3 text-sm text-zinc-300">{fmtTokens(row.tokens_in)}</td>
+                    <td className="px-5 py-3 text-sm text-zinc-300">{fmtTokens(row.tokens_out)}</td>
                     <td className="px-5 py-3 text-sm font-medium text-sky-300">
                       {fmtCost(row.cost_usd)}
                     </td>
@@ -505,10 +467,7 @@ export default function AIUsagePage() {
                 ))}
                 {/* Totals row */}
                 <tr className="border-t border-zinc-600/50 bg-zinc-700/20">
-                  <td
-                    className="px-5 py-3 text-xs font-medium text-zinc-500 uppercase"
-                    colSpan={2}
-                  >
+                  <td className="px-5 py-3 text-xs font-medium text-zinc-500 uppercase" colSpan={2}>
                     Total
                   </td>
                   <td className="px-5 py-3 text-sm font-semibold text-white">

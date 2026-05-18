@@ -21,10 +21,7 @@ export default function TenantDomainsPage() {
   const tenantId = params.id as string
   const [isLoading, setIsLoading] = useState(false)
 
-  const { data, error, mutate } = useSWR(
-    `/api/tenant/${tenantId}/domains`,
-    fetcher,
-  )
+  const { data, error, mutate } = useSWR(`/api/tenant/${tenantId}/domains`, fetcher)
 
   const handleAdd = async (domain: string) => {
     setIsLoading(true)
@@ -39,9 +36,7 @@ export default function TenantDomainsPage() {
   const handleRemove = async (domain: string) => {
     setIsLoading(true)
     try {
-      await api.delete(
-        `/api/tenant/${tenantId}/domains/${encodeURIComponent(domain)}`,
-      )
+      await api.delete(`/api/tenant/${tenantId}/domains/${encodeURIComponent(domain)}`)
       mutate()
     } finally {
       setIsLoading(false)
@@ -51,9 +46,7 @@ export default function TenantDomainsPage() {
   const handleVerify = async (domain: string) => {
     setIsLoading(true)
     try {
-      await api.post(
-        `/api/tenant/${tenantId}/domains/${encodeURIComponent(domain)}/verify`,
-      )
+      await api.post(`/api/tenant/${tenantId}/domains/${encodeURIComponent(domain)}/verify`)
       mutate()
     } finally {
       setIsLoading(false)
@@ -63,9 +56,7 @@ export default function TenantDomainsPage() {
   const handleGenerateSSL = async (domain: string) => {
     setIsLoading(true)
     try {
-      await api.post(
-        `/api/tenant/${tenantId}/domains/${encodeURIComponent(domain)}/ssl`,
-      )
+      await api.post(`/api/tenant/${tenantId}/domains/${encodeURIComponent(domain)}/ssl`)
       mutate()
     } finally {
       setIsLoading(false)
@@ -75,9 +66,7 @@ export default function TenantDomainsPage() {
   const handleSetPrimary = async (domain: string) => {
     setIsLoading(true)
     try {
-      await api.put(
-        `/api/tenant/${tenantId}/domains/${encodeURIComponent(domain)}/primary`,
-      )
+      await api.put(`/api/tenant/${tenantId}/domains/${encodeURIComponent(domain)}/primary`)
       mutate()
     } finally {
       setIsLoading(false)
@@ -95,12 +84,8 @@ export default function TenantDomainsPage() {
         >
           <ArrowLeft className="h-4 w-4" /> Back to Tenant
         </Link>
-        <h1 className="mt-4 text-2xl font-semibold text-white">
-          Custom Domains
-        </h1>
-        <p className="text-sm text-zinc-400">
-          Configure custom domains for your tenant
-        </p>
+        <h1 className="mt-4 text-2xl font-semibold text-white">Custom Domains</h1>
+        <p className="text-sm text-zinc-400">Configure custom domains for your tenant</p>
       </div>
 
       {error && (

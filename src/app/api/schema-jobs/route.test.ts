@@ -69,7 +69,7 @@ describe('POST /api/schema-jobs — R4/secfix2 raw DDL rejection (T-A)', () => {
     const res = await POST(req)
 
     expect(res.status).toBe(400)
-    const json = await res.json() as { success: boolean; error: string }
+    const json = (await res.json()) as { success: boolean; error: string }
     expect(json.success).toBe(false)
     expect(json.error).toMatch(/validated schema canvas/)
 
@@ -120,14 +120,14 @@ describe('POST /api/schema-jobs — R4/secfix2 raw DDL rejection (T-A)', () => {
     // Include a raw forwardDDL alongside canvas — it must be IGNORED
     const req = makePost({
       canvas,
-      forwardDDL: 'DROP SCHEMA public CASCADE;',  // attacker payload — must be ignored
+      forwardDDL: 'DROP SCHEMA public CASCADE;', // attacker payload — must be ignored
       name: 'test_migration',
     })
 
     const res = await POST(req)
     expect(res.status).toBe(201)
 
-    const json = await res.json() as { success: boolean; id: string }
+    const json = (await res.json()) as { success: boolean; id: string }
     expect(json.success).toBe(true)
     expect(json.id).toMatch(/^sjob_/)
 

@@ -11,7 +11,7 @@ import { Suspense } from 'react'
 
 function DeploymentHelpContent() {
   const deploymentArticles = helpArticlesArray.filter(
-    (a: HelpArticle) => a.category === 'deployment',
+    (a: HelpArticle) => a.category === 'deployment'
   )
 
   return (
@@ -28,13 +28,10 @@ function DeploymentHelpContent() {
                 <Rocket className="h-6 w-6 text-sky-500 dark:text-sky-400" />
               </div>
               <div className="flex-1">
-                <h2 className="mb-2 text-xl font-semibold">
-                  Deployment Strategies
-                </h2>
+                <h2 className="mb-2 text-xl font-semibold">Deployment Strategies</h2>
                 <p className="text-zinc-600 dark:text-zinc-400">
-                  Deploy to staging and production with confidence. Learn about
-                  blue-green deployments, rollbacks, CI/CD integration, and
-                  production best practices.
+                  Deploy to staging and production with confidence. Learn about blue-green
+                  deployments, rollbacks, CI/CD integration, and production best practices.
                 </p>
               </div>
             </div>

@@ -45,13 +45,7 @@
  *        (networkidle drain)        — warms remaining route module caches
  */
 
-import {
-  chromium,
-  firefox,
-  webkit,
-  type BrowserType,
-  type FullConfig,
-} from '@playwright/test'
+import { chromium, firefox, webkit, type BrowserType, type FullConfig } from '@playwright/test'
 
 import { mockProjectStatus, TEST_PASSWORD } from './helpers'
 
@@ -83,9 +77,7 @@ export default async function globalSetup(config: FullConfig) {
     //   all client-side JS modules for the login page on the server.
     // • waitUntil: 'networkidle' ensures every /_next/… request has returned
     //   (i.e. all bundles are compiled and served) before we continue.
-    console.log(
-      '[globalSetup] Navigating to /login (warming SSR + JS bundles)…',
-    )
+    console.log('[globalSetup] Navigating to /login (warming SSR + JS bundles)…')
     await page.goto('/login', { waitUntil: 'networkidle', timeout: 60000 })
 
     // Step 2: Check password status (warms /api/auth/init GET).
@@ -101,9 +93,7 @@ export default async function globalSetup(config: FullConfig) {
         data: { password: TEST_PASSWORD },
       })
       if (!r.ok()) {
-        throw new Error(
-          `[globalSetup] Failed to set admin password: ${await r.text()}`,
-        )
+        throw new Error(`[globalSetup] Failed to set admin password: ${await r.text()}`)
       }
       // Reload so the component reflects the new password state (login mode).
       // Also warms any bundles that differ between setup-mode and login-mode.
@@ -160,7 +150,7 @@ export default async function globalSetup(config: FullConfig) {
     }
 
     console.log(
-      '[globalSetup] All routes and JS bundles pre-compiled. Tests will run with a warm server.',
+      '[globalSetup] All routes and JS bundles pre-compiled. Tests will run with a warm server.'
     )
   } finally {
     await context.close()

@@ -30,13 +30,13 @@ interface DiagnosticsResult {
 const statusIcon = (status: DiagnosticCheck['status']) => {
   switch (status) {
     case 'pass':
-      return <CheckCircle className="h-4 w-4 text-green-400 flex-shrink-0" />
+      return <CheckCircle className="h-4 w-4 flex-shrink-0 text-green-400" />
     case 'fail':
-      return <XCircle className="h-4 w-4 text-red-400 flex-shrink-0" />
+      return <XCircle className="h-4 w-4 flex-shrink-0 text-red-400" />
     case 'warning':
-      return <AlertTriangle className="h-4 w-4 text-yellow-400 flex-shrink-0" />
+      return <AlertTriangle className="h-4 w-4 flex-shrink-0 text-yellow-400" />
     default:
-      return <ClipboardList className="h-4 w-4 text-gray-400 flex-shrink-0" />
+      return <ClipboardList className="h-4 w-4 flex-shrink-0 text-gray-400" />
   }
 }
 
@@ -87,18 +87,18 @@ function DiagnosticsContent() {
   // State 5: Offline
   if (offline) {
     return (
-      <div className="p-6 space-y-4">
-        <div className="flex items-center gap-3 p-4 rounded-lg bg-yellow-500/10 border border-yellow-500/30">
-          <WifiOff className="h-5 w-5 text-yellow-500 flex-shrink-0" />
+      <div className="space-y-4 p-6">
+        <div className="flex items-center gap-3 rounded-lg border border-yellow-500/30 bg-yellow-500/10 p-4">
+          <WifiOff className="h-5 w-5 flex-shrink-0 text-yellow-500" />
           <div>
             <p className="font-medium text-yellow-400">Docker not reachable</p>
-            <p className="text-sm text-gray-400 mt-0.5">
+            <p className="mt-0.5 text-sm text-gray-400">
               Make sure the nself stack is running before running diagnostics.
             </p>
           </div>
         </div>
         <Button onClick={runDiagnostics} disabled={loading} variant="secondary" size="sm">
-          <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
+          <RefreshCw className={`mr-2 h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
           Retry
         </Button>
       </div>
@@ -108,16 +108,16 @@ function DiagnosticsContent() {
   // State 4: Error
   if (error && !data) {
     return (
-      <div className="p-6 space-y-4">
-        <div className="flex items-center gap-3 p-4 rounded-lg bg-red-500/10 border border-red-500/30">
-          <AlertTriangle className="h-5 w-5 text-red-400 flex-shrink-0" />
+      <div className="space-y-4 p-6">
+        <div className="flex items-center gap-3 rounded-lg border border-red-500/30 bg-red-500/10 p-4">
+          <AlertTriangle className="h-5 w-5 flex-shrink-0 text-red-400" />
           <div>
             <p className="font-medium text-red-400">Diagnostics failed</p>
-            <p className="text-sm text-gray-400 mt-0.5">{error}</p>
+            <p className="mt-0.5 text-sm text-gray-400">{error}</p>
           </div>
         </div>
         <Button onClick={runDiagnostics} disabled={loading} variant="secondary" size="sm">
-          <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
+          <RefreshCw className={`mr-2 h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
           Retry
         </Button>
       </div>
@@ -128,10 +128,16 @@ function DiagnosticsContent() {
   if (!data) {
     return (
       <div className="p-6 text-center text-gray-400">
-        <ClipboardList className="h-8 w-8 mx-auto mb-2 opacity-50" />
+        <ClipboardList className="mx-auto mb-2 h-8 w-8 opacity-50" />
         <p>No diagnostics data available.</p>
-        <Button onClick={runDiagnostics} disabled={loading} variant="secondary" size="sm" className="mt-3">
-          <RefreshCw className="h-4 w-4 mr-2" />
+        <Button
+          onClick={runDiagnostics}
+          disabled={loading}
+          variant="secondary"
+          size="sm"
+          className="mt-3"
+        >
+          <RefreshCw className="mr-2 h-4 w-4" />
           Run Diagnostics
         </Button>
       </div>
@@ -139,11 +145,7 @@ function DiagnosticsContent() {
   }
 
   const overallColor =
-    data.overall === 'healthy'
-      ? 'green'
-      : data.overall === 'warning'
-        ? 'yellow'
-        : 'red'
+    data.overall === 'healthy' ? 'green' : data.overall === 'warning' ? 'yellow' : 'red'
 
   const overallBg =
     data.overall === 'healthy'
@@ -152,11 +154,12 @@ function DiagnosticsContent() {
         ? 'bg-yellow-500/10 border-yellow-500/30'
         : 'bg-red-500/10 border-red-500/30'
 
-  const overallText = data.overall === 'healthy'
-    ? 'text-green-400'
-    : data.overall === 'warning'
-      ? 'text-yellow-400'
-      : 'text-red-400'
+  const overallText =
+    data.overall === 'healthy'
+      ? 'text-green-400'
+      : data.overall === 'warning'
+        ? 'text-yellow-400'
+        : 'text-red-400'
 
   const passCount = data.checks.filter((c) => c.status === 'pass').length
   const failCount = data.checks.filter((c) => c.status === 'fail').length
@@ -164,35 +167,36 @@ function DiagnosticsContent() {
 
   // States 6 + 7: Success
   return (
-    <div className="p-6 space-y-6">
+    <div className="space-y-6 p-6">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-xl font-semibold text-white">System Diagnostics</h2>
-          <p className="text-sm text-gray-400 mt-1">
+          <p className="mt-1 text-sm text-gray-400">
             Last run: {new Date(data.runAt).toLocaleString()}
           </p>
         </div>
         <Button onClick={runDiagnostics} disabled={loading} variant="secondary" size="sm">
           {/* State 2: Refresh spinner */}
-          <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
+          <RefreshCw className={`mr-2 h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
           {loading ? 'Running…' : 'Run Again'}
         </Button>
       </div>
 
       {/* Overall status */}
-      <div className={`flex items-center gap-3 p-4 rounded-lg border ${overallBg}`}>
-        {data.overall === 'healthy'
-          ? <CheckCircle className={`h-5 w-5 text-${overallColor}-400 flex-shrink-0`} />
-          : data.overall === 'warning'
-            ? <AlertTriangle className={`h-5 w-5 text-${overallColor}-400 flex-shrink-0`} />
-            : <XCircle className={`h-5 w-5 text-${overallColor}-400 flex-shrink-0`} />
-        }
+      <div className={`flex items-center gap-3 rounded-lg border p-4 ${overallBg}`}>
+        {data.overall === 'healthy' ? (
+          <CheckCircle className={`h-5 w-5 text-${overallColor}-400 flex-shrink-0`} />
+        ) : data.overall === 'warning' ? (
+          <AlertTriangle className={`h-5 w-5 text-${overallColor}-400 flex-shrink-0`} />
+        ) : (
+          <XCircle className={`h-5 w-5 text-${overallColor}-400 flex-shrink-0`} />
+        )}
         <div className="flex-1">
           <p className={`font-medium ${overallText} capitalize`}>
             {data.overall === 'healthy' ? 'All checks passed' : `System ${data.overall}`}
           </p>
-          <p className="text-sm text-gray-400 mt-0.5">
+          <p className="mt-0.5 text-sm text-gray-400">
             {passCount} passed · {failCount} failed · {warnCount} warnings
           </p>
         </div>
@@ -202,31 +206,36 @@ function DiagnosticsContent() {
       {data.checks.length === 0 ? (
         <div className="rounded-lg border border-white/10 bg-white/5 p-8 text-center">
           <p className="text-gray-400">No diagnostic checks returned.</p>
-          <p className="text-sm text-gray-500 mt-1">
+          <p className="mt-1 text-sm text-gray-500">
             The output may not have been parseable. See raw output below.
           </p>
         </div>
       ) : (
-        <div className="rounded-lg border border-white/10 overflow-hidden divide-y divide-white/5">
+        <div className="divide-y divide-white/5 overflow-hidden rounded-lg border border-white/10">
           {data.checks.map((check, i) => (
-            <div key={i} className="flex items-start gap-3 px-4 py-3 hover:bg-white/[0.02] transition-colors">
+            <div
+              key={i}
+              className="flex items-start gap-3 px-4 py-3 transition-colors hover:bg-white/[0.02]"
+            >
               {statusIcon(check.status)}
-              <div className="flex-1 min-w-0">
-                <p className="text-sm text-white font-medium truncate">{check.name}</p>
-                <p className="text-xs text-gray-400 mt-0.5">{check.message}</p>
+              <div className="min-w-0 flex-1">
+                <p className="truncate text-sm font-medium text-white">{check.name}</p>
+                <p className="mt-0.5 text-xs text-gray-400">{check.message}</p>
                 {check.detail && (
-                  <p className="text-xs text-gray-500 mt-0.5 font-mono">{check.detail}</p>
+                  <p className="mt-0.5 font-mono text-xs text-gray-500">{check.detail}</p>
                 )}
               </div>
-              <span className={`text-xs font-medium flex-shrink-0 ${
-                check.status === 'pass'
-                  ? 'text-green-400'
-                  : check.status === 'fail'
-                    ? 'text-red-400'
-                    : check.status === 'warning'
-                      ? 'text-yellow-400'
-                      : 'text-gray-400'
-              }`}>
+              <span
+                className={`flex-shrink-0 text-xs font-medium ${
+                  check.status === 'pass'
+                    ? 'text-green-400'
+                    : check.status === 'fail'
+                      ? 'text-red-400'
+                      : check.status === 'warning'
+                        ? 'text-yellow-400'
+                        : 'text-gray-400'
+                }`}
+              >
                 {check.status.toUpperCase()}
               </span>
             </div>
@@ -239,12 +248,12 @@ function DiagnosticsContent() {
         <div>
           <button
             onClick={() => setShowRaw((v) => !v)}
-            className="text-xs text-gray-500 hover:text-gray-300 transition-colors"
+            className="text-xs text-gray-500 transition-colors hover:text-gray-300"
           >
             {showRaw ? 'Hide' : 'Show'} raw output
           </button>
           {showRaw && (
-            <pre className="mt-2 p-3 rounded-lg bg-black/40 border border-white/10 text-xs text-gray-300 font-mono whitespace-pre-wrap overflow-auto max-h-64">
+            <pre className="mt-2 max-h-64 overflow-auto rounded-lg border border-white/10 bg-black/40 p-3 font-mono text-xs whitespace-pre-wrap text-gray-300">
               {data.rawOutput}
             </pre>
           )}

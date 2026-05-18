@@ -5,14 +5,7 @@ import { Card } from '@/components/ui/card'
 import { PageContent } from '@/components/ui/page-content'
 import { PageHeader } from '@/components/ui/page-header'
 import { useDashboards, useDashboardStats } from '@/hooks/useDashboards'
-import {
-  Clock,
-  Copy,
-  LayoutDashboard,
-  MoreVertical,
-  Plus,
-  Trash2,
-} from 'lucide-react'
+import { Clock, Copy, LayoutDashboard, MoreVertical, Plus, Trash2 } from 'lucide-react'
 import Link from 'next/link'
 import { useState } from 'react'
 
@@ -54,10 +47,7 @@ export default function DashboardsPage() {
   if (isLoading) {
     return (
       <>
-        <PageHeader
-          title="Dashboards"
-          description="Create and manage custom dashboards"
-        />
+        <PageHeader title="Dashboards" description="Create and manage custom dashboards" />
         <PageContent>
           <div className="flex items-center justify-center py-20">
             <div className="h-8 w-8 animate-spin rounded-full border-4 border-sky-500 border-t-transparent" />
@@ -91,9 +81,7 @@ export default function DashboardsPage() {
                   <LayoutDashboard className="h-5 w-5 text-sky-500 dark:text-sky-400" />
                 </div>
                 <div>
-                  <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                    Total Dashboards
-                  </p>
+                  <p className="text-sm text-zinc-500 dark:text-zinc-400">Total Dashboards</p>
                   <p className="text-2xl font-bold text-zinc-900 dark:text-white">
                     {stats.totalDashboards}
                   </p>
@@ -106,9 +94,7 @@ export default function DashboardsPage() {
                   <LayoutDashboard className="h-5 w-5 text-blue-600 dark:text-blue-400" />
                 </div>
                 <div>
-                  <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                    Total Widgets
-                  </p>
+                  <p className="text-sm text-zinc-500 dark:text-zinc-400">Total Widgets</p>
                   <p className="text-2xl font-bold text-zinc-900 dark:text-white">
                     {stats.totalWidgets}
                   </p>
@@ -121,9 +107,7 @@ export default function DashboardsPage() {
                   <Clock className="h-5 w-5 text-green-600 dark:text-green-400" />
                 </div>
                 <div>
-                  <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                    Most Viewed
-                  </p>
+                  <p className="text-sm text-zinc-500 dark:text-zinc-400">Most Viewed</p>
                   <p className="truncate text-lg font-bold text-zinc-900 dark:text-white">
                     {stats.mostViewed?.[0]?.name || 'N/A'}
                   </p>
@@ -164,9 +148,7 @@ export default function DashboardsPage() {
                         onClick={(e) => {
                           e.preventDefault()
                           e.stopPropagation()
-                          setMenuOpen(
-                            menuOpen === dashboard.id ? null : dashboard.id,
-                          )
+                          setMenuOpen(menuOpen === dashboard.id ? null : dashboard.id)
                         }}
                         className="rounded p-1 opacity-0 transition-opacity group-hover:opacity-100 hover:bg-zinc-100 dark:hover:bg-zinc-700"
                       >
@@ -175,9 +157,7 @@ export default function DashboardsPage() {
                       {menuOpen === dashboard.id && (
                         <div className="absolute top-8 right-0 z-10 w-36 rounded-lg border border-zinc-200 bg-white py-1 shadow-lg dark:border-zinc-700 dark:bg-zinc-800">
                           <button
-                            onClick={(e) =>
-                              handleClone(dashboard.id, dashboard.name, e)
-                            }
+                            onClick={(e) => handleClone(dashboard.id, dashboard.name, e)}
                             className="flex w-full items-center gap-2 px-3 py-2 text-sm text-zinc-700 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-700"
                           >
                             <Copy className="h-4 w-4" />
@@ -204,9 +184,7 @@ export default function DashboardsPage() {
                   )}
                   <div className="flex items-center justify-between text-xs text-zinc-400 dark:text-zinc-500">
                     <span>{dashboard.widgets.length} widgets</span>
-                    <span>
-                      {new Date(dashboard.updatedAt).toLocaleDateString()}
-                    </span>
+                    <span>{new Date(dashboard.updatedAt).toLocaleDateString()}</span>
                   </div>
                   {dashboard.isDefault && (
                     <span className="absolute top-4 right-4 rounded-full bg-sky-100 px-2 py-0.5 text-xs font-medium text-sky-600 dark:bg-sky-900/30 dark:text-sky-400">

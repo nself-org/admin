@@ -63,20 +63,8 @@ export async function GET(): Promise<NextResponse> {
 
     // Check for existing Let's Encrypt certificates
     const certPaths = [
-      path.join(
-        projectPath,
-        'certbot',
-        'live',
-        status.domain || '',
-        'fullchain.pem',
-      ),
-      path.join(
-        projectPath,
-        'letsencrypt',
-        'live',
-        status.domain || '',
-        'fullchain.pem',
-      ),
+      path.join(projectPath, 'certbot', 'live', status.domain || '', 'fullchain.pem'),
+      path.join(projectPath, 'letsencrypt', 'live', status.domain || '', 'fullchain.pem'),
     ]
 
     for (const certPath of certPaths) {
@@ -100,7 +88,7 @@ export async function GET(): Promise<NextResponse> {
         success: false,
         error: "Failed to get Let's Encrypt status",
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -127,7 +115,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           error: 'Invalid request',
           details: validation.error.issues,
         },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -213,7 +201,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         success: false,
         error: "Failed to configure Let's Encrypt",
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

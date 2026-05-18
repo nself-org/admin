@@ -122,7 +122,8 @@ function ApiContent() {
     if (!search.trim()) return services
     const q = search.toLowerCase()
     return services.filter(
-      (s) => s.label.toLowerCase().includes(q) || s.url.toLowerCase().includes(q) || s.type.includes(q),
+      (s) =>
+        s.label.toLowerCase().includes(q) || s.url.toLowerCase().includes(q) || s.type.includes(q)
     )
   }, [services, search])
 
@@ -171,18 +172,18 @@ function ApiContent() {
   // State 5: offline
   if (offline) {
     return (
-      <div className="p-6 space-y-4">
-        <div className="flex items-center gap-3 p-4 rounded-lg bg-yellow-500/10 border border-yellow-500/30">
-          <WifiOff className="h-5 w-5 text-yellow-500 flex-shrink-0" />
+      <div className="space-y-4 p-6">
+        <div className="flex items-center gap-3 rounded-lg border border-yellow-500/30 bg-yellow-500/10 p-4">
+          <WifiOff className="h-5 w-5 flex-shrink-0 text-yellow-500" />
           <div>
             <p className="font-medium text-yellow-400">Cannot reach nself CLI</p>
-            <p className="text-sm text-gray-400 mt-0.5">
+            <p className="mt-0.5 text-sm text-gray-400">
               Verify the nself binary is installed and services are running.
             </p>
           </div>
         </div>
         <Button onClick={fetchUrls} disabled={loading} variant="secondary" size="sm">
-          <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
+          <RefreshCw className={`mr-2 h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
           Retry
         </Button>
       </div>
@@ -192,16 +193,16 @@ function ApiContent() {
   // State 4: error
   if (error && !data) {
     return (
-      <div className="p-6 space-y-4">
-        <div className="flex items-center gap-3 p-4 rounded-lg bg-red-500/10 border border-red-500/30">
-          <AlertTriangle className="h-5 w-5 text-red-400 flex-shrink-0" />
+      <div className="space-y-4 p-6">
+        <div className="flex items-center gap-3 rounded-lg border border-red-500/30 bg-red-500/10 p-4">
+          <AlertTriangle className="h-5 w-5 flex-shrink-0 text-red-400" />
           <div>
             <p className="font-medium text-red-400">Failed to load service URLs</p>
-            <p className="text-sm text-gray-400 mt-0.5">{error}</p>
+            <p className="mt-0.5 text-sm text-gray-400">{error}</p>
           </div>
         </div>
         <Button onClick={fetchUrls} disabled={loading} variant="secondary" size="sm">
-          <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
+          <RefreshCw className={`mr-2 h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
           Retry
         </Button>
       </div>
@@ -212,10 +213,16 @@ function ApiContent() {
   if (!data) {
     return (
       <div className="p-6 text-center text-gray-400">
-        <Globe className="h-8 w-8 mx-auto mb-2 opacity-50" />
+        <Globe className="mx-auto mb-2 h-8 w-8 opacity-50" />
         <p>No service information available.</p>
-        <Button onClick={fetchUrls} disabled={loading} variant="secondary" size="sm" className="mt-3">
-          <RefreshCw className="h-4 w-4 mr-2" />
+        <Button
+          onClick={fetchUrls}
+          disabled={loading}
+          variant="secondary"
+          size="sm"
+          className="mt-3"
+        >
+          <RefreshCw className="mr-2 h-4 w-4" />
           Load Services
         </Button>
       </div>
@@ -224,18 +231,18 @@ function ApiContent() {
 
   // States 6+7: success
   return (
-    <div className="p-6 space-y-6">
+    <div className="space-y-6 p-6">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-xl font-semibold text-white">API Explorer</h2>
-          <p className="text-sm text-gray-400 mt-1">
+          <p className="mt-1 text-sm text-gray-400">
             {services.length} service{services.length !== 1 ? 's' : ''} discovered
           </p>
         </div>
         <Button onClick={fetchUrls} disabled={loading} variant="secondary" size="sm">
           {/* State 2: refresh spinner */}
-          <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
+          <RefreshCw className={`mr-2 h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
           {loading ? 'Loading…' : 'Refresh'}
         </Button>
       </div>
@@ -243,13 +250,13 @@ function ApiContent() {
       {/* Search */}
       {services.length > 4 && (
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
+          <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-gray-500" />
           <input
             type="text"
             placeholder="Search services…"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-9 pr-4 py-2 rounded-lg bg-white/5 border border-white/10 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-sky-500/50 transition-colors"
+            className="w-full rounded-lg border border-white/10 bg-white/5 py-2 pr-4 pl-9 text-sm text-white placeholder-gray-500 transition-colors focus:border-sky-500/50 focus:outline-none"
           />
         </div>
       )}
@@ -257,13 +264,13 @@ function ApiContent() {
       {/* Service list */}
       {filtered.length === 0 ? (
         <div className="rounded-lg border border-white/10 bg-white/5 p-8 text-center">
-          <Globe className="h-8 w-8 mx-auto mb-2 opacity-30 text-gray-400" />
+          <Globe className="mx-auto mb-2 h-8 w-8 text-gray-400 opacity-30" />
           {search ? (
             <>
               <p className="text-gray-400">No services match &ldquo;{search}&rdquo;</p>
               <button
                 onClick={() => setSearch('')}
-                className="text-xs text-sky-400 hover:text-sky-300 mt-2 transition-colors"
+                className="mt-2 text-xs text-sky-400 transition-colors hover:text-sky-300"
               >
                 Clear search
               </button>
@@ -281,25 +288,25 @@ function ApiContent() {
             return (
               <div
                 key={service.name}
-                className="rounded-lg border border-white/10 bg-white/[0.02] overflow-hidden"
+                className="overflow-hidden rounded-lg border border-white/10 bg-white/[0.02]"
               >
                 {/* Service row */}
                 <div className="flex items-center gap-3 px-4 py-3">
-                  <Globe className="h-4 w-4 text-gray-500 flex-shrink-0" />
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 flex-wrap">
+                  <Globe className="h-4 w-4 flex-shrink-0 text-gray-500" />
+                  <div className="min-w-0 flex-1">
+                    <div className="flex flex-wrap items-center gap-2">
                       <span className="text-sm font-medium text-white">{service.label}</span>
                       <span
-                        className={`text-xs px-1.5 py-0.5 rounded border font-mono ${TYPE_COLORS[service.type]}`}
+                        className={`rounded border px-1.5 py-0.5 font-mono text-xs ${TYPE_COLORS[service.type]}`}
                       >
                         {service.type}
                       </span>
                       {result && (
                         <span
-                          className={`text-xs px-1.5 py-0.5 rounded font-mono ${
+                          className={`rounded px-1.5 py-0.5 font-mono text-xs ${
                             result.ok
-                              ? 'text-green-400 bg-green-500/10'
-                              : 'text-red-400 bg-red-500/10'
+                              ? 'bg-green-500/10 text-green-400'
+                              : 'bg-red-500/10 text-red-400'
                           }`}
                         >
                           {result.error ? 'ERR' : result.status} · {result.latencyMs}ms
@@ -310,13 +317,13 @@ function ApiContent() {
                       href={service.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center gap-1 text-xs text-sky-400 hover:text-sky-300 mt-0.5 font-mono transition-colors"
+                      className="mt-0.5 flex items-center gap-1 font-mono text-xs text-sky-400 transition-colors hover:text-sky-300"
                     >
                       {service.url}
                       <ExternalLink className="h-3 w-3" />
                     </a>
                   </div>
-                  <div className="flex items-center gap-2 flex-shrink-0">
+                  <div className="flex flex-shrink-0 items-center gap-2">
                     <Button
                       onClick={() => testEndpoint(service)}
                       disabled={isTesting}
@@ -335,7 +342,7 @@ function ApiContent() {
                         onClick={() =>
                           setExpanded((prev) => ({ ...prev, [service.name]: !prev[service.name] }))
                         }
-                        className="text-gray-500 hover:text-gray-300 transition-colors"
+                        className="text-gray-500 transition-colors hover:text-gray-300"
                         aria-label={isExpanded ? 'Collapse' : 'Expand'}
                       >
                         {isExpanded ? (
@@ -350,9 +357,9 @@ function ApiContent() {
 
                 {/* Result panel */}
                 {result && isExpanded && (
-                  <div className="border-t border-white/10 px-4 py-3 space-y-2">
+                  <div className="space-y-2 border-t border-white/10 px-4 py-3">
                     {result.error ? (
-                      <div className="flex items-center gap-2 text-red-400 text-sm">
+                      <div className="flex items-center gap-2 text-sm text-red-400">
                         <AlertTriangle className="h-4 w-4 flex-shrink-0" />
                         <span>{result.error}</span>
                       </div>
@@ -369,8 +376,8 @@ function ApiContent() {
                         </div>
                         {result.body && (
                           <div className="flex items-start gap-2">
-                            <Code2 className="h-3.5 w-3.5 text-gray-500 mt-0.5 flex-shrink-0" />
-                            <pre className="text-xs text-gray-300 font-mono whitespace-pre-wrap overflow-auto max-h-48 flex-1">
+                            <Code2 className="mt-0.5 h-3.5 w-3.5 flex-shrink-0 text-gray-500" />
+                            <pre className="max-h-48 flex-1 overflow-auto font-mono text-xs whitespace-pre-wrap text-gray-300">
                               {result.body}
                             </pre>
                           </div>
@@ -389,7 +396,7 @@ function ApiContent() {
       {services.some((s) => s.type === 'graphql') && (
         <p className="text-xs text-gray-500">
           For full GraphQL query/mutation testing, use the{' '}
-          <a href="/dev/graphql" className="text-sky-400 hover:text-sky-300 transition-colors">
+          <a href="/dev/graphql" className="text-sky-400 transition-colors hover:text-sky-300">
             GraphQL Explorer
           </a>
           .

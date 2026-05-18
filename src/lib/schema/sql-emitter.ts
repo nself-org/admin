@@ -28,7 +28,7 @@ export {
  */
 export function emitMigrationFile(
   state: import('../schema-builder').CanvasState,
-  label?: string,
+  label?: string
 ): string {
   const { generateForwardDDL: fwd } =
     require('../schema-builder') as typeof import('../schema-builder')
@@ -51,7 +51,7 @@ export function emitMigrationFile(
  */
 export function emitRollbackFile(
   state: import('../schema-builder').CanvasState,
-  label?: string,
+  label?: string
 ): string {
   const { generateReverseDDL: rev } =
     require('../schema-builder') as typeof import('../schema-builder')

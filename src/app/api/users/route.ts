@@ -16,11 +16,10 @@ import { NextRequest, NextResponse } from 'next/server'
 const NOT_AVAILABLE = NextResponse.json(
   {
     error: 'not_available',
-    message:
-      'Multi-user mode disabled. Set NSELF_ADMIN_MULTIUSER=true to enable.',
+    message: 'Multi-user mode disabled. Set NSELF_ADMIN_MULTIUSER=true to enable.',
     docs: 'https://docs.nself.org/admin/single-user-posture',
   },
-  { status: 404 },
+  { status: 404 }
 )
 
 export async function GET(): Promise<NextResponse> {

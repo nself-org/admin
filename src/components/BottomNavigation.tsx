@@ -43,7 +43,7 @@ export function BottomNavigation() {
                 className={clsx(
                   'flex flex-col items-center justify-center gap-1 rounded-lg px-4 py-2 text-xs font-medium transition-colors',
                   'text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900',
-                  'dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-white',
+                  'dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-white'
                 )}
                 aria-label="Open menu"
               >
@@ -61,7 +61,7 @@ export function BottomNavigation() {
                 'flex flex-col items-center justify-center gap-1 rounded-lg px-4 py-2 text-xs font-medium transition-colors',
                 isActive
                   ? 'text-blue-600 dark:text-blue-400'
-                  : 'text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-white',
+                  : 'text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-white'
               )}
               aria-label={item.label}
             >

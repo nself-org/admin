@@ -8,19 +8,13 @@ export async function GET(_request: NextRequest): Promise<NextResponse> {
     const sessionToken = cookieStore.get('session')?.value
 
     if (!sessionToken) {
-      return NextResponse.json(
-        { success: false, error: 'Not authenticated' },
-        { status: 401 },
-      )
+      return NextResponse.json({ success: false, error: 'Not authenticated' }, { status: 401 })
     }
 
     const session = await getSessionInfo(sessionToken)
 
     if (!session) {
-      return NextResponse.json(
-        { success: false, error: 'Session not found' },
-        { status: 401 },
-      )
+      return NextResponse.json({ success: false, error: 'Session not found' }, { status: 401 })
     }
 
     return NextResponse.json({
@@ -39,7 +33,7 @@ export async function GET(_request: NextRequest): Promise<NextResponse> {
         error: 'Failed to fetch session info',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

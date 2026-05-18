@@ -111,18 +111,18 @@ function UpdatesContent() {
   // State 5: Offline
   if (offline) {
     return (
-      <div className="p-6 space-y-4">
-        <div className="flex items-center gap-3 p-4 rounded-lg bg-yellow-500/10 border border-yellow-500/30">
-          <WifiOff className="h-5 w-5 text-yellow-500 flex-shrink-0" />
+      <div className="space-y-4 p-6">
+        <div className="flex items-center gap-3 rounded-lg border border-yellow-500/30 bg-yellow-500/10 p-4">
+          <WifiOff className="h-5 w-5 flex-shrink-0 text-yellow-500" />
           <div>
             <p className="font-medium text-yellow-400">Docker not reachable</p>
-            <p className="text-sm text-gray-400 mt-0.5">
+            <p className="mt-0.5 text-sm text-gray-400">
               Make sure the nself stack is running before checking for updates.
             </p>
           </div>
         </div>
         <Button onClick={checkUpdates} disabled={loading} variant="secondary" size="sm">
-          <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
+          <RefreshCw className={`mr-2 h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
           Retry
         </Button>
       </div>
@@ -132,16 +132,16 @@ function UpdatesContent() {
   // State 4: Error
   if (error && !updateInfo) {
     return (
-      <div className="p-6 space-y-4">
-        <div className="flex items-center gap-3 p-4 rounded-lg bg-red-500/10 border border-red-500/30">
-          <AlertTriangle className="h-5 w-5 text-red-400 flex-shrink-0" />
+      <div className="space-y-4 p-6">
+        <div className="flex items-center gap-3 rounded-lg border border-red-500/30 bg-red-500/10 p-4">
+          <AlertTriangle className="h-5 w-5 flex-shrink-0 text-red-400" />
           <div>
             <p className="font-medium text-red-400">Failed to check updates</p>
-            <p className="text-sm text-gray-400 mt-0.5">{error}</p>
+            <p className="mt-0.5 text-sm text-gray-400">{error}</p>
           </div>
         </div>
         <Button onClick={checkUpdates} disabled={loading} variant="secondary" size="sm">
-          <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
+          <RefreshCw className={`mr-2 h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
           Retry
         </Button>
       </div>
@@ -152,10 +152,16 @@ function UpdatesContent() {
   if (!updateInfo) {
     return (
       <div className="p-6 text-center text-gray-400">
-        <ArrowUpCircle className="h-8 w-8 mx-auto mb-2 opacity-50" />
+        <ArrowUpCircle className="mx-auto mb-2 h-8 w-8 opacity-50" />
         <p>No update information available.</p>
-        <Button onClick={checkUpdates} disabled={loading} variant="secondary" size="sm" className="mt-3">
-          <RefreshCw className="h-4 w-4 mr-2" />
+        <Button
+          onClick={checkUpdates}
+          disabled={loading}
+          variant="secondary"
+          size="sm"
+          className="mt-3"
+        >
+          <RefreshCw className="mr-2 h-4 w-4" />
           Check Now
         </Button>
       </div>
@@ -164,46 +170,43 @@ function UpdatesContent() {
 
   // States 6 + 7: Up-to-date or update available
   return (
-    <div className="p-6 space-y-6">
+    <div className="space-y-6 p-6">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-xl font-semibold text-white">nself Updates</h2>
-          <p className="text-sm text-gray-400 mt-1">Keep your nself CLI up to date</p>
+          <p className="mt-1 text-sm text-gray-400">Keep your nself CLI up to date</p>
         </div>
-        <Button
-          onClick={checkUpdates}
-          disabled={loading || updating}
-          variant="secondary"
-          size="sm"
-        >
+        <Button onClick={checkUpdates} disabled={loading || updating} variant="secondary" size="sm">
           {/* State 2: Refresh spinner */}
-          <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
+          <RefreshCw className={`mr-2 h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
           {loading ? 'Checking…' : 'Refresh'}
         </Button>
       </div>
 
       {/* Version cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         <div className="rounded-lg border border-white/10 bg-white/5 p-4">
-          <div className="flex items-center gap-2 text-gray-400 text-sm mb-2">
+          <div className="mb-2 flex items-center gap-2 text-sm text-gray-400">
             <Tag className="h-4 w-4" />
             Current version
           </div>
-          <p className="text-2xl font-mono font-bold text-white">
-            {updateInfo.currentVersion}
-          </p>
+          <p className="font-mono text-2xl font-bold text-white">{updateInfo.currentVersion}</p>
         </div>
-        <div className={`rounded-lg border p-4 ${updateInfo.upToDate ? 'border-green-500/30 bg-green-500/5' : 'border-sky-500/30 bg-sky-500/5'}`}>
-          <div className="flex items-center gap-2 text-gray-400 text-sm mb-2">
+        <div
+          className={`rounded-lg border p-4 ${updateInfo.upToDate ? 'border-green-500/30 bg-green-500/5' : 'border-sky-500/30 bg-sky-500/5'}`}
+        >
+          <div className="mb-2 flex items-center gap-2 text-sm text-gray-400">
             <ArrowUpCircle className="h-4 w-4" />
             Latest version
           </div>
-          <p className={`text-2xl font-mono font-bold ${updateInfo.upToDate ? 'text-green-400' : 'text-sky-400'}`}>
+          <p
+            className={`font-mono text-2xl font-bold ${updateInfo.upToDate ? 'text-green-400' : 'text-sky-400'}`}
+          >
             {updateInfo.latestVersion}
           </p>
           {updateInfo.publishedAt && (
-            <p className="text-xs text-gray-500 mt-1">
+            <p className="mt-1 text-xs text-gray-500">
               Released {new Date(updateInfo.publishedAt).toLocaleDateString()}
             </p>
           )}
@@ -212,32 +215,28 @@ function UpdatesContent() {
 
       {/* Status banner */}
       {updateInfo.upToDate ? (
-        <div className="flex items-center gap-3 p-4 rounded-lg bg-green-500/10 border border-green-500/30">
-          <CheckCircle className="h-5 w-5 text-green-400 flex-shrink-0" />
-          <p className="text-green-400 font-medium">You are running the latest version</p>
+        <div className="flex items-center gap-3 rounded-lg border border-green-500/30 bg-green-500/10 p-4">
+          <CheckCircle className="h-5 w-5 flex-shrink-0 text-green-400" />
+          <p className="font-medium text-green-400">You are running the latest version</p>
         </div>
       ) : (
-        <div className="flex items-center gap-3 p-4 rounded-lg bg-sky-500/10 border border-sky-500/30">
-          <Download className="h-5 w-5 text-sky-400 flex-shrink-0" />
+        <div className="flex items-center gap-3 rounded-lg border border-sky-500/30 bg-sky-500/10 p-4">
+          <Download className="h-5 w-5 flex-shrink-0 text-sky-400" />
           <div className="flex-1">
-            <p className="text-sky-400 font-medium">Update available</p>
-            <p className="text-sm text-gray-400 mt-0.5">
+            <p className="font-medium text-sky-400">Update available</p>
+            <p className="mt-0.5 text-sm text-gray-400">
               {updateInfo.latestVersion} is available — you are on {updateInfo.currentVersion}
             </p>
           </div>
-          <Button
-            onClick={runUpdate}
-            disabled={updating || loading}
-            size="sm"
-          >
+          <Button onClick={runUpdate} disabled={updating || loading} size="sm">
             {updating ? (
               <>
-                <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
+                <RefreshCw className="mr-2 h-4 w-4 animate-spin" />
                 Updating…
               </>
             ) : (
               <>
-                <Download className="h-4 w-4 mr-2" />
+                <Download className="mr-2 h-4 w-4" />
                 Update now
               </>
             )}
@@ -248,11 +247,11 @@ function UpdatesContent() {
       {/* Update result */}
       {updateResult && (
         <div className="rounded-lg border border-green-500/30 bg-green-500/5 p-4">
-          <div className="flex items-center gap-2 mb-2">
+          <div className="mb-2 flex items-center gap-2">
             <CheckCircle className="h-4 w-4 text-green-400" />
-            <span className="text-green-400 font-medium text-sm">Update complete</span>
+            <span className="text-sm font-medium text-green-400">Update complete</span>
           </div>
-          <pre className="text-xs text-gray-300 font-mono whitespace-pre-wrap overflow-auto max-h-40">
+          <pre className="max-h-40 overflow-auto font-mono text-xs whitespace-pre-wrap text-gray-300">
             {updateResult}
           </pre>
         </div>
@@ -260,30 +259,30 @@ function UpdatesContent() {
 
       {/* Error during update */}
       {error && updateInfo && (
-        <div className="flex items-center gap-3 p-4 rounded-lg bg-red-500/10 border border-red-500/30">
-          <AlertTriangle className="h-5 w-5 text-red-400 flex-shrink-0" />
-          <p className="text-red-400 text-sm">{error}</p>
+        <div className="flex items-center gap-3 rounded-lg border border-red-500/30 bg-red-500/10 p-4">
+          <AlertTriangle className="h-5 w-5 flex-shrink-0 text-red-400" />
+          <p className="text-sm text-red-400">{error}</p>
         </div>
       )}
 
       {/* Release notes */}
       {updateInfo.releaseNotes && (
         <div className="rounded-lg border border-white/10 bg-white/5 p-4">
-          <div className="flex items-center justify-between mb-3">
+          <div className="mb-3 flex items-center justify-between">
             <h3 className="text-sm font-medium text-gray-300">Release notes</h3>
             {updateInfo.releaseUrl && (
               <a
                 href={updateInfo.releaseUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-1 text-xs text-sky-400 hover:text-sky-300 transition-colors"
+                className="flex items-center gap-1 text-xs text-sky-400 transition-colors hover:text-sky-300"
               >
                 View on GitHub
                 <ExternalLink className="h-3 w-3" />
               </a>
             )}
           </div>
-          <pre className="text-xs text-gray-400 font-mono whitespace-pre-wrap overflow-auto max-h-64">
+          <pre className="max-h-64 overflow-auto font-mono text-xs whitespace-pre-wrap text-gray-400">
             {updateInfo.releaseNotes}
           </pre>
         </div>

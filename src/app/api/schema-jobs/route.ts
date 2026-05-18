@@ -13,9 +13,9 @@
  */
 
 import { getDb } from '@/lib/database'
+import { requireAuth } from '@/lib/require-auth'
 import type { CanvasState } from '@/lib/schema-builder'
 import { generateForwardDDL, generateReverseDDL } from '@/lib/schema-builder'
-import { requireAuth } from '@/lib/require-auth'
 import { NextRequest, NextResponse } from 'next/server'
 
 function getJobsCollection() {
@@ -54,7 +54,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to list schema jobs',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -93,7 +93,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
             'DDL must be generated from a validated schema canvas. ' +
             'Supply a `canvas` field (CanvasState) — raw `forwardDDL`/`reverseDDL` are not accepted.',
         },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -107,7 +107,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           success: false,
           error: 'No DDL to emit — canvas is empty or contains no tables',
         },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -135,7 +135,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to create schema job',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

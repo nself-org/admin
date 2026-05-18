@@ -6,10 +6,7 @@
  * Never log request bodies from this route — they contain credential values.
  */
 
-import {
-  removeCredential,
-  updateCredential,
-} from '@/features/settings/settings'
+import { removeCredential, updateCredential } from '@/features/settings/settings'
 import { getProjectPath } from '@/lib/paths'
 import { requireAuth } from '@/lib/require-auth'
 import { NextRequest, NextResponse } from 'next/server'
@@ -34,17 +31,11 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
     body = await request.json()
   } catch {
-    return NextResponse.json(
-      { error: 'Invalid JSON in request body' },
-      { status: 400 },
-    )
+    return NextResponse.json({ error: 'Invalid JSON in request body' }, { status: 400 })
   }
 
   if (typeof body !== 'object' || body === null) {
-    return NextResponse.json(
-      { error: 'Request body must be an object' },
-      { status: 400 },
-    )
+    return NextResponse.json({ error: 'Request body must be an object' }, { status: 400 })
   }
 
   const { key, value, description } = body as Record<string, unknown>
@@ -55,21 +46,18 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         error:
           'Invalid key. Must match /^[A-Z_][A-Z0-9_]{0,127}$/ (uppercase letters, digits, underscores; start with letter or underscore).',
       },
-      { status: 400 },
+      { status: 400 }
     )
   }
 
   if (typeof value !== 'string' || value.length === 0) {
-    return NextResponse.json(
-      { error: 'value must be a non-empty string' },
-      { status: 400 },
-    )
+    return NextResponse.json({ error: 'value must be a non-empty string' }, { status: 400 })
   }
 
   if (description !== undefined && typeof description !== 'string') {
     return NextResponse.json(
       { error: 'description must be a string when provided' },
-      { status: 400 },
+      { status: 400 }
     )
   }
 
@@ -79,12 +67,11 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       projectPath,
       key,
       value,
-      typeof description === 'string' ? description : undefined,
+      typeof description === 'string' ? description : undefined
     )
     return NextResponse.json({ success: true })
   } catch (err) {
-    const message =
-      err instanceof Error ? err.message : 'Failed to update credential'
+    const message = err instanceof Error ? err.message : 'Failed to update credential'
     return NextResponse.json({ error: message }, { status: 500 })
   }
 }
@@ -102,17 +89,11 @@ export async function DELETE(request: NextRequest): Promise<NextResponse> {
   try {
     body = await request.json()
   } catch {
-    return NextResponse.json(
-      { error: 'Invalid JSON in request body' },
-      { status: 400 },
-    )
+    return NextResponse.json({ error: 'Invalid JSON in request body' }, { status: 400 })
   }
 
   if (typeof body !== 'object' || body === null) {
-    return NextResponse.json(
-      { error: 'Request body must be an object' },
-      { status: 400 },
-    )
+    return NextResponse.json({ error: 'Request body must be an object' }, { status: 400 })
   }
 
   const { key } = body as Record<string, unknown>
@@ -123,7 +104,7 @@ export async function DELETE(request: NextRequest): Promise<NextResponse> {
         error:
           'Invalid key. Must match /^[A-Z_][A-Z0-9_]{0,127}$/ (uppercase letters, digits, underscores; start with letter or underscore).',
       },
-      { status: 400 },
+      { status: 400 }
     )
   }
 
@@ -132,8 +113,7 @@ export async function DELETE(request: NextRequest): Promise<NextResponse> {
     await removeCredential(projectPath, key)
     return NextResponse.json({ success: true })
   } catch (err) {
-    const message =
-      err instanceof Error ? err.message : 'Failed to remove credential'
+    const message = err instanceof Error ? err.message : 'Failed to remove credential'
     return NextResponse.json({ error: message }, { status: 500 })
   }
 }

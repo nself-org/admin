@@ -115,11 +115,7 @@ function ConfigEditor() {
   const [content, setContent] = useState('')
 
   return (
-    <CollaborativeEditor
-      documentId="env-file-dev"
-      initialContent={content}
-      onChange={setContent}
-    />
+    <CollaborativeEditor documentId="env-file-dev" initialContent={content} onChange={setContent} />
   )
 }
 ```
@@ -131,8 +127,10 @@ import { useCollaborativeEditor } from '@/hooks/useCollaboration'
 import { CollaborativeCursor } from '@/components/collaboration/CollaborativeCursor'
 
 function CustomEditor() {
-  const { cursors, selections, updateCursor, setTyping, applyEdit } =
-    useCollaborativeEditor('doc-id', 'room-id')
+  const { cursors, selections, updateCursor, setTyping, applyEdit } = useCollaborativeEditor(
+    'doc-id',
+    'room-id'
+  )
 
   // Update cursor on text changes
   const handleCursorMove = (line: number, column: number) => {
@@ -161,8 +159,7 @@ function CustomEditor() {
 import { useDocumentLock } from '@/hooks/useCollaboration'
 
 function ConfigPage() {
-  const { isLocked, lockedBy, lockDocument, unlockDocument } =
-    useDocumentLock('config-prod')
+  const { isLocked, lockedBy, lockDocument, unlockDocument } = useDocumentLock('config-prod')
 
   const handleEdit = async () => {
     const locked = await lockDocument()

@@ -5,10 +5,7 @@ interface RouteParams {
   params: Promise<{ id: string }>
 }
 
-export async function GET(
-  _request: NextRequest,
-  { params }: RouteParams,
-): Promise<NextResponse> {
+export async function GET(_request: NextRequest, { params }: RouteParams): Promise<NextResponse> {
   try {
     const { id } = await params
     const result = await executeNselfCommand('tenant', ['stats', id, '--json'])
@@ -20,7 +17,7 @@ export async function GET(
           error: 'Failed to get tenant stats',
           details: result.error || result.stderr || 'Unknown error',
         },
-        { status: 500 },
+        { status: 500 }
       )
     }
 
@@ -42,7 +39,7 @@ export async function GET(
         error: 'Failed to get tenant stats',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

@@ -84,11 +84,7 @@ function StatusIcon({ status }: { status: 'pass' | 'fail' | 'warning' }) {
   }
 }
 
-function HealthBadge({
-  summary,
-}: {
-  summary: ValidationData['summary'] | null
-}) {
+function HealthBadge({ summary }: { summary: ValidationData['summary'] | null }) {
   if (!summary) return null
 
   const { total, passed, failed } = summary
@@ -139,8 +135,7 @@ function CategoryGroup({
 
   let borderColor = 'border-zinc-200 dark:border-zinc-700'
   if (hasFailures) borderColor = 'border-red-200 dark:border-red-800/50'
-  else if (hasWarnings)
-    borderColor = 'border-yellow-200 dark:border-yellow-800/50'
+  else if (hasWarnings) borderColor = 'border-yellow-200 dark:border-yellow-800/50'
 
   return (
     <div
@@ -225,9 +220,7 @@ function CategoryGroup({
 
 function ConfigValidateContent() {
   const [loading, setLoading] = useState(false)
-  const [validationData, setValidationData] = useState<ValidationData | null>(
-    null,
-  )
+  const [validationData, setValidationData] = useState<ValidationData | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [lastValidated, setLastValidated] = useState<string | null>(null)
 
@@ -293,11 +286,7 @@ function ConfigValidateContent() {
               </p>
             </div>
             <div className="flex flex-col items-end gap-2">
-              <Button
-                onClick={runValidation}
-                variant="primary"
-                disabled={loading}
-              >
+              <Button onClick={runValidation} variant="primary" disabled={loading}>
                 {loading ? (
                   <RefreshCw className="mr-2 h-4 w-4 animate-spin" />
                 ) : (
@@ -324,9 +313,7 @@ function ConfigValidateContent() {
                 <h3 className="text-sm font-semibold text-red-800 dark:text-red-300">
                   Validation Error
                 </h3>
-                <p className="mt-1 text-sm text-red-700 dark:text-red-400">
-                  {error}
-                </p>
+                <p className="mt-1 text-sm text-red-700 dark:text-red-400">{error}</p>
               </div>
             </div>
           </div>
@@ -354,9 +341,7 @@ function ConfigValidateContent() {
             <div className="flex flex-col items-start justify-between gap-4 rounded-xl border border-zinc-200 bg-white p-6 shadow-sm sm:flex-row sm:items-center dark:border-zinc-700 dark:bg-zinc-800">
               <div className="flex items-center gap-4">
                 <HealthBadge summary={validationData.summary} />
-                {loading && (
-                  <RefreshCw className="h-4 w-4 animate-spin text-zinc-400" />
-                )}
+                {loading && <RefreshCw className="h-4 w-4 animate-spin text-zinc-400" />}
               </div>
               <div className="flex items-center gap-6 text-sm">
                 <div className="flex items-center gap-1.5">
@@ -383,13 +368,10 @@ function ConfigValidateContent() {
             {/* Category Groups */}
             <div className="space-y-4">
               {sortedCategories.map((category) => {
-                const categoryChecks = validationData.checks.filter(
-                  (c) => c.category === category,
-                )
+                const categoryChecks = validationData.checks.filter((c) => c.category === category)
                 const categorySummary = validationData.categories[category]
                 // Auto-open categories with failures
-                const hasProblems =
-                  categorySummary.failed > 0 || categorySummary.warnings > 0
+                const hasProblems = categorySummary.failed > 0 || categorySummary.warnings > 0
 
                 return (
                   <CategoryGroup

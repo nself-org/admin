@@ -37,18 +37,14 @@ export class ConfigPage {
   }
 
   async editVariable(key: string, newValue: string) {
-    const variableRow = this.page.locator(
-      `[data-testid="variable-row"][data-key="${key}"]`,
-    )
+    const variableRow = this.page.locator(`[data-testid="variable-row"][data-key="${key}"]`)
     await variableRow.locator('button:has-text("Edit")').click()
     await this.page.fill('[data-testid="variable-value"]', newValue)
     await this.page.click('button:has-text("Save")')
   }
 
   async deleteVariable(key: string) {
-    const variableRow = this.page.locator(
-      `[data-testid="variable-row"][data-key="${key}"]`,
-    )
+    const variableRow = this.page.locator(`[data-testid="variable-row"][data-key="${key}"]`)
     await variableRow.locator('button:has-text("Delete")').click()
     await this.page.click('button:has-text("Confirm")')
   }
@@ -59,14 +55,12 @@ export class ConfigPage {
   }
 
   async expectVariableExists(key: string) {
-    await expect(
-      this.page.locator(`[data-testid="variable-row"][data-key="${key}"]`),
-    ).toBeVisible()
+    await expect(this.page.locator(`[data-testid="variable-row"][data-key="${key}"]`)).toBeVisible()
   }
 
   async expectVariableNotExists(key: string) {
     await expect(
-      this.page.locator(`[data-testid="variable-row"][data-key="${key}"]`),
+      this.page.locator(`[data-testid="variable-row"][data-key="${key}"]`)
     ).not.toBeVisible()
   }
 }

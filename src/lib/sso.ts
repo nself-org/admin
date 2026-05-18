@@ -24,9 +24,7 @@ export interface SSOConfig {
 export function getSSOConfig(): SSOConfig {
   return {
     enabled: process.env.NSELF_ADMIN_SSO_HEADER_ENABLED === 'true',
-    headerName:
-      process.env.NSELF_ADMIN_SSO_HEADER_NAME ||
-      'CF-Access-Authenticated-User-Email',
+    headerName: process.env.NSELF_ADMIN_SSO_HEADER_NAME || 'CF-Access-Authenticated-User-Email',
     autoProvision: process.env.NSELF_ADMIN_SSO_AUTO_PROVISION === 'true',
   }
 }

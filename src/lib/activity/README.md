@@ -58,15 +58,9 @@ export async function POST(request: Request) {
   const result = await startService('postgres')
 
   // Log the activity
-  await logApiActivity(
-    request,
-    'started',
-    'service',
-    'svc-postgres',
-    'postgres',
-    'admin',
-    { status: 'success' },
-  )
+  await logApiActivity(request, 'started', 'service', 'svc-postgres', 'postgres', 'admin', {
+    status: 'success',
+  })
 
   return NextResponse.json({ success: true })
 }
@@ -75,11 +69,7 @@ export async function POST(request: Request) {
 #### Service Operations
 
 ```typescript
-import {
-  logServiceStart,
-  logServiceStop,
-  logServiceRestart,
-} from '@/lib/activity/logger'
+import { logServiceStart, logServiceStop, logServiceRestart } from '@/lib/activity/logger'
 
 // Log service start
 await logServiceStart(request, 'postgres', 'admin', {
@@ -121,7 +111,7 @@ await logConfigurationChange(
     { field: 'POSTGRES_PORT', oldValue: '5432', newValue: '5433' },
     { field: 'REDIS_ENABLED', oldValue: false, newValue: true },
   ],
-  'admin',
+  'admin'
 )
 ```
 
@@ -139,7 +129,7 @@ await logBackupCreation(
     database: 'postgres',
     type: 'scheduled',
   },
-  'system', // or undefined for system actor
+  'system' // or undefined for system actor
 )
 
 // Backup restored
@@ -150,7 +140,7 @@ await logBackupRestore(
     backupDate: '2026-02-01T10:00:00Z',
     restorePoint: 'before-migration',
   },
-  'admin',
+  'admin'
 )
 ```
 
@@ -168,11 +158,7 @@ await logDatabaseOperation(request, 'sync', 'updated', 'admin', {
 #### Secrets
 
 ```typescript
-import {
-  logSecretAccess,
-  logSecretCreation,
-  logSecretDeletion,
-} from '@/lib/activity/logger'
+import { logSecretAccess, logSecretCreation, logSecretDeletion } from '@/lib/activity/logger'
 
 // Secret accessed
 await logSecretAccess(request, 'secret-db-pass', 'Database Password', 'admin', {
@@ -258,10 +244,7 @@ const results = await searchActivity('postgres')
 import { exportActivity } from '@/lib/activity'
 
 // Export as JSON
-const jsonData = await exportActivity(
-  { startDate: '2026-02-01T00:00:00Z' },
-  'json',
-)
+const jsonData = await exportActivity({ startDate: '2026-02-01T00:00:00Z' }, 'json')
 
 // Export as CSV
 const csvData = await exportActivity({ resourceType: 'service' }, 'csv')

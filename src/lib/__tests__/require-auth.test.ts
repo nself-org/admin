@@ -28,19 +28,11 @@ jest.mock('@/lib/csrf', () => ({
 import { validateCSRFToken } from '@/lib/csrf'
 import { hasAdminPassword } from '@/lib/database'
 import { cookies } from 'next/headers'
-import {
-  requireAuth,
-  requireAuthPreSetup,
-  requireWizardNotComplete,
-} from '../require-auth'
+import { requireAuth, requireAuthPreSetup, requireWizardNotComplete } from '../require-auth'
 
 const mockCookies = cookies as jest.MockedFunction<typeof cookies>
-const mockHasAdminPassword = hasAdminPassword as jest.MockedFunction<
-  typeof hasAdminPassword
->
-const mockValidateCSRFToken = validateCSRFToken as jest.MockedFunction<
-  typeof validateCSRFToken
->
+const mockHasAdminPassword = hasAdminPassword as jest.MockedFunction<typeof hasAdminPassword>
+const mockValidateCSRFToken = validateCSRFToken as jest.MockedFunction<typeof validateCSRFToken>
 
 /**
  * Build a NextRequest with optional session cookie (via next/headers mock)
@@ -54,7 +46,7 @@ function makeRequest(
     method?: string
     sessionToken?: string | null
     csrfHeader?: string | null
-  } = {},
+  } = {}
 ): NextRequest {
   const { method = 'POST', sessionToken, csrfHeader } = opts
   const headers: Record<string, string> = {}
@@ -71,9 +63,7 @@ function makeRequest(
   // requireAuth reads first. This avoids fighting with NextRequest.cookies.
   mockCookies.mockResolvedValue({
     get: (name: string) =>
-      name === 'nself-session' && sessionToken
-        ? { value: sessionToken }
-        : undefined,
+      name === 'nself-session' && sessionToken ? { value: sessionToken } : undefined,
     getAll: () => [],
     has: () => false,
     set: jest.fn(),

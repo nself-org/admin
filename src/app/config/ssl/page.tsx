@@ -114,7 +114,10 @@ export default function SSLConfigPage() {
 
       const res = await fetch('/api/config/ssl/generate-local', { method: 'POST' })
 
-      if (res.status === 401) { setPageState('unauth'); return }
+      if (res.status === 401) {
+        setPageState('unauth')
+        return
+      }
 
       const data = await res.json()
 
@@ -139,7 +142,10 @@ export default function SSLConfigPage() {
 
       const res = await fetch('/api/config/ssl/trust', { method: 'POST' })
 
-      if (res.status === 401) { setPageState('unauth'); return }
+      if (res.status === 401) {
+        setPageState('unauth')
+        return
+      }
 
       const data = await res.json()
 
@@ -173,7 +179,10 @@ export default function SSLConfigPage() {
         body: JSON.stringify({ domain: leDomain, email: leEmail, staging: leStaging }),
       })
 
-      if (res.status === 401) { setPageState('unauth'); return }
+      if (res.status === 401) {
+        setPageState('unauth')
+        return
+      }
 
       const data = await res.json()
 
@@ -192,28 +201,41 @@ export default function SSLConfigPage() {
 
   const getModeColor = (mode: string) => {
     switch (mode) {
-      case 'letsencrypt': return 'text-green-600 dark:text-green-400'
-      case 'local': return 'text-blue-600 dark:text-blue-400'
-      default: return 'text-yellow-600 dark:text-yellow-400'
+      case 'letsencrypt':
+        return 'text-green-600 dark:text-green-400'
+      case 'local':
+        return 'text-blue-600 dark:text-blue-400'
+      default:
+        return 'text-yellow-600 dark:text-yellow-400'
     }
   }
 
   const getModeIcon = (mode: string) => {
     switch (mode) {
-      case 'letsencrypt': return <ShieldCheck className="h-5 w-5" />
-      case 'local': return <Shield className="h-5 w-5" />
-      default: return <AlertCircle className="h-5 w-5" />
+      case 'letsencrypt':
+        return <ShieldCheck className="h-5 w-5" />
+      case 'local':
+        return <Shield className="h-5 w-5" />
+      default:
+        return <AlertCircle className="h-5 w-5" />
     }
   }
 
   // ── State: unauth ──────────────────────────────────────────────────────────
   if (pageState === 'unauth') {
     return (
-      <div className="flex flex-col items-center justify-center py-24 gap-4">
-        <AlertCircle className="h-10 w-10 text-destructive" />
+      <div className="flex flex-col items-center justify-center gap-4 py-24">
+        <AlertCircle className="text-destructive h-10 w-10" />
         <p className="text-lg font-medium">Not authenticated</p>
-        <p className="text-sm text-muted-foreground">Please log in to manage SSL configuration.</p>
-        <Button variant="outline" onClick={() => { window.location.href = '/login' }}>Go to Login</Button>
+        <p className="text-muted-foreground text-sm">Please log in to manage SSL configuration.</p>
+        <Button
+          variant="outline"
+          onClick={() => {
+            window.location.href = '/login'
+          }}
+        >
+          Go to Login
+        </Button>
       </div>
     )
   }
@@ -221,11 +243,13 @@ export default function SSLConfigPage() {
   // ── State: offline ─────────────────────────────────────────────────────────
   if (pageState === 'offline') {
     return (
-      <div className="flex flex-col items-center justify-center py-24 gap-4">
-        <WifiOff className="h-10 w-10 text-muted-foreground" />
+      <div className="flex flex-col items-center justify-center gap-4 py-24">
+        <WifiOff className="text-muted-foreground h-10 w-10" />
         <p className="text-lg font-medium">Cannot connect to admin API</p>
-        <p className="text-sm text-muted-foreground">{errorMessage}</p>
-        <Button variant="outline" onClick={fetchStatus}>Retry</Button>
+        <p className="text-muted-foreground text-sm">{errorMessage}</p>
+        <Button variant="outline" onClick={fetchStatus}>
+          Retry
+        </Button>
       </div>
     )
   }
@@ -236,13 +260,13 @@ export default function SSLConfigPage() {
   }
 
   return (
-    <div className="space-y-6 max-w-3xl">
+    <div className="max-w-3xl space-y-6">
       <div>
-        <h1 className="text-2xl font-bold flex items-center gap-2">
+        <h1 className="flex items-center gap-2 text-2xl font-bold">
           <Lock className="h-6 w-6" />
           SSL Configuration
         </h1>
-        <p className="text-sm text-muted-foreground mt-1">
+        <p className="text-muted-foreground mt-1 text-sm">
           Manage SSL/TLS certificates for secure HTTPS connections.
         </p>
       </div>
@@ -260,9 +284,7 @@ export default function SSLConfigPage() {
       {successMessage && (
         <div className="flex items-start gap-3 rounded-lg border border-green-200 bg-green-50 p-4 dark:border-green-800 dark:bg-green-900/20">
           <CheckCircle className="h-5 w-5 flex-shrink-0 text-green-600 dark:text-green-400" />
-          <div className="text-sm text-green-800 dark:text-green-200">
-            {successMessage}
-          </div>
+          <div className="text-sm text-green-800 dark:text-green-200">{successMessage}</div>
         </div>
       )}
 
@@ -289,7 +311,9 @@ export default function SSLConfigPage() {
             {/* Mode */}
             <div className="rounded-lg border border-zinc-200 p-4 dark:border-zinc-700">
               <div className="mb-2 text-sm text-zinc-600 dark:text-zinc-400">SSL Mode</div>
-              <div className={`flex items-center gap-2 font-semibold ${getModeColor(sslStatus.mode)}`}>
+              <div
+                className={`flex items-center gap-2 font-semibold ${getModeColor(sslStatus.mode)}`}
+              >
                 {getModeIcon(sslStatus.mode)}
                 {sslStatus.mode === 'none'
                   ? 'Not Configured'
@@ -313,12 +337,21 @@ export default function SSLConfigPage() {
               >
                 {sslStatus.certificates.exists ? (
                   sslStatus.certificates.isValid ? (
-                    <><CheckCircle className="h-5 w-5" />Valid</>
+                    <>
+                      <CheckCircle className="h-5 w-5" />
+                      Valid
+                    </>
                   ) : (
-                    <><AlertCircle className="h-5 w-5" />Expired</>
+                    <>
+                      <AlertCircle className="h-5 w-5" />
+                      Expired
+                    </>
                   )
                 ) : (
-                  <><AlertCircle className="h-5 w-5" />Not Found</>
+                  <>
+                    <AlertCircle className="h-5 w-5" />
+                    Not Found
+                  </>
                 )}
               </div>
             </div>
@@ -334,9 +367,15 @@ export default function SSLConfigPage() {
                 }`}
               >
                 {sslStatus.trustInstalled ? (
-                  <><CheckCircle className="h-5 w-5" />Installed</>
+                  <>
+                    <CheckCircle className="h-5 w-5" />
+                    Installed
+                  </>
                 ) : (
-                  <><AlertCircle className="h-5 w-5" />Not Installed</>
+                  <>
+                    <AlertCircle className="h-5 w-5" />
+                    Not Installed
+                  </>
                 )}
               </div>
             </div>
@@ -384,8 +423,8 @@ export default function SSLConfigPage() {
                         : 'text-zinc-900 dark:text-white'
                     }`}
                   >
-                    {new Date(sslStatus.certificates.expiresAt).toLocaleDateString()}{' '}
-                    ({sslStatus.certificates.daysUntilExpiry} days)
+                    {new Date(sslStatus.certificates.expiresAt).toLocaleDateString()} (
+                    {sslStatus.certificates.daysUntilExpiry} days)
                   </span>
                 </div>
               )}
@@ -403,8 +442,8 @@ export default function SSLConfigPage() {
 
         <p className="mb-4 text-sm text-zinc-600 dark:text-zinc-400">
           Generate locally-trusted SSL certificates for development. Requires{' '}
-          <code className="rounded bg-zinc-100 px-1 py-0.5 dark:bg-zinc-700">mkcert</code>{' '}
-          to be installed. Private key material is never exposed via this interface.
+          <code className="rounded bg-zinc-100 px-1 py-0.5 dark:bg-zinc-700">mkcert</code> to be
+          installed. Private key material is never exposed via this interface.
         </p>
 
         <div className="flex flex-wrap items-center gap-3">
@@ -414,9 +453,15 @@ export default function SSLConfigPage() {
             className="gap-2"
           >
             {generating ? (
-              <><RefreshCw className="h-4 w-4 animate-spin" />Generating...</>
+              <>
+                <RefreshCw className="h-4 w-4 animate-spin" />
+                Generating...
+              </>
             ) : (
-              <><Download className="h-4 w-4" />Generate Certificates</>
+              <>
+                <Download className="h-4 w-4" />
+                Generate Certificates
+              </>
             )}
           </Button>
 
@@ -427,9 +472,15 @@ export default function SSLConfigPage() {
             className="gap-2"
           >
             {installingTrust ? (
-              <><RefreshCw className="h-4 w-4 animate-spin" />Installing...</>
+              <>
+                <RefreshCw className="h-4 w-4 animate-spin" />
+                Installing...
+              </>
             ) : (
-              <><ShieldCheck className="h-4 w-4" />Install Trust</>
+              <>
+                <ShieldCheck className="h-4 w-4" />
+                Install Trust
+              </>
             )}
           </Button>
         </div>
@@ -458,8 +509,8 @@ export default function SSLConfigPage() {
         </h2>
 
         <p className="mb-4 text-sm text-zinc-600 dark:text-zinc-400">
-          Obtain free, trusted SSL certificates from Let&apos;s Encrypt.
-          Requires a publicly accessible domain with DNS pointing to this server.
+          Obtain free, trusted SSL certificates from Let&apos;s Encrypt. Requires a publicly
+          accessible domain with DNS pointing to this server.
         </p>
 
         <form onSubmit={configureLetsEncrypt} className="space-y-4">
@@ -497,7 +548,10 @@ export default function SSLConfigPage() {
               onChange={(e) => setLeStaging(e.target.checked)}
               className="h-4 w-4 rounded border-zinc-300 text-green-600 focus:ring-green-500"
             />
-            <Label htmlFor="staging" className="font-normal text-sm text-zinc-700 dark:text-zinc-300">
+            <Label
+              htmlFor="staging"
+              className="text-sm font-normal text-zinc-700 dark:text-zinc-300"
+            >
               Use staging environment (for testing, not browser-trusted)
             </Label>
           </div>
@@ -509,9 +563,15 @@ export default function SSLConfigPage() {
               className="gap-2 bg-green-600 hover:bg-green-700"
             >
               {configuringLE ? (
-                <><RefreshCw className="h-4 w-4 animate-spin" />Configuring...</>
+                <>
+                  <RefreshCw className="h-4 w-4 animate-spin" />
+                  Configuring...
+                </>
               ) : (
-                <><ShieldCheck className="h-4 w-4" />Configure Let&apos;s Encrypt</>
+                <>
+                  <ShieldCheck className="h-4 w-4" />
+                  Configure Let&apos;s Encrypt
+                </>
               )}
             </Button>
 
@@ -547,9 +607,20 @@ export default function SSLConfigPage() {
         <ol className="space-y-2 text-sm text-zinc-600 dark:text-zinc-400">
           {[
             'Generate or configure SSL certificates above',
-            <>Run <code className="rounded bg-zinc-100 px-1 py-0.5 dark:bg-zinc-700">nself build</code> to regenerate nginx configuration</>,
-            <>Run <code className="rounded bg-zinc-100 px-1 py-0.5 dark:bg-zinc-700">nself start</code> to restart services with SSL enabled</>,
-            <>Access your services via <code className="rounded bg-zinc-100 px-1 py-0.5 dark:bg-zinc-700">https://</code></>,
+            <>
+              Run{' '}
+              <code className="rounded bg-zinc-100 px-1 py-0.5 dark:bg-zinc-700">nself build</code>{' '}
+              to regenerate nginx configuration
+            </>,
+            <>
+              Run{' '}
+              <code className="rounded bg-zinc-100 px-1 py-0.5 dark:bg-zinc-700">nself start</code>{' '}
+              to restart services with SSL enabled
+            </>,
+            <>
+              Access your services via{' '}
+              <code className="rounded bg-zinc-100 px-1 py-0.5 dark:bg-zinc-700">https://</code>
+            </>,
           ].map((step, i) => (
             <li key={i} className="flex items-start gap-2">
               <span className="flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-blue-100 text-xs font-medium text-blue-600 dark:bg-blue-900/30 dark:text-blue-400">

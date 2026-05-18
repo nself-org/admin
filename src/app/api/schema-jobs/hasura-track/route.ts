@@ -5,10 +5,7 @@
  */
 
 import { requireAuth } from '@/lib/require-auth'
-import {
-  buildHasuraTrackTablePayload,
-  type CanvasTable,
-} from '@/lib/schema-builder'
+import { buildHasuraTrackTablePayload, type CanvasTable } from '@/lib/schema-builder'
 import { NextRequest, NextResponse } from 'next/server'
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
@@ -21,29 +18,24 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     if (!Array.isArray(body.tables) || body.tables.length === 0) {
       return NextResponse.json(
         { success: false, error: 'tables array is required' },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
     // Read Hasura connection from env (set by nself build)
     const hasuraUrl =
-      process.env.HASURA_GRAPHQL_URL ??
-      process.env.NSELF_HASURA_URL ??
-      'http://localhost:8080'
+      process.env.HASURA_GRAPHQL_URL ?? process.env.NSELF_HASURA_URL ?? 'http://localhost:8080'
 
     const adminSecret =
-      process.env.HASURA_GRAPHQL_ADMIN_SECRET ??
-      process.env.NSELF_HASURA_ADMIN_SECRET ??
-      ''
+      process.env.HASURA_GRAPHQL_ADMIN_SECRET ?? process.env.NSELF_HASURA_ADMIN_SECRET ?? ''
 
     if (!adminSecret) {
       return NextResponse.json(
         {
           success: false,
-          error:
-            'HASURA_GRAPHQL_ADMIN_SECRET is not set. Ensure your nself stack is running.',
+          error: 'HASURA_GRAPHQL_ADMIN_SECRET is not set. Ensure your nself stack is running.',
         },
-        { status: 503 },
+        { status: 503 }
       )
     }
 
@@ -77,9 +69,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           tracked.push(table.name)
         }
       } catch (err) {
-        errors.push(
-          `${table.name}: ${err instanceof Error ? err.message : 'network error'}`,
-        )
+        errors.push(`${table.name}: ${err instanceof Error ? err.message : 'network error'}`)
       }
     }
 
@@ -95,7 +85,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to track tables in Hasura',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

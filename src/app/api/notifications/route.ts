@@ -33,15 +33,9 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     const limit = parseInt(searchParams.get('limit') || '20')
     const offset = parseInt(searchParams.get('offset') || '0')
     const unreadOnly = searchParams.get('unreadOnly') === 'true'
-    const type = searchParams.get(
-      'type',
-    ) as notificationsApi.NotificationType | null
-    const category = searchParams.get(
-      'category',
-    ) as notificationsApi.NotificationCategory | null
-    const priority = searchParams.get(
-      'priority',
-    ) as notificationsApi.NotificationPriority | null
+    const type = searchParams.get('type') as notificationsApi.NotificationType | null
+    const category = searchParams.get('category') as notificationsApi.NotificationCategory | null
+    const priority = searchParams.get('priority') as notificationsApi.NotificationPriority | null
 
     const result = await notificationsApi.getNotifications(userId, {
       limit,
@@ -69,7 +63,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to fetch notifications',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -112,10 +106,9 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       return NextResponse.json(
         {
           success: false,
-          error:
-            'Missing required fields: type, title, and message are required',
+          error: 'Missing required fields: type, title, and message are required',
         },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -133,7 +126,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           success: false,
           error: `Invalid type. Must be one of: ${validTypes.join(', ')}`,
         },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -169,7 +162,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to create notification',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -218,7 +211,7 @@ export async function DELETE(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to delete notifications',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

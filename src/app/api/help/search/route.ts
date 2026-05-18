@@ -1,8 +1,4 @@
-import {
-  helpArticlesArray,
-  helpSearchIndex,
-  type HelpArticle,
-} from '@/data/help-content'
+import { helpArticlesArray, helpSearchIndex, type HelpArticle } from '@/data/help-content'
 import { NextRequest, NextResponse } from 'next/server'
 
 interface SearchResult extends HelpArticle {
@@ -23,7 +19,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
           success: false,
           error: 'Query parameter "q" is required',
         },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -33,7 +29,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       (article) =>
         article.title.toLowerCase().includes(lowerQuery) ||
         article.content.toLowerCase().includes(lowerQuery) ||
-        article.tags.some((tag) => tag.toLowerCase().includes(lowerQuery)),
+        article.tags.some((tag) => tag.toLowerCase().includes(lowerQuery))
     )
 
     // Filter by category if specified
@@ -81,7 +77,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         error: 'Search failed',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

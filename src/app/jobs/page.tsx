@@ -105,11 +105,7 @@ export default function JobsPage() {
         setDlq(data.jobs ?? [])
       }
     } catch (err) {
-      setError(
-        err instanceof Error
-          ? err.message
-          : 'Failed to reach jobs plugin on 127.0.0.1:3105',
-      )
+      setError(err instanceof Error ? err.message : 'Failed to reach jobs plugin on 127.0.0.1:3105')
     } finally {
       setLoading(false)
     }
@@ -145,12 +141,9 @@ export default function JobsPage() {
     <div className="space-y-6 p-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-semibold text-white">
-            Jobs &amp; Queue
-          </h1>
+          <h1 className="text-2xl font-semibold text-white">Jobs &amp; Queue</h1>
           <p className="mt-1 text-sm text-zinc-400">
-            Background job queue with retries, DLQ, and HMAC-signed HTTP
-            callbacks.{' '}
+            Background job queue with retries, DLQ, and HMAC-signed HTTP callbacks.{' '}
             <Link href="/cron" className="text-sky-400 hover:underline">
               Looking for scheduled jobs? Open Cron →
             </Link>
@@ -174,9 +167,7 @@ export default function JobsPage() {
 
       {/* Queue stats */}
       <section>
-        <h2 className="mb-3 text-sm font-medium tracking-wide text-zinc-500 uppercase">
-          Queues
-        </h2>
+        <h2 className="mb-3 text-sm font-medium tracking-wide text-zinc-500 uppercase">Queues</h2>
         {queues.length === 0 ? (
           <div className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-4 text-sm text-zinc-500">
             No queues yet. Publish a job via POST /v1/jobs to create one.
@@ -184,13 +175,8 @@ export default function JobsPage() {
         ) : (
           <div className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-4">
             {queues.map((q) => (
-              <div
-                key={q.name}
-                className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-4"
-              >
-                <div className="truncate text-sm font-medium text-white">
-                  {q.name}
-                </div>
+              <div key={q.name} className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-4">
+                <div className="truncate text-sm font-medium text-white">{q.name}</div>
                 <div className="mt-2 grid grid-cols-2 gap-2 text-xs text-zinc-400">
                   <div>
                     Pending: <span className="text-amber-400">{q.pending}</span>
@@ -199,8 +185,7 @@ export default function JobsPage() {
                     Active: <span className="text-sky-400">{q.active}</span>
                   </div>
                   <div>
-                    Done:{' '}
-                    <span className="text-emerald-400">{q.completed}</span>
+                    Done: <span className="text-emerald-400">{q.completed}</span>
                   </div>
                   <div>
                     Failed: <span className="text-rose-400">{q.failed}</span>
@@ -266,24 +251,16 @@ export default function JobsPage() {
               <tbody className="divide-y divide-zinc-800 bg-zinc-900/30">
                 {jobs.map((j) => (
                   <tr key={j.id}>
-                    <td className="px-3 py-2 font-medium text-white">
-                      {j.queue}
-                    </td>
+                    <td className="px-3 py-2 font-medium text-white">{j.queue}</td>
                     <td className="px-3 py-2">
                       <StatusBadge status={j.status} />
                     </td>
                     <td className="px-3 py-2 text-zinc-400">
                       {j.attempts}/{j.max_attempts}
                     </td>
-                    <td className="px-3 py-2 text-zinc-400">
-                      {formatRelative(j.scheduled_at)}
-                    </td>
-                    <td className="px-3 py-2 text-zinc-400">
-                      {formatRelative(j.updated_at)}
-                    </td>
-                    <td className="max-w-xs truncate px-3 py-2 text-zinc-400">
-                      {j.error ?? '—'}
-                    </td>
+                    <td className="px-3 py-2 text-zinc-400">{formatRelative(j.scheduled_at)}</td>
+                    <td className="px-3 py-2 text-zinc-400">{formatRelative(j.updated_at)}</td>
+                    <td className="max-w-xs truncate px-3 py-2 text-zinc-400">{j.error ?? '—'}</td>
                     <td className="px-3 py-2">
                       <div className="flex items-center gap-2">
                         {j.status === 'failed' && (
@@ -336,18 +313,12 @@ export default function JobsPage() {
               <tbody className="divide-y divide-rose-500/10">
                 {dlq.map((j) => (
                   <tr key={j.id}>
-                    <td className="px-3 py-2 font-medium text-white">
-                      {j.queue}
-                    </td>
+                    <td className="px-3 py-2 font-medium text-white">{j.queue}</td>
                     <td className="px-3 py-2 text-zinc-400">
                       {j.attempts}/{j.max_attempts}
                     </td>
-                    <td className="max-w-md truncate px-3 py-2 text-zinc-400">
-                      {j.error ?? '—'}
-                    </td>
-                    <td className="px-3 py-2 text-zinc-400">
-                      {formatRelative(j.updated_at)}
-                    </td>
+                    <td className="max-w-md truncate px-3 py-2 text-zinc-400">{j.error ?? '—'}</td>
+                    <td className="px-3 py-2 text-zinc-400">{formatRelative(j.updated_at)}</td>
                     <td className="px-3 py-2">
                       <button
                         onClick={() => handleRevive(j.id)}

@@ -22,7 +22,7 @@ import { useCallback, useEffect, useRef } from 'react'
 export function useUrlState<T extends string | null>(
   key: string,
   defaultValue: T,
-  opts?: { pushMode?: 'replace' | 'push'; debounce?: number },
+  opts?: { pushMode?: 'replace' | 'push'; debounce?: number }
 ): [T, (v: T) => void] {
   const router = useRouter()
   const pathname = usePathname()
@@ -72,7 +72,7 @@ export function useUrlState<T extends string | null>(
         doUpdate()
       }
     },
-    [router, pathname, searchParams, key, defaultValue, pushMode, debounceMs],
+    [router, pathname, searchParams, key, defaultValue, pushMode, debounceMs]
   )
 
   return [value, setValue]

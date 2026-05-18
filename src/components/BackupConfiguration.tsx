@@ -1,14 +1,6 @@
 'use client'
 
-import {
-  Clock,
-  Database,
-  FileText,
-  HardDrive,
-  Image,
-  Shield,
-  Wrench,
-} from 'lucide-react'
+import { Clock, Database, FileText, HardDrive, Image, Shield, Wrench } from 'lucide-react'
 import { useState } from 'react'
 
 interface BackupConfig {
@@ -35,19 +27,14 @@ interface BackupConfigurationProps {
   onChange: (config: BackupConfig) => void
 }
 
-export function BackupConfiguration({
-  value,
-  onChange,
-}: BackupConfigurationProps) {
+export function BackupConfiguration({ value, onChange }: BackupConfigurationProps) {
   const [showModal, setShowModal] = useState(false)
 
   const updateConfig = (updates: Partial<BackupConfig>) => {
     onChange({ ...value, ...updates })
   }
 
-  const updateSchedule = (
-    scheduleUpdates: Partial<BackupConfig['schedule']>,
-  ) => {
+  const updateSchedule = (scheduleUpdates: Partial<BackupConfig['schedule']>) => {
     onChange({
       ...value,
       schedule: { ...value.schedule, ...scheduleUpdates },
@@ -73,8 +60,7 @@ export function BackupConfiguration({
 
   // Generate cron expression from schedule
   const getCronExpression = () => {
-    const { frequency, time, dayOfWeek, dayOfMonth, customCron } =
-      value.schedule
+    const { frequency, time, dayOfWeek, dayOfMonth, customCron } = value.schedule
 
     if (frequency === 'custom' && customCron) {
       return customCron
@@ -103,26 +89,12 @@ export function BackupConfiguration({
       case 'daily':
         return `Daily backups at ${timeStr}`
       case 'weekly': {
-        const days = [
-          'Sunday',
-          'Monday',
-          'Tuesday',
-          'Wednesday',
-          'Thursday',
-          'Friday',
-          'Saturday',
-        ]
+        const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
         return `Weekly backups on ${days[dayOfWeek || 0]}s at ${timeStr}`
       }
       case 'monthly': {
         const suffix =
-          dayOfMonth === 1
-            ? 'st'
-            : dayOfMonth === 2
-              ? 'nd'
-              : dayOfMonth === 3
-                ? 'rd'
-                : 'th'
+          dayOfMonth === 1 ? 'st' : dayOfMonth === 2 ? 'nd' : dayOfMonth === 3 ? 'rd' : 'th'
         return `Monthly backups on the ${dayOfMonth}${suffix} at ${timeStr}`
       }
       case 'custom':
@@ -165,10 +137,7 @@ export function BackupConfiguration({
           onClick={enableBackup}
         >
           <div className="flex items-start justify-between">
-            <div
-              className="flex flex-1 items-start space-x-4"
-              onClick={enableBackup}
-            >
+            <div className="flex flex-1 items-start space-x-4" onClick={enableBackup}>
               <div
                 className={`rounded-lg border p-2 ${
                   value.enabled
@@ -274,9 +243,7 @@ export function BackupConfiguration({
                       <input
                         type="checkbox"
                         checked={value.types.database}
-                        onChange={(e) =>
-                          updateTypes({ database: e.target.checked })
-                        }
+                        onChange={(e) => updateTypes({ database: e.target.checked })}
                         className="sr-only"
                       />
                       <Database
@@ -307,9 +274,7 @@ export function BackupConfiguration({
                       <input
                         type="checkbox"
                         checked={value.types.images}
-                        onChange={(e) =>
-                          updateTypes({ images: e.target.checked })
-                        }
+                        onChange={(e) => updateTypes({ images: e.target.checked })}
                         className="sr-only"
                       />
                       <Image
@@ -340,9 +305,7 @@ export function BackupConfiguration({
                       <input
                         type="checkbox"
                         checked={value.types.configs}
-                        onChange={(e) =>
-                          updateTypes({ configs: e.target.checked })
-                        }
+                        onChange={(e) => updateTypes({ configs: e.target.checked })}
                         className="sr-only"
                       />
                       <FileText
@@ -377,8 +340,7 @@ export function BackupConfiguration({
                           value={value.schedule.frequency}
                           onChange={(e) =>
                             updateSchedule({
-                              frequency: e.target
-                                .value as BackupConfig['schedule']['frequency'],
+                              frequency: e.target.value as BackupConfig['schedule']['frequency'],
                             })
                           }
                           className="focus:ring-opacity-20 w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 focus:ring-2 focus:ring-zinc-500 focus:outline-none dark:border-zinc-600 dark:bg-zinc-800 dark:text-white"
@@ -395,9 +357,7 @@ export function BackupConfiguration({
                         <input
                           type="time"
                           value={value.schedule.time}
-                          onChange={(e) =>
-                            updateSchedule({ time: e.target.value })
-                          }
+                          onChange={(e) => updateSchedule({ time: e.target.value })}
                           className="focus:ring-opacity-20 flex-1 rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 focus:ring-2 focus:ring-zinc-500 focus:outline-none dark:border-zinc-600 dark:bg-zinc-800 dark:text-white"
                         />
                       </div>
@@ -443,9 +403,7 @@ export function BackupConfiguration({
                       <input
                         type="text"
                         value={value.schedule.customCron || ''}
-                        onChange={(e) =>
-                          updateSchedule({ customCron: e.target.value })
-                        }
+                        onChange={(e) => updateSchedule({ customCron: e.target.value })}
                         className="focus:ring-opacity-20 w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 focus:ring-2 focus:ring-zinc-500 focus:outline-none dark:border-zinc-600 dark:bg-zinc-800 dark:text-white"
                         placeholder="0 2 * * * (Cron expression)"
                       />
@@ -491,9 +449,7 @@ export function BackupConfiguration({
                         <input
                           type="checkbox"
                           checked={value.compression}
-                          onChange={(e) =>
-                            updateConfig({ compression: e.target.checked })
-                          }
+                          onChange={(e) => updateConfig({ compression: e.target.checked })}
                           className="h-4 w-4 rounded border-gray-300 bg-gray-100 text-zinc-600 focus:ring-2 focus:ring-zinc-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-zinc-600"
                         />
                         <span className="text-sm text-zinc-700 dark:text-zinc-300">
@@ -506,9 +462,7 @@ export function BackupConfiguration({
                         <input
                           type="checkbox"
                           checked={value.encryption}
-                          onChange={(e) =>
-                            updateConfig({ encryption: e.target.checked })
-                          }
+                          onChange={(e) => updateConfig({ encryption: e.target.checked })}
                           className="h-4 w-4 rounded border-gray-300 bg-gray-100 text-zinc-600 focus:ring-2 focus:ring-zinc-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-zinc-600"
                         />
                         <span className="text-sm text-zinc-700 dark:text-zinc-300">

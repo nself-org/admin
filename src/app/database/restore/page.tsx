@@ -4,13 +4,7 @@ import { TableSkeleton } from '@/components/skeletons'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Progress } from '@/components/ui/progress'
@@ -51,9 +45,9 @@ function DatabaseRestoreContent() {
   const [lastOutput, setLastOutput] = useState<string>('')
   const [restoreProgress, setRestoreProgress] = useState(0)
   const [confirmationInput, setConfirmationInput] = useState('')
-  const [currentEnvironment, setCurrentEnvironment] = useState<
-    'local' | 'staging' | 'production'
-  >('local')
+  const [currentEnvironment, setCurrentEnvironment] = useState<'local' | 'staging' | 'production'>(
+    'local'
+  )
 
   const backups: Backup[] = backupData?.data || []
 
@@ -71,8 +65,7 @@ function DatabaseRestoreContent() {
     : isStagingEnvironment
       ? 'restore staging'
       : ''
-  const confirmationValid =
-    !requiresConfirmation || confirmationInput === confirmationPhrase
+  const confirmationValid = !requiresConfirmation || confirmationInput === confirmationPhrase
 
   const runRestore = async () => {
     const backupPath = selectedBackup?.path || customPath.trim()
@@ -82,9 +75,7 @@ function DatabaseRestoreContent() {
     }
 
     if (requiresConfirmation && !confirmationValid) {
-      setLastOutput(
-        `Error: Please type "${confirmationPhrase}" to confirm the restore operation`,
-      )
+      setLastOutput(`Error: Please type "${confirmationPhrase}" to confirm the restore operation`)
       return
     }
 
@@ -116,9 +107,7 @@ function DatabaseRestoreContent() {
       const data = await response.json()
       clearInterval(progressInterval)
       setRestoreProgress(100)
-      setLastOutput(
-        data.data?.output || data.details || JSON.stringify(data, null, 2),
-      )
+      setLastOutput(data.data?.output || data.details || JSON.stringify(data, null, 2))
 
       if (data.success) {
         setSelectedBackup(null)
@@ -158,9 +147,7 @@ function DatabaseRestoreContent() {
   return (
     <div className="space-y-6 p-6">
       <div>
-        <h1 className="text-2xl font-bold text-zinc-900 dark:text-white">
-          Restore Database
-        </h1>
+        <h1 className="text-2xl font-bold text-zinc-900 dark:text-white">Restore Database</h1>
         <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
           Restore your database from a backup file using{' '}
           <code className="rounded bg-zinc-100 px-1 py-0.5 text-xs dark:bg-zinc-800">
@@ -173,13 +160,11 @@ function DatabaseRestoreContent() {
         {isProductionEnvironment && (
           <Alert variant="destructive" className="border-red-600 bg-red-950/50">
             <Shield className="h-5 w-5" />
-            <AlertTitle className="text-lg">
-              Production Environment Detected
-            </AlertTitle>
+            <AlertTitle className="text-lg">Production Environment Detected</AlertTitle>
             <AlertDescription className="mt-2">
               <p className="mb-2">
-                You are about to restore a database in a{' '}
-                <strong>PRODUCTION</strong> environment. This operation will:
+                You are about to restore a database in a <strong>PRODUCTION</strong> environment.
+                This operation will:
               </p>
               <ul className="list-inside list-disc space-y-1">
                 <li>Permanently overwrite all existing production data</li>
@@ -197,12 +182,10 @@ function DatabaseRestoreContent() {
         {isStagingEnvironment && (
           <Alert className="border-amber-600 bg-amber-950/50">
             <AlertTriangle className="h-5 w-5 text-amber-500" />
-            <AlertTitle className="text-amber-500">
-              Staging Environment
-            </AlertTitle>
+            <AlertTitle className="text-amber-500">Staging Environment</AlertTitle>
             <AlertDescription className="text-amber-200">
-              This is a staging environment. Restoring will overwrite all
-              staging data. Type the confirmation phrase below to proceed.
+              This is a staging environment. Restoring will overwrite all staging data. Type the
+              confirmation phrase below to proceed.
             </AlertDescription>
           </Alert>
         )}
@@ -212,8 +195,8 @@ function DatabaseRestoreContent() {
           <AlertTriangle className="h-4 w-4" />
           <AlertTitle>Warning: Destructive Operation</AlertTitle>
           <AlertDescription>
-            Restoring a database will overwrite all existing data. Make sure you
-            have a recent backup before proceeding.
+            Restoring a database will overwrite all existing data. Make sure you have a recent
+            backup before proceeding.
           </AlertDescription>
         </Alert>
 
@@ -223,10 +206,8 @@ function DatabaseRestoreContent() {
           <AlertTitle>nself CLI Integration</AlertTitle>
           <AlertDescription>
             This page executes{' '}
-            <code className="rounded bg-zinc-100 px-1 dark:bg-zinc-800">
-              nself db restore
-            </code>{' '}
-            to restore your database from a backup file.
+            <code className="rounded bg-zinc-100 px-1 dark:bg-zinc-800">nself db restore</code> to
+            restore your database from a backup file.
           </AlertDescription>
         </Alert>
 
@@ -240,9 +221,7 @@ function DatabaseRestoreContent() {
                     <FileArchive className="h-5 w-5 text-blue-600" />
                     Select Backup
                   </CardTitle>
-                  <CardDescription>
-                    Choose a backup to restore from
-                  </CardDescription>
+                  <CardDescription>Choose a backup to restore from</CardDescription>
                 </div>
                 <Button
                   variant="outline"
@@ -250,9 +229,7 @@ function DatabaseRestoreContent() {
                   onClick={() => refreshBackups()}
                   disabled={backupsLoading}
                 >
-                  <RefreshCw
-                    className={`mr-2 h-4 w-4 ${backupsLoading ? 'animate-spin' : ''}`}
-                  />
+                  <RefreshCw className={`mr-2 h-4 w-4 ${backupsLoading ? 'animate-spin' : ''}`} />
                   Refresh
                 </Button>
               </div>
@@ -311,15 +288,10 @@ function DatabaseRestoreContent() {
                             </div>
                           </div>
                           <div className="flex items-center gap-2">
-                            <Badge
-                              variant="outline"
-                              className={getTypeColor(backup.type)}
-                            >
+                            <Badge variant="outline" className={getTypeColor(backup.type)}>
                               {backup.type}
                             </Badge>
-                            {isSelected && (
-                              <CheckCircle className="h-5 w-5 text-blue-500" />
-                            )}
+                            {isSelected && <CheckCircle className="h-5 w-5 text-blue-500" />}
                           </div>
                         </div>
                       )
@@ -366,17 +338,13 @@ function DatabaseRestoreContent() {
                 <RotateCcw className="h-5 w-5 text-orange-600" />
                 Restore Options
               </CardTitle>
-              <CardDescription>
-                Configure and execute the database restore
-              </CardDescription>
+              <CardDescription>Configure and execute the database restore</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
               {/* Selected Backup Info */}
               {selectedBackup && (
                 <div className="rounded-lg border bg-zinc-50 p-4 dark:border-zinc-700 dark:bg-zinc-800/50">
-                  <p className="text-sm font-medium text-zinc-500">
-                    Selected Backup
-                  </p>
+                  <p className="text-sm font-medium text-zinc-500">Selected Backup</p>
                   <div className="mt-2 flex items-center gap-3">
                     <Database className="h-8 w-8 text-blue-500" />
                     <div>
@@ -398,9 +366,7 @@ function DatabaseRestoreContent() {
 
               {customPath && (
                 <div className="rounded-lg border bg-zinc-50 p-4 dark:border-zinc-700 dark:bg-zinc-800/50">
-                  <p className="text-sm font-medium text-zinc-500">
-                    Custom Path
-                  </p>
+                  <p className="text-sm font-medium text-zinc-500">Custom Path</p>
                   <p className="mt-1 font-mono text-sm text-zinc-900 dark:text-white">
                     {customPath}
                   </p>
@@ -412,11 +378,7 @@ function DatabaseRestoreContent() {
                 <div className="space-y-2">
                   <Label
                     htmlFor="confirmation"
-                    className={
-                      isProductionEnvironment
-                        ? 'text-red-500'
-                        : 'text-amber-500'
-                    }
+                    className={isProductionEnvironment ? 'text-red-500' : 'text-amber-500'}
                   >
                     Type &quot;{confirmationPhrase}&quot; to confirm
                   </Label>
@@ -447,9 +409,7 @@ function DatabaseRestoreContent() {
                 <div className="space-y-2">
                   <div className="flex items-center justify-between text-sm">
                     <span className="text-zinc-500">Restoring database...</span>
-                    <span className="font-medium">
-                      {Math.round(restoreProgress)}%
-                    </span>
+                    <span className="font-medium">{Math.round(restoreProgress)}%</span>
                   </div>
                   <Progress value={restoreProgress} className="h-2" />
                 </div>
@@ -487,8 +447,7 @@ function DatabaseRestoreContent() {
                   <span>Command:</span>
                 </div>
                 <div className="mt-2">
-                  $ nself db restore{' '}
-                  {selectedBackup?.path || customPath || '<backup-file>'}
+                  $ nself db restore {selectedBackup?.path || customPath || '<backup-file>'}
                 </div>
               </div>
             </CardContent>

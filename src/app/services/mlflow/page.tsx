@@ -3,13 +3,7 @@
 import { PageShell } from '@/components/PageShell'
 import { ServiceDetailSkeleton } from '@/components/skeletons'
 import { Button } from '@/components/ui/button'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import {
   Beaker,
@@ -32,17 +26,13 @@ function MLflowContent() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [cliOutput, setCliOutput] = useState<string | null>(null)
-  const [lastCommand, setLastCommand] = useState<string>(
-    'nself service mlflow experiments',
-  )
+  const [lastCommand, setLastCommand] = useState<string>('nself service mlflow experiments')
 
   // Init state
   const [initializing, setInitializing] = useState(false)
 
   // Experiments state
-  const [experimentsOutput, setExperimentsOutput] = useState<string | null>(
-    null,
-  )
+  const [experimentsOutput, setExperimentsOutput] = useState<string | null>(null)
   const [loadingExperiments, setLoadingExperiments] = useState(false)
 
   // Models state
@@ -215,15 +205,11 @@ function MLflowContent() {
               <ExternalLink className="h-4 w-4 text-zinc-500" />
               <CardTitle className="text-base">MLflow UI</CardTitle>
             </div>
-            <CardDescription>
-              Access the MLflow tracking server web interface
-            </CardDescription>
+            <CardDescription>Access the MLflow tracking server web interface</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="rounded-lg bg-zinc-50 p-4 dark:bg-zinc-900">
-              <pre className="text-sm text-zinc-700 dark:text-zinc-300">
-                {mlflowUiOutput}
-              </pre>
+              <pre className="text-sm text-zinc-700 dark:text-zinc-300">{mlflowUiOutput}</pre>
             </div>
           </CardContent>
         </Card>
@@ -251,9 +237,7 @@ function MLflowContent() {
               Load
             </Button>
           </div>
-          <CardDescription>
-            MLflow experiment tracking and run history
-          </CardDescription>
+          <CardDescription>MLflow experiment tracking and run history</CardDescription>
         </CardHeader>
         <CardContent>
           {loadingExperiments ? (
@@ -262,17 +246,14 @@ function MLflowContent() {
             </div>
           ) : experimentsOutput ? (
             <ScrollArea className="max-h-64">
-              <pre className="text-xs text-zinc-700 dark:text-zinc-300">
-                {experimentsOutput}
-              </pre>
+              <pre className="text-xs text-zinc-700 dark:text-zinc-300">{experimentsOutput}</pre>
             </ScrollArea>
           ) : (
             <div className="py-8 text-center">
               <Beaker className="mx-auto mb-3 h-8 w-8 text-zinc-400" />
               <p className="text-sm text-zinc-500">
-                No experiments loaded. Click &ldquo;Load&rdquo; to fetch
-                experiments from MLflow, or &ldquo;Init&rdquo; to initialize the
-                service.
+                No experiments loaded. Click &ldquo;Load&rdquo; to fetch experiments from MLflow, or
+                &ldquo;Init&rdquo; to initialize the service.
               </p>
             </div>
           )}
@@ -287,12 +268,7 @@ function MLflowContent() {
               <BoxSelect className="h-4 w-4 text-zinc-500" />
               <CardTitle className="text-base">Model Registry</CardTitle>
             </div>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={fetchModels}
-              disabled={loadingModels}
-            >
+            <Button variant="outline" size="sm" onClick={fetchModels} disabled={loadingModels}>
               {loadingModels ? (
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               ) : (
@@ -301,9 +277,7 @@ function MLflowContent() {
               Load
             </Button>
           </div>
-          <CardDescription>
-            Registered ML models and version management
-          </CardDescription>
+          <CardDescription>Registered ML models and version management</CardDescription>
         </CardHeader>
         <CardContent>
           {loadingModels ? (
@@ -312,16 +286,13 @@ function MLflowContent() {
             </div>
           ) : modelsOutput ? (
             <ScrollArea className="max-h-64">
-              <pre className="text-xs text-zinc-700 dark:text-zinc-300">
-                {modelsOutput}
-              </pre>
+              <pre className="text-xs text-zinc-700 dark:text-zinc-300">{modelsOutput}</pre>
             </ScrollArea>
           ) : (
             <div className="py-8 text-center">
               <BoxSelect className="mx-auto mb-3 h-8 w-8 text-zinc-400" />
               <p className="text-sm text-zinc-500">
-                No models loaded. Click &ldquo;Load&rdquo; to fetch registered
-                models from MLflow.
+                No models loaded. Click &ldquo;Load&rdquo; to fetch registered models from MLflow.
               </p>
             </div>
           )}
@@ -335,26 +306,18 @@ function MLflowContent() {
             <Terminal className="h-4 w-4 text-zinc-500" />
             <CardTitle className="text-base">CLI Command</CardTitle>
           </div>
-          <CardDescription>
-            Command executed against the nself CLI
-          </CardDescription>
+          <CardDescription>Command executed against the nself CLI</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="rounded-lg bg-zinc-950 p-4">
-            <div className="mb-2 font-mono text-sm text-emerald-400">
-              $ {lastCommand}
-            </div>
+            <div className="mb-2 font-mono text-sm text-emerald-400">$ {lastCommand}</div>
             {cliOutput && (
               <ScrollArea className="max-h-48">
-                <pre className="font-mono text-xs text-zinc-300">
-                  {cliOutput}
-                </pre>
+                <pre className="font-mono text-xs text-zinc-300">{cliOutput}</pre>
               </ScrollArea>
             )}
             {!cliOutput && (
-              <p className="font-mono text-xs text-zinc-500">
-                Run a command to see output here
-              </p>
+              <p className="font-mono text-xs text-zinc-500">Run a command to see output here</p>
             )}
           </div>
         </CardContent>

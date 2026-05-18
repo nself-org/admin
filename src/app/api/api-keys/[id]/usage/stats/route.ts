@@ -17,20 +17,14 @@ interface RouteParams {
  *   - Top endpoints
  *   - Error rate
  */
-export async function GET(
-  _request: NextRequest,
-  { params }: RouteParams,
-): Promise<NextResponse> {
+export async function GET(_request: NextRequest, { params }: RouteParams): Promise<NextResponse> {
   try {
     const { id } = await params
 
     // Verify the key exists
     const apiKey = await apiKeysApi.getApiKeyById(id)
     if (!apiKey) {
-      return NextResponse.json(
-        { success: false, error: 'API key not found' },
-        { status: 404 },
-      )
+      return NextResponse.json({ success: false, error: 'API key not found' }, { status: 404 })
     }
 
     const stats = await apiKeysApi.getApiKeyUsageStats(id)
@@ -46,7 +40,7 @@ export async function GET(
         error: 'Failed to fetch API key usage stats',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

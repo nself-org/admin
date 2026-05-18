@@ -23,7 +23,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         cwd: projectPath,
         env: { ...process.env, PATH: getEnhancedPath() },
         timeout: 60000,
-      },
+      }
     )
 
     const result = JSON.parse(stdout)
@@ -48,7 +48,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to get environment diff',
         details: err.message,
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

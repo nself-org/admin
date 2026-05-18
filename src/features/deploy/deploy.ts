@@ -8,13 +8,7 @@ import { findNselfPath, getEnhancedPath } from '@/lib/nself-path'
 import { getProjectPath } from '@/lib/paths'
 import { execFile } from 'child_process'
 import { promisify } from 'util'
-import type {
-  DeployConfig,
-  DeployError,
-  DeployResult,
-  DeployStep,
-  DeployTarget,
-} from './types'
+import type { DeployConfig, DeployError, DeployResult, DeployStep, DeployTarget } from './types'
 
 const execFileAsync = promisify(execFile)
 
@@ -133,9 +127,7 @@ export async function runDeploy(config: DeployConfig): Promise<DeployResult> {
     }
 
     const duration = Date.now() - startedAt
-    const output = [typedErr.stdout?.trim(), typedErr.stderr?.trim()]
-      .filter(Boolean)
-      .join('\n')
+    const output = [typedErr.stdout?.trim(), typedErr.stderr?.trim()].filter(Boolean).join('\n')
     const steps = parseSteps(output, false)
 
     const message = typedErr.message ?? 'Deploy failed'

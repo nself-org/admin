@@ -62,7 +62,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         stderr: err.stderr,
         stdout: err.stdout,
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -96,7 +96,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         details: err.message || 'Unknown error',
         stderr: err.stderr,
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

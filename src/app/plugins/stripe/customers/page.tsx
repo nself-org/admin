@@ -36,9 +36,7 @@ function CustomerRow({ customer }: { customer: StripeCustomer }) {
             <Users className="h-4 w-4 text-zinc-400" />
           </div>
           <div>
-            <p className="font-medium text-white">
-              {customer.name || 'No name'}
-            </p>
+            <p className="font-medium text-white">{customer.name || 'No name'}</p>
             <p className="text-sm text-zinc-500">{customer.id}</p>
           </div>
         </div>
@@ -88,7 +86,7 @@ function StripeCustomersContent() {
     fetcher,
     {
       refreshInterval: 60000,
-    },
+    }
   )
 
   const handleSync = async () => {
@@ -159,9 +157,7 @@ function StripeCustomersContent() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-semibold text-white">Customers</h1>
-          <p className="text-sm text-zinc-400">
-            {total.toLocaleString()} total customers
-          </p>
+          <p className="text-sm text-zinc-400">{total.toLocaleString()} total customers</p>
         </div>
         <button
           onClick={handleSync}
@@ -214,9 +210,7 @@ function StripeCustomersContent() {
           </thead>
           <tbody>
             {customers.length > 0 ? (
-              customers.map((customer) => (
-                <CustomerRow key={customer.id} customer={customer} />
-              ))
+              customers.map((customer) => <CustomerRow key={customer.id} customer={customer} />)
             ) : (
               <tr>
                 <td colSpan={6} className="px-4 py-12 text-center">
@@ -233,8 +227,7 @@ function StripeCustomersContent() {
       {totalPages > 1 && (
         <div className="flex items-center justify-between">
           <p className="text-sm text-zinc-400">
-            Showing {(page - 1) * pageSize + 1} to{' '}
-            {Math.min(page * pageSize, total)} of {total}
+            Showing {(page - 1) * pageSize + 1} to {Math.min(page * pageSize, total)} of {total}
           </p>
           <div className="flex items-center gap-2">
             <button

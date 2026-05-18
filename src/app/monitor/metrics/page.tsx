@@ -41,7 +41,7 @@ function MetricsContent() {
     setError(null)
     try {
       const res = await fetch(
-        `/api/monitor/metrics?query=${encodeURIComponent(query)}&range=${timeRange}`,
+        `/api/monitor/metrics?query=${encodeURIComponent(query)}&range=${timeRange}`
       )
       if (!res.ok) throw new Error(`HTTP ${res.status}`)
       const data = await res.json()
@@ -170,9 +170,7 @@ function MetricsContent() {
 
           {/* Saved Queries */}
           <div>
-            <p className="mb-2 text-sm text-zinc-500 dark:text-zinc-400">
-              Common queries:
-            </p>
+            <p className="mb-2 text-sm text-zinc-500 dark:text-zinc-400">Common queries:</p>
             <div className="flex flex-wrap gap-2">
               {savedQueries.map((q) => (
                 <button
@@ -199,9 +197,7 @@ function MetricsContent() {
                 <Activity className="h-5 w-5" />
                 Query Results
               </h3>
-              <span className="text-sm text-zinc-500">
-                {results.length} series
-              </span>
+              <span className="text-sm text-zinc-500">{results.length} series</span>
             </div>
 
             {/* Chart */}
@@ -209,11 +205,7 @@ function MetricsContent() {
               <ResponsiveContainer width="100%" height={300}>
                 <LineChart>
                   <CartesianGrid strokeDasharray="3 3" opacity={0.3} />
-                  <XAxis
-                    dataKey="time"
-                    tick={{ fontSize: 12 }}
-                    allowDuplicatedCategory={false}
-                  />
+                  <XAxis dataKey="time" tick={{ fontSize: 12 }} allowDuplicatedCategory={false} />
                   <YAxis tick={{ fontSize: 12 }} />
                   <Tooltip />
                   {results.map((series, idx) => (
@@ -280,9 +272,7 @@ function MetricsContent() {
                         </div>
                       </td>
                       <td className="py-2 text-right font-mono text-sm text-zinc-900 dark:text-white">
-                        {series.values[series.values.length - 1]?.value.toFixed(
-                          2,
-                        )}
+                        {series.values[series.values.length - 1]?.value.toFixed(2)}
                       </td>
                     </tr>
                   ))}
@@ -299,8 +289,7 @@ function MetricsContent() {
           </h3>
           <div className="space-y-2 font-mono text-sm">
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-blue-500">nself metrics</span> - List
-              available metrics
+              <span className="text-blue-500">nself metrics</span> - List available metrics
             </p>
             <p className="text-zinc-600 dark:text-zinc-400">
               <span className="text-blue-500">
@@ -309,8 +298,7 @@ function MetricsContent() {
               - Query metrics
             </p>
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-blue-500">nself metrics --range=1h</span> -
-              Set time range
+              <span className="text-blue-500">nself metrics --range=1h</span> - Set time range
             </p>
           </div>
         </div>

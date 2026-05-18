@@ -6,10 +6,7 @@ interface RouteParams {
   params: Promise<{ id: string; widgetId: string }>
 }
 
-export async function PATCH(
-  request: NextRequest,
-  { params }: RouteParams,
-): Promise<NextResponse> {
+export async function PATCH(request: NextRequest, { params }: RouteParams): Promise<NextResponse> {
   const authError = await requireAuth(request)
   if (authError) return authError
 
@@ -22,7 +19,7 @@ export async function PATCH(
           success: false,
           error: 'Dashboard ID is required',
         },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -32,7 +29,7 @@ export async function PATCH(
           success: false,
           error: 'Widget ID is required',
         },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -45,7 +42,7 @@ export async function PATCH(
           success: false,
           error: 'Dashboard or widget not found',
         },
-        { status: 404 },
+        { status: 404 }
       )
     }
 
@@ -57,18 +54,14 @@ export async function PATCH(
     return NextResponse.json(
       {
         success: false,
-        error:
-          error instanceof Error ? error.message : 'Failed to update widget',
+        error: error instanceof Error ? error.message : 'Failed to update widget',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
 
-export async function DELETE(
-  request: NextRequest,
-  { params }: RouteParams,
-): Promise<NextResponse> {
+export async function DELETE(request: NextRequest, { params }: RouteParams): Promise<NextResponse> {
   const authError = await requireAuth(request)
   if (authError) return authError
 
@@ -81,7 +74,7 @@ export async function DELETE(
           success: false,
           error: 'Dashboard ID is required',
         },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -91,7 +84,7 @@ export async function DELETE(
           success: false,
           error: 'Widget ID is required',
         },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -103,7 +96,7 @@ export async function DELETE(
           success: false,
           error: 'Dashboard or widget not found',
         },
-        { status: 404 },
+        { status: 404 }
       )
     }
 
@@ -115,10 +108,9 @@ export async function DELETE(
     return NextResponse.json(
       {
         success: false,
-        error:
-          error instanceof Error ? error.message : 'Failed to delete widget',
+        error: error instanceof Error ? error.message : 'Failed to delete widget',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

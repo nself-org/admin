@@ -23,10 +23,9 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         {
           success: false,
           message: 'No docker-compose.yml found in project directory',
-          error:
-            'Project not initialized. Run nself init and nself build first.',
+          error: 'Project not initialized. Run nself init and nself build first.',
         },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -50,14 +49,8 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     const services: any[] = []
 
     lines.forEach((line) => {
-      if (
-        line.includes('Creating') ||
-        line.includes('Starting') ||
-        line.includes('Running')
-      ) {
-        const match = line.match(
-          /(Creating|Starting|Running)\s+(.+?)(?:\s+\.\.\.|$)/,
-        )
+      if (line.includes('Creating') || line.includes('Starting') || line.includes('Running')) {
+        const match = line.match(/(Creating|Starting|Running)\s+(.+?)(?:\s+\.\.\.|$)/)
         if (match) {
           services.push({
             name: match[2],
@@ -86,12 +79,8 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     console.error('docker-compose start error:', error)
 
     const errorMessage = execError.message || 'Start failed'
-    const isDockerNotRunning = errorMessage.includes(
-      'Cannot connect to the Docker daemon',
-    )
-    const isComposeNotFound = errorMessage.includes(
-      'docker-compose: command not found',
-    )
+    const isDockerNotRunning = errorMessage.includes('Cannot connect to the Docker daemon')
+    const isComposeNotFound = errorMessage.includes('docker-compose: command not found')
 
     let userMessage = 'Failed to start services'
     if (isDockerNotRunning) {
@@ -110,7 +99,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           stderr: execError.stderr ? execError.stderr.split('\n') : [],
         },
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

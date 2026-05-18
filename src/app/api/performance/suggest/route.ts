@@ -10,11 +10,7 @@ export async function GET(_request: NextRequest): Promise<NextResponse> {
   try {
     const result = await executeNselfCommand('perf', ['suggest', '--json'])
 
-    logger.cli(
-      'nself perf suggest --json',
-      result.success,
-      Date.now() - startTime,
-    )
+    logger.cli('nself perf suggest --json', result.success, Date.now() - startTime)
 
     if (!result.success) {
       return NextResponse.json(
@@ -23,7 +19,7 @@ export async function GET(_request: NextRequest): Promise<NextResponse> {
           error: 'Failed to get optimization suggestions',
           details: result.error || result.stderr,
         },
-        { status: 500 },
+        { status: 500 }
       )
     }
 
@@ -52,7 +48,7 @@ export async function GET(_request: NextRequest): Promise<NextResponse> {
         error: 'Failed to get optimization suggestions',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

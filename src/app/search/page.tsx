@@ -1,27 +1,12 @@
 'use client'
 
 import { Button } from '@/components/Button'
-import {
-  Activity,
-  Calendar,
-  Download,
-  Filter,
-  Search as SearchIcon,
-  Type,
-  X,
-} from 'lucide-react'
+import { Activity, Calendar, Download, Filter, Search as SearchIcon, Type, X } from 'lucide-react'
 import { useCallback, useEffect, useState } from 'react'
 
 type SearchResult = {
   id: string
-  type:
-    | 'log'
-    | 'audit'
-    | 'config'
-    | 'service'
-    | 'database'
-    | 'navigation'
-    | 'file'
+  type: 'log' | 'audit' | 'config' | 'service' | 'database' | 'navigation' | 'file'
   title: string
   description: string
   content?: string
@@ -116,10 +101,8 @@ export default function SearchPage() {
       const params = new URLSearchParams({ q: query })
 
       if (filters.types.length > 0) params.set('types', filters.types.join(','))
-      if (filters.services.length > 0)
-        params.set('services', filters.services.join(','))
-      if (filters.levels.length > 0)
-        params.set('levels', filters.levels.join(','))
+      if (filters.services.length > 0) params.set('services', filters.services.join(','))
+      if (filters.levels.length > 0) params.set('levels', filters.levels.join(','))
       if (filters.dateFrom) params.set('dateFrom', filters.dateFrom)
       if (filters.dateTo) params.set('dateTo', filters.dateTo)
       if (filters.regex) params.set('regex', 'true')
@@ -148,7 +131,7 @@ export default function SearchPage() {
 
   const toggleFilter = (
     category: keyof Pick<SearchFilters, 'types' | 'services' | 'levels'>,
-    value: string,
+    value: string
   ) => {
     setFilters((prev) => {
       const current = prev[category]
@@ -194,9 +177,7 @@ export default function SearchPage() {
   return (
     <div className="mx-auto max-w-7xl">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-zinc-900 dark:text-white">
-          Advanced Search
-        </h1>
+        <h1 className="text-3xl font-bold text-zinc-900 dark:text-white">Advanced Search</h1>
         <p className="mt-2 text-zinc-600 dark:text-zinc-400">
           Search across logs, configurations, audit trails, and system data
         </p>
@@ -216,9 +197,7 @@ export default function SearchPage() {
           <div className="absolute top-3.5 right-3 flex items-center gap-2">
             <Button
               onClick={() => setShowFilters(!showFilters)}
-              variant={
-                showFilters || hasActiveFilters ? 'primary' : 'secondary'
-              }
+              variant={showFilters || hasActiveFilters ? 'primary' : 'secondary'}
               className="px-3 py-2 text-sm"
             >
               <Filter className="h-4 w-4" />
@@ -335,9 +314,7 @@ export default function SearchPage() {
                   />
                 </div>
                 <div className="flex-1">
-                  <label className="mb-1 block text-xs text-zinc-600 dark:text-zinc-400">
-                    To
-                  </label>
+                  <label className="mb-1 block text-xs text-zinc-600 dark:text-zinc-400">To</label>
                   <input
                     type="date"
                     value={filters.dateTo}
@@ -359,9 +336,7 @@ export default function SearchPage() {
                 <input
                   type="checkbox"
                   checked={filters.regex}
-                  onChange={(e) =>
-                    setFilters((prev) => ({ ...prev, regex: e.target.checked }))
-                  }
+                  onChange={(e) => setFilters((prev) => ({ ...prev, regex: e.target.checked }))}
                   className="rounded border-zinc-300 dark:border-zinc-600"
                 />
                 Regex Search
@@ -383,11 +358,7 @@ export default function SearchPage() {
             </div>
 
             {hasActiveFilters && (
-              <Button
-                onClick={clearFilters}
-                variant="secondary"
-                className="w-full"
-              >
+              <Button onClick={clearFilters} variant="secondary" className="w-full">
                 <X className="mr-2 h-4 w-4" />
                 Clear All Filters
               </Button>
@@ -404,17 +375,12 @@ export default function SearchPage() {
               'Searching...'
             ) : (
               <>
-                Found <strong>{total}</strong> results in{' '}
-                <strong>{took}ms</strong>
+                Found <strong>{total}</strong> results in <strong>{took}ms</strong>
               </>
             )}
           </div>
           {results.length > 0 && (
-            <Button
-              onClick={exportResults}
-              variant="secondary"
-              className="text-sm"
-            >
+            <Button onClick={exportResults} variant="secondary" className="text-sm">
               <Download className="mr-2 h-4 w-4" />
               Export Results
             </Button>
@@ -461,8 +427,7 @@ export default function SearchPage() {
                   </div>
                   {result.service && (
                     <div className="mt-2 text-xs text-zinc-500">
-                      Service:{' '}
-                      <span className="font-medium">{result.service}</span>
+                      Service: <span className="font-medium">{result.service}</span>
                     </div>
                   )}
                 </div>

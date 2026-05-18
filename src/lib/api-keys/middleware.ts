@@ -45,7 +45,7 @@ export async function validateRequest(
     requiredResource?: string
     requiredAction?: 'create' | 'read' | 'update' | 'delete' | 'execute'
     checkRateLimit?: boolean
-  },
+  }
 ): Promise<ApiKeyValidationResult> {
   // Extract API key
   const key = extractApiKey(request)
@@ -53,8 +53,7 @@ export async function validateRequest(
   if (!key) {
     return {
       valid: false,
-      error:
-        'API key required. Provide key in Authorization header or X-API-Key header.',
+      error: 'API key required. Provide key in Authorization header or X-API-Key header.',
     }
   }
 
@@ -104,13 +103,7 @@ export async function validateRequest(
 
   // Check resource permissions
   if (options?.requiredResource && options?.requiredAction) {
-    if (
-      !hasResourcePermission(
-        apiKey,
-        options.requiredResource,
-        options.requiredAction,
-      )
-    ) {
+    if (!hasResourcePermission(apiKey, options.requiredResource, options.requiredAction)) {
       return {
         valid: false,
         error: `API key does not have ${options.requiredAction} permission for ${options.requiredResource}`,
@@ -144,22 +137,16 @@ export async function validateRequest(
  *   }, { requiredScope: 'read' })
  */
 export function withApiKey(
-  handler: (
-    request: NextRequest,
-    context: { apiKey: ApiKey; params?: any },
-  ) => Promise<Response>,
+  handler: (request: NextRequest, context: { apiKey: ApiKey; params?: any }) => Promise<Response>,
   options?: {
     requiredScope?: 'read' | 'write' | 'admin'
     requiredResource?: string
     requiredAction?: 'create' | 'read' | 'update' | 'delete' | 'execute'
     checkRateLimit?: boolean
     trackUsage?: boolean
-  },
+  }
 ) {
-  return async (
-    request: NextRequest,
-    context?: { params?: any },
-  ): Promise<Response> => {
+  return async (request: NextRequest, context?: { params?: any }): Promise<Response> => {
     const startTime = Date.now()
 
     // Validate API key
@@ -172,7 +159,7 @@ export function withApiKey(
           error: validation.error,
           rateLimited: validation.rateLimited,
         },
-        { status: validation.rateLimited ? 429 : 401 },
+        { status: validation.rateLimited ? 429 : 401 }
       )
 
       return response
@@ -198,7 +185,7 @@ export function withApiKey(
           statusCode,
           responseTime,
           getClientIp(request),
-          request.headers.get('user-agent') || undefined,
+          request.headers.get('user-agent') || undefined
         ).catch(console.error)
       }
 
@@ -214,7 +201,7 @@ export function withApiKey(
           500,
           responseTime,
           getClientIp(request),
-          request.headers.get('user-agent') || undefined,
+          request.headers.get('user-agent') || undefined
         ).catch(console.error)
       }
 
@@ -297,10 +284,7 @@ function ipToNumber(ip: string): number {
 /**
  * Check if API key has required scope
  */
-function hasRequiredScope(
-  apiKey: ApiKey,
-  requiredScope: 'read' | 'write' | 'admin',
-): boolean {
+function hasRequiredScope(apiKey: ApiKey, requiredScope: 'read' | 'write' | 'admin'): boolean {
   const scopeHierarchy = {
     read: 0,
     write: 1,
@@ -326,7 +310,7 @@ function hasRequiredScope(
 function hasResourcePermission(
   apiKey: ApiKey,
   resource: string,
-  action: 'create' | 'read' | 'update' | 'delete' | 'execute',
+  action: 'create' | 'read' | 'update' | 'delete' | 'execute'
 ): boolean {
   // Admin scope has all permissions
   if (apiKey.scope === 'admin') return true
@@ -335,8 +319,7 @@ function hasResourcePermission(
   if (!apiKey.permissions || apiKey.permissions.length === 0) {
     // Fall back to scope-based permissions
     if (apiKey.scope === 'read') return action === 'read'
-    if (apiKey.scope === 'write')
-      return ['create', 'read', 'update'].includes(action)
+    if (apiKey.scope === 'write') return ['create', 'read', 'update'].includes(action)
     return false
   }
 

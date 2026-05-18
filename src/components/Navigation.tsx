@@ -10,11 +10,7 @@ import { useEffect, useRef, useState } from 'react'
 import { useIsInsideMobileNavigation } from '@/components/MobileNavigation'
 import { useSectionStore } from '@/components/SectionProvider'
 import { Tag } from '@/components/Tag'
-import {
-  navigation,
-  type NavGroup,
-  type NavLink as NavLinkType,
-} from '@/lib/navigation'
+import { navigation, type NavGroup, type NavLink as NavLinkType } from '@/lib/navigation'
 import { remToPx } from '@/lib/remToPx'
 import { CloseButton } from '@headlessui/react'
 
@@ -51,9 +47,7 @@ function LicenseWidget() {
     }
 
     fetch('http://127.0.0.1:8001/license/info')
-      .then((res) =>
-        res.ok ? (res.json() as Promise<LicenseInfo>) : Promise.reject(),
-      )
+      .then((res) => (res.ok ? (res.json() as Promise<LicenseInfo>) : Promise.reject()))
       .then((data) => {
         _licenseCache = { data, at: now }
         setInfo(data)
@@ -65,8 +59,7 @@ function LicenseWidget() {
       })
   }, [])
 
-  const isOwner =
-    info?.tier === 'enterprise' && info?.features?.includes('all_plugins')
+  const isOwner = info?.tier === 'enterprise' && info?.features?.includes('all_plugins')
   const isMax = !isOwner && info?.tier === 'enterprise'
   const isPro = !isOwner && info?.tier === 'pro'
 
@@ -127,13 +120,7 @@ function useInitialValue<T>(value: T, condition = true) {
   return condition ? initialValue : value
 }
 
-function TopLevelNavItem({
-  href,
-  children,
-}: {
-  href: string
-  children: React.ReactNode
-}) {
+function TopLevelNavItem({ href, children }: { href: string; children: React.ReactNode }) {
   return (
     <li className="md:hidden">
       <CloseButton
@@ -176,7 +163,7 @@ function NavLink({
         isAnchorLink ? 'pl-7' : 'pl-4',
         active
           ? 'text-zinc-900 dark:text-white'
-          : 'text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white',
+          : 'text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white'
       )}
     >
       <span className="flex items-center gap-2 truncate">
@@ -215,7 +202,7 @@ function NavLink({
                 badgeColor === 'emerald',
               'bg-zinc-100 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-500':
                 badgeColor === 'zinc',
-            },
+            }
           )}
         >
           {badgeText}
@@ -227,11 +214,7 @@ function NavLink({
 
 function DisabledNavItem({ link }: { link: NavLinkType }) {
   const badgeText =
-    typeof link.badge === 'string'
-      ? link.badge
-      : link.badge
-        ? link.badge.text
-        : 'Soon'
+    typeof link.badge === 'string' ? link.badge : link.badge ? link.badge.text : 'Soon'
 
   return (
     <span
@@ -246,13 +229,7 @@ function DisabledNavItem({ link }: { link: NavLinkType }) {
   )
 }
 
-function ActivePageMarker({
-  group,
-  pathname,
-}: {
-  group: NavGroup
-  pathname: string
-}) {
+function ActivePageMarker({ group, pathname }: { group: NavGroup; pathname: string }) {
   let itemHeight = remToPx(2)
   let offset = remToPx(0.25)
   let activePageIndex = group.links.findIndex((link) => link.href === pathname)
@@ -270,23 +247,15 @@ function ActivePageMarker({
   )
 }
 
-function NavigationGroup({
-  group,
-  className,
-}: {
-  group: NavGroup
-  className?: string
-}) {
+function NavigationGroup({ group, className }: { group: NavGroup; className?: string }) {
   let isInsideMobileNavigation = useIsInsideMobileNavigation()
   let [pathname, sections] = useInitialValue(
     [usePathname(), useSectionStore((s) => s.sections)],
-    isInsideMobileNavigation,
+    isInsideMobileNavigation
   )
 
   let isActiveGroup =
-    group.links.findIndex(
-      (link) => link.href === pathname && !link.disabled,
-    ) !== -1
+    group.links.findIndex((link) => link.href === pathname && !link.disabled) !== -1
 
   // Store collapsed state in localStorage
   const [isCollapsed, setIsCollapsed] = useState(false)
@@ -338,20 +307,11 @@ function NavigationGroup({
           >
             <div className="relative mt-3 pl-2">
               <AnimatePresence initial={false}>
-                {isActiveGroup && (
-                  <ActivePageMarker group={group} pathname={pathname} />
-                )}
+                {isActiveGroup && <ActivePageMarker group={group} pathname={pathname} />}
               </AnimatePresence>
-              <ul
-                role="list"
-                className="border-l border-zinc-200 dark:border-zinc-800"
-              >
+              <ul role="list" className="border-l border-zinc-200 dark:border-zinc-800">
                 {group.links.map((link) => (
-                  <motion.li
-                    key={link.href}
-                    layout="position"
-                    className="relative"
-                  >
+                  <motion.li key={link.href} layout="position" className="relative">
                     {link.disabled ? (
                       <DisabledNavItem link={link} />
                     ) : (

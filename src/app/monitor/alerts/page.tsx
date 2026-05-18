@@ -67,9 +67,7 @@ function AlertsContent() {
   }
 
   const toggleRule = async (id: string) => {
-    setRules(
-      rules.map((r) => (r.id === id ? { ...r, enabled: !r.enabled } : r)),
-    )
+    setRules(rules.map((r) => (r.id === id ? { ...r, enabled: !r.enabled } : r)))
   }
 
   const filteredAlerts = alerts.filter((a) => {
@@ -85,7 +83,7 @@ function AlertsContent() {
 
   const activeAlerts = alerts.filter((a) => a.status === 'firing').length
   const criticalAlerts = alerts.filter(
-    (a) => a.severity === 'critical' && a.status === 'firing',
+    (a) => a.severity === 'critical' && a.status === 'firing'
   ).length
 
   const getSeverityIcon = (severity: string) => {
@@ -170,12 +168,8 @@ function AlertsContent() {
                 <Bell className="h-5 w-5 text-red-600 dark:text-red-400" />
               </div>
               <div>
-                <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                  Active Alerts
-                </p>
-                <p className="text-xl font-bold text-zinc-900 dark:text-white">
-                  {activeAlerts}
-                </p>
+                <p className="text-sm text-zinc-500 dark:text-zinc-400">Active Alerts</p>
+                <p className="text-xl font-bold text-zinc-900 dark:text-white">{activeAlerts}</p>
               </div>
             </div>
           </div>
@@ -185,12 +179,8 @@ function AlertsContent() {
                 <XCircle className="h-5 w-5 text-red-600 dark:text-red-400" />
               </div>
               <div>
-                <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                  Critical
-                </p>
-                <p className="text-xl font-bold text-red-600 dark:text-red-400">
-                  {criticalAlerts}
-                </p>
+                <p className="text-sm text-zinc-500 dark:text-zinc-400">Critical</p>
+                <p className="text-xl font-bold text-red-600 dark:text-red-400">{criticalAlerts}</p>
               </div>
             </div>
           </div>
@@ -200,9 +190,7 @@ function AlertsContent() {
                 <CheckCircle className="h-5 w-5 text-green-600 dark:text-green-400" />
               </div>
               <div>
-                <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                  Resolved Today
-                </p>
+                <p className="text-sm text-zinc-500 dark:text-zinc-400">Resolved Today</p>
                 <p className="text-xl font-bold text-zinc-900 dark:text-white">
                   {alerts.filter((a) => a.status === 'resolved').length}
                 </p>
@@ -215,9 +203,7 @@ function AlertsContent() {
                 <Settings className="h-5 w-5 text-blue-600 dark:text-blue-400" />
               </div>
               <div>
-                <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                  Alert Rules
-                </p>
+                <p className="text-sm text-zinc-500 dark:text-zinc-400">Alert Rules</p>
                 <p className="text-xl font-bold text-zinc-900 dark:text-white">
                   {rules.filter((r) => r.enabled).length}/{rules.length}
                 </p>
@@ -298,9 +284,7 @@ function AlertsContent() {
                         <div
                           className={`flex h-10 w-10 items-center justify-center rounded-lg ${getSeverityBg(alert.severity)}`}
                         >
-                          <Icon
-                            className={`h-5 w-5 ${getSeverityColor(alert.severity)}`}
-                          />
+                          <Icon className={`h-5 w-5 ${getSeverityColor(alert.severity)}`} />
                         </div>
                         <div>
                           <div className="mb-1 flex items-center gap-2">
@@ -318,9 +302,7 @@ function AlertsContent() {
                               </span>
                             )}
                           </div>
-                          <p className="text-zinc-600 dark:text-zinc-400">
-                            {alert.message}
-                          </p>
+                          <p className="text-zinc-600 dark:text-zinc-400">{alert.message}</p>
                           <div className="mt-2 flex items-center gap-4 text-sm text-zinc-500">
                             <span>{alert.source}</span>
                             <span className="flex items-center gap-1">
@@ -360,25 +342,19 @@ function AlertsContent() {
                 <div className="flex items-start justify-between">
                   <div>
                     <div className="mb-1 flex items-center gap-2">
-                      <h4 className="font-semibold text-zinc-900 dark:text-white">
-                        {rule.name}
-                      </h4>
+                      <h4 className="font-semibold text-zinc-900 dark:text-white">{rule.name}</h4>
                       <span
                         className={`rounded-full px-2 py-0.5 text-xs font-medium capitalize ${getSeverityBg(rule.severity)} ${getSeverityColor(rule.severity)}`}
                       >
                         {rule.severity}
                       </span>
                     </div>
-                    <p className="text-zinc-600 dark:text-zinc-400">
-                      {rule.message}
-                    </p>
+                    <p className="text-zinc-600 dark:text-zinc-400">{rule.message}</p>
                     <div className="mt-2 flex items-center gap-4 text-sm">
                       <code className="rounded bg-zinc-100 px-2 py-1 font-mono text-zinc-800 dark:bg-zinc-900 dark:text-zinc-200">
                         {rule.condition}
                       </code>
-                      <span className="text-zinc-500">
-                        Duration: {rule.duration}
-                      </span>
+                      <span className="text-zinc-500">Duration: {rule.duration}</span>
                     </div>
                   </div>
                   <button
@@ -414,22 +390,16 @@ function AlertsContent() {
           </h3>
           <div className="space-y-2 font-mono text-sm">
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-red-500">nself alerts</span> - List active
-              alerts
+              <span className="text-red-500">nself alerts</span> - List active alerts
             </p>
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-red-500">nself alerts --ack=id</span> -
-              Acknowledge alert
+              <span className="text-red-500">nself alerts --ack=id</span> - Acknowledge alert
             </p>
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-red-500">nself alerts rules</span> - List
-              alert rules
+              <span className="text-red-500">nself alerts rules</span> - List alert rules
             </p>
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-red-500">
-                nself alerts rules --disable=name
-              </span>{' '}
-              - Disable rule
+              <span className="text-red-500">nself alerts rules --disable=name</span> - Disable rule
             </p>
           </div>
         </div>

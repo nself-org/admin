@@ -1,6 +1,7 @@
 'use client'
 
 import { FormSkeleton } from '@/components/skeletons'
+import { Alert, AlertDescription } from '@/components/ui/alert'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -11,15 +12,8 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog'
-import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import {
   Dialog,
   DialogContent,
@@ -160,7 +154,9 @@ export default function SecretsPage() {
       const data = await res.json()
 
       if (data.success) {
-        toast.success('Secret added successfully', { description: `Secret '${newKey}' has been added` })
+        toast.success('Secret added successfully', {
+          description: `Secret '${newKey}' has been added`,
+        })
         setNewKey('')
         setNewValue('')
         setShowAddDialog(false)
@@ -183,17 +179,31 @@ export default function SecretsPage() {
       const res = await fetch('/api/config/secrets', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ key: editDialogKey, value: editValue, env: selectedEnv || undefined }),
+        body: JSON.stringify({
+          key: editDialogKey,
+          value: editValue,
+          env: selectedEnv || undefined,
+        }),
       })
       const data = await res.json()
 
       if (data.success) {
-        toast.success('Secret updated successfully', { description: `Secret '${editDialogKey}' has been updated` })
+        toast.success('Secret updated successfully', {
+          description: `Secret '${editDialogKey}' has been updated`,
+        })
         setEditDialogKey(null)
         setEditValue('')
         // Clear reveal state for the updated key — user must re-reveal explicitly
-        setRevealedKeys((prev) => { const next = new Set(prev); next.delete(editDialogKey!); return next })
-        setRevealedValues((prev) => { const next = { ...prev }; delete next[editDialogKey!]; return next })
+        setRevealedKeys((prev) => {
+          const next = new Set(prev)
+          next.delete(editDialogKey!)
+          return next
+        })
+        setRevealedValues((prev) => {
+          const next = { ...prev }
+          delete next[editDialogKey!]
+          return next
+        })
         await fetchSecrets()
       } else {
         toast.error('Failed to update secret', { description: data.details || data.error })
@@ -208,11 +218,15 @@ export default function SecretsPage() {
   const handleDelete = async (key: string) => {
     try {
       setDeletingKey(key)
-      const res = await fetch(`/api/config/secrets/${encodeURIComponent(key)}`, { method: 'DELETE' })
+      const res = await fetch(`/api/config/secrets/${encodeURIComponent(key)}`, {
+        method: 'DELETE',
+      })
       const data = await res.json()
 
       if (data.success) {
-        toast.success('Secret deleted successfully', { description: `Secret '${key}' has been deleted` })
+        toast.success('Secret deleted successfully', {
+          description: `Secret '${key}' has been deleted`,
+        })
         setDeleteDialogKey(null)
         await fetchSecrets()
       } else {
@@ -229,7 +243,11 @@ export default function SecretsPage() {
   // The API must return the actual value only after auth; this UI gates it behind a deliberate button press
   const handleReveal = async (key: string) => {
     if (revealedKeys.has(key)) {
-      setRevealedKeys((prev) => { const next = new Set(prev); next.delete(key); return next })
+      setRevealedKeys((prev) => {
+        const next = new Set(prev)
+        next.delete(key)
+        return next
+      })
       return
     }
 
@@ -253,7 +271,8 @@ export default function SecretsPage() {
 
   const handleRotate = async (key?: string) => {
     try {
-      if (key) setRotatingKey(key); else setRotatingAll(true)
+      if (key) setRotatingKey(key)
+      else setRotatingAll(true)
 
       const res = await fetch('/api/config/secrets/rotate', {
         method: 'POST',
@@ -313,42 +332,51 @@ export default function SecretsPage() {
   }
 
   const filteredSecrets = secrets.filter((s) =>
-    s.key.toLowerCase().includes(searchQuery.toLowerCase()),
+    s.key.toLowerCase().includes(searchQuery.toLowerCase())
   )
 
   // --- full-page state renders ---
 
   if (pageState === 'unauth') {
     return (
-      <div className="flex flex-col items-center justify-center py-24 gap-4">
-        <AlertCircle className="h-10 w-10 text-destructive" />
+      <div className="flex flex-col items-center justify-center gap-4 py-24">
+        <AlertCircle className="text-destructive h-10 w-10" />
         <p className="text-lg font-medium">Not authenticated</p>
-        <p className="text-sm text-muted-foreground">Please log in to manage secrets.</p>
-        <Button variant="outline" onClick={() => { window.location.href = '/login' }}>Go to Login</Button>
+        <p className="text-muted-foreground text-sm">Please log in to manage secrets.</p>
+        <Button
+          variant="outline"
+          onClick={() => {
+            window.location.href = '/login'
+          }}
+        >
+          Go to Login
+        </Button>
       </div>
     )
   }
 
   if (pageState === 'offline') {
     return (
-      <div className="flex flex-col items-center justify-center py-24 gap-4">
-        <WifiOff className="h-10 w-10 text-muted-foreground" />
+      <div className="flex flex-col items-center justify-center gap-4 py-24">
+        <WifiOff className="text-muted-foreground h-10 w-10" />
         <p className="text-lg font-medium">Cannot connect to admin API</p>
-        <p className="text-sm text-muted-foreground">{offlineMessage}</p>
-        <Button variant="outline" onClick={fetchSecrets}>Retry</Button>
+        <p className="text-muted-foreground text-sm">{offlineMessage}</p>
+        <Button variant="outline" onClick={fetchSecrets}>
+          Retry
+        </Button>
       </div>
     )
   }
 
   if (pageState === 'loading') {
     return (
-      <div className="space-y-6 max-w-4xl">
+      <div className="max-w-4xl space-y-6">
         <div>
-          <h1 className="text-2xl font-bold flex items-center gap-2">
+          <h1 className="flex items-center gap-2 text-2xl font-bold">
             <Key className="h-6 w-6" />
             Secrets Management
           </h1>
-          <p className="text-sm text-muted-foreground mt-1">Manage application secrets securely.</p>
+          <p className="text-muted-foreground mt-1 text-sm">Manage application secrets securely.</p>
         </div>
         <FormSkeleton />
       </div>
@@ -356,14 +384,15 @@ export default function SecretsPage() {
   }
 
   return (
-    <div className="space-y-6 max-w-5xl">
+    <div className="max-w-5xl space-y-6">
       <div>
-        <h1 className="text-2xl font-bold flex items-center gap-2">
+        <h1 className="flex items-center gap-2 text-2xl font-bold">
           <Key className="h-6 w-6" />
           Secrets Management
         </h1>
-        <p className="text-sm text-muted-foreground mt-1">
-          Manage application secrets securely. Values are masked by default — use the reveal button to view them explicitly.
+        <p className="text-muted-foreground mt-1 text-sm">
+          Manage application secrets securely. Values are masked by default — use the reveal button
+          to view them explicitly.
         </p>
       </div>
 
@@ -453,13 +482,20 @@ export default function SecretsPage() {
           {pageState === 'error' ? (
             <Alert variant="destructive">
               <AlertCircle className="h-4 w-4" />
-              <AlertDescription>Failed to load secrets. <Button variant="link" className="p-0 h-auto" onClick={fetchSecrets}>Try again</Button></AlertDescription>
+              <AlertDescription>
+                Failed to load secrets.{' '}
+                <Button variant="link" className="h-auto p-0" onClick={fetchSecrets}>
+                  Try again
+                </Button>
+              </AlertDescription>
             </Alert>
           ) : filteredSecrets.length === 0 ? (
             <div className="py-12 text-center">
               <Key className="text-muted-foreground mx-auto mb-3 h-8 w-8" />
               <p className="text-muted-foreground text-sm">
-                {searchQuery ? 'No secrets match your search' : 'No secrets found. Add your first secret.'}
+                {searchQuery
+                  ? 'No secrets match your search'
+                  : 'No secrets found. Add your first secret.'}
               </p>
             </div>
           ) : (
@@ -516,7 +552,9 @@ export default function SecretsPage() {
                           onClick={() => {
                             setEditDialogKey(secret.key)
                             // SECURITY: pre-fill only if already revealed — never expose masked placeholder as editable value
-                            setEditValue(revealedKeys.has(secret.key) ? revealedValues[secret.key] || '' : '')
+                            setEditValue(
+                              revealedKeys.has(secret.key) ? revealedValues[secret.key] || '' : ''
+                            )
                           }}
                           title="Edit"
                         >
@@ -564,23 +602,33 @@ export default function SecretsPage() {
         <CardContent>
           <div className="space-y-2 font-mono text-sm">
             <div className="flex items-start gap-3">
-              <code className="bg-muted inline-block min-w-[300px] rounded px-2 py-1 text-xs">nself config secrets list</code>
+              <code className="bg-muted inline-block min-w-[300px] rounded px-2 py-1 text-xs">
+                nself config secrets list
+              </code>
               <span className="text-muted-foreground">List all secret keys</span>
             </div>
             <div className="flex items-start gap-3">
-              <code className="bg-muted inline-block min-w-[300px] rounded px-2 py-1 text-xs">nself config secrets get &lt;key&gt;</code>
+              <code className="bg-muted inline-block min-w-[300px] rounded px-2 py-1 text-xs">
+                nself config secrets get &lt;key&gt;
+              </code>
               <span className="text-muted-foreground">Get a specific secret value</span>
             </div>
             <div className="flex items-start gap-3">
-              <code className="bg-muted inline-block min-w-[300px] rounded px-2 py-1 text-xs">nself config secrets set &lt;key&gt; &lt;value&gt;</code>
+              <code className="bg-muted inline-block min-w-[300px] rounded px-2 py-1 text-xs">
+                nself config secrets set &lt;key&gt; &lt;value&gt;
+              </code>
               <span className="text-muted-foreground">Set or update a secret</span>
             </div>
             <div className="flex items-start gap-3">
-              <code className="bg-muted inline-block min-w-[300px] rounded px-2 py-1 text-xs">nself config secrets delete &lt;key&gt;</code>
+              <code className="bg-muted inline-block min-w-[300px] rounded px-2 py-1 text-xs">
+                nself config secrets delete &lt;key&gt;
+              </code>
               <span className="text-muted-foreground">Remove a secret</span>
             </div>
             <div className="flex items-start gap-3">
-              <code className="bg-muted inline-block min-w-[300px] rounded px-2 py-1 text-xs">nself config secrets rotate [key]</code>
+              <code className="bg-muted inline-block min-w-[300px] rounded px-2 py-1 text-xs">
+                nself config secrets rotate [key]
+              </code>
               <span className="text-muted-foreground">Rotate one or all secrets</span>
             </div>
           </div>
@@ -605,7 +653,9 @@ export default function SecretsPage() {
                   placeholder="DATABASE_PASSWORD"
                   className="font-mono"
                 />
-                <p className="text-muted-foreground text-xs">Letters, numbers, underscores, and hyphens only</p>
+                <p className="text-muted-foreground text-xs">
+                  Letters, numbers, underscores, and hyphens only
+                </p>
               </div>
 
               <div className="space-y-2">
@@ -636,15 +686,25 @@ export default function SecretsPage() {
               <Button
                 type="button"
                 variant="outline"
-                onClick={() => { setShowAddDialog(false); setNewKey(''); setNewValue('') }}
+                onClick={() => {
+                  setShowAddDialog(false)
+                  setNewKey('')
+                  setNewValue('')
+                }}
               >
                 Cancel
               </Button>
               <Button type="submit" disabled={adding || !newKey || !newValue}>
                 {adding ? (
-                  <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Adding...</>
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Adding...
+                  </>
                 ) : (
-                  <><Plus className="mr-2 h-4 w-4" />Add Secret</>
+                  <>
+                    <Plus className="mr-2 h-4 w-4" />
+                    Add Secret
+                  </>
                 )}
               </Button>
             </DialogFooter>
@@ -655,7 +715,12 @@ export default function SecretsPage() {
       {/* Edit Secret Dialog */}
       <Dialog
         open={editDialogKey !== null}
-        onOpenChange={(open) => { if (!open) { setEditDialogKey(null); setEditValue('') } }}
+        onOpenChange={(open) => {
+          if (!open) {
+            setEditDialogKey(null)
+            setEditValue('')
+          }
+        }}
       >
         <DialogContent>
           <DialogHeader>
@@ -689,12 +754,21 @@ export default function SecretsPage() {
           </div>
 
           <DialogFooter>
-            <Button variant="outline" onClick={() => { setEditDialogKey(null); setEditValue('') }}>
+            <Button
+              variant="outline"
+              onClick={() => {
+                setEditDialogKey(null)
+                setEditValue('')
+              }}
+            >
               Cancel
             </Button>
             <Button onClick={handleEdit} disabled={saving || !editValue}>
               {saving ? (
-                <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Saving...</>
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Saving...
+                </>
               ) : (
                 <>Save Changes</>
               )}
@@ -706,7 +780,9 @@ export default function SecretsPage() {
       {/* Delete Confirmation Dialog */}
       <AlertDialog
         open={deleteDialogKey !== null}
-        onOpenChange={(open) => { if (!open) setDeleteDialogKey(null) }}
+        onOpenChange={(open) => {
+          if (!open) setDeleteDialogKey(null)
+        }}
       >
         <AlertDialogContent>
           <AlertDialogHeader>
@@ -724,7 +800,10 @@ export default function SecretsPage() {
               className="bg-destructive hover:bg-destructive/90"
             >
               {deletingKey === deleteDialogKey ? (
-                <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Deleting...</>
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Deleting...
+                </>
               ) : (
                 <>Delete</>
               )}

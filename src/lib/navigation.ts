@@ -771,8 +771,7 @@ const _allNavigation: Array<NavGroup> = [
         href: '/vibe',
         icon: 'sparkles',
         badge: { text: 'NEW', color: 'emerald' },
-        description:
-          'AI-powered full-stack code generation (migration + permissions + UI)',
+        description: 'AI-powered full-stack code generation (migration + permissions + UI)',
       },
     ],
   },
@@ -921,9 +920,7 @@ export const navigation: Array<NavGroup> = isMultiUserEnabled()
       .filter((group) => !MULTIUSER_NAV_GROUPS.has(group.title))
       .map((group) => ({
         ...group,
-        links: group.links.filter(
-          (link) => !MULTIUSER_NAV_ITEMS.has(link.href),
-        ),
+        links: group.links.filter((link) => !MULTIUSER_NAV_ITEMS.has(link.href)),
       }))
 
 export const flatNavigation = navigation.flatMap((group) =>
@@ -936,7 +933,7 @@ export const flatNavigation = navigation.flatMap((group) =>
         title: subitem.label,
         parent: link.title,
       })) || []),
-  ]),
+  ])
 )
 
 export function findNavItem(href: string) {

@@ -5,7 +5,13 @@ import { LogViewerSkeleton } from '@/components/skeletons'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 import { Loader2, RefreshCw, XCircle } from 'lucide-react'
 import { Suspense, useCallback, useEffect, useState } from 'react'
 
@@ -110,7 +116,7 @@ function LogsContent() {
   return (
     <PageShell title="Service Logs" description="View logs for all nSelf-managed services.">
       <div className="space-y-6">
-        <div className="flex items-center gap-3 flex-wrap">
+        <div className="flex flex-wrap items-center gap-3">
           <Select value={selectedService} onValueChange={handleServiceChange}>
             <SelectTrigger className="w-52" disabled={servicesLoading}>
               <SelectValue placeholder={servicesLoading ? 'Loading…' : 'Select service'} />
@@ -130,7 +136,11 @@ function LogsContent() {
             onClick={() => selectedService && void fetchLogs(selectedService)}
             disabled={logsLoading || !selectedService}
           >
-            {logsLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <RefreshCw className="h-4 w-4" />}
+            {logsLoading ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <RefreshCw className="h-4 w-4" />
+            )}
             Refresh Logs
           </Button>
 
@@ -140,7 +150,11 @@ function LogsContent() {
             onClick={() => void fetchServices()}
             disabled={servicesLoading}
           >
-            {servicesLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <RefreshCw className="h-4 w-4" />}
+            {servicesLoading ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <RefreshCw className="h-4 w-4" />
+            )}
             Refresh Services
           </Button>
 
@@ -157,7 +171,7 @@ function LogsContent() {
         {servicesError && (
           <Card className="border-destructive">
             <CardContent className="pt-6">
-              <div className="flex items-start gap-2 text-destructive">
+              <div className="text-destructive flex items-start gap-2">
                 <XCircle className="h-5 w-5 shrink-0" />
                 <div>
                   <p className="font-medium">Failed to load service list</p>
@@ -170,7 +184,7 @@ function LogsContent() {
 
         {!servicesLoading && !servicesError && services.length === 0 && (
           <Card>
-            <CardContent className="pt-6 text-center text-muted-foreground">
+            <CardContent className="text-muted-foreground pt-6 text-center">
               No services running. Start your nSelf stack first.
             </CardContent>
           </Card>
@@ -179,7 +193,7 @@ function LogsContent() {
         {logsError && (
           <Card className="border-destructive">
             <CardContent className="pt-6">
-              <div className="flex items-start gap-2 text-destructive">
+              <div className="text-destructive flex items-start gap-2">
                 <XCircle className="h-5 w-5 shrink-0" />
                 <div>
                   <p className="font-medium">Failed to load logs</p>
@@ -193,18 +207,18 @@ function LogsContent() {
         {selectedService && !logsError && (
           <Card>
             <CardHeader>
-              <CardTitle className="text-sm font-mono text-muted-foreground">
+              <CardTitle className="text-muted-foreground font-mono text-sm">
                 nself service logs {selectedService}
               </CardTitle>
             </CardHeader>
             <CardContent>
               {logsLoading ? (
-                <div className="flex items-center gap-2 py-8 justify-center text-muted-foreground">
+                <div className="text-muted-foreground flex items-center justify-center gap-2 py-8">
                   <Loader2 className="h-4 w-4 animate-spin" />
                   <span className="text-sm">Loading logs…</span>
                 </div>
               ) : (
-                <pre className="overflow-x-auto overflow-y-auto max-h-[600px] rounded bg-muted p-4 text-xs font-mono whitespace-pre-wrap break-all">
+                <pre className="bg-muted max-h-[600px] overflow-x-auto overflow-y-auto rounded p-4 font-mono text-xs break-all whitespace-pre-wrap">
                   {logOutput || '(no log output)'}
                 </pre>
               )}

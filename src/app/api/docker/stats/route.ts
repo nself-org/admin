@@ -23,12 +23,9 @@ export async function GET(): Promise<NextResponse> {
       {
         success: false,
         error: 'Failed to fetch Docker stats',
-        details:
-          error instanceof Error
-            ? error?.message || 'Unknown error'
-            : 'Unknown error',
+        details: error instanceof Error ? error?.message || 'Unknown error' : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

@@ -75,9 +75,7 @@ function validatePassword(password) {
   }
 
   if (!PASSWORD_REGEX.test(password)) {
-    errors.push(
-      'Password must contain uppercase, lowercase, number, and special character',
-    )
+    errors.push('Password must contain uppercase, lowercase, number, and special character')
   }
 
   if (WEAK_PASSWORDS.includes(password.toLowerCase())) {
@@ -138,9 +136,7 @@ function updateEnvFile(updates) {
 // Main setup flow
 async function main() {
   console.log('\n🔒 nself-admin Secure Setup\n')
-  console.log(
-    'This script will help you set up secure credentials for your admin panel.\n',
-  )
+  console.log('This script will help you set up secure credentials for your admin panel.\n')
 
   // Check current environment
   const envPath = path.join(process.cwd(), '.env.local')
@@ -152,12 +148,9 @@ async function main() {
       console.log('⚠️  Warning: .env.local already contains ADMIN_PASSWORD')
 
       const overwrite = await new Promise((resolve) => {
-        rl.question(
-          'Do you want to overwrite existing configuration? (y/N): ',
-          (answer) => {
-            resolve(answer.toLowerCase() === 'y')
-          },
-        )
+        rl.question('Do you want to overwrite existing configuration? (y/N): ', (answer) => {
+          resolve(answer.toLowerCase() === 'y')
+        })
       })
 
       if (!overwrite) {
@@ -176,12 +169,9 @@ async function main() {
 
   // Password setup
   const useGenerated = await new Promise((resolve) => {
-    rl.question(
-      'Would you like to generate a secure password? (Y/n): ',
-      (answer) => {
-        resolve(answer.toLowerCase() !== 'n')
-      },
-    )
+    rl.question('Would you like to generate a secure password? (Y/n): ', (answer) => {
+      resolve(answer.toLowerCase() !== 'n')
+    })
   })
 
   let password
@@ -191,9 +181,7 @@ async function main() {
     password = generateSecurePassword(16)
     console.log('\n🔑 Generated secure password:')
     console.log(`   ${password}`)
-    console.log(
-      "\n⚠️  IMPORTANT: Save this password securely! You won't see it again.\n",
-    )
+    console.log("\n⚠️  IMPORTANT: Save this password securely! You won't see it again.\n")
 
     passwordHash = await bcrypt.hash(password, 12)
   } else {
@@ -272,9 +260,7 @@ async function main() {
   console.log('\n🚀 Next steps:')
   console.log('   1. Review the .env.local file')
   console.log('   2. Set any additional environment variables needed')
-  console.log(
-    '   3. Start the admin panel with: npm run dev (or npm run start for production)',
-  )
+  console.log('   3. Start the admin panel with: npm run dev (or npm run start for production)')
 
   if (isProduction) {
     console.log('\n⚠️  Production Security Checklist:')
@@ -287,9 +273,7 @@ async function main() {
 
   console.log('\n🔒 Security Tips:')
   console.log('   - Never share or commit .env.local to version control')
-  console.log(
-    '   - Use environment variables in production instead of .env files',
-  )
+  console.log('   - Use environment variables in production instead of .env files')
   console.log('   - Rotate passwords and secrets regularly')
   console.log('   - Monitor access logs for suspicious activity')
 

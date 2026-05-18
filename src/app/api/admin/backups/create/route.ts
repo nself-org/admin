@@ -1,6 +1,6 @@
-import { execSync } from 'child_process'
-import { NextResponse, NextRequest } from 'next/server'
 import { requireAuth } from '@/lib/require-auth'
+import { execSync } from 'child_process'
+import { NextRequest, NextResponse } from 'next/server'
 
 /**
  * POST /api/admin/backups/create — create a new backup
@@ -21,9 +21,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
     // Try to extract the backup filename from CLI output
     // Common patterns: "Created: backup-2026-03-16.sql.gz" or just the filename line
-    const filenameMatch = output.match(
-      /(?:Created|backup)[:\s]+([^\s]+\.(?:sql|dump)(?:\.gz)?)/i,
-    )
+    const filenameMatch = output.match(/(?:Created|backup)[:\s]+([^\s]+\.(?:sql|dump)(?:\.gz)?)/i)
     const filename = filenameMatch?.[1]?.trim() ?? extractLastLine(output)
 
     return NextResponse.json({ filename, output: output.trim() })

@@ -29,9 +29,7 @@ function SuggestContent() {
   const [isAnalyzing, setIsAnalyzing] = useState(false)
   const [filterCategory, setFilterCategory] = useState<string>('all')
   const [filterPriority, setFilterPriority] = useState<string>('all')
-  const [appliedSuggestions, setAppliedSuggestions] = useState<Set<string>>(
-    new Set(),
-  )
+  const [appliedSuggestions, setAppliedSuggestions] = useState<Set<string>>(new Set())
 
   const { data, error, isLoading, mutate } = useSWR<{
     success: boolean
@@ -139,9 +137,7 @@ function SuggestContent() {
             <div className="flex items-center gap-3">
               <AlertCircle className="h-5 w-5 text-red-400" />
               <p className="text-red-400">
-                {error instanceof Error
-                  ? error.message
-                  : 'Failed to load optimization suggestions'}
+                {error instanceof Error ? error.message : 'Failed to load optimization suggestions'}
               </p>
             </div>
           </div>
@@ -202,36 +198,22 @@ function SuggestContent() {
         {/* Stats */}
         <div className="mb-8 grid gap-4 md:grid-cols-5">
           <div className="rounded-xl border border-zinc-200 bg-white p-4 shadow-sm dark:border-zinc-700 dark:bg-zinc-800">
-            <p className="text-sm text-zinc-500 dark:text-zinc-400">
-              Total Suggestions
-            </p>
-            <p className="text-2xl font-bold text-zinc-900 dark:text-white">
-              {stats.total}
-            </p>
+            <p className="text-sm text-zinc-500 dark:text-zinc-400">Total Suggestions</p>
+            <p className="text-2xl font-bold text-zinc-900 dark:text-white">{stats.total}</p>
           </div>
           <div className="rounded-xl border border-zinc-200 bg-white p-4 shadow-sm dark:border-zinc-700 dark:bg-zinc-800">
-            <p className="text-sm text-zinc-500 dark:text-zinc-400">
-              High Priority
-            </p>
-            <p className="text-2xl font-bold text-red-600 dark:text-red-400">
-              {stats.high}
-            </p>
+            <p className="text-sm text-zinc-500 dark:text-zinc-400">High Priority</p>
+            <p className="text-2xl font-bold text-red-600 dark:text-red-400">{stats.high}</p>
           </div>
           <div className="rounded-xl border border-zinc-200 bg-white p-4 shadow-sm dark:border-zinc-700 dark:bg-zinc-800">
-            <p className="text-sm text-zinc-500 dark:text-zinc-400">
-              Medium Priority
-            </p>
+            <p className="text-sm text-zinc-500 dark:text-zinc-400">Medium Priority</p>
             <p className="text-2xl font-bold text-yellow-600 dark:text-yellow-400">
               {stats.medium}
             </p>
           </div>
           <div className="rounded-xl border border-zinc-200 bg-white p-4 shadow-sm dark:border-zinc-700 dark:bg-zinc-800">
-            <p className="text-sm text-zinc-500 dark:text-zinc-400">
-              Low Priority
-            </p>
-            <p className="text-2xl font-bold text-green-600 dark:text-green-400">
-              {stats.low}
-            </p>
+            <p className="text-sm text-zinc-500 dark:text-zinc-400">Low Priority</p>
+            <p className="text-2xl font-bold text-green-600 dark:text-green-400">{stats.low}</p>
           </div>
           <div className="rounded-xl border border-zinc-200 bg-white p-4 shadow-sm dark:border-zinc-700 dark:bg-zinc-800">
             <p className="text-sm text-zinc-500 dark:text-zinc-400">Applied</p>
@@ -295,9 +277,7 @@ function SuggestContent() {
                         <h3 className="font-semibold text-zinc-900 dark:text-white">
                           {suggestion.title}
                         </h3>
-                        {isApplied && (
-                          <CheckCircle className="h-5 w-5 text-green-500" />
-                        )}
+                        {isApplied && <CheckCircle className="h-5 w-5 text-green-500" />}
                       </div>
                       <div className="flex items-center gap-2">
                         <span
@@ -324,9 +304,7 @@ function SuggestContent() {
                   )}
                 </div>
 
-                <p className="mb-4 text-zinc-600 dark:text-zinc-400">
-                  {suggestion.description}
-                </p>
+                <p className="mb-4 text-zinc-600 dark:text-zinc-400">{suggestion.description}</p>
 
                 <div className="flex items-center gap-2 rounded-lg bg-emerald-50 px-4 py-3 dark:bg-emerald-900/20">
                   <AlertTriangle className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
@@ -337,9 +315,7 @@ function SuggestContent() {
 
                 {suggestion.command && (
                   <div className="mt-4 rounded-lg bg-zinc-100 p-3 dark:bg-zinc-900">
-                    <p className="mb-1 text-xs text-zinc-500 dark:text-zinc-400">
-                      Command
-                    </p>
+                    <p className="mb-1 text-xs text-zinc-500 dark:text-zinc-400">Command</p>
                     <code className="font-mono text-sm text-zinc-800 dark:text-zinc-200">
                       {suggestion.command}
                     </code>
@@ -383,20 +359,16 @@ function SuggestContent() {
           </h3>
           <div className="space-y-2 font-mono text-sm">
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-yellow-500">nself perf suggest</span> - Get
-              optimization suggestions
+              <span className="text-yellow-500">nself perf suggest</span> - Get optimization
+              suggestions
             </p>
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-yellow-500">
-                nself perf suggest --apply
-              </span>{' '}
-              - Auto-apply safe suggestions
+              <span className="text-yellow-500">nself perf suggest --apply</span> - Auto-apply safe
+              suggestions
             </p>
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-yellow-500">
-                nself perf suggest --category=database
-              </span>{' '}
-              - Filter by category
+              <span className="text-yellow-500">nself perf suggest --category=database</span> -
+              Filter by category
             </p>
           </div>
         </div>

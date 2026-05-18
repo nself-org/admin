@@ -39,7 +39,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       const statusParam = filter === 'in_progress' ? '&status=in_progress' : ''
       const resp = await fetch(
         `https://api.github.com/repos/${repo}/actions/runs?per_page=100${statusParam}`,
-        { headers, signal: AbortSignal.timeout(15_000) },
+        { headers, signal: AbortSignal.timeout(15_000) }
       )
       if (resp.ok) {
         const data: { total_count: number; workflow_runs: Array<Record<string, unknown>> } =
@@ -51,13 +51,13 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       // Fetch top 5 most-recently-pushed repos and aggregate runs
       const reposResp = await fetch(
         'https://api.github.com/user/repos?sort=pushed&per_page=5&affiliation=owner',
-        { headers, signal: AbortSignal.timeout(15_000) },
+        { headers, signal: AbortSignal.timeout(15_000) }
       )
       if (!reposResp.ok) {
         const text = await reposResp.text()
         return NextResponse.json(
           { error: `GitHub API returned ${reposResp.status}`, details: text.slice(0, 500) },
-          { status: 502 },
+          { status: 502 }
         )
       }
       const repos: Array<Record<string, unknown>> = await reposResp.json()
@@ -67,13 +67,12 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
           const fullName = r.full_name as string
           const runsResp = await fetch(
             `https://api.github.com/repos/${fullName}/actions/runs?per_page=20`,
-            { headers, signal: AbortSignal.timeout(10_000) },
+            { headers, signal: AbortSignal.timeout(10_000) }
           ).catch(() => null)
           if (!runsResp?.ok) return
-          const data: { workflow_runs: Array<Record<string, unknown>> } =
-            await runsResp.json()
+          const data: { workflow_runs: Array<Record<string, unknown>> } = await runsResp.json()
           allRuns.push(...mapRuns(data.workflow_runs ?? []))
-        }),
+        })
       )
     }
 
@@ -108,7 +107,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to fetch workflow runs',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

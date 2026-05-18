@@ -20,7 +20,6 @@ import useSWR from 'swr'
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json())
 
-
 // Popular repos to add
 const popularRepos = [
   {
@@ -83,18 +82,14 @@ function HelmReposContent() {
   const [updating, setUpdating] = useState<string | null>(null)
   const [searchQuery, setSearchQuery] = useState('')
 
-  const { data, isLoading, mutate } = useSWR<{ repos: HelmRepo[] }>(
-    '/api/helm/repos',
-    fetcher,
-
-  )
+  const { data, isLoading, mutate } = useSWR<{ repos: HelmRepo[] }>('/api/helm/repos', fetcher)
 
   const repos = data?.repos ?? []
 
   const filteredRepos = repos.filter(
     (repo) =>
       repo.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      repo.url.toLowerCase().includes(searchQuery.toLowerCase()),
+      repo.url.toLowerCase().includes(searchQuery.toLowerCase())
   )
 
   const handleAdd = async () => {
@@ -143,9 +138,7 @@ function HelmReposContent() {
     return (
       <div className="space-y-6">
         <div>
-          <h1 className="text-2xl font-semibold text-white">
-            Helm Repositories
-          </h1>
+          <h1 className="text-2xl font-semibold text-white">Helm Repositories</h1>
           <p className="text-sm text-zinc-400">Loading...</p>
         </div>
         <div className="animate-pulse space-y-4">
@@ -169,12 +162,8 @@ function HelmReposContent() {
             <ArrowLeft className="h-5 w-5" />
           </Link>
           <div>
-            <h1 className="text-2xl font-semibold text-white">
-              Helm Repositories
-            </h1>
-            <p className="text-sm text-zinc-400">
-              {repos.length} repositories configured
-            </p>
+            <h1 className="text-2xl font-semibold text-white">Helm Repositories</h1>
+            <p className="text-sm text-zinc-400">{repos.length} repositories configured</p>
           </div>
         </div>
 
@@ -260,9 +249,7 @@ function HelmReposContent() {
                 <td className="px-4 py-3">
                   <div className="flex items-center gap-2 text-sm text-zinc-400">
                     <Clock className="h-3 w-3" />
-                    {repo.lastUpdated
-                      ? new Date(repo.lastUpdated).toLocaleDateString()
-                      : 'Never'}
+                    {repo.lastUpdated ? new Date(repo.lastUpdated).toLocaleDateString() : 'Never'}
                   </div>
                 </td>
                 <td className="px-4 py-3">
@@ -304,9 +291,7 @@ function HelmReposContent() {
           <div className="p-12 text-center">
             <Globe className="mx-auto mb-4 h-12 w-12 text-zinc-500" />
             <p className="text-zinc-400">No repositories found</p>
-            <p className="text-sm text-zinc-500">
-              Add a repository to get started
-            </p>
+            <p className="text-sm text-zinc-500">Add a repository to get started</p>
           </div>
         )}
       </div>
@@ -326,16 +311,13 @@ function HelmReposContent() {
               >
                 <div>
                   <div className="font-medium text-white">{repo.name}</div>
-                  <p className="mt-1 text-sm text-zinc-500">
-                    {repo.description}
-                  </p>
+                  <p className="mt-1 text-sm text-zinc-500">{repo.description}</p>
                 </div>
                 <Plus className="h-4 w-4 text-sky-400" />
               </button>
             ))}
         </div>
-        {popularRepos.filter((pr) => !repos.some((r) => r.name === pr.name))
-          .length === 0 && (
+        {popularRepos.filter((pr) => !repos.some((r) => r.name === pr.name)).length === 0 && (
           <div className="flex items-center gap-2 text-sm text-zinc-500">
             <CheckCircle className="h-4 w-4 text-emerald-400" />
             All popular repositories have been added
@@ -353,9 +335,7 @@ function HelmReposContent() {
           <code className="block rounded bg-zinc-900 p-3 text-sm text-sky-400">
             helm repo update
           </code>
-          <code className="block rounded bg-zinc-900 p-3 text-sm text-sky-400">
-            helm repo list
-          </code>
+          <code className="block rounded bg-zinc-900 p-3 text-sm text-sky-400">helm repo list</code>
         </div>
       </div>
 
@@ -363,15 +343,11 @@ function HelmReposContent() {
       {showAddModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
           <div className="w-full max-w-md rounded-lg border border-zinc-700 bg-zinc-800 p-6">
-            <h2 className="mb-4 text-lg font-semibold text-white">
-              Add Repository
-            </h2>
+            <h2 className="mb-4 text-lg font-semibold text-white">Add Repository</h2>
 
             <div className="space-y-4">
               <div>
-                <label className="mb-1 block text-sm text-zinc-400">
-                  Repository Name
-                </label>
+                <label className="mb-1 block text-sm text-zinc-400">Repository Name</label>
                 <input
                   type="text"
                   value={newRepoName}
@@ -382,9 +358,7 @@ function HelmReposContent() {
               </div>
 
               <div>
-                <label className="mb-1 block text-sm text-zinc-400">
-                  Repository URL
-                </label>
+                <label className="mb-1 block text-sm text-zinc-400">Repository URL</label>
                 <input
                   type="url"
                   value={newRepoUrl}

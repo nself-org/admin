@@ -43,9 +43,7 @@ function AutoScalingContent() {
       const res = await fetch('/api/scale/auto')
       if (!res.ok) {
         const data = await res.json().catch(() => ({}))
-        throw new Error(
-          (data as { error?: string }).error ?? `HTTP ${res.status}`,
-        )
+        throw new Error((data as { error?: string }).error ?? `HTTP ${res.status}`)
       }
       const data = (await res.json()) as {
         settings?: AutoScalingSettings[]
@@ -53,11 +51,7 @@ function AutoScalingContent() {
       }
       setSettings(data.settings ?? data.policies ?? [])
     } catch (err) {
-      setError(
-        err instanceof Error
-          ? err.message
-          : 'Failed to load autoscaling settings',
-      )
+      setError(err instanceof Error ? err.message : 'Failed to load autoscaling settings')
     } finally {
       setLoading(false)
     }
@@ -67,14 +61,8 @@ function AutoScalingContent() {
     fetchSettings()
   }, [fetchSettings])
 
-  const updateSetting = (
-    service: string,
-    key: string,
-    value: number | boolean,
-  ) => {
-    setSettings(
-      settings.map((s) => (s.service === service ? { ...s, [key]: value } : s)),
-    )
+  const updateSetting = (service: string, key: string, value: number | boolean) => {
+    setSettings(settings.map((s) => (s.service === service ? { ...s, [key]: value } : s)))
   }
 
   const saveSetting = async (service: string) => {
@@ -122,9 +110,7 @@ function AutoScalingContent() {
             <h2 className="mb-2 text-xl font-semibold text-zinc-900 dark:text-white">
               Failed to load autoscaling settings
             </h2>
-            <p className="mb-6 text-sm text-zinc-500 dark:text-zinc-400">
-              {error}
-            </p>
+            <p className="mb-6 text-sm text-zinc-500 dark:text-zinc-400">{error}</p>
             <button
               onClick={() => void fetchSettings()}
               className="inline-flex items-center gap-2 rounded-lg bg-sky-500 px-4 py-2 text-sm font-medium text-white hover:bg-sky-600"
@@ -197,12 +183,8 @@ function AutoScalingContent() {
                 <Server className="h-5 w-5 text-sky-500 dark:text-sky-400" />
               </div>
               <div>
-                <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                  Total Services
-                </p>
-                <p className="text-xl font-bold text-zinc-900 dark:text-white">
-                  {settings.length}
-                </p>
+                <p className="text-sm text-zinc-500 dark:text-zinc-400">Total Services</p>
+                <p className="text-xl font-bold text-zinc-900 dark:text-white">{settings.length}</p>
               </div>
             </div>
           </div>
@@ -212,9 +194,7 @@ function AutoScalingContent() {
                 <TrendingUp className="h-5 w-5 text-green-600 dark:text-green-400" />
               </div>
               <div>
-                <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                  Autoscaling Enabled
-                </p>
+                <p className="text-sm text-zinc-500 dark:text-zinc-400">Autoscaling Enabled</p>
                 <p className="text-xl font-bold text-zinc-900 dark:text-white">
                   {enabledCount}/{settings.length}
                 </p>
@@ -227,9 +207,7 @@ function AutoScalingContent() {
                 <Activity className="h-5 w-5 text-blue-600 dark:text-blue-400" />
               </div>
               <div>
-                <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                  Max Total Replicas
-                </p>
+                <p className="text-sm text-zinc-500 dark:text-zinc-400">Max Total Replicas</p>
                 <p className="text-xl font-bold text-zinc-900 dark:text-white">
                   {settings.reduce((acc, s) => acc + s.maxReplicas, 0)}
                 </p>
@@ -266,18 +244,10 @@ function AutoScalingContent() {
                     <input
                       type="checkbox"
                       checked={setting.enabled}
-                      onChange={(e) =>
-                        updateSetting(
-                          setting.service,
-                          'enabled',
-                          e.target.checked,
-                        )
-                      }
+                      onChange={(e) => updateSetting(setting.service, 'enabled', e.target.checked)}
                       className="h-4 w-4 rounded border-zinc-300 text-sky-500 focus:ring-sky-500"
                     />
-                    <span className="text-sm text-zinc-700 dark:text-zinc-300">
-                      Enabled
-                    </span>
+                    <span className="text-sm text-zinc-700 dark:text-zinc-300">Enabled</span>
                   </label>
                   {editingService === setting.service ? (
                     <button
@@ -317,11 +287,7 @@ function AutoScalingContent() {
                     type="number"
                     value={setting.minReplicas}
                     onChange={(e) =>
-                      updateSetting(
-                        setting.service,
-                        'minReplicas',
-                        parseInt(e.target.value) || 1,
-                      )
+                      updateSetting(setting.service, 'minReplicas', parseInt(e.target.value) || 1)
                     }
                     disabled={editingService !== setting.service}
                     min={1}
@@ -337,11 +303,7 @@ function AutoScalingContent() {
                     type="number"
                     value={setting.maxReplicas}
                     onChange={(e) =>
-                      updateSetting(
-                        setting.service,
-                        'maxReplicas',
-                        parseInt(e.target.value) || 1,
-                      )
+                      updateSetting(setting.service, 'maxReplicas', parseInt(e.target.value) || 1)
                     }
                     disabled={editingService !== setting.service}
                     min={setting.minReplicas}
@@ -358,11 +320,7 @@ function AutoScalingContent() {
                     type="number"
                     value={setting.targetCPU}
                     onChange={(e) =>
-                      updateSetting(
-                        setting.service,
-                        'targetCPU',
-                        parseInt(e.target.value) || 70,
-                      )
+                      updateSetting(setting.service, 'targetCPU', parseInt(e.target.value) || 70)
                     }
                     disabled={editingService !== setting.service}
                     min={10}
@@ -379,11 +337,7 @@ function AutoScalingContent() {
                     type="number"
                     value={setting.targetMemory}
                     onChange={(e) =>
-                      updateSetting(
-                        setting.service,
-                        'targetMemory',
-                        parseInt(e.target.value) || 80,
-                      )
+                      updateSetting(setting.service, 'targetMemory', parseInt(e.target.value) || 80)
                     }
                     disabled={editingService !== setting.service}
                     min={10}
@@ -406,16 +360,14 @@ function AutoScalingContent() {
                         updateSetting(
                           setting.service,
                           'scaleUpCooldown',
-                          parseInt(e.target.value) || 60,
+                          parseInt(e.target.value) || 60
                         )
                       }
                       min={0}
                       max={3600}
                       className="w-full rounded-lg border border-zinc-300 bg-white px-4 py-2 text-zinc-900 focus:border-sky-500 focus:outline-none dark:border-zinc-600 dark:bg-zinc-800 dark:text-white"
                     />
-                    <p className="mt-1 text-xs text-zinc-500">
-                      Wait time before scaling up again
-                    </p>
+                    <p className="mt-1 text-xs text-zinc-500">Wait time before scaling up again</p>
                   </div>
                   <div>
                     <label className="mb-2 block text-sm font-medium text-zinc-700 dark:text-zinc-300">
@@ -428,7 +380,7 @@ function AutoScalingContent() {
                         updateSetting(
                           setting.service,
                           'scaleDownCooldown',
-                          parseInt(e.target.value) || 300,
+                          parseInt(e.target.value) || 300
                         )
                       }
                       min={0}
@@ -452,26 +404,19 @@ function AutoScalingContent() {
           </h3>
           <div className="space-y-2 font-mono text-sm">
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-sky-500">nself scale auto</span> - Show
-              autoscaling status
+              <span className="text-sky-500">nself scale auto</span> - Show autoscaling status
             </p>
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-sky-500">
-                nself scale auto hasura --enable
-              </span>{' '}
-              - Enable autoscaling
+              <span className="text-sky-500">nself scale auto hasura --enable</span> - Enable
+              autoscaling
             </p>
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-sky-500">
-                nself scale auto hasura --min=2 --max=5
-              </span>{' '}
-              - Set replica limits
+              <span className="text-sky-500">nself scale auto hasura --min=2 --max=5</span> - Set
+              replica limits
             </p>
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-sky-500">
-                nself scale auto hasura --cpu=70 --memory=80
-              </span>{' '}
-              - Set targets
+              <span className="text-sky-500">nself scale auto hasura --cpu=70 --memory=80</span> -
+              Set targets
             </p>
           </div>
         </div>

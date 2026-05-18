@@ -1,6 +1,6 @@
-import { expect, test } from './fixtures'
-import { mockApiEndpoint, setupAuth } from './helpers'
 import type { Page } from '@playwright/test'
+import { expect, test } from './fixtures'
+import { setupAuth } from './helpers'
 
 // ── Mock data ─────────────────────────────────────────────────────────────────
 
@@ -107,7 +107,11 @@ const EMPTY_INVENTORY = { environments: [] }
 /** Stub GET /api/control-plane with the given inventory payload. */
 async function mockInventory(
   page: Page,
-  inventory: typeof MANAGE_INVENTORY | typeof EMPTY_INVENTORY | typeof PARTIAL_INVENTORY | typeof HIDDEN_INVENTORY,
+  inventory:
+    | typeof MANAGE_INVENTORY
+    | typeof EMPTY_INVENTORY
+    | typeof PARTIAL_INVENTORY
+    | typeof HIDDEN_INVENTORY
 ) {
   await page.route('**/api/control-plane*', (route) => {
     const url = new URL(route.request().url())
@@ -142,7 +146,7 @@ async function mockInventory(
 /** Stub POST /api/control-plane for add/remove actions, capturing last request. */
 async function mockInventoryPost(
   page: Page,
-  responseBody: Record<string, unknown>,
+  responseBody: Record<string, unknown>
 ): Promise<() => Request | null> {
   let lastRequest: Request | null = null
   await page.route('**/api/control-plane', async (route) => {
@@ -190,9 +194,12 @@ test.describe('Control-Plane Inventory Page', () => {
     await expect(card).toBeVisible()
 
     // Its host and role text should appear nearby
-    const cardContainer = page.locator('[class*="rounded-lg"]').filter({
-      hasText: 'staging-app-01',
-    }).first()
+    const cardContainer = page
+      .locator('[class*="rounded-lg"]')
+      .filter({
+        hasText: 'staging-app-01',
+      })
+      .first()
     await expect(cardContainer).toContainText('app')
   })
 
@@ -246,7 +253,9 @@ test.describe('Control-Plane Inventory Page', () => {
 
   // ── 07: empty state ────────────────────────────────────────────────────────
 
-  test('07 — empty state renders "No servers in inventory" when inventory is empty', async ({ page }) => {
+  test('07 — empty state renders "No servers in inventory" when inventory is empty', async ({
+    page,
+  }) => {
     await mockInventory(page, EMPTY_INVENTORY)
     await page.goto('/environments', { waitUntil: 'networkidle' })
 
@@ -296,7 +305,9 @@ test.describe('Control-Plane Inventory Page', () => {
 
   // ── 10: add-server POST hits correct API with name/host/role params ────────
 
-  test('10 — add-server form submits POST to /api/control-plane with correct body', async ({ page }) => {
+  test('10 — add-server form submits POST to /api/control-plane with correct body', async ({
+    page,
+  }) => {
     await mockInventory(page, EMPTY_INVENTORY)
 
     // Capture POST request
@@ -341,7 +352,9 @@ test.describe('Control-Plane Inventory Page', () => {
 
   // ── 11: deploy CLI command reference appears on page ──────────────────────
 
-  test('11 — CLI reference section shows "nself deploy <env> --server <name>" command', async ({ page }) => {
+  test('11 — CLI reference section shows "nself deploy <env> --server <name>" command', async ({
+    page,
+  }) => {
     await mockInventory(page, MANAGE_INVENTORY)
     await page.goto('/environments', { waitUntil: 'networkidle' })
 
@@ -368,7 +381,9 @@ test.describe('Control-Plane Inventory Page', () => {
 
   // ── 13: full-access badge shown when all servers manage-capable ───────────
 
-  test('13 — "full access" badge shown on environment with all manage servers', async ({ page }) => {
+  test('13 — "full access" badge shown on environment with all manage servers', async ({
+    page,
+  }) => {
     await mockInventory(page, MANAGE_INVENTORY)
     await page.goto('/environments', { waitUntil: 'networkidle' })
 
@@ -378,7 +393,9 @@ test.describe('Control-Plane Inventory Page', () => {
 
   // ── 14: "partial" badge shown on environment with mixed capabilities ───────
 
-  test('14 — "partial" badge shown on environment with mixed-capability servers', async ({ page }) => {
+  test('14 — "partial" badge shown on environment with mixed-capability servers', async ({
+    page,
+  }) => {
     await mockInventory(page, PARTIAL_INVENTORY)
     await page.goto('/environments', { waitUntil: 'networkidle' })
 
@@ -388,7 +405,9 @@ test.describe('Control-Plane Inventory Page', () => {
 
   // ── 15: offline state renders when CLI is not responding ──────────────────
 
-  test('15 — offline state renders "nself is not responding" when CLI is unavailable', async ({ page }) => {
+  test('15 — offline state renders "nself is not responding" when CLI is unavailable', async ({
+    page,
+  }) => {
     // 502 = CLI returned non-JSON (offline)
     await page.route('**/api/control-plane*', (route) => {
       route.fulfill({
@@ -415,7 +434,9 @@ test.describe('Control-Plane Inventory Page', () => {
 
   // ── 16: refresh button re-fetches inventory ────────────────────────────────
 
-  test('16 — Refresh button triggers a new GET /api/control-plane?action=list request', async ({ page }) => {
+  test('16 — Refresh button triggers a new GET /api/control-plane?action=list request', async ({
+    page,
+  }) => {
     let requestCount = 0
     await page.route('**/api/control-plane*', async (route) => {
       const url = new URL(route.request().url())

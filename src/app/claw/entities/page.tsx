@@ -18,14 +18,7 @@ const CLAW_API = 'http://127.0.0.1:3710'
 
 type PluginStatus = 'checking' | 'running' | 'stopped'
 
-type EntityType =
-  | 'person'
-  | 'place'
-  | 'organization'
-  | 'event'
-  | 'concept'
-  | 'product'
-  | string
+type EntityType = 'person' | 'place' | 'organization' | 'event' | 'concept' | 'product' | string
 
 interface ClawEntity {
   id: string
@@ -61,10 +54,7 @@ const ENTITY_TYPE_COLORS: Record<string, string> = {
 }
 
 function entityTypeColor(type: EntityType): string {
-  return (
-    ENTITY_TYPE_COLORS[type] ??
-    'border-zinc-600/50 bg-zinc-800/50 text-zinc-400'
-  )
+  return ENTITY_TYPE_COLORS[type] ?? 'border-zinc-600/50 bg-zinc-800/50 text-zinc-400'
 }
 
 // ── Status badge ──────────────────────────────────────────────────────────────
@@ -96,14 +86,7 @@ function StatusBadge({ status }: { status: PluginStatus }) {
 
 // ── Entity type filter ────────────────────────────────────────────────────────
 
-const ALL_TYPES: EntityType[] = [
-  'person',
-  'place',
-  'organization',
-  'event',
-  'concept',
-  'product',
-]
+const ALL_TYPES: EntityType[] = ['person', 'place', 'organization', 'event', 'concept', 'product']
 
 // ── Main page ─────────────────────────────────────────────────────────────────
 
@@ -174,7 +157,7 @@ export default function EntitiesPage() {
         setDeletingId(null)
       }
     },
-    [confirmDeleteId],
+    [confirmDeleteId]
   )
 
   const filtered = entities.filter((e) => {
@@ -205,9 +188,7 @@ export default function EntitiesPage() {
             disabled={refreshing}
             className="flex items-center gap-1.5 rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-1.5 text-xs font-medium text-zinc-300 transition-colors hover:border-zinc-600 hover:bg-zinc-700 disabled:opacity-50"
           >
-            <RefreshCw
-              className={`h-3 w-3 ${refreshing ? 'animate-spin' : ''}`}
-            />
+            <RefreshCw className={`h-3 w-3 ${refreshing ? 'animate-spin' : ''}`} />
             Refresh
           </button>
         </div>
@@ -218,9 +199,7 @@ export default function EntitiesPage() {
         <div className="flex items-start gap-3 rounded-xl border border-amber-500/20 bg-amber-900/10 p-4">
           <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-amber-400" />
           <div>
-            <p className="text-sm font-medium text-amber-300">
-              claw plugin is not running
-            </p>
+            <p className="text-sm font-medium text-amber-300">claw plugin is not running</p>
             <p className="mt-0.5 text-xs text-amber-400/70">
               Install via:{' '}
               <code className="rounded bg-amber-900/30 px-1 font-mono">
@@ -279,23 +258,16 @@ export default function EntitiesPage() {
         <div className="flex flex-col items-center justify-center gap-3 rounded-xl border border-dashed border-zinc-700 py-16">
           <Globe className="h-8 w-8 text-zinc-600" />
           <p className="text-sm text-zinc-500">
-            {search || typeFilter !== 'all'
-              ? 'No entities match your filters'
-              : 'No entities yet'}
+            {search || typeFilter !== 'all' ? 'No entities match your filters' : 'No entities yet'}
           </p>
         </div>
       ) : (
         <div className="divide-y divide-zinc-800 rounded-xl border border-zinc-800 bg-zinc-900/40">
           {filtered.map((entity) => (
-            <div
-              key={entity.id}
-              className="flex items-center justify-between px-4 py-3"
-            >
+            <div key={entity.id} className="flex items-center justify-between px-4 py-3">
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-2">
-                  <span className="truncate text-sm font-medium text-zinc-200">
-                    {entity.name}
-                  </span>
+                  <span className="truncate text-sm font-medium text-zinc-200">{entity.name}</span>
                   <span
                     className={`shrink-0 rounded-full border px-2 py-0.5 text-xs capitalize ${entityTypeColor(entity.entity_type)}`}
                   >
@@ -303,15 +275,12 @@ export default function EntitiesPage() {
                   </span>
                 </div>
                 {entity.description && (
-                  <p className="mt-0.5 truncate text-xs text-zinc-500">
-                    {entity.description}
-                  </p>
+                  <p className="mt-0.5 truncate text-xs text-zinc-500">{entity.description}</p>
                 )}
                 <p className="mt-0.5 text-xs text-zinc-600">
                   {entity.mention_count} mention
-                  {entity.mention_count !== 1 ? 's' : ''} ·{' '}
-                  {Math.round(entity.confidence * 100)}% confidence · updated{' '}
-                  {timeAgo(entity.updated_at)}
+                  {entity.mention_count !== 1 ? 's' : ''} · {Math.round(entity.confidence * 100)}%
+                  confidence · updated {timeAgo(entity.updated_at)}
                 </p>
               </div>
               <button

@@ -80,20 +80,21 @@ function MetricCard({
 }) {
   const changeSign = metric.change !== undefined && metric.change > 0 ? '+' : ''
   return (
-    <div className="rounded-lg border border-white/10 bg-white/[0.02] p-4 space-y-2">
+    <div className="space-y-2 rounded-lg border border-white/10 bg-white/[0.02] p-4">
       <div className="flex items-center gap-2 text-gray-400">
         {icon}
-        <span className="text-xs font-medium uppercase tracking-wide">{title}</span>
+        <span className="text-xs font-medium tracking-wide uppercase">{title}</span>
       </div>
       <div className="flex items-end justify-between gap-2">
         <div>
           <p className="text-2xl font-bold text-white">
             {metric.value.toLocaleString()}
-            <span className="text-sm font-normal text-gray-500 ml-1">{metric.unit}</span>
+            <span className="ml-1 text-sm font-normal text-gray-500">{metric.unit}</span>
           </p>
           {metric.change !== undefined && (
-            <p className={`text-xs mt-0.5 ${trendColor(metric.trend, metric.name)}`}>
-              {changeSign}{metric.change.toFixed(1)}% vs last hour
+            <p className={`mt-0.5 text-xs ${trendColor(metric.trend, metric.name)}`}>
+              {changeSign}
+              {metric.change.toFixed(1)}% vs last hour
             </p>
           )}
         </div>
@@ -110,10 +111,16 @@ function UsageBar({ label, value, unit }: { label: string; value: number; unit: 
     <div className="space-y-1">
       <div className="flex justify-between text-xs">
         <span className="text-gray-400">{label}</span>
-        <span className="text-white font-medium">{value}{unit}</span>
+        <span className="font-medium text-white">
+          {value}
+          {unit}
+        </span>
       </div>
       <div className="h-1.5 rounded-full bg-white/10">
-        <div className={`h-full rounded-full ${color} transition-all`} style={{ width: `${pct}%` }} />
+        <div
+          className={`h-full rounded-full ${color} transition-all`}
+          style={{ width: `${pct}%` }}
+        />
       </div>
     </div>
   )
@@ -167,18 +174,16 @@ function MetricsContent() {
   // State 5: offline
   if (offline) {
     return (
-      <div className="p-6 space-y-4">
-        <div className="flex items-center gap-3 p-4 rounded-lg bg-yellow-500/10 border border-yellow-500/30">
-          <WifiOff className="h-5 w-5 text-yellow-500 flex-shrink-0" />
+      <div className="space-y-4 p-6">
+        <div className="flex items-center gap-3 rounded-lg border border-yellow-500/30 bg-yellow-500/10 p-4">
+          <WifiOff className="h-5 w-5 flex-shrink-0 text-yellow-500" />
           <div>
             <p className="font-medium text-yellow-400">Cannot reach backend</p>
-            <p className="text-sm text-gray-400 mt-0.5">
-              Metrics require a running nself stack.
-            </p>
+            <p className="mt-0.5 text-sm text-gray-400">Metrics require a running nself stack.</p>
           </div>
         </div>
         <Button onClick={fetchMetrics} disabled={loading} variant="secondary" size="sm">
-          <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
+          <RefreshCw className={`mr-2 h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
           Retry
         </Button>
       </div>
@@ -188,16 +193,16 @@ function MetricsContent() {
   // State 4: error
   if (error && !data) {
     return (
-      <div className="p-6 space-y-4">
-        <div className="flex items-center gap-3 p-4 rounded-lg bg-red-500/10 border border-red-500/30">
-          <AlertTriangle className="h-5 w-5 text-red-400 flex-shrink-0" />
+      <div className="space-y-4 p-6">
+        <div className="flex items-center gap-3 rounded-lg border border-red-500/30 bg-red-500/10 p-4">
+          <AlertTriangle className="h-5 w-5 flex-shrink-0 text-red-400" />
           <div>
             <p className="font-medium text-red-400">Failed to load metrics</p>
-            <p className="text-sm text-gray-400 mt-0.5">{error}</p>
+            <p className="mt-0.5 text-sm text-gray-400">{error}</p>
           </div>
         </div>
         <Button onClick={fetchMetrics} disabled={loading} variant="secondary" size="sm">
-          <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
+          <RefreshCw className={`mr-2 h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
           Retry
         </Button>
       </div>
@@ -208,10 +213,16 @@ function MetricsContent() {
   if (!data) {
     return (
       <div className="p-6 text-center text-gray-400">
-        <BarChart2 className="h-8 w-8 mx-auto mb-2 opacity-50" />
+        <BarChart2 className="mx-auto mb-2 h-8 w-8 opacity-50" />
         <p>No metrics available.</p>
-        <Button onClick={fetchMetrics} disabled={loading} variant="secondary" size="sm" className="mt-3">
-          <RefreshCw className="h-4 w-4 mr-2" />
+        <Button
+          onClick={fetchMetrics}
+          disabled={loading}
+          variant="secondary"
+          size="sm"
+          className="mt-3"
+        >
+          <RefreshCw className="mr-2 h-4 w-4" />
           Load Metrics
         </Button>
       </div>
@@ -220,32 +231,44 @@ function MetricsContent() {
 
   // States 6+7: success
   return (
-    <div className="p-6 space-y-6">
+    <div className="space-y-6 p-6">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-xl font-semibold text-white">Performance Metrics</h2>
-          <p className="text-sm text-gray-400 mt-1">
+          <p className="mt-1 text-sm text-gray-400">
             Collected {new Date(data.collectedAt).toLocaleTimeString()}
           </p>
         </div>
         <Button onClick={fetchMetrics} disabled={loading} variant="secondary" size="sm">
-          <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
+          <RefreshCw className={`mr-2 h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
           {loading ? 'Collecting…' : 'Refresh'}
         </Button>
       </div>
 
       {/* KPI grid */}
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-        <MetricCard icon={<Activity className="h-4 w-4" />} title="Requests/s" metric={data.requests} />
-        <MetricCard icon={<Clock className="h-4 w-4" />} title="Avg latency" metric={data.latency} />
-        <MetricCard icon={<AlertTriangle className="h-4 w-4" />} title="Error rate" metric={data.errors} />
+        <MetricCard
+          icon={<Activity className="h-4 w-4" />}
+          title="Requests/s"
+          metric={data.requests}
+        />
+        <MetricCard
+          icon={<Clock className="h-4 w-4" />}
+          title="Avg latency"
+          metric={data.latency}
+        />
+        <MetricCard
+          icon={<AlertTriangle className="h-4 w-4" />}
+          title="Error rate"
+          metric={data.errors}
+        />
         <MetricCard icon={<Loader2 className="h-4 w-4" />} title="Uptime" metric={data.uptime} />
       </div>
 
       {/* Resource usage */}
-      <div className="rounded-lg border border-white/10 bg-white/[0.02] p-4 space-y-4">
-        <h3 className="text-sm font-medium text-white flex items-center gap-2">
+      <div className="space-y-4 rounded-lg border border-white/10 bg-white/[0.02] p-4">
+        <h3 className="flex items-center gap-2 text-sm font-medium text-white">
           <Cpu className="h-4 w-4 text-gray-400" />
           Resource Usage
         </h3>
@@ -256,7 +279,11 @@ function MetricsContent() {
 
       {/* Connection + request detail */}
       <div className="grid grid-cols-2 gap-3">
-        <MetricCard icon={<Database className="h-4 w-4" />} title="Connections" metric={data.connections} />
+        <MetricCard
+          icon={<Database className="h-4 w-4" />}
+          title="Connections"
+          metric={data.connections}
+        />
         <MetricCard icon={<HardDrive className="h-4 w-4" />} title="Disk I/O" metric={data.disk} />
       </div>
 
@@ -267,10 +294,10 @@ function MetricsContent() {
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
             {data.custom.map((m) => (
               <div key={m.name} className="rounded-lg border border-white/10 bg-white/[0.02] p-3">
-                <p className="text-xs text-gray-400 uppercase tracking-wide truncate">{m.name}</p>
-                <p className="text-lg font-bold text-white mt-1">
+                <p className="truncate text-xs tracking-wide text-gray-400 uppercase">{m.name}</p>
+                <p className="mt-1 text-lg font-bold text-white">
                   {m.value.toLocaleString()}
-                  <span className="text-xs font-normal text-gray-500 ml-1">{m.unit}</span>
+                  <span className="ml-1 text-xs font-normal text-gray-500">{m.unit}</span>
                 </p>
               </div>
             ))}

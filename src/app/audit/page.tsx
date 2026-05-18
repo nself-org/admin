@@ -130,26 +130,18 @@ function ActionBadge({ action }: { action: string }) {
   const colors: Record<string, string> = {
     login: 'bg-blue-50 text-blue-700 dark:bg-blue-900/20 dark:text-blue-400',
     logout: 'bg-zinc-100 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-400',
-    'config.change':
-      'bg-sky-50 text-sky-600 dark:bg-sky-900/20 dark:text-sky-400',
-    deploy:
-      'bg-emerald-50 text-emerald-700 dark:bg-emerald-900/20 dark:text-emerald-400',
-    'secret.access':
-      'bg-orange-50 text-orange-700 dark:bg-orange-900/20 dark:text-orange-400',
-    'role.change':
-      'bg-pink-50 text-pink-700 dark:bg-pink-900/20 dark:text-pink-400',
-    'webhook.fire':
-      'bg-cyan-50 text-cyan-700 dark:bg-cyan-900/20 dark:text-cyan-400',
+    'config.change': 'bg-sky-50 text-sky-600 dark:bg-sky-900/20 dark:text-sky-400',
+    deploy: 'bg-emerald-50 text-emerald-700 dark:bg-emerald-900/20 dark:text-emerald-400',
+    'secret.access': 'bg-orange-50 text-orange-700 dark:bg-orange-900/20 dark:text-orange-400',
+    'role.change': 'bg-pink-50 text-pink-700 dark:bg-pink-900/20 dark:text-pink-400',
+    'webhook.fire': 'bg-cyan-50 text-cyan-700 dark:bg-cyan-900/20 dark:text-cyan-400',
   }
 
   const colorClass =
-    colors[action] ||
-    'bg-zinc-100 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-400'
+    colors[action] || 'bg-zinc-100 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-400'
 
   return (
-    <span
-      className={`inline-flex rounded-full px-2.5 py-0.5 text-xs font-medium ${colorClass}`}
-    >
+    <span className={`inline-flex rounded-full px-2.5 py-0.5 text-xs font-medium ${colorClass}`}>
       {action}
     </span>
   )
@@ -240,9 +232,7 @@ function AuditLogContent() {
 
   // Client-side user filter
   const filteredEntries = userFilter
-    ? entries.filter((e) =>
-        e.user.toLowerCase().includes(userFilter.toLowerCase()),
-      )
+    ? entries.filter((e) => e.user.toLowerCase().includes(userFilter.toLowerCase()))
     : entries
 
   const handleExport = async (format: 'json' | 'csv') => {
@@ -298,11 +288,7 @@ function AuditLogContent() {
               </p>
             </div>
             <div className="flex items-center gap-2">
-              <Button
-                onClick={fetchAuditLog}
-                variant="primary"
-                disabled={loading}
-              >
+              <Button onClick={fetchAuditLog} variant="primary" disabled={loading}>
                 {loading ? (
                   <RefreshCw className="mr-2 h-4 w-4 animate-spin" />
                 ) : (
@@ -414,9 +400,7 @@ function AuditLogContent() {
                 <h3 className="text-sm font-semibold text-red-800 dark:text-red-300">
                   Audit Log Error
                 </h3>
-                <p className="mt-1 text-sm text-red-700 dark:text-red-400">
-                  {error}
-                </p>
+                <p className="mt-1 text-sm text-red-700 dark:text-red-400">{error}</p>
               </div>
             </div>
           </div>
@@ -430,9 +414,7 @@ function AuditLogContent() {
               <p className="text-sm font-medium text-zinc-600 dark:text-zinc-400">
                 Loading audit log...
               </p>
-              <p className="mt-1 text-xs text-zinc-400 dark:text-zinc-500">
-                Executing nself audit
-              </p>
+              <p className="mt-1 text-xs text-zinc-400 dark:text-zinc-500">Executing nself audit</p>
             </div>
           </div>
         )}
@@ -532,8 +514,8 @@ function AuditLogContent() {
                 No Audit Entries
               </h2>
               <p className="mx-auto max-w-md text-zinc-600 dark:text-zinc-400">
-                No audit log entries found for the current filters. Try
-                adjusting the filters or check back later.
+                No audit log entries found for the current filters. Try adjusting the filters or
+                check back later.
               </p>
             </div>
           </div>

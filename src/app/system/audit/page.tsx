@@ -32,7 +32,7 @@ const fetcher = (url: string) => fetch(url).then((res) => res.json())
 function SystemAuditContent() {
   const { data, error, mutate } = useSWR<{ entries: AuditEntry[]; total: number }>(
     '/api/system/audit',
-    fetcher,
+    fetcher
   )
 
   const entries = data?.entries ?? []
@@ -40,8 +40,7 @@ function SystemAuditContent() {
   const exportAuditLog = () => {
     const content = entries
       .map(
-        (e) =>
-          `${e.timestamp}\t${e.user}\t${e.action}\t${e.resource}\t${e.result}\t${e.ipAddress}`,
+        (e) => `${e.timestamp}\t${e.user}\t${e.action}\t${e.resource}\t${e.result}\t${e.ipAddress}`
       )
       .join('\n')
     const blob = new Blob([content], { type: 'text/plain' })
@@ -150,10 +149,7 @@ function SystemAuditContent() {
                 </thead>
                 <tbody className="divide-y divide-zinc-200 dark:divide-zinc-700">
                   {entries.map((entry) => (
-                    <tr
-                      key={entry.id}
-                      className="hover:bg-zinc-50 dark:hover:bg-zinc-800/50"
-                    >
+                    <tr key={entry.id} className="hover:bg-zinc-50 dark:hover:bg-zinc-800/50">
                       <td className="px-4 py-3 text-sm text-zinc-600 dark:text-zinc-400">
                         {new Date(entry.timestamp).toLocaleString()}
                       </td>

@@ -46,13 +46,11 @@ export async function GET(): Promise<NextResponse> {
       try {
         const parsed = JSON.parse(urlsRaw.value)
         const entries = Array.isArray(parsed) ? parsed : (parsed?.urls ?? [])
-        routes = entries.map(
-          (e: { domain?: string; upstream?: string; ssl?: boolean }) => ({
-            server: e.domain ?? '',
-            upstream: e.upstream ?? '',
-            ssl: e.ssl ?? false,
-          }),
-        )
+        routes = entries.map((e: { domain?: string; upstream?: string; ssl?: boolean }) => ({
+          server: e.domain ?? '',
+          upstream: e.upstream ?? '',
+          ssl: e.ssl ?? false,
+        }))
       } catch {
         // Non-fatal — empty routes is acceptable.
       }
@@ -64,17 +62,12 @@ export async function GET(): Promise<NextResponse> {
         const parsed = JSON.parse(sslRaw.value)
         const certs = Array.isArray(parsed) ? parsed : (parsed?.certs ?? [])
         sslCerts = certs.map(
-          (c: {
-            domain?: string
-            expiry?: string
-            issuer?: string
-            days_remaining?: number
-          }) => ({
+          (c: { domain?: string; expiry?: string; issuer?: string; days_remaining?: number }) => ({
             domain: c.domain ?? '',
             expiry: c.expiry ?? '',
             issuer: c.issuer ?? '',
             daysRemaining: c.days_remaining ?? 0,
-          }),
+          })
         )
       } catch {
         // Non-fatal.
@@ -84,10 +77,9 @@ export async function GET(): Promise<NextResponse> {
     // Fetch conf.d file list (best-effort).
     let confDFiles: string[] = []
     try {
-      const { stdout } = await execAsync(
-        'ls ./nginx/conf.d/ 2>/dev/null || true',
-        { timeout: 5_000 },
-      )
+      const { stdout } = await execAsync('ls ./nginx/conf.d/ 2>/dev/null || true', {
+        timeout: 5_000,
+      })
       confDFiles = stdout
         .trim()
         .split('\n')

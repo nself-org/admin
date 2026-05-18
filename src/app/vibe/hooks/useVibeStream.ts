@@ -45,7 +45,7 @@ export function useVibeStream(): UseVibeStreamReturn {
 
       // Use SSE for streaming (simpler than WebSocket for Next.js)
       const evtSource = new EventSource(
-        `/api/vibe/stream?session_id=${sessionId}&generation_id=${generationId}`,
+        `/api/vibe/stream?session_id=${sessionId}&generation_id=${generationId}`
       )
 
       evtSource.onmessage = (event: MessageEvent<string>) => {
@@ -69,10 +69,7 @@ export function useVibeStream(): UseVibeStreamReturn {
       evtSource.onerror = () => {
         setIsStreaming(false)
         evtSource.close()
-        setChunks((prev) => [
-          ...prev,
-          { type: 'error', content: 'Stream connection lost.' },
-        ])
+        setChunks((prev) => [...prev, { type: 'error', content: 'Stream connection lost.' }])
       }
 
       // Store cleanup ref
@@ -89,7 +86,7 @@ export function useVibeStream(): UseVibeStreamReturn {
         evtRef.close()
       }
     },
-    [clearStream],
+    [clearStream]
   )
 
   // Cleanup on unmount

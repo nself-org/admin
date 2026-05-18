@@ -59,7 +59,7 @@ export function DatePicker({
           className={cn(
             'w-full justify-start text-left font-normal',
             !value && 'text-zinc-500 dark:text-zinc-400',
-            className,
+            className
           )}
         >
           <CalendarIcon className="mr-2 h-4 w-4" />

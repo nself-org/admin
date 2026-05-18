@@ -14,8 +14,7 @@ import { requireAuth } from '@/lib/require-auth'
 import { NextRequest, NextResponse } from 'next/server'
 
 const MARKETPLACE_BASE =
-  process.env.NSELF_MARKETPLACE_URL?.replace(/\/marketplace\/?$/, '') ||
-  'https://plugins.nself.org'
+  process.env.NSELF_MARKETPLACE_URL?.replace(/\/marketplace\/?$/, '') || 'https://plugins.nself.org'
 const RATINGS_URL = `${MARKETPLACE_BASE}/ratings`
 
 export async function GET(request: NextRequest): Promise<NextResponse> {
@@ -29,25 +28,20 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     })
     clearTimeout(timeoutId)
     const body = await response.json().catch(() => ({}))
-    logger.api(
-      'GET',
-      '/api/plugins/ratings',
-      response.status,
-      Date.now() - startTime,
-    )
+    logger.api('GET', '/api/plugins/ratings', response.status, Date.now() - startTime)
     return NextResponse.json(
       {
         success: response.ok,
         ratings: body?.ratings || {},
       },
-      { status: response.ok ? 200 : response.status },
+      { status: response.ok ? 200 : response.status }
     )
   } catch (err) {
     const e = err as { message?: string }
     logger.error('Ratings fetch failed', { error: e.message })
     return NextResponse.json(
       { success: false, ratings: {}, error: e.message || 'Fetch failed' },
-      { status: 502 },
+      { status: 502 }
     )
   }
 }
@@ -61,23 +55,20 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
     body = await request.json()
   } catch {
-    return NextResponse.json(
-      { success: false, error: 'Invalid JSON body' },
-      { status: 400 },
-    )
+    return NextResponse.json({ success: false, error: 'Invalid JSON body' }, { status: 400 })
   }
 
   const payload = body as { plugin?: string; stars?: number; review?: string }
   if (!payload?.plugin || typeof payload.stars !== 'number') {
     return NextResponse.json(
       { success: false, error: 'plugin and stars (1-5) required' },
-      { status: 400 },
+      { status: 400 }
     )
   }
   if (payload.stars < 1 || payload.stars > 5) {
     return NextResponse.json(
       { success: false, error: 'stars must be between 1 and 5' },
-      { status: 400 },
+      { status: 400 }
     )
   }
 
@@ -100,26 +91,21 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     })
     clearTimeout(timeoutId)
     const result = await response.json().catch(() => ({}))
-    logger.api(
-      'POST',
-      '/api/plugins/ratings',
-      response.status,
-      Date.now() - startTime,
-    )
+    logger.api('POST', '/api/plugins/ratings', response.status, Date.now() - startTime)
     return NextResponse.json(
       {
         success: Boolean(result?.ok),
         rating: result?.rating,
         error: result?.error,
       },
-      { status: response.ok ? 200 : response.status },
+      { status: response.ok ? 200 : response.status }
     )
   } catch (err) {
     const e = err as { message?: string }
     logger.error('Ratings submit failed', { error: e.message })
     return NextResponse.json(
       { success: false, error: e.message || 'Submit failed' },
-      { status: 502 },
+      { status: 502 }
     )
   }
 }

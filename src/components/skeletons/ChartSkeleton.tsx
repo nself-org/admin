@@ -6,10 +6,7 @@ interface ChartSkeletonProps {
   height?: 'sm' | 'md' | 'lg'
 }
 
-export function ChartSkeleton({
-  title = true,
-  height = 'md',
-}: ChartSkeletonProps) {
+export function ChartSkeleton({ title = true, height = 'md' }: ChartSkeletonProps) {
   const heights = {
     sm: 'h-48',
     md: 'h-64',
@@ -25,9 +22,7 @@ export function ChartSkeleton({
         </CardHeader>
       )}
       <CardContent>
-        <div
-          className={`flex items-end justify-between gap-2 ${heights[height]}`}
-        >
+        <div className={`flex items-end justify-between gap-2 ${heights[height]}`}>
           {Array.from({ length: 12 }).map((_, i) => (
             <Skeleton
               key={i}

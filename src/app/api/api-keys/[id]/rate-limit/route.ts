@@ -15,20 +15,14 @@ interface RouteParams {
  *   - resetAt: string (ISO date)
  *   - isLimited: boolean
  */
-export async function GET(
-  _request: NextRequest,
-  { params }: RouteParams,
-): Promise<NextResponse> {
+export async function GET(_request: NextRequest, { params }: RouteParams): Promise<NextResponse> {
   try {
     const { id } = await params
 
     // Verify the key exists
     const apiKey = await apiKeysApi.getApiKeyById(id)
     if (!apiKey) {
-      return NextResponse.json(
-        { success: false, error: 'API key not found' },
-        { status: 404 },
-      )
+      return NextResponse.json({ success: false, error: 'API key not found' }, { status: 404 })
     }
 
     const rateLimit = await apiKeysApi.getApiKeyRateLimit(id)
@@ -52,7 +46,7 @@ export async function GET(
         error: 'Failed to fetch API key rate limit',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

@@ -24,11 +24,7 @@ export function loadEnvironmentVariables() {
   const isDevEnv = isDevelopment()
 
   // Define environment files in reverse priority order (last one wins)
-  const envFiles = [
-    isDevEnv ? '.env.dev' : '.env.prod',
-    '.env.local',
-    '.env',
-  ].filter(Boolean)
+  const envFiles = [isDevEnv ? '.env.dev' : '.env.prod', '.env.local', '.env'].filter(Boolean)
 
   // Store all env vars from files
   const envVars: Record<string, string> = {}
@@ -49,9 +45,7 @@ export function loadEnvironmentVariables() {
 
   return {
     isDevEnv,
-    loadedFiles: envFiles
-      .filter((file) => fs.existsSync(path.join(rootDir, file)))
-      .reverse(), // Show in priority order
+    loadedFiles: envFiles.filter((file) => fs.existsSync(path.join(rootDir, file))).reverse(), // Show in priority order
     adminPassword: process.env.ADMIN_PASSWORD,
     adminPasswordHash: process.env.ADMIN_PASSWORD_HASH,
   }
@@ -62,10 +56,7 @@ export function hasAdminPassword(): boolean {
   return !!(adminPassword || adminPasswordHash)
 }
 
-export async function setAdminPassword(
-  password: string,
-  _hostname?: string,
-): Promise<void> {
+export async function setAdminPassword(password: string, _hostname?: string): Promise<void> {
   const rootDir = process.cwd()
   const envFile = path.join(rootDir, '.env')
 
@@ -79,9 +70,7 @@ export async function setAdminPassword(
   const lines = envContent
     .split('\n')
     .filter(
-      (line) =>
-        !line.startsWith('ADMIN_PASSWORD=') &&
-        !line.startsWith('ADMIN_PASSWORD_HASH='),
+      (line) => !line.startsWith('ADMIN_PASSWORD=') && !line.startsWith('ADMIN_PASSWORD_HASH=')
     )
 
   // ALWAYS store hashed password (even in development)
@@ -93,10 +82,7 @@ export async function setAdminPassword(
   fs.writeFileSync(envFile, lines.join('\n'))
 }
 
-export async function verifyAdminPassword(
-  password: string,
-  _hostname?: string,
-): Promise<boolean> {
+export async function verifyAdminPassword(password: string, _hostname?: string): Promise<boolean> {
   const { adminPassword, adminPasswordHash } = loadEnvironmentVariables()
   const bcrypt = await import('bcryptjs')
 

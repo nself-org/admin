@@ -6,9 +6,7 @@ test.describe('Backup & Restore Flow', () => {
     await setupAuth(page)
   })
 
-  test('should navigate to database backup page', async ({
-    backupRestorePage,
-  }) => {
+  test('should navigate to database backup page', async ({ backupRestorePage }) => {
     await backupRestorePage.gotoBackup()
     await expect(backupRestorePage.pageTitle).toBeVisible()
     await expect(backupRestorePage.page).toHaveURL(/\/database\/backup/)
@@ -26,14 +24,10 @@ test.describe('Backup & Restore Flow', () => {
       await backupRestorePage.createBackupButton.click()
 
       // Should show progress
-      await expect(page.locator('[data-testid="backup-progress"]')).toBeVisible(
-        { timeout: 5000 },
-      )
+      await expect(page.locator('[data-testid="backup-progress"]')).toBeVisible({ timeout: 5000 })
 
       // Wait for backup to complete
-      await expect(page.locator('[data-testid="backup-complete"]')).toBeVisible(
-        { timeout: 60000 },
-      )
+      await expect(page.locator('[data-testid="backup-complete"]')).toBeVisible({ timeout: 60000 })
 
       // Success message
       await backupRestorePage.expectBackupSuccess()
@@ -172,10 +166,7 @@ test.describe('Backup & Restore Flow', () => {
     }
   })
 
-  test('should be responsive on mobile', async ({
-    backupRestorePage,
-    page,
-  }) => {
+  test('should be responsive on mobile', async ({ backupRestorePage, page }) => {
     await page.setViewportSize({ width: 375, height: 667 })
     await backupRestorePage.gotoBackup()
 
@@ -186,16 +177,12 @@ test.describe('Backup & Restore Flow', () => {
     }
   })
 
-  test('should have accessible controls', async ({
-    backupRestorePage,
-    page,
-  }) => {
+  test('should have accessible controls', async ({ backupRestorePage, page }) => {
     await backupRestorePage.gotoBackup()
 
     // Create backup button should have ARIA label
     if (await backupRestorePage.createBackupButton.isVisible()) {
-      const ariaLabel =
-        await backupRestorePage.createBackupButton.getAttribute('aria-label')
+      const ariaLabel = await backupRestorePage.createBackupButton.getAttribute('aria-label')
       const text = await backupRestorePage.createBackupButton.textContent()
 
       expect(ariaLabel || text).toBeTruthy()

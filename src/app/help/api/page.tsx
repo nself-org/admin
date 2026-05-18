@@ -10,9 +10,7 @@ import Link from 'next/link'
 import { Suspense } from 'react'
 
 function APIHelpContent() {
-  const apiArticles = helpArticlesArray.filter(
-    (a: HelpArticle) => a.category === 'api',
-  )
+  const apiArticles = helpArticlesArray.filter((a: HelpArticle) => a.category === 'api')
 
   return (
     <>
@@ -30,9 +28,9 @@ function APIHelpContent() {
               <div className="flex-1">
                 <h2 className="mb-2 text-xl font-semibold">nAdmin API</h2>
                 <p className="text-zinc-600 dark:text-zinc-400">
-                  nAdmin provides REST APIs for all operations. Each endpoint
-                  corresponds to a nself CLI command. Use these APIs to
-                  integrate with external tools or build custom workflows.
+                  nAdmin provides REST APIs for all operations. Each endpoint corresponds to a nself
+                  CLI command. Use these APIs to integrate with external tools or build custom
+                  workflows.
                 </p>
               </div>
             </div>
@@ -44,9 +42,7 @@ function APIHelpContent() {
               {apiArticles.map((article) => (
                 <Link key={article.id} href={`/help/article/${article.id}`}>
                   <Card className="p-4 transition-shadow hover:shadow-md">
-                    <h3 className="mb-2 font-mono text-sm font-semibold">
-                      {article.title}
-                    </h3>
+                    <h3 className="mb-2 font-mono text-sm font-semibold">{article.title}</h3>
                     <p className="mb-3 text-sm text-zinc-600 dark:text-zinc-400">
                       {article.description}
                     </p>

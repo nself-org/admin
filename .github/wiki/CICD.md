@@ -561,11 +561,7 @@ logger.info('User logged in', {
 try {
   await someOperation()
 } catch (error) {
-  logger.error(
-    'Operation failed',
-    { operation: 'backup', retryCount: 3 },
-    error as Error,
-  )
+  logger.error('Operation failed', { operation: 'backup', retryCount: 3 }, error as Error)
 }
 
 // HTTP request logging

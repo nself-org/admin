@@ -9,10 +9,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     const reportId = searchParams.get('reportId')
 
     if (!reportId) {
-      return NextResponse.json(
-        { success: false, error: 'reportId is required' },
-        { status: 400 },
-      )
+      return NextResponse.json({ success: false, error: 'reportId is required' }, { status: 400 })
     }
 
     const schedules = await reports.getSchedules(reportId)
@@ -25,10 +22,9 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     return NextResponse.json(
       {
         success: false,
-        error:
-          error instanceof Error ? error.message : 'Failed to list schedules',
+        error: error instanceof Error ? error.message : 'Failed to list schedules',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -43,39 +39,24 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
     // Validate required fields
     if (!body.reportId) {
-      return NextResponse.json(
-        { success: false, error: 'reportId is required' },
-        { status: 400 },
-      )
+      return NextResponse.json({ success: false, error: 'reportId is required' }, { status: 400 })
     }
     if (!body.frequency) {
-      return NextResponse.json(
-        { success: false, error: 'frequency is required' },
-        { status: 400 },
-      )
+      return NextResponse.json({ success: false, error: 'frequency is required' }, { status: 400 })
     }
     if (!body.time) {
-      return NextResponse.json(
-        { success: false, error: 'time is required' },
-        { status: 400 },
-      )
+      return NextResponse.json({ success: false, error: 'time is required' }, { status: 400 })
     }
     if (!body.timezone) {
-      return NextResponse.json(
-        { success: false, error: 'timezone is required' },
-        { status: 400 },
-      )
+      return NextResponse.json({ success: false, error: 'timezone is required' }, { status: 400 })
     }
     if (!body.format) {
-      return NextResponse.json(
-        { success: false, error: 'format is required' },
-        { status: 400 },
-      )
+      return NextResponse.json({ success: false, error: 'format is required' }, { status: 400 })
     }
     if (!body.recipients || !Array.isArray(body.recipients)) {
       return NextResponse.json(
         { success: false, error: 'recipients array is required' },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -87,7 +68,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           success: false,
           error: `Invalid frequency. Must be one of: ${validFrequencies.join(', ')}`,
         },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -99,7 +80,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           success: false,
           error: `Invalid format. Must be one of: ${validFormats.join(', ')}`,
         },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -107,7 +88,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     if (body.frequency === 'weekly' && body.dayOfWeek === undefined) {
       return NextResponse.json(
         { success: false, error: 'dayOfWeek is required for weekly schedules' },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -118,7 +99,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           success: false,
           error: 'dayOfMonth is required for monthly schedules',
         },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -138,16 +119,15 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         success: true,
         data: schedule,
       },
-      { status: 201 },
+      { status: 201 }
     )
   } catch (error) {
     return NextResponse.json(
       {
         success: false,
-        error:
-          error instanceof Error ? error.message : 'Failed to create schedule',
+        error: error instanceof Error ? error.message : 'Failed to create schedule',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

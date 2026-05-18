@@ -15,19 +15,11 @@ import {
 // Type Exports (for useReports hook compatibility)
 // ============================================================================
 
-export type CreateReportTemplateInput = Omit<
-  ReportTemplate,
-  'id' | 'createdAt' | 'updatedAt'
->
+export type CreateReportTemplateInput = Omit<ReportTemplate, 'id' | 'createdAt' | 'updatedAt'>
 
-export type UpdateReportTemplateInput = Partial<
-  Omit<ReportTemplate, 'id' | 'createdAt'>
->
+export type UpdateReportTemplateInput = Partial<Omit<ReportTemplate, 'id' | 'createdAt'>>
 
-export type CreateScheduleInput = Omit<
-  ReportSchedule,
-  'id' | 'reportId' | 'lastRun' | 'nextRun'
->
+export type CreateScheduleInput = Omit<ReportSchedule, 'id' | 'reportId' | 'lastRun' | 'nextRun'>
 
 export type UpdateScheduleInput = Partial<Omit<ReportSchedule, 'id'>>
 
@@ -51,9 +43,7 @@ function generateId(): string {
 // Template Operations
 // ============================================================================
 
-export async function getTemplates(
-  tenantId?: string,
-): Promise<ReportTemplate[]> {
+export async function getTemplates(tenantId?: string): Promise<ReportTemplate[]> {
   const allTemplates = Array.from(templates.values())
   if (tenantId) {
     return allTemplates.filter((t) => !t.tenantId || t.tenantId === tenantId)
@@ -66,7 +56,7 @@ export async function getTemplate(id: string): Promise<ReportTemplate | null> {
 }
 
 export async function createTemplate(
-  data: Omit<ReportTemplate, 'id' | 'createdAt' | 'updatedAt'>,
+  data: Omit<ReportTemplate, 'id' | 'createdAt' | 'updatedAt'>
 ): Promise<ReportTemplate> {
   const now = new Date().toISOString()
   const template: ReportTemplate = {
@@ -81,7 +71,7 @@ export async function createTemplate(
 
 export async function updateTemplate(
   id: string,
-  data: Partial<Omit<ReportTemplate, 'id' | 'createdAt'>>,
+  data: Partial<Omit<ReportTemplate, 'id' | 'createdAt'>>
 ): Promise<ReportTemplate | null> {
   const existing = templates.get(id)
   if (!existing) {
@@ -122,9 +112,7 @@ export async function getExecutions(options?: {
   }
 
   // Sort by startedAt descending
-  results.sort(
-    (a, b) => new Date(b.startedAt).getTime() - new Date(a.startedAt).getTime(),
-  )
+  results.sort((a, b) => new Date(b.startedAt).getTime() - new Date(a.startedAt).getTime())
 
   if (options?.offset) {
     results = results.slice(options.offset)
@@ -136,15 +124,11 @@ export async function getExecutions(options?: {
   return results
 }
 
-export async function getExecution(
-  id: string,
-): Promise<ReportExecution | null> {
+export async function getExecution(id: string): Promise<ReportExecution | null> {
   return executions.get(id) || null
 }
 
-export async function generateReport(
-  input: GenerateReportInput,
-): Promise<ReportExecution> {
+export async function generateReport(input: GenerateReportInput): Promise<ReportExecution> {
   const template = await getTemplate(input.templateId)
   if (!template) {
     throw new Error(`Template not found: ${input.templateId}`)
@@ -172,7 +156,7 @@ export async function generateReport(
 async function processReportGeneration(
   executionId: string,
   _template: ReportTemplate,
-  input: GenerateReportInput,
+  input: GenerateReportInput
 ): Promise<void> {
   const execution = executions.get(executionId)
   if (!execution) return
@@ -195,9 +179,7 @@ async function processReportGeneration(
     execution.fileSize = Math.floor(Math.random() * 100000) + 1000
     execution.rowCount = Math.floor(Math.random() * 1000) + 1
     execution.completedAt = new Date().toISOString()
-    execution.expiresAt = new Date(
-      Date.now() + 24 * 60 * 60 * 1000,
-    ).toISOString() // 24 hours
+    execution.expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString() // 24 hours
 
     executions.set(executionId, execution)
   } catch (error) {
@@ -209,7 +191,7 @@ async function processReportGeneration(
 }
 
 export async function getExecutionFile(
-  id: string,
+  id: string
 ): Promise<{ data: Uint8Array; filename: string; contentType: string } | null> {
   const execution = await getExecution(id)
   if (!execution || execution.status !== 'completed' || !execution.fileUrl) {
@@ -248,7 +230,7 @@ export async function getExecutionFile(
           data: [],
         },
         null,
-        2,
+        2
       )
       break
     case 'csv':
@@ -280,9 +262,7 @@ export async function getExecutionFile(
 // Schedule Operations
 // ============================================================================
 
-export async function getSchedules(
-  reportId?: string,
-): Promise<ReportSchedule[]> {
+export async function getSchedules(reportId?: string): Promise<ReportSchedule[]> {
   const allSchedules = Array.from(schedules.values())
   if (reportId) {
     return allSchedules.filter((s) => s.reportId === reportId)
@@ -297,7 +277,7 @@ export async function getSchedule(id: string): Promise<ReportSchedule | null> {
 // Overloaded createSchedule to support both single-object and two-argument forms
 export async function createSchedule(
   dataOrReportId: Omit<ReportSchedule, 'id' | 'lastRun' | 'nextRun'> | string,
-  scheduleInput?: CreateScheduleInput,
+  scheduleInput?: CreateScheduleInput
 ): Promise<ReportSchedule> {
   let data: Omit<ReportSchedule, 'id' | 'lastRun' | 'nextRun'>
 
@@ -333,7 +313,7 @@ export async function createSchedule(
 
 export async function updateSchedule(
   id: string,
-  data: Partial<Omit<ReportSchedule, 'id'>>,
+  data: Partial<Omit<ReportSchedule, 'id'>>
 ): Promise<ReportSchedule> {
   const existing = schedules.get(id)
   if (!existing) {
@@ -368,7 +348,7 @@ export async function deleteSchedule(id: string): Promise<void> {
 }
 
 function calculateNextRun(
-  schedule: Omit<ReportSchedule, 'id' | 'lastRun' | 'nextRun'> | ReportSchedule,
+  schedule: Omit<ReportSchedule, 'id' | 'lastRun' | 'nextRun'> | ReportSchedule
 ): string {
   const now = new Date()
   const [hours, minutes] = schedule.time.split(':').map(Number)
@@ -448,10 +428,7 @@ export async function getReportStats(): Promise<ReportStats> {
 
   // Get recent executions (last 10)
   const recentExecutions = allExecutions
-    .sort(
-      (a, b) =>
-        new Date(b.startedAt).getTime() - new Date(a.startedAt).getTime(),
-    )
+    .sort((a, b) => new Date(b.startedAt).getTime() - new Date(a.startedAt).getTime())
     .slice(0, 10)
 
   return {
@@ -546,9 +523,7 @@ export async function seedReportData(): Promise<void> {
 // ============================================================================
 
 // Template aliases
-export const getReportTemplates = async (
-  category?: string,
-): Promise<ReportTemplate[]> => {
+export const getReportTemplates = async (category?: string): Promise<ReportTemplate[]> => {
   const allTemplates = await getTemplates()
   if (category) {
     return allTemplates.filter((t) => t.category === category)
@@ -556,9 +531,7 @@ export const getReportTemplates = async (
   return allTemplates
 }
 
-export const getReportTemplateById = async (
-  id: string,
-): Promise<ReportTemplate> => {
+export const getReportTemplateById = async (id: string): Promise<ReportTemplate> => {
   const template = await getTemplate(id)
   if (!template) {
     throw new Error(`Template not found: ${id}`)
@@ -570,7 +543,7 @@ export const createReportTemplate = createTemplate
 
 export const updateReportTemplate = async (
   id: string,
-  updates: UpdateReportTemplateInput,
+  updates: UpdateReportTemplateInput
 ): Promise<ReportTemplate> => {
   const updated = await updateTemplate(id, updates)
   if (!updated) {
@@ -595,14 +568,12 @@ export const getScheduleById = async (id: string): Promise<ReportSchedule> => {
 // Execution aliases
 export const getReportExecutions = async (
   reportId?: string,
-  options?: GetReportExecutionsOptions,
+  options?: GetReportExecutionsOptions
 ): Promise<ReportExecution[]> => {
   return getExecutions({ reportId, ...options })
 }
 
-export const getReportExecution = async (
-  id: string,
-): Promise<ReportExecution> => {
+export const getReportExecution = async (id: string): Promise<ReportExecution> => {
   const execution = await getExecution(id)
   if (!execution) {
     throw new Error(`Execution not found: ${id}`)
@@ -615,9 +586,7 @@ export const getExecutionById = getReportExecution
 // Download function for client-side use
 export const downloadReport = async (executionId: string): Promise<Blob> => {
   // For client-side, fetch from the API endpoint
-  const response = await fetch(
-    `/api/reports/executions/${executionId}/download`,
-  )
+  const response = await fetch(`/api/reports/executions/${executionId}/download`)
   if (!response.ok) {
     throw new Error('Report file not found')
   }

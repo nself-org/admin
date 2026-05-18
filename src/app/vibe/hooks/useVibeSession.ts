@@ -75,9 +75,7 @@ export function useVibeSession(): UseVibeSessionReturn {
 
     // Max 3 sessions per user (enforced by API, but check client-side too)
     if (sessionCountRef.current >= 3) {
-      setError(
-        'Maximum 3 active sessions reached. Close an existing session first.',
-      )
+      setError('Maximum 3 active sessions reached. Close an existing session first.')
       return
     }
 
@@ -153,7 +151,7 @@ export function useVibeSession(): UseVibeSessionReturn {
         setError(err instanceof Error ? err.message : 'Generation failed')
       }
     },
-    [session],
+    [session]
   )
 
   const applyGeneration = useCallback(
@@ -197,9 +195,7 @@ export function useVibeSession(): UseVibeSessionReturn {
 
         const result = (await res.json()) as { applied_at: string }
         setGeneration((prev) =>
-          prev
-            ? { ...prev, applied_at: result.applied_at, status: 'done' }
-            : null,
+          prev ? { ...prev, applied_at: result.applied_at, status: 'done' } : null
         )
         setApplyStatus('done')
       } catch (err) {
@@ -207,7 +203,7 @@ export function useVibeSession(): UseVibeSessionReturn {
         setError(err instanceof Error ? err.message : 'Apply failed')
       }
     },
-    [generation, session],
+    [generation, session]
   )
 
   const resetGeneration = useCallback(() => {

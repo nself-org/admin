@@ -4,13 +4,7 @@ import { Card } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { PageContent } from '@/components/ui/page-content'
 import { PageHeader } from '@/components/ui/page-header'
-import {
-  AlertCircle,
-  ChevronDown,
-  ChevronRight,
-  ExternalLink,
-  Search,
-} from 'lucide-react'
+import { AlertCircle, ChevronDown, ChevronRight, ExternalLink, Search } from 'lucide-react'
 import { useEffect, useState } from 'react'
 
 interface ErrorCode {
@@ -48,32 +42,25 @@ const CATEGORY_LABELS: Record<string, string> = {
 
 const CATEGORY_COLORS: Record<string, string> = {
   docker: 'bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-300',
-  config:
-    'bg-purple-100 text-purple-800 dark:bg-purple-900/40 dark:text-purple-300',
-  plugin:
-    'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-300',
+  config: 'bg-purple-100 text-purple-800 dark:bg-purple-900/40 dark:text-purple-300',
+  plugin: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-300',
   ssl: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/40 dark:text-yellow-300',
-  network:
-    'bg-orange-100 text-orange-800 dark:bg-orange-900/40 dark:text-orange-300',
+  network: 'bg-orange-100 text-orange-800 dark:bg-orange-900/40 dark:text-orange-300',
   database: 'bg-cyan-100 text-cyan-800 dark:bg-cyan-900/40 dark:text-cyan-300',
-  health:
-    'bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-300',
+  health: 'bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-300',
   init: 'bg-indigo-100 text-indigo-800 dark:bg-indigo-900/40 dark:text-indigo-300',
   domain: 'bg-pink-100 text-pink-800 dark:bg-pink-900/40 dark:text-pink-300',
   auth: 'bg-red-100 text-red-800 dark:bg-red-900/40 dark:text-red-300',
   build: 'bg-slate-100 text-slate-800 dark:bg-slate-900/40 dark:text-slate-300',
   dr: 'bg-rose-100 text-rose-800 dark:bg-rose-900/40 dark:text-rose-300',
   upgrade: 'bg-teal-100 text-teal-800 dark:bg-teal-900/40 dark:text-teal-300',
-  onboarding:
-    'bg-violet-100 text-violet-800 dark:bg-violet-900/40 dark:text-violet-300',
-  import:
-    'bg-fuchsia-100 text-fuchsia-800 dark:bg-fuchsia-900/40 dark:text-fuchsia-300',
+  onboarding: 'bg-violet-100 text-violet-800 dark:bg-violet-900/40 dark:text-violet-300',
+  import: 'bg-fuchsia-100 text-fuchsia-800 dark:bg-fuchsia-900/40 dark:text-fuchsia-300',
 }
 
 function getCategoryColor(category: string): string {
   return (
-    CATEGORY_COLORS[category] ??
-    'bg-zinc-100 text-zinc-800 dark:bg-zinc-800 dark:text-zinc-300'
+    CATEGORY_COLORS[category] ?? 'bg-zinc-100 text-zinc-800 dark:bg-zinc-800 dark:text-zinc-300'
   )
 }
 
@@ -95,20 +82,14 @@ function ErrorRow({ entry }: { entry: ErrorCode }) {
         <span className="mt-0.5 shrink-0 font-mono text-sm font-semibold text-zinc-900 dark:text-zinc-100">
           {entry.code}
         </span>
-        <span className="flex-1 text-sm text-zinc-700 dark:text-zinc-300">
-          {entry.summary}
-        </span>
+        <span className="flex-1 text-sm text-zinc-700 dark:text-zinc-300">{entry.summary}</span>
         <span
           className={`shrink-0 rounded px-2 py-0.5 text-xs font-medium ${getCategoryColor(entry.category)}`}
         >
           {getCategoryLabel(entry.category)}
         </span>
         <span className="mt-0.5 ml-1 shrink-0 text-zinc-400">
-          {expanded ? (
-            <ChevronDown className="h-4 w-4" />
-          ) : (
-            <ChevronRight className="h-4 w-4" />
-          )}
+          {expanded ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
         </span>
       </button>
 
@@ -116,25 +97,15 @@ function ErrorRow({ entry }: { entry: ErrorCode }) {
         <div className="border-t border-zinc-100 bg-zinc-50/60 px-4 py-3 dark:border-zinc-800 dark:bg-white/[0.02]">
           <dl className="space-y-2 text-sm">
             <div>
-              <dt className="font-medium text-zinc-500 dark:text-zinc-400">
-                Why
-              </dt>
-              <dd className="mt-0.5 text-zinc-700 dark:text-zinc-300">
-                {entry.why}
-              </dd>
+              <dt className="font-medium text-zinc-500 dark:text-zinc-400">Why</dt>
+              <dd className="mt-0.5 text-zinc-700 dark:text-zinc-300">{entry.why}</dd>
             </div>
             <div>
-              <dt className="font-medium text-zinc-500 dark:text-zinc-400">
-                Fix
-              </dt>
-              <dd className="mt-0.5 text-zinc-700 dark:text-zinc-300">
-                {entry.fix}
-              </dd>
+              <dt className="font-medium text-zinc-500 dark:text-zinc-400">Fix</dt>
+              <dd className="mt-0.5 text-zinc-700 dark:text-zinc-300">{entry.fix}</dd>
             </div>
             <div>
-              <dt className="font-medium text-zinc-500 dark:text-zinc-400">
-                Docs
-              </dt>
+              <dt className="font-medium text-zinc-500 dark:text-zinc-400">Docs</dt>
               <dd className="mt-0.5">
                 <a
                   href={`https://docs.nself.org/${entry.docsPath}`}
@@ -182,8 +153,7 @@ export default function ErrorCodesPage() {
   }, [])
 
   const filtered = codes.filter((entry) => {
-    const matchesCategory =
-      selectedCategory === null || entry.category === selectedCategory
+    const matchesCategory = selectedCategory === null || entry.category === selectedCategory
 
     const term = search.trim().toLowerCase()
     if (!term) return matchesCategory
@@ -201,10 +171,7 @@ export default function ErrorCodesPage() {
       <PageHeader
         title="Error Codes"
         description="Reference for all nSelf CLI error codes with causes and fixes."
-        breadcrumbs={[
-          { label: 'Help', href: '/help' },
-          { label: 'Error Codes' },
-        ]}
+        breadcrumbs={[{ label: 'Help', href: '/help' }, { label: 'Error Codes' }]}
       />
       <PageContent>
         <div className="space-y-6">
@@ -240,9 +207,7 @@ export default function ErrorCodesPage() {
               <button
                 key={cat}
                 type="button"
-                onClick={() =>
-                  setSelectedCategory((prev) => (prev === cat ? null : cat))
-                }
+                onClick={() => setSelectedCategory((prev) => (prev === cat ? null : cat))}
                 className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
                   selectedCategory === cat
                     ? 'bg-indigo-600 text-white'
@@ -275,9 +240,7 @@ export default function ErrorCodesPage() {
 
           {!loading && !error && filtered.length === 0 && (
             <Card className="p-6">
-              <p className="text-sm text-zinc-500">
-                No error codes match your search.
-              </p>
+              <p className="text-sm text-zinc-500">No error codes match your search.</p>
             </Card>
           )}
 
@@ -288,9 +251,7 @@ export default function ErrorCodesPage() {
                   {filtered.length} {filtered.length === 1 ? 'code' : 'codes'}
                   {search.trim() || selectedCategory ? ' matching' : ' total'}
                 </span>
-                <span className="text-xs text-zinc-400">
-                  Click a row to see details
-                </span>
+                <span className="text-xs text-zinc-400">Click a row to see details</span>
               </div>
               {filtered.map((entry) => (
                 <ErrorRow key={entry.code} entry={entry} />

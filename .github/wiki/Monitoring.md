@@ -449,7 +449,7 @@ app.use((req, res, next) => {
     const duration = (Date.now() - start) / 1000
     httpDuration.observe(
       { method: req.method, route: req.path, status_code: res.statusCode },
-      duration,
+      duration
     )
   })
   next()

@@ -8,7 +8,7 @@ interface RouteContext {
 // GET /api/reports/executions/[id]/download - Download report file
 export async function GET(
   _request: NextRequest,
-  context: RouteContext,
+  context: RouteContext
 ): Promise<Response | NextResponse> {
   try {
     const { id } = await context.params
@@ -16,10 +16,7 @@ export async function GET(
     // Get execution to verify it exists and is completed
     const execution = await reports.getExecutionById(id)
     if (!execution) {
-      return NextResponse.json(
-        { success: false, error: 'Execution not found' },
-        { status: 404 },
-      )
+      return NextResponse.json({ success: false, error: 'Execution not found' }, { status: 404 })
     }
 
     if (execution.status !== 'completed') {
@@ -28,26 +25,20 @@ export async function GET(
           success: false,
           error: `Report is not ready for download. Current status: ${execution.status}`,
         },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
     // Check if report has expired
     if (execution.expiresAt && new Date(execution.expiresAt) < new Date()) {
-      return NextResponse.json(
-        { success: false, error: 'Report has expired' },
-        { status: 410 },
-      )
+      return NextResponse.json({ success: false, error: 'Report has expired' }, { status: 410 })
     }
 
     // Get the file data
     const file = await reports.getExecutionFile(id)
 
     if (!file) {
-      return NextResponse.json(
-        { success: false, error: 'File not found' },
-        { status: 404 },
-      )
+      return NextResponse.json({ success: false, error: 'File not found' }, { status: 404 })
     }
 
     // Return the file with proper headers
@@ -72,10 +63,9 @@ export async function GET(
     return NextResponse.json(
       {
         success: false,
-        error:
-          error instanceof Error ? error.message : 'Failed to download report',
+        error: error instanceof Error ? error.message : 'Failed to download report',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

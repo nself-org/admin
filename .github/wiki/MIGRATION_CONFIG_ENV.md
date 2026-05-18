@@ -107,9 +107,7 @@ Variables are now auto-saved to localStorage as drafts:
 Click column headers to sort by key or value:
 
 ```tsx
-<th onClick={() => handleSort('key')}>
-  Key {sortColumn === 'key' && <SortIcon />}
-</th>
+<th onClick={() => handleSort('key')}>Key {sortColumn === 'key' && <SortIcon />}</th>
 ```
 
 #### Group By Toggle
@@ -117,9 +115,7 @@ Click column headers to sort by key or value:
 Switch between category grouping and flat list:
 
 ```tsx
-<button
-  onClick={() => setGroupBy(groupBy === 'category' ? 'none' : 'category')}
->
+<button onClick={() => setGroupBy(groupBy === 'category' ? 'none' : 'category')}>
   {groupBy === 'category' ? 'Grouped' : 'Flat'}
 </button>
 ```

@@ -33,9 +33,7 @@ async function openBrowser(url: string): Promise<void> {
   } else if (platform === 'linux') {
     await execFileAsync('xdg-open', [url])
   } else {
-    throw new Error(
-      `Unsupported platform for browser open: ${process.platform}`,
-    )
+    throw new Error(`Unsupported platform for browser open: ${process.platform}`)
   }
 }
 
@@ -89,7 +87,7 @@ export async function GET(_request: NextRequest): Promise<NextResponse> {
           error: 'Failed to open browser',
           details: err instanceof Error ? err.message : String(err),
         },
-        { status: 500 },
+        { status: 500 }
       )
     }
 
@@ -102,7 +100,7 @@ export async function GET(_request: NextRequest): Promise<NextResponse> {
         error: 'Failed to initiate pairing',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -118,7 +116,7 @@ export async function DELETE(_request: NextRequest): Promise<NextResponse> {
         error: 'Failed to clear keychain',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

@@ -27,9 +27,7 @@ export default {
           '--tw-prose-invert-headings': theme('colors.white'),
           '--tw-prose-invert-links': theme('colors.emerald.400'),
           '--tw-prose-invert-links-hover': theme('colors.emerald.500'),
-          '--tw-prose-invert-links-underline': theme(
-            'colors.emerald.500 / 0.3',
-          ),
+          '--tw-prose-invert-links-underline': theme('colors.emerald.500 / 0.3'),
           '--tw-prose-invert-bold': theme('colors.white'),
           '--tw-prose-invert-counters': theme('colors.zinc.400'),
           '--tw-prose-invert-bullets': theme('colors.zinc.600'),
@@ -333,8 +331,7 @@ export default {
           '--tw-prose-headings': 'var(--tw-prose-invert-headings)',
           '--tw-prose-links': 'var(--tw-prose-invert-links)',
           '--tw-prose-links-hover': 'var(--tw-prose-invert-links-hover)',
-          '--tw-prose-links-underline':
-            'var(--tw-prose-invert-links-underline)',
+          '--tw-prose-links-underline': 'var(--tw-prose-invert-links-underline)',
           '--tw-prose-bold': 'var(--tw-prose-invert-bold)',
           '--tw-prose-counters': 'var(--tw-prose-invert-counters)',
           '--tw-prose-bullets': 'var(--tw-prose-invert-bullets)',

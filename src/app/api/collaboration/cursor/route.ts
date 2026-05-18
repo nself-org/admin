@@ -4,11 +4,7 @@
  */
 
 import type { CollaborationCursorItem } from '@/lib/database'
-import {
-  getDocumentCursors,
-  removeCursor,
-  updateCursorPosition,
-} from '@/lib/database'
+import { getDocumentCursors, removeCursor, updateCursorPosition } from '@/lib/database'
 import { requireAuth } from '@/lib/require-auth'
 import { emitCursorPosition, emitTextSelection } from '@/lib/websocket/emitters'
 import { NextRequest, NextResponse } from 'next/server'
@@ -27,7 +23,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
           success: false,
           error: 'documentId is required',
         },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -44,7 +40,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to get cursors',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -66,7 +62,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           success: false,
           error: 'userId, userName, documentId, and position are required',
         },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -92,7 +88,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         color,
         timestamp: new Date().toISOString(),
       },
-      `document-${documentId}`,
+      `document-${documentId}`
     )
 
     // Broadcast selection if present
@@ -106,7 +102,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           color,
           timestamp: new Date().toISOString(),
         },
-        `document-${documentId}`,
+        `document-${documentId}`
       )
     }
 
@@ -121,7 +117,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to update cursor position',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -143,7 +139,7 @@ export async function DELETE(request: NextRequest): Promise<NextResponse> {
           success: false,
           error: 'userId and documentId are required',
         },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -160,7 +156,7 @@ export async function DELETE(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to remove cursor',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

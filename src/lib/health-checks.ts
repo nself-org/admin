@@ -51,9 +51,7 @@ export async function getConnectedProject(): Promise<ConnectedProject | null> {
     const name = resolvedPath.split('/').filter(Boolean).pop() ?? resolvedPath
 
     // Look for matching entry in config to pick up hasuraUrl / authUrl.
-    const configEntry = config?.projects.find(
-      (p) => p.path === resolvedPath || p.name === name,
-    )
+    const configEntry = config?.projects.find((p) => p.path === resolvedPath || p.name === name)
 
     return {
       name: configEntry?.name ?? name,
@@ -68,9 +66,7 @@ export async function getConnectedProject(): Promise<ConnectedProject | null> {
   const { activeProject, projects } = config
 
   // Find the active project entry.
-  const entry = activeProject
-    ? projects.find((p) => p.name === activeProject)
-    : projects[0]
+  const entry = activeProject ? projects.find((p) => p.name === activeProject) : projects[0]
 
   if (!entry) return null
 
@@ -91,11 +87,7 @@ export async function getConnectedProject(): Promise<ConnectedProject | null> {
  * 3. Default: 'local'.
  */
 export async function getActiveEnv(): Promise<'local' | 'staging' | 'prod'> {
-  const validEnvs: ReadonlyArray<'local' | 'staging' | 'prod'> = [
-    'local',
-    'staging',
-    'prod',
-  ]
+  const validEnvs: ReadonlyArray<'local' | 'staging' | 'prod'> = ['local', 'staging', 'prod']
 
   const envVar = process.env.NSELF_ENV
   if (envVar && (validEnvs as ReadonlyArray<string>).includes(envVar)) {
@@ -103,10 +95,7 @@ export async function getActiveEnv(): Promise<'local' | 'staging' | 'prod'> {
   }
 
   const config = await readNselfConfig()
-  if (
-    config?.activeEnv &&
-    (validEnvs as ReadonlyArray<string>).includes(config.activeEnv)
-  ) {
+  if (config?.activeEnv && (validEnvs as ReadonlyArray<string>).includes(config.activeEnv)) {
     return config.activeEnv as 'local' | 'staging' | 'prod'
   }
 

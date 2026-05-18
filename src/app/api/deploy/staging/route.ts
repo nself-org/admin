@@ -18,11 +18,7 @@ const VALID_LINES = /^\d{1,4}$/
 const VALID_FILE_PATH = /^[a-zA-Z0-9_\-./]+$/
 
 // Validate input against pattern
-function validateInput(
-  value: string | undefined,
-  pattern: RegExp,
-  name: string,
-): string | null {
+function validateInput(value: string | undefined, pattern: RegExp, name: string): string | null {
   if (!value) return null
   if (!pattern.test(value)) {
     throw new Error(`Invalid ${name}: contains disallowed characters`)
@@ -37,22 +33,15 @@ export async function GET(): Promise<NextResponse> {
     const nselfPath = await findNselfPath()
 
     if (!nselfPath) {
-      return NextResponse.json(
-        { success: false, error: 'nself CLI not found' },
-        { status: 500 },
-      )
+      return NextResponse.json({ success: false, error: 'nself CLI not found' }, { status: 500 })
     }
 
     try {
-      const { stdout, stderr } = await execFileAsync(
-        nselfPath,
-        ['staging', 'status'],
-        {
-          cwd: projectPath,
-          env: { ...process.env, PATH: getEnhancedPath() },
-          timeout: 30000,
-        },
-      )
+      const { stdout, stderr } = await execFileAsync(nselfPath, ['staging', 'status'], {
+        cwd: projectPath,
+        env: { ...process.env, PATH: getEnhancedPath() },
+        timeout: 30000,
+      })
 
       return NextResponse.json({
         success: true,
@@ -75,7 +64,7 @@ export async function GET(): Promise<NextResponse> {
         error: 'Failed to get staging status',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -92,10 +81,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     const nselfPath = await findNselfPath()
 
     if (!nselfPath) {
-      return NextResponse.json(
-        { success: false, error: 'nself CLI not found' },
-        { status: 500 },
-      )
+      return NextResponse.json({ success: false, error: 'nself CLI not found' }, { status: 500 })
     }
 
     // Build args array safely - no string interpolation
@@ -109,7 +95,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         if (!domain) {
           return NextResponse.json(
             { success: false, error: 'Domain is required for init' },
-            { status: 400 },
+            { status: 400 }
           )
         }
         args.push(domain)
@@ -145,7 +131,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           if (file.includes('..')) {
             return NextResponse.json(
               { success: false, error: 'Invalid file path' },
-              { status: 400 },
+              { status: 400 }
             )
           }
           args.push('--file', file)
@@ -169,11 +155,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         if (service) {
           args.push(service)
         }
-        const lines = validateInput(
-          options.lines?.toString(),
-          VALID_LINES,
-          'lines',
-        )
+        const lines = validateInput(options.lines?.toString(), VALID_LINES, 'lines')
         if (lines) {
           args.push('-n', lines)
         }
@@ -196,7 +178,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         const secretAction = validateInput(
           options.secretAction || 'show',
           VALID_SECRET_ACTION,
-          'secretAction',
+          'secretAction'
         )
         if (secretAction) {
           args.push(secretAction)
@@ -210,7 +192,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       default:
         return NextResponse.json(
           { success: false, error: `Unknown action: ${action}` },
-          { status: 400 },
+          { status: 400 }
         )
     }
 
@@ -240,7 +222,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         stdout: execError.stdout || '',
         stderr: execError.stderr || '',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

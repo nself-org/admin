@@ -45,7 +45,7 @@ export async function GET(): Promise<NextResponse> {
         details: error instanceof Error ? error.message : 'Unknown error',
         code: ErrorCode.DB_RESTORE_FAILED,
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -64,7 +64,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           error: 'Backup file is required',
           code: ErrorCode.VALIDATION_ERROR,
         },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -81,7 +81,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           error: 'Backup file not found',
           code: ErrorCode.BACKUP_NOT_FOUND,
         },
-        { status: 404 },
+        { status: 404 }
       )
     }
 
@@ -96,7 +96,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           details: result.stderr || result.error,
           code: ErrorCode.DB_RESTORE_FAILED,
         },
-        { status: 500 },
+        { status: 500 }
       )
     }
 
@@ -116,7 +116,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         details: error instanceof Error ? error.message : 'Unknown error',
         code: ErrorCode.DB_RESTORE_FAILED,
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

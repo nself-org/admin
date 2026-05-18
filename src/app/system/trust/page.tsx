@@ -70,18 +70,18 @@ function TrustContent() {
   // State 5: Offline
   if (offline) {
     return (
-      <div className="p-6 space-y-4">
-        <div className="flex items-center gap-3 p-4 rounded-lg bg-yellow-500/10 border border-yellow-500/30">
-          <WifiOff className="h-5 w-5 text-yellow-500 flex-shrink-0" />
+      <div className="space-y-4 p-6">
+        <div className="flex items-center gap-3 rounded-lg border border-yellow-500/30 bg-yellow-500/10 p-4">
+          <WifiOff className="h-5 w-5 flex-shrink-0 text-yellow-500" />
           <div>
             <p className="font-medium text-yellow-400">Cannot reach nself CLI</p>
-            <p className="text-sm text-gray-400 mt-0.5">
+            <p className="mt-0.5 text-sm text-gray-400">
               Verify the nself binary is on PATH and your stack is running.
             </p>
           </div>
         </div>
         <Button onClick={fetchTrust} disabled={loading} variant="secondary" size="sm">
-          <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
+          <RefreshCw className={`mr-2 h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
           Retry
         </Button>
       </div>
@@ -91,16 +91,16 @@ function TrustContent() {
   // State 4: Error
   if (error && !data) {
     return (
-      <div className="p-6 space-y-4">
-        <div className="flex items-center gap-3 p-4 rounded-lg bg-red-500/10 border border-red-500/30">
-          <AlertTriangle className="h-5 w-5 text-red-400 flex-shrink-0" />
+      <div className="space-y-4 p-6">
+        <div className="flex items-center gap-3 rounded-lg border border-red-500/30 bg-red-500/10 p-4">
+          <AlertTriangle className="h-5 w-5 flex-shrink-0 text-red-400" />
           <div>
             <p className="font-medium text-red-400">Failed to load trust status</p>
-            <p className="text-sm text-gray-400 mt-0.5">{error}</p>
+            <p className="mt-0.5 text-sm text-gray-400">{error}</p>
           </div>
         </div>
         <Button onClick={fetchTrust} disabled={loading} variant="secondary" size="sm">
-          <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
+          <RefreshCw className={`mr-2 h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
           Retry
         </Button>
       </div>
@@ -111,10 +111,16 @@ function TrustContent() {
   if (!data) {
     return (
       <div className="p-6 text-center text-gray-400">
-        <ShieldCheck className="h-8 w-8 mx-auto mb-2 opacity-50" />
+        <ShieldCheck className="mx-auto mb-2 h-8 w-8 opacity-50" />
         <p>No trust status available.</p>
-        <Button onClick={fetchTrust} disabled={loading} variant="secondary" size="sm" className="mt-3">
-          <RefreshCw className="h-4 w-4 mr-2" />
+        <Button
+          onClick={fetchTrust}
+          disabled={loading}
+          variant="secondary"
+          size="sm"
+          className="mt-3"
+        >
+          <RefreshCw className="mr-2 h-4 w-4" />
           Load Status
         </Button>
       </div>
@@ -155,53 +161,55 @@ function TrustContent() {
 
   // States 6 + 7: Success
   return (
-    <div className="p-6 space-y-6">
+    <div className="space-y-6 p-6">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-xl font-semibold text-white">Trust & Certificates</h2>
-          <p className="text-sm text-gray-400 mt-1">
+          <p className="mt-1 text-sm text-gray-400">
             Manage trusted certificates and local networking
           </p>
         </div>
         <Button onClick={fetchTrust} disabled={loading} variant="secondary" size="sm">
           {/* State 2: Refresh spinner */}
-          <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
+          <RefreshCw className={`mr-2 h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
           {loading ? 'Refreshing…' : 'Refresh'}
         </Button>
       </div>
 
       {/* Overall banner */}
       {allActive ? (
-        <div className="flex items-center gap-3 p-4 rounded-lg bg-green-500/10 border border-green-500/30">
-          <CheckCircle className="h-5 w-5 text-green-400 flex-shrink-0" />
-          <p className="text-green-400 font-medium">All trust components are active</p>
+        <div className="flex items-center gap-3 rounded-lg border border-green-500/30 bg-green-500/10 p-4">
+          <CheckCircle className="h-5 w-5 flex-shrink-0 text-green-400" />
+          <p className="font-medium text-green-400">All trust components are active</p>
         </div>
       ) : (
-        <div className="flex items-center gap-3 p-4 rounded-lg bg-yellow-500/10 border border-yellow-500/30">
-          <AlertTriangle className="h-5 w-5 text-yellow-400 flex-shrink-0" />
+        <div className="flex items-center gap-3 rounded-lg border border-yellow-500/30 bg-yellow-500/10 p-4">
+          <AlertTriangle className="h-5 w-5 flex-shrink-0 text-yellow-400" />
           <div>
-            <p className="text-yellow-400 font-medium">Some trust components are inactive</p>
-            <p className="text-sm text-gray-400 mt-0.5">
-              Run <code className="font-mono text-sky-400">nself trust install</code> to configure all components.
+            <p className="font-medium text-yellow-400">Some trust components are inactive</p>
+            <p className="mt-0.5 text-sm text-gray-400">
+              Run <code className="font-mono text-sky-400">nself trust install</code> to configure
+              all components.
             </p>
           </div>
         </div>
       )}
 
       {/* Trust items */}
-      <div className="rounded-lg border border-white/10 overflow-hidden divide-y divide-white/5">
+      <div className="divide-y divide-white/5 overflow-hidden rounded-lg border border-white/10">
         {items.map((item, i) => (
-          <div key={i} className="flex items-center gap-4 px-4 py-4 hover:bg-white/[0.02] transition-colors">
+          <div
+            key={i}
+            className="flex items-center gap-4 px-4 py-4 transition-colors hover:bg-white/[0.02]"
+          >
             <div className="flex-shrink-0">{item.icon}</div>
-            <div className="flex-1 min-w-0">
+            <div className="min-w-0 flex-1">
               <p className="text-sm font-medium text-white">{item.label}</p>
-              <p className="text-xs text-gray-400 mt-0.5">{item.description}</p>
-              {!item.active && (
-                <p className="text-xs text-gray-500 mt-1 font-mono">{item.hint}</p>
-              )}
+              <p className="mt-0.5 text-xs text-gray-400">{item.description}</p>
+              {!item.active && <p className="mt-1 font-mono text-xs text-gray-500">{item.hint}</p>}
             </div>
-            <div className="flex items-center gap-2 flex-shrink-0">
+            <div className="flex flex-shrink-0 items-center gap-2">
               {item.active ? (
                 <>
                   <CheckCircle className="h-4 w-4 text-green-400" />
@@ -223,12 +231,12 @@ function TrustContent() {
         <div>
           <button
             onClick={() => setShowRaw((v) => !v)}
-            className="text-xs text-gray-500 hover:text-gray-300 transition-colors"
+            className="text-xs text-gray-500 transition-colors hover:text-gray-300"
           >
             {showRaw ? 'Hide' : 'Show'} CLI output
           </button>
           {showRaw && (
-            <pre className="mt-2 p-3 rounded-lg bg-black/40 border border-white/10 text-xs text-gray-300 font-mono whitespace-pre-wrap overflow-auto max-h-48">
+            <pre className="mt-2 max-h-48 overflow-auto rounded-lg border border-white/10 bg-black/40 p-3 font-mono text-xs whitespace-pre-wrap text-gray-300">
               {data.rawOutput}
             </pre>
           )}

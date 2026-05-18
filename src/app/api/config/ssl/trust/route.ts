@@ -80,7 +80,7 @@ export async function GET(): Promise<NextResponse> {
         success: false,
         error: 'Failed to check trust status',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -114,7 +114,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
                 : 'choco install mkcert',
           ],
         },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -149,7 +149,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
               'Then refresh this page.',
             ],
           },
-          { status: 403 },
+          { status: 403 }
         )
       }
 
@@ -169,7 +169,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           'sudo mkcert -install',
         ],
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

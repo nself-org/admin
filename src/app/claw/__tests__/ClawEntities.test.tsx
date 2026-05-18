@@ -80,25 +80,19 @@ describe('EntitiesPage', () => {
   it('renders the Entities header', () => {
     render(<EntitiesPage />)
     expect(screen.getByText('Entities')).toBeInTheDocument()
-    expect(
-      screen.getByText(/People, places, and concepts/i),
-    ).toBeInTheDocument()
+    expect(screen.getByText(/People, places, and concepts/i)).toBeInTheDocument()
   })
 
   it('shows a search input', () => {
     render(<EntitiesPage />)
-    expect(
-      screen.getByPlaceholderText('Search entities...'),
-    ).toBeInTheDocument()
+    expect(screen.getByPlaceholderText('Search entities...')).toBeInTheDocument()
   })
 
   it('renders entity type filter buttons', () => {
     render(<EntitiesPage />)
     expect(screen.getByRole('button', { name: 'All' })).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'person' })).toBeInTheDocument()
-    expect(
-      screen.getByRole('button', { name: 'organization' }),
-    ).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'organization' })).toBeInTheDocument()
   })
 
   // ── State 2: Checking ──────────────────────────────────────────────────────
@@ -199,9 +193,7 @@ describe('EntitiesPage', () => {
     const user = userEvent.setup()
     render(<EntitiesPage />)
     await waitFor(() => {
-      expect(
-        screen.getByRole('button', { name: /Refresh/i }),
-      ).toBeInTheDocument()
+      expect(screen.getByRole('button', { name: /Refresh/i })).toBeInTheDocument()
     })
     const before = mockFetch.mock.calls.length
     await user.click(screen.getByRole('button', { name: /Refresh/i }))

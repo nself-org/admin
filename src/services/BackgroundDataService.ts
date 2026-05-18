@@ -158,12 +158,9 @@ class BackgroundDataService {
 
     try {
       // Quick fetch without stats for responsive updates
-      const response = await fetch(
-        '/api/docker/containers?detailed=true&stats=false',
-        {
-          credentials: 'same-origin',
-        },
-      )
+      const response = await fetch('/api/docker/containers?detailed=true&stats=false', {
+        credentials: 'same-origin',
+      })
       if (response.ok) {
         const data = await response.json()
         if (data.success && Array.isArray(data.data)) {
@@ -199,12 +196,9 @@ class BackgroundDataService {
 
     try {
       // Fetch with stats for CPU/Memory data
-      const response = await fetch(
-        '/api/docker/containers?detailed=true&stats=true',
-        {
-          credentials: 'same-origin',
-        },
-      )
+      const response = await fetch('/api/docker/containers?detailed=true&stats=true', {
+        credentials: 'same-origin',
+      })
       if (response.ok) {
         const data = await response.json()
         if (data.success && Array.isArray(data.data)) {
@@ -215,9 +209,7 @@ class BackgroundDataService {
           // If we have current containers, merge stats; otherwise use new data
           if (currentContainers.length > 0) {
             const updatedContainers = currentContainers.map((container) => {
-              const statsContainer = newContainers.find(
-                (c: any) => c.id === container.id,
-              )
+              const statsContainer = newContainers.find((c: any) => c.id === container.id)
               if (statsContainer) {
                 return { ...container, ...statsContainer }
               }
@@ -252,10 +244,7 @@ class BackgroundDataService {
         fetch('/api/database?action=tables'),
       ])
 
-      const [statsData, tablesData] = await Promise.all([
-        statsRes.json(),
-        tablesRes.json(),
-      ])
+      const [statsData, tablesData] = await Promise.all([statsRes.json(), tablesRes.json()])
 
       const updates: any = {}
       if (statsData.success) updates.databaseStats = statsData.data
@@ -322,10 +311,7 @@ class BackgroundDataService {
             await config.fetcher()
             config.lastFetch = Date.now()
           } catch (err) {
-            console.warn(
-              `[BackgroundDataService] Error updating interval for ${key}:`,
-              err,
-            )
+            console.warn(`[BackgroundDataService] Error updating interval for ${key}:`, err)
           }
         }, interval)
 
@@ -350,10 +336,7 @@ class BackgroundDataService {
               await config.fetcher()
               config.lastFetch = Date.now()
             } catch (err) {
-              console.warn(
-                `[BackgroundDataService] Error during setEnabled for ${key}:`,
-                err,
-              )
+              console.warn(`[BackgroundDataService] Error during setEnabled for ${key}:`, err)
             }
           }, config.interval)
 

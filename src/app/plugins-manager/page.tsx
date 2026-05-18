@@ -17,14 +17,7 @@ import { useCallback, useEffect, useState } from 'react'
 interface NselfPlugin {
   name: string
   version: string
-  tier:
-    | 'free'
-    | 'basic'
-    | 'pro'
-    | 'elite'
-    | 'business'
-    | 'business-plus'
-    | 'enterprise'
+  tier: 'free' | 'basic' | 'pro' | 'elite' | 'business' | 'business-plus' | 'enterprise'
   installed: boolean
   enabled: boolean
   bundle: string | null
@@ -54,9 +47,7 @@ function TierBadge({ tier }: { tier: NselfPlugin['tier'] }) {
             ? 'border-fuchsia-500/40 text-fuchsia-400 bg-fuchsia-500/10'
             : 'border-amber-500/40 text-amber-400 bg-amber-500/10'
   return (
-    <span
-      className={`rounded-full border px-2 py-0.5 text-xs font-medium capitalize ${tone}`}
-    >
+    <span className={`rounded-full border px-2 py-0.5 text-xs font-medium capitalize ${tone}`}>
       {tier.replace('-', ' ')}
     </span>
   )
@@ -114,9 +105,7 @@ function ConfigDrawer({ plugin, onClose, onSave }: ConfigDrawerProps) {
     async function load() {
       setLoading(true)
       try {
-        const res = await fetch(
-          `/api/nself-plugins/${encodeURIComponent(plugin.name)}/config`,
-        )
+        const res = await fetch(`/api/nself-plugins/${encodeURIComponent(plugin.name)}/config`)
         if (!res.ok) throw new Error(`Server ${res.status}`)
         const data = (await res.json()) as { env: Record<string, string> }
         setEnv(data.env)
@@ -151,9 +140,7 @@ function ConfigDrawer({ plugin, onClose, onSave }: ConfigDrawerProps) {
       <div className="glass-card h-full w-full max-w-md overflow-y-auto p-6">
         <div className="mb-4 flex items-center gap-2">
           <Settings className="text-nself-primary h-4 w-4" />
-          <h2 className="text-nself-text text-base font-semibold">
-            Configure {plugin.name}
-          </h2>
+          <h2 className="text-nself-text text-base font-semibold">Configure {plugin.name}</h2>
           <button
             type="button"
             onClick={onClose}
@@ -171,9 +158,7 @@ function ConfigDrawer({ plugin, onClose, onSave }: ConfigDrawerProps) {
         ) : (
           <>
             {Object.keys(env).length === 0 ? (
-              <p className="text-nself-text-muted text-sm">
-                No configuration keys.
-              </p>
+              <p className="text-nself-text-muted text-sm">No configuration keys.</p>
             ) : (
               <div className="space-y-3">
                 {Object.entries(env).map(([key, value]) => (
@@ -188,9 +173,7 @@ function ConfigDrawer({ plugin, onClose, onSave }: ConfigDrawerProps) {
                       id={`cfg-${key}`}
                       type="text"
                       value={value}
-                      onChange={(e) =>
-                        setEnv((prev) => ({ ...prev, [key]: e.target.value }))
-                      }
+                      onChange={(e) => setEnv((prev) => ({ ...prev, [key]: e.target.value }))}
                       className="border-nself-border bg-nself-bg text-nself-text focus:border-nself-primary focus:ring-nself-primary w-full rounded-lg border px-3 py-1.5 font-mono text-xs focus:ring-1 focus:outline-none"
                       autoComplete="off"
                       spellCheck={false}
@@ -253,22 +236,14 @@ function PluginRow({
     <li className="border-nself-border rounded-lg border p-3">
       <div className="flex items-center gap-2">
         <Puzzle className="text-nself-primary h-4 w-4" />
-        <span className="text-nself-text flex-1 truncate text-sm font-semibold">
-          {plugin.name}
-        </span>
-        <span className="text-nself-text-muted font-mono text-xs">
-          v{plugin.version}
-        </span>
+        <span className="text-nself-text flex-1 truncate text-sm font-semibold">{plugin.name}</span>
+        <span className="text-nself-text-muted font-mono text-xs">v{plugin.version}</span>
         <TierBadge tier={plugin.tier} />
         <StatusChip plugin={plugin} />
       </div>
-      <p className="text-nself-text-muted mt-1 pl-6 text-xs">
-        {plugin.description}
-      </p>
+      <p className="text-nself-text-muted mt-1 pl-6 text-xs">{plugin.description}</p>
       {plugin.statusDetail !== undefined && (
-        <p className="mt-1 pl-6 text-xs text-amber-300">
-          {plugin.statusDetail}
-        </p>
+        <p className="mt-1 pl-6 text-xs text-amber-300">{plugin.statusDetail}</p>
       )}
       {plugin.bundle !== null && (
         <p className="text-nself-text-muted mt-1 pl-6 text-xs">
@@ -362,15 +337,14 @@ export default function PluginsManagerPage() {
 
   async function runAction(
     plugin: NselfPlugin,
-    action: 'install' | 'uninstall' | 'update' | 'revoke',
+    action: 'install' | 'uninstall' | 'update' | 'revoke'
   ) {
     setBusyName(plugin.name)
     setError(null)
     try {
-      const res = await fetch(
-        `/api/nself-plugins/${encodeURIComponent(plugin.name)}/${action}`,
-        { method: 'POST' },
-      )
+      const res = await fetch(`/api/nself-plugins/${encodeURIComponent(plugin.name)}/${action}`, {
+        method: 'POST',
+      })
       if (!res.ok) {
         const body = (await res.json().catch(() => ({}))) as { error?: string }
         throw new Error(body.error ?? `Server ${res.status}`)
@@ -385,14 +359,11 @@ export default function PluginsManagerPage() {
 
   async function handleSaveConfig(config: Record<string, string>) {
     if (configTarget === null) return
-    const res = await fetch(
-      `/api/nself-plugins/${encodeURIComponent(configTarget.name)}/config`,
-      {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ env: config }),
-      },
-    )
+    const res = await fetch(`/api/nself-plugins/${encodeURIComponent(configTarget.name)}/config`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ env: config }),
+    })
     if (!res.ok) {
       const body = (await res.json().catch(() => ({}))) as { error?: string }
       throw new Error(body.error ?? `Server ${res.status}`)
@@ -404,9 +375,7 @@ export default function PluginsManagerPage() {
     <div className="mx-auto max-w-4xl space-y-4 p-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="nself-gradient-text text-xl font-semibold">
-            Plugin Management
-          </h1>
+          <h1 className="nself-gradient-text text-xl font-semibold">Plugin Management</h1>
           <p className="text-nself-text-muted text-xs">
             Install, configure, update, and revoke nSelf plugins
           </p>
@@ -458,9 +427,7 @@ export default function PluginsManagerPage() {
       )}
 
       <div className="glass-card p-4">
-        <h2 className="text-nself-text mb-3 text-sm font-semibold">
-          Available Plugins
-        </h2>
+        <h2 className="text-nself-text mb-3 text-sm font-semibold">Available Plugins</h2>
         {loading && data === null ? (
           <div className="flex items-center justify-center py-8">
             <Loader2 className="text-nself-primary h-5 w-5 animate-spin" />

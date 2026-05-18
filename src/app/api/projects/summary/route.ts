@@ -6,8 +6,7 @@ export async function GET() {
     const data = await buildDashboard()
     return NextResponse.json(data)
   } catch (err) {
-    const message =
-      err instanceof Error ? err.message : 'Failed to build dashboard.'
+    const message = err instanceof Error ? err.message : 'Failed to build dashboard.'
     return NextResponse.json({ error: message }, { status: 500 })
   }
 }

@@ -40,7 +40,7 @@ export async function GET(_request: NextRequest): Promise<NextResponse> {
         error: 'Failed to get scaling status',
         details: err.message,
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

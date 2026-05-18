@@ -24,12 +24,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 
     const preferences = await notificationsApi.getPreferences(userId)
 
-    logger.api(
-      'GET',
-      '/api/notifications/preferences',
-      200,
-      Date.now() - startTime,
-    )
+    logger.api('GET', '/api/notifications/preferences', 200, Date.now() - startTime)
 
     return NextResponse.json({
       success: true,
@@ -46,7 +41,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to get notification preferences',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -90,7 +85,7 @@ export async function PUT(request: NextRequest): Promise<NextResponse> {
           success: false,
           error: 'Invalid quietHoursStart format. Use HH:MM (24-hour format)',
         },
-        { status: 400 },
+        { status: 400 }
       )
     }
     if (body.quietHoursEnd && !timeRegex.test(body.quietHoursEnd)) {
@@ -99,7 +94,7 @@ export async function PUT(request: NextRequest): Promise<NextResponse> {
           success: false,
           error: 'Invalid quietHoursEnd format. Use HH:MM (24-hour format)',
         },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -116,16 +111,14 @@ export async function PUT(request: NextRequest): Promise<NextResponse> {
         'general',
       ]
       const providedCategories = Object.keys(body.categories)
-      const invalidCategories = providedCategories.filter(
-        (c) => !validCategories.includes(c),
-      )
+      const invalidCategories = providedCategories.filter((c) => !validCategories.includes(c))
       if (invalidCategories.length > 0) {
         return NextResponse.json(
           {
             success: false,
             error: `Invalid categories: ${invalidCategories.join(', ')}. Valid categories: ${validCategories.join(', ')}`,
           },
-          { status: 400 },
+          { status: 400 }
         )
       }
     }
@@ -134,16 +127,14 @@ export async function PUT(request: NextRequest): Promise<NextResponse> {
     if (body.priorities) {
       const validPriorities = ['low', 'normal', 'high', 'urgent']
       const providedPriorities = Object.keys(body.priorities)
-      const invalidPriorities = providedPriorities.filter(
-        (p) => !validPriorities.includes(p),
-      )
+      const invalidPriorities = providedPriorities.filter((p) => !validPriorities.includes(p))
       if (invalidPriorities.length > 0) {
         return NextResponse.json(
           {
             success: false,
             error: `Invalid priorities: ${invalidPriorities.join(', ')}. Valid priorities: ${validPriorities.join(', ')}`,
           },
-          { status: 400 },
+          { status: 400 }
         )
       }
     }
@@ -158,12 +149,7 @@ export async function PUT(request: NextRequest): Promise<NextResponse> {
       quietHoursEnd: body.quietHoursEnd,
     })
 
-    logger.api(
-      'PUT',
-      '/api/notifications/preferences',
-      200,
-      Date.now() - startTime,
-    )
+    logger.api('PUT', '/api/notifications/preferences', 200, Date.now() - startTime)
     logger.info('Updated notification preferences', { userId })
 
     return NextResponse.json({
@@ -181,7 +167,7 @@ export async function PUT(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to update notification preferences',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

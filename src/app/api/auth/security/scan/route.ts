@@ -26,7 +26,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           error: 'Security scan failed',
           details: result.error || result.stderr || 'Unknown error',
         },
-        { status: 500 },
+        { status: 500 }
       )
     }
 
@@ -41,7 +41,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         error: 'Security scan failed',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

@@ -21,7 +21,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     if (!target || typeof target !== 'string') {
       return NextResponse.json(
         { success: false, error: 'Benchmark target is required' },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -32,7 +32,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           success: false,
           error: `Invalid benchmark target. Valid targets: ${VALID_TARGETS.join(', ')}`,
         },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -52,11 +52,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
     const result = await executeNselfCommand('bench', args, { timeout: 300000 })
 
-    logger.cli(
-      `nself bench run ${target} --json`,
-      result.success,
-      Date.now() - startTime,
-    )
+    logger.cli(`nself bench run ${target} --json`, result.success, Date.now() - startTime)
 
     if (!result.success) {
       return NextResponse.json(
@@ -65,7 +61,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           error: 'Benchmark failed',
           details: result.error || result.stderr,
         },
-        { status: 500 },
+        { status: 500 }
       )
     }
 
@@ -95,7 +91,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to run benchmark',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

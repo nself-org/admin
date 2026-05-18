@@ -1016,7 +1016,7 @@ ws.onopen = () => {
     JSON.stringify({
       type: 'auth',
       token: 'your-jwt-token',
-    }),
+    })
   )
 }
 ```
@@ -1030,7 +1030,7 @@ ws.send(
     type: 'subscribe',
     channel: 'logs',
     service: 'postgres',
-  }),
+  })
 )
 
 // Subscribe to metrics
@@ -1039,7 +1039,7 @@ ws.send(
     type: 'subscribe',
     channel: 'metrics',
     services: ['postgres', 'api'],
-  }),
+  })
 )
 
 // Subscribe to alerts
@@ -1047,7 +1047,7 @@ ws.send(
   JSON.stringify({
     type: 'subscribe',
     channel: 'alerts',
-  }),
+  })
 )
 ```
 
@@ -1232,11 +1232,7 @@ Future versions will use URL versioning:
 ```javascript
 // Allowed origins
 const corsOptions = {
-  origin: [
-    'http://localhost:3000',
-    'http://localhost:3001',
-    'https://your-domain.com',
-  ],
+  origin: ['http://localhost:3000', 'http://localhost:3001', 'https://your-domain.com'],
   credentials: true,
 }
 ```

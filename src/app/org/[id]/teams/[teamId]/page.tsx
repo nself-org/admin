@@ -4,16 +4,7 @@ import { TeamMemberList } from '@/components/org'
 import { DashboardSkeleton } from '@/components/skeletons'
 import { useOrganization } from '@/hooks/useOrganization'
 import { useOrgTeam, useOrgTeams } from '@/hooks/useOrgTeams'
-import {
-  ArrowLeft,
-  Edit2,
-  Save,
-  Settings,
-  Trash2,
-  UserPlus,
-  Users,
-  X,
-} from 'lucide-react'
+import { ArrowLeft, Edit2, Save, Settings, Trash2, UserPlus, Users, X } from 'lucide-react'
 import Link from 'next/link'
 import { useParams, useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
@@ -24,17 +15,8 @@ export default function TeamDetailPage() {
   const orgId = params.id as string
   const teamId = params.teamId as string
 
-  const {
-    org,
-    members,
-    isLoading: orgLoading,
-    error: orgError,
-  } = useOrganization(orgId)
-  const {
-    team,
-    isLoading: teamLoading,
-    error: teamError,
-  } = useOrgTeam(orgId, teamId)
+  const { org, members, isLoading: orgLoading, error: orgError } = useOrganization(orgId)
+  const { team, isLoading: teamLoading, error: teamError } = useOrgTeam(orgId, teamId)
   const { update, remove, addMember, removeMember } = useOrgTeams(orgId)
 
   const [isEditing, setIsEditing] = useState(false)
@@ -58,9 +40,7 @@ export default function TeamDetailPage() {
   if (orgError || teamError || !org || !team) {
     return (
       <div className="rounded-lg border border-red-500/30 bg-red-900/20 p-4">
-        <p className="text-red-400">
-          {orgError || teamError || 'Team not found'}
-        </p>
+        <p className="text-red-400">{orgError || teamError || 'Team not found'}</p>
       </div>
     )
   }
@@ -136,12 +116,8 @@ export default function TeamDetailPage() {
             </div>
           ) : (
             <>
-              <h1 className="mt-4 text-2xl font-semibold text-white">
-                {team.name}
-              </h1>
-              <p className="text-sm text-zinc-400">
-                {team.description || 'No description'}
-              </p>
+              <h1 className="mt-4 text-2xl font-semibold text-white">{team.name}</h1>
+              <p className="text-sm text-zinc-400">{team.description || 'No description'}</p>
             </>
           )}
         </div>
@@ -189,9 +165,7 @@ export default function TeamDetailPage() {
               <Users className="h-5 w-5 text-emerald-400" />
             </div>
             <div>
-              <p className="text-2xl font-semibold text-white">
-                {teamMembers.length}
-              </p>
+              <p className="text-2xl font-semibold text-white">{teamMembers.length}</p>
               <p className="text-xs text-zinc-500">Members</p>
             </div>
           </div>
@@ -203,9 +177,7 @@ export default function TeamDetailPage() {
               <Settings className="h-5 w-5 text-blue-400" />
             </div>
             <div>
-              <p className="text-2xl font-semibold text-white">
-                {team.permissions.length}
-              </p>
+              <p className="text-2xl font-semibold text-white">{team.permissions.length}</p>
               <p className="text-xs text-zinc-500">Permissions</p>
             </div>
           </div>
@@ -217,9 +189,7 @@ export default function TeamDetailPage() {
               <UserPlus className="h-5 w-5 text-yellow-400" />
             </div>
             <div>
-              <p className="text-2xl font-semibold text-white">
-                {availableMembers.length}
-              </p>
+              <p className="text-2xl font-semibold text-white">{availableMembers.length}</p>
               <p className="text-xs text-zinc-500">Available to Add</p>
             </div>
           </div>
@@ -275,9 +245,7 @@ export default function TeamDetailPage() {
 
       {/* Permissions Section */}
       <div className="rounded-lg border border-zinc-700 bg-zinc-800/50 p-6">
-        <h2 className="mb-4 text-lg font-medium text-white">
-          Team Permissions
-        </h2>
+        <h2 className="mb-4 text-lg font-medium text-white">Team Permissions</h2>
         {team.permissions.length > 0 ? (
           <div className="flex flex-wrap gap-2">
             {team.permissions.map((perm) => (
@@ -290,9 +258,7 @@ export default function TeamDetailPage() {
             ))}
           </div>
         ) : (
-          <p className="text-sm text-zinc-500">
-            No specific permissions assigned to this team.
-          </p>
+          <p className="text-sm text-zinc-500">No specific permissions assigned to this team.</p>
         )}
         <Link
           href={`/org/${orgId}/permissions`}

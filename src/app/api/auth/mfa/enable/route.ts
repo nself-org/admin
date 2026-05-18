@@ -17,7 +17,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           error: 'Invalid MFA method',
           details: 'Method must be totp or sms',
         },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -31,7 +31,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           error: 'Failed to enable MFA',
           details: result.error || result.stderr || 'Unknown error',
         },
-        { status: 500 },
+        { status: 500 }
       )
     }
 
@@ -46,7 +46,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to enable MFA',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

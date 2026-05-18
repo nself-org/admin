@@ -39,18 +39,12 @@ export function PageShell({
         <div className="mb-8">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-4xl font-bold text-zinc-900 dark:text-white">
-                {title}
-              </h1>
+              <h1 className="text-4xl font-bold text-zinc-900 dark:text-white">{title}</h1>
               {description && (
-                <p className="mt-2 text-zinc-600 dark:text-zinc-400">
-                  {description}
-                </p>
+                <p className="mt-2 text-zinc-600 dark:text-zinc-400">{description}</p>
               )}
             </div>
-            {actions && (
-              <div className="flex items-center gap-3">{actions}</div>
-            )}
+            {actions && <div className="flex items-center gap-3">{actions}</div>}
           </div>
         </div>
 

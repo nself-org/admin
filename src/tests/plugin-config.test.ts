@@ -35,7 +35,7 @@ jest.mock('lucide-react', () => {
     {},
     {
       get: () => Icon,
-    },
+    }
   )
 })
 
@@ -110,8 +110,7 @@ describe('Plugin config page — /plugins/[name]/config', () => {
     })
 
     // Dynamic import to pick up mocks
-    const { default: PluginConfigPage } =
-      await import('@/app/plugins/[name]/config/page')
+    const { default: PluginConfigPage } = await import('@/app/plugins/[name]/config/page')
     render(React.createElement(PluginConfigPage))
 
     // While loading, the component should render without throwing
@@ -128,8 +127,7 @@ describe('Plugin config page — /plugins/[name]/config', () => {
       mutate: jest.fn(),
     })
 
-    const { default: PluginConfigPage } =
-      await import('@/app/plugins/[name]/config/page')
+    const { default: PluginConfigPage } = await import('@/app/plugins/[name]/config/page')
     render(React.createElement(PluginConfigPage))
 
     // Error state should render gracefully — no unhandled exceptions
@@ -144,8 +142,7 @@ describe('Plugin config page — /plugins/[name]/config', () => {
       mutate: jest.fn(),
     })
 
-    const { default: PluginConfigPage } =
-      await import('@/app/plugins/[name]/config/page')
+    const { default: PluginConfigPage } = await import('@/app/plugins/[name]/config/page')
     render(React.createElement(PluginConfigPage))
 
     // The page should render without throwing
@@ -163,8 +160,7 @@ describe('Plugin config page — /plugins/[name]/config', () => {
       mutate: jest.fn(),
     })
 
-    const { default: PluginConfigPage } =
-      await import('@/app/plugins/[name]/config/page')
+    const { default: PluginConfigPage } = await import('@/app/plugins/[name]/config/page')
     expect(() => render(React.createElement(PluginConfigPage))).not.toThrow()
   })
 
@@ -178,8 +174,7 @@ describe('Plugin config page — /plugins/[name]/config', () => {
       mutate: jest.fn(),
     })
 
-    const { default: PluginConfigPage } =
-      await import('@/app/plugins/[name]/config/page')
+    const { default: PluginConfigPage } = await import('@/app/plugins/[name]/config/page')
     expect(() => render(React.createElement(PluginConfigPage))).not.toThrow()
   })
 
@@ -191,8 +186,7 @@ describe('Plugin config page — /plugins/[name]/config', () => {
       mutate: jest.fn(),
     })
 
-    const { default: PluginConfigPage } =
-      await import('@/app/plugins/[name]/config/page')
+    const { default: PluginConfigPage } = await import('@/app/plugins/[name]/config/page')
     expect(() => render(React.createElement(PluginConfigPage))).not.toThrow()
   })
 })

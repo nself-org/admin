@@ -4,13 +4,7 @@ import { OrgTeamTree, RoleBadge } from '@/components/org'
 import { DashboardSkeleton } from '@/components/skeletons'
 import { useOrganization } from '@/hooks/useOrganization'
 import { useOrgTeams } from '@/hooks/useOrgTeams'
-import {
-  ArrowLeft,
-  MoreHorizontal,
-  Settings,
-  Shield,
-  Users,
-} from 'lucide-react'
+import { ArrowLeft, MoreHorizontal, Settings, Shield, Users } from 'lucide-react'
 import Link from 'next/link'
 import { useParams, useRouter } from 'next/navigation'
 import { useState } from 'react'
@@ -113,26 +107,17 @@ export default function OrgDetailPage() {
             teams={teams}
             members={members}
             onCreateTeam={() => router.push(`/org/${orgId}/teams`)}
-            onEditTeam={(teamId) =>
-              router.push(`/org/${orgId}/teams/${teamId}`)
-            }
+            onEditTeam={(teamId) => router.push(`/org/${orgId}/teams/${teamId}`)}
             onDeleteTeam={() => {}}
-            onSelectTeam={(teamId) =>
-              router.push(`/org/${orgId}/teams/${teamId}`)
-            }
+            onSelectTeam={(teamId) => router.push(`/org/${orgId}/teams/${teamId}`)}
           />
         </div>
 
         <div className="rounded-lg border border-zinc-700 bg-zinc-800/50 p-6 lg:col-span-2">
-          <h2 className="mb-4 text-lg font-medium text-white">
-            Recent Members
-          </h2>
+          <h2 className="mb-4 text-lg font-medium text-white">Recent Members</h2>
           <div className="space-y-3">
             {members.slice(0, 5).map((member) => (
-              <div
-                key={member.id}
-                className="flex items-center justify-between"
-              >
+              <div key={member.id} className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <div className="flex h-8 w-8 items-center justify-center rounded-full bg-zinc-700 text-sm uppercase">
                     {member.name.charAt(0)}

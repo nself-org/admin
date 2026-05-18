@@ -3,16 +3,7 @@
 import { Button } from '@/components/Button'
 import { HeroPattern } from '@/components/HeroPattern'
 import { ListSkeleton } from '@/components/skeletons'
-import {
-  Check,
-  ExternalLink,
-  GitBranch,
-  Github,
-  Loader2,
-  Puzzle,
-  Settings,
-  X,
-} from 'lucide-react'
+import { Check, ExternalLink, GitBranch, Github, Loader2, Puzzle, Settings, X } from 'lucide-react'
 import { Suspense, useState } from 'react'
 
 interface Integration {
@@ -47,9 +38,7 @@ function SystemIntegrationsContent() {
   const connectIntegration = async (id: string) => {
     setConnecting(id)
     await new Promise((resolve) => setTimeout(resolve, 1500))
-    setIntegrations((prev) =>
-      prev.map((i) => (i.id === id ? { ...i, connected: true } : i)),
-    )
+    setIntegrations((prev) => prev.map((i) => (i.id === id ? { ...i, connected: true } : i)))
     setConnecting(null)
   }
 
@@ -100,9 +89,7 @@ function SystemIntegrationsContent() {
 
                 <Button
                   onClick={() => connectIntegration(integration.id)}
-                  disabled={
-                    integration.connected || connecting === integration.id
-                  }
+                  disabled={integration.connected || connecting === integration.id}
                   className="w-full text-sm"
                   variant={integration.connected ? 'outline' : 'primary'}
                 >

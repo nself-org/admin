@@ -26,9 +26,7 @@ export function Accordion({
   defaultOpen = [],
   className,
 }: AccordionProps) {
-  const [openItems, setOpenItems] = React.useState<Set<string>>(
-    new Set(defaultOpen),
-  )
+  const [openItems, setOpenItems] = React.useState<Set<string>>(new Set(defaultOpen))
 
   const toggleItem = (id: string) => {
     setOpenItems((prev) => {
@@ -59,12 +57,7 @@ export function Accordion({
               className="flex w-full items-center justify-between bg-white px-4 py-3 text-left text-sm font-medium transition-colors hover:bg-zinc-50 dark:bg-zinc-950 dark:hover:bg-zinc-900"
             >
               <span>{item.title}</span>
-              <ChevronDown
-                className={cn(
-                  'h-4 w-4 transition-transform',
-                  isOpen && 'rotate-180',
-                )}
-              />
+              <ChevronDown className={cn('h-4 w-4 transition-transform', isOpen && 'rotate-180')} />
             </button>
             {isOpen && (
               <div className="border-t border-zinc-200 bg-white px-4 py-3 text-sm text-zinc-600 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-400">

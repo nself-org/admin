@@ -112,25 +112,12 @@ export function ResourceUsage({
     <div className={cn('flex flex-col', sizes.container, className)}>
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-1.5">
-          <Icon
-            className={cn(sizes.icon, 'text-zinc-500 dark:text-zinc-400')}
-            aria-hidden="true"
-          />
-          <span
-            className={cn(
-              sizes.text,
-              'font-medium text-zinc-700 dark:text-zinc-300',
-            )}
-          >
+          <Icon className={cn(sizes.icon, 'text-zinc-500 dark:text-zinc-400')} aria-hidden="true" />
+          <span className={cn(sizes.text, 'font-medium text-zinc-700 dark:text-zinc-300')}>
             {displayLabel}
           </span>
         </div>
-        <div
-          className={cn(
-            sizes.text,
-            'font-semibold text-zinc-900 dark:text-zinc-100',
-          )}
-        >
+        <div className={cn(sizes.text, 'font-semibold text-zinc-900 dark:text-zinc-100')}>
           {percentage.toFixed(0)}%
         </div>
       </div>
@@ -138,7 +125,7 @@ export function ResourceUsage({
       <div
         className={cn(
           sizes.bar,
-          'w-full overflow-hidden rounded-full bg-zinc-200 dark:bg-zinc-700',
+          'w-full overflow-hidden rounded-full bg-zinc-200 dark:bg-zinc-700'
         )}
         role="progressbar"
         aria-valuenow={percentage}
@@ -147,10 +134,7 @@ export function ResourceUsage({
         aria-label={`${displayLabel} usage: ${percentage.toFixed(0)}%`}
       >
         <div
-          className={cn(
-            'h-full transition-all duration-300',
-            getColorClasses(percentage),
-          )}
+          className={cn('h-full transition-all duration-300', getColorClasses(percentage))}
           style={{ width: `${Math.min(percentage, 100)}%` }}
         />
       </div>

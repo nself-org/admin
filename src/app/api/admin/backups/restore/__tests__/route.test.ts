@@ -43,7 +43,7 @@ describe('POST /api/admin/backups/restore', () => {
     expect(mockExecFileSync).toHaveBeenCalledWith(
       'nself',
       ['backup', 'restore', '--', 'backup-2026-05-15.sql.gz'],
-      expect.objectContaining({ encoding: 'utf-8' }),
+      expect.objectContaining({ encoding: 'utf-8' })
     )
   })
 
@@ -75,17 +75,14 @@ describe('POST /api/admin/backups/restore', () => {
     'file\x00null',
   ]
 
-  it.each(maliciousFilenames)(
-    'rejects malicious filename %j with HTTP 400',
-    async (filename) => {
-      const res = await POST(makeRequest({ filename }))
-      const data = await res.json()
+  it.each(maliciousFilenames)('rejects malicious filename %j with HTTP 400', async (filename) => {
+    const res = await POST(makeRequest({ filename }))
+    const data = await res.json()
 
-      expect(res.status).toBe(400)
-      expect(data.error).toBe('Invalid filename')
-      expect(mockExecFileSync).not.toHaveBeenCalled()
-    },
-  )
+    expect(res.status).toBe(400)
+    expect(data.error).toBe('Invalid filename')
+    expect(mockExecFileSync).not.toHaveBeenCalled()
+  })
 
   // ── Missing / empty filename ──────────────────────────────────────────────
 

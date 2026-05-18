@@ -18,13 +18,7 @@ import { ThemeToggle } from '@/components/ThemeToggle'
 import { useAuth } from '@/contexts/AuthContext'
 import { CloseButton } from '@headlessui/react'
 
-function TopLevelNavItem({
-  href,
-  children,
-}: {
-  href: string
-  children: React.ReactNode
-}) {
+function TopLevelNavItem({ href, children }: { href: string; children: React.ReactNode }) {
   return (
     <li>
       <Link
@@ -81,11 +75,10 @@ export const Header = forwardRef<
       className={clsx(
         className,
         'fixed inset-x-0 top-0 z-50 flex h-14 items-center justify-between gap-12 px-4 transition sm:px-6 lg:left-72 lg:z-30 lg:px-8 xl:left-80',
-        !isInsideMobileNavigation &&
-          'backdrop-blur-xs lg:left-72 xl:left-80 dark:backdrop-blur-sm',
+        !isInsideMobileNavigation && 'backdrop-blur-xs lg:left-72 xl:left-80 dark:backdrop-blur-sm',
         isInsideMobileNavigation
           ? 'bg-white dark:bg-zinc-900'
-          : 'bg-white/(--bg-opacity-light) dark:bg-zinc-900/(--bg-opacity-dark)',
+          : 'bg-white/(--bg-opacity-light) dark:bg-zinc-900/(--bg-opacity-dark)'
       )}
       style={
         {
@@ -97,8 +90,7 @@ export const Header = forwardRef<
       <div
         className={clsx(
           'absolute inset-x-0 top-full h-px transition',
-          (isInsideMobileNavigation || !mobileNavIsOpen) &&
-            'bg-zinc-900/7.5 dark:bg-white/7.5',
+          (isInsideMobileNavigation || !mobileNavIsOpen) && 'bg-zinc-900/7.5 dark:bg-white/7.5'
         )}
       />
       <AdvancedSearch />
@@ -122,11 +114,7 @@ export const Header = forwardRef<
           <ThemeToggle />
         </div>
         <div className="hidden min-[416px]:contents">
-          {isAuthenticated ? (
-            <LogoutButton />
-          ) : (
-            <Button href="/login">Sign in</Button>
-          )}
+          {isAuthenticated ? <LogoutButton /> : <Button href="/login">Sign in</Button>}
         </div>
       </div>
     </motion.div>

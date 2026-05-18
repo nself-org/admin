@@ -60,7 +60,7 @@ async function generateEnvContent(data: SetupData): Promise<string> {
   env.push('POSTGRES_DB=nself')
   env.push('POSTGRES_USER=postgres')
   env.push(
-    `POSTGRES_PASSWORD=${data.databaseConfig?.customPassword && data.databaseConfig?.password ? data.databaseConfig.password : 'nself-dev-password'}`,
+    `POSTGRES_PASSWORD=${data.databaseConfig?.customPassword && data.databaseConfig?.password ? data.databaseConfig.password : 'nself-dev-password'}`
   )
   env.push('POSTGRES_EXTENSIONS=uuid-ossp')
   env.push('')
@@ -69,9 +69,7 @@ async function generateEnvContent(data: SetupData): Promise<string> {
   env.push('# Hasura GraphQL Engine')
   env.push('HASURA_VERSION=v2.44.0')
   env.push(`HASURA_GRAPHQL_ADMIN_SECRET=${generateSecureSecret()}`)
-  env.push(
-    `HASURA_JWT_KEY=${data.authConfig?.jwtSecret || generateSecureSecret(64)}`,
-  )
+  env.push(`HASURA_JWT_KEY=${data.authConfig?.jwtSecret || generateSecureSecret(64)}`)
   env.push('HASURA_JWT_TYPE=HS256')
   env.push('HASURA_GRAPHQL_ENABLE_CONSOLE=true')
   env.push(`HASURA_ROUTE=api.${data.baseDomain || 'local.nself.org'}`)
@@ -91,12 +89,8 @@ async function generateEnvContent(data: SetupData): Promise<string> {
   env.push('STORAGE_VERSION=0.6.1')
   env.push(`STORAGE_ROUTE=storage.${data.baseDomain || 'local.nself.org'}`)
   env.push('MINIO_VERSION=latest')
-  env.push(
-    `S3_ACCESS_KEY=${data.storageConfig?.accessKey || generateSecureSecret(16)}`,
-  )
-  env.push(
-    `S3_SECRET_KEY=${data.storageConfig?.secretKey || generateSecureSecret(32)}`,
-  )
+  env.push(`S3_ACCESS_KEY=${data.storageConfig?.accessKey || generateSecureSecret(16)}`)
+  env.push(`S3_SECRET_KEY=${data.storageConfig?.secretKey || generateSecureSecret(32)}`)
   env.push(`S3_BUCKET=${data.storageConfig?.bucket || 'nself'}`)
   env.push('')
 
@@ -107,19 +101,15 @@ async function generateEnvContent(data: SetupData): Promise<string> {
 
   // Optional Services
   env.push('# Optional Services')
-  env.push(
-    `FUNCTIONS_ENABLED=${data.optionalServices?.functions ? 'true' : 'false'}`,
-  )
-  env.push(
-    `DASHBOARD_ENABLED=${data.optionalServices?.dashboard ? 'true' : 'false'}`,
-  )
+  env.push(`FUNCTIONS_ENABLED=${data.optionalServices?.functions ? 'true' : 'false'}`)
+  env.push(`DASHBOARD_ENABLED=${data.optionalServices?.dashboard ? 'true' : 'false'}`)
   env.push(`REDIS_ENABLED=${data.optionalServices?.redis ? 'true' : 'false'}`)
   env.push('')
 
   // Microservices Configuration
   env.push('# Microservices Configuration')
   env.push(
-    `SERVICES_ENABLED=${data.optionalServices?.nestjs || data.optionalServices?.golang || data.optionalServices?.python ? 'true' : 'false'}`,
+    `SERVICES_ENABLED=${data.optionalServices?.nestjs || data.optionalServices?.golang || data.optionalServices?.python ? 'true' : 'false'}`
   )
   env.push(`NESTJS_ENABLED=${data.optionalServices?.nestjs ? 'true' : 'false'}`)
   env.push('BULLMQ_ENABLED=false')
@@ -131,7 +121,7 @@ async function generateEnvContent(data: SetupData): Promise<string> {
   env.push('# Admin UI Configuration')
   env.push('ADMIN_ENABLED=true')
   env.push(
-    `ADMIN_PASSWORD_HASH=${data.adminPassword ? await hashPassword(data.adminPassword) : ''}`,
+    `ADMIN_PASSWORD_HASH=${data.adminPassword ? await hashPassword(data.adminPassword) : ''}`
   )
   env.push('')
 
@@ -177,7 +167,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         message: 'Failed to generate configuration file',
         error: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

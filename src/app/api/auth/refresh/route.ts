@@ -13,10 +13,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     const sessionToken = cookieStore.get('session')?.value
 
     if (!sessionToken) {
-      return NextResponse.json(
-        { success: false, error: 'No session found' },
-        { status: 401 },
-      )
+      return NextResponse.json({ success: false, error: 'No session found' }, { status: 401 })
     }
 
     // Refresh the session
@@ -25,7 +22,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     if (!session) {
       return NextResponse.json(
         { success: false, error: 'Failed to refresh session' },
-        { status: 401 },
+        { status: 401 }
       )
     }
 
@@ -51,7 +48,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to refresh session',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

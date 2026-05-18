@@ -12,11 +12,7 @@ import {
   WifiOff,
 } from 'lucide-react'
 import { useCallback, useEffect, useState } from 'react'
-import type {
-  RemoteConnection,
-  RemoteMode,
-  TestConnectionResult,
-} from './types'
+import type { RemoteConnection, RemoteMode, TestConnectionResult } from './types'
 
 // ---------------------------------------------------------------------------
 // Add-connection form
@@ -28,11 +24,7 @@ interface AddConnectionFormProps {
   loading: boolean
 }
 
-function AddConnectionForm({
-  onAdd,
-  onCancel,
-  loading,
-}: AddConnectionFormProps) {
+function AddConnectionForm({ onAdd, onCancel, loading }: AddConnectionFormProps) {
   const [name, setName] = useState('')
   const [mode, setMode] = useState<RemoteMode>('ssh')
   const [host, setHost] = useState('')
@@ -84,9 +76,7 @@ function AddConnectionForm({
         active: false,
       })
     } catch (err) {
-      setFormError(
-        err instanceof Error ? err.message : 'Failed to add connection.',
-      )
+      setFormError(err instanceof Error ? err.message : 'Failed to add connection.')
     }
   }
 
@@ -108,10 +98,7 @@ function AddConnectionForm({
 
       {/* Name */}
       <div>
-        <label
-          htmlFor="rc-name"
-          className="text-nself-text-muted mb-1 block text-xs font-medium"
-        >
+        <label htmlFor="rc-name" className="text-nself-text-muted mb-1 block text-xs font-medium">
           Display name
         </label>
         <input
@@ -128,10 +115,7 @@ function AddConnectionForm({
 
       {/* Mode selector */}
       <div>
-        <label
-          htmlFor="rc-mode"
-          className="text-nself-text-muted mb-1 block text-xs font-medium"
-        >
+        <label htmlFor="rc-mode" className="text-nself-text-muted mb-1 block text-xs font-medium">
           Mode
         </label>
         <div className="relative">
@@ -150,10 +134,7 @@ function AddConnectionForm({
 
       {/* Host */}
       <div>
-        <label
-          htmlFor="rc-host"
-          className="text-nself-text-muted mb-1 block text-xs font-medium"
-        >
+        <label htmlFor="rc-host" className="text-nself-text-muted mb-1 block text-xs font-medium">
           Host
         </label>
         <input
@@ -232,10 +213,7 @@ function AddConnectionForm({
       {/* API-specific fields */}
       {mode === 'api' && (
         <div>
-          <label
-            htmlFor="rc-api"
-            className="text-nself-text-muted mb-1 block text-xs font-medium"
-          >
+          <label htmlFor="rc-api" className="text-nself-text-muted mb-1 block text-xs font-medium">
             API endpoint
           </label>
           <input
@@ -309,9 +287,7 @@ function ConnectionRow({
   actionLoading,
 }: ConnectionRowProps) {
   const modeLabel =
-    conn.mode === 'ssh'
-      ? `SSH ${conn.sshUser}@${conn.host}:${conn.port}`
-      : conn.apiEndpoint
+    conn.mode === 'ssh' ? `SSH ${conn.sshUser}@${conn.host}:${conn.port}` : conn.apiEndpoint
 
   return (
     <div
@@ -324,10 +300,7 @@ function ConnectionRow({
       {/* Top row: name + mode badge + active indicator */}
       <div className="flex items-center gap-2">
         <Server className="text-nself-primary h-4 w-4 flex-shrink-0" />
-        <span
-          className="text-nself-text flex-1 truncate text-sm font-semibold"
-          title={conn.name}
-        >
+        <span className="text-nself-text flex-1 truncate text-sm font-semibold" title={conn.name}>
           {conn.name}
         </span>
         {conn.active && (
@@ -342,10 +315,7 @@ function ConnectionRow({
       </div>
 
       {/* Host line */}
-      <p
-        className="text-nself-text-muted mt-1 truncate pl-6 font-mono text-xs"
-        title={modeLabel}
-      >
+      <p className="text-nself-text-muted mt-1 truncate pl-6 font-mono text-xs" title={modeLabel}>
         {modeLabel}
       </p>
 
@@ -366,9 +336,7 @@ function ConnectionRow({
           <span className="text-xs">
             {testResult.message}
             {testResult.success && (
-              <span className="ml-1 opacity-70">
-                ({testResult.latencyMs} ms)
-              </span>
+              <span className="ml-1 opacity-70">({testResult.latencyMs} ms)</span>
             )}
           </span>
         </div>
@@ -393,11 +361,7 @@ function ConnectionRow({
           disabled={actionLoading || testing}
           className="border-nself-border text-nself-text-muted hover:border-nself-primary hover:text-nself-text flex items-center gap-1 rounded-lg border px-3 py-1 text-xs font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-50"
         >
-          {testing ? (
-            <Loader2 className="h-3 w-3 animate-spin" />
-          ) : (
-            <Wifi className="h-3 w-3" />
-          )}
+          {testing ? <Loader2 className="h-3 w-3 animate-spin" /> : <Wifi className="h-3 w-3" />}
           Test
         </button>
 
@@ -426,9 +390,7 @@ export function RemotePanel() {
   const [error, setError] = useState<string | null>(null)
   const [showAddForm, setShowAddForm] = useState(false)
   const [testingId, setTestingId] = useState<string | null>(null)
-  const [testResults, setTestResults] = useState<
-    Record<string, TestConnectionResult>
-  >({})
+  const [testResults, setTestResults] = useState<Record<string, TestConnectionResult>>({})
 
   // ---------------------------------------------------------------------------
   // Load connections on mount
@@ -445,9 +407,7 @@ export function RemotePanel() {
       const data = (await res.json()) as { connections: RemoteConnection[] }
       setConnections(data.connections)
     } catch (err) {
-      setError(
-        err instanceof Error ? err.message : 'Failed to load connections.',
-      )
+      setError(err instanceof Error ? err.message : 'Failed to load connections.')
     } finally {
       setLoading(false)
     }
@@ -497,12 +457,9 @@ export function RemotePanel() {
     setActionLoading(true)
     setError(null)
     try {
-      const res = await fetch(
-        `/api/remote/connections/${encodeURIComponent(id)}`,
-        {
-          method: 'DELETE',
-        },
-      )
+      const res = await fetch(`/api/remote/connections/${encodeURIComponent(id)}`, {
+        method: 'DELETE',
+      })
       if (!res.ok) {
         const data = (await res.json()) as { error?: string }
         throw new Error(data.error ?? 'Failed to delete connection.')
@@ -514,9 +471,7 @@ export function RemotePanel() {
         return next
       })
     } catch (err) {
-      setError(
-        err instanceof Error ? err.message : 'Failed to delete connection.',
-      )
+      setError(err instanceof Error ? err.message : 'Failed to delete connection.')
     } finally {
       setActionLoading(false)
     }
@@ -530,21 +485,16 @@ export function RemotePanel() {
     setActionLoading(true)
     setError(null)
     try {
-      const res = await fetch(
-        `/api/remote/connections/${encodeURIComponent(id)}/activate`,
-        {
-          method: 'POST',
-        },
-      )
+      const res = await fetch(`/api/remote/connections/${encodeURIComponent(id)}/activate`, {
+        method: 'POST',
+      })
       if (!res.ok) {
         const data = (await res.json()) as { error?: string }
         throw new Error(data.error ?? 'Failed to activate connection.')
       }
       setConnections((prev) => prev.map((c) => ({ ...c, active: c.id === id })))
     } catch (err) {
-      setError(
-        err instanceof Error ? err.message : 'Failed to activate connection.',
-      )
+      setError(err instanceof Error ? err.message : 'Failed to activate connection.')
     } finally {
       setActionLoading(false)
     }
@@ -558,15 +508,10 @@ export function RemotePanel() {
     setTestingId(conn.id)
     setError(null)
     try {
-      const res = await fetch(
-        `/api/remote/connections/${encodeURIComponent(conn.id)}/test`,
-        {
-          method: 'POST',
-        },
-      )
-      const data = (await res.json()) as
-        | TestConnectionResult
-        | { error?: string }
+      const res = await fetch(`/api/remote/connections/${encodeURIComponent(conn.id)}/test`, {
+        method: 'POST',
+      })
+      const data = (await res.json()) as TestConnectionResult | { error?: string }
       if (!res.ok) {
         const errData = data as { error?: string }
         throw new Error(errData.error ?? 'Test request failed.')
@@ -607,9 +552,7 @@ export function RemotePanel() {
           <Server className="text-nself-primary h-5 w-5" />
           <h2 className="text-nself-text text-sm font-semibold">Remote Mode</h2>
         </div>
-        {loading && (
-          <Loader2 className="text-nself-primary h-4 w-4 animate-spin" />
-        )}
+        {loading && <Loader2 className="text-nself-primary h-4 w-4 animate-spin" />}
       </div>
 
       {/* Status bar */}
@@ -625,9 +568,7 @@ export function RemotePanel() {
             <Wifi className="text-nself-primary h-4 w-4 flex-shrink-0" />
             <span className="text-nself-text text-xs">
               Connected to{' '}
-              <span className="nself-gradient-text font-semibold">
-                {activeConn.name}
-              </span>
+              <span className="nself-gradient-text font-semibold">{activeConn.name}</span>
             </span>
             <span className="border-nself-primary/40 bg-nself-primary/20 text-nself-primary ml-auto rounded-full border px-2 py-0.5 text-xs font-medium">
               Remote
@@ -673,8 +614,7 @@ export function RemotePanel() {
       {/* Empty state */}
       {!loading && connections.length === 0 && !showAddForm && (
         <p className="text-nself-text-muted mb-4 text-xs">
-          No remote connections saved. Add one below to connect to a remote
-          ɳCloud server.
+          No remote connections saved. Add one below to connect to a remote ɳCloud server.
         </p>
       )}
 

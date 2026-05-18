@@ -76,9 +76,7 @@ function WebhookEventRow({ event }: { event: StripeWebhookEvent }) {
           {new Date(event.receivedAt).toLocaleString()}
         </td>
         <td className="px-4 py-3 text-sm text-zinc-400">
-          {event.processedAt
-            ? new Date(event.processedAt).toLocaleString()
-            : '-'}
+          {event.processedAt ? new Date(event.processedAt).toLocaleString() : '-'}
         </td>
         <td className="px-4 py-3">
           {event.status === 'failed' && (
@@ -106,9 +104,7 @@ function WebhookEventRow({ event }: { event: StripeWebhookEvent }) {
                 </div>
               )}
               <div>
-                <p className="mb-2 text-sm font-medium text-zinc-400">
-                  Payload
-                </p>
+                <p className="mb-2 text-sm font-medium text-zinc-400">Payload</p>
                 <pre className="max-h-64 overflow-x-auto rounded-lg bg-zinc-900 p-3 text-xs text-zinc-300">
                   {JSON.stringify(event.data, null, 2)}
                 </pre>
@@ -133,13 +129,9 @@ function StripeWebhooksContent() {
       processed: number
       failed: number
     }
-  }>(
-    `/api/plugins/stripe/webhooks?page=${page}&pageSize=${pageSize}`,
-    fetcher,
-    {
-      refreshInterval: 10000,
-    },
-  )
+  }>(`/api/plugins/stripe/webhooks?page=${page}&pageSize=${pageSize}`, fetcher, {
+    refreshInterval: 10000,
+  })
 
   const events = data?.events || []
   const total = data?.total || 0
@@ -230,9 +222,7 @@ function StripeWebhooksContent() {
             <span className="text-sm text-zinc-400">Processed (24h)</span>
             <CheckCircle className="h-5 w-5 text-emerald-400" />
           </div>
-          <p className="mt-2 text-2xl font-bold text-white">
-            {stats.processed}
-          </p>
+          <p className="mt-2 text-2xl font-bold text-white">{stats.processed}</p>
         </div>
         <div className="rounded-xl border border-zinc-700/50 bg-zinc-800/50 p-4">
           <div className="flex items-center justify-between">
@@ -270,9 +260,7 @@ function StripeWebhooksContent() {
           </thead>
           <tbody>
             {events.length > 0 ? (
-              events.map((event) => (
-                <WebhookEventRow key={event.id} event={event} />
-              ))
+              events.map((event) => <WebhookEventRow key={event.id} event={event} />)
             ) : (
               <tr>
                 <td colSpan={6} className="px-4 py-12 text-center">
@@ -289,8 +277,7 @@ function StripeWebhooksContent() {
       {totalPages > 1 && (
         <div className="flex items-center justify-between">
           <p className="text-sm text-zinc-400">
-            Showing {(page - 1) * pageSize + 1} to{' '}
-            {Math.min(page * pageSize, total)} of {total}
+            Showing {(page - 1) * pageSize + 1} to {Math.min(page * pageSize, total)} of {total}
           </p>
           <div className="flex items-center gap-2">
             <button

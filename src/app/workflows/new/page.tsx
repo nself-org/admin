@@ -19,9 +19,7 @@ export default function NewWorkflowPage() {
 
   const [name, setName] = React.useState('')
   const [description, setDescription] = React.useState('')
-  const [validationError, setValidationError] = React.useState<string | null>(
-    null,
-  )
+  const [validationError, setValidationError] = React.useState<string | null>(null)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -142,16 +140,15 @@ export default function NewWorkflowPage() {
                     rows={3}
                   />
                   <p className="text-xs text-zinc-500 dark:text-zinc-400">
-                    Optional description to help you remember the purpose of
-                    this workflow
+                    Optional description to help you remember the purpose of this workflow
                   </p>
                 </div>
 
                 {/* Template Selection (Future Feature) */}
                 <div className="rounded-lg border border-dashed border-zinc-300 bg-zinc-50 p-4 dark:border-zinc-700 dark:bg-zinc-900/50">
                   <p className="text-center text-sm text-zinc-500 dark:text-zinc-400">
-                    Workflow templates coming soon - you will be able to start
-                    from pre-built templates
+                    Workflow templates coming soon - you will be able to start from pre-built
+                    templates
                   </p>
                 </div>
 
@@ -183,38 +180,36 @@ export default function NewWorkflowPage() {
           {/* Tips Card */}
           <Card className="mt-6">
             <CardHeader>
-              <CardTitle className="text-base">
-                Tips for Great Workflows
-              </CardTitle>
+              <CardTitle className="text-base">Tips for Great Workflows</CardTitle>
             </CardHeader>
             <CardContent>
               <ul className="space-y-2 text-sm text-zinc-600 dark:text-zinc-400">
                 <li className="flex items-start gap-2">
                   <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-blue-500" />
                   <span>
-                    <strong>Start simple:</strong> Begin with a single trigger
-                    and action, then expand as needed
+                    <strong>Start simple:</strong> Begin with a single trigger and action, then
+                    expand as needed
                   </span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-blue-500" />
                   <span>
-                    <strong>Use descriptive names:</strong> Include the purpose
-                    and frequency in your workflow name
+                    <strong>Use descriptive names:</strong> Include the purpose and frequency in
+                    your workflow name
                   </span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-blue-500" />
                   <span>
-                    <strong>Test before activating:</strong> Use the Run Now
-                    button to test your workflow manually first
+                    <strong>Test before activating:</strong> Use the Run Now button to test your
+                    workflow manually first
                   </span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-blue-500" />
                   <span>
-                    <strong>Add error handling:</strong> Configure retry
-                    policies for actions that might fail
+                    <strong>Add error handling:</strong> Configure retry policies for actions that
+                    might fail
                   </span>
                 </li>
               </ul>

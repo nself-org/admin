@@ -1,15 +1,21 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
-import { AlertCircle, CheckCircle, Mail, Loader2, Save, Send, WifiOff } from 'lucide-react'
+import { FormSkeleton } from '@/components/skeletons'
 import { Alert, AlertDescription } from '@/components/ui/alert'
+import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Badge } from '@/components/ui/badge'
-import { FormSkeleton } from '@/components/skeletons'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import { AlertCircle, CheckCircle, Loader2, Mail, Save, Send, WifiOff } from 'lucide-react'
+import { useCallback, useEffect, useState } from 'react'
 
 interface SmtpConfig {
   host: string
@@ -99,11 +105,11 @@ function EmailContent() {
     setForm(updated)
     setIsDirty(
       updated.host !== config.host ||
-      updated.port !== config.port ||
-      updated.secure !== config.secure ||
-      updated.user !== config.user ||
-      (updated.pass !== '' && updated.pass !== MASK) ||
-      updated.sender !== config.sender
+        updated.port !== config.port ||
+        updated.secure !== config.secure ||
+        updated.user !== config.user ||
+        (updated.pass !== '' && updated.pass !== MASK) ||
+        updated.sender !== config.sender
     )
     setSaveError(null)
     setSaveSuccess(false)
@@ -176,11 +182,20 @@ function EmailContent() {
   // ── State: unauth ──────────────────────────────────────────────────────────
   if (pageState === 'unauth') {
     return (
-      <div className="flex flex-col items-center justify-center py-24 gap-4">
-        <AlertCircle className="h-10 w-10 text-destructive" />
+      <div className="flex flex-col items-center justify-center gap-4 py-24">
+        <AlertCircle className="text-destructive h-10 w-10" />
         <p className="text-lg font-medium">Not authenticated</p>
-        <p className="text-sm text-muted-foreground">Please log in to manage email configuration.</p>
-        <Button variant="outline" onClick={() => { window.location.href = '/login' }}>Go to Login</Button>
+        <p className="text-muted-foreground text-sm">
+          Please log in to manage email configuration.
+        </p>
+        <Button
+          variant="outline"
+          onClick={() => {
+            window.location.href = '/login'
+          }}
+        >
+          Go to Login
+        </Button>
       </div>
     )
   }
@@ -188,11 +203,13 @@ function EmailContent() {
   // ── State: offline ─────────────────────────────────────────────────────────
   if (pageState === 'offline') {
     return (
-      <div className="flex flex-col items-center justify-center py-24 gap-4">
-        <WifiOff className="h-10 w-10 text-muted-foreground" />
+      <div className="flex flex-col items-center justify-center gap-4 py-24">
+        <WifiOff className="text-muted-foreground h-10 w-10" />
         <p className="text-lg font-medium">Cannot connect to admin API</p>
-        <p className="text-sm text-muted-foreground">{errorMessage}</p>
-        <Button variant="outline" onClick={load}>Retry</Button>
+        <p className="text-muted-foreground text-sm">{errorMessage}</p>
+        <Button variant="outline" onClick={load}>
+          Retry
+        </Button>
       </div>
     )
   }
@@ -200,11 +217,13 @@ function EmailContent() {
   // ── State: error ───────────────────────────────────────────────────────────
   if (pageState === 'error') {
     return (
-      <div className="flex flex-col items-center justify-center py-24 gap-4">
-        <AlertCircle className="h-10 w-10 text-destructive" />
+      <div className="flex flex-col items-center justify-center gap-4 py-24">
+        <AlertCircle className="text-destructive h-10 w-10" />
         <p className="text-lg font-medium">Failed to load email configuration</p>
-        <p className="text-sm text-muted-foreground">{errorMessage}</p>
-        <Button variant="outline" onClick={load}>Retry</Button>
+        <p className="text-muted-foreground text-sm">{errorMessage}</p>
+        <Button variant="outline" onClick={load}>
+          Retry
+        </Button>
       </div>
     )
   }
@@ -216,13 +235,13 @@ function EmailContent() {
 
   // ── States: empty / partial / success ─────────────────────────────────────
   return (
-    <div className="space-y-6 max-w-2xl">
+    <div className="max-w-2xl space-y-6">
       <div>
-        <h1 className="text-2xl font-bold flex items-center gap-2">
+        <h1 className="flex items-center gap-2 text-2xl font-bold">
           <Mail className="h-6 w-6" />
           Email Configuration
         </h1>
-        <p className="text-sm text-muted-foreground mt-1">
+        <p className="text-muted-foreground mt-1 text-sm">
           Configure the SMTP server used by the Auth service to send transactional emails
           (verification, password reset, invitations).
         </p>
@@ -256,13 +275,19 @@ function EmailContent() {
 
       {testResult && (
         <Alert
-          className={testResult.success ? 'border-green-500 bg-green-50 dark:bg-green-950' : undefined}
+          className={
+            testResult.success ? 'border-green-500 bg-green-50 dark:bg-green-950' : undefined
+          }
           variant={testResult.success ? 'default' : 'destructive'}
         >
-          {testResult.success
-            ? <CheckCircle className="h-4 w-4 text-green-600" />
-            : <AlertCircle className="h-4 w-4" />}
-          <AlertDescription className={testResult.success ? 'text-green-700 dark:text-green-300' : undefined}>
+          {testResult.success ? (
+            <CheckCircle className="h-4 w-4 text-green-600" />
+          ) : (
+            <AlertCircle className="h-4 w-4" />
+          )}
+          <AlertDescription
+            className={testResult.success ? 'text-green-700 dark:text-green-300' : undefined}
+          >
             {testResult.message}
           </AlertDescription>
         </Alert>
@@ -299,10 +324,7 @@ function EmailContent() {
           </div>
           <div>
             <Label htmlFor="smtp-secure">AUTH_SMTP_SECURE</Label>
-            <Select
-              value={form.secure}
-              onValueChange={(v) => handleFormChange('secure', v)}
-            >
+            <Select value={form.secure} onValueChange={(v) => handleFormChange('secure', v)}>
               <SelectTrigger id="smtp-secure" className="mt-1">
                 <SelectValue />
               </SelectTrigger>
@@ -320,7 +342,8 @@ function EmailContent() {
         <CardHeader>
           <CardTitle className="text-base">Authentication</CardTitle>
           <CardDescription>
-            SMTP credentials. Leave blank for servers that require no authentication (e.g., local Mailpit).
+            SMTP credentials. Leave blank for servers that require no authentication (e.g., local
+            Mailpit).
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -339,7 +362,9 @@ function EmailContent() {
             <Label htmlFor="smtp-pass">
               AUTH_SMTP_PASS
               {config.hasPass && (
-                <Badge variant="secondary" className="ml-2 text-xs">saved</Badge>
+                <Badge variant="secondary" className="ml-2 text-xs">
+                  saved
+                </Badge>
               )}
             </Label>
             <Input
@@ -351,7 +376,7 @@ function EmailContent() {
               value={form.pass}
               onChange={(e) => handleFormChange('pass', e.target.value)}
             />
-            <p className="text-xs text-muted-foreground mt-1">
+            <p className="text-muted-foreground mt-1 text-xs">
               Leave blank to keep the existing password. The current value is never displayed.
             </p>
           </div>
@@ -363,7 +388,8 @@ function EmailContent() {
         <CardHeader>
           <CardTitle className="text-base">Sender Address</CardTitle>
           <CardDescription>
-            The <code className="text-xs bg-muted px-1 rounded">From:</code> address used for all transactional emails.
+            The <code className="bg-muted rounded px-1 text-xs">From:</code> address used for all
+            transactional emails.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -378,26 +404,17 @@ function EmailContent() {
         </CardContent>
       </Card>
 
-      <div className="flex items-center gap-3 flex-wrap">
-        <Button
-          onClick={handleSave}
-          disabled={saving || !isDirty}
-          className="gap-2"
-        >
+      <div className="flex flex-wrap items-center gap-3">
+        <Button onClick={handleSave} disabled={saving || !isDirty} className="gap-2">
           {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
           {saving ? 'Saving…' : 'Save Configuration'}
         </Button>
-        <Button
-          variant="outline"
-          onClick={handleTest}
-          disabled={testing}
-          className="gap-2"
-        >
+        <Button variant="outline" onClick={handleTest} disabled={testing} className="gap-2">
           {testing ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
           {testing ? 'Sending…' : 'Send Test Email'}
         </Button>
         {isDirty && (
-          <span className="text-xs text-muted-foreground ml-auto">You have unsaved changes</span>
+          <span className="text-muted-foreground ml-auto text-xs">You have unsaved changes</span>
         )}
       </div>
     </div>

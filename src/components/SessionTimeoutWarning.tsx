@@ -18,9 +18,7 @@ interface SessionTimeoutWarningProps {
   sessionDurationMinutes?: number // Total session duration
 }
 
-export function SessionTimeoutWarning({
-  warningMinutes = 5,
-}: SessionTimeoutWarningProps) {
+export function SessionTimeoutWarning({ warningMinutes = 5 }: SessionTimeoutWarningProps) {
   const router = useRouter()
   const [showWarning, setShowWarning] = useState(false)
   const [timeRemaining, setTimeRemaining] = useState<number>(0)
@@ -89,17 +87,12 @@ export function SessionTimeoutWarning({
           <AlertDialogTitle>Session Expiring Soon</AlertDialogTitle>
           <AlertDialogDescription>
             Your session will expire in approximately {timeRemaining} minute
-            {timeRemaining !== 1 ? 's' : ''}. Would you like to extend your
-            session?
+            {timeRemaining !== 1 ? 's' : ''}. Would you like to extend your session?
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel onClick={handleLogout}>
-            Logout Now
-          </AlertDialogCancel>
-          <AlertDialogAction onClick={handleExtendSession}>
-            Extend Session
-          </AlertDialogAction>
+          <AlertDialogCancel onClick={handleLogout}>Logout Now</AlertDialogCancel>
+          <AlertDialogAction onClick={handleExtendSession}>Extend Session</AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

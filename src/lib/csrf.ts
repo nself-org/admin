@@ -23,9 +23,7 @@ const ALLOWED_ORIGIN_PATTERNS = [
 export function generateCSRFToken(): string {
   const array = new Uint8Array(CSRF_TOKEN_LENGTH)
   crypto.getRandomValues(array)
-  return Array.from(array, (byte) => byte.toString(16).padStart(2, '0')).join(
-    '',
-  )
+  return Array.from(array, (byte) => byte.toString(16).padStart(2, '0')).join('')
 }
 
 /**
@@ -49,7 +47,7 @@ export function setCSRFCookie(response: NextResponse, token?: string): string {
  */
 export async function validateCSRFToken(
   request: NextRequest,
-  sessionToken?: string,
+  sessionToken?: string
 ): Promise<boolean> {
   // Skip CSRF check for GET and HEAD requests
   if (['GET', 'HEAD'].includes(request.method)) {
@@ -139,10 +137,7 @@ export function validateCSRFTokenSync(request: NextRequest): boolean {
  * CSRF error response
  */
 export function csrfErrorResponse(): NextResponse {
-  return NextResponse.json(
-    { error: 'CSRF token validation failed' },
-    { status: 403 },
-  )
+  return NextResponse.json({ error: 'CSRF token validation failed' }, { status: 403 })
 }
 
 /**
@@ -180,8 +175,5 @@ export function validateOrigin(request: NextRequest): boolean {
  * Origin validation error response
  */
 export function originErrorResponse(): NextResponse {
-  return NextResponse.json(
-    { error: 'Request origin not allowed' },
-    { status: 403 },
-  )
+  return NextResponse.json({ error: 'Request origin not allowed' }, { status: 403 })
 }

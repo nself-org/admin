@@ -39,17 +39,13 @@ export class BackupRestorePage {
 
   async downloadBackup(backupName: string) {
     const downloadPromise = this.page.waitForEvent('download')
-    await this.page.click(
-      `[data-backup="${backupName}"] button:has-text("Download")`,
-    )
+    await this.page.click(`[data-backup="${backupName}"] button:has-text("Download")`)
     const download = await downloadPromise
     return download
   }
 
   async restoreFromBackup(backupName: string) {
-    await this.page.click(
-      `[data-backup="${backupName}"] button:has-text("Restore")`,
-    )
+    await this.page.click(`[data-backup="${backupName}"] button:has-text("Restore")`)
     await this.page.click('button:has-text("Confirm")')
     // Wait for restore to complete
     await this.page.waitForSelector('[data-testid="restore-complete"]', {
@@ -63,9 +59,7 @@ export class BackupRestorePage {
   }
 
   async expectBackupSuccess() {
-    await expect(this.page.locator('[role="alert"]')).toContainText(
-      /backup.*success/i,
-    )
+    await expect(this.page.locator('[role="alert"]')).toContainText(/backup.*success/i)
   }
 
   async expectRestoreSuccess() {

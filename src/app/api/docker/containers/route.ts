@@ -10,10 +10,7 @@ const execFileAsync = promisify(execFile)
 
 // Known distroless services that can't use Docker healthcheck
 // These services have no shell, so we check their HTTP endpoints directly
-const DISTROLESS_SERVICES: Record<
-  string,
-  { port: number; path: string; internalPort?: number }
-> = {
+const DISTROLESS_SERVICES: Record<string, { port: number; path: string; internalPort?: number }> = {
   tempo: { port: 3200, path: '/ready', internalPort: 3200 },
 }
 
@@ -38,14 +35,10 @@ function getServiceType(name: string, _labels: unknown): string {
   return 'service'
 }
 
-function getServiceCategory(
-  name: string,
-  _labels: Record<string, unknown>,
-): string {
+function getServiceCategory(name: string, _labels: Record<string, unknown>): string {
   const n = name.toLowerCase()
   // Core/Required services (same as project info)
-  if (['postgres', 'hasura', 'auth', 'nginx'].some((s) => n.includes(s)))
-    return 'required'
+  if (['postgres', 'hasura', 'auth', 'nginx'].some((s) => n.includes(s))) return 'required'
   // Optional services including monitoring stack
   if (
     [
@@ -114,7 +107,7 @@ function isDistrolessService(name: string): string | null {
 
 // Check health of a distroless service via HTTP endpoint
 async function checkDistrolessHealth(
-  serviceName: string,
+  serviceName: string
 ): Promise<{ healthy: boolean; checked: boolean }> {
   const config = DISTROLESS_SERVICES[serviceName]
   if (!config) return { healthy: false, checked: false }
@@ -123,13 +116,10 @@ async function checkDistrolessHealth(
     const controller = new AbortController()
     const timeout = setTimeout(() => controller.abort(), 2000)
 
-    const response = await fetch(
-      `http://localhost:${config.port}${config.path}`,
-      {
-        method: 'GET',
-        signal: controller.signal,
-      },
-    )
+    const response = await fetch(`http://localhost:${config.port}${config.path}`, {
+      method: 'GET',
+      signal: controller.signal,
+    })
 
     clearTimeout(timeout)
     return { healthy: response.ok, checked: true }
@@ -152,10 +142,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 
     const validation = querySchema.safeParse(params)
     if (!validation.success) {
-      return NextResponse.json(
-        { error: 'Invalid query parameters' },
-        { status: 400 },
-      )
+      return NextResponse.json({ error: 'Invalid query parameters' }, { status: 400 })
     }
     const _detailed = params.detailed === 'true'
     const withStats = params.stats === 'true'
@@ -164,7 +151,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     const { stdout: containerJson } = await execFileAsync(
       'docker',
       ['ps', '-a', '--format', '{{json .}}'],
-      { timeout: 10000 },
+      { timeout: 10000 }
     )
 
     const containers = containerJson
@@ -187,10 +174,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       const dockerComposePath = path.join(projectPath, 'docker-compose.yml')
 
       try {
-        const dockerComposeContent = await fs.readFile(
-          dockerComposePath,
-          'utf8',
-        )
+        const dockerComposeContent = await fs.readFile(dockerComposePath, 'utf8')
         const projectMatch = dockerComposeContent.match(/# Project: ([^\s\n]+)/)
         if (projectMatch) {
           projectPrefix = projectMatch[1].trim()
@@ -256,7 +240,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         const { stdout: statsOutput } = await execFileAsync(
           'docker',
           ['stats', '--no-stream', '--format', '{{json .}}', ...containerIds],
-          { timeout: 5000 },
+          { timeout: 5000 }
         )
 
         statsOutput
@@ -296,8 +280,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
           // Always check via HTTP endpoint for accurate health status
           const httpCheck = await checkDistrolessHealth(distrolessService)
           if (httpCheck.checked) {
-            const dockerSaysUnhealthy =
-              container.Status?.includes('(unhealthy)')
+            const dockerSaysUnhealthy = container.Status?.includes('(unhealthy)')
             if (httpCheck.healthy) {
               health = 'healthy'
               healthNote = dockerSaysUnhealthy
@@ -329,10 +312,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
                   }
                 : null
             })
-            .filter(
-              (p: { private: number; public: number; type: string } | null) =>
-                p,
-            ),
+            .filter((p: { private: number; public: number; type: string } | null) => p),
           created: container.CreatedAt,
           serviceType: getServiceType(container.Names, {}),
           category: getServiceCategory(container.Names, {}),
@@ -340,7 +320,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
           healthNote: healthNote,
           stats: stats || null,
         }
-      }),
+      })
     )
 
     // Debug summary
@@ -349,7 +329,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         acc[c.health] = (acc[c.health] || 0) + 1
         return acc
       },
-      {} as Record<string, number>,
+      {} as Record<string, number>
     )
 
     return NextResponse.json({
@@ -363,12 +343,9 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       {
         success: false,
         error: 'Failed to fetch container status',
-        details:
-          error instanceof Error
-            ? error?.message || 'Unknown error'
-            : 'Unknown error',
+        details: error instanceof Error ? error?.message || 'Unknown error' : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

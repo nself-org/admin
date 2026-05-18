@@ -41,17 +41,12 @@ function MetricCard({
 
   const colorClasses = {
     sky: 'from-sky-500/40 to-sky-400/30 bg-sky-500/20 text-sky-400',
-    emerald:
-      'from-emerald-500/40 to-emerald-400/30 bg-emerald-500/20 text-emerald-400',
+    emerald: 'from-emerald-500/40 to-emerald-400/30 bg-emerald-500/20 text-emerald-400',
     amber: 'from-amber-500/40 to-amber-400/30 bg-amber-500/20 text-amber-400',
     blue: 'from-blue-500/40 to-blue-400/30 bg-blue-500/20 text-blue-400',
   }
 
-  function onMouseMove({
-    currentTarget,
-    clientX,
-    clientY,
-  }: React.MouseEvent<HTMLDivElement>) {
+  function onMouseMove({ currentTarget, clientX, clientY }: React.MouseEvent<HTMLDivElement>) {
     const { left, top } = currentTarget.getBoundingClientRect()
     mouseX.set(clientX - left)
     mouseY.set(clientY - top)
@@ -72,9 +67,7 @@ function MetricCard({
       <div className="absolute inset-0 rounded-2xl ring-1 ring-zinc-900/10 transition-colors duration-300 ring-inset group-hover:ring-sky-500/50 dark:ring-white/20 dark:group-hover:ring-sky-400/60" />
       <div className="relative">
         <div className="flex items-center justify-between">
-          <h3 className="text-sm font-semibold text-zinc-900 dark:text-white">
-            {title}
-          </h3>
+          <h3 className="text-sm font-semibold text-zinc-900 dark:text-white">{title}</h3>
           <div
             className={`flex h-8 w-8 items-center justify-center rounded-full ${colorClasses[color].split(' ').slice(2, 4).join(' ')}`}
           >
@@ -82,20 +75,15 @@ function MetricCard({
           </div>
         </div>
         <div className="mt-4">
-          <div className="text-2xl font-bold text-zinc-900 dark:text-white">
-            {value}
-          </div>
+          <div className="text-2xl font-bold text-zinc-900 dark:text-white">{value}</div>
         </div>
         {description && (
-          <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
-            {description}
-          </p>
+          <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">{description}</p>
         )}
       </div>
     </div>
   )
 }
-
 
 const statusColors: Record<string, string> = {
   deployed: 'bg-emerald-900/30 text-emerald-400',
@@ -112,7 +100,7 @@ function HelmContent() {
   const { data, isLoading, mutate } = useSWR<{ releases: HelmRelease[] }>(
     '/api/helm/releases',
     fetcher,
-    { refreshInterval: 30000 },
+    { refreshInterval: 30000 }
   )
 
   const releases = data?.releases ?? []
@@ -121,7 +109,7 @@ function HelmContent() {
     (r) =>
       r.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       r.namespace.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      r.chart.toLowerCase().includes(searchQuery.toLowerCase()),
+      r.chart.toLowerCase().includes(searchQuery.toLowerCase())
   )
 
   const deployedCount = releases.filter((r) => r.status === 'deployed').length
@@ -158,9 +146,7 @@ function HelmContent() {
         <h1 className="bg-gradient-to-r from-sky-500 to-black bg-clip-text text-4xl/tight font-extrabold text-transparent sm:text-6xl/tight dark:from-sky-400 dark:to-white">
           Helm
         </h1>
-        <p className="mt-2 text-zinc-600 dark:text-zinc-400">
-          Manage Helm charts and releases
-        </p>
+        <p className="mt-2 text-zinc-600 dark:text-zinc-400">Manage Helm charts and releases</p>
       </div>
 
       {/* Stats Cards */}
@@ -302,16 +288,11 @@ function HelmContent() {
           </thead>
           <tbody className="divide-y divide-zinc-700/50">
             {filteredReleases.map((release) => (
-              <tr
-                key={`${release.namespace}-${release.name}`}
-                className="hover:bg-zinc-800/50"
-              >
+              <tr key={`${release.namespace}-${release.name}`} className="hover:bg-zinc-800/50">
                 <td className="px-4 py-3">
                   <div className="flex items-center gap-3">
                     <Package className="h-4 w-4 text-sky-400" />
-                    <span className="font-medium text-white">
-                      {release.name}
-                    </span>
+                    <span className="font-medium text-white">{release.name}</span>
                   </div>
                 </td>
                 <td className="px-4 py-3">
@@ -322,29 +303,19 @@ function HelmContent() {
                 <td className="px-4 py-3">
                   <div>
                     <span className="text-white">{release.chart}</span>
-                    <span className="ml-1 text-sm text-zinc-500">
-                      v{release.chartVersion}
-                    </span>
+                    <span className="ml-1 text-sm text-zinc-500">v{release.chartVersion}</span>
                   </div>
                 </td>
-                <td className="px-4 py-3 text-sm text-zinc-400">
-                  {release.appVersion}
-                </td>
-                <td className="px-4 py-3 text-sm text-zinc-400">
-                  {release.revision}
-                </td>
+                <td className="px-4 py-3 text-sm text-zinc-400">{release.appVersion}</td>
+                <td className="px-4 py-3 text-sm text-zinc-400">{release.revision}</td>
                 <td className="px-4 py-3">
                   <span
                     className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs capitalize ${
                       statusColors[release.status] || statusColors.deployed
                     }`}
                   >
-                    {release.status === 'deployed' && (
-                      <CheckCircle className="h-3 w-3" />
-                    )}
-                    {release.status === 'failed' && (
-                      <AlertCircle className="h-3 w-3" />
-                    )}
+                    {release.status === 'deployed' && <CheckCircle className="h-3 w-3" />}
+                    {release.status === 'failed' && <AlertCircle className="h-3 w-3" />}
                     {release.status}
                   </span>
                 </td>
@@ -375,9 +346,7 @@ function HelmContent() {
                       <History className="h-4 w-4" />
                     </button>
                     <button
-                      onClick={() =>
-                        handleUninstall(release.name, release.namespace)
-                      }
+                      onClick={() => handleUninstall(release.name, release.namespace)}
                       className="rounded p-1.5 text-red-400 hover:bg-zinc-700"
                       title="Uninstall"
                     >

@@ -8,9 +8,7 @@ interface TenantBrandingEditorProps {
   branding: TenantBranding
   onUpdateLogo: (file: File) => Promise<void>
   onUpdateColors: (
-    colors: Partial<
-      Pick<TenantBranding, 'primaryColor' | 'secondaryColor' | 'accentColor'>
-    >,
+    colors: Partial<Pick<TenantBranding, 'primaryColor' | 'secondaryColor' | 'accentColor'>>
   ) => Promise<void>
   onPreview: () => Promise<string>
   onReset: () => Promise<void>
@@ -61,11 +59,7 @@ export function TenantBrandingEditor({
         <div className="flex items-center gap-6">
           <div className="flex h-24 w-24 items-center justify-center rounded-lg border-2 border-dashed border-zinc-600 bg-zinc-900">
             {branding.logo ? (
-              <img
-                src={branding.logo}
-                alt="Logo"
-                className="h-20 w-20 object-contain"
-              />
+              <img src={branding.logo} alt="Logo" className="h-20 w-20 object-contain" />
             ) : (
               <Upload className="h-8 w-8 text-zinc-500" />
             )}
@@ -85,9 +79,7 @@ export function TenantBrandingEditor({
             >
               Upload Logo
             </button>
-            <p className="mt-2 text-xs text-zinc-500">
-              PNG, JPG, or SVG. Max 2MB.
-            </p>
+            <p className="mt-2 text-xs text-zinc-500">PNG, JPG, or SVG. Max 2MB.</p>
           </div>
         </div>
       </div>
@@ -143,11 +135,7 @@ export function TenantBrandingEditor({
 
       {previewUrl && (
         <div className="rounded-lg border border-zinc-700 p-4">
-          <iframe
-            src={previewUrl}
-            className="h-96 w-full rounded-lg"
-            title="Branding Preview"
-          />
+          <iframe src={previewUrl} className="h-96 w-full rounded-lg" title="Branding Preview" />
         </div>
       )}
     </div>

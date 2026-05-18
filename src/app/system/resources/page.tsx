@@ -141,8 +141,7 @@ function MetricsCard({
     yellow: 'text-yellow-500',
   }
 
-  const TrendIcon =
-    trend === 'up' ? TrendingUp : trend === 'down' ? TrendingDown : Activity
+  const TrendIcon = trend === 'up' ? TrendingUp : trend === 'down' ? TrendingDown : Activity
 
   return (
     <div className="rounded-lg border border-zinc-200 bg-white p-6 dark:border-zinc-700 dark:bg-zinc-800">
@@ -150,15 +149,11 @@ function MetricsCard({
         <div className="flex-1">
           <div className="mb-2 flex items-center gap-2">
             <Icon className={`h-5 w-5 ${colorClasses[color]}`} />
-            <h3 className="text-sm font-medium text-zinc-600 dark:text-zinc-400">
-              {title}
-            </h3>
+            <h3 className="text-sm font-medium text-zinc-600 dark:text-zinc-400">{title}</h3>
           </div>
 
           <div className="mb-2 flex items-baseline gap-2">
-            <span className="text-2xl font-bold text-zinc-900 dark:text-white">
-              {value}
-            </span>
+            <span className="text-2xl font-bold text-zinc-900 dark:text-white">{value}</span>
             {unit && <span className="text-sm text-zinc-500">{unit}</span>}
           </div>
 
@@ -228,9 +223,7 @@ function ResourceChart({
   return (
     <div className="rounded-lg border border-zinc-200 bg-white p-6 dark:border-zinc-700 dark:bg-zinc-800">
       <div className="mb-4 flex items-center justify-between">
-        <h3 className="text-lg font-semibold text-zinc-900 dark:text-white">
-          {title}
-        </h3>
+        <h3 className="text-lg font-semibold text-zinc-900 dark:text-white">{title}</h3>
         <div className="flex items-center gap-2">
           <Button variant="outline" className="text-xs">
             <Download className="mr-1 h-3 w-3" />
@@ -262,33 +255,23 @@ function ResourceChart({
 function DiskUsageBreakdown({ disks }: { disks: DiskInfo[] }) {
   return (
     <div className="rounded-lg border border-zinc-200 bg-white p-6 dark:border-zinc-700 dark:bg-zinc-800">
-      <h3 className="mb-4 text-lg font-semibold text-zinc-900 dark:text-white">
-        Disk Usage
-      </h3>
+      <h3 className="mb-4 text-lg font-semibold text-zinc-900 dark:text-white">Disk Usage</h3>
 
       <div className="space-y-4">
         {disks.map((disk, index) => (
-          <div
-            key={index}
-            className="rounded-lg border border-zinc-200 p-4 dark:border-zinc-700"
-          >
+          <div key={index} className="rounded-lg border border-zinc-200 p-4 dark:border-zinc-700">
             <div className="mb-2 flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <HardDrive className="h-4 w-4 text-zinc-500" />
-                <span className="font-medium text-zinc-900 dark:text-white">
-                  {disk.device}
-                </span>
-                <span className="text-sm text-zinc-500">
-                  ({disk.filesystem})
-                </span>
+                <span className="font-medium text-zinc-900 dark:text-white">{disk.device}</span>
+                <span className="text-sm text-zinc-500">({disk.filesystem})</span>
               </div>
               <span className="text-sm text-zinc-500">{disk.mountpoint}</span>
             </div>
 
             <div className="mb-2 flex items-center justify-between text-sm text-zinc-600 dark:text-zinc-400">
               <span>
-                {(disk.used / 1024 ** 3).toFixed(1)} GB /{' '}
-                {(disk.size / 1024 ** 3).toFixed(1)} GB
+                {(disk.used / 1024 ** 3).toFixed(1)} GB / {(disk.size / 1024 ** 3).toFixed(1)} GB
               </span>
               <span>{disk.usage.toFixed(1)}% used</span>
             </div>
@@ -364,9 +347,7 @@ function ProcessManager({
     <div className="rounded-lg border border-zinc-200 bg-white dark:border-zinc-700 dark:bg-zinc-800">
       <div className="border-b border-zinc-200 p-6 dark:border-zinc-700">
         <div className="mb-4 flex items-center justify-between">
-          <h3 className="text-lg font-semibold text-zinc-900 dark:text-white">
-            Process Manager
-          </h3>
+          <h3 className="text-lg font-semibold text-zinc-900 dark:text-white">Process Manager</h3>
           <div className="flex items-center gap-2">
             <Button variant="outline" className="text-xs">
               <RefreshCw className="mr-1 h-3 w-3" />
@@ -401,9 +382,7 @@ function ProcessManager({
 
           <select
             value={sortBy}
-            onChange={(e) =>
-              setSortBy(e.target.value as 'cpu' | 'memory' | 'name')
-            }
+            onChange={(e) => setSortBy(e.target.value as 'cpu' | 'memory' | 'name')}
             className="rounded-lg border border-zinc-200 bg-white px-3 py-2 text-sm dark:border-zinc-700 dark:bg-zinc-800"
           >
             <option value="cpu">Sort by CPU</option>
@@ -446,10 +425,7 @@ function ProcessManager({
           </thead>
           <tbody className="divide-y divide-zinc-200 dark:divide-zinc-700">
             {filteredProcesses.map((process) => (
-              <tr
-                key={process.pid}
-                className="hover:bg-zinc-50 dark:hover:bg-zinc-800/50"
-              >
+              <tr key={process.pid} className="hover:bg-zinc-50 dark:hover:bg-zinc-800/50">
                 <td className="px-4 py-3 font-mono text-sm text-zinc-900 dark:text-white">
                   {process.pid}
                 </td>
@@ -468,9 +444,7 @@ function ProcessManager({
                 </td>
                 <td className="px-4 py-3">
                   <div className="flex items-center gap-2">
-                    <span className="text-sm font-medium">
-                      {process.cpuUsage.toFixed(1)}%
-                    </span>
+                    <span className="text-sm font-medium">{process.cpuUsage.toFixed(1)}%</span>
                     <div className="h-2 w-16 overflow-hidden rounded-full bg-zinc-200 dark:bg-zinc-700">
                       <div
                         className={`h-full transition-all ${
@@ -576,11 +550,7 @@ function ProcessManager({
   )
 }
 
-function ContainerResourceAllocation({
-  containers,
-}: {
-  containers: ContainerResource[]
-}) {
+function ContainerResourceAllocation({ containers }: { containers: ContainerResource[] }) {
   return (
     <div className="rounded-lg border border-zinc-200 bg-white dark:border-zinc-700 dark:bg-zinc-800">
       <div className="border-b border-zinc-200 p-6 dark:border-zinc-700">
@@ -598,12 +568,8 @@ function ContainerResourceAllocation({
             >
               <div className="mb-3 flex items-start justify-between">
                 <div>
-                  <h4 className="font-medium text-zinc-900 dark:text-white">
-                    {container.name}
-                  </h4>
-                  <p className="font-mono text-sm text-zinc-500">
-                    {container.image}
-                  </p>
+                  <h4 className="font-medium text-zinc-900 dark:text-white">{container.name}</h4>
+                  <p className="font-mono text-sm text-zinc-500">{container.image}</p>
                 </div>
                 <span
                   className={`rounded px-2 py-1 text-xs font-medium ${
@@ -636,11 +602,7 @@ function ContainerResourceAllocation({
                   <div className="mb-1 flex items-center justify-between text-xs text-zinc-500">
                     <span>Memory</span>
                     <span>
-                      {(
-                        (container.memoryUsage / container.memoryLimit) *
-                        100
-                      ).toFixed(1)}
-                      %
+                      {((container.memoryUsage / container.memoryLimit) * 100).toFixed(1)}%
                     </span>
                   </div>
                   <div className="h-2 overflow-hidden rounded-full bg-zinc-200 dark:bg-zinc-700">
@@ -702,9 +664,7 @@ function ResourceAlerts({
     <div className="rounded-lg border border-zinc-200 bg-white dark:border-zinc-700 dark:bg-zinc-800">
       <div className="border-b border-zinc-200 p-6 dark:border-zinc-700">
         <div className="flex items-center justify-between">
-          <h3 className="text-lg font-semibold text-zinc-900 dark:text-white">
-            Resource Alerts
-          </h3>
+          <h3 className="text-lg font-semibold text-zinc-900 dark:text-white">Resource Alerts</h3>
           <Button onClick={() => setIsCreating(true)} className="text-sm">
             <Plus className="mr-1 h-4 w-4" />
             Add Alert
@@ -733,26 +693,20 @@ function ResourceAlerts({
                 </div>
 
                 <div className="mb-2 text-sm text-zinc-600 dark:text-zinc-400">
-                  Trigger when {alert.type} usage is {alert.condition}{' '}
-                  {alert.threshold}%
+                  Trigger when {alert.type} usage is {alert.condition} {alert.threshold}%
                 </div>
 
                 <div className="flex items-center gap-4 text-xs text-zinc-500">
                   <span>Notification: {alert.notification}</span>
                   {alert.lastTriggered && (
-                    <span>
-                      Last triggered:{' '}
-                      {new Date(alert.lastTriggered).toLocaleString()}
-                    </span>
+                    <span>Last triggered: {new Date(alert.lastTriggered).toLocaleString()}</span>
                   )}
                 </div>
               </div>
 
               <div className="ml-4 flex items-center gap-2">
                 <Button
-                  onClick={() =>
-                    onAlertUpdate({ ...alert, enabled: !alert.enabled })
-                  }
+                  onClick={() => onAlertUpdate({ ...alert, enabled: !alert.enabled })}
                   variant="outline"
                   className="text-xs"
                 >
@@ -817,9 +771,7 @@ function SystemResourcesContent() {
         <div className="mx-auto max-w-7xl">
           <div className="flex items-center justify-center py-12">
             <Loader2 className="h-8 w-8 animate-spin text-blue-500" />
-            <span className="ml-2 text-zinc-600 dark:text-zinc-400">
-              Loading system metrics...
-            </span>
+            <span className="ml-2 text-zinc-600 dark:text-zinc-400">Loading system metrics...</span>
           </div>
         </div>
       </>
@@ -870,9 +822,7 @@ function SystemResourcesContent() {
         <div className="mb-8">
           <div className="mb-6 flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold text-zinc-900 dark:text-white">
-                System Resources
-              </h1>
+              <h1 className="text-3xl font-bold text-zinc-900 dark:text-white">System Resources</h1>
               <p className="mt-1 text-zinc-600 dark:text-zinc-400">
                 Monitor CPU, memory, disk, and network usage
               </p>
@@ -887,11 +837,7 @@ function SystemResourcesContent() {
                 />
                 Auto-refresh
               </label>
-              <Button
-                onClick={fetchMetrics}
-                variant="outline"
-                className="flex items-center gap-2"
-              >
+              <Button onClick={fetchMetrics} variant="outline" className="flex items-center gap-2">
                 <RefreshCw className="h-4 w-4" />
                 Refresh
               </Button>
@@ -952,13 +898,7 @@ function SystemResourcesContent() {
                 percentage={metrics.cpu.usage}
                 trend={metrics.cpu.usage > 50 ? 'up' : 'stable'}
                 icon={Cpu}
-                color={
-                  metrics.cpu.usage > 80
-                    ? 'red'
-                    : metrics.cpu.usage > 50
-                      ? 'yellow'
-                      : 'green'
-                }
+                color={metrics.cpu.usage > 80 ? 'red' : metrics.cpu.usage > 50 ? 'yellow' : 'green'}
                 details={[
                   `${metrics.cpu.cores} cores @ ${metrics.cpu.frequency} GHz`,
                   `${metrics.cpu.processes} processes`,
@@ -973,11 +913,7 @@ function SystemResourcesContent() {
                 trend={metrics.memory.usage > 70 ? 'up' : 'stable'}
                 icon={MemoryStick}
                 color={
-                  metrics.memory.usage > 90
-                    ? 'red'
-                    : metrics.memory.usage > 70
-                      ? 'yellow'
-                      : 'green'
+                  metrics.memory.usage > 90 ? 'red' : metrics.memory.usage > 70 ? 'yellow' : 'green'
                 }
                 details={[
                   `Total: ${formatBytes(metrics.memory.total)}`,
@@ -993,11 +929,7 @@ function SystemResourcesContent() {
                 trend="stable"
                 icon={HardDrive}
                 color={
-                  metrics.disk.usage > 90
-                    ? 'red'
-                    : metrics.disk.usage > 70
-                      ? 'yellow'
-                      : 'green'
+                  metrics.disk.usage > 90 ? 'red' : metrics.disk.usage > 70 ? 'yellow' : 'green'
                 }
                 details={[
                   `Total: ${formatBytes(metrics.disk.total)}`,
@@ -1008,9 +940,7 @@ function SystemResourcesContent() {
 
               <MetricsCard
                 title="Network"
-                value={formatBytes(
-                  metrics.network.bytesIn + metrics.network.bytesOut,
-                )}
+                value={formatBytes(metrics.network.bytesIn + metrics.network.bytesOut)}
                 trend="up"
                 icon={Network}
                 color="blue"
@@ -1053,36 +983,21 @@ function SystemResourcesContent() {
                 </h3>
                 <div className="space-y-3">
                   <div className="flex justify-between">
-                    <span className="text-zinc-600 dark:text-zinc-400">
-                      Uptime
-                    </span>
-                    <span className="font-medium">
-                      {formatUptime(metrics.uptime)}
-                    </span>
+                    <span className="text-zinc-600 dark:text-zinc-400">Uptime</span>
+                    <span className="font-medium">{formatUptime(metrics.uptime)}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-zinc-600 dark:text-zinc-400">
-                      Load Average
-                    </span>
-                    <span className="font-medium">
-                      {metrics.loadAverage.join(', ')}
-                    </span>
+                    <span className="text-zinc-600 dark:text-zinc-400">Load Average</span>
+                    <span className="font-medium">{metrics.loadAverage.join(', ')}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-zinc-600 dark:text-zinc-400">
-                      Running Processes
-                    </span>
+                    <span className="text-zinc-600 dark:text-zinc-400">Running Processes</span>
                     <span className="font-medium">{metrics.cpu.processes}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-zinc-600 dark:text-zinc-400">
-                      Active Containers
-                    </span>
+                    <span className="text-zinc-600 dark:text-zinc-400">Active Containers</span>
                     <span className="font-medium">
-                      {
-                        metrics.containers.filter((c) => c.status === 'running')
-                          .length
-                      }
+                      {metrics.containers.filter((c) => c.status === 'running').length}
                     </span>
                   </div>
                 </div>
@@ -1103,13 +1018,10 @@ function SystemResourcesContent() {
                           className={`h-2 w-2 rounded-full ${interface_.status === 'up' ? 'bg-green-500' : 'bg-red-500'}`}
                         />
                         <span className="font-medium">{interface_.name}</span>
-                        <span className="text-sm text-zinc-500">
-                          {interface_.speed} Mbps
-                        </span>
+                        <span className="text-sm text-zinc-500">{interface_.speed} Mbps</span>
                       </div>
                       <div className="text-sm text-zinc-600 dark:text-zinc-400">
-                        ↓{formatBytes(interface_.bytesIn)} ↑
-                        {formatBytes(interface_.bytesOut)}
+                        ↓{formatBytes(interface_.bytesIn)} ↑{formatBytes(interface_.bytesOut)}
                       </div>
                     </div>
                   ))}
@@ -1120,10 +1032,7 @@ function SystemResourcesContent() {
         )}
 
         {selectedTab === 'processes' && (
-          <ProcessManager
-            processes={metrics.processes}
-            onProcessAction={handleProcessAction}
-          />
+          <ProcessManager processes={metrics.processes} onProcessAction={handleProcessAction} />
         )}
 
         {selectedTab === 'containers' && (

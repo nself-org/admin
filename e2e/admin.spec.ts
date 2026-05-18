@@ -41,7 +41,7 @@ test.beforeAll(async ({ playwright }) => {
   }
 
   throw new Error(
-    `nAdmin not reachable at ${BASE} after ${maxAttempts} attempts (${(maxAttempts * intervalMs) / 1000}s). Run \`nself admin start\` first.`,
+    `nAdmin not reachable at ${BASE} after ${maxAttempts} attempts (${(maxAttempts * intervalMs) / 1000}s). Run \`nself admin start\` first.`
   )
 })
 
@@ -68,9 +68,7 @@ test('plugin management tab shows plugin cards', async ({ page }) => {
 
   // Plugin list, cards, or table rows must be visible
   const pluginItems = page
-    .locator(
-      '[data-testid="plugin-list"], [data-testid="plugin-card"], ul li, table tbody tr',
-    )
+    .locator('[data-testid="plugin-list"], [data-testid="plugin-card"], ul li, table tbody tr')
     .first()
   await expect(pluginItems).toBeVisible({ timeout: 10000 })
 })
@@ -103,7 +101,7 @@ test('backup panel renders with trigger button', async ({ page }) => {
   // Accept either a dedicated backup route or the database page with a backup section
   const backupTrigger = page
     .locator(
-      'button:has-text("Backup"), button:has-text("backup"), [data-testid="backup-trigger"], [data-testid="backup-btn"]',
+      'button:has-text("Backup"), button:has-text("backup"), [data-testid="backup-trigger"], [data-testid="backup-btn"]'
     )
     .first()
 
@@ -126,13 +124,9 @@ test('dashboard has no critical axe-core violations', async ({ page }) => {
   await page.goto('/')
   await page.waitForLoadState('networkidle')
 
-  const results = await new AxeBuilder({ page })
-    .withTags(['wcag2a', 'wcag2aa'])
-    .analyze()
+  const results = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa']).analyze()
 
-  const criticalViolations = results.violations.filter(
-    (v) => v.impact === 'critical',
-  )
+  const criticalViolations = results.violations.filter((v) => v.impact === 'critical')
 
   if (criticalViolations.length > 0) {
     const summary = criticalViolations

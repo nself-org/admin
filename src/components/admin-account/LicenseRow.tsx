@@ -43,19 +43,13 @@ function StatusBadge({ status }: { status: License['status'] }) {
   )
 }
 
-export function LicenseRow({
-  license,
-  onActivate,
-  onDeactivate,
-}: LicenseRowProps) {
+export function LicenseRow({ license, onActivate, onDeactivate }: LicenseRowProps) {
   return (
     <tr className="transition-colors hover:bg-zinc-50 dark:hover:bg-zinc-700/30">
       <td className="px-4 py-3 font-mono text-sm text-zinc-900 dark:text-white">
         {license.keyPrefix}…
       </td>
-      <td className="px-4 py-3 text-sm text-zinc-600 dark:text-zinc-400">
-        {license.tier}
-      </td>
+      <td className="px-4 py-3 text-sm text-zinc-600 dark:text-zinc-400">{license.tier}</td>
       <td className="px-4 py-3 whitespace-nowrap">
         <StatusBadge status={license.status} />
       </td>
@@ -63,9 +57,7 @@ export function LicenseRow({
         {license.machineBound ? 'Yes' : 'No'}
       </td>
       <td className="px-4 py-3 font-mono text-xs text-zinc-500 dark:text-zinc-500">
-        {license.expiresAt
-          ? new Date(license.expiresAt).toLocaleDateString()
-          : 'Never'}
+        {license.expiresAt ? new Date(license.expiresAt).toLocaleDateString() : 'Never'}
       </td>
       <td className="px-4 py-3 text-right whitespace-nowrap">
         <LicenseActivateButton

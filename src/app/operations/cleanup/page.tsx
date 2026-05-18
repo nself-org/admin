@@ -5,14 +5,7 @@ import { ListSkeleton } from '@/components/skeletons'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import {
-  AlertTriangle,
-  CheckCircle,
-  Loader2,
-  RefreshCw,
-  Trash2,
-  XCircle,
-} from 'lucide-react'
+import { AlertTriangle, CheckCircle, Loader2, RefreshCw, Trash2, XCircle } from 'lucide-react'
 import { Suspense, useCallback, useEffect, useState } from 'react'
 
 interface CleanupStatus {
@@ -28,7 +21,8 @@ function parseCleanupStatus(stdout: string): CleanupStatus | null {
   } catch {
     const lines = stdout.split('\n').filter(Boolean)
     const reclaimable =
-      lines.find((l) => l.toLowerCase().includes('reclaim') || l.toLowerCase().includes('freed'))
+      lines
+        .find((l) => l.toLowerCase().includes('reclaim') || l.toLowerCase().includes('freed'))
         ?.split(':')
         .slice(1)
         .join(':')
@@ -113,7 +107,11 @@ function CleanupContent() {
       <div className="space-y-6">
         <div className="flex items-center gap-3">
           <Button variant="outline" size="sm" onClick={() => void fetchStatus()} disabled={loading}>
-            {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <RefreshCw className="h-4 w-4" />}
+            {loading ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <RefreshCw className="h-4 w-4" />
+            )}
             Refresh
           </Button>
           {actionSuccess && (
@@ -131,7 +129,7 @@ function CleanupContent() {
         {error && (
           <Card className="border-destructive">
             <CardContent className="pt-6">
-              <div className="flex items-start gap-2 text-destructive">
+              <div className="text-destructive flex items-start gap-2">
                 <XCircle className="h-5 w-5 shrink-0" />
                 <div>
                   <p className="font-medium">Failed to load cleanup status</p>
@@ -157,14 +155,14 @@ function CleanupContent() {
                 </p>
               )}
               {status.items.length > 0 && (
-                <ul className="list-inside list-disc space-y-1 text-sm text-muted-foreground">
+                <ul className="text-muted-foreground list-inside list-disc space-y-1 text-sm">
                   {status.items.map((item, i) => (
                     <li key={i}>{item.replace(/^[-*]\s*/, '')}</li>
                   ))}
                 </ul>
               )}
               {!status.reclaimable && status.items.length === 0 && (
-                <p className="text-sm text-muted-foreground">Nothing to clean up.</p>
+                <p className="text-muted-foreground text-sm">Nothing to clean up.</p>
               )}
             </CardContent>
           </Card>
@@ -172,7 +170,7 @@ function CleanupContent() {
 
         {!loading && !error && !status && (
           <Card>
-            <CardContent className="pt-6 text-center text-muted-foreground">
+            <CardContent className="text-muted-foreground pt-6 text-center">
               No cleanup data available.
             </CardContent>
           </Card>
@@ -231,17 +229,19 @@ function CleanupContent() {
               </Card>
             )}
 
-            {actionError && <p className="text-sm text-destructive">{actionError}</p>}
+            {actionError && <p className="text-destructive text-sm">{actionError}</p>}
           </CardContent>
         </Card>
 
         {output && (
           <Card>
             <CardHeader>
-              <CardTitle className="text-sm font-mono text-muted-foreground">{lastCommand}</CardTitle>
+              <CardTitle className="text-muted-foreground font-mono text-sm">
+                {lastCommand}
+              </CardTitle>
             </CardHeader>
             <CardContent>
-              <pre className="overflow-x-auto rounded bg-muted p-4 text-xs">{output}</pre>
+              <pre className="bg-muted overflow-x-auto rounded p-4 text-xs">{output}</pre>
             </CardContent>
           </Card>
         )}

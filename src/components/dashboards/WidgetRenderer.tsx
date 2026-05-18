@@ -85,9 +85,7 @@ function GaugeWidget({ widget }: { widget: Widget }) {
           </div>
         </div>
         {widget.config.title && (
-          <p className="mt-2 text-sm text-zinc-500 dark:text-zinc-400">
-            {widget.config.title}
-          </p>
+          <p className="mt-2 text-sm text-zinc-500 dark:text-zinc-400">{widget.config.title}</p>
         )}
       </div>
     </div>
@@ -103,10 +101,7 @@ function ProgressWidget({ widget }: { widget: Widget }) {
         </p>
       )}
       <div className="h-2 w-full overflow-hidden rounded-full bg-zinc-200 dark:bg-zinc-700">
-        <div
-          className="h-full rounded-full bg-blue-500 transition-all"
-          style={{ width: '65%' }}
-        />
+        <div className="h-full rounded-full bg-blue-500 transition-all" style={{ width: '65%' }} />
       </div>
       <p className="text-xs text-zinc-500 dark:text-zinc-400">65% complete</p>
     </div>
@@ -138,9 +133,7 @@ function StatusWidget({ widget }: { widget: Widget }) {
       <div className="space-y-2">
         {statuses.map((item) => (
           <div key={item.name} className="flex items-center justify-between">
-            <span className="text-sm text-zinc-600 dark:text-zinc-400">
-              {item.name}
-            </span>
+            <span className="text-sm text-zinc-600 dark:text-zinc-400">{item.name}</span>
             <span
               className={`h-2 w-2 rounded-full ${statusColors[item.status as keyof typeof statusColors] || statusColors.unknown}`}
             />
@@ -213,9 +206,7 @@ function TimelineWidget({ widget }: { widget: Widget }) {
           <div key={index} className="relative flex gap-3">
             <div className="absolute top-1.5 -left-3 h-2 w-2 rounded-full bg-blue-500" />
             <span className="shrink-0 text-xs text-zinc-400">{item.time}</span>
-            <span className="text-sm text-zinc-600 dark:text-zinc-400">
-              {item.event}
-            </span>
+            <span className="text-sm text-zinc-600 dark:text-zinc-400">{item.event}</span>
           </div>
         ))}
       </div>
@@ -236,9 +227,7 @@ function CalendarWidget({ widget }: { widget: Widget }) {
             month: 'long',
           })}
         </p>
-        {widget.config.title && (
-          <p className="mt-2 text-xs text-zinc-400">{widget.config.title}</p>
-        )}
+        {widget.config.title && <p className="mt-2 text-xs text-zinc-400">{widget.config.title}</p>}
       </div>
     </div>
   )
@@ -288,9 +277,7 @@ function UnsupportedWidget({ type }: { type: string }) {
   return (
     <div className="flex h-full items-center justify-center bg-zinc-100 dark:bg-zinc-800">
       <div className="text-center">
-        <p className="text-sm font-medium text-zinc-600 dark:text-zinc-400">
-          Unsupported Widget
-        </p>
+        <p className="text-sm font-medium text-zinc-600 dark:text-zinc-400">Unsupported Widget</p>
         <p className="text-xs text-zinc-400">Type: {type}</p>
       </div>
     </div>

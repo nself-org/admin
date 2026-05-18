@@ -69,10 +69,7 @@ const formatIcons: Record<ReportFormat, React.ReactNode> = {
   html: <FileText className="h-4 w-4" />,
 }
 
-const statusConfig: Record<
-  ReportStatus,
-  { color: string; icon: React.ReactNode }
-> = {
+const statusConfig: Record<ReportStatus, { color: string; icon: React.ReactNode }> = {
   pending: {
     color: 'bg-zinc-500/10 text-zinc-400',
     icon: <Clock className="h-3.5 w-3.5" />,
@@ -139,8 +136,7 @@ function ExecutionsContent() {
 
   const formatDuration = (start: string, end?: string): string => {
     if (!end) return '-'
-    const duration =
-      (new Date(end).getTime() - new Date(start).getTime()) / 1000
+    const duration = (new Date(end).getTime() - new Date(start).getTime()) / 1000
     if (duration < 60) return `${duration.toFixed(1)}s`
     return `${Math.floor(duration / 60)}m ${Math.floor(duration % 60)}s`
   }
@@ -172,7 +168,7 @@ function ExecutionsContent() {
     const completed = executions.filter((e) => e.status === 'completed').length
     const failed = executions.filter((e) => e.status === 'failed').length
     const pending = executions.filter(
-      (e) => e.status === 'pending' || e.status === 'generating',
+      (e) => e.status === 'pending' || e.status === 'generating'
     ).length
 
     return { total, completed, failed, pending }
@@ -190,12 +186,7 @@ function ExecutionsContent() {
         ]}
         actions={
           <div className="flex items-center gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => refresh()}
-              className="gap-2"
-            >
+            <Button variant="outline" size="sm" onClick={() => refresh()} className="gap-2">
               <RefreshCw className="h-4 w-4" />
               Refresh
             </Button>
@@ -216,9 +207,7 @@ function ExecutionsContent() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-zinc-400">Total Executions</p>
-                  <p className="mt-1 text-2xl font-semibold text-white">
-                    {stats.total}
-                  </p>
+                  <p className="mt-1 text-2xl font-semibold text-white">{stats.total}</p>
                 </div>
                 <Calendar className="h-8 w-8 text-zinc-600" />
               </div>
@@ -229,9 +218,7 @@ function ExecutionsContent() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-zinc-400">Completed</p>
-                  <p className="mt-1 text-2xl font-semibold text-green-400">
-                    {stats.completed}
-                  </p>
+                  <p className="mt-1 text-2xl font-semibold text-green-400">{stats.completed}</p>
                 </div>
                 <CheckCircle2 className="h-8 w-8 text-green-600/50" />
               </div>
@@ -242,9 +229,7 @@ function ExecutionsContent() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-zinc-400">Failed</p>
-                  <p className="mt-1 text-2xl font-semibold text-red-400">
-                    {stats.failed}
-                  </p>
+                  <p className="mt-1 text-2xl font-semibold text-red-400">{stats.failed}</p>
                 </div>
                 <XCircle className="h-8 w-8 text-red-600/50" />
               </div>
@@ -255,9 +240,7 @@ function ExecutionsContent() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-zinc-400">In Progress</p>
-                  <p className="mt-1 text-2xl font-semibold text-blue-400">
-                    {stats.pending}
-                  </p>
+                  <p className="mt-1 text-2xl font-semibold text-blue-400">{stats.pending}</p>
                 </div>
                 <Loader2 className="h-8 w-8 text-blue-600/50" />
               </div>
@@ -338,9 +321,7 @@ function ExecutionsContent() {
                       <TableHead className="text-zinc-400">Duration</TableHead>
                       <TableHead className="text-zinc-400">Rows</TableHead>
                       <TableHead className="text-zinc-400">Size</TableHead>
-                      <TableHead className="text-right text-zinc-400">
-                        Actions
-                      </TableHead>
+                      <TableHead className="text-right text-zinc-400">Actions</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -355,18 +336,14 @@ function ExecutionsContent() {
                         </TableCell>
                         <TableCell>
                           <div className="flex items-center gap-2">
-                            <span className="text-zinc-400">
-                              {formatIcons[execution.format]}
-                            </span>
+                            <span className="text-zinc-400">{formatIcons[execution.format]}</span>
                             <span className="text-sm text-white">
                               {execution.format.toUpperCase()}
                             </span>
                           </div>
                         </TableCell>
                         <TableCell>
-                          <Badge
-                            className={`gap-1 ${statusConfig[execution.status].color}`}
-                          >
+                          <Badge className={`gap-1 ${statusConfig[execution.status].color}`}>
                             {statusConfig[execution.status].icon}
                             {execution.status}
                           </Badge>
@@ -375,10 +352,7 @@ function ExecutionsContent() {
                           {formatDate(execution.startedAt)}
                         </TableCell>
                         <TableCell className="text-sm text-zinc-400">
-                          {formatDuration(
-                            execution.startedAt,
-                            execution.completedAt,
-                          )}
+                          {formatDuration(execution.startedAt, execution.completedAt)}
                         </TableCell>
                         <TableCell className="text-sm text-zinc-400">
                           {execution.rowCount?.toLocaleString() ?? '-'}
@@ -387,30 +361,25 @@ function ExecutionsContent() {
                           {formatFileSize(execution.fileSize)}
                         </TableCell>
                         <TableCell className="text-right">
-                          {execution.status === 'completed' &&
-                            execution.fileUrl && (
-                              <Button
-                                variant="ghost"
-                                size="sm"
-                                disabled={
-                                  isDownloading &&
-                                  downloadingId === execution.id
-                                }
-                                onClick={(e) => {
-                                  e.stopPropagation()
-                                  handleDownload(execution.id, execution.format)
-                                }}
-                                className="gap-1 text-emerald-400 hover:text-emerald-300"
-                              >
-                                {isDownloading &&
-                                downloadingId === execution.id ? (
-                                  <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                                ) : (
-                                  <Download className="h-3.5 w-3.5" />
-                                )}
-                                Download
-                              </Button>
-                            )}
+                          {execution.status === 'completed' && execution.fileUrl && (
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              disabled={isDownloading && downloadingId === execution.id}
+                              onClick={(e) => {
+                                e.stopPropagation()
+                                handleDownload(execution.id, execution.format)
+                              }}
+                              className="gap-1 text-emerald-400 hover:text-emerald-300"
+                            >
+                              {isDownloading && downloadingId === execution.id ? (
+                                <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                              ) : (
+                                <Download className="h-3.5 w-3.5" />
+                              )}
+                              Download
+                            </Button>
+                          )}
                         </TableCell>
                       </TableRow>
                     ))}
@@ -420,13 +389,9 @@ function ExecutionsContent() {
             ) : (
               <div className="flex flex-col items-center justify-center py-16 text-center">
                 <FileText className="mb-4 h-12 w-12 text-zinc-600" />
-                <h3 className="mb-2 text-lg font-medium text-white">
-                  No executions found
-                </h3>
+                <h3 className="mb-2 text-lg font-medium text-white">No executions found</h3>
                 <p className="mb-4 text-sm text-zinc-400">
-                  {searchQuery ||
-                  statusFilter !== 'all' ||
-                  formatFilter !== 'all'
+                  {searchQuery || statusFilter !== 'all' || formatFilter !== 'all'
                     ? 'Try adjusting your filters'
                     : 'Generate your first report to see execution history'}
                 </p>

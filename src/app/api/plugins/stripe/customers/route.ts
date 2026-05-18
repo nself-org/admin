@@ -18,8 +18,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       return NextResponse.json({
         success: true,
         pluginInstalled: false,
-        message:
-          'Stripe plugin not installed. Run: nself plugin install stripe',
+        message: 'Stripe plugin not installed. Run: nself plugin install stripe',
         customers: [],
         total: 0,
       })
@@ -88,29 +87,22 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       })
     }
 
-    const customers: StripeCustomer[] = (result.data?.customers || []).map(
-      (c) => ({
-        id: c.id,
-        email: c.email,
-        name: c.name || undefined,
-        phone: c.phone || undefined,
-        currency: c.currency || 'usd',
-        balance: c.balance || 0,
-        created: c.created_at,
-        metadata: c.metadata || undefined,
-        defaultSource: c.default_source || undefined,
-        subscriptionCount: c.subscription_count || 0,
-      }),
-    )
+    const customers: StripeCustomer[] = (result.data?.customers || []).map((c) => ({
+      id: c.id,
+      email: c.email,
+      name: c.name || undefined,
+      phone: c.phone || undefined,
+      currency: c.currency || 'usd',
+      balance: c.balance || 0,
+      created: c.created_at,
+      metadata: c.metadata || undefined,
+      defaultSource: c.default_source || undefined,
+      subscriptionCount: c.subscription_count || 0,
+    }))
 
     const total = result.data?.total?.aggregate?.count || 0
 
-    logger.api(
-      'GET',
-      '/api/plugins/stripe/customers',
-      200,
-      Date.now() - startTime,
-    )
+    logger.api('GET', '/api/plugins/stripe/customers', 200, Date.now() - startTime)
 
     return NextResponse.json({
       success: true,
@@ -131,7 +123,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to fetch customers',
         details: err.message || 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

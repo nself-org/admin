@@ -38,10 +38,7 @@ export function useWebSocket() {
   /**
    * Subscribe to event type
    */
-  const on = <T = unknown>(
-    eventType: EventType,
-    listener: (data: T) => void,
-  ) => {
+  const on = <T = unknown>(eventType: EventType, listener: (data: T) => void) => {
     return clientRef.current.on(eventType, listener)
   }
 

@@ -98,7 +98,7 @@ export function HeavyUsersPanel() {
         u.multipleOfP95.toFixed(1),
         u.warnSentAt ?? '',
         u.capped ? 'yes' : 'no',
-      ].join(','),
+      ].join(',')
     )
     const csv = [header, ...rows].join('\n')
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' })
@@ -116,9 +116,7 @@ export function HeavyUsersPanel() {
     return (
       <div className="flex flex-col items-center justify-center py-16 text-center">
         <Shield className="mb-3 h-12 w-12 text-red-400" />
-        <p className="text-sm text-zinc-400">
-          Owner license required to view heavy users.
-        </p>
+        <p className="text-sm text-zinc-400">Owner license required to view heavy users.</p>
       </div>
     )
   }
@@ -127,9 +125,7 @@ export function HeavyUsersPanel() {
     return (
       <div className="flex flex-col items-center justify-center py-16 text-center">
         <AlertTriangle className="mb-3 h-12 w-12 text-yellow-400" />
-        <p className="text-sm text-zinc-400">
-          Rate limited. Retry in {state.retryAfter}s.
-        </p>
+        <p className="text-sm text-zinc-400">Rate limited. Retry in {state.retryAfter}s.</p>
       </div>
     )
   }
@@ -173,12 +169,7 @@ export function HeavyUsersPanel() {
     )
   }
 
-  const data =
-    state.tag === 'offline'
-      ? state.data
-      : state.tag === 'populated'
-        ? state.data
-        : null
+  const data = state.tag === 'offline' ? state.data : state.tag === 'populated' ? state.data : null
   if (!data) return null
 
   return (
@@ -190,9 +181,7 @@ export function HeavyUsersPanel() {
           <p className="text-xs text-zinc-400">
             Users above the {percentile}th percentile — {data.billingMonth}
             {state.tag === 'offline' && (
-              <span className="ml-2 text-yellow-400">
-                (stale — last updated {data.fetchedAt})
-              </span>
+              <span className="ml-2 text-yellow-400">(stale — last updated {data.fetchedAt})</span>
             )}
           </p>
         </div>
@@ -235,10 +224,7 @@ export function HeavyUsersPanel() {
           </thead>
           <tbody className="divide-y divide-zinc-800">
             {data.users.map((u) => (
-              <tr
-                key={`${u.userId}-${u.tenantId}`}
-                className="hover:bg-zinc-800/50"
-              >
+              <tr key={`${u.userId}-${u.tenantId}`} className="hover:bg-zinc-800/50">
                 <td className="px-4 py-3 font-mono text-xs text-zinc-300">
                   {u.userId.slice(0, 8)}…
                 </td>
@@ -253,9 +239,7 @@ export function HeavyUsersPanel() {
                   </span>
                 </td>
                 <td className="px-4 py-3 text-xs text-zinc-400">
-                  {u.warnSentAt
-                    ? new Date(u.warnSentAt).toLocaleDateString()
-                    : '—'}
+                  {u.warnSentAt ? new Date(u.warnSentAt).toLocaleDateString() : '—'}
                 </td>
                 <td className="px-4 py-3">
                   {u.capped ? (
@@ -271,9 +255,8 @@ export function HeavyUsersPanel() {
       </div>
 
       <p className="text-xs text-zinc-500">
-        Threshold (p{percentile}): {data.p95Threshold.toLocaleString()}{' '}
-        tokens/mo. This list is for operator visibility only — no automatic
-        action is taken.
+        Threshold (p{percentile}): {data.p95Threshold.toLocaleString()} tokens/mo. This list is for
+        operator visibility only — no automatic action is taken.
       </p>
     </div>
   )

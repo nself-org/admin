@@ -31,9 +31,7 @@ function StepWelcome({ onNext }: { onNext: () => void }) {
   return (
     <div className="space-y-6 text-center">
       <div>
-        <h1 className="text-2xl font-semibold text-white">
-          Welcome to nSelf Admin
-        </h1>
+        <h1 className="text-2xl font-semibold text-white">Welcome to nSelf Admin</h1>
         <p className="mt-2 text-sm text-gray-400">
           This wizard walks you through connecting Admin to your nSelf backend.
         </p>
@@ -91,9 +89,7 @@ function StepConnect({
   return (
     <div className="space-y-5">
       <div>
-        <h2 className="text-xl font-semibold text-white">
-          Connect to your backend
-        </h2>
+        <h2 className="text-xl font-semibold text-white">Connect to your backend</h2>
         <p className="mt-1 text-sm text-gray-400">
           Enter the URL and API key for your nSelf backend.
         </p>
@@ -101,10 +97,7 @@ function StepConnect({
 
       <div className="space-y-4">
         <div>
-          <label
-            htmlFor="backend-url"
-            className="mb-1.5 block text-sm font-medium text-gray-300"
-          >
+          <label htmlFor="backend-url" className="mb-1.5 block text-sm font-medium text-gray-300">
             Backend URL
           </label>
           <input
@@ -118,10 +111,7 @@ function StepConnect({
         </div>
 
         <div>
-          <label
-            htmlFor="api-key"
-            className="mb-1.5 block text-sm font-medium text-gray-300"
-          >
+          <label htmlFor="api-key" className="mb-1.5 block text-sm font-medium text-gray-300">
             API key
           </label>
           <input
@@ -172,12 +162,8 @@ function StepVerify({
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-xl font-semibold text-white">
-          Connection verified
-        </h2>
-        <p className="mt-1 text-sm text-gray-400">
-          Admin is connected to your nSelf backend.
-        </p>
+        <h2 className="text-xl font-semibold text-white">Connection verified</h2>
+        <p className="mt-1 text-sm text-gray-400">Admin is connected to your nSelf backend.</p>
       </div>
 
       <div className="flex flex-col items-center gap-3 rounded-lg border border-green-800 bg-green-950/30 px-6 py-8">
@@ -185,8 +171,7 @@ function StepVerify({
           &#10003;
         </span>
         <p className="text-sm text-gray-300">
-          Backend version:{' '}
-          <span className="font-mono text-white">{version || 'unknown'}</span>
+          Backend version: <span className="font-mono text-white">{version || 'unknown'}</span>
         </p>
       </div>
 
@@ -226,14 +211,13 @@ function StepDemo({
       <div>
         <h2 className="text-xl font-semibold text-white">Demo project</h2>
         <p className="mt-1 text-sm text-gray-400">
-          Create a demo project to explore nSelf Admin with pre-configured
-          services and sample data.
+          Create a demo project to explore nSelf Admin with pre-configured services and sample data.
         </p>
       </div>
 
       <div className="rounded-lg border border-gray-800 bg-gray-900 p-4 text-sm text-gray-400">
-        Runs <span className="font-mono text-gray-300">nself init --demo</span>{' '}
-        to scaffold a ready-to-use local project. Takes about 30 seconds.
+        Runs <span className="font-mono text-gray-300">nself init --demo</span> to scaffold a
+        ready-to-use local project. Takes about 30 seconds.
       </div>
 
       {error && (
@@ -273,18 +257,14 @@ function StepDone({ onOpen }: { onOpen: () => void }) {
     <div className="space-y-6 text-center">
       <div>
         <h2 className="text-xl font-semibold text-white">Setup complete</h2>
-        <p className="mt-1 text-sm text-gray-400">
-          nSelf Admin is ready to use.
-        </p>
+        <p className="mt-1 text-sm text-gray-400">nSelf Admin is ready to use.</p>
       </div>
 
       <div className="flex flex-col items-center gap-3 rounded-lg border border-indigo-800 bg-indigo-950/30 px-6 py-8">
         <span className="flex h-12 w-12 items-center justify-center rounded-full bg-indigo-500/20 text-2xl text-indigo-400">
           &#10003;
         </span>
-        <p className="text-sm text-gray-300">
-          Connected and configured successfully.
-        </p>
+        <p className="text-sm text-gray-300">Connected and configured successfully.</p>
       </div>
 
       <button
@@ -334,9 +314,7 @@ export default function OnboardingPage() {
         setConnectError(data.error ?? 'Connection failed.')
       }
     } catch {
-      setConnectError(
-        'Could not reach the server. Check the URL and try again.',
-      )
+      setConnectError('Could not reach the server. Check the URL and try again.')
     } finally {
       setConnecting(false)
     }
@@ -354,9 +332,7 @@ export default function OnboardingPage() {
         setDemoError(data.error ?? 'Demo creation failed.')
       }
     } catch {
-      setDemoError(
-        'Request failed. You can skip this step and create a project later.',
-      )
+      setDemoError('Request failed. You can skip this step and create a project later.')
     } finally {
       setCreatingDemo(false)
     }

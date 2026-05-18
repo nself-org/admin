@@ -9,24 +9,13 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
   const startTime = Date.now()
 
   try {
-    const result = await executeNselfCommand('bench', [
-      'baseline',
-      '--show',
-      '--json',
-    ])
+    const result = await executeNselfCommand('bench', ['baseline', '--show', '--json'])
 
-    logger.cli(
-      'nself bench baseline --show --json',
-      result.success,
-      Date.now() - startTime,
-    )
+    logger.cli('nself bench baseline --show --json', result.success, Date.now() - startTime)
 
     if (!result.success) {
       // No baseline exists yet - not an error
-      if (
-        result.stderr?.includes('no baseline') ||
-        result.error?.includes('no baseline')
-      ) {
+      if (result.stderr?.includes('no baseline') || result.error?.includes('no baseline')) {
         return NextResponse.json({
           success: true,
           data: null,
@@ -40,7 +29,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
           error: 'Failed to read baseline',
           details: result.error || result.stderr,
         },
-        { status: 500 },
+        { status: 500 }
       )
     }
 
@@ -69,7 +58,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to read baseline',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -103,7 +92,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           error: 'Failed to create baseline',
           details: result.error || result.stderr,
         },
-        { status: 500 },
+        { status: 500 }
       )
     }
 
@@ -133,7 +122,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to create baseline',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

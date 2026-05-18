@@ -1,14 +1,7 @@
 'use client'
 
 import type { CreateTenantInput } from '@/types/tenant'
-import {
-  Building2,
-  Check,
-  ChevronLeft,
-  ChevronRight,
-  Palette,
-  Settings,
-} from 'lucide-react'
+import { Building2, Check, ChevronLeft, ChevronRight, Palette, Settings } from 'lucide-react'
 import { useState } from 'react'
 
 interface TenantCreateWizardProps {
@@ -22,10 +15,7 @@ const steps = [
   { id: 'settings', title: 'Settings', icon: Settings },
 ]
 
-export function TenantCreateWizard({
-  onCreate,
-  isLoading,
-}: TenantCreateWizardProps) {
+export function TenantCreateWizard({ onCreate, isLoading }: TenantCreateWizardProps) {
   const [currentStep, setCurrentStep] = useState(0)
   const [formData, setFormData] = useState<CreateTenantInput>({
     name: '',
@@ -53,8 +43,7 @@ export function TenantCreateWizard({
 
     if (currentStep === 0) {
       if (!formData.name.trim()) newErrors.name = 'Name is required'
-      if (formData.name.length < 2)
-        newErrors.name = 'Name must be at least 2 characters'
+      if (formData.name.length < 2) newErrors.name = 'Name must be at least 2 characters'
     }
 
     setErrors(newErrors)
@@ -112,9 +101,7 @@ export function TenantCreateWizard({
                   <step.icon className="h-4 w-4" />
                 )}
               </div>
-              <span className="hidden text-sm font-medium sm:inline">
-                {step.title}
-              </span>
+              <span className="hidden text-sm font-medium sm:inline">{step.title}</span>
             </div>
             {index < steps.length - 1 && (
               <div
@@ -129,13 +116,9 @@ export function TenantCreateWizard({
       <div className="rounded-lg border border-zinc-700 bg-zinc-800/50 p-6">
         {currentStep === 0 && (
           <div className="space-y-4">
-            <h2 className="text-xl font-semibold text-white">
-              Basic Information
-            </h2>
+            <h2 className="text-xl font-semibold text-white">Basic Information</h2>
             <div>
-              <label className="mb-2 block text-sm text-zinc-400">
-                Tenant Name *
-              </label>
+              <label className="mb-2 block text-sm text-zinc-400">Tenant Name *</label>
               <input
                 type="text"
                 value={formData.name}
@@ -148,9 +131,7 @@ export function TenantCreateWizard({
                 className="w-full rounded-lg border border-zinc-700 bg-zinc-900 px-4 py-2 text-white focus:border-emerald-500 focus:outline-none"
                 placeholder="Acme Corporation"
               />
-              {errors.name && (
-                <p className="mt-1 text-xs text-red-400">{errors.name}</p>
-              )}
+              {errors.name && <p className="mt-1 text-xs text-red-400">{errors.name}</p>}
             </div>
             <div>
               <label className="mb-2 block text-sm text-zinc-400">Slug</label>
@@ -186,9 +167,7 @@ export function TenantCreateWizard({
             <h2 className="text-xl font-semibold text-white">Branding</h2>
             <div className="grid grid-cols-3 gap-4">
               <div>
-                <label className="mb-2 block text-sm text-zinc-400">
-                  Primary Color
-                </label>
+                <label className="mb-2 block text-sm text-zinc-400">Primary Color</label>
                 <input
                   type="color"
                   value={formData.branding?.primaryColor || '#10b981'}
@@ -204,9 +183,7 @@ export function TenantCreateWizard({
                 />
               </div>
               <div>
-                <label className="mb-2 block text-sm text-zinc-400">
-                  Secondary Color
-                </label>
+                <label className="mb-2 block text-sm text-zinc-400">Secondary Color</label>
                 <input
                   type="color"
                   value={formData.branding?.secondaryColor || '#1f2937'}
@@ -222,9 +199,7 @@ export function TenantCreateWizard({
                 />
               </div>
               <div>
-                <label className="mb-2 block text-sm text-zinc-400">
-                  Accent Color
-                </label>
+                <label className="mb-2 block text-sm text-zinc-400">Accent Color</label>
                 <input
                   type="color"
                   value={formData.branding?.accentColor || '#3b82f6'}
@@ -261,9 +236,7 @@ export function TenantCreateWizard({
                   }
                   className="h-4 w-4 rounded border-zinc-600 bg-zinc-800 text-emerald-500"
                 />
-                <span className="text-sm text-zinc-300">
-                  Allow public signup
-                </span>
+                <span className="text-sm text-zinc-300">Allow public signup</span>
               </label>
               <label className="flex items-center gap-3">
                 <input
@@ -279,15 +252,11 @@ export function TenantCreateWizard({
                   }
                   className="h-4 w-4 rounded border-zinc-600 bg-zinc-800 text-emerald-500"
                 />
-                <span className="text-sm text-zinc-300">
-                  Require email verification
-                </span>
+                <span className="text-sm text-zinc-300">Require email verification</span>
               </label>
             </div>
             <div>
-              <label className="mb-2 block text-sm text-zinc-400">
-                Max Members
-              </label>
+              <label className="mb-2 block text-sm text-zinc-400">Max Members</label>
               <input
                 type="number"
                 value={formData.settings?.maxMembers || 10}

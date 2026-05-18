@@ -7,11 +7,7 @@ import { useEffect } from 'react'
 // import { dockerPollingService } from '@/services/DockerPollingService'
 import { simplifiedPolling } from '@/services/SimplifiedPolling'
 
-export function GlobalDataProvider({
-  children,
-}: {
-  children: React.ReactNode
-}) {
+export function GlobalDataProvider({ children }: { children: React.ReactNode }) {
   const _pathname = usePathname()
   const projectStatus = useProjectStore((state) => state.projectStatus)
   const { isAuthenticated } = useAuth()

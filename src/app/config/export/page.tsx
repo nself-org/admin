@@ -2,13 +2,7 @@
 
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import {
   Select,
@@ -95,8 +89,7 @@ export default function ConfigExportPage() {
 
     const selectedFormat = FORMATS.find((f) => f.value === format)
     const extension = selectedFormat?.extension || '.json'
-    const mimeType =
-      format === 'yaml' ? 'application/x-yaml' : 'application/json'
+    const mimeType = format === 'yaml' ? 'application/x-yaml' : 'application/json'
 
     const blob = new Blob([exportedContent], { type: mimeType })
     const url = URL.createObjectURL(blob)
@@ -109,35 +102,45 @@ export default function ConfigExportPage() {
 
   if (actionState === 'unauth') {
     return (
-      <div className="flex flex-col items-center justify-center py-24 gap-4">
-        <AlertCircle className="h-10 w-10 text-destructive" />
+      <div className="flex flex-col items-center justify-center gap-4 py-24">
+        <AlertCircle className="text-destructive h-10 w-10" />
         <p className="text-lg font-medium">Not authenticated</p>
-        <p className="text-sm text-muted-foreground">Please log in to export configuration.</p>
-        <Button variant="outline" onClick={() => { window.location.href = '/login' }}>Go to Login</Button>
+        <p className="text-muted-foreground text-sm">Please log in to export configuration.</p>
+        <Button
+          variant="outline"
+          onClick={() => {
+            window.location.href = '/login'
+          }}
+        >
+          Go to Login
+        </Button>
       </div>
     )
   }
 
   if (actionState === 'offline') {
     return (
-      <div className="flex flex-col items-center justify-center py-24 gap-4">
-        <WifiOff className="h-10 w-10 text-muted-foreground" />
+      <div className="flex flex-col items-center justify-center gap-4 py-24">
+        <WifiOff className="text-muted-foreground h-10 w-10" />
         <p className="text-lg font-medium">Cannot connect to admin API</p>
-        <p className="text-sm text-muted-foreground">{errorMessage}</p>
-        <Button variant="outline" onClick={() => setActionState('idle')}>Retry</Button>
+        <p className="text-muted-foreground text-sm">{errorMessage}</p>
+        <Button variant="outline" onClick={() => setActionState('idle')}>
+          Retry
+        </Button>
       </div>
     )
   }
 
   return (
-    <div className="space-y-6 max-w-4xl">
+    <div className="max-w-4xl space-y-6">
       <div>
-        <h1 className="text-2xl font-bold flex items-center gap-2">
+        <h1 className="flex items-center gap-2 text-2xl font-bold">
           <Download className="h-6 w-6" />
           Config Export
         </h1>
-        <p className="text-sm text-muted-foreground mt-1">
-          Export environment configuration to a downloadable file. Secrets are redacted from exports.
+        <p className="text-muted-foreground mt-1 text-sm">
+          Export environment configuration to a downloadable file. Secrets are redacted from
+          exports.
         </p>
       </div>
 
@@ -147,10 +150,9 @@ export default function ConfigExportPage() {
         <AlertTitle>nself CLI Integration</AlertTitle>
         <AlertDescription>
           This page executes{' '}
-          <code className="rounded bg-muted px-1 text-xs">
-            nself config export
-          </code>{' '}
-          to export configuration for a specific environment. Secret values are redacted and not included in the export.
+          <code className="bg-muted rounded px-1 text-xs">nself config export</code> to export
+          configuration for a specific environment. Secret values are redacted and not included in
+          the export.
         </AlertDescription>
       </Alert>
 
@@ -169,9 +171,7 @@ export default function ConfigExportPage() {
               <Download className="h-5 w-5 text-blue-600" />
               <CardTitle>Export Configuration</CardTitle>
             </div>
-            <CardDescription>
-              Select an environment and format to export
-            </CardDescription>
+            <CardDescription>Select an environment and format to export</CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
             {/* Environment Selector */}
@@ -195,9 +195,7 @@ export default function ConfigExportPage() {
 
             {/* Format Selector */}
             <div className="space-y-2">
-              <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
-                Format
-              </label>
+              <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">Format</label>
               <Select value={format} onValueChange={setFormat}>
                 <SelectTrigger>
                   <SelectValue />

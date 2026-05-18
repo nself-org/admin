@@ -2,31 +2,11 @@
 
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { ConfirmDialog } from '@/components/ui/confirm-dialog'
-import {
-  useActivateWorkflow,
-  useDeleteWorkflow,
-  usePauseWorkflow,
-} from '@/hooks/useWorkflows'
+import { useActivateWorkflow, useDeleteWorkflow, usePauseWorkflow } from '@/hooks/useWorkflows'
 import type { Workflow, WorkflowStatus } from '@/types/workflow'
-import {
-  Calendar,
-  Clock,
-  Edit,
-  Globe,
-  Pause,
-  Play,
-  Trash2,
-  Webhook,
-  Zap,
-} from 'lucide-react'
+import { Calendar, Clock, Edit, Globe, Pause, Play, Trash2, Webhook, Zap } from 'lucide-react'
 import * as React from 'react'
 
 interface WorkflowCardProps {
@@ -56,11 +36,7 @@ const triggerIcons: Record<string, React.ReactNode> = {
   api: <Globe className="h-3 w-3" />,
 }
 
-export function WorkflowCard({
-  workflow,
-  onEdit,
-  onDelete,
-}: WorkflowCardProps) {
+export function WorkflowCard({ workflow, onEdit, onDelete }: WorkflowCardProps) {
   const [showActions, setShowActions] = React.useState(false)
   const [confirmDelete, setConfirmDelete] = React.useState(false)
   const { activate, isLoading: isActivating } = useActivateWorkflow()
@@ -115,9 +91,7 @@ export function WorkflowCard({
             <div className="space-y-1">
               <CardTitle className="text-base">{workflow.name}</CardTitle>
               {workflow.description && (
-                <CardDescription className="line-clamp-2">
-                  {workflow.description}
-                </CardDescription>
+                <CardDescription className="line-clamp-2">{workflow.description}</CardDescription>
               )}
             </div>
             <Badge variant={status.variant}>{status.label}</Badge>
@@ -129,9 +103,7 @@ export function WorkflowCard({
           <div className="flex items-center gap-4 text-sm text-zinc-500 dark:text-zinc-400">
             {primaryTrigger && (
               <div className="flex items-center gap-1.5">
-                {triggerIcons[primaryTrigger.type] || (
-                  <Zap className="h-3 w-3" />
-                )}
+                {triggerIcons[primaryTrigger.type] || <Zap className="h-3 w-3" />}
                 <span className="capitalize">{primaryTrigger.type}</span>
                 {primaryTrigger.config.cron && (
                   <span className="text-xs text-zinc-400 dark:text-zinc-500">
@@ -168,22 +140,12 @@ export function WorkflowCard({
             </Button>
 
             {workflow.status === 'active' ? (
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handlePause}
-                disabled={isPausing}
-              >
+              <Button variant="outline" size="sm" onClick={handlePause} disabled={isPausing}>
                 <Pause className="mr-1.5 h-3.5 w-3.5" />
                 {isPausing ? 'Pausing...' : 'Pause'}
               </Button>
             ) : workflow.status !== 'archived' ? (
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handleActivate}
-                disabled={isActivating}
-              >
+              <Button variant="outline" size="sm" onClick={handleActivate} disabled={isActivating}>
                 <Play className="mr-1.5 h-3.5 w-3.5" />
                 {isActivating ? 'Activating...' : 'Activate'}
               </Button>

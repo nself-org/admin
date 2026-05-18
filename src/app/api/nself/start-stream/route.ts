@@ -24,9 +24,9 @@ export async function POST(request: NextRequest): Promise<Response> {
           type: 'error',
           message: 'No docker-compose.yml found in project directory',
           error: `Project not initialized at ${projectPath}. Run nself init and nself build first.`,
-        }) + '\n',
+        }) + '\n'
       ),
-      { status: 400 },
+      { status: 400 }
     )
   }
 
@@ -53,8 +53,7 @@ export async function POST(request: NextRequest): Promise<Response> {
               encoder.encode(
                 JSON.stringify({
                   type: 'error',
-                  message:
-                    'nself CLI not found. Please install or reinstall nself.',
+                  message: 'nself CLI not found. Please install or reinstall nself.',
                   error:
                     'The nself command-line tool is required but was not found on your system.',
                   instructions: [
@@ -64,8 +63,8 @@ export async function POST(request: NextRequest): Promise<Response> {
                     '3. Ensure nself is in your PATH or installed in /usr/local/bin',
                     '4. Try running "nself version" in your terminal to verify installation',
                   ],
-                }) + '\n',
-              ),
+                }) + '\n'
+              )
             )
             controller.close()
             return
@@ -100,15 +99,13 @@ export async function POST(request: NextRequest): Promise<Response> {
               type: 'status',
               message: `Checking ${allImages.length} Docker images...`,
               totalImages: allImages.length,
-            }) + '\n',
-          ),
+            }) + '\n'
+          )
         )
 
         // Check which images are already downloaded
         const localImages = await checkLocalImages()
-        const imagesToPull = allImages.filter(
-          (img) => !localImages.includes(img),
-        )
+        const imagesToPull = allImages.filter((img) => !localImages.includes(img))
 
         if (imagesToPull.length > 0) {
           controller.enqueue(
@@ -119,12 +116,10 @@ export async function POST(request: NextRequest): Promise<Response> {
                 imagesToPull: imagesToPull.length,
                 totalImages: allImages.length,
                 percentage: Math.round(
-                  ((allImages.length - imagesToPull.length) /
-                    allImages.length) *
-                    100,
+                  ((allImages.length - imagesToPull.length) / allImages.length) * 100
                 ),
-              }) + '\n',
-            ),
+              }) + '\n'
+            )
           )
         }
 
@@ -136,8 +131,8 @@ export async function POST(request: NextRequest): Promise<Response> {
               message: 'Starting services with nself CLI...',
               command: `${nselfPath} start`,
               cwd: projectPath,
-            }) + '\n',
-          ),
+            }) + '\n'
+          )
         )
         const composeProcess = spawn(nselfPath, ['start'], {
           cwd: projectPath,
@@ -164,10 +159,7 @@ export async function POST(request: NextRequest): Promise<Response> {
 
           for (const line of lines) {
             // Track image pulling
-            if (
-              line.includes('Pulling') &&
-              !line.includes('Pulling fs layer')
-            ) {
+            if (line.includes('Pulling') && !line.includes('Pulling fs layer')) {
               const match = line.match(/(\w+)\s+Pulling/)
               if (match) {
                 controller.enqueue(
@@ -176,17 +168,15 @@ export async function POST(request: NextRequest): Promise<Response> {
                       type: 'progress',
                       message: `Pulling image for ${match[1]}...`,
                       service: match[1],
-                    }) + '\n',
-                  ),
+                    }) + '\n'
+                  )
                 )
               }
             }
 
             // Track download progress
             if (line.includes('Downloading')) {
-              const match = line.match(
-                /\[([=>]+)\s*\]\s*([\d.]+)MB\/([\d.]+)MB/,
-              )
+              const match = line.match(/\[([=>]+)\s*\]\s*([\d.]+)MB\/([\d.]+)MB/)
               if (match) {
                 const current = parseFloat(match[2])
                 const total = parseFloat(match[3])
@@ -201,8 +191,8 @@ export async function POST(request: NextRequest): Promise<Response> {
                         type: 'download',
                         message: progressMsg,
                         percentage,
-                      }) + '\n',
-                    ),
+                      }) + '\n'
+                    )
                   )
                 }
               }
@@ -217,16 +207,14 @@ export async function POST(request: NextRequest): Promise<Response> {
                     type: 'progress',
                     message: `Downloaded ${pulledImages} images...`,
                     pulledImages,
-                  }) + '\n',
-                ),
+                  }) + '\n'
+                )
               )
             }
 
             // Track container creation
             if (line.includes('Creating') || line.includes('Starting')) {
-              const match = line.match(
-                /(Creating|Starting)\s+(.+?)(?:\s+\.\.\.|$)/,
-              )
+              const match = line.match(/(Creating|Starting)\s+(.+?)(?:\s+\.\.\.|$)/)
               if (match) {
                 startedContainers++
                 controller.enqueue(
@@ -237,8 +225,8 @@ export async function POST(request: NextRequest): Promise<Response> {
                       action: match[1].toLowerCase(),
                       container: match[2],
                       startedContainers,
-                    }) + '\n',
-                  ),
+                    }) + '\n'
+                  )
                 )
               }
             }
@@ -250,21 +238,15 @@ export async function POST(request: NextRequest): Promise<Response> {
                   JSON.stringify({
                     type: 'error',
                     message: line.trim(),
-                  }) + '\n',
-                ),
+                  }) + '\n'
+                )
               )
             }
 
             // Track nself specific output
-            if (
-              line.includes('✓') ||
-              line.includes('Starting') ||
-              line.includes('Restarting')
-            ) {
+            if (line.includes('✓') || line.includes('Starting') || line.includes('Restarting')) {
               // Parse "Starting Docker containers... (12/20)" format
-              const containerMatch = line.match(
-                /Starting Docker containers.*\((\d+)\/(\d+)\)/,
-              )
+              const containerMatch = line.match(/Starting Docker containers.*\((\d+)\/(\d+)\)/)
               if (containerMatch) {
                 const current = parseInt(containerMatch[1])
                 const total = parseInt(containerMatch[2])
@@ -277,8 +259,8 @@ export async function POST(request: NextRequest): Promise<Response> {
                       current,
                       total,
                       percentage,
-                    }) + '\n',
-                  ),
+                    }) + '\n'
+                  )
                 )
               } else {
                 controller.enqueue(
@@ -286,8 +268,8 @@ export async function POST(request: NextRequest): Promise<Response> {
                     JSON.stringify({
                       type: 'progress',
                       message: line.trim(),
-                    }) + '\n',
-                  ),
+                    }) + '\n'
+                  )
                 )
               }
             }
@@ -362,8 +344,8 @@ export async function POST(request: NextRequest): Promise<Response> {
                   details: error.toString(),
                   code: error.code,
                   instructions,
-                }) + '\n',
-              ),
+                }) + '\n'
+              )
             )
           })
 
@@ -390,13 +372,9 @@ export async function POST(request: NextRequest): Promise<Response> {
               (code === 1 && (!hasErrors || startedContainers > 0))
             ) {
               // Check how many containers are actually running
-              const checkContainers = spawn(
-                'docker',
-                ['ps', '--format', '{{.Names}}'],
-                {
-                  cwd: projectPath,
-                },
-              )
+              const checkContainers = spawn('docker', ['ps', '--format', '{{.Names}}'], {
+                cwd: projectPath,
+              })
 
               let containerList = ''
               checkContainers.stdout.on('data', (data) => {
@@ -417,21 +395,20 @@ export async function POST(request: NextRequest): Promise<Response> {
                         startedContainers: runningContainers,
                         exitCode: code,
                         hasStartedContainers: true,
-                      }) + '\n',
-                    ),
+                      }) + '\n'
+                    )
                   )
                 } else if (code === 0) {
                   controller.enqueue(
                     encoder.encode(
                       JSON.stringify({
                         type: 'complete',
-                        message:
-                          'Services start process completed successfully!',
+                        message: 'Services start process completed successfully!',
                         startedContainers,
                         exitCode: code,
                         hasStartedContainers,
-                      }) + '\n',
-                    ),
+                      }) + '\n'
+                    )
                   )
                 } else {
                   controller.enqueue(
@@ -443,8 +420,8 @@ export async function POST(request: NextRequest): Promise<Response> {
                         exitCode: code,
                         output: allOutput.slice(-500),
                         errorOutput: errorOutput.slice(-500),
-                      }) + '\n',
-                    ),
+                      }) + '\n'
+                    )
                   )
                 }
                 resolve()
@@ -458,8 +435,8 @@ export async function POST(request: NextRequest): Promise<Response> {
                     exitCode: code,
                     output: allOutput.slice(-500), // Last 500 chars
                     errorOutput: errorOutput.slice(-500), // Last 500 chars
-                  }) + '\n',
-                ),
+                  }) + '\n'
+                )
               )
               // Still resolve to allow partial success
               resolve()
@@ -473,12 +450,9 @@ export async function POST(request: NextRequest): Promise<Response> {
           encoder.encode(
             JSON.stringify({
               type: 'error',
-              message:
-                error instanceof Error
-                  ? error.message
-                  : 'Unknown error occurred',
-            }) + '\n',
-          ),
+              message: error instanceof Error ? error.message : 'Unknown error occurred',
+            }) + '\n'
+          )
         )
         controller.close()
       }
@@ -496,11 +470,7 @@ export async function POST(request: NextRequest): Promise<Response> {
 
 async function checkLocalImages(): Promise<string[]> {
   return new Promise((resolve) => {
-    const checkProcess = spawn('docker', [
-      'images',
-      '--format',
-      '{{.Repository}}:{{.Tag}}',
-    ])
+    const checkProcess = spawn('docker', ['images', '--format', '{{.Repository}}:{{.Tag}}'])
     let imageData = ''
 
     checkProcess.stdout.on('data', (data) => {
@@ -508,9 +478,7 @@ async function checkLocalImages(): Promise<string[]> {
     })
 
     checkProcess.on('close', () => {
-      const images = imageData
-        .split('\n')
-        .filter((img) => img.trim() && img !== '<none>:<none>')
+      const images = imageData.split('\n').filter((img) => img.trim() && img !== '<none>:<none>')
       resolve(images)
     })
 

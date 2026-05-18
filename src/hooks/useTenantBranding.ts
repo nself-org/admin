@@ -23,10 +23,7 @@ export function useTenantBranding(tenantId: string) {
     data: branding,
     error: fetchError,
     mutate,
-  } = useSWR<TenantBranding>(
-    tenantId ? `/api/tenant/${tenantId}/branding` : null,
-    fetcher,
-  )
+  } = useSWR<TenantBranding>(tenantId ? `/api/tenant/${tenantId}/branding` : null, fetcher)
 
   const updateLogo = useCallback(
     async (file: File) => {
@@ -37,22 +34,19 @@ export function useTenantBranding(tenantId: string) {
         mutate()
         return logoUrl
       } catch (err) {
-        const message =
-          err instanceof Error ? err.message : 'Failed to update logo'
+        const message = err instanceof Error ? err.message : 'Failed to update logo'
         setError(message)
         throw err
       } finally {
         setIsLoading(false)
       }
     },
-    [tenantId, mutate],
+    [tenantId, mutate]
   )
 
   const updateColors = useCallback(
     async (
-      colors: Partial<
-        Pick<TenantBranding, 'primaryColor' | 'secondaryColor' | 'accentColor'>
-      >,
+      colors: Partial<Pick<TenantBranding, 'primaryColor' | 'secondaryColor' | 'accentColor'>>
     ) => {
       setIsLoading(true)
       setError(null)
@@ -61,15 +55,14 @@ export function useTenantBranding(tenantId: string) {
         mutate(updated)
         return updated
       } catch (err) {
-        const message =
-          err instanceof Error ? err.message : 'Failed to update colors'
+        const message = err instanceof Error ? err.message : 'Failed to update colors'
         setError(message)
         throw err
       } finally {
         setIsLoading(false)
       }
     },
-    [tenantId, mutate],
+    [tenantId, mutate]
   )
 
   const preview = useCallback(async () => {
@@ -79,8 +72,7 @@ export function useTenantBranding(tenantId: string) {
       const result = await brandingApi.preview(tenantId)
       return result.previewUrl
     } catch (err) {
-      const message =
-        err instanceof Error ? err.message : 'Failed to get preview'
+      const message = err instanceof Error ? err.message : 'Failed to get preview'
       setError(message)
       throw err
     } finally {
@@ -96,8 +88,7 @@ export function useTenantBranding(tenantId: string) {
       mutate(updated)
       return updated
     } catch (err) {
-      const message =
-        err instanceof Error ? err.message : 'Failed to reset branding'
+      const message = err instanceof Error ? err.message : 'Failed to reset branding'
       setError(message)
       throw err
     } finally {

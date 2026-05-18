@@ -156,11 +156,7 @@ export const BUS_FACTOR_ACCOUNTS: readonly BusFactorAccount[] = [
 // Types
 // ----------------------------------------------------------------------
 
-export type VerificationStatus =
-  | 'pending'
-  | 'verified'
-  | 'failed'
-  | 'awaiting_attestation'
+export type VerificationStatus = 'pending' | 'verified' | 'failed' | 'awaiting_attestation'
 
 export interface NominationInput {
   accountId: string
@@ -198,15 +194,14 @@ export interface Nomination extends NominationInput {
 export async function verifyAccess(
   account: BusFactorAccount,
   nomineeHandle: string,
-  nomineeEmail: string,
+  nomineeEmail: string
 ): Promise<VerificationResult> {
   // Manual-attestation accounts: send an email token, mark awaiting_attestation
   if (account.verificationMethod === 'manual') {
     return {
       status: 'awaiting_attestation',
       method: 'email-attestation',
-      message:
-        'Attestation email queued. Nominee must click the confirmation link to verify.',
+      message: 'Attestation email queued. Nominee must click the confirmation link to verify.',
     }
   }
 
@@ -259,7 +254,7 @@ async function verifyGitHubMember(handle: string): Promise<VerificationResult> {
         Accept: 'application/vnd.github+json',
         'User-Agent': 'nself-admin/bus-factor',
       },
-    },
+    }
   )
   // 204 = is a member, 302/404 = not a member
   if (res.status === 204) {
@@ -303,10 +298,9 @@ async function verifyVercelMember(email: string): Promise<VerificationResult> {
       message: 'VERCEL_TOKEN or VERCEL_TEAM_ID not set.',
     }
   }
-  const res = await fetch(
-    `https://api.vercel.com/v2/teams/${teamId}/members?limit=100`,
-    { headers: { Authorization: `Bearer ${token}` } },
-  )
+  const res = await fetch(`https://api.vercel.com/v2/teams/${teamId}/members?limit=100`, {
+    headers: { Authorization: `Bearer ${token}` },
+  })
   if (!res.ok) {
     return {
       status: 'failed',
@@ -315,9 +309,7 @@ async function verifyVercelMember(email: string): Promise<VerificationResult> {
     }
   }
   const data = (await res.json()) as { members?: Array<{ email?: string }> }
-  const match = data.members?.some(
-    (m) => m.email?.toLowerCase() === email.toLowerCase(),
-  )
+  const match = data.members?.some((m) => m.email?.toLowerCase() === email.toLowerCase())
   return match
     ? { status: 'verified', method: 'vercel-api' }
     : {
@@ -327,9 +319,7 @@ async function verifyVercelMember(email: string): Promise<VerificationResult> {
       }
 }
 
-async function verifyCloudflareMember(
-  email: string,
-): Promise<VerificationResult> {
+async function verifyCloudflareMember(email: string): Promise<VerificationResult> {
   const token = process.env.CLOUDFLARE_API_KEY
   if (!token) {
     return {
@@ -338,10 +328,9 @@ async function verifyCloudflareMember(
       message: 'CLOUDFLARE_API_KEY not set.',
     }
   }
-  const res = await fetch(
-    'https://api.cloudflare.com/client/v4/accounts?per_page=50',
-    { headers: { Authorization: `Bearer ${token}` } },
-  )
+  const res = await fetch('https://api.cloudflare.com/client/v4/accounts?per_page=50', {
+    headers: { Authorization: `Bearer ${token}` },
+  })
   if (!res.ok) {
     return {
       status: 'failed',
@@ -371,9 +360,7 @@ async function verifyStripeMember(email: string): Promise<VerificationResult> {
   }
 }
 
-async function verifyDockerHubMember(
-  handle: string,
-): Promise<VerificationResult> {
+async function verifyDockerHubMember(handle: string): Promise<VerificationResult> {
   const token = process.env.DOCKER_HUB_TOKEN
   if (!token) {
     return {
@@ -384,7 +371,7 @@ async function verifyDockerHubMember(
   }
   const res = await fetch(
     `https://hub.docker.com/v2/orgs/nself/members/${encodeURIComponent(handle)}/`,
-    { headers: { Authorization: `JWT ${token}` } },
+    { headers: { Authorization: `JWT ${token}` } }
   )
   if (res.status === 200) {
     return { status: 'verified', method: 'docker-hub-api' }
@@ -420,7 +407,7 @@ export async function logBusFactorEvent(
     actor?: string
     details?: unknown
   },
-  success = true,
+  success = true
 ): Promise<void> {
   await addAuditLog(
     `bus_factor.${eventType}`,
@@ -431,7 +418,7 @@ export async function logBusFactorEvent(
       details: payload.details ?? null,
     },
     success,
-    payload.actor,
+    payload.actor
   )
 }
 
@@ -463,15 +450,10 @@ function nominationKey(accountId: string, nomineeHandle: string): string {
 }
 
 export function listNominations(): Nomination[] {
-  return Array.from(store().values()).sort((a, b) =>
-    a.accountId.localeCompare(b.accountId),
-  )
+  return Array.from(store().values()).sort((a, b) => a.accountId.localeCompare(b.accountId))
 }
 
-export function getNomination(
-  accountId: string,
-  nomineeHandle: string,
-): Nomination | undefined {
+export function getNomination(accountId: string, nomineeHandle: string): Nomination | undefined {
   return store().get(nominationKey(accountId, nomineeHandle))
 }
 
@@ -481,23 +463,17 @@ export function getNomination(
  */
 export async function recordNomination(
   input: NominationInput,
-  actor?: string,
+  actor?: string
 ): Promise<Nomination> {
   const account = BUS_FACTOR_ACCOUNTS.find((a) => a.id === input.accountId)
   if (!account) {
     throw new Error(`Unknown bus-factor account id: ${input.accountId}`)
   }
 
-  const verification = await verifyAccess(
-    account,
-    input.nomineeHandle,
-    input.nomineeEmail,
-  )
+  const verification = await verifyAccess(account, input.nomineeHandle, input.nomineeEmail)
 
   const now = new Date().toISOString()
-  const id = `bf_${Date.now().toString(36)}_${Math.random()
-    .toString(36)
-    .slice(2, 8)}`
+  const id = `bf_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 8)}`
 
   const nomination: Nomination = {
     id,
@@ -528,7 +504,7 @@ export async function recordNomination(
         verification_method: verification.method,
       },
     },
-    true,
+    true
   )
 
   if (verification.status === 'verified') {
@@ -539,7 +515,7 @@ export async function recordNomination(
         nomineeHandle: input.nomineeHandle,
         actor,
       },
-      true,
+      true
     )
   } else if (verification.status === 'failed') {
     await logBusFactorEvent(
@@ -550,7 +526,7 @@ export async function recordNomination(
         actor,
         details: { message: verification.message },
       },
-      false,
+      false
     )
   } else if (verification.status === 'awaiting_attestation') {
     await logBusFactorEvent(
@@ -561,7 +537,7 @@ export async function recordNomination(
         nomineeEmail: input.nomineeEmail,
         actor,
       },
-      true,
+      true
     )
   }
 
@@ -572,7 +548,7 @@ export async function revokeNomination(
   accountId: string,
   nomineeHandle: string,
   reason: string,
-  actor?: string,
+  actor?: string
 ): Promise<boolean> {
   const key = nominationKey(accountId, nomineeHandle)
   const existing = store().get(key)
@@ -586,7 +562,7 @@ export async function revokeNomination(
       actor,
       details: { reason },
     },
-    true,
+    true
   )
   return true
 }

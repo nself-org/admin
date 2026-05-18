@@ -22,7 +22,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     if (!name || typeof name !== 'string') {
       return NextResponse.json(
         { success: false, error: 'Function name is required' },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -34,7 +34,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           error:
             'Invalid function name. Only alphanumeric characters, hyphens, and underscores are allowed.',
         },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -53,7 +53,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           error: 'Failed to invoke function',
           details: result.error || result.stderr || 'Unknown error',
         },
-        { status: 500 },
+        { status: 500 }
       )
     }
 
@@ -68,7 +68,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to invoke function',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

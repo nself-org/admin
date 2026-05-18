@@ -44,10 +44,10 @@ export function useDatabaseData() {
     tableName: string,
     schema: string = 'public',
     limit: number = 100,
-    offset: number = 0,
+    offset: number = 0
   ) => {
     const response = await fetch(
-      `/api/database?action=table-data&table=${tableName}&schema=${schema}&limit=${limit}&offset=${offset}`,
+      `/api/database?action=table-data&table=${tableName}&schema=${schema}&limit=${limit}&offset=${offset}`
     )
 
     const data = await response.json()

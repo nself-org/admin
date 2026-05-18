@@ -37,7 +37,7 @@ function generateSlug(name: string): string {
  */
 export function createSampleTenant(
   name: string,
-  plan: 'free' | 'pro' | 'enterprise' = 'free',
+  plan: 'free' | 'pro' | 'enterprise' = 'free'
 ): Tenant {
   const now = new Date().toISOString()
   const id = generateId('tenant_')
@@ -56,19 +56,12 @@ export function createSampleTenant(
       allowPublicSignup: true,
       requireEmailVerification: true,
       maxMembers: plan === 'free' ? 5 : plan === 'pro' ? 50 : 1000,
-      maxStorage:
-        plan === 'free'
-          ? 1073741824
-          : plan === 'pro'
-            ? 10737418240
-            : 107374182400, // 1GB, 10GB, 100GB
+      maxStorage: plan === 'free' ? 1073741824 : plan === 'pro' ? 10737418240 : 107374182400, // 1GB, 10GB, 100GB
       apiRateLimit: plan === 'free' ? 60 : plan === 'pro' ? 600 : 6000,
       features: [
         'basic_features',
         ...(plan !== 'free' ? ['advanced_analytics'] : []),
-        ...(plan === 'enterprise'
-          ? ['sso', 'audit_logs', 'custom_domains']
-          : []),
+        ...(plan === 'enterprise' ? ['sso', 'audit_logs', 'custom_domains'] : []),
       ],
     },
     branding: {
@@ -83,12 +76,7 @@ export function createSampleTenant(
       },
       storage: {
         used: 0,
-        limit:
-          plan === 'free'
-            ? 1073741824
-            : plan === 'pro'
-              ? 10737418240
-              : 107374182400,
+        limit: plan === 'free' ? 1073741824 : plan === 'pro' ? 10737418240 : 107374182400,
       },
       apiCalls: {
         used: 0,
@@ -108,7 +96,7 @@ export function createSampleTenant(
 export function createSampleOrganization(
   tenantId: string,
   name: string,
-  parentId?: string,
+  parentId?: string
 ): Organization {
   const now = new Date().toISOString()
   const id = generateId('org_')
@@ -138,7 +126,7 @@ export function createSampleTenantMember(
   tenantId: string,
   email: string,
   name: string,
-  role: 'owner' | 'admin' | 'member' | 'viewer' = 'member',
+  role: 'owner' | 'admin' | 'member' | 'viewer' = 'member'
 ): TenantMember {
   const now = new Date().toISOString()
   const id = generateId('tm_')
@@ -164,7 +152,7 @@ export function createSampleOrgMember(
   orgId: string,
   email: string,
   name: string,
-  role: 'owner' | 'admin' | 'member' | 'viewer' = 'member',
+  role: 'owner' | 'admin' | 'member' | 'viewer' = 'member'
 ): OrgMember {
   const now = new Date().toISOString()
   const id = generateId('om_')
@@ -185,11 +173,7 @@ export function createSampleOrgMember(
 /**
  * Create a sample team
  */
-export function createSampleTeam(
-  orgId: string,
-  name: string,
-  memberIds: string[] = [],
-): Team {
+export function createSampleTeam(orgId: string, name: string, memberIds: string[] = []): Team {
   const now = new Date().toISOString()
   const id = generateId('team_')
 
@@ -211,7 +195,7 @@ export function createSampleDomain(
   tenantId: string,
   domain: string,
   verified: boolean = false,
-  ssl: boolean = false,
+  ssl: boolean = false
 ): TenantDomain {
   const now = new Date().toISOString()
   const id = generateId('domain_')
@@ -264,16 +248,8 @@ export async function generateTestTenantHierarchy() {
 
   // Create organizations for Tenant 1 (hierarchical)
   const orgEngineering = createSampleOrganization(tenant1.id, 'Engineering')
-  const orgBackend = createSampleOrganization(
-    tenant1.id,
-    'Backend Team',
-    orgEngineering.id,
-  )
-  const orgFrontend = createSampleOrganization(
-    tenant1.id,
-    'Frontend Team',
-    orgEngineering.id,
-  )
+  const orgBackend = createSampleOrganization(tenant1.id, 'Backend Team', orgEngineering.id)
+  const orgFrontend = createSampleOrganization(tenant1.id, 'Frontend Team', orgEngineering.id)
   const orgSales = createSampleOrganization(tenant1.id, 'Sales')
 
   await createOrganization(orgEngineering)
@@ -289,71 +265,31 @@ export async function generateTestTenantHierarchy() {
   await createOrganization(orgBiz)
 
   // Create tenant members for Tenant 1
-  const tm1 = createSampleTenantMember(
-    tenant1.id,
-    'alice@acme.com',
-    'Alice Admin',
-    'admin',
-  )
-  const tm2 = createSampleTenantMember(
-    tenant1.id,
-    'bob@acme.com',
-    'Bob Developer',
-    'member',
-  )
-  const tm3 = createSampleTenantMember(
-    tenant1.id,
-    'charlie@acme.com',
-    'Charlie Sales',
-    'member',
-  )
+  const tm1 = createSampleTenantMember(tenant1.id, 'alice@acme.com', 'Alice Admin', 'admin')
+  const tm2 = createSampleTenantMember(tenant1.id, 'bob@acme.com', 'Bob Developer', 'member')
+  const tm3 = createSampleTenantMember(tenant1.id, 'charlie@acme.com', 'Charlie Sales', 'member')
 
   await createTenantMember(tm1)
   await createTenantMember(tm2)
   await createTenantMember(tm3)
 
   // Create tenant members for Tenant 2
-  const tm4 = createSampleTenantMember(
-    tenant2.id,
-    'david@startup.com',
-    'David Founder',
-    'owner',
-  )
-  const tm5 = createSampleTenantMember(
-    tenant2.id,
-    'eve@startup.com',
-    'Eve Developer',
-    'member',
-  )
+  const tm4 = createSampleTenantMember(tenant2.id, 'david@startup.com', 'David Founder', 'owner')
+  const tm5 = createSampleTenantMember(tenant2.id, 'eve@startup.com', 'Eve Developer', 'member')
 
   await createTenantMember(tm4)
   await createTenantMember(tm5)
 
   // Create org members for Backend Team (Tenant 1)
-  const om1 = createSampleOrgMember(
-    orgBackend.id,
-    'bob@acme.com',
-    'Bob Developer',
-    'member',
-  )
+  const om1 = createSampleOrgMember(orgBackend.id, 'bob@acme.com', 'Bob Developer', 'member')
   await createOrgMember(om1)
 
   // Create org members for Sales (Tenant 1)
-  const om2 = createSampleOrgMember(
-    orgSales.id,
-    'charlie@acme.com',
-    'Charlie Sales',
-    'admin',
-  )
+  const om2 = createSampleOrgMember(orgSales.id, 'charlie@acme.com', 'Charlie Sales', 'admin')
   await createOrgMember(om2)
 
   // Create org members for Tech Team (Tenant 2)
-  const om3 = createSampleOrgMember(
-    orgTech.id,
-    'eve@startup.com',
-    'Eve Developer',
-    'member',
-  )
+  const om3 = createSampleOrgMember(orgTech.id, 'eve@startup.com', 'Eve Developer', 'member')
   await createOrgMember(om3)
 
   // Create teams

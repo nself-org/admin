@@ -6,8 +6,7 @@ import { NextResponse } from 'next/server'
  * Returns honest empty when the plugin is not running.
  */
 
-const STATUS_PAGE_URL =
-  process.env.STATUS_PAGE_URL ?? 'http://127.0.0.1:3832'
+const STATUS_PAGE_URL = process.env.STATUS_PAGE_URL ?? 'http://127.0.0.1:3832'
 
 export async function GET() {
   try {
@@ -19,21 +18,16 @@ export async function GET() {
     if (!res.ok) {
       return NextResponse.json(
         { error: `nself-status-page upstream error: ${res.status}` },
-        { status: res.status },
+        { status: res.status }
       )
     }
 
     const data: unknown = await res.json()
     return NextResponse.json(data)
   } catch (err) {
-    const msg =
-      err instanceof Error ? err.message : 'Failed to reach nself-status-page'
+    const msg = err instanceof Error ? err.message : 'Failed to reach nself-status-page'
 
-    if (
-      msg.includes('ECONNREFUSED') ||
-      msg.includes('fetch failed') ||
-      msg.includes('timeout')
-    ) {
+    if (msg.includes('ECONNREFUSED') || msg.includes('fetch failed') || msg.includes('timeout')) {
       return NextResponse.json({ pages: [], generatedAt: new Date().toISOString() })
     }
 

@@ -6,8 +6,7 @@ import { NextResponse } from 'next/server'
  * Returns honest empty when the plugin is not running.
  */
 
-const UPTIME_MONITOR_URL =
-  process.env.UPTIME_MONITOR_URL ?? 'http://127.0.0.1:3831'
+const UPTIME_MONITOR_URL = process.env.UPTIME_MONITOR_URL ?? 'http://127.0.0.1:3831'
 
 export async function GET() {
   try {
@@ -19,21 +18,16 @@ export async function GET() {
     if (!res.ok) {
       return NextResponse.json(
         { error: `nself-uptime-monitor upstream error: ${res.status}` },
-        { status: res.status },
+        { status: res.status }
       )
     }
 
     const data: unknown = await res.json()
     return NextResponse.json(data)
   } catch (err) {
-    const msg =
-      err instanceof Error ? err.message : 'Failed to reach nself-uptime-monitor'
+    const msg = err instanceof Error ? err.message : 'Failed to reach nself-uptime-monitor'
 
-    if (
-      msg.includes('ECONNREFUSED') ||
-      msg.includes('fetch failed') ||
-      msg.includes('timeout')
-    ) {
+    if (msg.includes('ECONNREFUSED') || msg.includes('fetch failed') || msg.includes('timeout')) {
       return NextResponse.json({ monitors: [], generatedAt: new Date().toISOString() })
     }
 

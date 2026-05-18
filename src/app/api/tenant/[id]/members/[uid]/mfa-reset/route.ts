@@ -6,10 +6,7 @@ interface RouteParams {
   params: Promise<{ id: string; uid: string }>
 }
 
-export async function POST(
-  request: NextRequest,
-  { params }: RouteParams,
-): Promise<NextResponse> {
+export async function POST(request: NextRequest, { params }: RouteParams): Promise<NextResponse> {
   const authError = await requireAuth(request)
   if (authError) return authError
 
@@ -28,7 +25,7 @@ export async function POST(
           error: 'Failed to reset MFA',
           details: result.error || result.stderr || 'Unknown error',
         },
-        { status: 500 },
+        { status: 500 }
       )
     }
     return NextResponse.json({
@@ -42,7 +39,7 @@ export async function POST(
         error: 'Failed to reset MFA',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

@@ -13,8 +13,7 @@ export interface ErrorMessage {
 export const ERROR_MESSAGES: Record<ErrorCode, ErrorMessage> = {
   // ===== NETWORK ERRORS =====
   [ErrorCode.NETWORK_ERROR]: {
-    userMessage:
-      'Network connection failed. Please check your internet connection.',
+    userMessage: 'Network connection failed. Please check your internet connection.',
     action: 'Check your network connection and try again.',
     retryable: true,
   },
@@ -72,8 +71,7 @@ export const ERROR_MESSAGES: Record<ErrorCode, ErrorMessage> = {
   },
   [ErrorCode.PASSWORD_TOO_WEAK]: {
     userMessage: 'Password does not meet security requirements.',
-    action:
-      'Use a stronger password with uppercase, lowercase, numbers, and special characters.',
+    action: 'Use a stronger password with uppercase, lowercase, numbers, and special characters.',
     retryable: true,
   },
   [ErrorCode.PASSWORD_MISMATCH]: {

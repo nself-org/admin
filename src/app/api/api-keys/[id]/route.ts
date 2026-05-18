@@ -9,19 +9,13 @@ interface RouteParams {
 /**
  * GET /api/api-keys/[id] - Get a single API key by ID
  */
-export async function GET(
-  request: NextRequest,
-  { params }: RouteParams,
-): Promise<NextResponse> {
+export async function GET(request: NextRequest, { params }: RouteParams): Promise<NextResponse> {
   try {
     const { id } = await params
     const apiKey = await apiKeysApi.getApiKeyById(id)
 
     if (!apiKey) {
-      return NextResponse.json(
-        { success: false, error: 'API key not found' },
-        { status: 404 },
-      )
+      return NextResponse.json({ success: false, error: 'API key not found' }, { status: 404 })
     }
 
     return NextResponse.json({
@@ -35,7 +29,7 @@ export async function GET(
         error: 'Failed to fetch API key',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -52,10 +46,7 @@ export async function GET(
  *   - permissions?: ApiKeyPermission[]
  *   - expiresAt?: string
  */
-export async function PATCH(
-  request: NextRequest,
-  { params }: RouteParams,
-): Promise<NextResponse> {
+export async function PATCH(request: NextRequest, { params }: RouteParams): Promise<NextResponse> {
   const authError = await requireAuth(request)
   if (authError) return authError
 
@@ -72,7 +63,7 @@ export async function PATCH(
             success: false,
             error: `Invalid status. Must be one of: ${validStatuses.join(', ')}`,
           },
-          { status: 400 },
+          { status: 400 }
         )
       }
     }
@@ -99,17 +90,14 @@ export async function PATCH(
     if (Object.keys(updates).length === 0) {
       return NextResponse.json(
         { success: false, error: 'No valid fields to update' },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
     const updatedKey = await apiKeysApi.updateApiKey(id, updates)
 
     if (!updatedKey) {
-      return NextResponse.json(
-        { success: false, error: 'API key not found' },
-        { status: 404 },
-      )
+      return NextResponse.json({ success: false, error: 'API key not found' }, { status: 404 })
     }
 
     return NextResponse.json({
@@ -123,7 +111,7 @@ export async function PATCH(
         error: 'Failed to update API key',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -131,10 +119,7 @@ export async function PATCH(
 /**
  * DELETE /api/api-keys/[id] - Delete an API key permanently
  */
-export async function DELETE(
-  request: NextRequest,
-  { params }: RouteParams,
-): Promise<NextResponse> {
+export async function DELETE(request: NextRequest, { params }: RouteParams): Promise<NextResponse> {
   const authError = await requireAuth(request)
   if (authError) return authError
 
@@ -143,10 +128,7 @@ export async function DELETE(
     const deleted = await apiKeysApi.deleteApiKey(id)
 
     if (!deleted) {
-      return NextResponse.json(
-        { success: false, error: 'API key not found' },
-        { status: 404 },
-      )
+      return NextResponse.json({ success: false, error: 'API key not found' }, { status: 404 })
     }
 
     return NextResponse.json({
@@ -160,7 +142,7 @@ export async function DELETE(
         error: 'Failed to delete API key',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

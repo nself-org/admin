@@ -4,11 +4,7 @@ import { Button } from '@/components/Button'
 import { EnvImportExport } from '@/components/config/EnvImportExport'
 import { EnvTabBar } from '@/components/config/EnvTabBar'
 import { EnvVariableRow } from '@/components/config/EnvVariableRow'
-import {
-  AccessRole,
-  EnvVariable,
-  EnvironmentTab,
-} from '@/components/config/types'
+import { AccessRole, EnvVariable, EnvironmentTab } from '@/components/config/types'
 import { PageShell } from '@/components/PageShell'
 import { FormSkeleton } from '@/components/skeletons/FormSkeleton'
 import { useAsyncData } from '@/hooks/useAsyncData'
@@ -88,9 +84,7 @@ function EnvEditorContent() {
     type: 'success' | 'error'
     text: string
   } | null>(null)
-  const [collapsedSections, setCollapsedSections] = useState<Set<string>>(
-    new Set(),
-  )
+  const [collapsedSections, setCollapsedSections] = useState<Set<string>>(new Set())
   const [showAddForm, setShowAddForm] = useState(false)
   const [newKey, setNewKey] = useState('')
   const [newValue, setNewValue] = useState('')
@@ -98,9 +92,7 @@ function EnvEditorContent() {
   const [newIsSecret, setNewIsSecret] = useState(false)
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null)
   const [undoTimeout, setUndoTimeout] = useState<NodeJS.Timeout | null>(null)
-  const [deletedVariable, setDeletedVariable] = useState<EnvVariable | null>(
-    null,
-  )
+  const [deletedVariable, setDeletedVariable] = useState<EnvVariable | null>(null)
   const [sortColumn, setSortColumn] = useState<'key' | 'value' | null>(null)
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc')
   const [groupBy, setGroupBy] = useState<'category' | 'none'>('category')
@@ -108,11 +100,8 @@ function EnvEditorContent() {
   const [showSchemaValidation, setShowSchemaValidation] = useState(false)
 
   const schemaErrors = useMemo(
-    () =>
-      validateEnvVars(
-        variables.map(({ key, value }) => ({ key, value: value ?? '' })),
-      ),
-    [variables],
+    () => validateEnvVars(variables.map(({ key, value }) => ({ key, value: value ?? '' }))),
+    [variables]
   )
 
   // Role-based access (in a real app this would come from auth context)
@@ -120,9 +109,7 @@ function EnvEditorContent() {
   const [accessRole] = useState<AccessRole>('lead_dev')
 
   // Visible tabs based on access role
-  const visibleTabs = ENVIRONMENT_TABS.filter((tab) =>
-    canAccessTab(accessRole, tab.minRole),
-  )
+  const visibleTabs = ENVIRONMENT_TABS.filter((tab) => canAccessTab(accessRole, tab.minRole))
 
   // Data fetching
   const { data, loading, error, refetch } = useAsyncData<EnvVariable[]>(
@@ -131,10 +118,9 @@ function EnvEditorContent() {
       const timeoutId = setTimeout(() => controller.abort(), 5000)
 
       try {
-        const res = await fetch(
-          `/api/config/env?env=${environment}&defaults=${showDefaults}`,
-          { signal: controller.signal },
-        )
+        const res = await fetch(`/api/config/env?env=${environment}&defaults=${showDefaults}`, {
+          signal: controller.signal,
+        })
         clearTimeout(timeoutId)
 
         if (!res.ok) {
@@ -157,7 +143,7 @@ function EnvEditorContent() {
     {
       fetchOnMount: true,
       dependencies: [environment, showDefaults],
-    },
+    }
   )
 
   // Sync fetched data to local state (no localStorage — secrets must not persist client-side)
@@ -195,10 +181,8 @@ function EnvEditorContent() {
   const updateVariable = useCallback((key: string, value: string) => {
     setVariables((vars) =>
       vars.map((v) =>
-        v.key === key
-          ? { ...v, value, hasChanges: true, source: 'env' as const }
-          : v,
-      ),
+        v.key === key ? { ...v, value, hasChanges: true, source: 'env' as const } : v
+      )
     )
     setHasChanges(true)
     setRebuildRequired(true)
@@ -268,7 +252,7 @@ function EnvEditorContent() {
       }, 5000)
       setUndoTimeout(timeout)
     },
-    [deleteConfirm, variables],
+    [deleteConfirm, variables]
   )
 
   const undoDelete = useCallback(() => {
@@ -404,15 +388,13 @@ function EnvEditorContent() {
         text: `Imported ${Object.keys(vars).length} variables`,
       })
     },
-    [variables],
+    [variables]
   )
 
   const copyFromEnvironment = useCallback(
     async (sourceEnv: string) => {
       try {
-        const res = await fetch(
-          `/api/config/env?env=${sourceEnv}&defaults=false`,
-        )
+        const res = await fetch(`/api/config/env?env=${sourceEnv}&defaults=false`)
         const json = await res.json()
 
         if (json.success) {
@@ -431,7 +413,7 @@ function EnvEditorContent() {
         })
       }
     },
-    [importVariables],
+    [importVariables]
   )
 
   const findReplace = useCallback(
@@ -464,7 +446,7 @@ function EnvEditorContent() {
         })
       }
     },
-    [variables],
+    [variables]
   )
 
   const handleSort = useCallback(
@@ -476,7 +458,7 @@ function EnvEditorContent() {
         setSortDirection('asc')
       }
     },
-    [sortColumn, sortDirection],
+    [sortColumn, sortDirection]
   )
 
   const handleTabChange = useCallback((tabId: string) => {
@@ -547,13 +529,11 @@ function EnvEditorContent() {
             acc[cat].push(v)
             return acc
           },
-          {} as Record<string, EnvVariable[]>,
+          {} as Record<string, EnvVariable[]>
         )
       : { All: sortedVariables }
 
-  const envVarCount = variables.filter(
-    (v) => v.source === 'env' && v.value,
-  ).length
+  const envVarCount = variables.filter((v) => v.source === 'env' && v.value).length
   const modifiedCount = variables.filter((v) => v.hasChanges).length
 
   const currentTab = ENVIRONMENT_TABS.find((t) => t.id === environment)
@@ -608,10 +588,7 @@ function EnvEditorContent() {
         </Button>
       )}
 
-      <Button
-        onClick={saveEnvironmentVariables}
-        disabled={!hasChanges || saving}
-      >
+      <Button onClick={saveEnvironmentVariables} disabled={!hasChanges || saving}>
         <Icons.Save className="mr-1 h-3 w-3" />
         {saving ? 'Saving...' : 'Save & Build'}
       </Button>
@@ -662,8 +639,7 @@ function EnvEditorContent() {
           <div className="flex items-center gap-2">
             <Icons.Info className="h-4 w-4 text-blue-600 dark:text-blue-400" />
             <span className="text-sm text-blue-800 dark:text-blue-200">
-              Deleted variable:{' '}
-              <span className="font-mono">{deletedVariable.key}</span>
+              Deleted variable: <span className="font-mono">{deletedVariable.key}</span>
             </span>
           </div>
           <Button variant="outline" onClick={undoDelete}>
@@ -713,9 +689,7 @@ function EnvEditorContent() {
                 : 'bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400'
             }`}
           >
-            {showDefaults ? (
-              <Icons.Check className="mr-1 inline h-3 w-3" />
-            ) : null}
+            {showDefaults ? <Icons.Check className="mr-1 inline h-3 w-3" /> : null}
             Defaults
           </button>
 
@@ -723,18 +697,12 @@ function EnvEditorContent() {
             onClick={() => setShowSecrets(!showSecrets)}
             className="flex items-center gap-1 rounded-lg bg-zinc-100 px-3 py-1.5 text-xs text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400"
           >
-            {showSecrets ? (
-              <Icons.EyeOff className="h-3 w-3" />
-            ) : (
-              <Icons.Eye className="h-3 w-3" />
-            )}
+            {showSecrets ? <Icons.EyeOff className="h-3 w-3" /> : <Icons.Eye className="h-3 w-3" />}
             Secrets
           </button>
 
           <button
-            onClick={() =>
-              setGroupBy(groupBy === 'category' ? 'none' : 'category')
-            }
+            onClick={() => setGroupBy(groupBy === 'category' ? 'none' : 'category')}
             className="flex items-center gap-1 rounded-lg bg-zinc-100 px-3 py-1.5 text-xs text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400"
           >
             <Icons.Filter className="h-3 w-3" />
@@ -858,8 +826,8 @@ function EnvEditorContent() {
             </div>
           </div>
           <p className="mt-1.5 text-xs text-blue-700/70 dark:text-blue-400/50">
-            Variable names can contain letters, numbers, and underscores. Press
-            Enter to add, Escape to cancel.
+            Variable names can contain letters, numbers, and underscores. Press Enter to add, Escape
+            to cancel.
           </p>
         </div>
       )}
@@ -899,15 +867,9 @@ function EnvEditorContent() {
               <table className="w-full text-xs">
                 <thead>
                   <tr className="border-b border-zinc-100 dark:border-zinc-800">
-                    <th className="px-4 py-2 text-left font-medium text-zinc-500">
-                      Variable
-                    </th>
-                    <th className="px-4 py-2 text-left font-medium text-zinc-500">
-                      Issue
-                    </th>
-                    <th className="w-20 px-4 py-2 text-left font-medium text-zinc-500">
-                      Severity
-                    </th>
+                    <th className="px-4 py-2 text-left font-medium text-zinc-500">Variable</th>
+                    <th className="px-4 py-2 text-left font-medium text-zinc-500">Issue</th>
+                    <th className="w-20 px-4 py-2 text-left font-medium text-zinc-500">Severity</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -919,9 +881,7 @@ function EnvEditorContent() {
                       <td className="px-4 py-2 font-mono text-zinc-700 dark:text-zinc-300">
                         {err.key}
                       </td>
-                      <td className="px-4 py-2 text-zinc-600 dark:text-zinc-400">
-                        {err.message}
-                      </td>
+                      <td className="px-4 py-2 text-zinc-600 dark:text-zinc-400">{err.message}</td>
                       <td className="px-4 py-2">
                         <span
                           className={`rounded-full px-2 py-0.5 text-[10px] font-medium ${
@@ -954,8 +914,8 @@ function EnvEditorContent() {
             </p>
             {!searchTerm && (
               <p className="mt-2 text-sm text-zinc-500">
-                Click &quot;Add&quot; to create a new variable, or enable
-                &quot;Defaults&quot; to see available settings.
+                Click &quot;Add&quot; to create a new variable, or enable &quot;Defaults&quot; to
+                see available settings.
               </p>
             )}
           </div>
@@ -1067,10 +1027,8 @@ function EnvEditorContent() {
                       <div className="space-y-3 md:hidden">
                         {vars.map((variable) => {
                           const isEditing = editingKey === variable.key
-                          const displayValue =
-                            variable.value || variable.defaultValue || ''
-                          const isConfirmingDelete =
-                            deleteConfirm === variable.key
+                          const displayValue = variable.value || variable.defaultValue || ''
+                          const isConfirmingDelete = deleteConfirm === variable.key
 
                           return (
                             <div
@@ -1095,9 +1053,7 @@ function EnvEditorContent() {
                                 </div>
                                 <div className="ml-2 flex gap-1">
                                   <button
-                                    onClick={() =>
-                                      copyToClipboard(displayValue)
-                                    }
+                                    onClick={() => copyToClipboard(displayValue)}
                                     className="rounded p-2 hover:bg-zinc-100 dark:hover:bg-zinc-700"
                                     title="Copy value"
                                   >
@@ -1120,11 +1076,7 @@ function EnvEditorContent() {
                                         ? 'bg-red-100 text-red-600 dark:bg-red-900/20'
                                         : 'hover:bg-zinc-100 dark:hover:bg-zinc-700'
                                     }`}
-                                    title={
-                                      isConfirmingDelete
-                                        ? 'Click again to confirm'
-                                        : 'Delete'
-                                    }
+                                    title={isConfirmingDelete ? 'Click again to confirm' : 'Delete'}
                                   >
                                     <Icons.Trash2 className="h-4 w-4" />
                                   </button>
@@ -1135,9 +1087,7 @@ function EnvEditorContent() {
                                 <div className="space-y-2">
                                   <textarea
                                     value={tempValue}
-                                    onChange={(e) =>
-                                      setTempValue(e.target.value)
-                                    }
+                                    onChange={(e) => setTempValue(e.target.value)}
                                     className="w-full rounded border border-zinc-200 bg-white px-3 py-2 font-mono text-sm dark:border-zinc-700 dark:bg-zinc-800"
                                     rows={3}
                                     autoFocus
@@ -1174,24 +1124,16 @@ function EnvEditorContent() {
                               ) : (
                                 <div className="font-mono text-sm text-zinc-600 dark:text-zinc-400">
                                   {variable.isSecret && !showSecrets ? (
-                                    <span className="text-zinc-400">
-                                      ••••••••
-                                    </span>
+                                    <span className="text-zinc-400">••••••••</span>
                                   ) : displayValue ? (
-                                    <div className="break-all">
-                                      {displayValue}
-                                    </div>
+                                    <div className="break-all">{displayValue}</div>
                                   ) : (
-                                    <span className="text-zinc-400 italic">
-                                      not set
-                                    </span>
+                                    <span className="text-zinc-400 italic">not set</span>
                                   )}
                                 </div>
                               )}
 
-                              {(variable.source ||
-                                variable.hasChanges ||
-                                variable.isSecret) && (
+                              {(variable.source || variable.hasChanges || variable.isSecret) && (
                                 <div className="mt-2 flex flex-wrap gap-1">
                                   {variable.source && (
                                     <span className="rounded bg-zinc-100 px-2 py-0.5 text-xs text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400">

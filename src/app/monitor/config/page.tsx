@@ -70,11 +70,7 @@ function MonitorConfigContent() {
     }
   }
 
-  const updateConfig = (
-    section: keyof MonitoringConfig,
-    key: string,
-    value: unknown,
-  ) => {
+  const updateConfig = (section: keyof MonitoringConfig, key: string, value: unknown) => {
     if (!config) return
     setConfig({
       ...config,
@@ -121,12 +117,10 @@ function MonitorConfigContent() {
               Configuration not available
             </h3>
             <p className="text-zinc-600 dark:text-zinc-400">
-              Monitoring configuration is not exposed via the Admin API. Use the CLI
-              to view or update configuration directly.
+              Monitoring configuration is not exposed via the Admin API. Use the CLI to view or
+              update configuration directly.
             </p>
-            <p className="mt-4 font-mono text-sm text-cyan-500">
-              nself monitor config
-            </p>
+            <p className="mt-4 font-mono text-sm text-cyan-500">nself monitor config</p>
           </div>
         </div>
       </>
@@ -178,23 +172,17 @@ function MonitorConfigContent() {
               <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-orange-100 dark:bg-orange-900/30">
                 <Database className="h-5 w-5 text-orange-600 dark:text-orange-400" />
               </div>
-              <h3 className="text-lg font-semibold text-zinc-900 dark:text-white">
-                Prometheus
-              </h3>
+              <h3 className="text-lg font-semibold text-zinc-900 dark:text-white">Prometheus</h3>
             </div>
             <div className="space-y-4">
               <label className="flex items-center gap-3">
                 <input
                   type="checkbox"
                   checked={config.prometheus.enabled}
-                  onChange={(e) =>
-                    updateConfig('prometheus', 'enabled', e.target.checked)
-                  }
+                  onChange={(e) => updateConfig('prometheus', 'enabled', e.target.checked)}
                   className="h-4 w-4 rounded border-zinc-300 text-cyan-600 focus:ring-cyan-500"
                 />
-                <span className="text-zinc-700 dark:text-zinc-300">
-                  Enable Prometheus
-                </span>
+                <span className="text-zinc-700 dark:text-zinc-300">Enable Prometheus</span>
               </label>
               <div>
                 <label className="mb-2 block text-sm font-medium text-zinc-700 dark:text-zinc-300">
@@ -204,11 +192,7 @@ function MonitorConfigContent() {
                   type="number"
                   value={config.prometheus.retentionDays}
                   onChange={(e) =>
-                    updateConfig(
-                      'prometheus',
-                      'retentionDays',
-                      parseInt(e.target.value) || 15,
-                    )
+                    updateConfig('prometheus', 'retentionDays', parseInt(e.target.value) || 15)
                   }
                   min={1}
                   max={365}
@@ -221,9 +205,7 @@ function MonitorConfigContent() {
                 </label>
                 <select
                   value={config.prometheus.scrapeInterval}
-                  onChange={(e) =>
-                    updateConfig('prometheus', 'scrapeInterval', e.target.value)
-                  }
+                  onChange={(e) => updateConfig('prometheus', 'scrapeInterval', e.target.value)}
                   className="w-full rounded-lg border border-zinc-300 bg-white px-4 py-2 text-zinc-900 focus:border-cyan-500 focus:outline-none dark:border-zinc-600 dark:bg-zinc-800 dark:text-white"
                 >
                   <option value="5s">5 seconds</option>
@@ -242,23 +224,17 @@ function MonitorConfigContent() {
               <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-yellow-100 dark:bg-yellow-900/30">
                 <Server className="h-5 w-5 text-yellow-600 dark:text-yellow-400" />
               </div>
-              <h3 className="text-lg font-semibold text-zinc-900 dark:text-white">
-                Loki (Logs)
-              </h3>
+              <h3 className="text-lg font-semibold text-zinc-900 dark:text-white">Loki (Logs)</h3>
             </div>
             <div className="space-y-4">
               <label className="flex items-center gap-3">
                 <input
                   type="checkbox"
                   checked={config.loki.enabled}
-                  onChange={(e) =>
-                    updateConfig('loki', 'enabled', e.target.checked)
-                  }
+                  onChange={(e) => updateConfig('loki', 'enabled', e.target.checked)}
                   className="h-4 w-4 rounded border-zinc-300 text-cyan-600 focus:ring-cyan-500"
                 />
-                <span className="text-zinc-700 dark:text-zinc-300">
-                  Enable Loki
-                </span>
+                <span className="text-zinc-700 dark:text-zinc-300">Enable Loki</span>
               </label>
               <div>
                 <label className="mb-2 block text-sm font-medium text-zinc-700 dark:text-zinc-300">
@@ -268,11 +244,7 @@ function MonitorConfigContent() {
                   type="number"
                   value={config.loki.retentionDays}
                   onChange={(e) =>
-                    updateConfig(
-                      'loki',
-                      'retentionDays',
-                      parseInt(e.target.value) || 7,
-                    )
+                    updateConfig('loki', 'retentionDays', parseInt(e.target.value) || 7)
                   }
                   min={1}
                   max={90}
@@ -288,23 +260,17 @@ function MonitorConfigContent() {
               <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-orange-100 dark:bg-orange-900/30">
                 <Settings className="h-5 w-5 text-orange-600 dark:text-orange-400" />
               </div>
-              <h3 className="text-lg font-semibold text-zinc-900 dark:text-white">
-                Grafana
-              </h3>
+              <h3 className="text-lg font-semibold text-zinc-900 dark:text-white">Grafana</h3>
             </div>
             <div className="space-y-4">
               <label className="flex items-center gap-3">
                 <input
                   type="checkbox"
                   checked={config.grafana.enabled}
-                  onChange={(e) =>
-                    updateConfig('grafana', 'enabled', e.target.checked)
-                  }
+                  onChange={(e) => updateConfig('grafana', 'enabled', e.target.checked)}
                   className="h-4 w-4 rounded border-zinc-300 text-cyan-600 focus:ring-cyan-500"
                 />
-                <span className="text-zinc-700 dark:text-zinc-300">
-                  Enable Grafana
-                </span>
+                <span className="text-zinc-700 dark:text-zinc-300">Enable Grafana</span>
               </label>
               <div>
                 <label className="mb-2 block text-sm font-medium text-zinc-700 dark:text-zinc-300">
@@ -313,9 +279,7 @@ function MonitorConfigContent() {
                 <input
                   type="password"
                   value={config.grafana.adminPassword}
-                  onChange={(e) =>
-                    updateConfig('grafana', 'adminPassword', e.target.value)
-                  }
+                  onChange={(e) => updateConfig('grafana', 'adminPassword', e.target.value)}
                   className="w-full rounded-lg border border-zinc-300 bg-white px-4 py-2 text-zinc-900 focus:border-cyan-500 focus:outline-none dark:border-zinc-600 dark:bg-zinc-800 dark:text-white"
                 />
               </div>
@@ -323,14 +287,10 @@ function MonitorConfigContent() {
                 <input
                   type="checkbox"
                   checked={config.grafana.anonymousAccess}
-                  onChange={(e) =>
-                    updateConfig('grafana', 'anonymousAccess', e.target.checked)
-                  }
+                  onChange={(e) => updateConfig('grafana', 'anonymousAccess', e.target.checked)}
                   className="h-4 w-4 rounded border-zinc-300 text-cyan-600 focus:ring-cyan-500"
                 />
-                <span className="text-zinc-700 dark:text-zinc-300">
-                  Allow Anonymous Access
-                </span>
+                <span className="text-zinc-700 dark:text-zinc-300">Allow Anonymous Access</span>
               </label>
             </div>
           </div>
@@ -341,49 +301,35 @@ function MonitorConfigContent() {
               <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-red-100 dark:bg-red-900/30">
                 <Bell className="h-5 w-5 text-red-600 dark:text-red-400" />
               </div>
-              <h3 className="text-lg font-semibold text-zinc-900 dark:text-white">
-                Alerting
-              </h3>
+              <h3 className="text-lg font-semibold text-zinc-900 dark:text-white">Alerting</h3>
             </div>
             <div className="space-y-4">
               <label className="flex items-center gap-3">
                 <input
                   type="checkbox"
                   checked={config.alerting.enabled}
-                  onChange={(e) =>
-                    updateConfig('alerting', 'enabled', e.target.checked)
-                  }
+                  onChange={(e) => updateConfig('alerting', 'enabled', e.target.checked)}
                   className="h-4 w-4 rounded border-zinc-300 text-cyan-600 focus:ring-cyan-500"
                 />
-                <span className="text-zinc-700 dark:text-zinc-300">
-                  Enable Alerting
-                </span>
+                <span className="text-zinc-700 dark:text-zinc-300">Enable Alerting</span>
               </label>
               <label className="flex items-center gap-3">
                 <input
                   type="checkbox"
                   checked={config.alerting.emailEnabled}
-                  onChange={(e) =>
-                    updateConfig('alerting', 'emailEnabled', e.target.checked)
-                  }
+                  onChange={(e) => updateConfig('alerting', 'emailEnabled', e.target.checked)}
                   className="h-4 w-4 rounded border-zinc-300 text-cyan-600 focus:ring-cyan-500"
                 />
-                <span className="text-zinc-700 dark:text-zinc-300">
-                  Email Notifications
-                </span>
+                <span className="text-zinc-700 dark:text-zinc-300">Email Notifications</span>
               </label>
               <label className="flex items-center gap-3">
                 <input
                   type="checkbox"
                   checked={config.alerting.slackEnabled}
-                  onChange={(e) =>
-                    updateConfig('alerting', 'slackEnabled', e.target.checked)
-                  }
+                  onChange={(e) => updateConfig('alerting', 'slackEnabled', e.target.checked)}
                   className="h-4 w-4 rounded border-zinc-300 text-cyan-600 focus:ring-cyan-500"
                 />
-                <span className="text-zinc-700 dark:text-zinc-300">
-                  Slack Notifications
-                </span>
+                <span className="text-zinc-700 dark:text-zinc-300">Slack Notifications</span>
               </label>
               {config.alerting.slackEnabled && (
                 <div>
@@ -393,9 +339,7 @@ function MonitorConfigContent() {
                   <input
                     type="text"
                     value={config.alerting.slackWebhook}
-                    onChange={(e) =>
-                      updateConfig('alerting', 'slackWebhook', e.target.value)
-                    }
+                    onChange={(e) => updateConfig('alerting', 'slackWebhook', e.target.value)}
                     placeholder="https://hooks.slack.com/services/..."
                     className="w-full rounded-lg border border-zinc-300 bg-white px-4 py-2 text-zinc-900 focus:border-cyan-500 focus:outline-none dark:border-zinc-600 dark:bg-zinc-800 dark:text-white"
                   />
@@ -412,8 +356,7 @@ function MonitorConfigContent() {
           </h3>
           <div className="space-y-2 font-mono text-sm">
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-cyan-500">nself monitor config</span> - Show
-              current config
+              <span className="text-cyan-500">nself monitor config</span> - Show current config
             </p>
             <p className="text-zinc-600 dark:text-zinc-400">
               <span className="text-cyan-500">
@@ -422,8 +365,8 @@ function MonitorConfigContent() {
               - Update config
             </p>
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-cyan-500">nself monitor restart</span> -
-              Restart monitoring services
+              <span className="text-cyan-500">nself monitor restart</span> - Restart monitoring
+              services
             </p>
           </div>
         </div>

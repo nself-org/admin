@@ -27,7 +27,6 @@ import {
 } from 'lucide-react'
 import { Suspense, useCallback, useEffect, useState } from 'react'
 
-
 type SortDir = 'asc' | 'desc' | null
 
 interface TableRowsResponse {
@@ -37,11 +36,7 @@ interface TableRowsResponse {
   limit: number
 }
 
-function exportCsv(
-  columns: string[],
-  rows: Record<string, unknown>[],
-  tableName: string,
-) {
+function exportCsv(columns: string[], rows: Record<string, unknown>[], tableName: string) {
   const header = columns.join(',')
   const body = rows
     .map((row) =>
@@ -55,7 +50,7 @@ function exportCsv(
           }
           return str
         })
-        .join(','),
+        .join(',')
     )
     .join('\n')
 
@@ -122,9 +117,7 @@ function NpTablesContent() {
     setRowsLoading(true)
     setRowsError(null)
     try {
-      const res = await fetch(
-        `/api/database/np-tables/${tableName}?page=${pageNum}&limit=${LIMIT}`,
-      )
+      const res = await fetch(`/api/database/np-tables/${tableName}?page=${pageNum}&limit=${LIMIT}`)
       if (res.status === 401) {
         window.location.href = '/login'
         return
@@ -211,14 +204,10 @@ function NpTablesContent() {
   return (
     <div className="space-y-6 p-6">
       <div>
-        <h1 className="text-2xl font-bold text-zinc-900 dark:text-white">
-          Plugin Tables
-        </h1>
+        <h1 className="text-2xl font-bold text-zinc-900 dark:text-white">Plugin Tables</h1>
         <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
           Read-only browser for{' '}
-          <code className="rounded bg-zinc-100 px-1 py-0.5 text-xs dark:bg-zinc-800">
-            np_*
-          </code>{' '}
+          <code className="rounded bg-zinc-100 px-1 py-0.5 text-xs dark:bg-zinc-800">np_*</code>{' '}
           database tables created by installed plugins
         </p>
       </div>
@@ -266,18 +255,14 @@ function NpTablesContent() {
           {!selectedTable ? (
             <div className="flex flex-1 flex-col items-center justify-center py-16">
               <Database className="mb-4 h-12 w-12 text-zinc-700" />
-              <p className="text-sm text-zinc-400">
-                Select a table from the sidebar
-              </p>
+              <p className="text-sm text-zinc-400">Select a table from the sidebar</p>
             </div>
           ) : (
             <>
               {/* Table toolbar */}
               <div className="flex items-center justify-between border-b border-zinc-700/50 px-4 py-3">
                 <div className="flex items-center gap-3">
-                  <span className="font-mono text-sm font-medium text-white">
-                    {selectedTable}
-                  </span>
+                  <span className="font-mono text-sm font-medium text-white">{selectedTable}</span>
                   {!rowsLoading && (
                     <span className="rounded-full bg-zinc-700/50 px-2 py-0.5 text-xs text-zinc-400">
                       {total} rows
@@ -307,17 +292,13 @@ function NpTablesContent() {
                     className="flex items-center gap-1 rounded border border-zinc-700 px-2 py-1.5 text-xs text-zinc-400 hover:text-white disabled:opacity-50"
                     aria-label="Refresh rows"
                   >
-                    <RefreshCw
-                      className={`h-3.5 w-3.5 ${rowsLoading ? 'animate-spin' : ''}`}
-                    />
+                    <RefreshCw className={`h-3.5 w-3.5 ${rowsLoading ? 'animate-spin' : ''}`} />
                   </button>
 
                   {/* Export CSV */}
                   <button
                     type="button"
-                    onClick={() =>
-                      exportCsv(columns, sortedRows, selectedTable)
-                    }
+                    onClick={() => exportCsv(columns, sortedRows, selectedTable)}
                     disabled={sortedRows.length === 0}
                     className="flex items-center gap-1 rounded border border-zinc-700 px-2.5 py-1.5 text-xs text-zinc-400 hover:text-white disabled:opacity-50"
                     aria-label="Export current page as CSV"
@@ -348,9 +329,7 @@ function NpTablesContent() {
                   <div className="flex flex-col items-center justify-center py-16">
                     <Database className="mb-3 h-10 w-10 text-zinc-700" />
                     <p className="text-sm text-zinc-400">
-                      {search
-                        ? 'No rows match your filter'
-                        : 'This table is empty'}
+                      {search ? 'No rows match your filter' : 'This table is empty'}
                     </p>
                   </div>
                 ) : (
@@ -425,9 +404,7 @@ function NpTablesContent() {
                 <p className="text-xs text-zinc-500">
                   Page {page + 1} of {totalPages}
                   {search && (
-                    <span className="ml-2 text-zinc-600">
-                      ({sortedRows.length} filtered)
-                    </span>
+                    <span className="ml-2 text-zinc-600">({sortedRows.length} filtered)</span>
                   )}
                 </p>
                 <div className="flex items-center gap-1">
@@ -443,9 +420,7 @@ function NpTablesContent() {
                   </button>
                   <button
                     type="button"
-                    onClick={() =>
-                      setPage((p) => Math.min(totalPages - 1, p + 1))
-                    }
+                    onClick={() => setPage((p) => Math.min(totalPages - 1, p + 1))}
                     disabled={page >= totalPages - 1 || rowsLoading}
                     className="flex items-center gap-1 rounded border border-zinc-700 px-2.5 py-1 text-xs text-zinc-400 hover:text-white disabled:cursor-not-allowed disabled:opacity-40"
                     aria-label="Next page"

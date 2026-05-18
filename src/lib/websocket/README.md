@@ -44,14 +44,7 @@ function MyComponent() {
   const { connected, reconnecting, status } = useWebSocket()
 
   return (
-    <div>
-      Status:{' '}
-      {connected
-        ? 'Connected'
-        : reconnecting
-          ? 'Reconnecting...'
-          : 'Disconnected'}
-    </div>
+    <div>Status: {connected ? 'Connected' : reconnecting ? 'Reconnecting...' : 'Disconnected'}</div>
   )
 }
 ```
@@ -82,8 +75,7 @@ function ServiceCard({ serviceName }: { serviceName: string }) {
 import { useBuildProgress } from '@/hooks/useBuildProgress'
 
 function BuildPage() {
-  const { progress, isBuilding, isComplete, isFailed, history, reset } =
-    useBuildProgress()
+  const { progress, isBuilding, isComplete, isFailed, history, reset } = useBuildProgress()
 
   return (
     <div>
@@ -176,7 +168,7 @@ emitServiceStatus(
     status: 'running',
     timestamp: new Date().toISOString(),
   },
-  'project-abc123', // room ID
+  'project-abc123' // room ID
 )
 ```
 

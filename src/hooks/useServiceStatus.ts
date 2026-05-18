@@ -21,18 +21,15 @@ export function useServiceStatus(serviceName?: string) {
     if (!connected) return
 
     // Subscribe to service status updates
-    const unsubscribe = on<ServiceStatusEvent>(
-      EventType.SERVICE_STATUS,
-      (data) => {
-        // Only update if this is the service we're watching, or if no specific service is set
-        if (!serviceName || data.service === serviceName) {
-          setStatuses((prev) => ({
-            ...prev,
-            [data.service]: data,
-          }))
-        }
-      },
-    )
+    const unsubscribe = on<ServiceStatusEvent>(EventType.SERVICE_STATUS, (data) => {
+      // Only update if this is the service we're watching, or if no specific service is set
+      if (!serviceName || data.service === serviceName) {
+        setStatuses((prev) => ({
+          ...prev,
+          [data.service]: data,
+        }))
+      }
+    })
 
     return () => {
       unsubscribe()

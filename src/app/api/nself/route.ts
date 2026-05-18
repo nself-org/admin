@@ -31,10 +31,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     const { command, args = [] } = await request.json()
 
     if (!command) {
-      return NextResponse.json(
-        { success: false, error: 'Command is required' },
-        { status: 400 },
-      )
+      return NextResponse.json({ success: false, error: 'Command is required' }, { status: 400 })
     }
 
     // Validate allowed commands for security
@@ -79,16 +76,13 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     if (!allowedCommands.includes(command)) {
       return NextResponse.json(
         { success: false, error: `Command '${command}' not allowed` },
-        { status: 403 },
+        { status: 403 }
       )
     }
 
     // Validate args is an array
     if (!Array.isArray(args)) {
-      return NextResponse.json(
-        { success: false, error: 'Args must be an array' },
-        { status: 400 },
-      )
+      return NextResponse.json({ success: false, error: 'Args must be an array' }, { status: 400 })
     }
 
     // Validate each argument
@@ -97,13 +91,13 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       if (typeof arg !== 'string') {
         return NextResponse.json(
           { success: false, error: 'All arguments must be strings' },
-          { status: 400 },
+          { status: 400 }
         )
       }
       if (arg.length > 0 && !validateSafeArg(arg)) {
         return NextResponse.json(
           { success: false, error: `Invalid argument: ${arg}` },
-          { status: 400 },
+          { status: 400 }
         )
       }
       if (arg.length > 0) {
@@ -149,7 +143,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         stderr: execError.stderr || '',
         stdout: execError.stdout || '',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -164,7 +158,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
   if (!allowedActions.includes(action)) {
     return NextResponse.json(
       { success: false, error: `Unknown action: ${action}` },
-      { status: 400 },
+      { status: 400 }
     )
   }
 
@@ -197,7 +191,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         error: `Failed to get ${action} data`,
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

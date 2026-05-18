@@ -2,12 +2,7 @@
  * Cloud Infrastructure Types for nself-admin v0.0.8
  */
 
-export type CloudProviderCategory =
-  | 'enterprise'
-  | 'developer'
-  | 'budget'
-  | 'regional'
-  | 'edge'
+export type CloudProviderCategory = 'enterprise' | 'developer' | 'budget' | 'regional' | 'edge'
 
 export type ServerSize = 'tiny' | 'small' | 'medium' | 'large' | 'xlarge'
 
@@ -52,14 +47,7 @@ export interface CloudServer {
   provider: string
   region: string
   size: ServerSize
-  status:
-    | 'running'
-    | 'stopped'
-    | 'starting'
-    | 'stopping'
-    | 'provisioning'
-    | 'error'
-    | 'unknown'
+  status: 'running' | 'stopped' | 'starting' | 'stopping' | 'provisioning' | 'error' | 'unknown'
   createdAt: string
   tags?: Record<string, string>
   specs?: {

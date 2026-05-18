@@ -124,9 +124,7 @@ function PerformanceContent() {
                     : 'border-zinc-300 text-zinc-700 hover:bg-zinc-50 dark:border-zinc-600 dark:text-zinc-300 dark:hover:bg-zinc-800'
                 }`}
               >
-                <RefreshCw
-                  className={`h-4 w-4 ${autoRefresh ? 'animate-spin' : ''}`}
-                />
+                <RefreshCw className={`h-4 w-4 ${autoRefresh ? 'animate-spin' : ''}`} />
                 {autoRefresh ? 'Auto' : 'Manual'}
               </button>
               <button
@@ -150,9 +148,7 @@ function PerformanceContent() {
           <div className="rounded-xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-zinc-700 dark:bg-zinc-800">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                  CPU Usage
-                </p>
+                <p className="text-sm text-zinc-500 dark:text-zinc-400">CPU Usage</p>
                 <p className="text-3xl font-bold text-zinc-900 dark:text-white">
                   {systemProfile?.cpu.usage.toFixed(1)}%
                 </p>
@@ -174,9 +170,7 @@ function PerformanceContent() {
           <div className="rounded-xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-zinc-700 dark:bg-zinc-800">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                  Memory
-                </p>
+                <p className="text-sm text-zinc-500 dark:text-zinc-400">Memory</p>
                 <p className="text-3xl font-bold text-zinc-900 dark:text-white">
                   {systemProfile?.memory.percentage.toFixed(1)}%
                 </p>
@@ -220,9 +214,7 @@ function PerformanceContent() {
           <div className="rounded-xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-zinc-700 dark:bg-zinc-800">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                  Network I/O
-                </p>
+                <p className="text-sm text-zinc-500 dark:text-zinc-400">Network I/O</p>
                 <p className="text-3xl font-bold text-zinc-900 dark:text-white">
                   {formatBytes(systemProfile?.network.bytesIn || 0)}/s
                 </p>
@@ -334,10 +326,7 @@ function PerformanceContent() {
               </thead>
               <tbody>
                 {services.map((service) => (
-                  <tr
-                    key={service.name}
-                    className="border-b border-zinc-100 dark:border-zinc-800"
-                  >
+                  <tr key={service.name} className="border-b border-zinc-100 dark:border-zinc-800">
                     <td className="py-3 font-medium text-zinc-900 dark:text-white">
                       {service.name}
                     </td>
@@ -386,9 +375,7 @@ function PerformanceContent() {
               <Activity className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
             </div>
             <div>
-              <p className="font-medium text-zinc-900 dark:text-white">
-                Full Profile
-              </p>
+              <p className="font-medium text-zinc-900 dark:text-white">Full Profile</p>
               <p className="text-sm text-zinc-500">Detailed system analysis</p>
             </div>
           </Link>
@@ -401,12 +388,8 @@ function PerformanceContent() {
               <Database className="h-5 w-5 text-blue-600 dark:text-blue-400" />
             </div>
             <div>
-              <p className="font-medium text-zinc-900 dark:text-white">
-                Slow Queries
-              </p>
-              <p className="text-sm text-zinc-500">
-                Query performance analysis
-              </p>
+              <p className="font-medium text-zinc-900 dark:text-white">Slow Queries</p>
+              <p className="text-sm text-zinc-500">Query performance analysis</p>
             </div>
           </Link>
 
@@ -418,12 +401,8 @@ function PerformanceContent() {
               <Zap className="h-5 w-5 text-yellow-600 dark:text-yellow-400" />
             </div>
             <div>
-              <p className="font-medium text-zinc-900 dark:text-white">
-                Suggestions
-              </p>
-              <p className="text-sm text-zinc-500">
-                Optimization recommendations
-              </p>
+              <p className="font-medium text-zinc-900 dark:text-white">Suggestions</p>
+              <p className="text-sm text-zinc-500">Optimization recommendations</p>
             </div>
           </Link>
 
@@ -435,9 +414,7 @@ function PerformanceContent() {
               <TrendingUp className="h-5 w-5 text-sky-500 dark:text-sky-400" />
             </div>
             <div>
-              <p className="font-medium text-zinc-900 dark:text-white">
-                Benchmarks
-              </p>
+              <p className="font-medium text-zinc-900 dark:text-white">Benchmarks</p>
               <p className="text-sm text-zinc-500">Performance testing</p>
             </div>
           </Link>
@@ -451,20 +428,18 @@ function PerformanceContent() {
           </h3>
           <div className="space-y-2 font-mono text-sm">
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-emerald-500">nself perf</span> - Show system
-              performance overview
+              <span className="text-emerald-500">nself perf</span> - Show system performance
+              overview
             </p>
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-emerald-500">nself perf profile</span> - Run
-              full system profile
+              <span className="text-emerald-500">nself perf profile</span> - Run full system profile
             </p>
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-emerald-500">nself perf queries</span> -
-              Analyze slow queries
+              <span className="text-emerald-500">nself perf queries</span> - Analyze slow queries
             </p>
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-emerald-500">nself perf suggest</span> - Get
-              optimization suggestions
+              <span className="text-emerald-500">nself perf suggest</span> - Get optimization
+              suggestions
             </p>
           </div>
         </div>

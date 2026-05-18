@@ -48,9 +48,4 @@ export interface PairingError extends Error {
   details?: string
 }
 
-export type PairingStatus =
-  | 'idle'
-  | 'initiating'
-  | 'polling'
-  | 'paired'
-  | 'error'
+export type PairingStatus = 'idle' | 'initiating' | 'polling' | 'paired' | 'error'

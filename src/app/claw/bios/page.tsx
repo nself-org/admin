@@ -101,9 +101,7 @@ function LayerRow({ layer }: { layer: BiosLayer }) {
   return (
     <div
       className={`flex items-start gap-4 rounded-xl border p-4 ${
-        layer.active
-          ? 'border-sky-500/20 bg-sky-900/10'
-          : 'border-zinc-800 bg-zinc-900/40'
+        layer.active ? 'border-sky-500/20 bg-sky-900/10' : 'border-zinc-800 bg-zinc-900/40'
       }`}
     >
       <div
@@ -130,9 +128,7 @@ function LayerRow({ layer }: { layer: BiosLayer }) {
         <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-xs text-zinc-600">
           <span>
             Hash:{' '}
-            <code className="font-mono text-zinc-400">
-              {layer.prompt_hash.slice(0, 8)}&hellip;
-            </code>
+            <code className="font-mono text-zinc-400">{layer.prompt_hash.slice(0, 8)}&hellip;</code>
           </span>
           <span>{layer.token_count.toLocaleString()} tokens</span>
           <span>Modified {timeAgo(layer.last_modified)}</span>
@@ -252,9 +248,7 @@ export default function BiosPage() {
             disabled={refreshing}
             className="flex items-center gap-1.5 rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-1.5 text-xs font-medium text-zinc-300 transition-colors hover:border-zinc-600 hover:bg-zinc-700 disabled:opacity-50"
           >
-            <RefreshCw
-              className={`h-3 w-3 ${refreshing ? 'animate-spin' : ''}`}
-            />
+            <RefreshCw className={`h-3 w-3 ${refreshing ? 'animate-spin' : ''}`} />
             Refresh
           </button>
         </div>
@@ -265,9 +259,7 @@ export default function BiosPage() {
         <div className="flex items-start gap-3 rounded-xl border border-amber-500/20 bg-amber-900/10 p-4">
           <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-amber-400" />
           <div>
-            <p className="text-sm font-medium text-amber-300">
-              claw plugin is not running
-            </p>
+            <p className="text-sm font-medium text-amber-300">claw plugin is not running</p>
             <p className="mt-0.5 text-xs text-amber-400/70">
               Install via:{' '}
               <code className="rounded bg-amber-900/30 px-1 font-mono">
@@ -323,9 +315,7 @@ export default function BiosPage() {
             </div>
             <div className="rounded-xl border border-zinc-800 bg-zinc-900/60 p-4">
               <p className="text-xs text-zinc-500">Last snapshot</p>
-              <p className="mt-1 text-sm text-zinc-300">
-                {timeAgo(bios.last_snapshot)}
-              </p>
+              <p className="mt-1 text-sm text-zinc-300">{timeAgo(bios.last_snapshot)}</p>
             </div>
             <div className="rounded-xl border border-zinc-800 bg-zinc-900/60 p-4">
               <p className="text-xs text-zinc-500">Drift count</p>

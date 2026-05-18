@@ -37,9 +37,7 @@ export function BundleUpsell({
     <div className="rounded-xl border border-indigo-500/30 bg-gradient-to-br from-indigo-900/40 to-zinc-900/60 p-5">
       <div className="mb-4 flex items-start justify-between gap-4">
         <div className="space-y-1">
-          <h3 className="font-semibold text-white">
-            Get the full {displayName}
-          </h3>
+          <h3 className="font-semibold text-white">Get the full {displayName}</h3>
           <div className="flex items-center gap-2 text-sm">
             <span className="font-medium text-indigo-300">{price}</span>
             <span className="text-zinc-500">per month</span>
@@ -52,10 +50,8 @@ export function BundleUpsell({
 
       {installedCount > 0 && (
         <p className="mb-4 text-sm text-zinc-400">
-          You have{' '}
-          <span className="font-medium text-indigo-300">{installedCount}</span>{' '}
-          of <span className="font-medium text-white">{totalCount}</span>{' '}
-          plugins in this bundle
+          You have <span className="font-medium text-indigo-300">{installedCount}</span> of{' '}
+          <span className="font-medium text-white">{totalCount}</span> plugins in this bundle
         </p>
       )}
 

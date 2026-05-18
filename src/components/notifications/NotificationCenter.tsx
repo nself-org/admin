@@ -33,10 +33,7 @@ export function NotificationCenter({ className }: NotificationCenterProps) {
   // Close dropdown when clicking outside
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
-      if (
-        containerRef.current &&
-        !containerRef.current.contains(event.target as Node)
-      ) {
+      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
         setIsOpen(false)
       }
     }
@@ -119,10 +116,7 @@ export function NotificationCenter({ className }: NotificationCenterProps) {
               )}
               <Link
                 href="/settings/notifications"
-                className={cn(
-                  buttonVariants({ variant: 'ghost', size: 'icon' }),
-                  'h-8 w-8',
-                )}
+                className={cn(buttonVariants({ variant: 'ghost', size: 'icon' }), 'h-8 w-8')}
               >
                 <Settings className="h-4 w-4" />
                 <span className="sr-only">Notification settings</span>
@@ -170,7 +164,7 @@ export function NotificationCenter({ className }: NotificationCenterProps) {
                     href="/notifications"
                     className={cn(
                       buttonVariants({ variant: 'ghost' }),
-                      'w-full justify-center text-sm',
+                      'w-full justify-center text-sm'
                     )}
                     onClick={() => setIsOpen(false)}
                   >

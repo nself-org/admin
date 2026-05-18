@@ -27,17 +27,14 @@ function authRequiredResponse(): NextResponse {
     {
       status: 503,
       headers: { 'X-Service-Required': 'auth' },
-    },
+    }
   )
 }
 
 export async function GET(request: NextRequest): Promise<NextResponse> {
   const token = request.cookies.get('nself-session')?.value
   if (!token || !(await validateSessionToken(token))) {
-    return NextResponse.json(
-      { success: false, error: 'Unauthorized' },
-      { status: 401 },
-    )
+    return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 })
   }
 
   if (!AUTH_URL) {
@@ -55,7 +52,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     if (!upstream.ok) {
       return NextResponse.json(
         { success: false, error: 'Failed to fetch account info' },
-        { status: upstream.status },
+        { status: upstream.status }
       )
     }
 

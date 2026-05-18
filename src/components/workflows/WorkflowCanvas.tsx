@@ -72,7 +72,7 @@ export function WorkflowCanvas({
         onActionMove?.(state.dragging, { x, y })
       }
     },
-    [state.dragging, state.panX, state.panY, state.zoom, onActionMove],
+    [state.dragging, state.panX, state.panY, state.zoom, onActionMove]
   )
 
   const handleMouseUp = React.useCallback(() => {
@@ -83,15 +83,12 @@ export function WorkflowCanvas({
     setState((prev) => ({ ...prev, dragging: actionId }))
   }, [])
 
-  const handlePortDragStart = React.useCallback(
-    (actionId: string, port: string) => {
-      setState((prev) => ({
-        ...prev,
-        connecting: { sourceId: actionId, sourcePort: port },
-      }))
-    },
-    [],
-  )
+  const handlePortDragStart = React.useCallback((actionId: string, port: string) => {
+    setState((prev) => ({
+      ...prev,
+      connecting: { sourceId: actionId, sourcePort: port },
+    }))
+  }, [])
 
   const handlePortDrop = React.useCallback(
     (targetId: string, targetPort: string) => {
@@ -105,7 +102,7 @@ export function WorkflowCanvas({
       }
       setState((prev) => ({ ...prev, connecting: null }))
     },
-    [state.connecting, onConnectionCreate],
+    [state.connecting, onConnectionCreate]
   )
 
   const getNodePosition = (actionId: string) => {

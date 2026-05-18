@@ -79,29 +79,20 @@ export function ProjectStateWrapper({ children }: ProjectStateWrapperProps) {
       if (
         status.success &&
         !status.needsSetup &&
-        (status.projectState === 'configured' ||
-          status.projectState === 'running')
+        (status.projectState === 'configured' || status.projectState === 'running')
       ) {
         localStorage.setItem(PROJECT_SETUP_KEY, 'true')
       }
 
       // Only redirect if we're not already on init page and project needs setup
-      if (
-        status.success &&
-        status.needsSetup &&
-        !pathname.startsWith('/init')
-      ) {
+      if (status.success && status.needsSetup && !pathname.startsWith('/init')) {
         localStorage.removeItem(PROJECT_SETUP_KEY) // Clear cached status
         router.push('/init/1') // Start at step 1 of the wizard
         return
       }
 
       // If project is set up but we're on init page, redirect appropriately
-      if (
-        status.success &&
-        !status.needsSetup &&
-        pathname.startsWith('/init')
-      ) {
+      if (status.success && !status.needsSetup && pathname.startsWith('/init')) {
         // If has docker-compose but no containers, go to /start
         if (status.hasDockerCompose && status.containerCount === 0) {
           router.push('/start')
@@ -135,11 +126,7 @@ export function ProjectStateWrapper({ children }: ProjectStateWrapperProps) {
 
       // If project is no longer set up, clear cache and redirect appropriately
       // But don't redirect if we're already on an init page
-      if (
-        status.success &&
-        status.needsSetup &&
-        !pathname.startsWith('/init')
-      ) {
+      if (status.success && status.needsSetup && !pathname.startsWith('/init')) {
         localStorage.removeItem(PROJECT_SETUP_KEY)
         router.push('/init/1') // Start at step 1 of the wizard
         return
@@ -149,8 +136,7 @@ export function ProjectStateWrapper({ children }: ProjectStateWrapperProps) {
       if (
         status.success &&
         !status.needsSetup &&
-        (status.projectState === 'configured' ||
-          status.projectState === 'running')
+        (status.projectState === 'configured' || status.projectState === 'running')
       ) {
         localStorage.setItem(PROJECT_SETUP_KEY, 'true')
       }

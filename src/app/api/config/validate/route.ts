@@ -11,10 +11,7 @@ export interface ValidationCheck {
 
 export interface ValidationResult {
   checks: ValidationCheck[]
-  categories: Record<
-    string,
-    { total: number; passed: number; failed: number; warnings: number }
-  >
+  categories: Record<string, { total: number; passed: number; failed: number; warnings: number }>
   summary: {
     total: number
     passed: number
@@ -63,16 +60,13 @@ function parseCLIOutput(output: string): ValidationCheck[] {
     }
 
     // Parse [PASS], [FAIL], [WARN] format
-    const bracketMatch = trimmed.match(
-      /^\[(PASS|FAIL|WARN|OK|ERROR|WARNING|INFO)\]\s*(.+)$/i,
-    )
+    const bracketMatch = trimmed.match(/^\[(PASS|FAIL|WARN|OK|ERROR|WARNING|INFO)\]\s*(.+)$/i)
     if (bracketMatch) {
       const rawStatus = bracketMatch[1].toUpperCase()
       const message = bracketMatch[2].trim()
       let status: 'pass' | 'fail' | 'warning' = 'pass'
       if (rawStatus === 'FAIL' || rawStatus === 'ERROR') status = 'fail'
-      else if (rawStatus === 'WARN' || rawStatus === 'WARNING')
-        status = 'warning'
+      else if (rawStatus === 'WARN' || rawStatus === 'WARNING') status = 'warning'
 
       checks.push({
         name: extractCheckName(message),
@@ -85,9 +79,7 @@ function parseCLIOutput(output: string): ValidationCheck[] {
     }
 
     // Parse checkmark/cross format: ✓ / ✗ / ⚠ or [x] / [ ] patterns
-    const symbolMatch = trimmed.match(
-      /^([✓✔☑]|[✗✘☒❌]|[⚠⚡]|PASS|FAIL|WARN)\s+(.+)$/,
-    )
+    const symbolMatch = trimmed.match(/^([✓✔☑]|[✗✘☒❌]|[⚠⚡]|PASS|FAIL|WARN)\s+(.+)$/)
     if (symbolMatch) {
       const symbol = symbolMatch[1]
       const message = symbolMatch[2].trim()
@@ -107,14 +99,13 @@ function parseCLIOutput(output: string): ValidationCheck[] {
 
     // Parse colon-separated lines: "Check Name: PASS" or "Check Name: OK"
     const colonMatch = trimmed.match(
-      /^(.+?):\s*(PASS|FAIL|OK|ERROR|WARN|WARNING|HEALTHY|UNHEALTHY|UP|DOWN|RUNNING|STOPPED)$/i,
+      /^(.+?):\s*(PASS|FAIL|OK|ERROR|WARN|WARNING|HEALTHY|UNHEALTHY|UP|DOWN|RUNNING|STOPPED)$/i
     )
     if (colonMatch) {
       const name = colonMatch[1].trim()
       const rawStatus = colonMatch[2].toUpperCase()
       let status: 'pass' | 'fail' | 'warning' = 'pass'
-      if (['FAIL', 'ERROR', 'UNHEALTHY', 'DOWN', 'STOPPED'].includes(rawStatus))
-        status = 'fail'
+      if (['FAIL', 'ERROR', 'UNHEALTHY', 'DOWN', 'STOPPED'].includes(rawStatus)) status = 'fail'
       else if (['WARN', 'WARNING'].includes(rawStatus)) status = 'warning'
 
       checks.push({
@@ -173,11 +164,7 @@ function inferCategory(currentCategory: string, message: string): string {
   ) {
     return 'ssl'
   }
-  if (
-    lower.includes('docker') ||
-    lower.includes('container') ||
-    lower.includes('compose')
-  ) {
+  if (lower.includes('docker') || lower.includes('container') || lower.includes('compose')) {
     return 'services'
   }
   if (
@@ -197,11 +184,7 @@ function inferCategory(currentCategory: string, message: string): string {
   ) {
     return 'storage'
   }
-  if (
-    lower.includes('mail') ||
-    lower.includes('smtp') ||
-    lower.includes('email')
-  ) {
+  if (lower.includes('mail') || lower.includes('smtp') || lower.includes('email')) {
     return 'email'
   }
   if (
@@ -266,11 +249,8 @@ function inferSuggestion(message: string): string {
  * Build category summary from parsed checks.
  */
 function buildCategorySummary(
-  checks: ValidationCheck[],
-): Record<
-  string,
-  { total: number; passed: number; failed: number; warnings: number }
-> {
+  checks: ValidationCheck[]
+): Record<string, { total: number; passed: number; failed: number; warnings: number }> {
   const categories: Record<
     string,
     { total: number; passed: number; failed: number; warnings: number }
@@ -309,17 +289,13 @@ export async function GET(): Promise<Response> {
 
       // If still empty, create a synthetic failure entry
       if (checks.length === 0) {
-        const errorMsg =
-          result.error ||
-          doctorResult.error ||
-          'Validation command not available'
+        const errorMsg = result.error || doctorResult.error || 'Validation command not available'
         checks.push({
           name: 'CLI Validation',
           category: 'general',
           status: 'fail',
           message: errorMsg,
-          suggestion:
-            'Ensure nself CLI is installed and up to date: nself update --cli',
+          suggestion: 'Ensure nself CLI is installed and up to date: nself update --cli',
         })
       }
     }
@@ -355,7 +331,7 @@ export async function GET(): Promise<Response> {
         error: 'Configuration validation failed',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

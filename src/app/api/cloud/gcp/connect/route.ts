@@ -68,14 +68,12 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     if (!projectId || !serviceAccountKey) {
       return NextResponse.json(
         { success: false, error: 'Missing required fields' },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
     const serviceAccountJson =
-      typeof serviceAccountKey === 'string'
-        ? serviceAccountKey
-        : JSON.stringify(serviceAccountKey)
+      typeof serviceAccountKey === 'string' ? serviceAccountKey : JSON.stringify(serviceAccountKey)
 
     const result = validateGCPServiceAccount(serviceAccountJson)
 
@@ -86,7 +84,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           error: result.error || 'GCP service account validation failed',
           configured: false,
         },
-        { status: 422 },
+        { status: 422 }
       )
     }
 
@@ -110,7 +108,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to connect to GCP',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

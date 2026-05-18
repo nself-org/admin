@@ -17,10 +17,7 @@ interface RouteParams {
  * GET /api/cloud/providers/[name] - Get provider details
  * Executes: nself cloud provider info {name} --json
  */
-export async function GET(
-  request: NextRequest,
-  { params }: RouteParams,
-): Promise<NextResponse> {
+export async function GET(request: NextRequest, { params }: RouteParams): Promise<NextResponse> {
   const startTime = Date.now()
   const { name } = await params
 
@@ -59,11 +56,7 @@ export async function GET(
       stderr?: string
     }
 
-    logger.cli(
-      `nself cloud provider info ${name}`,
-      false,
-      Date.now() - startTime,
-    )
+    logger.cli(`nself cloud provider info ${name}`, false, Date.now() - startTime)
     logger.error('Failed to get provider info', {
       provider: name,
       error: execError.message,
@@ -77,7 +70,7 @@ export async function GET(
         stdout: execError.stdout || '',
         stderr: execError.stderr || '',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -86,10 +79,7 @@ export async function GET(
  * POST /api/cloud/providers/[name] - Configure provider credentials
  * Executes: nself cloud provider init {name} with credentials
  */
-export async function POST(
-  request: NextRequest,
-  { params }: RouteParams,
-): Promise<NextResponse> {
+export async function POST(request: NextRequest, { params }: RouteParams): Promise<NextResponse> {
   const authError = await requireAuth(request)
   if (authError) return authError
 
@@ -143,11 +133,7 @@ export async function POST(
       stderr?: string
     }
 
-    logger.cli(
-      `nself cloud provider init ${name}`,
-      false,
-      Date.now() - startTime,
-    )
+    logger.cli(`nself cloud provider init ${name}`, false, Date.now() - startTime)
     logger.error('Failed to configure provider', {
       provider: name,
       error: execError.message,
@@ -161,7 +147,7 @@ export async function POST(
         stdout: execError.stdout || '',
         stderr: execError.stderr || '',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

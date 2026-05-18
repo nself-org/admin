@@ -52,11 +52,7 @@ export function ExportCSVButton({
         {loading ? 'Exporting…' : 'Export CSV'}
       </button>
       {error && (
-        <span
-          role="alert"
-          aria-live="assertive"
-          className="text-xs text-red-600 dark:text-red-400"
-        >
+        <span role="alert" aria-live="assertive" className="text-xs text-red-600 dark:text-red-400">
           {error}
         </span>
       )}

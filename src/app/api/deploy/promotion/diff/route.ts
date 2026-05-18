@@ -19,9 +19,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'No active project.' }, { status: 400 })
     }
 
-    const stagingEnv = await readEnvKeys(
-      path.join(project.path, '.env.staging'),
-    )
+    const stagingEnv = await readEnvKeys(path.join(project.path, '.env.staging'))
     const prodEnv = await readEnvKeys(path.join(project.path, '.env.prod'))
     const envChanged = diffSets(stagingEnv, prodEnv)
 

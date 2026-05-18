@@ -38,7 +38,7 @@ interface UseAsyncDataResult<T> {
  */
 export function useAsyncData<T>(
   fetcher: () => Promise<T>,
-  options: UseAsyncDataOptions = {},
+  options: UseAsyncDataOptions = {}
 ): UseAsyncDataResult<T> {
   const { fetchOnMount = true, pollingInterval, dependencies = [] } = options
 

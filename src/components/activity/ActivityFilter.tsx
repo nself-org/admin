@@ -196,8 +196,7 @@ export function ActivityFilter({
   const handleResourceTypeChange = (types: string[]) => {
     onChange({
       ...value,
-      resourceType:
-        types.length > 0 ? (types as ActivityResourceType[]) : undefined,
+      resourceType: types.length > 0 ? (types as ActivityResourceType[]) : undefined,
     })
   }
 
@@ -221,11 +220,7 @@ export function ActivityFilter({
   }
 
   const hasActiveFilters =
-    value.action ||
-    value.resourceType ||
-    value.startDate ||
-    value.endDate ||
-    value.search
+    value.action || value.resourceType || value.startDate || value.endDate || value.search
 
   // Get current action values as string array
   const currentActions = value.action
@@ -270,7 +265,7 @@ export function ActivityFilter({
     <div
       className={cn(
         'rounded-lg border border-zinc-200 bg-white p-4 dark:border-zinc-800 dark:bg-zinc-950',
-        className,
+        className
       )}
     >
       {/* Search and toggle */}
@@ -295,12 +290,8 @@ export function ActivityFilter({
           {hasActiveFilters && (
             <span className="ml-2 rounded-full bg-blue-500 px-1.5 py-0.5 text-xs text-white">
               {
-                [
-                  value.action,
-                  value.resourceType,
-                  value.startDate,
-                  value.endDate,
-                ].filter(Boolean).length
+                [value.action, value.resourceType, value.startDate, value.endDate].filter(Boolean)
+                  .length
               }
             </span>
           )}

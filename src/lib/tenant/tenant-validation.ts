@@ -10,17 +10,14 @@ export const tenantNameSchema = z
   .max(100, 'Name must be less than 100 characters')
   .regex(
     /^[a-zA-Z0-9\s\-_]+$/,
-    'Name can only contain letters, numbers, spaces, hyphens, and underscores',
+    'Name can only contain letters, numbers, spaces, hyphens, and underscores'
   )
 
 export const tenantSlugSchema = z
   .string()
   .min(2, 'Slug must be at least 2 characters')
   .max(50, 'Slug must be less than 50 characters')
-  .regex(
-    /^[a-z0-9-]+$/,
-    'Slug can only contain lowercase letters, numbers, and hyphens',
-  )
+  .regex(/^[a-z0-9-]+$/, 'Slug can only contain lowercase letters, numbers, and hyphens')
 
 export const domainSchema = z
   .string()
@@ -31,8 +28,7 @@ export const domainSchema = z
     const parts = val.split('.')
     if (parts.length < 2) return false
     return parts.every(
-      (part) =>
-        /^[a-zA-Z0-9-]+$/.test(part) && part.length > 0 && part.length <= 63,
+      (part) => /^[a-zA-Z0-9-]+$/.test(part) && part.length > 0 && part.length <= 63
     )
   }, 'Invalid domain format')
 

@@ -8,13 +8,7 @@ import { PageContent } from '@/components/ui/page-content'
 import { PageHeader } from '@/components/ui/page-header'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useActivityStats } from '@/hooks/useActivity'
-import {
-  Activity,
-  BarChart3,
-  Calendar,
-  CalendarDays,
-  Download,
-} from 'lucide-react'
+import { Activity, BarChart3, Calendar, CalendarDays, Download } from 'lucide-react'
 import * as React from 'react'
 import { Suspense, useState } from 'react'
 
@@ -48,12 +42,7 @@ function StatsCard({
 
 function ActivityPageContent() {
   const [view, setView] = useState<'feed' | 'timeline'>('feed')
-  const {
-    totalToday,
-    totalWeek,
-    totalMonth,
-    isLoading: statsLoading,
-  } = useActivityStats()
+  const { totalToday, totalWeek, totalMonth, isLoading: statsLoading } = useActivityStats()
 
   const handleExport = async () => {
     try {
@@ -93,18 +82,8 @@ function ActivityPageContent() {
       <PageContent>
         {/* Stats Cards */}
         <div className="mb-6 grid gap-4 md:grid-cols-3">
-          <StatsCard
-            title="Today"
-            value={totalToday}
-            icon={Activity}
-            isLoading={statsLoading}
-          />
-          <StatsCard
-            title="This Week"
-            value={totalWeek}
-            icon={Calendar}
-            isLoading={statsLoading}
-          />
+          <StatsCard title="Today" value={totalToday} icon={Activity} isLoading={statsLoading} />
+          <StatsCard title="This Week" value={totalWeek} icon={Calendar} isLoading={statsLoading} />
           <StatsCard
             title="This Month"
             value={totalMonth}
@@ -115,10 +94,7 @@ function ActivityPageContent() {
 
         {/* Tabs for Feed and Timeline */}
         <Card className="p-6">
-          <Tabs
-            value={view}
-            onValueChange={(v) => setView(v as 'feed' | 'timeline')}
-          >
+          <Tabs value={view} onValueChange={(v) => setView(v as 'feed' | 'timeline')}>
             <TabsList className="mb-4">
               <TabsTrigger value="feed">
                 <Activity className="mr-2 h-4 w-4" />

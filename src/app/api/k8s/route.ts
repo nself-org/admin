@@ -39,7 +39,7 @@ export async function GET(_request: NextRequest): Promise<NextResponse> {
         error: 'Failed to get K8s status',
         details: err.message,
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

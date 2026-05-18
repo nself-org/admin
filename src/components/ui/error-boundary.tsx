@@ -97,23 +97,19 @@ export class ErrorBoundary extends Component<Props, State> {
             </CardHeader>
             <CardContent className="space-y-4">
               <p className="text-muted-foreground">
-                An unexpected error occurred. Try refreshing the page or contact
-                support if the problem persists.
+                An unexpected error occurred. Try refreshing the page or contact support if the
+                problem persists.
               </p>
 
               {errorMessage && (
                 <div className="border-destructive/20 bg-destructive/10 rounded-md border p-4">
-                  <p className="text-destructive font-mono text-sm">
-                    {errorMessage}
-                  </p>
+                  <p className="text-destructive font-mono text-sm">{errorMessage}</p>
                 </div>
               )}
 
               {isDev && this.state.error && (
                 <details className="border-border bg-muted rounded-md border p-4">
-                  <summary className="cursor-pointer font-medium">
-                    Technical Details
-                  </summary>
+                  <summary className="cursor-pointer font-medium">Technical Details</summary>
                   <div className="mt-2 space-y-2">
                     <div>
                       <p className="text-sm font-medium">Error:</p>

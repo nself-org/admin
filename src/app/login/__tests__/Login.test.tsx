@@ -15,9 +15,7 @@ jest.mock('next/navigation', () => ({
 // Mock AuthContext with successful login
 const mockLogin = jest.fn().mockResolvedValue(true)
 jest.mock('@/contexts/AuthContext', () => ({
-  AuthProvider: ({ children }: { children: React.ReactNode }) => (
-    <div>{children}</div>
-  ),
+  AuthProvider: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
   useAuth: () => ({
     login: mockLogin,
     logout: jest.fn(),
@@ -95,9 +93,7 @@ describe('LoginPage', () => {
       await user.type(passwordInput, 'test')
 
       await waitFor(() => {
-        expect(
-          screen.getByText(/Use 12\+ characters with uppercase/i),
-        ).toBeInTheDocument()
+        expect(screen.getByText(/Use 12\+ characters with uppercase/i)).toBeInTheDocument()
       })
     })
 
@@ -105,9 +101,7 @@ describe('LoginPage', () => {
       render(<LoginPage />)
 
       await waitFor(() => {
-        expect(
-          screen.getByPlaceholderText(/re-enter your password/i),
-        ).toBeInTheDocument()
+        expect(screen.getByPlaceholderText(/re-enter your password/i)).toBeInTheDocument()
       })
     })
 
@@ -212,9 +206,7 @@ describe('LoginPage', () => {
       render(<LoginPage />)
 
       await waitFor(() => {
-        expect(
-          screen.getByPlaceholderText(/enter your password/i),
-        ).toBeInTheDocument()
+        expect(screen.getByPlaceholderText(/enter your password/i)).toBeInTheDocument()
       })
 
       const passwordInput = screen.getByPlaceholderText(/enter your password/i)
@@ -234,9 +226,7 @@ describe('LoginPage', () => {
       render(<LoginPage />)
 
       await waitFor(() => {
-        expect(
-          screen.getByLabelText(/remember me for 30 days/i),
-        ).toBeInTheDocument()
+        expect(screen.getByLabelText(/remember me for 30 days/i)).toBeInTheDocument()
       })
     })
 
@@ -246,11 +236,10 @@ describe('LoginPage', () => {
       // Wait for the component to finish loading and auto-focus
       await waitFor(
         () => {
-          const passwordInput =
-            screen.getByPlaceholderText(/enter your password/i)
+          const passwordInput = screen.getByPlaceholderText(/enter your password/i)
           expect(passwordInput).toHaveFocus()
         },
-        { timeout: 2000 },
+        { timeout: 2000 }
       )
     })
   })
@@ -291,9 +280,7 @@ describe('LoginPage', () => {
       render(<LoginPage />)
 
       await waitFor(() => {
-        expect(
-          screen.getByPlaceholderText(/enter your password/i),
-        ).toBeInTheDocument()
+        expect(screen.getByPlaceholderText(/enter your password/i)).toBeInTheDocument()
       })
 
       const passwordInput = screen.getByPlaceholderText(/enter your password/i)
@@ -316,9 +303,7 @@ describe('LoginPage', () => {
       render(<LoginPage />)
 
       await waitFor(() => {
-        expect(
-          screen.getByPlaceholderText(/enter your password/i),
-        ).toBeInTheDocument()
+        expect(screen.getByPlaceholderText(/enter your password/i)).toBeInTheDocument()
       })
 
       const passwordInput = screen.getByPlaceholderText(/enter your password/i)
@@ -341,9 +326,7 @@ describe('LoginPage', () => {
       render(<LoginPage />)
 
       await waitFor(() => {
-        expect(
-          screen.getByPlaceholderText(/enter your password/i),
-        ).toBeInTheDocument()
+        expect(screen.getByPlaceholderText(/enter your password/i)).toBeInTheDocument()
       })
 
       const passwordInput = screen.getByPlaceholderText(/enter your password/i)
@@ -395,9 +378,7 @@ describe('LoginPage', () => {
       render(<LoginPage />)
 
       await waitFor(() => {
-        expect(
-          screen.getByPlaceholderText(/enter your password/i),
-        ).toBeInTheDocument()
+        expect(screen.getByPlaceholderText(/enter your password/i)).toBeInTheDocument()
       })
 
       const passwordInput = screen.getByPlaceholderText(/enter your password/i)
@@ -420,9 +401,7 @@ describe('LoginPage', () => {
       render(<LoginPage />)
 
       await waitFor(() => {
-        expect(
-          screen.getByPlaceholderText(/enter your password/i),
-        ).toBeInTheDocument()
+        expect(screen.getByPlaceholderText(/enter your password/i)).toBeInTheDocument()
       })
 
       const passwordInput = screen.getByPlaceholderText(/enter your password/i)
@@ -442,7 +421,7 @@ describe('LoginPage', () => {
             headers: expect.objectContaining({
               'x-csrf-token': 'mock-csrf-token',
             }),
-          }),
+          })
         )
       })
     })
@@ -475,9 +454,7 @@ describe('LoginPage', () => {
       render(<LoginPage />)
 
       await waitFor(() => {
-        expect(
-          screen.getByPlaceholderText(/enter your password/i),
-        ).toBeInTheDocument()
+        expect(screen.getByPlaceholderText(/enter your password/i)).toBeInTheDocument()
       })
 
       const passwordInput = screen.getByPlaceholderText(/enter your password/i)
@@ -524,9 +501,7 @@ describe('LoginPage', () => {
       render(<LoginPage />)
 
       await waitFor(() => {
-        expect(
-          screen.getByPlaceholderText(/enter your password/i),
-        ).toBeInTheDocument()
+        expect(screen.getByPlaceholderText(/enter your password/i)).toBeInTheDocument()
       })
 
       const passwordInput = screen.getByPlaceholderText(/enter your password/i)
@@ -539,10 +514,7 @@ describe('LoginPage', () => {
       })
 
       await waitFor(() => {
-        expect(global.fetch).toHaveBeenCalledWith(
-          '/api/auth/login',
-          expect.any(Object),
-        )
+        expect(global.fetch).toHaveBeenCalledWith('/api/auth/login', expect.any(Object))
       })
     })
   })
@@ -565,9 +537,7 @@ describe('LoginPage', () => {
 
       // Wait for the component to load
       await waitFor(() => {
-        expect(
-          screen.getByPlaceholderText(/enter your password/i),
-        ).toBeInTheDocument()
+        expect(screen.getByPlaceholderText(/enter your password/i)).toBeInTheDocument()
       })
 
       const submitButton = screen.getByRole('button', { name: /sign in/i })

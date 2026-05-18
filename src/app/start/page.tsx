@@ -49,14 +49,7 @@ import { ensureCorrectRoute } from '@/lib/routing-logic'
 import { useProjectStore } from '@/stores/projectStore'
 import type { MotionValue } from 'framer-motion'
 import { motion, useMotionTemplate, useMotionValue } from 'framer-motion'
-import {
-  CheckCircle,
-  ChevronDown,
-  ChevronUp,
-  Eye,
-  EyeOff,
-  Server,
-} from 'lucide-react'
+import { CheckCircle, ChevronDown, ChevronUp, Eye, EyeOff, Server } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
@@ -64,17 +57,10 @@ interface ProjectInfoCardProps {
   icon: React.ComponentType<{ className?: string }>
   label: string
   value: string | number
-  pattern: Omit<
-    React.ComponentPropsWithoutRef<typeof GridPattern>,
-    'width' | 'height' | 'x'
-  >
+  pattern: Omit<React.ComponentPropsWithoutRef<typeof GridPattern>, 'width' | 'height' | 'x'>
 }
 
-function ProjectInfoIcon({
-  icon: Icon,
-}: {
-  icon: React.ComponentType<{ className?: string }>
-}) {
+function ProjectInfoIcon({ icon: Icon }: { icon: React.ComponentType<{ className?: string }> }) {
   return (
     <div className="flex h-7 w-7 items-center justify-center rounded-full bg-zinc-900/5 ring-1 ring-zinc-900/25 backdrop-blur-[2px] transition duration-300 group-hover:bg-white/50 group-hover:ring-zinc-900/25 dark:bg-white/7.5 dark:ring-white/15 dark:group-hover:bg-blue-400/10 dark:group-hover:ring-blue-400">
       <Icon className="h-4 w-4 stroke-zinc-700 transition-colors duration-300 group-hover:stroke-zinc-900 dark:stroke-zinc-400 dark:group-hover:stroke-blue-400" />
@@ -124,20 +110,11 @@ function ProjectInfoPattern({
   )
 }
 
-function ProjectInfoCard({
-  icon,
-  label,
-  value,
-  pattern,
-}: ProjectInfoCardProps) {
+function ProjectInfoCard({ icon, label, value, pattern }: ProjectInfoCardProps) {
   let mouseX = useMotionValue(0)
   let mouseY = useMotionValue(0)
 
-  function onMouseMove({
-    currentTarget,
-    clientX,
-    clientY,
-  }: React.MouseEvent<HTMLDivElement>) {
+  function onMouseMove({ currentTarget, clientX, clientY }: React.MouseEvent<HTMLDivElement>) {
     let { left, top } = currentTarget.getBoundingClientRect()
     mouseX.set(clientX - left)
     mouseY.set(clientY - top)
@@ -154,13 +131,9 @@ function ProjectInfoCard({
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-3">
             <ProjectInfoIcon icon={icon} />
-            <div className="text-sm font-semibold text-zinc-900 dark:text-white">
-              {label}
-            </div>
+            <div className="text-sm font-semibold text-zinc-900 dark:text-white">{label}</div>
           </div>
-          <div className="text-lg font-bold text-blue-600 dark:text-blue-400">
-            {value}
-          </div>
+          <div className="text-lg font-bold text-blue-600 dark:text-blue-400">{value}</div>
         </div>
       </div>
     </div>
@@ -281,12 +254,7 @@ function getServiceInfo(name: string): {
   if (lowerName === 'redis') {
     return {
       description: 'Redis Cache',
-      details: [
-        'Container: redis',
-        'Image: redis:7-alpine',
-        'Port: 6379',
-        'In-memory data store',
-      ],
+      details: ['Container: redis', 'Image: redis:7-alpine', 'Port: 6379', 'In-memory data store'],
     }
   }
   if (lowerName === 'functions') {
@@ -418,11 +386,7 @@ function getServiceInfo(name: string): {
     const serviceNum = name.replace(/cs/i, '')
     return {
       description: `Custom Service ${serviceNum}`,
-      details: [
-        `Container: ${name}`,
-        'User-defined service',
-        'Check .env file for details',
-      ],
+      details: [`Container: ${name}`, 'User-defined service', 'Check .env file for details'],
     }
   }
 
@@ -494,10 +458,7 @@ function getServiceDisplayName(name: string): string {
 export default function StartPage() {
   const router = useRouter()
   const [projectInfo, setProjectInfo] = useState<ProjectInfo | null>(null)
-  const [_serviceDetails, setServiceDetails] = useState<Record<
-    string,
-    ServiceDetail
-  > | null>(null)
+  const [_serviceDetails, setServiceDetails] = useState<Record<string, ServiceDetail> | null>(null)
   const [_loadingServices, setLoadingServices] = useState(true)
   const [starting, setStarting] = useState(false)
   const [showDetails, setShowDetails] = useState(false)
@@ -506,19 +467,11 @@ export default function StartPage() {
   const [startProgress, setStartProgress] = useState<{
     message: string
     percentage?: number
-    type?:
-      | 'status'
-      | 'progress'
-      | 'download'
-      | 'container'
-      | 'error'
-      | 'complete'
+    type?: 'status' | 'progress' | 'download' | 'container' | 'error' | 'complete'
     instructions?: string[]
   }>({ message: '' })
 
-  const checkProjectStatus = useProjectStore(
-    (state) => state.checkProjectStatus,
-  )
+  const checkProjectStatus = useProjectStore((state) => state.checkProjectStatus)
   const _projectStatus = useProjectStore((state) => state.projectStatus)
 
   // Check routing and load start page data
@@ -602,9 +555,7 @@ export default function StartPage() {
         const errorText = await response.text()
         console.error('Start failed with status:', response.status)
         console.error('Error response:', errorText)
-        throw new Error(
-          `Failed to start services: ${response.status} - ${errorText}`,
-        )
+        throw new Error(`Failed to start services: ${response.status} - ${errorText}`)
       }
 
       const reader = response.body?.getReader()
@@ -674,12 +625,7 @@ export default function StartPage() {
                     errorProgress.instructions = data.instructions
                   }
 
-                  console.error(
-                    'Start error:',
-                    data.message,
-                    data.errorOutput,
-                    data.instructions,
-                  )
+                  console.error('Start error:', data.message, data.errorOutput, data.instructions)
                   setStarting(false) // Reset starting state on error
                   break
                 }
@@ -691,10 +637,7 @@ export default function StartPage() {
                     type: 'complete',
                   })
                   // Mark that services were recently started
-                  localStorage.setItem(
-                    'services_recently_started',
-                    Date.now().toString(),
-                  )
+                  localStorage.setItem('services_recently_started', Date.now().toString())
 
                   // Wait longer and verify services are actually running before redirect
                   setTimeout(async () => {
@@ -743,9 +686,7 @@ export default function StartPage() {
             <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-blue-50 dark:bg-blue-500/10">
               <div className="h-6 w-6 animate-ping rounded-full bg-blue-500" />
             </div>
-            <p className="mt-4 text-zinc-600 dark:text-zinc-400">
-              Checking services...
-            </p>
+            <p className="mt-4 text-zinc-600 dark:text-zinc-400">Checking services...</p>
           </div>
         </div>
       </div>
@@ -877,15 +818,11 @@ export default function StartPage() {
                     {showDetails && (
                       <div className="mt-3 space-y-3 border-t border-zinc-200 pt-3 dark:border-zinc-700">
                         {/* Required Services */}
-                        {(projectInfo.servicesByCategory?.required?.length ??
-                          0) > 0 && (
+                        {(projectInfo.servicesByCategory?.required?.length ?? 0) > 0 && (
                           <div>
                             <div className="mb-2 flex items-center space-x-2">
                               <span className="text-sm font-semibold text-blue-600 dark:text-blue-400">
-                                Required (
-                                {projectInfo.servicesByCategory?.required
-                                  ?.length ?? 0}
-                                )
+                                Required ({projectInfo.servicesByCategory?.required?.length ?? 0})
                               </span>
                             </div>
                             <div className="ml-4 space-y-1">
@@ -894,18 +831,14 @@ export default function StartPage() {
                                   const serviceData = _serviceDetails?.[service]
                                   const info = serviceData
                                     ? {
-                                        description:
-                                          getServiceDisplayName(service),
+                                        description: getServiceDisplayName(service),
                                         details: [
                                           serviceData.container_name &&
                                             `Container: ${serviceData.container_name}`,
-                                          serviceData.image &&
-                                            `Image: ${serviceData.image}`,
-                                          (serviceData.ports?.length ?? 0) >
-                                            0 &&
+                                          serviceData.image && `Image: ${serviceData.image}`,
+                                          (serviceData.ports?.length ?? 0) > 0 &&
                                             `Ports: ${serviceData.ports?.map((p: string) => p.split(':')[0]).join(', ')}`,
-                                          serviceData.restart &&
-                                            `Restart: ${serviceData.restart}`,
+                                          serviceData.restart && `Restart: ${serviceData.restart}`,
                                         ].filter(Boolean),
                                       }
                                     : getServiceInfo(service)
@@ -948,22 +881,18 @@ export default function StartPage() {
                                       </div>
                                     </div>
                                   )
-                                },
+                                }
                               )}
                             </div>
                           </div>
                         )}
 
                         {/* Optional Services */}
-                        {(projectInfo.servicesByCategory?.optional?.length ??
-                          0) > 0 && (
+                        {(projectInfo.servicesByCategory?.optional?.length ?? 0) > 0 && (
                           <div>
                             <div className="mb-2 flex items-center space-x-2">
                               <span className="text-sm font-semibold text-sky-500 dark:text-sky-400">
-                                Optional (
-                                {projectInfo.servicesByCategory?.optional
-                                  ?.length ?? 0}
-                                )
+                                Optional ({projectInfo.servicesByCategory?.optional?.length ?? 0})
                               </span>
                             </div>
                             <div className="ml-4 space-y-1">
@@ -972,18 +901,14 @@ export default function StartPage() {
                                   const serviceData = _serviceDetails?.[service]
                                   const info = serviceData
                                     ? {
-                                        description:
-                                          getServiceDisplayName(service),
+                                        description: getServiceDisplayName(service),
                                         details: [
                                           serviceData.container_name &&
                                             `Container: ${serviceData.container_name}`,
-                                          serviceData.image &&
-                                            `Image: ${serviceData.image}`,
-                                          (serviceData.ports?.length ?? 0) >
-                                            0 &&
+                                          serviceData.image && `Image: ${serviceData.image}`,
+                                          (serviceData.ports?.length ?? 0) > 0 &&
                                             `Ports: ${serviceData.ports?.map((p: string) => p.split(':')[0]).join(', ')}`,
-                                          serviceData.restart &&
-                                            `Restart: ${serviceData.restart}`,
+                                          serviceData.restart && `Restart: ${serviceData.restart}`,
                                         ].filter(Boolean),
                                       }
                                     : getServiceInfo(service)
@@ -1026,22 +951,18 @@ export default function StartPage() {
                                       </div>
                                     </div>
                                   )
-                                },
+                                }
                               )}
                             </div>
                           </div>
                         )}
 
                         {/* Custom Services */}
-                        {(projectInfo.servicesByCategory?.user?.length ?? 0) >
-                          0 && (
+                        {(projectInfo.servicesByCategory?.user?.length ?? 0) > 0 && (
                           <div>
                             <div className="mb-2 flex items-center space-x-2">
                               <span className="text-sm font-semibold text-orange-600 dark:text-orange-400">
-                                Custom (
-                                {projectInfo.servicesByCategory?.user?.length ??
-                                  0}
-                                )
+                                Custom ({projectInfo.servicesByCategory?.user?.length ?? 0})
                               </span>
                             </div>
                             <div className="ml-4 space-y-1">
@@ -1054,17 +975,14 @@ export default function StartPage() {
                                         details: [
                                           serviceData.container_name &&
                                             `Container: ${serviceData.container_name}`,
-                                          serviceData.image &&
-                                            `Image: ${serviceData.image}`,
-                                          (serviceData.ports?.length ?? 0) >
-                                            0 &&
+                                          serviceData.image && `Image: ${serviceData.image}`,
+                                          (serviceData.ports?.length ?? 0) > 0 &&
                                             `Ports: ${serviceData.ports?.map((p: string) => p.split(':')[0]).join(', ')}`,
                                           serviceData.customInfo?.type &&
                                             `Type: ${serviceData.customInfo.type}`,
                                           serviceData.customInfo?.route &&
                                             `Route: ${serviceData.customInfo.route}`,
-                                          serviceData.restart &&
-                                            `Restart: ${serviceData.restart}`,
+                                          serviceData.restart && `Restart: ${serviceData.restart}`,
                                         ].filter(Boolean),
                                       }
                                     : getServiceInfo(service)
@@ -1107,37 +1025,32 @@ export default function StartPage() {
                                       </div>
                                     </div>
                                   )
-                                },
+                                }
                               )}
                             </div>
                           </div>
                         )}
 
                         {/* Frontend Apps */}
-                        {projectInfo.frontendApps &&
-                          projectInfo.frontendApps.length > 0 && (
-                            <div>
-                              <div className="mb-2 flex items-center space-x-2">
-                                <span className="text-sm font-semibold text-sky-500 dark:text-sky-400">
-                                  Frontend Apps (
-                                  {projectInfo.frontendApps.length})
-                                </span>
-                              </div>
-                              <div className="ml-4 space-y-1">
-                                {projectInfo.frontendApps.map((app: any) => (
-                                  <div
-                                    key={app.name}
-                                    className="flex items-center space-x-2 text-sm"
-                                  >
-                                    <div className="h-1.5 w-1.5 rounded-full bg-sky-500"></div>
-                                    <span className="text-zinc-700 dark:text-zinc-300">
-                                      {app.label} (port {app.port})
-                                    </span>
-                                  </div>
-                                ))}
-                              </div>
+                        {projectInfo.frontendApps && projectInfo.frontendApps.length > 0 && (
+                          <div>
+                            <div className="mb-2 flex items-center space-x-2">
+                              <span className="text-sm font-semibold text-sky-500 dark:text-sky-400">
+                                Frontend Apps ({projectInfo.frontendApps.length})
+                              </span>
                             </div>
-                          )}
+                            <div className="ml-4 space-y-1">
+                              {projectInfo.frontendApps.map((app: any) => (
+                                <div key={app.name} className="flex items-center space-x-2 text-sm">
+                                  <div className="h-1.5 w-1.5 rounded-full bg-sky-500"></div>
+                                  <span className="text-zinc-700 dark:text-zinc-300">
+                                    {app.label} (port {app.port})
+                                  </span>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
 
                         {/* Backup Status */}
                         {projectInfo.backupEnabled && (
@@ -1150,9 +1063,7 @@ export default function StartPage() {
                             <div className="ml-4 space-y-1">
                               <div className="flex items-center space-x-2 text-sm">
                                 <div className="h-1.5 w-1.5 rounded-full bg-gray-500"></div>
-                                <span className="text-zinc-700 dark:text-zinc-300">
-                                  Enabled
-                                </span>
+                                <span className="text-zinc-700 dark:text-zinc-300">Enabled</span>
                                 <div className="group/tooltip relative isolate inline-flex">
                                   <svg
                                     className="h-4 w-4 flex-shrink-0 cursor-help text-zinc-400 dark:text-zinc-500"
@@ -1168,24 +1079,14 @@ export default function StartPage() {
                                     />
                                   </svg>
                                   <div className="pointer-events-none invisible absolute bottom-full left-0 z-50 mb-2 w-72 rounded-lg bg-gray-900 p-3 text-xs text-white opacity-0 shadow-lg transition-all duration-200 group-hover/tooltip:visible group-hover/tooltip:opacity-100">
-                                    <div className="mb-2 font-semibold">
-                                      Database Backups
-                                    </div>
+                                    <div className="mb-2 font-semibold">Database Backups</div>
                                     <div className="space-y-1 text-gray-300">
+                                      <div className="text-xs">Status: Enabled</div>
                                       <div className="text-xs">
-                                        Status: Enabled
+                                        Schedule: {projectInfo.backupSchedule || 'Daily at 2AM'}
                                       </div>
-                                      <div className="text-xs">
-                                        Schedule:{' '}
-                                        {projectInfo.backupSchedule ||
-                                          'Daily at 2AM'}
-                                      </div>
-                                      <div className="text-xs">
-                                        Type: PostgreSQL dumps
-                                      </div>
-                                      <div className="text-xs">
-                                        Retention: 7 days
-                                      </div>
+                                      <div className="text-xs">Type: PostgreSQL dumps</div>
+                                      <div className="text-xs">Retention: 7 days</div>
                                     </div>
                                     <div className="absolute top-full left-2 h-0 w-0 border-t-4 border-r-4 border-l-4 border-transparent border-t-gray-900"></div>
                                   </div>
@@ -1244,12 +1145,11 @@ export default function StartPage() {
                 {!starting && (
                   <>
                     <p className="text-center text-xs leading-tight text-zinc-500 dark:text-zinc-500">
-                      This will run{' '}
-                      <span className="font-medium">nself start</span> which
-                      uses Docker Compose
+                      This will run <span className="font-medium">nself start</span> which uses
+                      Docker Compose
                       <br />
-                      to launch all {projectInfo?.totalServices || 0} services
-                      with smart defaults and auto-recovery.
+                      to launch all {projectInfo?.totalServices || 0} services with smart defaults
+                      and auto-recovery.
                     </p>
 
                     {/* Edit/Reset Options */}
@@ -1277,7 +1177,7 @@ export default function StartPage() {
                         onClick={() => {
                           if (
                             confirm(
-                              'This will completely reset your project and delete all configuration. Are you sure?',
+                              'This will completely reset your project and delete all configuration. Are you sure?'
                             )
                           ) {
                             safeNavigate(router, '/init/reset', true) // Force navigation to reset
@@ -1322,23 +1222,17 @@ export default function StartPage() {
                     </p>
 
                     {/* Show instructions if present (for errors) */}
-                    {startProgress.instructions &&
-                      startProgress.instructions.length > 0 && (
-                        <div className="mt-3 rounded-lg border border-red-200 bg-red-50 p-3 dark:border-red-800 dark:bg-red-900/20">
-                          <div className="space-y-1 text-left">
-                            {startProgress.instructions.map(
-                              (instruction, index) => (
-                                <div
-                                  key={index}
-                                  className="text-xs text-red-700 dark:text-red-300"
-                                >
-                                  {instruction}
-                                </div>
-                              ),
-                            )}
-                          </div>
+                    {startProgress.instructions && startProgress.instructions.length > 0 && (
+                      <div className="mt-3 rounded-lg border border-red-200 bg-red-50 p-3 dark:border-red-800 dark:bg-red-900/20">
+                        <div className="space-y-1 text-left">
+                          {startProgress.instructions.map((instruction, index) => (
+                            <div key={index} className="text-xs text-red-700 dark:text-red-300">
+                              {instruction}
+                            </div>
+                          ))}
                         </div>
-                      )}
+                      </div>
+                    )}
 
                     {/* Progress Bar */}
                     {startProgress.percentage !== undefined &&

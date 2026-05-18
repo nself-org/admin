@@ -31,10 +31,7 @@ function formatCurrency(amount: number, currency: string = 'USD') {
   }).format(amount)
 }
 
-const financialStatusConfig: Record<
-  string,
-  { label: string; className: string }
-> = {
+const financialStatusConfig: Record<string, { label: string; className: string }> = {
   pending: { label: 'Pending', className: 'bg-yellow-500/20 text-yellow-400' },
   authorized: {
     label: 'Authorized',
@@ -84,8 +81,7 @@ const fulfillmentStatusConfig: Record<
 
 function OrderRow({ order }: { order: ShopifyOrder }) {
   const financialStatus =
-    financialStatusConfig[order.financialStatus] ||
-    financialStatusConfig.pending
+    financialStatusConfig[order.financialStatus] || financialStatusConfig.pending
   const fulfillmentStatus = order.fulfillmentStatus
     ? fulfillmentStatusConfig[order.fulfillmentStatus]
     : fulfillmentStatusConfig.unfulfilled
@@ -101,9 +97,7 @@ function OrderRow({ order }: { order: ShopifyOrder }) {
       </td>
       <td className="px-4 py-3">
         <div>
-          <p className="text-sm text-zinc-300">
-            {order.customerName || 'Guest'}
-          </p>
+          <p className="text-sm text-zinc-300">{order.customerName || 'Guest'}</p>
           <p className="text-xs text-zinc-500">{order.email || 'No email'}</p>
         </div>
       </td>
@@ -165,7 +159,7 @@ function ShopifyOrdersContent() {
   }>(
     `/api/plugins/shopify/orders?page=${page}&pageSize=${pageSize}&search=${searchQuery}&status=${statusFilter}`,
     fetcher,
-    { refreshInterval: 60000 },
+    { refreshInterval: 60000 }
   )
 
   const handleSync = async () => {
@@ -236,9 +230,7 @@ function ShopifyOrdersContent() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-semibold text-white">Orders</h1>
-          <p className="text-sm text-zinc-400">
-            {total.toLocaleString()} total orders
-          </p>
+          <p className="text-sm text-zinc-400">{total.toLocaleString()} total orders</p>
         </div>
         <button
           onClick={handleSync}
@@ -339,8 +331,7 @@ function ShopifyOrdersContent() {
       {totalPages > 1 && (
         <div className="flex items-center justify-between">
           <p className="text-sm text-zinc-400">
-            Showing {(page - 1) * pageSize + 1} to{' '}
-            {Math.min(page * pageSize, total)} of {total}
+            Showing {(page - 1) * pageSize + 1} to {Math.min(page * pageSize, total)} of {total}
           </p>
           <div className="flex items-center gap-2">
             <button

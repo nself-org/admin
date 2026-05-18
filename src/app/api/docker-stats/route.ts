@@ -41,15 +41,9 @@ export async function GET() {
       containers.map(async (c) => {
         try {
           const container = docker.getContainer(c.Id)
-          const inspect = (await container.inspect()) as unknown as Record<
-            string,
-            unknown
-          >
+          const inspect = (await container.inspect()) as unknown as Record<string, unknown>
           const config = (inspect.Config ?? {}) as Record<string, unknown>
-          const hostConfig = (inspect.HostConfig ?? {}) as Record<
-            string,
-            unknown
-          >
+          const hostConfig = (inspect.HostConfig ?? {}) as Record<string, unknown>
           const state = (inspect.State ?? {}) as Record<string, unknown>
           const healthObj = state.Health as
             | { Status?: 'healthy' | 'unhealthy' | 'starting' | 'none' }
@@ -84,10 +78,8 @@ export async function GET() {
               cpuShares: (hostConfig.CpuShares as number | undefined) ?? null,
               cpuQuota: (hostConfig.CpuQuota as number | undefined) ?? null,
               cpuPeriod: (hostConfig.CpuPeriod as number | undefined) ?? null,
-              memoryLimitBytes:
-                (hostConfig.Memory as number | undefined) ?? null,
-              memoryReservationBytes:
-                (hostConfig.MemoryReservation as number | undefined) ?? null,
+              memoryLimitBytes: (hostConfig.Memory as number | undefined) ?? null,
+              memoryReservationBytes: (hostConfig.MemoryReservation as number | undefined) ?? null,
               pidsLimit: (hostConfig.PidsLimit as number | undefined) ?? null,
             },
           }
@@ -110,7 +102,7 @@ export async function GET() {
             },
           }
         }
-      }),
+      })
     )
 
     return NextResponse.json({
@@ -125,7 +117,7 @@ export async function GET() {
         containers: [],
         error: msg,
       },
-      { status: 200 }, // return 200 so the UI can render empty state gracefully
+      { status: 200 } // return 200 so the UI can render empty state gracefully
     )
   }
 }

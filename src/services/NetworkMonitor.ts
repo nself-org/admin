@@ -20,9 +20,7 @@ class NetworkMonitor {
   async getSystemNetworkStats(): Promise<{ rx: number; tx: number }> {
     try {
       // Get current network bytes from primary interface
-      const { stdout } = await fetch('/api/system/network/bytes').then((r) =>
-        r.json(),
-      )
+      const { stdout } = await fetch('/api/system/network/bytes').then((r) => r.json())
 
       const currentSnapshot: NetworkSnapshot = {
         timestamp: Date.now(),
@@ -32,16 +30,13 @@ class NetworkMonitor {
 
       // Calculate rate if we have a previous snapshot
       if (this.lastSystemSnapshot) {
-        const timeDelta =
-          (currentSnapshot.timestamp - this.lastSystemSnapshot.timestamp) / 1000 // seconds
+        const timeDelta = (currentSnapshot.timestamp - this.lastSystemSnapshot.timestamp) / 1000 // seconds
 
         if (timeDelta > 0) {
           const rxBytesPerSec =
-            (currentSnapshot.rxBytes - this.lastSystemSnapshot.rxBytes) /
-            timeDelta
+            (currentSnapshot.rxBytes - this.lastSystemSnapshot.rxBytes) / timeDelta
           const txBytesPerSec =
-            (currentSnapshot.txBytes - this.lastSystemSnapshot.txBytes) /
-            timeDelta
+            (currentSnapshot.txBytes - this.lastSystemSnapshot.txBytes) / timeDelta
 
           // Convert to Mbps
           const rxMbps = (rxBytesPerSec * 8) / 1000000
@@ -77,17 +72,13 @@ class NetworkMonitor {
       const currentSnapshot: DockerNetworkSnapshot = {
         timestamp: Date.now(),
         containers: new Map(
-          data.containers.map((c: any) => [
-            c.name,
-            { rx: c.rxBytes, tx: c.txBytes },
-          ]),
+          data.containers.map((c: any) => [c.name, { rx: c.rxBytes, tx: c.txBytes }])
         ),
       }
 
       // Calculate aggregate rate if we have a previous snapshot
       if (this.lastDockerSnapshot) {
-        const timeDelta =
-          (currentSnapshot.timestamp - this.lastDockerSnapshot.timestamp) / 1000 // seconds
+        const timeDelta = (currentSnapshot.timestamp - this.lastDockerSnapshot.timestamp) / 1000 // seconds
 
         if (timeDelta > 0) {
           let totalRxBytesPerSec = 0

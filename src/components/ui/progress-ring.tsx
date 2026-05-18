@@ -60,10 +60,7 @@ export function ProgressRing({
 
   return (
     <div
-      className={cn(
-        'relative inline-flex items-center justify-center',
-        className,
-      )}
+      className={cn('relative inline-flex items-center justify-center', className)}
       style={{ width: size, height: size }}
       {...props}
     >
@@ -85,10 +82,7 @@ export function ProgressRing({
           strokeDasharray={circumference}
           strokeDashoffset={offset}
           strokeLinecap="round"
-          className={cn(
-            'fill-none transition-all duration-300',
-            variantColors[variant],
-          )}
+          className={cn('fill-none transition-all duration-300', variantColors[variant])}
         />
       </svg>
       {/* Center label */}

@@ -9,17 +9,10 @@ interface EnvTabBarProps {
   onTabChange: (tabId: string) => void
 }
 
-export function EnvTabBar({
-  tabs,
-  activeTab,
-  hasUnsavedChanges,
-  onTabChange,
-}: EnvTabBarProps) {
+export function EnvTabBar({ tabs, activeTab, hasUnsavedChanges, onTabChange }: EnvTabBarProps) {
   const handleTabClick = (tabId: string) => {
     if (hasUnsavedChanges) {
-      const confirmed = window.confirm(
-        'You have unsaved changes. Switch environments?',
-      )
+      const confirmed = window.confirm('You have unsaved changes. Switch environments?')
       if (!confirmed) return
     }
     onTabChange(tabId)

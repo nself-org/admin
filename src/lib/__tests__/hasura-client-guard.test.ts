@@ -35,16 +35,12 @@ describe('hasura-client production startup guard', () => {
   describe('missing secret', () => {
     it('throws FATAL when HASURA_GRAPHQL_ADMIN_SECRET is not set in production', () => {
       delete process.env.HASURA_GRAPHQL_ADMIN_SECRET
-      expect(() => freshModule()).toThrow(
-        /HASURA_GRAPHQL_ADMIN_SECRET is not set/,
-      )
+      expect(() => freshModule()).toThrow(/HASURA_GRAPHQL_ADMIN_SECRET is not set/)
     })
 
     it('throws FATAL when HASURA_GRAPHQL_ADMIN_SECRET is empty string in production', () => {
       process.env.HASURA_GRAPHQL_ADMIN_SECRET = ''
-      expect(() => freshModule()).toThrow(
-        /HASURA_GRAPHQL_ADMIN_SECRET is not set/,
-      )
+      expect(() => freshModule()).toThrow(/HASURA_GRAPHQL_ADMIN_SECRET is not set/)
     })
   })
 
@@ -62,7 +58,7 @@ describe('hasura-client production startup guard', () => {
       it(`throws FATAL for known-bad secret: "${bad}"`, () => {
         process.env.HASURA_GRAPHQL_ADMIN_SECRET = bad
         expect(() => freshModule()).toThrow(
-          /HASURA_GRAPHQL_ADMIN_SECRET is (not set|set to a known insecure|must be at least)/,
+          /HASURA_GRAPHQL_ADMIN_SECRET is (not set|set to a known insecure|must be at least)/
         )
       })
     })

@@ -98,7 +98,7 @@ export class DockerStatsCollector {
     bin: string,
     args: string[],
     timeout: number,
-    options: { maxBuffer?: number } = {},
+    options: { maxBuffer?: number } = {}
   ): Promise<{ stdout: string; stderr: string }> {
     return new Promise((resolve, reject) => {
       const controller = new AbortController()
@@ -130,7 +130,7 @@ export class DockerStatsCollector {
       const { stdout: psOutput } = await this.execWithTimeout(
         'docker',
         ['ps', '-a', '--format', '{{.State}}|{{.Status}}'],
-        2000,
+        2000
       )
 
       const lines = psOutput
@@ -190,7 +190,7 @@ export class DockerStatsCollector {
         'docker',
         ['stats', '--no-stream', '--format', '{{json .}}'],
         8000,
-        { maxBuffer: 5 * 1024 * 1024 },
+        { maxBuffer: 5 * 1024 * 1024 }
       )
 
       const lines = stdout
@@ -250,7 +250,7 @@ export class DockerStatsCollector {
       const { stdout } = await this.execWithTimeout(
         'docker',
         ['system', 'df', '--format', '{{json .}}'],
-        5000,
+        5000
       )
 
       const lines = stdout
@@ -303,7 +303,7 @@ export class DockerStatsCollector {
         'docker',
         ['stats', '--no-stream', '--format', '{{json .}}'],
         8000,
-        { maxBuffer: 5 * 1024 * 1024 },
+        { maxBuffer: 5 * 1024 * 1024 }
       )
 
       const lines = stdout

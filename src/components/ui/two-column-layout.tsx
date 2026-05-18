@@ -51,16 +51,12 @@ export function TwoColumnLayout({
         reverseMobile
           ? 'grid-cols-1 lg:grid-cols-[1fr,auto]'
           : 'grid-cols-1 lg:grid-cols-[auto,1fr]',
-        className,
+        className
       )}
     >
       {/* Sidebar */}
       <aside
-        className={cn(
-          'w-full',
-          sidebarWidths[sidebarWidth],
-          reverseMobile && 'lg:order-2',
-        )}
+        className={cn('w-full', sidebarWidths[sidebarWidth], reverseMobile && 'lg:order-2')}
         role="complementary"
         aria-label="Sidebar"
       >
@@ -68,9 +64,7 @@ export function TwoColumnLayout({
       </aside>
 
       {/* Main Content */}
-      <main className={cn('min-w-0', reverseMobile && 'lg:order-1')}>
-        {children}
-      </main>
+      <main className={cn('min-w-0', reverseMobile && 'lg:order-1')}>{children}</main>
     </div>
   )
 }

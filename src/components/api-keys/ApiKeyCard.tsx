@@ -6,15 +6,7 @@ import { Card, CardContent } from '@/components/ui/card'
 import { cn } from '@/lib/utils'
 import type { ApiKey, ApiKeyScope, ApiKeyStatus } from '@/types/api-key'
 import { formatDistanceToNow } from 'date-fns'
-import {
-  Activity,
-  Clock,
-  Key,
-  MoreHorizontal,
-  Pencil,
-  ShieldOff,
-  Trash2,
-} from 'lucide-react'
+import { Activity, Clock, Key, MoreHorizontal, Pencil, ShieldOff, Trash2 } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 
 interface ApiKeyCardProps {
@@ -59,8 +51,7 @@ const scopeConfig: Record<ApiKeyScope, { label: string; className: string }> = {
   },
   write: {
     label: 'Write',
-    className:
-      'bg-amber-100 text-amber-700 dark:bg-amber-900 dark:text-amber-300',
+    className: 'bg-amber-100 text-amber-700 dark:bg-amber-900 dark:text-amber-300',
   },
   admin: {
     label: 'Admin',
@@ -72,13 +63,7 @@ const scopeConfig: Record<ApiKeyScope, { label: string; className: string }> = {
   },
 }
 
-export function ApiKeyCard({
-  apiKey,
-  onClick,
-  onEdit,
-  onRevoke,
-  onDelete,
-}: ApiKeyCardProps) {
+export function ApiKeyCard({ apiKey, onClick, onEdit, onRevoke, onDelete }: ApiKeyCardProps) {
   const [menuOpen, setMenuOpen] = useState(false)
   const menuRef = useRef<HTMLDivElement>(null)
 
@@ -102,7 +87,7 @@ export function ApiKeyCard({
     <Card
       className={cn(
         'cursor-pointer transition-colors hover:bg-zinc-50 dark:hover:bg-zinc-900',
-        isDisabled && 'opacity-60',
+        isDisabled && 'opacity-60'
       )}
       onClick={onClick}
     >
@@ -115,26 +100,19 @@ export function ApiKeyCard({
             </div>
             <div className="space-y-1">
               <div className="flex items-center gap-2">
-                <h4 className="font-medium text-zinc-900 dark:text-zinc-100">
-                  {apiKey.name}
-                </h4>
+                <h4 className="font-medium text-zinc-900 dark:text-zinc-100">{apiKey.name}</h4>
                 <Badge
                   variant={statusStyle.variant}
                   className={cn('text-xs', statusStyle.className)}
                 >
                   {statusStyle.label}
                 </Badge>
-                <Badge
-                  variant="outline"
-                  className={cn('border-0 text-xs', scopeStyle.className)}
-                >
+                <Badge variant="outline" className={cn('border-0 text-xs', scopeStyle.className)}>
                   {scopeStyle.label}
                 </Badge>
               </div>
               {apiKey.description && (
-                <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                  {apiKey.description}
-                </p>
+                <p className="text-sm text-zinc-500 dark:text-zinc-400">{apiKey.description}</p>
               )}
               <code className="font-mono text-xs text-zinc-600 dark:text-zinc-400">
                 {maskedKey}
@@ -162,9 +140,7 @@ export function ApiKeyCard({
                 </div>
               )}
               {!apiKey.lastUsedAt && (
-                <div className="mt-1 text-xs text-zinc-400 dark:text-zinc-500">
-                  Never used
-                </div>
+                <div className="mt-1 text-xs text-zinc-400 dark:text-zinc-500">Never used</div>
               )}
             </div>
 

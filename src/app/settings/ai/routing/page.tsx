@@ -1,14 +1,6 @@
 'use client'
 
-import {
-  AlertCircle,
-  ChevronDown,
-  ChevronUp,
-  Edit2,
-  GripVertical,
-  Loader2,
-  X,
-} from 'lucide-react'
+import { AlertCircle, ChevronDown, ChevronUp, Edit2, GripVertical, Loader2, X } from 'lucide-react'
 import { useCallback, useEffect, useState } from 'react'
 
 const AI_API = 'http://127.0.0.1:8010'
@@ -86,9 +78,7 @@ export default function RoutingPage() {
       if (qRes.ok) setQuality((await qRes.json()).metrics ?? [])
       setPageState('ready')
     } catch (e) {
-      setError(
-        e instanceof Error ? e.message : 'Failed to load routing config.',
-      )
+      setError(e instanceof Error ? e.message : 'Failed to load routing config.')
       setPageState('error')
     }
   }, [])
@@ -166,15 +156,10 @@ export default function RoutingPage() {
   if (pageState === 'loading') {
     return (
       <div className="mx-auto max-w-4xl p-6">
-        <h1 className="mb-6 text-2xl font-semibold text-zinc-100">
-          AI Routing
-        </h1>
+        <h1 className="mb-6 text-2xl font-semibold text-zinc-100">AI Routing</h1>
         <div className="space-y-3">
           {[1, 2, 3, 4, 5].map((n) => (
-            <div
-              key={n}
-              className="h-12 animate-pulse rounded-xl bg-zinc-800/50"
-            />
+            <div key={n} className="h-12 animate-pulse rounded-xl bg-zinc-800/50" />
           ))}
         </div>
       </div>
@@ -184,9 +169,7 @@ export default function RoutingPage() {
   if (pageState === 'error') {
     return (
       <div className="mx-auto max-w-4xl p-6">
-        <h1 className="mb-6 text-2xl font-semibold text-zinc-100">
-          AI Routing
-        </h1>
+        <h1 className="mb-6 text-2xl font-semibold text-zinc-100">AI Routing</h1>
         <div className="rounded-xl border border-red-500/30 bg-red-500/5 p-6 text-center">
           <AlertCircle className="mx-auto mb-3 h-8 w-8 text-red-400" />
           <p className="mb-4 text-sm text-red-300">{error}</p>
@@ -231,9 +214,7 @@ export default function RoutingPage() {
                 key={t.task_class}
                 className={`border-b border-zinc-800/50 ${saved === t.task_class ? 'bg-green-500/5' : ''}`}
               >
-                <td className="px-5 py-3 font-medium text-zinc-200">
-                  {t.task_class}
-                </td>
+                <td className="px-5 py-3 font-medium text-zinc-200">{t.task_class}</td>
                 <td className="px-5 py-3">
                   <div className="flex flex-wrap gap-1">
                     {t.tier_chain.map((tier, i) => (
@@ -249,9 +230,7 @@ export default function RoutingPage() {
                 <td className="px-5 py-3 text-zinc-400">
                   {t.background_only_local ? 'Yes' : 'No'}
                 </td>
-                <td className="px-5 py-3 text-zinc-400">
-                  {(t.timeout_ms / 1000).toFixed(0)}s
-                </td>
+                <td className="px-5 py-3 text-zinc-400">{(t.timeout_ms / 1000).toFixed(0)}s</td>
                 <td className="px-5 py-3">
                   <button
                     onClick={() => startEdit(t)}
@@ -272,13 +251,9 @@ export default function RoutingPage() {
           <div className="w-full max-w-lg rounded-xl border border-zinc-700 bg-zinc-900 p-6">
             <div className="mb-4 flex items-center justify-between">
               <h3 className="text-lg font-medium text-zinc-100">
-                Edit:{' '}
-                <span className="text-sky-400">{editForm.task_class}</span>
+                Edit: <span className="text-sky-400">{editForm.task_class}</span>
               </h3>
-              <button
-                onClick={cancelEdit}
-                className="text-zinc-500 hover:text-zinc-300"
-              >
+              <button onClick={cancelEdit} className="text-zinc-500 hover:text-zinc-300">
                 <X className="h-5 w-5" />
               </button>
             </div>
@@ -322,17 +297,15 @@ export default function RoutingPage() {
                 ))}
               </div>
               <div className="mt-2 flex flex-wrap gap-1">
-                {ALL_TIERS.filter((t) => !editForm.tier_chain.includes(t)).map(
-                  (tier) => (
-                    <button
-                      key={tier}
-                      onClick={() => addTier(tier)}
-                      className="rounded border border-zinc-700 px-2 py-0.5 text-xs text-zinc-500 hover:border-sky-500/30 hover:text-sky-300"
-                    >
-                      + {TIER_LABELS[tier] ?? tier}
-                    </button>
-                  ),
-                )}
+                {ALL_TIERS.filter((t) => !editForm.tier_chain.includes(t)).map((tier) => (
+                  <button
+                    key={tier}
+                    onClick={() => addTier(tier)}
+                    className="rounded border border-zinc-700 px-2 py-0.5 text-xs text-zinc-500 hover:border-sky-500/30 hover:text-sky-300"
+                  >
+                    + {TIER_LABELS[tier] ?? tier}
+                  </button>
+                ))}
               </div>
             </div>
 
@@ -353,9 +326,7 @@ export default function RoutingPage() {
                 Background-only local
               </label>
               <div>
-                <label className="mb-1 block text-xs text-zinc-400">
-                  Timeout (seconds)
-                </label>
+                <label className="mb-1 block text-xs text-zinc-400">Timeout (seconds)</label>
                 <input
                   type="number"
                   value={editForm.timeout_ms / 1000}
@@ -371,14 +342,10 @@ export default function RoutingPage() {
                 />
               </div>
               <div>
-                <label className="mb-1 block text-xs text-zinc-400">
-                  Notes
-                </label>
+                <label className="mb-1 block text-xs text-zinc-400">Notes</label>
                 <textarea
                   value={editForm.notes}
-                  onChange={(e) =>
-                    setEditForm({ ...editForm, notes: e.target.value })
-                  }
+                  onChange={(e) => setEditForm({ ...editForm, notes: e.target.value })}
                   rows={2}
                   className="w-full resize-y rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-1.5 text-sm text-zinc-200"
                 />
@@ -397,11 +364,7 @@ export default function RoutingPage() {
                 disabled={saving}
                 className="rounded-lg bg-sky-500 px-4 py-2 text-sm text-white hover:bg-sky-400 disabled:opacity-50"
               >
-                {saving ? (
-                  <Loader2 className="inline h-4 w-4 animate-spin" />
-                ) : (
-                  'Save'
-                )}
+                {saving ? <Loader2 className="inline h-4 w-4 animate-spin" /> : 'Save'}
               </button>
             </div>
           </div>
@@ -411,30 +374,21 @@ export default function RoutingPage() {
       {/* ── Quality Dashboard ─────────────────────────────────────────────── */}
       {quality.length > 0 && (
         <section className="rounded-xl border border-zinc-700/50 bg-zinc-800/50 p-5">
-          <h2 className="mb-4 text-lg font-medium text-zinc-200">
-            Quality Dashboard
-          </h2>
+          <h2 className="mb-4 text-lg font-medium text-zinc-200">Quality Dashboard</h2>
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {quality.map((q) => (
               <div
                 key={q.task_class}
                 className="rounded-lg border border-zinc-700/50 bg-zinc-900/50 p-3"
               >
-                <h3 className="mb-2 text-sm font-medium text-zinc-200">
-                  {q.task_class}
-                </h3>
+                <h3 className="mb-2 text-sm font-medium text-zinc-200">{q.task_class}</h3>
                 <div className="space-y-1 text-xs">
                   <div className="flex items-center justify-between text-zinc-400">
                     <span>Cost/day</span>
-                    <span className="text-zinc-200">
-                      ${q.cost_per_day_usd.toFixed(4)}
-                    </span>
+                    <span className="text-zinc-200">${q.cost_per_day_usd.toFixed(4)}</span>
                   </div>
                   {Object.entries(q.latency_p95_ms).map(([tier, ms]) => (
-                    <div
-                      key={tier}
-                      className="flex items-center justify-between text-zinc-500"
-                    >
+                    <div key={tier} className="flex items-center justify-between text-zinc-500">
                       <span>{TIER_LABELS[tier] ?? tier} p95</span>
                       <span>{ms}ms</span>
                     </div>
@@ -442,16 +396,14 @@ export default function RoutingPage() {
                   <div className="flex items-center justify-between text-zinc-400">
                     <span>Distribution</span>
                     <div className="flex gap-1">
-                      {Object.entries(q.tier_distribution).map(
-                        ([tier, pct]) => (
-                          <span
-                            key={tier}
-                            className={`rounded px-1 py-0.5 text-[10px] ${TIER_COLORS[tier] ?? 'border-zinc-700/30 bg-zinc-700/20 text-zinc-400'}`}
-                          >
-                            {pct}%
-                          </span>
-                        ),
-                      )}
+                      {Object.entries(q.tier_distribution).map(([tier, pct]) => (
+                        <span
+                          key={tier}
+                          className={`rounded px-1 py-0.5 text-[10px] ${TIER_COLORS[tier] ?? 'border-zinc-700/30 bg-zinc-700/20 text-zinc-400'}`}
+                        >
+                          {pct}%
+                        </span>
+                      ))}
                     </div>
                   </div>
                 </div>

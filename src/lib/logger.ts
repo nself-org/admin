@@ -19,7 +19,7 @@ class Logger {
   private formatMessage(
     level: LogLevel,
     message: string,
-    context?: Record<string, unknown>,
+    context?: Record<string, unknown>
   ): string {
     const timestamp = new Date().toISOString()
     const prefix = {
@@ -43,11 +43,7 @@ class Logger {
     return JSON.stringify(entry)
   }
 
-  private log(
-    level: LogLevel,
-    message: string,
-    context?: Record<string, unknown>,
-  ) {
+  private log(level: LogLevel, message: string, context?: Record<string, unknown>) {
     if (this.isTest) return
 
     const formatted = this.formatMessage(level, message, context)

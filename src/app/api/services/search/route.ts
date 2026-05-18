@@ -13,23 +13,17 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     if (!query || typeof query !== 'string' || query.trim().length === 0) {
       return NextResponse.json(
         { success: false, error: 'Search query is required' },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
     // Sanitize query - only allow alphanumeric, spaces, hyphens, underscores
     const sanitized = query.trim().replace(/[^a-zA-Z0-9\s_-]/g, '')
     if (sanitized.length === 0) {
-      return NextResponse.json(
-        { success: false, error: 'Invalid search query' },
-        { status: 400 },
-      )
+      return NextResponse.json({ success: false, error: 'Invalid search query' }, { status: 400 })
     }
 
-    const result = await executeNselfCommand('service', [
-      'search',
-      `--query=${sanitized}`,
-    ])
+    const result = await executeNselfCommand('service', ['search', `--query=${sanitized}`])
 
     if (!result.success) {
       return NextResponse.json(
@@ -38,7 +32,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
           error: 'Failed to search services',
           details: result.error || result.stderr || 'Unknown error',
         },
-        { status: 500 },
+        { status: 500 }
       )
     }
 
@@ -53,7 +47,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to search services',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

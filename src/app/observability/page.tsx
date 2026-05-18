@@ -1,13 +1,6 @@
 'use client'
 
-import {
-  Activity,
-  BarChart3,
-  ExternalLink,
-  FileText,
-  Loader2,
-  Server,
-} from 'lucide-react'
+import { Activity, BarChart3, ExternalLink, FileText, Loader2, Server } from 'lucide-react'
 import { useEffect, useState } from 'react'
 
 interface ObservabilityLink {
@@ -87,9 +80,7 @@ function LinkCard({
           <Icon className="text-nself-primary h-4 w-4" />
         </div>
         <div className="flex-1">
-          <h3 className="text-nself-text text-sm font-semibold">
-            {link.label}
-          </h3>
+          <h3 className="text-nself-text text-sm font-semibold">{link.label}</h3>
           <p className="text-nself-text-muted text-xs">{link.description}</p>
         </div>
         {probing ? (
@@ -97,15 +88,9 @@ function LinkCard({
         ) : reachable === null ? (
           <span className="bg-nself-text-muted h-2 w-2 rounded-full" />
         ) : reachable ? (
-          <span
-            className="h-2 w-2 rounded-full bg-green-400"
-            title="Reachable"
-          />
+          <span className="h-2 w-2 rounded-full bg-green-400" title="Reachable" />
         ) : (
-          <span
-            className="h-2 w-2 rounded-full bg-red-400"
-            title="Unreachable"
-          />
+          <span className="h-2 w-2 rounded-full bg-red-400" title="Unreachable" />
         )}
       </div>
       <p className="text-nself-text-muted font-mono text-xs">{link.url}</p>
@@ -158,12 +143,9 @@ export default function ObservabilityPage() {
   return (
     <div className="mx-auto max-w-5xl space-y-4 p-6">
       <div>
-        <h1 className="nself-gradient-text text-xl font-semibold">
-          Observability
-        </h1>
+        <h1 className="nself-gradient-text text-xl font-semibold">Observability</h1>
         <p className="text-nself-text-muted text-xs">
-          Passthrough links to the monitoring bundle. Each tool runs locally in
-          your nself stack.
+          Passthrough links to the monitoring bundle. Each tool runs locally in your nself stack.
         </p>
       </div>
 
@@ -184,12 +166,8 @@ export default function ObservabilityPage() {
           <div className="border-nself-border flex items-center justify-between border-b px-4 py-2">
             <div className="flex items-center gap-2">
               <active.icon className="text-nself-primary h-4 w-4" />
-              <span className="text-nself-text text-sm font-semibold">
-                {active.label} Preview
-              </span>
-              <span className="text-nself-text-muted font-mono text-xs">
-                {active.url}
-              </span>
+              <span className="text-nself-text text-sm font-semibold">{active.label} Preview</span>
+              <span className="text-nself-text-muted font-mono text-xs">{active.url}</span>
             </div>
             <button
               type="button"

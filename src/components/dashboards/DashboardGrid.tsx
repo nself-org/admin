@@ -32,10 +32,7 @@ export function DashboardGrid({
   }
 
   // Handle drag start for repositioning
-  const handleDragStart = (
-    e: React.DragEvent<HTMLDivElement>,
-    widget: Widget,
-  ) => {
+  const handleDragStart = (e: React.DragEvent<HTMLDivElement>, widget: Widget) => {
     if (!editable) return
     e.dataTransfer.setData('widgetId', widget.id)
     e.dataTransfer.setData('widgetPosition', JSON.stringify(widget.position))
@@ -43,17 +40,11 @@ export function DashboardGrid({
   }
 
   // Handle drop for repositioning
-  const handleDrop = (
-    e: React.DragEvent<HTMLDivElement>,
-    targetX: number,
-    targetY: number,
-  ) => {
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>, targetX: number, targetY: number) => {
     if (!editable || !onWidgetUpdate) return
     e.preventDefault()
     const widgetId = e.dataTransfer.getData('widgetId')
-    const oldPosition = JSON.parse(
-      e.dataTransfer.getData('widgetPosition'),
-    ) as WidgetPosition
+    const oldPosition = JSON.parse(e.dataTransfer.getData('widgetPosition')) as WidgetPosition
     const newPosition: WidgetPosition = {
       ...oldPosition,
       x: Math.max(0, Math.min(targetX, columns - oldPosition.w)),
@@ -76,9 +67,7 @@ export function DashboardGrid({
             No widgets added yet
           </p>
           <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-500">
-            {editable
-              ? 'Click "Add Widget" to get started'
-              : 'This dashboard is empty'}
+            {editable ? 'Click "Add Widget" to get started' : 'This dashboard is empty'}
           </p>
         </div>
       </div>

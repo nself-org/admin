@@ -28,7 +28,7 @@ async function getLogsSnapshot(
   name: string,
   lines: number,
   nselfPath: string,
-  projectPath: string,
+  projectPath: string
 ): Promise<NextResponse> {
   const startTime = Date.now()
 
@@ -39,7 +39,7 @@ async function getLogsSnapshot(
         cwd: projectPath,
         env: { ...process.env, PATH: getEnhancedPath() },
         timeout: 15000,
-      },
+      }
     )
 
     const output = stdout || stderr || ''
@@ -78,7 +78,7 @@ async function getLogsSnapshot(
         error: 'Failed to retrieve plugin logs',
         details: err.message || 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -90,7 +90,7 @@ async function streamLogs(
   lines: number,
   nselfPath: string,
   projectPath: string,
-  signal: AbortSignal,
+  signal: AbortSignal
 ): Promise<Response> {
   const encoder = new TextEncoder()
 
@@ -98,19 +98,11 @@ async function streamLogs(
     start(controller) {
       const child = spawn(
         nselfPath,
-        [
-          'plugin',
-          'logs',
-          name,
-          '--lines',
-          String(lines),
-          '--follow',
-          '--no-color',
-        ],
+        ['plugin', 'logs', name, '--lines', String(lines), '--follow', '--no-color'],
         {
           cwd: projectPath,
           env: { ...process.env, PATH: getEnhancedPath() },
-        },
+        }
       )
 
       const sendEvent = (data: string) => {
@@ -135,17 +127,13 @@ async function streamLogs(
       child.on('error', (err) => {
         logger.error('Plugin log stream error', { name, error: err.message })
         controller.enqueue(
-          encoder.encode(
-            `data: ${JSON.stringify({ error: err.message, ts: Date.now() })}\n\n`,
-          ),
+          encoder.encode(`data: ${JSON.stringify({ error: err.message, ts: Date.now() })}\n\n`)
         )
         controller.close()
       })
 
       child.on('close', () => {
-        controller.enqueue(
-          encoder.encode(`data: ${JSON.stringify({ done: true })}\n\n`),
-        )
+        controller.enqueue(encoder.encode(`data: ${JSON.stringify({ done: true })}\n\n`))
         controller.close()
       })
 
@@ -171,7 +159,7 @@ async function streamLogs(
 
 export async function GET(
   request: NextRequest,
-  context: RouteContext,
+  context: RouteContext
 ): Promise<NextResponse | Response> {
   const { name } = await context.params
 
@@ -179,14 +167,14 @@ export async function GET(
   if (!/^[a-zA-Z0-9_-]+$/.test(name)) {
     return NextResponse.json(
       { success: false, error: 'Invalid plugin name format' },
-      { status: 400 },
+      { status: 400 }
     )
   }
 
   const { searchParams } = new URL(request.url)
   const lines = Math.min(
     parseInt(searchParams.get('lines') || '100', 10),
-    5000, // cap at 5000 lines
+    5000 // cap at 5000 lines
   )
   const follow = searchParams.get('follow') === 'true'
 
@@ -208,7 +196,7 @@ export async function GET(
         error: 'Failed to access plugin logs',
         details: err.message || 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

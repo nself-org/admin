@@ -32,9 +32,7 @@ export default function TenantUsagePage() {
           <ArrowLeft className="h-4 w-4" /> Back to Tenant
         </Link>
         <h1 className="mt-4 text-2xl font-semibold text-white">Usage</h1>
-        <p className="text-sm text-zinc-400">
-          Monitor resource usage and quotas
-        </p>
+        <p className="text-sm text-zinc-400">Monitor resource usage and quotas</p>
       </div>
 
       <TenantQuotaDisplay quota={tenant.quota} />

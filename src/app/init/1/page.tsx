@@ -89,8 +89,7 @@ export default function InitStep1() {
             environment: data.env.ENV || 'dev',
             domain: data.env.BASE_DOMAIN || 'local.nself.org',
             databaseName: data.env.POSTGRES_DB || 'nself',
-            databasePassword:
-              data.env.POSTGRES_PASSWORD || 'nself-dev-password',
+            databasePassword: data.env.POSTGRES_PASSWORD || 'nself-dev-password',
             adminEmail: data.env.ADMIN_EMAIL || '',
             backup: {
               enabled: data.env.BACKUP_ENABLED === 'true',
@@ -218,9 +217,7 @@ export default function InitStep1() {
       })
 
       if (!response.ok) {
-        throw new Error(
-          `Save failed: ${response.status} ${response.statusText}`,
-        )
+        throw new Error(`Save failed: ${response.status} ${response.statusText}`)
       }
     } catch (error) {
       console.error('Failed to auto-save configuration:', error)
@@ -248,8 +245,7 @@ export default function InitStep1() {
         if (!value || value.length < 3) {
           error = 'Must be at least 3 characters'
         } else if (!/^[a-z][a-z0-9_]*$/.test(value)) {
-          error =
-            'Must start with letter, use only lowercase, numbers, underscore'
+          error = 'Must start with letter, use only lowercase, numbers, underscore'
         }
         break
       case 'databasePassword':
@@ -262,21 +258,14 @@ export default function InitStep1() {
           error = 'Base domain is required'
         } else if (env === 'development' || env === 'dev') {
           // Support both for compatibility
-          if (
-            !value.includes('localhost') &&
-            !value.includes('local.nself.org')
-          ) {
+          if (!value.includes('localhost') && !value.includes('local.nself.org')) {
             error = 'Development requires localhost or local.nself.org'
           }
         }
         break
       case 'adminEmail':
         // Only validate if there's enough content to be meaningful
-        if (
-          value &&
-          value.length >= 3 &&
-          !value.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)
-        ) {
+        if (value && value.length >= 3 && !value.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
           error = 'Invalid email format'
         }
         break
@@ -290,12 +279,7 @@ export default function InitStep1() {
     const allTouched: any = {}
 
     // Validate all required fields
-    const fieldsToValidate = [
-      'projectName',
-      'databaseName',
-      'databasePassword',
-      'domain',
-    ]
+    const fieldsToValidate = ['projectName', 'databaseName', 'databasePassword', 'domain']
     fieldsToValidate.forEach((field) => {
       const error = validateField(field, (config as any)[field])
       if (error) {
@@ -359,9 +343,7 @@ export default function InitStep1() {
             id="projectName"
             value={config.projectName}
             onChange={(e) => {
-              const value = e.target.value
-                .toLowerCase()
-                .replace(/[^a-z0-9_-]/g, '')
+              const value = e.target.value.toLowerCase().replace(/[^a-z0-9_-]/g, '')
               setConfig({ ...config, projectName: value })
               setTouched({ ...touched, projectName: true })
               const error = validateField('projectName', value)
@@ -387,9 +369,7 @@ export default function InitStep1() {
           </label>
           <div className="h-5">
             {touched.projectName && errors.projectName && (
-              <p className="mt-1 text-xs text-red-600 dark:text-red-400">
-                {errors.projectName}
-              </p>
+              <p className="mt-1 text-xs text-red-600 dark:text-red-400">{errors.projectName}</p>
             )}
           </div>
         </div>
@@ -405,16 +385,10 @@ export default function InitStep1() {
               // Update domain when switching environments
               if (newEnv === 'dev' || newEnv === 'development') {
                 // Switching to development - use local.nself.org if current domain isn't valid for dev
-                if (
-                  config.domain !== 'localhost' &&
-                  config.domain !== 'local.nself.org'
-                ) {
+                if (config.domain !== 'localhost' && config.domain !== 'local.nself.org') {
                   newDomain = 'local.nself.org' // Use nself default domain
                 }
-              } else if (
-                config.environment === 'dev' ||
-                config.environment === 'development'
-              ) {
+              } else if (config.environment === 'dev' || config.environment === 'development') {
                 // Switching from development to staging/prod - set a placeholder domain
                 newDomain = ''
               }
@@ -448,9 +422,7 @@ export default function InitStep1() {
             id="databaseName"
             value={config.databaseName}
             onChange={(e) => {
-              const value = e.target.value
-                .toLowerCase()
-                .replace(/[^a-z0-9_]/g, '')
+              const value = e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, '')
               setConfig({ ...config, databaseName: value })
               setTouched({ ...touched, databaseName: true })
               const error = validateField('databaseName', value)
@@ -476,9 +448,7 @@ export default function InitStep1() {
           </label>
           <div className="h-5">
             {touched.databaseName && errors.databaseName && (
-              <p className="mt-1 text-xs text-red-600 dark:text-red-400">
-                {errors.databaseName}
-              </p>
+              <p className="mt-1 text-xs text-red-600 dark:text-red-400">{errors.databaseName}</p>
             )}
           </div>
         </div>
@@ -507,11 +477,7 @@ export default function InitStep1() {
             onClick={() => setShowPassword(!showPassword)}
             className="absolute top-[50%] right-3 -translate-y-[50%] text-zinc-400 transition-colors hover:text-zinc-600 dark:hover:text-zinc-300"
           >
-            {showPassword ? (
-              <EyeOff className="h-4 w-4" />
-            ) : (
-              <Eye className="h-4 w-4" />
-            )}
+            {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
           </button>
           <label
             htmlFor="databasePassword"
@@ -533,8 +499,7 @@ export default function InitStep1() {
         </div>
 
         <div className="relative">
-          {config.environment === 'dev' ||
-          config.environment === 'development' ? (
+          {config.environment === 'dev' || config.environment === 'development' ? (
             <>
               <select
                 id="domain"
@@ -592,8 +557,7 @@ export default function InitStep1() {
           {config.domain && !errors.domain && (
             <span
               className={`pointer-events-none absolute top-[50%] -translate-y-[50%] text-xs text-zinc-500 dark:text-zinc-600 ${
-                config.environment === 'dev' ||
-                config.environment === 'development'
+                config.environment === 'dev' || config.environment === 'development'
                   ? 'right-14'
                   : 'right-2'
               }`}
@@ -603,9 +567,7 @@ export default function InitStep1() {
           )}
           <div className="h-5">
             {touched.domain && errors.domain && (
-              <p className="mt-1 text-xs text-red-600 dark:text-red-400">
-                {errors.domain}
-              </p>
+              <p className="mt-1 text-xs text-red-600 dark:text-red-400">{errors.domain}</p>
             )}
           </div>
         </div>
@@ -655,9 +617,7 @@ export default function InitStep1() {
           </span>
           <div className="h-5">
             {touched.adminEmail && errors.adminEmail && (
-              <p className="mt-1 text-xs text-red-600 dark:text-red-400">
-                {errors.adminEmail}
-              </p>
+              <p className="mt-1 text-xs text-red-600 dark:text-red-400">{errors.adminEmail}</p>
             )}
           </div>
         </div>
@@ -676,9 +636,7 @@ export default function InitStep1() {
               encryption: false,
             }
           }
-          onChange={(backup) =>
-            setConfig({ ...config, backup: backup as WizardBackupConfig })
-          }
+          onChange={(backup) => setConfig({ ...config, backup: backup as WizardBackupConfig })}
         />
       </div>
 

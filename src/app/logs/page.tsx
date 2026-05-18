@@ -2,10 +2,7 @@
 
 import { Button } from '@/components/Button'
 import { HeroPattern } from '@/components/HeroPattern'
-import {
-  LogFilters,
-  LogFilters as LogFiltersType,
-} from '@/components/logs/LogFilters'
+import { LogFilters, LogFilters as LogFiltersType } from '@/components/logs/LogFilters'
 import { LogEntry } from '@/components/logs/LogLine'
 import { LogStream } from '@/components/logs/LogStream'
 import { LogViewerSkeleton } from '@/components/logs/LogViewerSkeleton'
@@ -57,8 +54,7 @@ function LogsContent() {
         const res = await fetch('/api/project/services-detail')
         if (res.ok) {
           const data = await res.json()
-          const serviceNames =
-            data.services?.map((s: { name: string }) => s.name) || []
+          const serviceNames = data.services?.map((s: { name: string }) => s.name) || []
           setServices(serviceNames)
           setIsLoading(false)
         }
@@ -87,22 +83,19 @@ function LogsContent() {
 
     wsClient.connect()
 
-    const unsubscribeLogs = wsClient.on<LogStreamEvent>(
-      EventType.LOGS_STREAM,
-      (event) => {
-        const newLog: LogEntry = {
-          id: `${event.service}-${Date.now()}-${Math.random()}`,
-          service: event.service,
-          line: event.line,
-          timestamp: event.timestamp,
-          level: event.level || 'info',
-          source: event.source,
-        }
+    const unsubscribeLogs = wsClient.on<LogStreamEvent>(EventType.LOGS_STREAM, (event) => {
+      const newLog: LogEntry = {
+        id: `${event.service}-${Date.now()}-${Math.random()}`,
+        service: event.service,
+        line: event.line,
+        timestamp: event.timestamp,
+        level: event.level || 'info',
+        source: event.source,
+      }
 
-        // Add to buffer for throttling
-        setBufferedLogs((prev) => [...prev, newLog])
-      },
-    )
+      // Add to buffer for throttling
+      setBufferedLogs((prev) => [...prev, newLog])
+    })
 
     // Join log rooms for selected services
     if (selectedServices.length > 0) {
@@ -181,9 +174,7 @@ function LogsContent() {
 
     if (filters.timeRange !== 'custom') {
       const range = timeRanges[filters.timeRange]
-      result = result.filter(
-        (log) => now - new Date(log.timestamp).getTime() < range,
-      )
+      result = result.filter((log) => now - new Date(log.timestamp).getTime() < range)
     } else if (filters.customStartTime || filters.customEndTime) {
       result = result.filter((log) => {
         const logTime = new Date(log.timestamp).getTime()
@@ -202,15 +193,11 @@ function LogsContent() {
         } catch {
           // Invalid regex, fall back to plain text search
           const searchLower = filters.searchText.toLowerCase()
-          result = result.filter((log) =>
-            log.line.toLowerCase().includes(searchLower),
-          )
+          result = result.filter((log) => log.line.toLowerCase().includes(searchLower))
         }
       } else {
         const searchLower = filters.searchText.toLowerCase()
-        result = result.filter((log) =>
-          log.line.toLowerCase().includes(searchLower),
-        )
+        result = result.filter((log) => log.line.toLowerCase().includes(searchLower))
       }
     }
 
@@ -219,12 +206,8 @@ function LogsContent() {
 
   // Calculate insights
   const insights = useMemo((): LogInsights => {
-    const errorCount = filteredLogs.filter(
-      (log) => log.level === 'error',
-    ).length
-    const warningCount = filteredLogs.filter(
-      (log) => log.level === 'warn',
-    ).length
+    const errorCount = filteredLogs.filter((log) => log.level === 'error').length
+    const warningCount = filteredLogs.filter((log) => log.level === 'warn').length
 
     // Find repeated error patterns
     const errorMessages = filteredLogs
@@ -236,7 +219,7 @@ function LogsContent() {
         acc[msg] = (acc[msg] || 0) + 1
         return acc
       },
-      {} as Record<string, number>,
+      {} as Record<string, number>
     )
 
     const patterns = Object.entries(messageCounts)
@@ -260,11 +243,7 @@ function LogsContent() {
   }, [])
 
   const handleClearLogs = () => {
-    if (
-      confirm(
-        'Clear all logs from view? This will not affect actual service logs.',
-      )
-    ) {
+    if (confirm('Clear all logs from view? This will not affect actual service logs.')) {
       setLogs([])
       setBufferedLogs([])
     }
@@ -273,10 +252,7 @@ function LogsContent() {
   const handleDownloadLogs = () => {
     const logsToDownload = filteredLogs.slice(-1000)
     const content = logsToDownload
-      .map(
-        (log) =>
-          `[${log.timestamp}] [${log.service}] [${log.level?.toUpperCase()}] ${log.line}`,
-      )
+      .map((log) => `[${log.timestamp}] [${log.service}] [${log.level?.toUpperCase()}] ${log.line}`)
       .join('\n')
 
     const blob = new Blob([content], { type: 'text/plain' })
@@ -328,8 +304,7 @@ function LogsContent() {
         ...prev,
         level: (levelParam as LogFiltersType['level']) || prev.level,
         searchText: searchParam || prev.searchText,
-        timeRange:
-          (rangeParam as LogFiltersType['timeRange']) || prev.timeRange,
+        timeRange: (rangeParam as LogFiltersType['timeRange']) || prev.timeRange,
       }))
     }
   }, [])
@@ -351,9 +326,7 @@ function LogsContent() {
       <div className="mb-6">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-4xl font-bold text-zinc-900 dark:text-white">
-              Service Logs
-            </h1>
+            <h1 className="text-4xl font-bold text-zinc-900 dark:text-white">Service Logs</h1>
             <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
               Real-time log streaming from your services
             </p>
@@ -380,32 +353,16 @@ function LogsContent() {
               </span>
             </div>
 
-            <Button
-              onClick={handleRefresh}
-              variant="outline"
-              className="px-3 py-2 text-sm"
-            >
+            <Button onClick={handleRefresh} variant="outline" className="px-3 py-2 text-sm">
               <RefreshCw className="h-4 w-4" />
             </Button>
-            <Button
-              onClick={handleDownloadLogs}
-              variant="outline"
-              className="px-3 py-2 text-sm"
-            >
+            <Button onClick={handleDownloadLogs} variant="outline" className="px-3 py-2 text-sm">
               <Download className="h-4 w-4" />
             </Button>
-            <Button
-              onClick={handleShare}
-              variant="outline"
-              className="px-3 py-2 text-sm"
-            >
+            <Button onClick={handleShare} variant="outline" className="px-3 py-2 text-sm">
               <Share2 className="h-4 w-4" />
             </Button>
-            <Button
-              onClick={handleClearLogs}
-              variant="outline"
-              className="px-3 py-2 text-sm"
-            >
+            <Button onClick={handleClearLogs} variant="outline" className="px-3 py-2 text-sm">
               <Trash2 className="h-4 w-4" />
             </Button>
           </div>
@@ -433,9 +390,7 @@ function LogsContent() {
       </div>
 
       {/* Insights */}
-      {(insights.errorCount > 0 ||
-        insights.warningCount > 0 ||
-        insights.patterns.length > 0) && (
+      {(insights.errorCount > 0 || insights.warningCount > 0 || insights.patterns.length > 0) && (
         <div className="mb-4 rounded-lg border border-zinc-200 bg-white p-4 dark:border-zinc-700 dark:bg-zinc-900">
           <div className="flex items-center gap-6">
             {/* Error Count */}
@@ -444,9 +399,7 @@ function LogsContent() {
                 <AlertCircle className="h-5 w-5 text-red-500" />
                 <div>
                   <div className="text-xs text-zinc-500">Errors</div>
-                  <div className="text-lg font-bold text-red-500">
-                    {insights.errorCount}
-                  </div>
+                  <div className="text-lg font-bold text-red-500">{insights.errorCount}</div>
                 </div>
               </div>
             )}
@@ -457,9 +410,7 @@ function LogsContent() {
                 <AlertTriangle className="h-5 w-5 text-yellow-500" />
                 <div>
                   <div className="text-xs text-zinc-500">Warnings</div>
-                  <div className="text-lg font-bold text-yellow-500">
-                    {insights.warningCount}
-                  </div>
+                  <div className="text-lg font-bold text-yellow-500">{insights.warningCount}</div>
                 </div>
               </div>
             )}
@@ -473,13 +424,8 @@ function LogsContent() {
                 </div>
                 <div className="space-y-1">
                   {insights.patterns.map((pattern, idx) => (
-                    <div
-                      key={idx}
-                      className="truncate text-xs text-zinc-700 dark:text-zinc-300"
-                    >
-                      <span className="font-semibold text-red-500">
-                        {pattern.count}x
-                      </span>{' '}
+                    <div key={idx} className="truncate text-xs text-zinc-700 dark:text-zinc-300">
+                      <span className="font-semibold text-red-500">{pattern.count}x</span>{' '}
                       {pattern.message}
                     </div>
                   ))}
@@ -496,9 +442,7 @@ function LogsContent() {
           <div className="flex h-full items-center justify-center rounded-lg border border-zinc-200 bg-white dark:border-zinc-700 dark:bg-zinc-900">
             <div className="text-center">
               <AlertCircle className="mx-auto mb-4 h-12 w-12 text-red-500" />
-              <p className="text-sm font-semibold text-zinc-900 dark:text-white">
-                Connection lost
-              </p>
+              <p className="text-sm font-semibold text-zinc-900 dark:text-white">Connection lost</p>
               <p className="mt-1 text-xs text-zinc-500">Reconnecting...</p>
             </div>
           </div>

@@ -162,8 +162,7 @@ describe('project-utils', () => {
   describe('getDockerStatus', () => {
     it('returns docker status with containers', async () => {
       mockExecAsync.mockResolvedValue({
-        stdout:
-          'ID\tNAMES\tSTATE\tSTATUS\nabc123\tpostgres\trunning\tUp 5 minutes\n',
+        stdout: 'ID\tNAMES\tSTATE\tSTATUS\nabc123\tpostgres\trunning\tUp 5 minutes\n',
         stderr: '',
       })
 

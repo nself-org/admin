@@ -4,13 +4,7 @@ import { FormSkeleton } from '@/components/skeletons'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Progress } from '@/components/ui/progress'
@@ -45,10 +39,7 @@ function DatabaseMockContent() {
   const [progress, setProgress] = useState(0)
   const [lastOutput, setLastOutput] = useState<string>('')
   const [tables, setTables] = useState<TableConfig[]>([])
-  const [previewData, setPreviewData] = useState<Record<
-    string,
-    unknown[]
-  > | null>(null)
+  const [previewData, setPreviewData] = useState<Record<string, unknown[]> | null>(null)
 
   // Check if development mode
   useEffect(() => {
@@ -80,7 +71,7 @@ function DatabaseMockContent() {
               rowCount: t.rowCount ?? 0,
               enabled: true,
               columns: Array.isArray(t.columns) ? t.columns : [],
-            }),
+            })
           )
         : []
       setTables(fetched)
@@ -95,13 +86,8 @@ function DatabaseMockContent() {
     fetchSchema()
   }, [fetchSchema])
 
-  const updateTableConfig = (
-    tableName: string,
-    updates: Partial<TableConfig>,
-  ) => {
-    setTables((prev) =>
-      prev.map((t) => (t.name === tableName ? { ...t, ...updates } : t)),
-    )
+  const updateTableConfig = (tableName: string, updates: Partial<TableConfig>) => {
+    setTables((prev) => prev.map((t) => (t.name === tableName ? { ...t, ...updates } : t)))
   }
 
   const generatePreview = async () => {
@@ -130,9 +116,7 @@ function DatabaseMockContent() {
       const data = await response.json()
       if (!response.ok || !data.success) {
         setLastOutput(
-          (prev) =>
-            prev +
-            `\nError: ${data.details || data.error || `HTTP ${response.status}`}`,
+          (prev) => prev + `\nError: ${data.details || data.error || `HTTP ${response.status}`}`
         )
         return
       }
@@ -141,15 +125,11 @@ function DatabaseMockContent() {
       setProgress(100)
       setLastOutput(
         (prev) =>
-          prev +
-          (data.data?.output ||
-            `\nPreview generated.\nTables: ${enabledTables.length}`),
+          prev + (data.data?.output || `\nPreview generated.\nTables: ${enabledTables.length}`)
       )
     } catch (error) {
       setLastOutput(
-        (prev) =>
-          prev +
-          `\nError: ${error instanceof Error ? error.message : 'Generation failed'}`,
+        (prev) => prev + `\nError: ${error instanceof Error ? error.message : 'Generation failed'}`
       )
     } finally {
       setIsGenerating(false)
@@ -157,9 +137,7 @@ function DatabaseMockContent() {
   }
 
   const generateMockData = async () => {
-    if (
-      !confirm('This will insert mock data into your database. Are you sure?')
-    ) {
+    if (!confirm('This will insert mock data into your database. Are you sure?')) {
       return
     }
 
@@ -188,22 +166,15 @@ function DatabaseMockContent() {
       const data = await response.json()
       if (!response.ok || !data.success) {
         setLastOutput(
-          (prev) =>
-            prev +
-            `\nError: ${data.details || data.error || `HTTP ${response.status}`}`,
+          (prev) => prev + `\nError: ${data.details || data.error || `HTTP ${response.status}`}`
         )
         return
       }
       setProgress(100)
-      setLastOutput(
-        (prev) =>
-          prev + (data.data?.output || '\n--- Generation Complete ---'),
-      )
+      setLastOutput((prev) => prev + (data.data?.output || '\n--- Generation Complete ---'))
     } catch (error) {
       setLastOutput(
-        (prev) =>
-          prev +
-          `\nError: ${error instanceof Error ? error.message : 'Generation failed'}`,
+        (prev) => prev + `\nError: ${error instanceof Error ? error.message : 'Generation failed'}`
       )
     } finally {
       setIsGenerating(false)
@@ -214,9 +185,7 @@ function DatabaseMockContent() {
     return (
       <div className="space-y-6 p-6">
         <div>
-          <h1 className="text-2xl font-bold text-zinc-900 dark:text-white">
-            Mock Data Generator
-          </h1>
+          <h1 className="text-2xl font-bold text-zinc-900 dark:text-white">Mock Data Generator</h1>
           <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
             Generate realistic mock data for your database
           </p>
@@ -225,8 +194,8 @@ function DatabaseMockContent() {
           <AlertTriangle className="h-4 w-4" />
           <AlertTitle>Development Only</AlertTitle>
           <AlertDescription>
-            The mock data generator is only available in development mode to
-            prevent accidental data generation in production environments.
+            The mock data generator is only available in development mode to prevent accidental data
+            generation in production environments.
           </AlertDescription>
         </Alert>
       </div>
@@ -237,9 +206,7 @@ function DatabaseMockContent() {
     return (
       <div className="space-y-6 p-6">
         <div>
-          <h1 className="text-2xl font-bold text-zinc-900 dark:text-white">
-            Mock Data Generator
-          </h1>
+          <h1 className="text-2xl font-bold text-zinc-900 dark:text-white">Mock Data Generator</h1>
           <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
             Generate realistic mock data for your database
           </p>
@@ -257,9 +224,7 @@ function DatabaseMockContent() {
   return (
     <div className="space-y-6 p-6">
       <div>
-        <h1 className="text-2xl font-bold text-zinc-900 dark:text-white">
-          Mock Data Generator
-        </h1>
+        <h1 className="text-2xl font-bold text-zinc-900 dark:text-white">Mock Data Generator</h1>
         <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
           Generate realistic mock data for your database
         </p>
@@ -271,10 +236,8 @@ function DatabaseMockContent() {
           <AlertTitle>Development Tool</AlertTitle>
           <AlertDescription>
             This tool generates mock data using{' '}
-            <code className="rounded bg-zinc-100 px-1 dark:bg-zinc-800">
-              nself db mock
-            </code>
-            . It is designed for development and testing purposes only.
+            <code className="rounded bg-zinc-100 px-1 dark:bg-zinc-800">nself db mock</code>. It is
+            designed for development and testing purposes only.
           </AlertDescription>
         </Alert>
 
@@ -298,9 +261,7 @@ function DatabaseMockContent() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm font-medium text-zinc-500">Enabled</p>
-                  <p className="mt-1 text-2xl font-bold text-emerald-500">
-                    {enabledTables.length}
-                  </p>
+                  <p className="mt-1 text-2xl font-bold text-emerald-500">{enabledTables.length}</p>
                 </div>
                 <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-emerald-500/10">
                   <CheckCircle className="h-6 w-6 text-emerald-500" />
@@ -312,12 +273,8 @@ function DatabaseMockContent() {
             <CardContent className="pt-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-zinc-500">
-                    Total Rows
-                  </p>
-                  <p className="mt-1 text-2xl font-bold">
-                    {totalRows.toLocaleString()}
-                  </p>
+                  <p className="text-sm font-medium text-zinc-500">Total Rows</p>
+                  <p className="mt-1 text-2xl font-bold">{totalRows.toLocaleString()}</p>
                 </div>
                 <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-amber-500/10">
                   <Database className="h-6 w-6 text-amber-500" />
@@ -330,9 +287,7 @@ function DatabaseMockContent() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm font-medium text-zinc-500">Progress</p>
-                  <p className="mt-1 text-2xl font-bold">
-                    {Math.round(progress)}%
-                  </p>
+                  <p className="mt-1 text-2xl font-bold">{Math.round(progress)}%</p>
                 </div>
                 <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-sky-500/10">
                   <Sparkles className="h-6 w-6 text-sky-500" />
@@ -356,9 +311,7 @@ function DatabaseMockContent() {
                   Refresh
                 </Button>
               </div>
-              <CardDescription>
-                Configure row counts for each table
-              </CardDescription>
+              <CardDescription>Configure row counts for each table</CardDescription>
             </CardHeader>
             <CardContent>
               <ScrollArea className="h-80">
@@ -386,16 +339,11 @@ function DatabaseMockContent() {
                           />
                           <div>
                             <p className="font-medium">{table.name}</p>
-                            <p className="text-xs text-zinc-500">
-                              {table.columns.length} columns
-                            </p>
+                            <p className="text-xs text-zinc-500">{table.columns.length} columns</p>
                           </div>
                         </div>
                         <div className="flex items-center gap-2">
-                          <Label
-                            htmlFor={`count-${table.name}`}
-                            className="sr-only"
-                          >
+                          <Label htmlFor={`count-${table.name}`} className="sr-only">
                             Row count
                           </Label>
                           <Input
@@ -493,7 +441,10 @@ function DatabaseMockContent() {
                     }
                     const data = await response.json()
                     setLastOutput(
-                      data.data?.output || (data.success ? 'Mock data cleared.' : (data.error ?? 'Error clearing data')),
+                      data.data?.output ||
+                        (data.success
+                          ? 'Mock data cleared.'
+                          : (data.error ?? 'Error clearing data'))
                     )
                   } catch (err) {
                     setLastOutput(err instanceof Error ? err.message : 'Clear failed')
@@ -527,8 +478,7 @@ function DatabaseMockContent() {
                 </div>
                 <div className="mt-2">
                   $ nself db mock --tables=
-                  {enabledTables.map((t) => t.name).join(',') || 'none'}{' '}
-                  --count=
+                  {enabledTables.map((t) => t.name).join(',') || 'none'} --count=
                   {totalRows}
                 </div>
               </div>
@@ -573,13 +523,8 @@ function DatabaseMockContent() {
                         </thead>
                         <tbody className="divide-y dark:divide-zinc-700">
                           {rows.map((row, i) => (
-                            <tr
-                              key={i}
-                              className="hover:bg-zinc-50 dark:hover:bg-zinc-800/50"
-                            >
-                              {Object.values(
-                                row as Record<string, unknown>,
-                              ).map((val, j) => (
+                            <tr key={i} className="hover:bg-zinc-50 dark:hover:bg-zinc-800/50">
+                              {Object.values(row as Record<string, unknown>).map((val, j) => (
                                 <td
                                   key={j}
                                   className="max-w-xs truncate px-3 py-2 font-mono text-xs"

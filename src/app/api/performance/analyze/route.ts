@@ -9,11 +9,7 @@ export async function GET(_request: NextRequest): Promise<NextResponse> {
   try {
     const result = await executeNselfCommand('perf', ['analyze', '--json'])
 
-    logger.cli(
-      'nself perf analyze --json',
-      result.success,
-      Date.now() - startTime,
-    )
+    logger.cli('nself perf analyze --json', result.success, Date.now() - startTime)
 
     if (!result.success) {
       return NextResponse.json(
@@ -22,7 +18,7 @@ export async function GET(_request: NextRequest): Promise<NextResponse> {
           error: 'Failed to analyze performance',
           details: result.error || result.stderr,
         },
-        { status: 500 },
+        { status: 500 }
       )
     }
 
@@ -51,7 +47,7 @@ export async function GET(_request: NextRequest): Promise<NextResponse> {
         error: 'Failed to analyze performance',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

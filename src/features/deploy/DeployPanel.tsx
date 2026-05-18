@@ -1,5 +1,11 @@
 'use client'
 
+import type {
+  ControlPlaneEnvironment,
+  ControlPlaneInventory,
+  ControlPlaneServer,
+  ServerCapability,
+} from '@/types/deployment'
 import {
   AlertCircle,
   CheckCircle2,
@@ -14,18 +20,7 @@ import {
   XCircle,
 } from 'lucide-react'
 import { useCallback, useEffect, useRef, useState } from 'react'
-import type {
-  ControlPlaneEnvironment,
-  ControlPlaneInventory,
-  ControlPlaneServer,
-  ServerCapability,
-} from '@/types/deployment'
-import type {
-  DeployResult,
-  DeployState,
-  DeployStep,
-  DeployStrategy,
-} from './types'
+import type { DeployResult, DeployState, DeployStep, DeployStrategy } from './types'
 
 // ---------------------------------------------------------------------------
 // Strategy config (static — strategy choice doesn't come from CLI)
@@ -92,13 +87,9 @@ function StepIcon({ status }: { status: DeployStep['status'] }) {
     case 'failed':
       return <XCircle className="h-4 w-4 flex-shrink-0 text-red-400" />
     case 'running':
-      return (
-        <Loader2 className="text-nself-primary h-4 w-4 flex-shrink-0 animate-spin" />
-      )
+      return <Loader2 className="text-nself-primary h-4 w-4 flex-shrink-0 animate-spin" />
     case 'skipped':
-      return (
-        <SkipForward className="text-nself-text-muted h-4 w-4 flex-shrink-0" />
-      )
+      return <SkipForward className="text-nself-text-muted h-4 w-4 flex-shrink-0" />
     default:
       return <Circle className="text-nself-text-muted h-4 w-4 flex-shrink-0" />
   }
@@ -146,8 +137,7 @@ function ProdConfirmModal({
   }
 
   const isProd =
-    environmentName.toLowerCase() === 'production' ||
-    environmentName.toLowerCase() === 'prod'
+    environmentName.toLowerCase() === 'production' || environmentName.toLowerCase() === 'prod'
 
   return (
     <div
@@ -164,22 +154,16 @@ function ProdConfirmModal({
               isProd ? 'bg-red-500/15' : 'bg-amber-500/15'
             }`}
           >
-            <Rocket
-              className={`h-5 w-5 ${isProd ? 'text-red-400' : 'text-amber-400'}`}
-            />
+            <Rocket className={`h-5 w-5 ${isProd ? 'text-red-400' : 'text-amber-400'}`} />
           </div>
           <div>
-            <h2
-              id="deploy-prod-title"
-              className="text-nself-text text-base font-semibold"
-            >
+            <h2 id="deploy-prod-title" className="text-nself-text text-base font-semibold">
               Deploy to {environmentName}?
             </h2>
             <p className="text-nself-text-muted mt-1 text-sm">
               {serverName && (
                 <span>
-                  Server:{' '}
-                  <span className="text-nself-text font-mono">{serverName}</span>
+                  Server: <span className="text-nself-text font-mono">{serverName}</span>
                   {' · '}
                 </span>
               )}
@@ -198,14 +182,10 @@ function ProdConfirmModal({
 
         <div
           className={`mb-4 rounded-lg border px-4 py-3 ${
-            isProd
-              ? 'border-red-500/30 bg-red-500/10'
-              : 'border-amber-500/30 bg-amber-500/10'
+            isProd ? 'border-red-500/30 bg-red-500/10' : 'border-amber-500/30 bg-amber-500/10'
           }`}
         >
-          <p
-            className={`text-xs font-medium ${isProd ? 'text-red-300' : 'text-amber-300'}`}
-          >
+          <p className={`text-xs font-medium ${isProd ? 'text-red-300' : 'text-amber-300'}`}>
             Type{' '}
             <span
               className={`rounded px-1 font-mono ${isProd ? 'bg-red-500/20' : 'bg-amber-500/20'}`}
@@ -241,9 +221,7 @@ function ProdConfirmModal({
             onClick={onConfirm}
             disabled={!confirmed}
             className={`flex-1 rounded-lg px-4 py-2 text-sm font-semibold text-white transition-colors disabled:cursor-not-allowed disabled:opacity-40 ${
-              isProd
-                ? 'bg-red-600 hover:bg-red-700'
-                : 'bg-amber-600 hover:bg-amber-700'
+              isProd ? 'bg-red-600 hover:bg-red-700' : 'bg-amber-600 hover:bg-amber-700'
             }`}
           >
             Deploy to {environmentName}
@@ -298,12 +276,7 @@ function isProductionLike(name: string): boolean {
 /** Returns true when an environment name looks staging-like (warn before deploy). */
 function requiresConfirmation(name: string): boolean {
   const n = name.toLowerCase()
-  return (
-    n === 'production' ||
-    n === 'prod' ||
-    n === 'staging' ||
-    n === 'stage'
-  )
+  return n === 'production' || n === 'prod' || n === 'staging' || n === 'stage'
 }
 
 export function DeployPanel({ onComplete }: DeployPanelProps) {
@@ -314,9 +287,7 @@ export function DeployPanel({ onComplete }: DeployPanelProps) {
 
   // Selected environment + server
   const [selectedEnvName, setSelectedEnvName] = useState<string | null>(null)
-  const [selectedServerName, setSelectedServerName] = useState<string | null>(
-    null,
-  )
+  const [selectedServerName, setSelectedServerName] = useState<string | null>(null)
 
   // Deploy options
   const [strategy, setStrategy] = useState<DeployStrategy>('rolling')
@@ -393,9 +364,7 @@ export function DeployPanel({ onComplete }: DeployPanelProps) {
       if (selectedEnvName === null) {
         const firstEnv = envs[0]
         setSelectedEnvName(firstEnv.name)
-        const firstManageable = firstEnv.servers.find(
-          (s) => s.capability === 'manage',
-        )
+        const firstManageable = firstEnv.servers.find((s) => s.capability === 'manage')
         setSelectedServerName(firstManageable?.name ?? null)
       }
     } catch (_err) {
@@ -425,9 +394,7 @@ export function DeployPanel({ onComplete }: DeployPanelProps) {
   const multiServer = visibleServers.length > 1
 
   const selectedServer: ControlPlaneServer | null =
-    visibleServers.find((s) => s.name === selectedServerName) ??
-    visibleServers[0] ??
-    null
+    visibleServers.find((s) => s.name === selectedServerName) ?? visibleServers[0] ?? null
 
   const canDeploy = selectedServer?.capability === 'manage'
 
@@ -523,8 +490,7 @@ export function DeployPanel({ onComplete }: DeployPanelProps) {
         onComplete?.(syntheticResult)
       }
     } catch (err) {
-      const errMsg =
-        err instanceof Error ? err.message : 'Network error — deploy request failed'
+      const errMsg = err instanceof Error ? err.message : 'Network error — deploy request failed'
       const syntheticResult: DeployResult = {
         success: false,
         target: 'staging',
@@ -590,9 +556,7 @@ export function DeployPanel({ onComplete }: DeployPanelProps) {
             <span className="nself-gradient-text font-semibold">
               {selectedEnvName}
               {selectedServerName && (
-                <span className="text-nself-text-muted font-mono">
-                  {' '}({selectedServerName})
-                </span>
+                <span className="text-nself-text-muted font-mono"> ({selectedServerName})</span>
               )}
             </span>
             …
@@ -671,9 +635,7 @@ export function DeployPanel({ onComplete }: DeployPanelProps) {
       return (
         <div className="rounded-lg border border-zinc-600/40 bg-zinc-800/30 px-4 py-6 text-center">
           <Server className="text-nself-text-muted mx-auto mb-2 h-8 w-8" />
-          <p className="text-nself-text mb-1 text-sm font-medium">
-            CLI not responding
-          </p>
+          <p className="text-nself-text mb-1 text-sm font-medium">CLI not responding</p>
           <p className="text-nself-text-muted mb-3 text-xs">
             Make sure the nself CLI is installed and on PATH.
           </p>
@@ -695,12 +657,8 @@ export function DeployPanel({ onComplete }: DeployPanelProps) {
           <div className="flex items-start gap-2">
             <AlertCircle className="mt-0.5 h-4 w-4 flex-shrink-0 text-red-400" />
             <div>
-              <p className="text-sm font-medium text-red-300">
-                Failed to load environments
-              </p>
-              <p className="mt-0.5 text-xs text-red-300/70">
-                {inventoryState.message}
-              </p>
+              <p className="text-sm font-medium text-red-300">Failed to load environments</p>
+              <p className="mt-0.5 text-xs text-red-300/70">{inventoryState.message}</p>
             </div>
           </div>
           <button
@@ -719,9 +677,7 @@ export function DeployPanel({ onComplete }: DeployPanelProps) {
       return (
         <div className="rounded-lg border border-zinc-600/40 bg-zinc-800/30 px-4 py-6 text-center">
           <Server className="text-nself-text-muted mx-auto mb-2 h-8 w-8" />
-          <p className="text-nself-text mb-1 text-sm font-medium">
-            No environments configured
-          </p>
+          <p className="text-nself-text mb-1 text-sm font-medium">No environments configured</p>
           <p className="text-nself-text-muted mb-3 text-xs">
             Add a server in{' '}
             <a href="/environments" className="text-nself-primary hover:underline">
@@ -755,9 +711,7 @@ export function DeployPanel({ onComplete }: DeployPanelProps) {
                 setSelectedEnvName(name)
                 // Reset server selection when environment changes
                 const env = environments.find((x) => x.name === name)
-                const firstManageable = env?.servers.find(
-                  (s) => s.capability === 'manage',
-                )
+                const firstManageable = env?.servers.find((s) => s.capability === 'manage')
                 setSelectedServerName(firstManageable?.name ?? null)
               }}
               disabled={isRunning}
@@ -765,11 +719,12 @@ export function DeployPanel({ onComplete }: DeployPanelProps) {
             >
               {environments.map((env) => (
                 <option key={env.name} value={env.name}>
-                  {env.name}{env.kind ? ` (${env.kind})` : ''}
+                  {env.name}
+                  {env.kind ? ` (${env.kind})` : ''}
                 </option>
               ))}
             </select>
-            <ChevronDown className="text-nself-text-muted pointer-events-none absolute right-2.5 top-1/2 h-4 w-4 -translate-y-1/2" />
+            <ChevronDown className="text-nself-text-muted pointer-events-none absolute top-1/2 right-2.5 h-4 w-4 -translate-y-1/2" />
           </div>
         </div>
 
@@ -791,17 +746,13 @@ export function DeployPanel({ onComplete }: DeployPanelProps) {
                 className="border-nself-border bg-nself-bg text-nself-text focus:border-nself-primary focus:ring-nself-primary w-full appearance-none rounded-lg border py-2 pr-8 pl-3 text-sm focus:ring-1 focus:outline-none disabled:opacity-60"
               >
                 {visibleServers.map((srv) => (
-                  <option
-                    key={srv.name}
-                    value={srv.name}
-                    disabled={srv.capability !== 'manage'}
-                  >
+                  <option key={srv.name} value={srv.name} disabled={srv.capability !== 'manage'}>
                     {srv.name} ({srv.role})
                     {srv.capability !== 'manage' ? ` — ${capabilityLabel(srv.capability)}` : ''}
                   </option>
                 ))}
               </select>
-              <ChevronDown className="text-nself-text-muted pointer-events-none absolute right-2.5 top-1/2 h-4 w-4 -translate-y-1/2" />
+              <ChevronDown className="text-nself-text-muted pointer-events-none absolute top-1/2 right-2.5 h-4 w-4 -translate-y-1/2" />
             </div>
           </div>
         )}
@@ -839,7 +790,9 @@ export function DeployPanel({ onComplete }: DeployPanelProps) {
             <AlertCircle className="h-3.5 w-3.5 flex-shrink-0 text-zinc-400" />
             <p className="text-xs text-zinc-400">
               {selectedEnv.servers.filter((s) => s.capability === 'hidden').length} hidden server
-              {selectedEnv.servers.filter((s) => s.capability === 'hidden').length > 1 ? 's' : ''}{' '}
+              {selectedEnv.servers.filter((s) => s.capability === 'hidden').length > 1
+                ? 's'
+                : ''}{' '}
               not shown.{' '}
               <a href="/environments" className="text-nself-primary hover:underline">
                 Manage in Environments
@@ -876,12 +829,8 @@ export function DeployPanel({ onComplete }: DeployPanelProps) {
               <Rocket className="text-nself-primary h-5 w-5" />
             </div>
             <div>
-              <h2 className="nself-gradient-text text-base font-semibold">
-                Deploy Pipeline
-              </h2>
-              <p className="text-nself-text-muted text-xs">
-                Push your stack to any environment
-              </p>
+              <h2 className="nself-gradient-text text-base font-semibold">Deploy Pipeline</h2>
+              <p className="text-nself-text-muted text-xs">Push your stack to any environment</p>
             </div>
           </div>
           {inventoryState.status === 'ready' && (
@@ -949,9 +898,7 @@ export function DeployPanel({ onComplete }: DeployPanelProps) {
                       disabled={isRunning}
                       className="border-nself-border accent-nself-primary h-4 w-4 rounded"
                     />
-                    <span className="text-nself-text text-sm font-medium">
-                      Dry run
-                    </span>
+                    <span className="text-nself-text text-sm font-medium">Dry run</span>
                     <span className="text-nself-text-muted text-xs">
                       — validate without making changes
                     </span>
@@ -973,9 +920,7 @@ export function DeployPanel({ onComplete }: DeployPanelProps) {
                     <Rocket className="h-4 w-4" />
                     {dryRun ? 'Dry Run' : 'Deploy'} to {selectedEnvName}
                     {selectedServerName && multiServer && (
-                      <span className="font-mono text-xs opacity-70">
-                        ({selectedServerName})
-                      </span>
+                      <span className="font-mono text-xs opacity-70">({selectedServerName})</span>
                     )}
                   </button>
                 ) : (

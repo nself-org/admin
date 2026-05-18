@@ -13,9 +13,7 @@ const statusConfig = {
 export function TenantStatusBadge({ status }: TenantStatusBadgeProps) {
   const config = statusConfig[status]
   return (
-    <span
-      className={`rounded-full px-2 py-0.5 text-xs font-medium ${config.className}`}
-    >
+    <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${config.className}`}>
       {config.label}
     </span>
   )

@@ -21,18 +21,12 @@ export function Spinner({
   )
 }
 
-export function LoadingOverlay({
-  message = 'Loading...',
-}: {
-  message?: string
-}) {
+export function LoadingOverlay({ message = 'Loading...' }: { message?: string }) {
   return (
     <div className="absolute inset-0 z-50 flex items-center justify-center bg-white/80 backdrop-blur-sm dark:bg-zinc-900/80">
       <div className="flex flex-col items-center">
         <Spinner size="lg" />
-        <p className="mt-4 text-sm text-zinc-600 dark:text-zinc-400">
-          {message}
-        </p>
+        <p className="mt-4 text-sm text-zinc-600 dark:text-zinc-400">{message}</p>
       </div>
     </div>
   )

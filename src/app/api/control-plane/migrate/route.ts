@@ -112,7 +112,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to parse remote-connections.json',
         details: err instanceof Error ? err.message : 'Parse error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 
@@ -132,10 +132,11 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       continue
     }
 
-    const safeName = (conn.name ?? conn.id ?? `remote-${results.length}`)
-      .replace(/[^a-zA-Z0-9_\-]/g, '-')
-      .replace(/^-+|-+$/g, '')
-      .slice(0, 63) || `remote-${results.length}`
+    const safeName =
+      (conn.name ?? conn.id ?? `remote-${results.length}`)
+        .replace(/[^a-zA-Z0-9_\-]/g, '-')
+        .replace(/^-+|-+$/g, '')
+        .slice(0, 63) || `remote-${results.length}`
 
     if (!validateSafeArg(safeName)) {
       results.push({ name, status: 'skipped', reason: 'Could not derive a safe name' })
@@ -173,7 +174,10 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       const execErr = err as { message?: string; stderr?: string }
       const reason = execErr.stderr?.trim() ?? execErr.message ?? 'CLI error'
       // Treat "already exists" as success
-      if (reason.toLowerCase().includes('already exists') || reason.toLowerCase().includes('duplicate')) {
+      if (
+        reason.toLowerCase().includes('already exists') ||
+        reason.toLowerCase().includes('duplicate')
+      ) {
         results.push({ name, status: 'added' })
       } else {
         results.push({ name, status: 'failed', reason })

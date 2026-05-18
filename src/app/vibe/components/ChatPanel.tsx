@@ -38,9 +38,7 @@ export function ChatPanel({
     if (generation?.prompt && generation.status === 'generating') {
       setMessages((prev) => {
         // Avoid duplicates
-        if (
-          prev.some((m) => m.role === 'user' && m.content === generation.prompt)
-        ) {
+        if (prev.some((m) => m.role === 'user' && m.content === generation.prompt)) {
           return prev
         }
         return [
@@ -61,10 +59,7 @@ export function ChatPanel({
     setMessages((prev) => {
       const last = prev[prev.length - 1]
       if (!last || last.role !== 'assistant') return prev
-      return [
-        ...prev.slice(0, -1),
-        { ...last, content, isStreaming: isStreaming },
-      ]
+      return [...prev.slice(0, -1), { ...last, content, isStreaming: isStreaming }]
     })
   }, [streamChunks, isStreaming])
 
@@ -101,7 +96,7 @@ export function ChatPanel({
         handleSubmit()
       }
     },
-    [handleSubmit],
+    [handleSubmit]
   )
 
   return (
@@ -111,13 +106,7 @@ export function ChatPanel({
       </h2>
 
       {/* Status live region for screen readers */}
-      <div
-        role="status"
-        aria-live="polite"
-        aria-atomic="false"
-        className="sr-only"
-        ref={liveRef}
-      >
+      <div role="status" aria-live="polite" aria-atomic="false" className="sr-only" ref={liveRef}>
         {statusMessage}
       </div>
 
@@ -129,16 +118,11 @@ export function ChatPanel({
       >
         {messages.length === 0 && (
           <div className="flex h-full flex-col items-center justify-center py-12 text-center">
-            <Sparkles
-              className="mb-3 h-8 w-8 text-sky-500"
-              aria-hidden="true"
-            />
-            <p className="text-sm font-medium text-zinc-300">
-              Describe a feature to generate
-            </p>
+            <Sparkles className="mb-3 h-8 w-8 text-sky-500" aria-hidden="true" />
+            <p className="text-sm font-medium text-zinc-300">Describe a feature to generate</p>
             <p className="mt-1 max-w-xs text-xs text-zinc-500">
-              Example: &quot;Add a comments table with user_id and body, with
-              Hasura permissions for authenticated users&quot;
+              Example: &quot;Add a comments table with user_id and body, with Hasura permissions for
+              authenticated users&quot;
             </p>
           </div>
         )}
@@ -146,9 +130,7 @@ export function ChatPanel({
         {messages.map((msg, i) => (
           <article
             key={i}
-            className={
-              msg.role === 'user' ? 'flex justify-end' : 'flex justify-start'
-            }
+            className={msg.role === 'user' ? 'flex justify-end' : 'flex justify-start'}
           >
             <div
               className={
@@ -159,16 +141,11 @@ export function ChatPanel({
             >
               {msg.role === 'assistant' && msg.isStreaming && !msg.content && (
                 <span className="flex items-center gap-1.5 text-zinc-400">
-                  <Loader2
-                    className="h-3.5 w-3.5 animate-spin"
-                    aria-hidden="true"
-                  />
+                  <Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden="true" />
                   <span>Generating...</span>
                 </span>
               )}
-              {msg.content && (
-                <p className="whitespace-pre-wrap">{msg.content}</p>
-              )}
+              {msg.content && <p className="whitespace-pre-wrap">{msg.content}</p>}
               {msg.role === 'assistant' && msg.isStreaming && (
                 <span
                   className="ml-0.5 inline-block h-4 w-0.5 animate-pulse bg-sky-400"
@@ -180,10 +157,7 @@ export function ChatPanel({
         ))}
 
         {statusMessage && isStreaming && (
-          <p
-            className="py-1 text-center text-xs text-zinc-500"
-            aria-hidden="true"
-          >
+          <p className="py-1 text-center text-xs text-zinc-500" aria-hidden="true">
             {statusMessage}
           </p>
         )}

@@ -19,13 +19,7 @@ export interface StripeSubscription {
   id: string
   customerId: string
   customerEmail: string
-  status:
-    | 'active'
-    | 'canceled'
-    | 'incomplete'
-    | 'past_due'
-    | 'trialing'
-    | 'unpaid'
+  status: 'active' | 'canceled' | 'incomplete' | 'past_due' | 'trialing' | 'unpaid'
   priceId: string
   productName: string
   amount: number

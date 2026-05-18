@@ -17,15 +17,11 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           error: 'Invalid code',
           details: 'A verification code is required',
         },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
-    const result = await executeNselfCommand('auth', [
-      'mfa',
-      'verify',
-      `--code=${code}`,
-    ])
+    const result = await executeNselfCommand('auth', ['mfa', 'verify', `--code=${code}`])
 
     if (!result.success) {
       return NextResponse.json(
@@ -34,7 +30,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           error: 'MFA verification failed',
           details: result.error || result.stderr || 'Unknown error',
         },
-        { status: 500 },
+        { status: 500 }
       )
     }
 
@@ -49,7 +45,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         error: 'MFA verification failed',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

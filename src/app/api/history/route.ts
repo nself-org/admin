@@ -25,14 +25,11 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     if (since) args.push(`--since=${since}`)
     if (until) args.push(`--until=${until}`)
 
-    const { stdout } = await execAsync(
-      `${nselfPath} ${args.join(' ')} --json`,
-      {
-        cwd: projectPath,
-        env: { ...process.env, PATH: getEnhancedPath() },
-        timeout: 60000,
-      },
-    )
+    const { stdout } = await execAsync(`${nselfPath} ${args.join(' ')} --json`, {
+      cwd: projectPath,
+      env: { ...process.env, PATH: getEnhancedPath() },
+      timeout: 60000,
+    })
 
     const result = JSON.parse(stdout)
 
@@ -41,20 +38,14 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       success: true,
       history: result.history ?? [],
       total: result.total ?? 0,
-      types: result.types ?? [
-        'deployment',
-        'migration',
-        'backup',
-        'sync',
-        'config',
-      ],
+      types: result.types ?? ['deployment', 'migration', 'backup', 'sync', 'config'],
     })
   } catch (error) {
     const err = error as { message?: string; stdout?: string; stderr?: string }
     logger.error('Failed to get history', { error: err.message })
     return NextResponse.json(
       { success: false, error: 'Failed to get history', details: err.message },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

@@ -42,7 +42,7 @@ export async function GET(): Promise<NextResponse> {
     let diskInfo = { used: 50, total: 100, percentage: 50 } // Defaults
     try {
       const { stdout } = await execAsync(
-        "df -h / | tail -1 | awk '{print $2 \" \" $3 \" \" $5}' | sed 's/G//g' | sed 's/%//'",
+        "df -h / | tail -1 | awk '{print $2 \" \" $3 \" \" $5}' | sed 's/G//g' | sed 's/%//'"
       )
       const parts = stdout.trim().split(' ')
       diskInfo = {
@@ -59,7 +59,7 @@ export async function GET(): Promise<NextResponse> {
     try {
       // Try to get Wi-Fi transmit rate
       const { stdout: wifiInfo } = await execAsync(
-        "system_profiler SPAirPortDataType 2>/dev/null | grep 'Transmit Rate:' | head -1 | awk '{print $3}'",
+        "system_profiler SPAirPortDataType 2>/dev/null | grep 'Transmit Rate:' | head -1 | awk '{print $3}'"
       )
       const wifiRate = parseInt(wifiInfo.trim())
       if (wifiRate && wifiRate > 0) {
@@ -121,7 +121,7 @@ export async function GET(): Promise<NextResponse> {
         success: false,
         error: 'Failed to fetch metrics',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

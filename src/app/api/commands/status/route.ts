@@ -51,11 +51,7 @@ function parseStatusOutput(output: string): ServiceStatus[] {
 
     let state: ServiceStatus['state'] = 'unknown'
     if (rawState === 'running' || rawState === 'up') state = 'running'
-    else if (
-      rawState === 'stopped' ||
-      rawState === 'down' ||
-      rawState === 'exited'
-    )
+    else if (rawState === 'stopped' || rawState === 'down' || rawState === 'exited')
       state = 'stopped'
     else if (rawState === 'error' || rawState === 'unhealthy') state = 'error'
 
@@ -117,7 +113,7 @@ export async function GET(): Promise<NextResponse> {
         output: '',
         services: [],
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

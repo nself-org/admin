@@ -13,24 +13,13 @@ import { useState } from 'react'
 export default function TenantMembersPage() {
   const params = useParams()
   const tenantId = params.id as string
-  const {
-    members,
-    isLoading,
-    error,
-    invite,
-    remove,
-    updateRole,
-    resendInvite,
-  } = useTenantMembers(tenantId)
+  const { members, isLoading, error, invite, remove, updateRole, resendInvite } =
+    useTenantMembers(tenantId)
   const [showInviteModal, setShowInviteModal] = useState(false)
 
   if (isLoading) return <FormSkeleton />
 
-  const handleInvite = async (
-    email: string,
-    role: TenantRole,
-    message?: string,
-  ) => {
+  const handleInvite = async (email: string, role: TenantRole, message?: string) => {
     await invite({ email, role, message })
     setShowInviteModal(false)
   }
@@ -72,12 +61,8 @@ export default function TenantMembersPage() {
       ) : (
         <div className="flex flex-col items-center justify-center rounded-xl border border-zinc-700/50 bg-zinc-800/30 py-16">
           <Users className="mb-4 h-12 w-12 text-zinc-600" />
-          <h3 className="mb-2 text-lg font-medium text-white">
-            No members yet
-          </h3>
-          <p className="mb-4 text-sm text-zinc-400">
-            Invite your first team member
-          </p>
+          <h3 className="mb-2 text-lg font-medium text-white">No members yet</h3>
+          <p className="mb-4 text-sm text-zinc-400">Invite your first team member</p>
           <button
             onClick={() => setShowInviteModal(true)}
             className="inline-flex items-center gap-2 rounded-lg bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-500"
@@ -90,13 +75,7 @@ export default function TenantMembersPage() {
       <OrgInviteModal
         isOpen={showInviteModal}
         onClose={() => setShowInviteModal(false)}
-        onInvite={
-          handleInvite as (
-            email: string,
-            role: string,
-            message?: string,
-          ) => Promise<void>
-        }
+        onInvite={handleInvite as (email: string, role: string, message?: string) => Promise<void>}
       />
     </div>
   )

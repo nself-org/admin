@@ -22,7 +22,7 @@ class PollingManager {
     id: string,
     callback: PollingCallback,
     interval: number,
-    immediate: boolean = true,
+    immediate: boolean = true
   ): void {
     // Clean up existing task if any
     this.unregister(id)
@@ -142,7 +142,7 @@ import { useEffect, useRef } from 'react'
 export function usePolling(
   callback: PollingCallback,
   interval: number | null,
-  deps: any[] = [],
+  deps: any[] = []
 ): void {
   const savedCallback = useRef<PollingCallback | undefined>(undefined)
   const taskId = useRef<string | undefined>(undefined)
@@ -159,12 +159,7 @@ export function usePolling(
       taskId.current = `polling-${Math.random().toString(36).substr(2, 9)}`
 
       // Register polling task
-      pollingManager.register(
-        taskId.current,
-        () => savedCallback.current?.(),
-        interval,
-        true,
-      )
+      pollingManager.register(taskId.current, () => savedCallback.current?.(), interval, true)
 
       // Cleanup on unmount
       return () => {

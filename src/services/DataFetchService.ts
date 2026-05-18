@@ -30,7 +30,7 @@ class DataFetchService {
   private async dedupedFetch(
     key: string,
     fetcher: () => Promise<any>,
-    maxAge: number,
+    maxAge: number
   ): Promise<any> {
     const record = this.fetchRecords.get(key)
 
@@ -83,9 +83,7 @@ class DataFetchService {
         const store = useProjectStore.getState()
         if (store.projectStatus !== 'running') return null
 
-        const response = await fetch(
-          '/api/docker/containers?detailed=true&stats=false',
-        )
+        const response = await fetch('/api/docker/containers?detailed=true&stats=false')
         if (response.ok) {
           const data = await response.json()
           if (data.success) {
@@ -108,7 +106,7 @@ class DataFetchService {
         }
         return null
       },
-      maxAge,
+      maxAge
     )
   }
 
@@ -126,18 +124,14 @@ class DataFetchService {
         const store = useProjectStore.getState()
         if (store.projectStatus !== 'running') return null
 
-        const response = await fetch(
-          '/api/docker/containers?detailed=true&stats=true',
-        )
+        const response = await fetch('/api/docker/containers?detailed=true&stats=true')
         if (response.ok) {
           const data = await response.json()
           if (data.success) {
             // Merge stats into existing container data
             const currentContainers = store.containerStats || []
             const updatedContainers = currentContainers.map((container) => {
-              const statsContainer = data.data.containers.find(
-                (c: any) => c.id === container.id,
-              )
+              const statsContainer = data.data.containers.find((c: any) => c.id === container.id)
               if (statsContainer) {
                 return { ...container, ...statsContainer }
               }
@@ -153,7 +147,7 @@ class DataFetchService {
         }
         return null
       },
-      maxAge,
+      maxAge
     )
   }
 
@@ -176,10 +170,7 @@ class DataFetchService {
           fetch('/api/database?action=tables'),
         ])
 
-        const [statsData, tablesData] = await Promise.all([
-          statsRes.json(),
-          tablesRes.json(),
-        ])
+        const [statsData, tablesData] = await Promise.all([statsRes.json(), tablesRes.json()])
 
         const updates: any = {}
         if (statsData.success) updates.databaseStats = statsData.data
@@ -191,7 +182,7 @@ class DataFetchService {
 
         return updates
       },
-      maxAge,
+      maxAge
     )
   }
 
@@ -220,7 +211,7 @@ class DataFetchService {
         }
         return null
       },
-      maxAge,
+      maxAge
     )
   }
 
@@ -259,7 +250,7 @@ class DataFetchService {
         }
         return null
       },
-      maxAge,
+      maxAge
     )
   }
 

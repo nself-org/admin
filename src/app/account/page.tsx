@@ -35,16 +35,9 @@ interface AccountData {
 
 function AccountSkeleton() {
   return (
-    <div
-      className="space-y-4"
-      aria-busy="true"
-      aria-label="Loading account details"
-    >
+    <div className="space-y-4" aria-busy="true" aria-label="Loading account details">
       {[1, 2, 3, 4].map((i) => (
-        <div
-          key={i}
-          className="h-16 animate-pulse rounded-xl bg-zinc-100 dark:bg-zinc-800"
-        />
+        <div key={i} className="h-16 animate-pulse rounded-xl bg-zinc-100 dark:bg-zinc-800" />
       ))}
     </div>
   )
@@ -128,10 +121,7 @@ function AccountContent() {
           <div className="flex items-start justify-between">
             <div className="flex items-center gap-3">
               <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-100 dark:bg-blue-900/30">
-                <User
-                  className="h-5 w-5 text-blue-600 dark:text-blue-400"
-                  aria-hidden="true"
-                />
+                <User className="h-5 w-5 text-blue-600 dark:text-blue-400" aria-hidden="true" />
               </div>
               <div>
                 <h1
@@ -167,10 +157,7 @@ function AccountContent() {
                 className="inline-flex items-center gap-2 rounded-lg bg-red-50 px-3 py-2 text-sm font-medium text-red-700 transition-colors hover:bg-red-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-500 disabled:opacity-50 dark:bg-red-900/20 dark:text-red-400"
               >
                 {loggingOut ? (
-                  <Loader2
-                    className="h-4 w-4 animate-spin"
-                    aria-hidden="true"
-                  />
+                  <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
                 ) : (
                   <LogOut className="h-4 w-4" aria-hidden="true" />
                 )}
@@ -202,17 +189,10 @@ function AccountContent() {
             aria-live="assertive"
             className="mb-6 flex items-start gap-3 rounded-xl border border-red-200 bg-red-50 p-4 dark:border-red-800 dark:bg-red-900/20"
           >
-            <AlertCircle
-              className="h-5 w-5 flex-shrink-0 text-red-500"
-              aria-hidden="true"
-            />
+            <AlertCircle className="h-5 w-5 flex-shrink-0 text-red-500" aria-hidden="true" />
             <div>
-              <p className="font-medium text-red-800 dark:text-red-300">
-                Error loading account
-              </p>
-              <p className="mt-1 text-sm text-red-700 dark:text-red-400">
-                {error}
-              </p>
+              <p className="font-medium text-red-800 dark:text-red-300">Error loading account</p>
+              <p className="mt-1 text-sm text-red-700 dark:text-red-400">{error}</p>
             </div>
           </div>
         )}
@@ -258,9 +238,7 @@ function AccountContent() {
                     Last login
                   </dt>
                   <dd className="text-sm font-semibold text-zinc-900 dark:text-white">
-                    {data.lastLogin
-                      ? new Date(data.lastLogin).toLocaleString()
-                      : 'Unknown'}
+                    {data.lastLogin ? new Date(data.lastLogin).toLocaleString() : 'Unknown'}
                   </dd>
                 </div>
               </dl>
@@ -269,10 +247,7 @@ function AccountContent() {
             {/* Empty state for new accounts */}
             {data.licenseCount === 0 && (
               <div className="rounded-xl border border-dashed border-zinc-300 bg-zinc-50 p-6 text-center dark:border-zinc-700 dark:bg-zinc-800/50">
-                <Key
-                  className="mx-auto mb-2 h-8 w-8 text-zinc-400"
-                  aria-hidden="true"
-                />
+                <Key className="mx-auto mb-2 h-8 w-8 text-zinc-400" aria-hidden="true" />
                 <p className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
                   No licenses yet
                 </p>

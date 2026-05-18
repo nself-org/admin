@@ -185,7 +185,7 @@ global.fetch = jest.fn(() =>
     headers: new Headers(),
     status: 200,
     statusText: 'OK',
-  }),
+  })
 )
 
 // Mock Docker API
@@ -220,10 +220,7 @@ jest.mock('lokijs', () => {
         }
         return this.data.filter((doc) => {
           return Object.keys(query).every((key) => {
-            if (
-              typeof query[key] === 'object' &&
-              query[key].$ne !== undefined
-            ) {
+            if (typeof query[key] === 'object' && query[key].$ne !== undefined) {
               return doc[key] !== query[key].$ne
             }
             return doc[key] === query[key]
@@ -232,9 +229,8 @@ jest.mock('lokijs', () => {
       }),
       findOne: jest.fn(function (query = {}) {
         return (
-          this.data.find((doc) =>
-            Object.keys(query).every((key) => doc[key] === query[key]),
-          ) || null
+          this.data.find((doc) => Object.keys(query).every((key) => doc[key] === query[key])) ||
+          null
         )
       }),
       insert: jest.fn(function (doc) {
@@ -250,16 +246,14 @@ jest.mock('lokijs', () => {
         return doc
       }),
       remove: jest.fn(function (doc) {
-        const index = this.data.findIndex(
-          (d) => d.$loki === doc.$loki || d === doc,
-        )
+        const index = this.data.findIndex((d) => d.$loki === doc.$loki || d === doc)
         if (index > -1) {
           this.data.splice(index, 1)
         }
       }),
       removeWhere: jest.fn(function (query) {
         this.data = this.data.filter(
-          (doc) => !Object.keys(query).every((key) => doc[key] === query[key]),
+          (doc) => !Object.keys(query).every((key) => doc[key] === query[key])
         )
       }),
       clear: jest.fn(function () {
@@ -288,14 +282,11 @@ jest.mock('lokijs', () => {
             }
             this._data = this._data.filter((doc) =>
               Object.keys(query).every((key) => {
-                if (
-                  typeof query[key] === 'object' &&
-                  query[key].$ne !== undefined
-                ) {
+                if (typeof query[key] === 'object' && query[key].$ne !== undefined) {
                   return doc[key] !== query[key].$ne
                 }
                 return doc[key] === query[key]
-              }),
+              })
             )
             return this
           }),
@@ -440,7 +431,10 @@ jest.mock('next/server', () => {
       super(input, init)
 
       // Add NextRequest-specific properties
-      const url = new URL(typeof input === 'string' ? input : input.url)
+      // input may be a string, a URL object (has .href), or a Request (has .url)
+      const urlStr =
+        typeof input === 'string' ? input : input instanceof URL ? input.href : input.url
+      const url = new URL(urlStr)
 
       Object.defineProperties(this, {
         nextUrl: {
@@ -469,7 +463,7 @@ jest.mock('next/server', () => {
                     const [key, ...values] = c.trim().split('=')
                     return [key, values.join('=')]
                   })
-                  .filter(([key]) => key),
+                  .filter(([key]) => key)
               )
               return cookies[name] ? { name, value: cookies[name] } : undefined
             }),
@@ -506,9 +500,7 @@ jest.mock('next/server', () => {
           }),
           get: jest.fn((name) => {
             const cookie = cookieJar.find((c) => c.name === name)
-            return cookie
-              ? { name: cookie.name, value: cookie.value }
-              : undefined
+            return cookie ? { name: cookie.name, value: cookie.value } : undefined
           }),
           getAll: jest.fn(() => cookieJar),
           delete: jest.fn((name) => {

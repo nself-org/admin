@@ -6,11 +6,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import path from 'path'
 
 // CORS-related env var keys managed by this route
-const CORS_KEYS = [
-  'CORS_ALLOWED_ORIGINS',
-  'HASURA_GRAPHQL_CORS_DOMAIN',
-  'AUTH_CLIENT_URL',
-] as const
+const CORS_KEYS = ['CORS_ALLOWED_ORIGINS', 'HASURA_GRAPHQL_CORS_DOMAIN', 'AUTH_CLIENT_URL'] as const
 
 /** Parse an env file into a key→value map. */
 function parseEnvFile(content: string): Record<string, string> {
@@ -27,10 +23,7 @@ function parseEnvFile(content: string): Record<string, string> {
 }
 
 /** Serialize a key→value map back to env-file format, preserving unrelated lines. */
-async function writeEnvKeys(
-  filePath: string,
-  updates: Record<string, string>,
-): Promise<void> {
+async function writeEnvKeys(filePath: string, updates: Record<string, string>): Promise<void> {
   let content = ''
   try {
     content = await fs.readFile(filePath, 'utf-8')
@@ -58,9 +51,7 @@ async function writeEnvKeys(
   // Append any keys not yet in the file
   for (const [key, val] of Object.entries(updates)) {
     if (!written.has(key)) {
-      newLines.push(
-        `${key}=${val.includes(' ') || val.includes('#') ? `"${val}"` : val}`,
-      )
+      newLines.push(`${key}=${val.includes(' ') || val.includes('#') ? `"${val}"` : val}`)
     }
   }
 
@@ -115,7 +106,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     console.error('[cors/route] GET error:', error)
     return NextResponse.json(
       { success: false, error: 'Failed to read CORS configuration' },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -150,13 +141,13 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         if (!['http:', 'https:'].includes(u.protocol)) {
           return NextResponse.json(
             { success: false, error: 'AUTH_CLIENT_URL must use http or https' },
-            { status: 400 },
+            { status: 400 }
           )
         }
       } catch {
         return NextResponse.json(
           { success: false, error: 'AUTH_CLIENT_URL is not a valid URL' },
-          { status: 400 },
+          { status: 400 }
         )
       }
     }
@@ -192,7 +183,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     console.error('[cors/route] POST error:', error)
     return NextResponse.json(
       { success: false, error: 'Failed to save CORS configuration' },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

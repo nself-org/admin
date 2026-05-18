@@ -9,14 +9,10 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     const { query, range } = await request.json()
 
     if (!query) {
-      return NextResponse.json(
-        { success: false, error: 'Query is required' },
-        { status: 400 },
-      )
+      return NextResponse.json({ success: false, error: 'Query is required' }, { status: 400 })
     }
 
-    const promUrl =
-      process.env.PROMETHEUS_URL || process.env.NSELF_PROMETHEUS_URL
+    const promUrl = process.env.PROMETHEUS_URL || process.env.NSELF_PROMETHEUS_URL
     if (!promUrl) {
       return NextResponse.json({
         success: true,
@@ -29,11 +25,9 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
     // Map range to Prometheus step
     const now = Math.floor(Date.now() / 1000)
-    const rangeSeconds =
-      range === '5m' ? 300 : range === '1h' ? 3600 : 86400
+    const rangeSeconds = range === '5m' ? 300 : range === '1h' ? 3600 : 86400
     const start = now - rangeSeconds
-    const step =
-      range === '5m' ? '30s' : range === '1h' ? '60s' : '3600s'
+    const step = range === '5m' ? '30s' : range === '1h' ? '60s' : '3600s'
 
     const params = new URLSearchParams({
       query,
@@ -42,13 +36,10 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       step,
     })
 
-    const promResponse = await fetch(
-      `${promUrl.replace(/\/$/, '')}/api/v1/query_range?${params}`,
-      {
-        headers: { 'Content-Type': 'application/json' },
-        signal: AbortSignal.timeout(10_000),
-      },
-    )
+    const promResponse = await fetch(`${promUrl.replace(/\/$/, '')}/api/v1/query_range?${params}`, {
+      headers: { 'Content-Type': 'application/json' },
+      signal: AbortSignal.timeout(10_000),
+    })
 
     if (!promResponse.ok) {
       const text = await promResponse.text()
@@ -58,7 +49,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           error: `Prometheus returned ${promResponse.status}`,
           details: text.slice(0, 500),
         },
-        { status: 502 },
+        { status: 502 }
       )
     }
 
@@ -94,7 +85,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to execute query',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

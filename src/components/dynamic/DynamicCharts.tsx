@@ -9,34 +9,22 @@ const LoadingFallback = () => (
   </div>
 )
 
-export const DynamicLineChart = dynamic(
-  () => import('recharts').then((mod) => mod.LineChart),
-  {
-    loading: LoadingFallback,
-    ssr: false,
-  },
-)
+export const DynamicLineChart = dynamic(() => import('recharts').then((mod) => mod.LineChart), {
+  loading: LoadingFallback,
+  ssr: false,
+})
 
-export const DynamicBarChart = dynamic(
-  () => import('recharts').then((mod) => mod.BarChart),
-  {
-    loading: LoadingFallback,
-    ssr: false,
-  },
-)
+export const DynamicBarChart = dynamic(() => import('recharts').then((mod) => mod.BarChart), {
+  loading: LoadingFallback,
+  ssr: false,
+})
 
-export const DynamicAreaChart = dynamic(
-  () => import('recharts').then((mod) => mod.AreaChart),
-  {
-    loading: LoadingFallback,
-    ssr: false,
-  },
-)
+export const DynamicAreaChart = dynamic(() => import('recharts').then((mod) => mod.AreaChart), {
+  loading: LoadingFallback,
+  ssr: false,
+})
 
-export const DynamicPieChart = dynamic(
-  () => import('recharts').then((mod) => mod.PieChart),
-  {
-    loading: LoadingFallback,
-    ssr: false,
-  },
-)
+export const DynamicPieChart = dynamic(() => import('recharts').then((mod) => mod.PieChart), {
+  loading: LoadingFallback,
+  ssr: false,
+})

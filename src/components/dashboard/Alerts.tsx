@@ -63,9 +63,7 @@ export function Alerts({ alerts, onDismiss }: AlertsProps) {
   }
 
   const visibleAlerts = alerts.filter((alert) => !dismissed.has(alert.id))
-  const criticalCount = visibleAlerts.filter(
-    (a) => a.type === 'critical',
-  ).length
+  const criticalCount = visibleAlerts.filter((a) => a.type === 'critical').length
   const warningCount = visibleAlerts.filter((a) => a.type === 'warning').length
 
   if (visibleAlerts.length === 0) {
@@ -136,24 +134,15 @@ export function Alerts({ alerts, onDismiss }: AlertsProps) {
               <div className="flex items-start gap-3 p-4 pl-5">
                 {/* Icon */}
                 <div className="flex-shrink-0">
-                  <Icon
-                    className={`h-5 w-5 ${config.iconColor}`}
-                    aria-hidden="true"
-                  />
+                  <Icon className={`h-5 w-5 ${config.iconColor}`} aria-hidden="true" />
                 </div>
 
                 {/* Content */}
                 <div className="min-w-0 flex-1">
                   <div className="flex items-start justify-between gap-2">
                     <div className="min-w-0 flex-1">
-                      <h4
-                        className={`text-sm font-semibold ${config.textColor}`}
-                      >
-                        {alert.title}
-                      </h4>
-                      <p
-                        className={`mt-1 text-sm ${config.textColor} opacity-90`}
-                      >
+                      <h4 className={`text-sm font-semibold ${config.textColor}`}>{alert.title}</h4>
+                      <p className={`mt-1 text-sm ${config.textColor} opacity-90`}>
                         {alert.message}
                       </p>
 
@@ -181,9 +170,7 @@ export function Alerts({ alerts, onDismiss }: AlertsProps) {
                   </div>
 
                   {/* Timestamp */}
-                  {alert.timestamp && (
-                    <p className="mt-2 text-xs opacity-60">{alert.timestamp}</p>
-                  )}
+                  {alert.timestamp && <p className="mt-2 text-xs opacity-60">{alert.timestamp}</p>}
                 </div>
               </div>
             </motion.div>

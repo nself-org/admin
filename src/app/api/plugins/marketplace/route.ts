@@ -40,12 +40,7 @@ export async function GET(_request: NextRequest): Promise<NextResponse> {
         const data = await response.json()
         plugins = Array.isArray(data) ? data : data.plugins || []
 
-        logger.api(
-          'GET',
-          '/api/plugins/marketplace',
-          200,
-          Date.now() - startTime,
-        )
+        logger.api('GET', '/api/plugins/marketplace', 200, Date.now() - startTime)
 
         return NextResponse.json({
           success: true,
@@ -63,14 +58,11 @@ export async function GET(_request: NextRequest): Promise<NextResponse> {
       const projectPath = getProjectPath()
       const nselfPath = await findNselfPath()
 
-      const { stdout } = await execAsync(
-        `${nselfPath} plugin list --available --json`,
-        {
-          cwd: projectPath,
-          env: { ...process.env, PATH: getEnhancedPath() },
-          timeout: 30000,
-        },
-      )
+      const { stdout } = await execAsync(`${nselfPath} plugin list --available --json`, {
+        cwd: projectPath,
+        env: { ...process.env, PATH: getEnhancedPath() },
+        timeout: 30000,
+      })
 
       const parsed = JSON.parse(stdout.trim())
       plugins = Array.isArray(parsed) ? parsed : parsed.plugins || []
@@ -98,7 +90,7 @@ export async function GET(_request: NextRequest): Promise<NextResponse> {
         error: 'Failed to fetch available plugins',
         details: err.message || 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

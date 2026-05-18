@@ -45,9 +45,7 @@ describe('tenantNameSchema', () => {
     const result = tenantNameSchema.safeParse(longName)
     expect(result.success).toBe(false)
     if (!result.success) {
-      expect(result.error.issues[0].message).toContain(
-        'less than 100 characters',
-      )
+      expect(result.error.issues[0].message).toContain('less than 100 characters')
     }
   })
 
@@ -108,21 +106,14 @@ describe('tenantSlugSchema', () => {
     const result = tenantSlugSchema.safeParse(longSlug)
     expect(result.success).toBe(false)
     if (!result.success) {
-      expect(result.error.issues[0].message).toContain(
-        'less than 50 characters',
-      )
+      expect(result.error.issues[0].message).toContain('less than 50 characters')
     }
   })
 })
 
 describe('domainSchema', () => {
   it('accepts valid domains', () => {
-    const validDomains = [
-      'example.com',
-      'sub.example.com',
-      'my-site.org',
-      'test.nself.org',
-    ]
+    const validDomains = ['example.com', 'sub.example.com', 'my-site.org', 'test.nself.org']
     for (const domain of validDomains) {
       const result = domainSchema.safeParse(domain)
       expect(result.success).toBe(true)

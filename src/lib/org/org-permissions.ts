@@ -108,7 +108,7 @@ export async function listRoles(orgId: string): Promise<OrgRoleDefinition[]> {
 
 export async function createRole(
   orgId: string,
-  role: Omit<OrgRoleDefinition, 'id' | 'isSystem'>,
+  role: Omit<OrgRoleDefinition, 'id' | 'isSystem'>
 ): Promise<OrgRoleDefinition> {
   const response = await api.post(`/api/org/${orgId}/roles`, role)
   const data = await response.json()
@@ -119,7 +119,7 @@ export async function createRole(
 export async function updateRole(
   orgId: string,
   roleId: string,
-  role: Partial<OrgRoleDefinition>,
+  role: Partial<OrgRoleDefinition>
 ): Promise<OrgRoleDefinition> {
   const response = await api.put(`/api/org/${orgId}/roles/${roleId}`, role)
   const data = await response.json()
@@ -133,9 +133,7 @@ export async function deleteRole(orgId: string, roleId: string): Promise<void> {
   if (!data.success) throw new Error(data.error || 'Failed to delete role')
 }
 
-export async function getPermissions(
-  orgId: string,
-): Promise<{ permissions: OrgPermission[] }> {
+export async function getPermissions(orgId: string): Promise<{ permissions: OrgPermission[] }> {
   const response = await api.get(`/api/org/${orgId}/permissions`)
   const data = await response.json()
   if (!data.success) throw new Error(data.error || 'Failed to get permissions')
@@ -145,15 +143,14 @@ export async function getPermissions(
 export async function updatePermissions(
   orgId: string,
   roleId: string,
-  permissions: string[],
+  permissions: string[]
 ): Promise<void> {
   const response = await api.put(`/api/org/${orgId}/permissions`, {
     roleId,
     permissions,
   })
   const data = await response.json()
-  if (!data.success)
-    throw new Error(data.error || 'Failed to update permissions')
+  if (!data.success) throw new Error(data.error || 'Failed to update permissions')
 }
 
 /**
@@ -166,20 +163,14 @@ export function hasPermission(role: OrgRole, permission: string): boolean {
 /**
  * Check if a role has any of the specified permissions
  */
-export function hasAnyPermission(
-  role: OrgRole,
-  permissions: string[],
-): boolean {
+export function hasAnyPermission(role: OrgRole, permissions: string[]): boolean {
   return permissions.some((p) => hasPermission(role, p))
 }
 
 /**
  * Check if a role has all of the specified permissions
  */
-export function hasAllPermissions(
-  role: OrgRole,
-  permissions: string[],
-): boolean {
+export function hasAllPermissions(role: OrgRole, permissions: string[]): boolean {
   return permissions.every((p) => hasPermission(role, p))
 }
 

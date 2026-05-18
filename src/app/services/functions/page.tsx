@@ -4,13 +4,7 @@ import { PageShell } from '@/components/PageShell'
 import { ServiceDetailSkeleton } from '@/components/skeletons'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Progress } from '@/components/ui/progress'
 import { ScrollArea } from '@/components/ui/scroll-area'
@@ -80,9 +74,7 @@ function FunctionsContent() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [cliOutput, setCliOutput] = useState<string | null>(null)
-  const [lastCommand, setLastCommand] = useState<string>(
-    'nself service functions list',
-  )
+  const [lastCommand, setLastCommand] = useState<string>('nself service functions list')
 
   // Deploy state
   const [deploying, setDeploying] = useState(false)
@@ -102,13 +94,10 @@ function FunctionsContent() {
 
   // Enhanced features state
   const [activeTab, setActiveTab] = useUrlState<string>('tab', 'overview')
-  const [deploymentStatus, setDeploymentStatus] = useState<DeploymentStatus[]>(
-    [],
-  )
+  const [deploymentStatus, setDeploymentStatus] = useState<DeploymentStatus[]>([])
   const [logLevel, setLogLevel] = useState('all')
   const [filteredLogs, setFilteredLogs] = useState<string | null>(null)
-  const [selectedTemplate, setSelectedTemplate] =
-    useState<FunctionTemplate | null>(null)
+  const [selectedTemplate, setSelectedTemplate] = useState<FunctionTemplate | null>(null)
 
   // Static quick-start templates (not fetched from backend — these are UI scaffolding).
   const templates: FunctionTemplate[] = [
@@ -167,7 +156,7 @@ function FunctionsContent() {
             name: f.name ?? '',
             runtime: 'node',
             status: f.status ?? 'unknown',
-          })),
+          }))
         )
       } else {
         setError(json.error || 'Failed to list functions')
@@ -270,9 +259,7 @@ function FunctionsContent() {
     setError(null)
     setInvokeResult(null)
     const payloadDisplay = invokePayload ? ' --payload=...' : ''
-    setLastCommand(
-      `nself service functions invoke --name=${invokeName}${payloadDisplay}`,
-    )
+    setLastCommand(`nself service functions invoke --name=${invokeName}${payloadDisplay}`)
     try {
       const res = await fetch('/api/services/functions/invoke', {
         method: 'POST',
@@ -312,7 +299,7 @@ function FunctionsContent() {
         .filter((line) => line.toLowerCase().includes(level.toLowerCase()))
       setFilteredLogs(lines.join('\n'))
     },
-    [logsOutput],
+    [logsOutput]
   )
 
   return (
@@ -360,11 +347,7 @@ function FunctionsContent() {
       )}
 
       {/* Main Tabs */}
-      <Tabs
-        value={activeTab}
-        onValueChange={setActiveTab}
-        className="space-y-6"
-      >
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
         <TabsList className="grid w-full grid-cols-5">
           <TabsTrigger value="overview">Overview</TabsTrigger>
           <TabsTrigger value="deploy">Deploy Status</TabsTrigger>
@@ -384,9 +367,7 @@ function FunctionsContent() {
                     <Code2 className="h-5 w-5 text-blue-600 dark:text-blue-400" />
                   </div>
                   <div>
-                    <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                      Functions
-                    </p>
+                    <p className="text-sm text-zinc-500 dark:text-zinc-400">Functions</p>
                     <p className="text-2xl font-bold">{functions.length}</p>
                   </div>
                 </div>
@@ -399,13 +380,9 @@ function FunctionsContent() {
                     <Activity className="h-5 w-5 text-green-600 dark:text-green-400" />
                   </div>
                   <div>
-                    <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                      Invocations
-                    </p>
+                    <p className="text-sm text-zinc-500 dark:text-zinc-400">Invocations</p>
                     <p className="text-2xl font-bold">
-                      {functions
-                        .reduce((sum, f) => sum + (f.invocations || 0), 0)
-                        .toLocaleString()}
+                      {functions.reduce((sum, f) => sum + (f.invocations || 0), 0).toLocaleString()}
                     </p>
                   </div>
                 </div>
@@ -418,16 +395,12 @@ function FunctionsContent() {
                     <Clock className="h-5 w-5 text-amber-600 dark:text-amber-400" />
                   </div>
                   <div>
-                    <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                      Avg Duration
-                    </p>
+                    <p className="text-sm text-zinc-500 dark:text-zinc-400">Avg Duration</p>
                     <p className="text-2xl font-bold">
                       {functions.length > 0
                         ? Math.round(
-                            functions.reduce(
-                              (sum, f) => sum + (f.avgDuration || 0),
-                              0,
-                            ) / functions.length,
+                            functions.reduce((sum, f) => sum + (f.avgDuration || 0), 0) /
+                              functions.length
                           )
                         : 0}
                       ms
@@ -443,16 +416,12 @@ function FunctionsContent() {
                     <TrendingUp className="h-5 w-5 text-red-600 dark:text-red-400" />
                   </div>
                   <div>
-                    <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                      Error Rate
-                    </p>
+                    <p className="text-sm text-zinc-500 dark:text-zinc-400">Error Rate</p>
                     <p className="text-2xl font-bold">
                       {functions.length > 0
                         ? (
-                            functions.reduce(
-                              (sum, f) => sum + (f.errorRate || 0),
-                              0,
-                            ) / functions.length
+                            functions.reduce((sum, f) => sum + (f.errorRate || 0), 0) /
+                            functions.length
                           ).toFixed(1)
                         : 0}
                       %
@@ -479,9 +448,9 @@ function FunctionsContent() {
                 <div className="py-8 text-center">
                   <Code2 className="mx-auto mb-3 h-8 w-8 text-zinc-400" />
                   <p className="text-sm text-zinc-500">
-                    No functions found. Click &ldquo;Refresh&rdquo; to load from
-                    the CLI, &ldquo;Init&rdquo; to initialize the service, or
-                    &ldquo;Deploy&rdquo; to deploy your functions.
+                    No functions found. Click &ldquo;Refresh&rdquo; to load from the CLI,
+                    &ldquo;Init&rdquo; to initialize the service, or &ldquo;Deploy&rdquo; to deploy
+                    your functions.
                   </p>
                 </div>
               ) : (
@@ -496,11 +465,7 @@ function FunctionsContent() {
                           <code className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
                             {fn.name}
                           </code>
-                          <Badge
-                            variant={
-                              fn.status === 'active' ? 'default' : 'secondary'
-                            }
-                          >
+                          <Badge variant={fn.status === 'active' ? 'default' : 'secondary'}>
                             {fn.status}
                           </Badge>
                           {fn.runtime && (
@@ -578,10 +543,7 @@ function FunctionsContent() {
                 </div>
 
                 {/* Invoke Button */}
-                <Button
-                  onClick={invokeFunction}
-                  disabled={invoking || !invokeName}
-                >
+                <Button onClick={invokeFunction} disabled={invoking || !invokeName}>
                   {invoking ? (
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   ) : (
@@ -593,13 +555,9 @@ function FunctionsContent() {
                 {/* Invocation Result */}
                 {invokeResult && (
                   <div className="rounded-lg bg-zinc-950 p-4">
-                    <div className="mb-2 text-xs font-medium text-zinc-400">
-                      Response
-                    </div>
+                    <div className="mb-2 text-xs font-medium text-zinc-400">Response</div>
                     <ScrollArea className="max-h-48">
-                      <pre className="font-mono text-xs text-zinc-300">
-                        {invokeResult}
-                      </pre>
+                      <pre className="font-mono text-xs text-zinc-300">{invokeResult}</pre>
                     </ScrollArea>
                   </div>
                 )}
@@ -614,13 +572,9 @@ function FunctionsContent() {
             <CardHeader>
               <div className="flex items-center gap-2">
                 <Rocket className="h-4 w-4 text-zinc-500" />
-                <CardTitle className="text-base">
-                  Real-Time Deployment Status
-                </CardTitle>
+                <CardTitle className="text-base">Real-Time Deployment Status</CardTitle>
               </div>
-              <CardDescription>
-                Track deployment progress for all functions
-              </CardDescription>
+              <CardDescription>Track deployment progress for all functions</CardDescription>
             </CardHeader>
             <CardContent>
               {deploymentStatus.length === 0 ? (
@@ -639,9 +593,7 @@ function FunctionsContent() {
                     >
                       <div className="mb-2 flex items-center justify-between">
                         <div className="flex items-center gap-2">
-                          <code className="text-sm font-medium">
-                            {deploy.functionName}
-                          </code>
+                          <code className="text-sm font-medium">{deploy.functionName}</code>
                           <Badge
                             variant={
                               deploy.status === 'success'
@@ -654,9 +606,7 @@ function FunctionsContent() {
                             {deploy.status}
                           </Badge>
                         </div>
-                        <span className="text-sm text-zinc-500">
-                          {deploy.progress}%
-                        </span>
+                        <span className="text-sm text-zinc-500">{deploy.progress}%</span>
                       </div>
                       <Progress value={deploy.progress} className="mb-2" />
                       <p className="text-xs text-zinc-500">{deploy.message}</p>
@@ -674,9 +624,7 @@ function FunctionsContent() {
             <CardHeader>
               <div className="flex items-center gap-2">
                 <Activity className="h-4 w-4 text-zinc-500" />
-                <CardTitle className="text-base">
-                  Function Invocation Metrics
-                </CardTitle>
+                <CardTitle className="text-base">Function Invocation Metrics</CardTitle>
               </div>
               <CardDescription>
                 Performance and error tracking for function invocations
@@ -687,9 +635,7 @@ function FunctionsContent() {
                 {functions.length === 0 ? (
                   <div className="py-8 text-center">
                     <Activity className="mx-auto mb-3 h-8 w-8 text-zinc-400" />
-                    <p className="text-sm text-zinc-500">
-                      No function metrics available yet.
-                    </p>
+                    <p className="text-sm text-zinc-500">No function metrics available yet.</p>
                   </div>
                 ) : (
                   <div className="space-y-3">
@@ -704,25 +650,17 @@ function FunctionsContent() {
                         </div>
                         <div className="grid grid-cols-3 gap-4 text-sm">
                           <div>
-                            <p className="text-zinc-500 dark:text-zinc-400">
-                              Invocations
-                            </p>
+                            <p className="text-zinc-500 dark:text-zinc-400">Invocations</p>
                             <p className="font-semibold">
                               {(fn.invocations || 0).toLocaleString()}
                             </p>
                           </div>
                           <div>
-                            <p className="text-zinc-500 dark:text-zinc-400">
-                              Avg Duration
-                            </p>
-                            <p className="font-semibold">
-                              {fn.avgDuration || 0}ms
-                            </p>
+                            <p className="text-zinc-500 dark:text-zinc-400">Avg Duration</p>
+                            <p className="font-semibold">{fn.avgDuration || 0}ms</p>
                           </div>
                           <div>
-                            <p className="text-zinc-500 dark:text-zinc-400">
-                              Error Rate
-                            </p>
+                            <p className="text-zinc-500 dark:text-zinc-400">Error Rate</p>
                             <p
                               className={`font-semibold ${(fn.errorRate || 0) > 5 ? 'text-red-600' : 'text-green-600'}`}
                             >
@@ -746,9 +684,7 @@ function FunctionsContent() {
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <ScrollText className="h-4 w-4 text-zinc-500" />
-                  <CardTitle className="text-base">
-                    Function Logs with Filtering
-                  </CardTitle>
+                  <CardTitle className="text-base">Function Logs with Filtering</CardTitle>
                 </div>
                 <div className="flex items-center gap-2">
                   <Select value={logLevel} onValueChange={handleFilterLogs}>
@@ -775,10 +711,9 @@ function FunctionsContent() {
                     variant="outline"
                     size="sm"
                     onClick={() => {
-                      const blob = new Blob(
-                        [filteredLogs || logsOutput || ''],
-                        { type: 'text/plain' },
-                      )
+                      const blob = new Blob([filteredLogs || logsOutput || ''], {
+                        type: 'text/plain',
+                      })
                       const url = URL.createObjectURL(blob)
                       const a = document.createElement('a')
                       a.href = url
@@ -792,9 +727,7 @@ function FunctionsContent() {
                   </Button>
                 </div>
               </div>
-              <CardDescription>
-                Filter, search, and export function execution logs
-              </CardDescription>
+              <CardDescription>Filter, search, and export function execution logs</CardDescription>
             </CardHeader>
             <CardContent>
               {loadingLogs ? (
@@ -884,26 +817,18 @@ function FunctionsContent() {
             <Terminal className="h-4 w-4 text-zinc-500" />
             <CardTitle className="text-base">CLI Command</CardTitle>
           </div>
-          <CardDescription>
-            Command executed against the nself CLI
-          </CardDescription>
+          <CardDescription>Command executed against the nself CLI</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="rounded-lg bg-zinc-950 p-4">
-            <div className="mb-2 font-mono text-sm text-emerald-400">
-              $ {lastCommand}
-            </div>
+            <div className="mb-2 font-mono text-sm text-emerald-400">$ {lastCommand}</div>
             {cliOutput && (
               <ScrollArea className="max-h-48">
-                <pre className="font-mono text-xs text-zinc-300">
-                  {cliOutput}
-                </pre>
+                <pre className="font-mono text-xs text-zinc-300">{cliOutput}</pre>
               </ScrollArea>
             )}
             {!cliOutput && (
-              <p className="font-mono text-xs text-zinc-500">
-                Run a command to see output here
-              </p>
+              <p className="font-mono text-xs text-zinc-500">Run a command to see output here</p>
             )}
           </div>
         </CardContent>

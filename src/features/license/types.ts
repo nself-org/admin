@@ -70,10 +70,5 @@ export interface LicenseValidateResult {
  * Always catches and re-wraps errors from CLI execution.
  */
 export interface LicenseError extends Error {
-  code:
-    | 'CLI_NOT_FOUND'
-    | 'INVALID_KEY'
-    | 'VALIDATE_FAILED'
-    | 'CLEAR_FAILED'
-    | 'IO_ERROR'
+  code: 'CLI_NOT_FOUND' | 'INVALID_KEY' | 'VALIDATE_FAILED' | 'CLEAR_FAILED' | 'IO_ERROR'
 }

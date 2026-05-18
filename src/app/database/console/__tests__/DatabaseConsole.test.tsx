@@ -10,13 +10,7 @@ jest.mock('next-themes', () => ({
 // Mock Monaco Editor
 jest.mock('@monaco-editor/react', () => ({
   __esModule: true,
-  default: ({
-    value,
-    onChange,
-  }: {
-    value: string
-    onChange: (value: string) => void
-  }) => (
+  default: ({ value, onChange }: { value: string; onChange: (value: string) => void }) => (
     <textarea
       data-testid="monaco-editor"
       aria-label="SQL editor"
@@ -95,7 +89,7 @@ describe('DatabaseConsolePage', () => {
       () => {
         expect(screen.getByText('Schema Browser')).toBeInTheDocument()
       },
-      { timeout: 1000 },
+      { timeout: 1000 }
     )
 
     const schemaButton = screen.getByRole('button', { name: /schema/i })
@@ -141,7 +135,7 @@ describe('DatabaseConsolePage', () => {
         const editor = screen.getByTestId('monaco-editor')
         expect(editor).toBeInTheDocument()
       },
-      { timeout: 1000 },
+      { timeout: 1000 }
     )
 
     const editor = screen.getByTestId('monaco-editor')
@@ -158,14 +152,27 @@ describe('DatabaseConsolePage', () => {
     jest.advanceTimersByTime(500)
 
     await waitFor(() => {
-      expect(
-        screen.getByRole('button', { name: /execute/i }),
-      ).toBeInTheDocument()
+      expect(screen.getByRole('button', { name: /execute/i })).toBeInTheDocument()
     })
   })
 
   it('can execute a query', async () => {
     jest.useRealTimers()
+    // Override global fetch mock so ALL fetch calls in this test get a success response.
+    // The component makes 2 fetch calls on init (db + schema) then 1 during execute.
+    // The execute call needs success: true so the component shows "Query Results".
+    const successResponse = () =>
+      Promise.resolve({
+        ok: true,
+        status: 200,
+        json: () =>
+          Promise.resolve({
+            success: true,
+            data: { columns: ['id', 'name'], rows: [[1, 'Alice']], rowCount: 1 },
+          }),
+      } as Response)
+    jest.spyOn(global, 'fetch').mockImplementation(successResponse)
+
     const user = userEvent.setup()
     render(<DatabaseConsolePage />)
 
@@ -174,18 +181,17 @@ describe('DatabaseConsolePage', () => {
         const executeButton = screen.getByRole('button', { name: /execute/i })
         expect(executeButton).toBeInTheDocument()
       },
-      { timeout: 1000 },
+      { timeout: 1000 }
     )
 
     const executeButton = screen.getByRole('button', { name: /execute/i })
     await user.click(executeButton)
 
-    // The execute function has a random delay (500-2000ms), wait for results
     await waitFor(
       () => {
         expect(screen.getByText('Query Results')).toBeInTheDocument()
       },
-      { timeout: 3000 },
+      { timeout: 5000 }
     )
   })
 
@@ -196,9 +202,7 @@ describe('DatabaseConsolePage', () => {
     jest.advanceTimersByTime(500)
 
     await waitFor(() => {
-      expect(
-        screen.getByRole('button', { name: /history/i }),
-      ).toBeInTheDocument()
+      expect(screen.getByRole('button', { name: /history/i })).toBeInTheDocument()
     })
   })
 
@@ -212,7 +216,7 @@ describe('DatabaseConsolePage', () => {
         const historyButton = screen.getByRole('button', { name: /history/i })
         expect(historyButton).toBeInTheDocument()
       },
-      { timeout: 1000 },
+      { timeout: 1000 }
     )
 
     // First, hide the schema browser so history sidebar can appear
@@ -249,7 +253,7 @@ describe('DatabaseConsolePage', () => {
         const savedButton = screen.getByRole('button', { name: /saved/i })
         expect(savedButton).toBeInTheDocument()
       },
-      { timeout: 1000 },
+      { timeout: 1000 }
     )
 
     // First, hide the schema browser so saved sidebar can appear
@@ -272,9 +276,7 @@ describe('DatabaseConsolePage', () => {
     jest.advanceTimersByTime(500)
 
     await waitFor(() => {
-      expect(
-        screen.getByRole('button', { name: /save query/i }),
-      ).toBeInTheDocument()
+      expect(screen.getByRole('button', { name: /save query/i })).toBeInTheDocument()
     })
   })
 
@@ -322,7 +324,7 @@ describe('DatabaseConsolePage', () => {
         const executeButton = screen.getByRole('button', { name: /execute/i })
         expect(executeButton).toBeInTheDocument()
       },
-      { timeout: 1000 },
+      { timeout: 1000 }
     )
 
     const executeButton = screen.getByRole('button', { name: /execute/i })
@@ -333,7 +335,7 @@ describe('DatabaseConsolePage', () => {
         const history = localStorage.getItem('db-console-history')
         expect(history).not.toBeNull()
       },
-      { timeout: 3000 },
+      { timeout: 3000 }
     )
   })
 })

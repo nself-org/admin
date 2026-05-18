@@ -4,13 +4,7 @@ import { TableSkeleton } from '@/components/skeletons'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Label } from '@/components/ui/label'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Switch } from '@/components/ui/switch'
@@ -113,9 +107,7 @@ function DatabaseTypesContent() {
       setGeneratedCode(code || null)
       setLastOutput(output)
     } catch (error) {
-      setLastOutput(
-        error instanceof Error ? error.message : 'Generation failed',
-      )
+      setLastOutput(error instanceof Error ? error.message : 'Generation failed')
     } finally {
       setIsGenerating(false)
     }
@@ -145,9 +137,7 @@ function DatabaseTypesContent() {
   return (
     <div className="space-y-6 p-6">
       <div>
-        <h1 className="text-2xl font-bold text-zinc-900 dark:text-white">
-          Type Generation
-        </h1>
+        <h1 className="text-2xl font-bold text-zinc-900 dark:text-white">Type Generation</h1>
         <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
           Generate TypeScript type definitions from your database schema
         </p>
@@ -159,11 +149,9 @@ function DatabaseTypesContent() {
           <AlertTitle>nself CLI Integration</AlertTitle>
           <AlertDescription>
             This page executes{' '}
-            <code className="rounded bg-zinc-100 px-1 dark:bg-zinc-800">
-              nself db types
-            </code>{' '}
-            to generate type definitions from your database schema. Supports
-            TypeScript, Go, and Python.
+            <code className="rounded bg-zinc-100 px-1 dark:bg-zinc-800">nself db types</code> to
+            generate type definitions from your database schema. Supports TypeScript, Go, and
+            Python.
           </AlertDescription>
         </Alert>
 
@@ -175,9 +163,7 @@ function DatabaseTypesContent() {
                 <Settings className="h-5 w-5 text-blue-600" />
                 <CardTitle>Generation Options</CardTitle>
               </div>
-              <CardDescription>
-                Configure type generation settings
-              </CardDescription>
+              <CardDescription>Configure type generation settings</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
               {/* Language Selector */}
@@ -227,9 +213,7 @@ function DatabaseTypesContent() {
                 <div className="flex items-center justify-between rounded-lg border p-4 dark:border-zinc-700">
                   <div>
                     <p className="text-sm font-medium">Handle Nullable</p>
-                    <p className="text-xs text-zinc-500">
-                      Mark nullable columns as optional types
-                    </p>
+                    <p className="text-xs text-zinc-500">Mark nullable columns as optional types</p>
                   </div>
                   <Switch
                     checked={options.includeNullable}
@@ -243,9 +227,7 @@ function DatabaseTypesContent() {
                   <>
                     <div className="flex items-center justify-between rounded-lg border p-4 dark:border-zinc-700">
                       <div>
-                        <p className="text-sm font-medium">
-                          Use Optional Properties
-                        </p>
+                        <p className="text-sm font-medium">Use Optional Properties</p>
                         <p className="text-xs text-zinc-500">
                           Use ? syntax instead of | null for optional fields
                         </p>
@@ -292,12 +274,7 @@ function DatabaseTypesContent() {
               </div>
 
               {/* Generate Button */}
-              <Button
-                onClick={generateTypes}
-                disabled={isGenerating}
-                className="w-full"
-                size="lg"
-              >
+              <Button onClick={generateTypes} disabled={isGenerating} className="w-full" size="lg">
                 {isGenerating ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -380,11 +357,7 @@ function DatabaseTypesContent() {
                     <Download className="mr-2 h-4 w-4" />
                     Download
                   </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => setGeneratedCode(null)}
-                  >
+                  <Button variant="outline" size="sm" onClick={() => setGeneratedCode(null)}>
                     <RefreshCw className="mr-2 h-4 w-4" />
                     Clear
                   </Button>

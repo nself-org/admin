@@ -12,33 +12,22 @@ interface RouteParams {
   params: Promise<{ name: string }>
 }
 
-export async function GET(
-  request: NextRequest,
-  { params }: RouteParams,
-): Promise<NextResponse> {
+export async function GET(request: NextRequest, { params }: RouteParams): Promise<NextResponse> {
   const startTime = Date.now()
   try {
     const { name } = await params
     const projectPath = getProjectPath()
     const nselfPath = await findNselfPath()
 
-    const { stdout } = await execAsync(
-      `${nselfPath} k8s namespaces get ${name} --json`,
-      {
-        cwd: projectPath,
-        env: { ...process.env, PATH: getEnhancedPath() },
-        timeout: 60000,
-      },
-    )
+    const { stdout } = await execAsync(`${nselfPath} k8s namespaces get ${name} --json`, {
+      cwd: projectPath,
+      env: { ...process.env, PATH: getEnhancedPath() },
+      timeout: 60000,
+    })
 
     const result = JSON.parse(stdout)
 
-    logger.api(
-      'GET',
-      `/api/k8s/namespaces/${name}`,
-      200,
-      Date.now() - startTime,
-    )
+    logger.api('GET', `/api/k8s/namespaces/${name}`, 200, Date.now() - startTime)
     return NextResponse.json({
       success: true,
       namespace: result.namespace ?? { name },
@@ -53,15 +42,12 @@ export async function GET(
         error: 'Failed to get namespace',
         details: err.message,
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
 
-export async function DELETE(
-  request: NextRequest,
-  { params }: RouteParams,
-): Promise<NextResponse> {
+export async function DELETE(request: NextRequest, { params }: RouteParams): Promise<NextResponse> {
   const authError = await requireAuth(request)
   if (authError) return authError
 
@@ -71,23 +57,15 @@ export async function DELETE(
     const projectPath = getProjectPath()
     const nselfPath = await findNselfPath()
 
-    const { stdout } = await execAsync(
-      `${nselfPath} k8s namespaces delete ${name} --json`,
-      {
-        cwd: projectPath,
-        env: { ...process.env, PATH: getEnhancedPath() },
-        timeout: 120000,
-      },
-    )
+    const { stdout } = await execAsync(`${nselfPath} k8s namespaces delete ${name} --json`, {
+      cwd: projectPath,
+      env: { ...process.env, PATH: getEnhancedPath() },
+      timeout: 120000,
+    })
 
     const result = JSON.parse(stdout)
 
-    logger.api(
-      'DELETE',
-      `/api/k8s/namespaces/${name}`,
-      200,
-      Date.now() - startTime,
-    )
+    logger.api('DELETE', `/api/k8s/namespaces/${name}`, 200, Date.now() - startTime)
     return NextResponse.json({
       success: true,
       message: result.message ?? `Namespace ${name} deleted`,
@@ -101,7 +79,7 @@ export async function DELETE(
         error: 'Failed to delete namespace',
         details: err.message,
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

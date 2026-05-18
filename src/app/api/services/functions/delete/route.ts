@@ -17,15 +17,11 @@ export async function DELETE(request: NextRequest): Promise<NextResponse> {
     if (!name || !/^[a-z0-9][a-z0-9-]*$/.test(name)) {
       return NextResponse.json(
         { success: false, error: 'Invalid or missing function name' },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
-    const result = await executeNselfCommand('functions', [
-      'delete',
-      name,
-      '--confirm',
-    ])
+    const result = await executeNselfCommand('functions', ['delete', name, '--confirm'])
 
     if (!result.success) {
       return NextResponse.json(
@@ -34,7 +30,7 @@ export async function DELETE(request: NextRequest): Promise<NextResponse> {
           error: 'Failed to delete function',
           details: result.error || result.stderr || 'Unknown error',
         },
-        { status: 500 },
+        { status: 500 }
       )
     }
 
@@ -49,7 +45,7 @@ export async function DELETE(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to delete function',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

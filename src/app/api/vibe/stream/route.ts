@@ -26,7 +26,7 @@ export async function GET(request: NextRequest): Promise<Response> {
   try {
     const upstreamRes = await fetch(
       `${VIBE_API_BASE}/stream?session_id=${sessionId}&generation_id=${generationId}`,
-      { signal: AbortSignal.timeout(2000) }, // 2s connection timeout
+      { signal: AbortSignal.timeout(2000) } // 2s connection timeout
     )
 
     if (upstreamRes.ok && upstreamRes.body) {
@@ -69,7 +69,7 @@ export async function GET(request: NextRequest): Promise<Response> {
           'Content-Type': 'application/json',
           'X-Service-Required': 'vibe_api',
         },
-      },
+      }
     )
   } catch {
     // vibe_api not reachable (ECONNREFUSED, timeout, etc.)
@@ -85,7 +85,7 @@ export async function GET(request: NextRequest): Promise<Response> {
           'Content-Type': 'application/json',
           'X-Service-Required': 'vibe_api',
         },
-      },
+      }
     )
   }
 }

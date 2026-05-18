@@ -29,8 +29,7 @@ interface SyntheticFlowsResponse {
   total: number
 }
 
-const SYNTHETIC_MONITOR_URL =
-  process.env.SYNTHETIC_MONITOR_URL ?? 'http://127.0.0.1:3836'
+const SYNTHETIC_MONITOR_URL = process.env.SYNTHETIC_MONITOR_URL ?? 'http://127.0.0.1:3836'
 
 export async function GET() {
   try {
@@ -42,23 +41,18 @@ export async function GET() {
     if (!res.ok) {
       return NextResponse.json(
         { error: `nself-synthetic-monitor upstream error: ${res.status}` },
-        { status: res.status },
+        { status: res.status }
       )
     }
 
     const data = (await res.json()) as SyntheticFlowsResponse
     return NextResponse.json(data)
   } catch (err) {
-    const msg =
-      err instanceof Error ? err.message : 'Failed to reach nself-synthetic-monitor'
+    const msg = err instanceof Error ? err.message : 'Failed to reach nself-synthetic-monitor'
 
     // Return empty list when the plugin is not running so the admin UI
     // renders the "no flows configured" empty state instead of an error.
-    if (
-      msg.includes('ECONNREFUSED') ||
-      msg.includes('fetch failed') ||
-      msg.includes('timeout')
-    ) {
+    if (msg.includes('ECONNREFUSED') || msg.includes('fetch failed') || msg.includes('timeout')) {
       const empty: SyntheticFlowsResponse = { flows: [], total: 0 }
       return NextResponse.json(empty)
     }

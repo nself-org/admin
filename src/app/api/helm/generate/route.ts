@@ -27,14 +27,11 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     if (body.includeIngress) args.push('--include-ingress')
     if (body.includeSecrets) args.push('--include-secrets')
 
-    const { stdout } = await execAsync(
-      `${nselfPath} ${args.join(' ')} --json`,
-      {
-        cwd: projectPath,
-        env: { ...process.env, PATH: getEnhancedPath() },
-        timeout: 120000,
-      },
-    )
+    const { stdout } = await execAsync(`${nselfPath} ${args.join(' ')} --json`, {
+      cwd: projectPath,
+      env: { ...process.env, PATH: getEnhancedPath() },
+      timeout: 120000,
+    })
 
     const result = JSON.parse(stdout)
 
@@ -54,7 +51,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to generate helm chart files',
         details: err.message,
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

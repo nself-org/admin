@@ -33,10 +33,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   if (authError) return authError
 
   if (!VIBE_ENABLED) {
-    return NextResponse.json(
-      { error: 'Vibe-Code is disabled.' },
-      { status: 503 },
-    )
+    return NextResponse.json({ error: 'Vibe-Code is disabled.' }, { status: 503 })
   }
 
   let body: unknown
@@ -54,7 +51,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         error_code: 'requires_confirmation',
         details: parsed.error.flatten(),
       },
-      { status: 400 },
+      { status: 400 }
     )
   }
 
@@ -66,7 +63,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     const waitSec = Math.ceil((RATE_LIMIT_MS - (Date.now() - lastApply)) / 1000)
     return NextResponse.json(
       { error: `Rate limited. Wait ${waitSec}s before retrying.` },
-      { status: 429, headers: { 'Retry-After': String(waitSec) } },
+      { status: 429, headers: { 'Retry-After': String(waitSec) } }
     )
   }
 
@@ -95,7 +92,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
             error: errBody.error ?? 'Apply failed',
             error_code: errBody.error_code,
           },
-          { status: vibeRes.status },
+          { status: vibeRes.status }
         )
       }
 

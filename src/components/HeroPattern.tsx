@@ -7,8 +7,7 @@ export function HeroPattern() {
         <div
           className="absolute inset-0 bg-gradient-to-r from-blue-600 to-blue-400 opacity-40 dark:from-blue-600/30 dark:to-blue-400/30 dark:opacity-100"
           style={{
-            maskImage:
-              'radial-gradient(farthest-side at top, white, transparent)',
+            maskImage: 'radial-gradient(farthest-side at top, white, transparent)',
           }}
         >
           <GridPattern

@@ -5,10 +5,7 @@
 
 // Create a test-friendly version of the cache
 class TestDataCache {
-  private cache = new Map<
-    string,
-    { data: unknown; timestamp: number; ttl: number }
-  >()
+  private cache = new Map<string, { data: unknown; timestamp: number; ttl: number }>()
   private timers = new Map<string, NodeJS.Timeout>()
 
   get<T>(key: string): T | null {

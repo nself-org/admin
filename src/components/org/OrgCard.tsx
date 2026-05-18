@@ -27,9 +27,7 @@ export function OrgCard({ org }: OrgCardProps) {
       </div>
 
       {org.description && (
-        <p className="mb-4 line-clamp-2 text-sm text-zinc-400">
-          {org.description}
-        </p>
+        <p className="mb-4 line-clamp-2 text-sm text-zinc-400">{org.description}</p>
       )}
 
       <div className="flex items-center gap-4 text-xs text-zinc-500">

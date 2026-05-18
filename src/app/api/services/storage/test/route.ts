@@ -19,7 +19,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
             error:
               'Invalid bucket name. Only letters, numbers, dots, hyphens, and underscores are allowed.',
           },
-          { status: 400 },
+          { status: 400 }
         )
       }
       args.push(`--bucket=${bucket}`)
@@ -34,7 +34,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           error: 'Storage test failed',
           details: result.error || result.stderr || 'Unknown error',
         },
-        { status: 500 },
+        { status: 500 }
       )
     }
 
@@ -49,7 +49,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         error: 'Storage test failed',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

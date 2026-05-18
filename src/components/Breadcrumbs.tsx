@@ -31,8 +31,7 @@ export function Breadcrumbs() {
 
   segments.forEach((segment, index) => {
     const href = '/' + segments.slice(0, index + 1).join('/')
-    const label =
-      pathLabels[segment] || segment.charAt(0).toUpperCase() + segment.slice(1)
+    const label = pathLabels[segment] || segment.charAt(0).toUpperCase() + segment.slice(1)
     items.push({ label, href })
   })
 
@@ -55,9 +54,7 @@ export function Breadcrumbs() {
         <div key={item.href} className="flex flex-shrink-0 items-center">
           <ChevronRight className="mx-1 h-4 w-4 flex-shrink-0" />
           {index === items.length - 1 ? (
-            <span className="font-medium text-gray-900 dark:text-gray-100">
-              {item.label}
-            </span>
+            <span className="font-medium text-gray-900 dark:text-gray-100">{item.label}</span>
           ) : (
             <Link
               href={item.href}
@@ -81,24 +78,17 @@ export function MobileBreadcrumbs() {
 
   const currentSegment = segments[segments.length - 1]
   const currentLabel =
-    pathLabels[currentSegment] ||
-    currentSegment.charAt(0).toUpperCase() + currentSegment.slice(1)
+    pathLabels[currentSegment] || currentSegment.charAt(0).toUpperCase() + currentSegment.slice(1)
 
-  const parentPath =
-    segments.length > 1 ? '/' + segments.slice(0, -1).join('/') : '/'
+  const parentPath = segments.length > 1 ? '/' + segments.slice(0, -1).join('/') : '/'
 
   return (
     <nav className="mb-4 flex items-center space-x-2 text-sm md:hidden">
-      <Link
-        href={parentPath}
-        className="text-blue-600 hover:underline dark:text-blue-400"
-      >
+      <Link href={parentPath} className="text-blue-600 hover:underline dark:text-blue-400">
         ← Back
       </Link>
       <span className="text-gray-500">|</span>
-      <span className="font-medium text-gray-900 dark:text-gray-100">
-        {currentLabel}
-      </span>
+      <span className="font-medium text-gray-900 dark:text-gray-100">{currentLabel}</span>
     </nav>
   )
 }

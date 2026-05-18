@@ -101,20 +101,12 @@ interface ContextMenuState {
 
 // ─── SVG Edge (FK line) ───────────────────────────────────────────────────────
 
-function RelationshipEdge({
-  rel,
-  tables,
-}: {
-  rel: CanvasRelationship
-  tables: CanvasTable[]
-}) {
+function RelationshipEdge({ rel, tables }: { rel: CanvasRelationship; tables: CanvasTable[] }) {
   const fromTable = tables.find((t) => t.id === rel.fromTableId)
   const toTable = tables.find((t) => t.id === rel.toTableId)
   if (!fromTable || !toTable) return null
 
-  const fromColIdx = fromTable.columns.findIndex(
-    (c) => c.id === rel.fromColumnId,
-  )
+  const fromColIdx = fromTable.columns.findIndex((c) => c.id === rel.fromColumnId)
   const toColIdx = toTable.columns.findIndex((c) => c.id === rel.toColumnId)
   if (fromColIdx < 0 || toColIdx < 0) return null
 
@@ -179,14 +171,7 @@ function TableNode({
       aria-selected={isSelected}
     >
       {/* Drop shadow */}
-      <rect
-        x="2"
-        y="2"
-        width={TABLE_WIDTH}
-        height={h}
-        rx="6"
-        fill="rgba(0,0,0,0.15)"
-      />
+      <rect x="2" y="2" width={TABLE_WIDTH} height={h} rx="6" fill="rgba(0,0,0,0.15)" />
       {/* Main card */}
       <rect
         width={TABLE_WIDTH}
@@ -197,18 +182,8 @@ function TableNode({
         strokeWidth={isSelected ? 2 : 1}
       />
       {/* Header */}
-      <rect
-        width={TABLE_WIDTH}
-        height={TABLE_HEADER_HEIGHT}
-        rx="6"
-        fill="#0f172a"
-      />
-      <rect
-        y={TABLE_HEADER_HEIGHT - 6}
-        width={TABLE_WIDTH}
-        height="6"
-        fill="#0f172a"
-      />
+      <rect width={TABLE_WIDTH} height={TABLE_HEADER_HEIGHT} rx="6" fill="#0f172a" />
+      <rect y={TABLE_HEADER_HEIGHT - 6} width={TABLE_WIDTH} height="6" fill="#0f172a" />
       <text
         x="12"
         y="24"
@@ -276,13 +251,7 @@ function TableNode({
               {col.type}
             </text>
             {!col.nullable && (
-              <circle
-                cx={TABLE_WIDTH - 4}
-                cy="5"
-                r="3"
-                fill="#ef4444"
-                aria-label="NOT NULL"
-              />
+              <circle cx={TABLE_WIDTH - 4} cy="5" r="3" fill="#ef4444" aria-label="NOT NULL" />
             )}
           </g>
         )
@@ -406,9 +375,7 @@ export default function SchemaBuilderPage() {
   const [jobs, setJobs] = useState<
     { id: string; name: string; status: string; createdAt: string }[]
   >([])
-  const [showRollbackWarning, setShowRollbackWarning] = useState<string | null>(
-    null,
-  )
+  const [showRollbackWarning, setShowRollbackWarning] = useState<string | null>(null)
 
   const svgRef = useRef<SVGSVGElement>(null)
   const canvasRef = useRef<HTMLDivElement>(null)
@@ -436,7 +403,7 @@ export default function SchemaBuilderPage() {
       setDragTableId(tableId)
       setIsDragging(true)
     },
-    [state.tables],
+    [state.tables]
   )
 
   const handleMouseMove = useCallback(
@@ -447,12 +414,10 @@ export default function SchemaBuilderPage() {
       const newY = Math.max(0, e.clientY - rect.top - dragOffset.y)
       setState((prev) => ({
         ...prev,
-        tables: prev.tables.map((t) =>
-          t.id === dragTableId ? { ...t, x: newX, y: newY } : t,
-        ),
+        tables: prev.tables.map((t) => (t.id === dragTableId ? { ...t, x: newX, y: newY } : t)),
       }))
     },
-    [isDragging, dragTableId, dragOffset],
+    [isDragging, dragTableId, dragOffset]
   )
 
   const handleMouseUp = useCallback(() => {
@@ -480,18 +445,14 @@ export default function SchemaBuilderPage() {
           tables: prev.tables.map((t) =>
             t.id === selectedTableId
               ? { ...t, x: Math.max(0, t.x + d.x), y: Math.max(0, t.y + d.y) }
-              : t,
+              : t
           ),
         }))
         const table = state.tables.find((t) => t.id === selectedTableId)
         if (table) announce(`Moved ${table.name}`)
       }
       // Tab cycles entities
-      if (
-        e.key === 'Tab' &&
-        !e.shiftKey &&
-        document.activeElement?.closest('svg')
-      ) {
+      if (e.key === 'Tab' && !e.shiftKey && document.activeElement?.closest('svg')) {
         e.preventDefault()
         const ids = state.tables.map((t) => t.id)
         const idx = ids.indexOf(selectedTableId)
@@ -507,13 +468,10 @@ export default function SchemaBuilderPage() {
 
   // ── Context menu ──────────────────────────────────────────────────────────────
 
-  const handleContextMenu = useCallback(
-    (e: React.MouseEvent, tableId: string, colId?: string) => {
-      e.preventDefault()
-      setContextMenu({ x: e.clientX, y: e.clientY, tableId, columnId: colId })
-    },
-    [],
-  )
+  const handleContextMenu = useCallback((e: React.MouseEvent, tableId: string, colId?: string) => {
+    e.preventDefault()
+    setContextMenu({ x: e.clientX, y: e.clientY, tableId, columnId: colId })
+  }, [])
 
   const closeContextMenu = useCallback(() => setContextMenu(null), [])
 
@@ -563,7 +521,7 @@ export default function SchemaBuilderPage() {
               }
             }),
             relationships: prev.relationships.filter(
-              (r) => r.fromColumnId !== columnId && r.toColumnId !== columnId,
+              (r) => r.fromColumnId !== columnId && r.toColumnId !== columnId
             ),
           }
         }
@@ -583,7 +541,7 @@ export default function SchemaBuilderPage() {
 
       closeContextMenu()
     },
-    [contextMenu, closeContextMenu, announce],
+    [contextMenu, closeContextMenu, announce]
   )
 
   // ── Add table ──────────────────────────────────────────────────────────────────
@@ -650,7 +608,7 @@ export default function SchemaBuilderPage() {
                 },
               ],
             }
-          : t,
+          : t
       ),
     }))
     announce('Added new column')
@@ -665,8 +623,7 @@ export default function SchemaBuilderPage() {
     setState((prev) => ({
       tables: prev.tables.filter((t) => t.id !== selectedTableId),
       relationships: prev.relationships.filter(
-        (r) =>
-          r.fromTableId !== selectedTableId && r.toTableId !== selectedTableId,
+        (r) => r.fromTableId !== selectedTableId && r.toTableId !== selectedTableId
       ),
     }))
     setSelectedTableId(null)
@@ -734,7 +691,7 @@ export default function SchemaBuilderPage() {
         })
       }
     },
-    [announce],
+    [announce]
   )
 
   // ── Rollback migration ────────────────────────────────────────────────────────
@@ -762,7 +719,7 @@ export default function SchemaBuilderPage() {
         setShowRollbackWarning(null)
       }
     },
-    [announce],
+    [announce]
   )
 
   // ── Hasura tracking ────────────────────────────────────────────────────────────
@@ -825,10 +782,10 @@ export default function SchemaBuilderPage() {
           ? {
               ...t,
               columns: t.columns.map((c) =>
-                c.id === editingColumn.col.id ? editingColumn.col : c,
+                c.id === editingColumn.col.id ? editingColumn.col : c
               ),
             }
-          : t,
+          : t
       ),
     }))
     announce(`Updated column ${editingColumn.col.name}`)
@@ -842,14 +799,8 @@ export default function SchemaBuilderPage() {
   const reverseDDL = generateReverseDDL(state)
   const selectedTable = state.tables.find((t) => t.id === selectedTableId)
 
-  const canvasWidth = Math.max(
-    800,
-    ...state.tables.map((t) => t.x + TABLE_WIDTH + 60),
-  )
-  const canvasHeight = Math.max(
-    500,
-    ...state.tables.map((t) => t.y + tableHeight(t) + 60),
-  )
+  const canvasWidth = Math.max(800, ...state.tables.map((t) => t.x + TABLE_WIDTH + 60))
+  const canvasHeight = Math.max(500, ...state.tables.map((t) => t.y + tableHeight(t) + 60))
 
   return (
     <div className="relative mx-auto max-w-7xl">
@@ -859,28 +810,20 @@ export default function SchemaBuilderPage() {
           Visual Schema Builder
         </h1>
         <p className="mt-2 text-zinc-400">
-          Design your database schema visually — drag tables, define columns, and generate Postgres DDL
+          Design your database schema visually — drag tables, define columns, and generate Postgres
+          DDL
         </p>
       </div>
 
       {/* Aria live region for a11y */}
-      <div
-        aria-live="polite"
-        aria-atomic="true"
-        className="sr-only"
-        role="status"
-      >
+      <div aria-live="polite" aria-atomic="true" className="sr-only" role="status">
         {announcement}
       </div>
 
       <div className="space-y-4">
         {/* Toolbar */}
         <div className="flex flex-wrap items-center gap-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => setShowAddTable(true)}
-          >
+          <Button variant="outline" size="sm" onClick={() => setShowAddTable(true)}>
             <Plus className="mr-1 h-4 w-4" />
             Add Table
           </Button>
@@ -904,20 +847,11 @@ export default function SchemaBuilderPage() {
           )}
 
           <div className="ml-auto flex items-center gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setShowDDL(!showDDL)}
-            >
+            <Button variant="outline" size="sm" onClick={() => setShowDDL(!showDDL)}>
               <Code className="mr-1 h-4 w-4" />
               {showDDL ? 'Hide DDL' : 'Show DDL'}
             </Button>
-            <Button
-              size="sm"
-              variant="outline"
-              onClick={handleTrackHasura}
-              disabled={isTracking}
-            >
+            <Button size="sm" variant="outline" onClick={handleTrackHasura} disabled={isTracking}>
               {isTracking ? (
                 <Loader2 className="mr-1 h-4 w-4 animate-spin" />
               ) : (
@@ -941,9 +875,8 @@ export default function SchemaBuilderPage() {
           <Database className="h-4 w-4" />
           <AlertTitle>Keyboard Navigation</AlertTitle>
           <AlertDescription>
-            Click or press Enter to select a table. Arrow keys move the selected
-            table. Tab cycles between tables. Right-click a column for options.
-            Alt+D reads the structure aloud.
+            Click or press Enter to select a table. Arrow keys move the selected table. Tab cycles
+            between tables. Right-click a column for options. Alt+D reads the structure aloud.
           </AlertDescription>
         </Alert>
 
@@ -989,29 +922,15 @@ export default function SchemaBuilderPage() {
             >
               {/* Grid pattern */}
               <defs>
-                <pattern
-                  id="grid"
-                  width="20"
-                  height="20"
-                  patternUnits="userSpaceOnUse"
-                >
-                  <path
-                    d="M 20 0 L 0 0 0 20"
-                    fill="none"
-                    stroke="#1e293b"
-                    strokeWidth="0.5"
-                  />
+                <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
+                  <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#1e293b" strokeWidth="0.5" />
                 </pattern>
               </defs>
               <rect width="100%" height="100%" fill="url(#grid)" />
 
               {/* Relationship edges */}
               {state.relationships.map((rel) => (
-                <RelationshipEdge
-                  key={rel.id}
-                  rel={rel}
-                  tables={state.tables}
-                />
+                <RelationshipEdge key={rel.id} rel={rel} tables={state.tables} />
               ))}
 
               {/* Tables */}
@@ -1097,21 +1016,15 @@ export default function SchemaBuilderPage() {
           {selectedTable && (
             <div className="w-64 shrink-0 space-y-4">
               <div className="rounded-xl border border-zinc-700 bg-zinc-900 p-4">
-                <h3 className="mb-3 font-semibold text-zinc-100">
-                  {selectedTable.name}
-                </h3>
-                <p className="mb-2 text-xs text-zinc-400">
-                  {selectedTable.columns.length} columns
-                </p>
+                <h3 className="mb-3 font-semibold text-zinc-100">{selectedTable.name}</h3>
+                <p className="mb-2 text-xs text-zinc-400">{selectedTable.columns.length} columns</p>
                 <div className="space-y-1">
                   {selectedTable.columns.map((col) => (
                     <div
                       key={col.id}
                       className="flex items-center justify-between rounded px-2 py-1 text-xs hover:bg-zinc-800"
                     >
-                      <span className="font-mono text-zinc-300">
-                        {col.name}
-                      </span>
+                      <span className="font-mono text-zinc-300">{col.name}</span>
                       <Badge variant="outline" className="text-[10px]">
                         {col.type}
                       </Badge>
@@ -1137,9 +1050,7 @@ export default function SchemaBuilderPage() {
               </ScrollArea>
             </div>
             <div className="rounded-xl border border-zinc-700 bg-zinc-950 p-4">
-              <h3 className="mb-2 text-sm font-semibold text-zinc-300">
-                Reverse Migration (DROP)
-              </h3>
+              <h3 className="mb-2 text-sm font-semibold text-zinc-300">Reverse Migration (DROP)</h3>
               <ScrollArea className="h-64">
                 <pre className="font-mono text-xs whitespace-pre-wrap text-red-400">
                   {reverseDDL || '-- (empty canvas)'}
@@ -1157,26 +1068,16 @@ export default function SchemaBuilderPage() {
               <table className="w-full text-sm" role="table">
                 <thead>
                   <tr className="border-b border-zinc-700">
-                    <th className="py-2 text-left text-xs font-medium text-zinc-400">
-                      Name
-                    </th>
-                    <th className="py-2 text-left text-xs font-medium text-zinc-400">
-                      Status
-                    </th>
-                    <th className="py-2 text-left text-xs font-medium text-zinc-400">
-                      Created
-                    </th>
-                    <th className="py-2 text-right text-xs font-medium text-zinc-400">
-                      Actions
-                    </th>
+                    <th className="py-2 text-left text-xs font-medium text-zinc-400">Name</th>
+                    <th className="py-2 text-left text-xs font-medium text-zinc-400">Status</th>
+                    <th className="py-2 text-left text-xs font-medium text-zinc-400">Created</th>
+                    <th className="py-2 text-right text-xs font-medium text-zinc-400">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
                   {jobs.map((job) => (
                     <tr key={job.id} className="border-b border-zinc-800">
-                      <td className="py-2 font-mono text-zinc-300">
-                        {job.name}
-                      </td>
+                      <td className="py-2 font-mono text-zinc-300">{job.name}</td>
                       <td className="py-2">
                         <Badge
                           variant="outline"
@@ -1285,7 +1186,7 @@ export default function SchemaBuilderPage() {
                             ...prev,
                             col: { ...prev.col, name: e.target.value },
                           }
-                        : null,
+                        : null
                     )
                   }
                   className="mt-1"
@@ -1297,7 +1198,7 @@ export default function SchemaBuilderPage() {
                   value={editingColumn.col.type}
                   onValueChange={(v) =>
                     setEditingColumn((prev) =>
-                      prev ? { ...prev, col: { ...prev.col, type: v } } : null,
+                      prev ? { ...prev, col: { ...prev.col, type: v } } : null
                     )
                   }
                 >
@@ -1318,13 +1219,19 @@ export default function SchemaBuilderPage() {
                 <Label htmlFor="col-default-kind">Default</Label>
                 <Select
                   value={
-                    editingColumn.col.default === undefined ||
-                    editingColumn.col.default === ''
+                    editingColumn.col.default === undefined || editingColumn.col.default === ''
                       ? 'none'
-                      : (['now', 'gen_random_uuid', 'uuid_generate_v4', 'current_timestamp'] as AllowedDefaultFunction[]).some(
+                      : (
+                            [
+                              'now',
+                              'gen_random_uuid',
+                              'uuid_generate_v4',
+                              'current_timestamp',
+                            ] as AllowedDefaultFunction[]
+                          ).some(
                             (fn) =>
                               editingColumn.col.default === fn ||
-                              editingColumn.col.default === `${fn}()`,
+                              editingColumn.col.default === `${fn}()`
                           )
                         ? 'function'
                         : 'literal'
@@ -1338,12 +1245,13 @@ export default function SchemaBuilderPage() {
                         return { ...prev, col: { ...prev.col, default: 'now()' } }
                       // literal — keep existing or reset
                       const currentIsFunction = (
-                        ['now', 'gen_random_uuid', 'uuid_generate_v4', 'current_timestamp'] as AllowedDefaultFunction[]
-                      ).some(
-                        (fn) =>
-                          prev.col.default === fn ||
-                          prev.col.default === `${fn}()`,
-                      )
+                        [
+                          'now',
+                          'gen_random_uuid',
+                          'uuid_generate_v4',
+                          'current_timestamp',
+                        ] as AllowedDefaultFunction[]
+                      ).some((fn) => prev.col.default === fn || prev.col.default === `${fn}()`)
                       return {
                         ...prev,
                         col: {
@@ -1368,11 +1276,15 @@ export default function SchemaBuilderPage() {
                 {editingColumn.col.default !== undefined &&
                   editingColumn.col.default !== '' &&
                   !(
-                    ['now', 'gen_random_uuid', 'uuid_generate_v4', 'current_timestamp'] as AllowedDefaultFunction[]
+                    [
+                      'now',
+                      'gen_random_uuid',
+                      'uuid_generate_v4',
+                      'current_timestamp',
+                    ] as AllowedDefaultFunction[]
                   ).some(
                     (fn) =>
-                      editingColumn.col.default === fn ||
-                      editingColumn.col.default === `${fn}()`,
+                      editingColumn.col.default === fn || editingColumn.col.default === `${fn}()`
                   ) && (
                     <Input
                       id="col-default-literal"
@@ -1387,7 +1299,7 @@ export default function SchemaBuilderPage() {
                                   default: e.target.value,
                                 },
                               }
-                            : null,
+                            : null
                         )
                       }
                       placeholder="e.g. 0, true, hello"
@@ -1398,16 +1310,22 @@ export default function SchemaBuilderPage() {
                 {/* Allowed SQL function picker */}
                 {editingColumn.col.default !== undefined &&
                   (
-                    ['now', 'gen_random_uuid', 'uuid_generate_v4', 'current_timestamp'] as AllowedDefaultFunction[]
+                    [
+                      'now',
+                      'gen_random_uuid',
+                      'uuid_generate_v4',
+                      'current_timestamp',
+                    ] as AllowedDefaultFunction[]
                   ).some(
                     (fn) =>
-                      editingColumn.col.default === fn ||
-                      editingColumn.col.default === `${fn}()`,
+                      editingColumn.col.default === fn || editingColumn.col.default === `${fn}()`
                   ) && (
                     <Select
                       value={
-                        (editingColumn.col.default ?? '')
-                          .replace(/\(\)$/, '') as AllowedDefaultFunction
+                        (editingColumn.col.default ?? '').replace(
+                          /\(\)$/,
+                          ''
+                        ) as AllowedDefaultFunction
                       }
                       onValueChange={(fn) =>
                         setEditingColumn((prev) =>
@@ -1416,7 +1334,7 @@ export default function SchemaBuilderPage() {
                                 ...prev,
                                 col: { ...prev.col, default: `${fn}()` },
                               }
-                            : null,
+                            : null
                         )
                       }
                     >
@@ -1438,9 +1356,7 @@ export default function SchemaBuilderPage() {
                   checked={editingColumn.col.nullable}
                   onCheckedChange={(v) =>
                     setEditingColumn((prev) =>
-                      prev
-                        ? { ...prev, col: { ...prev.col, nullable: v } }
-                        : null,
+                      prev ? { ...prev, col: { ...prev.col, nullable: v } } : null
                     )
                   }
                 />
@@ -1452,9 +1368,7 @@ export default function SchemaBuilderPage() {
                   checked={editingColumn.col.hasIndex ?? false}
                   onCheckedChange={(v) =>
                     setEditingColumn((prev) =>
-                      prev
-                        ? { ...prev, col: { ...prev.col, hasIndex: v } }
-                        : null,
+                      prev ? { ...prev, col: { ...prev.col, hasIndex: v } } : null
                     )
                   }
                 />
@@ -1478,10 +1392,7 @@ export default function SchemaBuilderPage() {
       </Dialog>
 
       {/* Rollback warning dialog */}
-      <Dialog
-        open={showRollbackWarning !== null}
-        onOpenChange={() => setShowRollbackWarning(null)}
-      >
+      <Dialog open={showRollbackWarning !== null} onOpenChange={() => setShowRollbackWarning(null)}>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Confirm Rollback</DialogTitle>
@@ -1491,16 +1402,13 @@ export default function SchemaBuilderPage() {
               <AlertTriangle className="h-4 w-4" />
               <AlertTitle>Warning</AlertTitle>
               <AlertDescription>
-                Rolling back this migration will execute DROP statements and may
-                result in data loss. This action cannot be undone. Are you sure?
+                Rolling back this migration will execute DROP statements and may result in data
+                loss. This action cannot be undone. Are you sure?
               </AlertDescription>
             </Alert>
           </div>
           <DialogFooter>
-            <Button
-              variant="outline"
-              onClick={() => setShowRollbackWarning(null)}
-            >
+            <Button variant="outline" onClick={() => setShowRollbackWarning(null)}>
               Cancel
             </Button>
             <Button

@@ -138,9 +138,7 @@ function WorkflowRunRow({ run }: { run: GitHubWorkflowRun }) {
         </div>
       </td>
       <td className="px-4 py-3">
-        <span className="font-mono text-xs text-zinc-500">
-          {run.headSha.substring(0, 7)}
-        </span>
+        <span className="font-mono text-xs text-zinc-500">{run.headSha.substring(0, 7)}</span>
       </td>
       <td className="px-4 py-3 text-sm text-zinc-400">
         {new Date(run.createdAt).toLocaleString()}
@@ -171,7 +169,7 @@ function GitHubActionsContent() {
   }>(
     `/api/plugins/github/actions?page=${page}&pageSize=${pageSize}&filter=${statusFilter}`,
     fetcher,
-    { refreshInterval: 30000 },
+    { refreshInterval: 30000 }
   )
 
   const handleSync = async () => {
@@ -242,9 +240,7 @@ function GitHubActionsContent() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-semibold text-white">Actions</h1>
-          <p className="text-sm text-zinc-400">
-            {total.toLocaleString()} total workflow runs
-          </p>
+          <p className="text-sm text-zinc-400">{total.toLocaleString()} total workflow runs</p>
         </div>
         <button
           onClick={handleSync}
@@ -337,8 +333,7 @@ function GitHubActionsContent() {
       {totalPages > 1 && (
         <div className="flex items-center justify-between">
           <p className="text-sm text-zinc-400">
-            Showing {(page - 1) * pageSize + 1} to{' '}
-            {Math.min(page * pageSize, total)} of {total}
+            Showing {(page - 1) * pageSize + 1} to {Math.min(page * pageSize, total)} of {total}
           </p>
           <div className="flex items-center gap-2">
             <button

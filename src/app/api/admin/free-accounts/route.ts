@@ -8,18 +8,13 @@
 import { NextRequest, NextResponse } from 'next/server'
 
 const PING_API_URL =
-  process.env.NEXT_PUBLIC_PING_API_URL?.replace(/\/$/, '') ??
-  'https://ping.nself.org'
+  process.env.NEXT_PUBLIC_PING_API_URL?.replace(/\/$/, '') ?? 'https://ping.nself.org'
 
 export async function GET(request: NextRequest): Promise<NextResponse> {
-  const adminSecret =
-    process.env.HASURA_GRAPHQL_ADMIN_SECRET ?? process.env.ADMIN_SECRET ?? ''
+  const adminSecret = process.env.HASURA_GRAPHQL_ADMIN_SECRET ?? process.env.ADMIN_SECRET ?? ''
 
   if (!adminSecret) {
-    return NextResponse.json(
-      { error: 'Admin secret not configured' },
-      { status: 503 },
-    )
+    return NextResponse.json({ error: 'Admin secret not configured' }, { status: 503 })
   }
 
   const filter = request.nextUrl.searchParams.get('filter') ?? 'all'
@@ -30,7 +25,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       {
         headers: { 'x-admin-secret': adminSecret },
         signal: AbortSignal.timeout(10_000),
-      },
+      }
     )
 
     if (upstream.status === 401 || upstream.status === 403) {
@@ -41,9 +36,6 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     return NextResponse.json(data, { status: upstream.status })
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : String(err)
-    return NextResponse.json(
-      { error: `Upstream error: ${message}` },
-      { status: 502 },
-    )
+    return NextResponse.json({ error: `Upstream error: ${message}` }, { status: 502 })
   }
 }

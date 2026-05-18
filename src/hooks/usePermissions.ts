@@ -3,11 +3,7 @@
  */
 'use client'
 
-import {
-  DEFAULT_ROLE_PERMISSIONS,
-  permissionsApi,
-  STANDARD_PERMISSIONS,
-} from '@/lib/org'
+import { DEFAULT_ROLE_PERMISSIONS, permissionsApi, STANDARD_PERMISSIONS } from '@/lib/org'
 import type { OrgRole, OrgRoleDefinition } from '@/types/tenant'
 import { useCallback, useMemo, useState } from 'react'
 import useSWR from 'swr'
@@ -27,10 +23,7 @@ export function usePermissions(orgId: string) {
     data: rolesData,
     error: fetchError,
     mutate,
-  } = useSWR<{ roles: OrgRoleDefinition[] }>(
-    orgId ? `/api/org/${orgId}/roles` : null,
-    fetcher,
-  )
+  } = useSWR<{ roles: OrgRoleDefinition[] }>(orgId ? `/api/org/${orgId}/roles` : null, fetcher)
 
   const roles = useMemo(() => rolesData?.roles || [], [rolesData])
 
@@ -43,15 +36,14 @@ export function usePermissions(orgId: string) {
         mutate()
         return newRole
       } catch (err) {
-        const message =
-          err instanceof Error ? err.message : 'Failed to create role'
+        const message = err instanceof Error ? err.message : 'Failed to create role'
         setError(message)
         throw err
       } finally {
         setIsLoading(false)
       }
     },
-    [orgId, mutate],
+    [orgId, mutate]
   )
 
   const updateRole = useCallback(
@@ -63,15 +55,14 @@ export function usePermissions(orgId: string) {
         mutate()
         return updated
       } catch (err) {
-        const message =
-          err instanceof Error ? err.message : 'Failed to update role'
+        const message = err instanceof Error ? err.message : 'Failed to update role'
         setError(message)
         throw err
       } finally {
         setIsLoading(false)
       }
     },
-    [orgId, mutate],
+    [orgId, mutate]
   )
 
   const deleteRole = useCallback(
@@ -82,34 +73,27 @@ export function usePermissions(orgId: string) {
         await permissionsApi.deleteRole(orgId, roleId)
         mutate()
       } catch (err) {
-        const message =
-          err instanceof Error ? err.message : 'Failed to delete role'
+        const message = err instanceof Error ? err.message : 'Failed to delete role'
         setError(message)
         throw err
       } finally {
         setIsLoading(false)
       }
     },
-    [orgId, mutate],
+    [orgId, mutate]
   )
 
   const checkPermission = useCallback((role: OrgRole, permission: string) => {
     return permissionsApi.hasPermission(role, permission)
   }, [])
 
-  const checkAnyPermission = useCallback(
-    (role: OrgRole, permissions: string[]) => {
-      return permissionsApi.hasAnyPermission(role, permissions)
-    },
-    [],
-  )
+  const checkAnyPermission = useCallback((role: OrgRole, permissions: string[]) => {
+    return permissionsApi.hasAnyPermission(role, permissions)
+  }, [])
 
-  const checkAllPermissions = useCallback(
-    (role: OrgRole, permissions: string[]) => {
-      return permissionsApi.hasAllPermissions(role, permissions)
-    },
-    [],
-  )
+  const checkAllPermissions = useCallback((role: OrgRole, permissions: string[]) => {
+    return permissionsApi.hasAllPermissions(role, permissions)
+  }, [])
 
   const getRolePermissions = useCallback((role: OrgRole) => {
     return permissionsApi.getRolePermissions(role)

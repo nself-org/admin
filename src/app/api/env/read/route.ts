@@ -33,18 +33,16 @@ const ALWAYS_REDACT: ReadonlySet<string> = new Set([
 ])
 
 // Pattern-based redaction: any key whose name matches gets redacted.
-const SECRET_KEY_PATTERN =
-  /SECRET|PASSWORD|KEY|TOKEN|PRIVATE|CREDENTIAL|AUTH|CERT|SEED/i
+const SECRET_KEY_PATTERN = /SECRET|PASSWORD|KEY|TOKEN|PRIVATE|CREDENTIAL|AUTH|CERT|SEED/i
 
 const REDACTED_VALUE = '***REDACTED***'
 
 function redactSecrets(
-  env: Record<string, string>,
+  env: Record<string, string>
 ): Record<string, string | typeof REDACTED_VALUE> {
   const out: Record<string, string | typeof REDACTED_VALUE> = {}
   for (const [k, v] of Object.entries(env)) {
-    out[k] =
-      ALWAYS_REDACT.has(k) || SECRET_KEY_PATTERN.test(k) ? REDACTED_VALUE : v
+    out[k] = ALWAYS_REDACT.has(k) || SECRET_KEY_PATTERN.test(k) ? REDACTED_VALUE : v
   }
   return out
 }
@@ -70,7 +68,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to read env file',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

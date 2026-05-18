@@ -20,11 +20,7 @@ const path = require('path')
 const REPO_ROOT = path.resolve(__dirname, '..')
 const HOOKS_DIR = path.join(REPO_ROOT, '.git', 'hooks')
 const HOOK_PATH = path.join(HOOKS_DIR, 'pre-commit')
-const LOCKSTEP_SCRIPT = path.join(
-  REPO_ROOT,
-  'scripts',
-  'check-version-lockstep.sh',
-)
+const LOCKSTEP_SCRIPT = path.join(REPO_ROOT, 'scripts', 'check-version-lockstep.sh')
 
 const HOOK_CONTENT = `#!/usr/bin/env bash
 # Pre-commit hook — installed by scripts/install-hooks.js (pnpm prepare)

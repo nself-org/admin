@@ -29,16 +29,12 @@ interface SchemaBrowserProps {
   onColumnClick: (tableName: string, columnName: string) => void
 }
 
-export function SchemaBrowser({
-  tables,
-  onTableClick,
-  onColumnClick,
-}: SchemaBrowserProps) {
+export function SchemaBrowser({ tables, onTableClick, onColumnClick }: SchemaBrowserProps) {
   const [searchTerm, setSearchTerm] = useState('')
   const [expandedTables, setExpandedTables] = useState<Set<string>>(new Set())
 
   const filteredTables = tables.filter((table) =>
-    table.name.toLowerCase().includes(searchTerm.toLowerCase()),
+    table.name.toLowerCase().includes(searchTerm.toLowerCase())
   )
 
   const toggleTable = (tableName: string) => {
@@ -84,9 +80,7 @@ export function SchemaBrowser({
                       className={`h-4 w-4 transition-transform ${isExpanded ? 'rotate-90' : ''}`}
                     />
                     <Table className="h-4 w-4 text-blue-500" />
-                    <span className="flex-1 text-sm font-medium">
-                      {table.name}
-                    </span>
+                    <span className="flex-1 text-sm font-medium">{table.name}</span>
                     {table.rowCount !== undefined && (
                       <Badge variant="secondary" className="text-xs">
                         {table.rowCount.toLocaleString()}
@@ -112,31 +106,18 @@ export function SchemaBrowser({
                           <div
                             key={column.name}
                             className="flex cursor-pointer items-center gap-2 rounded px-2 py-1 text-sm hover:bg-zinc-100 dark:hover:bg-zinc-800"
-                            onClick={() =>
-                              onColumnClick(table.name, column.name)
-                            }
+                            onClick={() => onColumnClick(table.name, column.name)}
                           >
                             <div className="flex h-4 w-4 items-center justify-center">
                               {column.isPrimaryKey && (
-                                <span className="text-xs font-bold text-yellow-500">
-                                  K
-                                </span>
+                                <span className="text-xs font-bold text-yellow-500">K</span>
                               )}
                             </div>
-                            <span className="flex-1 font-mono">
-                              {column.name}
-                            </span>
-                            <Badge
-                              variant="outline"
-                              className="text-xs font-normal"
-                            >
+                            <span className="flex-1 font-mono">{column.name}</span>
+                            <Badge variant="outline" className="text-xs font-normal">
                               {column.type}
                             </Badge>
-                            {column.nullable && (
-                              <span className="text-xs text-zinc-500">
-                                NULL
-                              </span>
-                            )}
+                            {column.nullable && <span className="text-xs text-zinc-500">NULL</span>}
                           </div>
                         ))}
                       </div>

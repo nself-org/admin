@@ -75,20 +75,8 @@ function ScoreRing({ score }: { score: number }) {
 
   return (
     <div className="relative flex h-28 w-28 items-center justify-center">
-      <svg
-        className="absolute inset-0"
-        viewBox="0 0 100 100"
-        width={112}
-        height={112}
-      >
-        <circle
-          cx="50"
-          cy="50"
-          r={radius}
-          fill="none"
-          stroke="#27272a"
-          strokeWidth="10"
-        />
+      <svg className="absolute inset-0" viewBox="0 0 100 100" width={112} height={112}>
+        <circle cx="50" cy="50" r={radius} fill="none" stroke="#27272a" strokeWidth="10" />
         <circle
           cx="50"
           cy="50"
@@ -178,9 +166,7 @@ export default function AICostDashboardPage() {
       })
       if (!res.ok) throw new Error(await res.text())
       const d = await res.json()
-      setSuccessMsg(
-        `Analysis complete — ${d.recommendations_count ?? 0} recommendations updated.`,
-      )
+      setSuccessMsg(`Analysis complete — ${d.recommendations_count ?? 0} recommendations updated.`)
       await fetchAll()
     } catch (e) {
       setError(`Analysis failed: ${e instanceof Error ? e.message : String(e)}`)
@@ -202,7 +188,7 @@ export default function AICostDashboardPage() {
       })
       if (!res.ok) throw new Error(await res.text())
       setSuccessMsg(
-        `Rule applied for "${rec.task_class}" — requests now route to ${rec.suggested_model}.`,
+        `Rule applied for "${rec.task_class}" — requests now route to ${rec.suggested_model}.`
       )
       await fetchAll()
     } catch (e) {
@@ -236,9 +222,7 @@ export default function AICostDashboardPage() {
       {/* Header */}
       <div className="mb-6 flex items-center justify-between">
         <div>
-          <h1 className="text-xl font-semibold text-white">
-            AI Cost Optimization
-          </h1>
+          <h1 className="text-xl font-semibold text-white">AI Cost Optimization</h1>
           <p className="mt-0.5 text-sm text-zinc-400">
             Route tasks to cheaper models without quality loss.
           </p>
@@ -261,9 +245,7 @@ export default function AICostDashboardPage() {
             disabled={loading}
             className="flex items-center gap-1.5 rounded-lg border border-zinc-600/50 bg-zinc-800/50 px-3 py-1.5 text-sm text-zinc-300 hover:bg-zinc-800 disabled:opacity-50"
           >
-            <RefreshCw
-              className={`h-3.5 w-3.5 ${loading ? 'animate-spin' : ''}`}
-            />
+            <RefreshCw className={`h-3.5 w-3.5 ${loading ? 'animate-spin' : ''}`} />
             Refresh
           </button>
         </div>
@@ -297,47 +279,35 @@ export default function AICostDashboardPage() {
               <ScoreRing score={score ?? 0} />
               <div>
                 <div className="text-sm text-zinc-400">Optimization Score</div>
-                <div className="mt-1 text-xs text-zinc-500">
-                  % of savings captured
-                </div>
+                <div className="mt-1 text-xs text-zinc-500">% of savings captured</div>
               </div>
             </div>
 
             {/* Projected savings */}
             <div className="rounded-xl border border-zinc-800 bg-zinc-900/60 p-5">
-              <div className="text-sm text-zinc-400">
-                Projected Monthly Savings
-              </div>
+              <div className="text-sm text-zinc-400">Projected Monthly Savings</div>
               <div className="mt-2 text-3xl font-bold text-green-400">
                 {totalSavings != null ? fmtCost(totalSavings) : '—'}
               </div>
-              <div className="mt-1 text-xs text-zinc-500">
-                if all recommendations applied
-              </div>
+              <div className="mt-1 text-xs text-zinc-500">if all recommendations applied</div>
             </div>
 
             {/* Active rules */}
             <div className="rounded-xl border border-zinc-800 bg-zinc-900/60 p-5">
               <div className="text-sm text-zinc-400">Active Routing Rules</div>
-              <div className="mt-2 text-3xl font-bold text-white">
-                {rules.length}
-              </div>
-              <div className="mt-1 text-xs text-zinc-500">
-                overriding model selection
-              </div>
+              <div className="mt-2 text-3xl font-bold text-white">{rules.length}</div>
+              <div className="mt-1 text-xs text-zinc-500">overriding model selection</div>
             </div>
           </div>
 
           {/* Recommendations */}
           <div className="mb-6">
             <h2 className="mb-3 text-sm font-medium text-zinc-300">
-              Recommendations{' '}
-              <span className="text-zinc-500">({recommendations.length})</span>
+              Recommendations <span className="text-zinc-500">({recommendations.length})</span>
             </h2>
             {recommendations.length === 0 ? (
               <div className="rounded-xl border border-zinc-800 bg-zinc-900/40 py-10 text-center text-sm text-zinc-500">
-                No recommendations yet. Click Re-analyze to scan recent
-                requests.
+                No recommendations yet. Click Re-analyze to scan recent requests.
               </div>
             ) : (
               <div className="space-y-2">
@@ -381,8 +351,7 @@ export default function AICostDashboardPage() {
                             </span>
                           </div>
                           <div className="mt-0.5 text-xs text-zinc-500">
-                            {fmtCost(rec.current_cost_usd)} →{' '}
-                            {fmtCost(rec.projected_cost_usd)}
+                            {fmtCost(rec.current_cost_usd)} → {fmtCost(rec.projected_cost_usd)}
                           </div>
                           <button
                             onClick={() => void applyRule(rec)}
@@ -408,37 +377,26 @@ export default function AICostDashboardPage() {
           {/* Active routing rules */}
           {rules.length > 0 && (
             <div>
-              <h2 className="mb-3 text-sm font-medium text-zinc-300">
-                Active Routing Rules
-              </h2>
+              <h2 className="mb-3 text-sm font-medium text-zinc-300">Active Routing Rules</h2>
               <div className="overflow-x-auto rounded-xl border border-zinc-800">
                 <table className="w-full text-sm">
                   <thead>
                     <tr className="border-b border-zinc-800 text-left text-xs text-zinc-500">
                       <th className="px-4 py-2.5 font-medium">Task class</th>
                       <th className="px-4 py-2.5 font-medium">Routes to</th>
-                      <th className="px-4 py-2.5 font-medium">
-                        Min confidence
-                      </th>
+                      <th className="px-4 py-2.5 font-medium">Min confidence</th>
                       <th className="px-4 py-2.5 font-medium">Applied</th>
-                      <th className="px-4 py-2.5 font-medium">
-                        Est. savings/mo
-                      </th>
+                      <th className="px-4 py-2.5 font-medium">Est. savings/mo</th>
                       <th className="px-4 py-2.5 font-medium"></th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-zinc-800">
                     {rules.map((rule) => (
-                      <tr
-                        key={rule.id}
-                        className="text-zinc-300 hover:bg-zinc-900/40"
-                      >
+                      <tr key={rule.id} className="text-zinc-300 hover:bg-zinc-900/40">
                         <td className="px-4 py-2.5 capitalize">
                           {rule.task_class.replace(/_/g, ' ')}
                         </td>
-                        <td className="px-4 py-2.5 font-mono text-xs text-sky-300">
-                          {rule.model}
-                        </td>
+                        <td className="px-4 py-2.5 font-mono text-xs text-sky-300">{rule.model}</td>
                         <td className="px-4 py-2.5 text-zinc-400">
                           {(rule.confidence_min * 100).toFixed(0)}%
                         </td>

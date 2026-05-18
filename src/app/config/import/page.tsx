@@ -2,13 +2,7 @@
 
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import {
   Select,
@@ -55,31 +49,28 @@ export default function ConfigImportPage() {
   const [errorMessage, setErrorMessage] = useState('')
   const fileInputRef = useRef<HTMLInputElement>(null)
 
-  const handleFileUpload = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
-      const file = event.target.files?.[0]
-      if (!file) return
+  const handleFileUpload = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0]
+    if (!file) return
 
-      setFileName(file.name)
+    setFileName(file.name)
 
-      // Auto-detect format from extension
-      if (file.name.endsWith('.yaml') || file.name.endsWith('.yml')) {
-        setFormat('yaml')
-      } else if (file.name.endsWith('.json')) {
-        setFormat('json')
+    // Auto-detect format from extension
+    if (file.name.endsWith('.yaml') || file.name.endsWith('.yml')) {
+      setFormat('yaml')
+    } else if (file.name.endsWith('.json')) {
+      setFormat('json')
+    }
+
+    const reader = new FileReader()
+    reader.onload = (e) => {
+      const text = e.target?.result
+      if (typeof text === 'string') {
+        setFileContent(text)
       }
-
-      const reader = new FileReader()
-      reader.onload = (e) => {
-        const text = e.target?.result
-        if (typeof text === 'string') {
-          setFileContent(text)
-        }
-      }
-      reader.readAsText(file)
-    },
-    [],
-  )
+    }
+    reader.readAsText(file)
+  }, [])
 
   const handleDrop = useCallback(
     (event: React.DragEvent<HTMLDivElement>) => {
@@ -97,15 +88,12 @@ export default function ConfigImportPage() {
         } as React.ChangeEvent<HTMLInputElement>)
       }
     },
-    [handleFileUpload],
+    [handleFileUpload]
   )
 
-  const handleDragOver = useCallback(
-    (event: React.DragEvent<HTMLDivElement>) => {
-      event.preventDefault()
-    },
-    [],
-  )
+  const handleDragOver = useCallback((event: React.DragEvent<HTMLDivElement>) => {
+    event.preventDefault()
+  }, [])
 
   const callImportApi = async (preview: boolean) => {
     if (!fileContent) {
@@ -137,8 +125,7 @@ export default function ConfigImportPage() {
       }
 
       const data = await response.json()
-      const output =
-        data.data?.output || data.data?.stderr || data.error || data.details
+      const output = data.data?.output || data.data?.stderr || data.error || data.details
       setLastOutput(output || JSON.stringify(data, null, 2))
 
       if (data.success) {
@@ -155,39 +142,50 @@ export default function ConfigImportPage() {
     }
   }
 
-  const isActionDisabled = actionState === 'previewing' || actionState === 'importing' || !fileContent
+  const isActionDisabled =
+    actionState === 'previewing' || actionState === 'importing' || !fileContent
 
   if (actionState === 'unauth') {
     return (
-      <div className="flex flex-col items-center justify-center py-24 gap-4">
-        <AlertCircle className="h-10 w-10 text-destructive" />
+      <div className="flex flex-col items-center justify-center gap-4 py-24">
+        <AlertCircle className="text-destructive h-10 w-10" />
         <p className="text-lg font-medium">Not authenticated</p>
-        <p className="text-sm text-muted-foreground">Please log in to import configuration.</p>
-        <Button variant="outline" onClick={() => { window.location.href = '/login' }}>Go to Login</Button>
+        <p className="text-muted-foreground text-sm">Please log in to import configuration.</p>
+        <Button
+          variant="outline"
+          onClick={() => {
+            window.location.href = '/login'
+          }}
+        >
+          Go to Login
+        </Button>
       </div>
     )
   }
 
   if (actionState === 'offline') {
     return (
-      <div className="flex flex-col items-center justify-center py-24 gap-4">
-        <WifiOff className="h-10 w-10 text-muted-foreground" />
+      <div className="flex flex-col items-center justify-center gap-4 py-24">
+        <WifiOff className="text-muted-foreground h-10 w-10" />
         <p className="text-lg font-medium">Cannot connect to admin API</p>
-        <p className="text-sm text-muted-foreground">{errorMessage}</p>
-        <Button variant="outline" onClick={() => setActionState('idle')}>Retry</Button>
+        <p className="text-muted-foreground text-sm">{errorMessage}</p>
+        <Button variant="outline" onClick={() => setActionState('idle')}>
+          Retry
+        </Button>
       </div>
     )
   }
 
   return (
-    <div className="space-y-6 max-w-4xl">
+    <div className="max-w-4xl space-y-6">
       <div>
-        <h1 className="text-2xl font-bold flex items-center gap-2">
+        <h1 className="flex items-center gap-2 text-2xl font-bold">
           <Upload className="h-6 w-6" />
           Config Import
         </h1>
-        <p className="text-sm text-muted-foreground mt-1">
-          Import configuration from a file into an environment. Values are validated before applying.
+        <p className="text-muted-foreground mt-1 text-sm">
+          Import configuration from a file into an environment. Values are validated before
+          applying.
         </p>
       </div>
 
@@ -197,11 +195,9 @@ export default function ConfigImportPage() {
         <AlertTitle>nself CLI Integration</AlertTitle>
         <AlertDescription>
           This page executes{' '}
-          <code className="rounded bg-muted px-1 text-xs">
-            nself config import
-          </code>{' '}
-          to import configuration into a specific environment. Use the preview
-          button to see changes before applying. Uploaded values are validated by the CLI before being applied.
+          <code className="bg-muted rounded px-1 text-xs">nself config import</code> to import
+          configuration into a specific environment. Use the preview button to see changes before
+          applying. Uploaded values are validated by the CLI before being applied.
         </AlertDescription>
       </Alert>
 
@@ -211,9 +207,8 @@ export default function ConfigImportPage() {
           <AlertTriangle className="h-4 w-4" />
           <AlertTitle>Production Environment</AlertTitle>
           <AlertDescription>
-            You are importing configuration into the{' '}
-            <strong>production</strong> environment. Please preview changes
-            before applying.
+            You are importing configuration into the <strong>production</strong> environment. Please
+            preview changes before applying.
           </AlertDescription>
         </Alert>
       )}
@@ -248,9 +243,7 @@ export default function ConfigImportPage() {
               <Upload className="mx-auto mb-3 h-8 w-8 text-zinc-400" />
               {fileName ? (
                 <div>
-                  <p className="text-sm font-medium text-zinc-900 dark:text-white">
-                    {fileName}
-                  </p>
+                  <p className="text-sm font-medium text-zinc-900 dark:text-white">{fileName}</p>
                   <p className="mt-1 text-xs text-zinc-500">
                     {fileContent.length} characters loaded
                   </p>

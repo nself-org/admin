@@ -80,22 +80,14 @@ function MetricCard({
   }
 
   return (
-    <div
-      className={`rounded-xl border p-5 ${colorMap[color]}`}
-      role="region"
-      aria-label={label}
-    >
+    <div className={`rounded-xl border p-5 ${colorMap[color]}`} role="region" aria-label={label}>
       <div className="flex items-center justify-between">
-        <p className="text-xs font-medium tracking-wide text-zinc-500 uppercase">
-          {label}
-        </p>
+        <p className="text-xs font-medium tracking-wide text-zinc-500 uppercase">{label}</p>
         <Icon className={`h-4 w-4 ${iconColorMap[color]}`} />
       </div>
       <p className="mt-3 text-2xl font-bold">
         {value}
-        {unit && (
-          <span className="ml-1 text-sm font-normal text-zinc-500">{unit}</span>
-        )}
+        {unit && <span className="ml-1 text-sm font-normal text-zinc-500">{unit}</span>}
       </p>
     </div>
   )
@@ -121,15 +113,11 @@ function DockerStatsRow({ stats }: { stats: DockerStats }) {
             <HardDrive className="h-3.5 w-3.5" />
             Memory
           </div>
-          <p className="text-lg font-semibold text-white">
-            {stats.memoryUsage}
-          </p>
+          <p className="text-lg font-semibold text-white">{stats.memoryUsage}</p>
         </div>
         <div className="space-y-1">
           <p className="text-xs text-zinc-500">Mem Limit</p>
-          <p className="text-lg font-semibold text-white">
-            {stats.memoryLimit}
-          </p>
+          <p className="text-lg font-semibold text-white">{stats.memoryLimit}</p>
         </div>
         <div className="space-y-1">
           <p className="text-xs text-zinc-500">Mem %</p>
@@ -206,8 +194,7 @@ export default function PluginHealthPage() {
       setState((prev) => ({
         ...prev,
         loading: false,
-        error:
-          err instanceof Error ? err.message : 'Failed to fetch health data',
+        error: err instanceof Error ? err.message : 'Failed to fetch health data',
       }))
     }
   }, [pluginName])
@@ -230,15 +217,7 @@ export default function PluginHealthPage() {
     }
   }, [fetchHealth])
 
-  const {
-    healthy,
-    licenseTier,
-    metrics,
-    dockerStats,
-    lastUpdated,
-    loading,
-    error,
-  } = state
+  const { healthy, licenseTier, metrics, dockerStats, lastUpdated, loading, error } = state
 
   const errorRateColor = metrics && metrics.errorRate > 5 ? 'red' : 'green'
 
@@ -258,9 +237,7 @@ export default function PluginHealthPage() {
             </Link>
             <div className="flex items-center gap-2">
               <Activity className="h-5 w-5 text-zinc-500" />
-              <h1 className="text-lg font-semibold text-white capitalize">
-                {pluginName} health
-              </h1>
+              <h1 className="text-lg font-semibold text-white capitalize">{pluginName} health</h1>
               {isOwnerTier(licenseTier) && (
                 <span className="rounded-full bg-sky-500/20 px-2 py-0.5 text-xs font-medium text-sky-400">
                   Owner
@@ -277,9 +254,7 @@ export default function PluginHealthPage() {
               className="flex items-center gap-1 rounded-lg border border-zinc-700 px-3 py-1.5 text-xs text-zinc-400 hover:text-white disabled:opacity-50"
               aria-label="Refresh health data"
             >
-              <RefreshCw
-                className={`h-3.5 w-3.5 ${loading ? 'animate-spin' : ''}`}
-              />
+              <RefreshCw className={`h-3.5 w-3.5 ${loading ? 'animate-spin' : ''}`} />
               Refresh
             </button>
           </div>
@@ -297,9 +272,7 @@ export default function PluginHealthPage() {
               {healthy ? 'Healthy' : 'Unhealthy'}
             </span>
           </span>
-          {lastUpdated && (
-            <span>Last updated: {lastUpdated.toLocaleTimeString()}</span>
-          )}
+          {lastUpdated && <span>Last updated: {lastUpdated.toLocaleTimeString()}</span>}
           <span className="flex items-center gap-1">
             <span className="relative flex h-2 w-2">
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-zinc-400 opacity-40" />
@@ -320,9 +293,8 @@ export default function PluginHealthPage() {
           >
             <AlertCircle className="h-5 w-5 shrink-0 text-red-400" />
             <p className="text-sm text-red-400">
-              Plugin{' '}
-              <span className="font-semibold capitalize">{pluginName}</span> is
-              unhealthy — check logs
+              Plugin <span className="font-semibold capitalize">{pluginName}</span> is unhealthy —
+              check logs
             </p>
             <Link
               href={`/plugins/${pluginName}/logs`}

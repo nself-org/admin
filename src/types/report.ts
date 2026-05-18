@@ -1,18 +1,8 @@
 // Report types for v0.7.0
 
 export type ReportFormat = 'pdf' | 'excel' | 'csv' | 'json' | 'html'
-export type ReportStatus =
-  | 'pending'
-  | 'generating'
-  | 'completed'
-  | 'failed'
-  | 'expired'
-export type ReportScheduleFrequency =
-  | 'once'
-  | 'hourly'
-  | 'daily'
-  | 'weekly'
-  | 'monthly'
+export type ReportStatus = 'pending' | 'generating' | 'completed' | 'failed' | 'expired'
+export type ReportScheduleFrequency = 'once' | 'hourly' | 'daily' | 'weekly' | 'monthly'
 
 export interface ReportColumn {
   id: string

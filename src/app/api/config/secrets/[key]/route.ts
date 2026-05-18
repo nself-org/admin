@@ -8,24 +8,18 @@ import { NextRequest, NextResponse } from 'next/server'
  */
 export async function GET(
   request: NextRequest,
-  { params }: { params: Promise<{ key: string }> },
+  { params }: { params: Promise<{ key: string }> }
 ): Promise<NextResponse> {
   try {
     const { key } = await params
 
     if (!key) {
-      return NextResponse.json(
-        { success: false, error: 'Key is required' },
-        { status: 400 },
-      )
+      return NextResponse.json({ success: false, error: 'Key is required' }, { status: 400 })
     }
 
     // Validate key format to prevent CLI flag injection
     if (!/^[A-Za-z_][A-Za-z0-9_-]*$/.test(key)) {
-      return NextResponse.json(
-        { success: false, error: 'Invalid key format' },
-        { status: 400 },
-      )
+      return NextResponse.json({ success: false, error: 'Invalid key format' }, { status: 400 })
     }
 
     const result = await executeNselfCommand('config', ['secrets', 'get', key])
@@ -46,7 +40,7 @@ export async function GET(
         error: `Secret '${key}' not found`,
         details: result.stderr || result.error || 'Unknown error',
       },
-      { status: 404 },
+      { status: 404 }
     )
   } catch (error) {
     return NextResponse.json(
@@ -55,7 +49,7 @@ export async function GET(
         error: 'Failed to get secret',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -66,7 +60,7 @@ export async function GET(
  */
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: Promise<{ key: string }> },
+  { params }: { params: Promise<{ key: string }> }
 ): Promise<NextResponse> {
   const authError = await requireAuth(request)
   if (authError) return authError
@@ -75,25 +69,15 @@ export async function DELETE(
     const { key } = await params
 
     if (!key) {
-      return NextResponse.json(
-        { success: false, error: 'Key is required' },
-        { status: 400 },
-      )
+      return NextResponse.json({ success: false, error: 'Key is required' }, { status: 400 })
     }
 
     // Validate key format to prevent CLI flag injection
     if (!/^[A-Za-z_][A-Za-z0-9_-]*$/.test(key)) {
-      return NextResponse.json(
-        { success: false, error: 'Invalid key format' },
-        { status: 400 },
-      )
+      return NextResponse.json({ success: false, error: 'Invalid key format' }, { status: 400 })
     }
 
-    const result = await executeNselfCommand('config', [
-      'secrets',
-      'delete',
-      key,
-    ])
+    const result = await executeNselfCommand('config', ['secrets', 'delete', key])
 
     if (result.success) {
       return NextResponse.json({
@@ -110,7 +94,7 @@ export async function DELETE(
         error: `Failed to delete secret '${key}'`,
         details: result.stderr || result.error || 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   } catch (error) {
     return NextResponse.json(
@@ -119,7 +103,7 @@ export async function DELETE(
         error: 'Failed to delete secret',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

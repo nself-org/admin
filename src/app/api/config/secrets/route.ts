@@ -56,7 +56,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to list secrets',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -83,7 +83,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           success: false,
           error: 'Key and value are required',
         },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -92,10 +92,9 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       return NextResponse.json(
         {
           success: false,
-          error:
-            'Invalid key format. Use letters, numbers, underscores, and hyphens.',
+          error: 'Invalid key format. Use letters, numbers, underscores, and hyphens.',
         },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -120,7 +119,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         error: `Failed to set secret '${key}'`,
         details: result.stderr || result.error || 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   } catch (error) {
     return NextResponse.json(
@@ -129,7 +128,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to set secret',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

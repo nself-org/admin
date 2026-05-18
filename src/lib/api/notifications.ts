@@ -11,13 +11,7 @@ const BASE = '/api/notifications'
 // Types
 // ---------------------------------------------------------------------------
 
-export type CampaignStatus =
-  | 'draft'
-  | 'scheduled'
-  | 'sending'
-  | 'sent'
-  | 'failed'
-  | 'canceled'
+export type CampaignStatus = 'draft' | 'scheduled' | 'sending' | 'sent' | 'failed' | 'canceled'
 export type Platform = 'fcm' | 'apns'
 
 export interface Campaign {
@@ -111,7 +105,7 @@ export interface PaginatedResult<T> {
 export class NotifyApiError extends Error {
   constructor(
     public readonly status: number,
-    message: string,
+    message: string
   ) {
     super(message)
     this.name = 'NotifyApiError'

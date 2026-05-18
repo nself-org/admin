@@ -16,12 +16,7 @@ beforeAll(async () => {
 beforeEach(() => {
   const db = getDatabase()
   if (!db) return
-  const collections = [
-    'apiKeys',
-    'apiKeyUsage',
-    'apiKeyLogs',
-    'apiKeyRateLimit',
-  ]
+  const collections = ['apiKeys', 'apiKeyUsage', 'apiKeyLogs', 'apiKeyRateLimit']
   for (const name of collections) {
     const col = db.getCollection(name)
     if (col) col.clear()
@@ -80,9 +75,7 @@ describe('API Key Validation', () => {
   })
 
   test('rejects invalid API key', async () => {
-    const validation = await apiKeys.validateApiKey(
-      'nself_xx_invalidkeyxxxxxxxxxxxxxxxxxxxxxxxxxx',
-    )
+    const validation = await apiKeys.validateApiKey('nself_xx_invalidkeyxxxxxxxxxxxxxxxxxxxxxxxxxx')
 
     expect(validation.valid).toBe(false)
     expect(validation.error).toBeDefined()
@@ -307,7 +300,7 @@ describe('Usage Tracking', () => {
       200,
       45,
       '127.0.0.1',
-      'Test/1.0',
+      'Test/1.0'
     )
 
     const usage = await apiKeys.apiKeysApi.getUsage(result.key.id)
@@ -324,30 +317,9 @@ describe('Usage Tracking', () => {
       scope: 'read',
     })
 
-    await apiKeys.recordApiKeyUsage(
-      result.key.id,
-      '/api/test1',
-      'GET',
-      200,
-      30,
-      '127.0.0.1',
-    )
-    await apiKeys.recordApiKeyUsage(
-      result.key.id,
-      '/api/test2',
-      'POST',
-      201,
-      45,
-      '127.0.0.1',
-    )
-    await apiKeys.recordApiKeyUsage(
-      result.key.id,
-      '/api/test1',
-      'GET',
-      200,
-      35,
-      '127.0.0.1',
-    )
+    await apiKeys.recordApiKeyUsage(result.key.id, '/api/test1', 'GET', 200, 30, '127.0.0.1')
+    await apiKeys.recordApiKeyUsage(result.key.id, '/api/test2', 'POST', 201, 45, '127.0.0.1')
+    await apiKeys.recordApiKeyUsage(result.key.id, '/api/test1', 'GET', 200, 35, '127.0.0.1')
 
     const stats = await apiKeys.apiKeysApi.getUsageStats(result.key.id)
 
@@ -430,9 +402,7 @@ describe('Security Features', () => {
   })
 
   test('sets expiration date', async () => {
-    const futureDate = new Date(
-      Date.now() + 30 * 24 * 60 * 60 * 1000,
-    ).toISOString()
+    const futureDate = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString()
 
     const result = await apiKeys.apiKeysApi.create({
       name: 'Expiration Test',

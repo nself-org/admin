@@ -52,9 +52,7 @@ function MigrationHistoryContent() {
 
   const allMigrations = data?.migrations ?? []
   const migrations =
-    filterStatus !== 'all'
-      ? allMigrations.filter((m) => m.status === filterStatus)
-      : allMigrations
+    filterStatus !== 'all' ? allMigrations.filter((m) => m.status === filterStatus) : allMigrations
 
   const getStatusIcon = (status: string) => {
     switch (status) {
@@ -95,9 +93,7 @@ function MigrationHistoryContent() {
             <div className="flex items-center gap-3">
               <AlertCircle className="h-5 w-5 text-red-400" />
               <p className="text-red-400">
-                {error instanceof Error
-                  ? error.message
-                  : 'Failed to load migration history'}
+                {error instanceof Error ? error.message : 'Failed to load migration history'}
               </p>
             </div>
           </div>
@@ -157,9 +153,7 @@ function MigrationHistoryContent() {
             <div className="flex items-center gap-3">
               <Database className="h-8 w-8 text-green-500" />
               <div>
-                <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                  Total Migrations
-                </p>
+                <p className="text-sm text-zinc-500 dark:text-zinc-400">Total Migrations</p>
                 <p className="text-2xl font-bold text-zinc-900 dark:text-white">
                   {data?.total ?? allMigrations.length}
                 </p>
@@ -170,12 +164,8 @@ function MigrationHistoryContent() {
             <div className="flex items-center gap-3">
               <CheckCircle className="h-8 w-8 text-green-500" />
               <div>
-                <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                  Applied
-                </p>
-                <p className="text-2xl font-bold text-zinc-900 dark:text-white">
-                  {appliedCount}
-                </p>
+                <p className="text-sm text-zinc-500 dark:text-zinc-400">Applied</p>
+                <p className="text-2xl font-bold text-zinc-900 dark:text-white">{appliedCount}</p>
               </div>
             </div>
           </div>
@@ -183,12 +173,8 @@ function MigrationHistoryContent() {
             <div className="flex items-center gap-3">
               <Clock className="h-8 w-8 text-yellow-500" />
               <div>
-                <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                  Pending
-                </p>
-                <p className="text-2xl font-bold text-zinc-900 dark:text-white">
-                  {pendingCount}
-                </p>
+                <p className="text-sm text-zinc-500 dark:text-zinc-400">Pending</p>
+                <p className="text-2xl font-bold text-zinc-900 dark:text-white">{pendingCount}</p>
               </div>
             </div>
           </div>
@@ -196,9 +182,7 @@ function MigrationHistoryContent() {
             <div className="flex items-center gap-3">
               <RotateCcw className="h-8 w-8 text-orange-500" />
               <div>
-                <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                  Rolled Back
-                </p>
+                <p className="text-sm text-zinc-500 dark:text-zinc-400">Rolled Back</p>
                 <p className="text-2xl font-bold text-zinc-900 dark:text-white">
                   {rolledBackCount}
                 </p>
@@ -230,9 +214,7 @@ function MigrationHistoryContent() {
         <div className="mb-6 flex flex-wrap gap-4">
           <div className="flex items-center gap-2">
             <Filter className="h-4 w-4 text-zinc-500" />
-            <span className="text-sm text-zinc-600 dark:text-zinc-400">
-              Filters:
-            </span>
+            <span className="text-sm text-zinc-600 dark:text-zinc-400">Filters:</span>
           </div>
           <div className="relative">
             <select
@@ -262,10 +244,7 @@ function MigrationHistoryContent() {
           ) : (
             <div className="divide-y divide-zinc-200 dark:divide-zinc-700">
               {migrations.map((migration) => (
-                <div
-                  key={migration.id}
-                  className="p-4 hover:bg-zinc-50 dark:hover:bg-zinc-700/50"
-                >
+                <div key={migration.id} className="p-4 hover:bg-zinc-50 dark:hover:bg-zinc-700/50">
                   <div className="flex items-start justify-between">
                     <div className="flex items-start gap-4">
                       {getStatusIcon(migration.status)}
@@ -320,12 +299,8 @@ function MigrationHistoryContent() {
                               <Clock className="h-3 w-3" />
                               {new Date(migration.appliedAt).toLocaleString()}
                             </span>
-                            {migration.duration && (
-                              <span>{migration.duration}ms</span>
-                            )}
-                            {migration.appliedBy && (
-                              <span>{migration.appliedBy}</span>
-                            )}
+                            {migration.duration && <span>{migration.duration}ms</span>}
+                            {migration.appliedBy && <span>{migration.appliedBy}</span>}
                           </div>
                         )}
                       </div>
@@ -369,24 +344,20 @@ function MigrationHistoryContent() {
           </h3>
           <div className="space-y-2 font-mono text-sm">
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-green-500">nself db migrate</span> - Apply
-              all pending migrations
+              <span className="text-green-500">nself db migrate</span> - Apply all pending
+              migrations
             </p>
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-green-500">nself db migrate --status</span>{' '}
-              - Show migration status
+              <span className="text-green-500">nself db migrate --status</span> - Show migration
+              status
             </p>
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-green-500">
-                nself db migrate --rollback
-              </span>{' '}
-              - Rollback last migration
+              <span className="text-green-500">nself db migrate --rollback</span> - Rollback last
+              migration
             </p>
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-green-500">
-                nself db migrate --to=20240118_001
-              </span>{' '}
-              - Migrate to specific version
+              <span className="text-green-500">nself db migrate --to=20240118_001</span> - Migrate
+              to specific version
             </p>
           </div>
         </div>

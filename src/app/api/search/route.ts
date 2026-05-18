@@ -27,9 +27,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     const dateFrom = searchParams.get('dateFrom')
       ? new Date(searchParams.get('dateFrom')!)
       : undefined
-    const dateTo = searchParams.get('dateTo')
-      ? new Date(searchParams.get('dateTo')!)
-      : undefined
+    const dateTo = searchParams.get('dateTo') ? new Date(searchParams.get('dateTo')!) : undefined
     const regex = searchParams.get('regex') === 'true'
     const caseSensitive = searchParams.get('caseSensitive') === 'true'
     const limit = parseInt(searchParams.get('limit') || '50', 10)
@@ -58,7 +56,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         error: 'Search failed',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

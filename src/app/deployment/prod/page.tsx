@@ -39,27 +39,18 @@ function ProductionContent() {
 
       if (data.success) {
         const output = data.status || ''
-        const isConfigured =
-          !output.includes('not-configured') && !output.includes('not found')
+        const isConfigured = !output.includes('not-configured') && !output.includes('not found')
 
         setStatus({
           configured: isConfigured,
-          environment:
-            extractValue(output, 'ENV') || extractValue(output, 'environment'),
-          domain:
-            extractValue(output, 'domain') ||
-            extractValue(output, 'BASE_DOMAIN'),
-          sslEnabled:
-            output.includes('SSL_ENABLED=true') ||
-            output.includes('SSL: enabled'),
+          environment: extractValue(output, 'ENV') || extractValue(output, 'environment'),
+          domain: extractValue(output, 'domain') || extractValue(output, 'BASE_DOMAIN'),
+          sslEnabled: output.includes('SSL_ENABLED=true') || output.includes('SSL: enabled'),
           secretsConfigured:
-            output.includes('secrets: configured') ||
-            output.includes('.env.secrets: found'),
+            output.includes('secrets: configured') || output.includes('.env.secrets: found'),
           hasuraConsoleDisabled:
-            output.includes('console: disabled') ||
-            output.includes('HASURA.*CONSOLE.*false'),
-          debugDisabled:
-            output.includes('DEBUG=false') || !output.includes('DEBUG=true'),
+            output.includes('console: disabled') || output.includes('HASURA.*CONSOLE.*false'),
+          debugDisabled: output.includes('DEBUG=false') || !output.includes('DEBUG=true'),
         })
       }
     } catch (error) {
@@ -78,10 +69,7 @@ function ProductionContent() {
     return match?.[1]
   }
 
-  const executeAction = async (
-    action: string,
-    options: Record<string, unknown> = {},
-  ) => {
+  const executeAction = async (action: string, options: Record<string, unknown> = {}) => {
     setActionLoading(action)
     setActionResult(null)
 
@@ -170,9 +158,7 @@ function ProductionContent() {
                 </svg>
               </div>
               <div>
-                <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                  Config
-                </p>
+                <p className="text-sm text-zinc-500 dark:text-zinc-400">Config</p>
                 <p
                   className={`font-semibold ${status?.configured ? 'text-green-600 dark:text-green-400' : 'text-yellow-600 dark:text-yellow-400'}`}
                 >
@@ -234,9 +220,7 @@ function ProductionContent() {
                 </svg>
               </div>
               <div>
-                <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                  Secrets
-                </p>
+                <p className="text-sm text-zinc-500 dark:text-zinc-400">Secrets</p>
                 <p
                   className={`font-semibold ${status?.secretsConfigured ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}
                 >
@@ -267,9 +251,7 @@ function ProductionContent() {
                 </svg>
               </div>
               <div>
-                <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                  Debug
-                </p>
+                <p className="text-sm text-zinc-500 dark:text-zinc-400">Debug</p>
                 <p
                   className={`font-semibold ${status?.debugDisabled ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}
                 >
@@ -286,9 +268,7 @@ function ProductionContent() {
             <h3 className="mb-4 text-lg font-semibold text-zinc-900 dark:text-white">
               Production Domain
             </h3>
-            <p className="font-mono text-xl text-zinc-900 dark:text-white">
-              {status.domain}
-            </p>
+            <p className="font-mono text-xl text-zinc-900 dark:text-white">{status.domain}</p>
           </div>
         )}
 
@@ -330,9 +310,7 @@ function ProductionContent() {
                   disabled={!initDomain || actionLoading === 'init'}
                   className="rounded-lg bg-blue-600 px-4 py-2 font-medium text-white transition-colors hover:bg-blue-700 disabled:opacity-50"
                 >
-                  {actionLoading === 'init'
-                    ? 'Initializing...'
-                    : 'Initialize Production'}
+                  {actionLoading === 'init' ? 'Initializing...' : 'Initialize Production'}
                 </button>
                 <button
                   type="button"
@@ -397,12 +375,7 @@ function ProductionContent() {
                 onClick={() => setActionResult(null)}
                 className="text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300"
               >
-                <svg
-                  className="h-5 w-5"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
+                <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
@@ -428,12 +401,7 @@ function ProductionContent() {
                   onClick={() => setShowInitForm(true)}
                   className="flex items-center gap-3 rounded-lg bg-blue-600 px-4 py-3 font-medium text-white transition-colors hover:bg-blue-700"
                 >
-                  <svg
-                    className="h-5 w-5"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
+                  <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
@@ -446,18 +414,11 @@ function ProductionContent() {
               )}
 
               <button
-                onClick={() =>
-                  executeAction('secrets', { secretAction: 'generate' })
-                }
+                onClick={() => executeAction('secrets', { secretAction: 'generate' })}
                 disabled={actionLoading !== null}
                 className="flex items-center gap-3 rounded-lg border border-zinc-300 px-4 py-3 font-medium text-zinc-700 transition-colors hover:bg-zinc-50 disabled:opacity-50 dark:border-zinc-600 dark:text-zinc-300 dark:hover:bg-zinc-700"
               >
-                <svg
-                  className="h-5 w-5"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
+                <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
@@ -465,24 +426,15 @@ function ProductionContent() {
                     d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"
                   />
                 </svg>
-                {actionLoading === 'secrets'
-                  ? 'Generating...'
-                  : 'Generate Production Secrets'}
+                {actionLoading === 'secrets' ? 'Generating...' : 'Generate Production Secrets'}
               </button>
 
               <button
-                onClick={() =>
-                  executeAction('secrets', { secretAction: 'validate' })
-                }
+                onClick={() => executeAction('secrets', { secretAction: 'validate' })}
                 disabled={actionLoading !== null}
                 className="flex items-center gap-3 rounded-lg border border-zinc-300 px-4 py-3 font-medium text-zinc-700 transition-colors hover:bg-zinc-50 disabled:opacity-50 dark:border-zinc-600 dark:text-zinc-300 dark:hover:bg-zinc-700"
               >
-                <svg
-                  className="h-5 w-5"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
+                <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
@@ -490,9 +442,7 @@ function ProductionContent() {
                     d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
                   />
                 </svg>
-                {actionLoading === 'secrets-validate'
-                  ? 'Validating...'
-                  : 'Validate Secrets'}
+                {actionLoading === 'secrets-validate' ? 'Validating...' : 'Validate Secrets'}
               </button>
             </div>
           </div>
@@ -508,12 +458,7 @@ function ProductionContent() {
                 disabled={actionLoading !== null}
                 className="flex items-center gap-3 rounded-lg border border-zinc-300 px-4 py-3 font-medium text-zinc-700 transition-colors hover:bg-zinc-50 disabled:opacity-50 dark:border-zinc-600 dark:text-zinc-300 dark:hover:bg-zinc-700"
               >
-                <svg
-                  className="h-5 w-5"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
+                <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
@@ -521,9 +466,7 @@ function ProductionContent() {
                     d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
                   />
                 </svg>
-                {actionLoading === 'ssl-status'
-                  ? 'Checking...'
-                  : 'Check SSL Status'}
+                {actionLoading === 'ssl-status' ? 'Checking...' : 'Check SSL Status'}
               </button>
 
               <button
@@ -536,12 +479,7 @@ function ProductionContent() {
                 disabled={!status?.domain || actionLoading !== null}
                 className="flex items-center gap-3 rounded-lg border border-zinc-300 px-4 py-3 font-medium text-zinc-700 transition-colors hover:bg-zinc-50 disabled:opacity-50 dark:border-zinc-600 dark:text-zinc-300 dark:hover:bg-zinc-700"
               >
-                <svg
-                  className="h-5 w-5"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
+                <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
@@ -559,12 +497,7 @@ function ProductionContent() {
                 disabled={actionLoading !== null}
                 className="flex items-center gap-3 rounded-lg border border-zinc-300 px-4 py-3 font-medium text-zinc-700 transition-colors hover:bg-zinc-50 disabled:opacity-50 dark:border-zinc-600 dark:text-zinc-300 dark:hover:bg-zinc-700"
               >
-                <svg
-                  className="h-5 w-5"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
+                <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
@@ -572,30 +505,21 @@ function ProductionContent() {
                     d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
                   />
                 </svg>
-                {actionLoading === 'ssl-renew'
-                  ? 'Renewing...'
-                  : 'Renew SSL Certificate'}
+                {actionLoading === 'ssl-renew' ? 'Renewing...' : 'Renew SSL Certificate'}
               </button>
             </div>
           </div>
 
           {/* Security Actions */}
           <div className="rounded-xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-zinc-700 dark:bg-zinc-800">
-            <h3 className="mb-4 text-lg font-semibold text-zinc-900 dark:text-white">
-              Security
-            </h3>
+            <h3 className="mb-4 text-lg font-semibold text-zinc-900 dark:text-white">Security</h3>
             <div className="grid gap-3">
               <button
                 onClick={() => executeAction('check', { verbose: true })}
                 disabled={actionLoading !== null}
                 className="flex items-center gap-3 rounded-lg border border-zinc-300 px-4 py-3 font-medium text-zinc-700 transition-colors hover:bg-zinc-50 disabled:opacity-50 dark:border-zinc-600 dark:text-zinc-300 dark:hover:bg-zinc-700"
               >
-                <svg
-                  className="h-5 w-5"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
+                <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
@@ -603,24 +527,15 @@ function ProductionContent() {
                     d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"
                   />
                 </svg>
-                {actionLoading === 'check'
-                  ? 'Auditing...'
-                  : 'Run Security Audit'}
+                {actionLoading === 'check' ? 'Auditing...' : 'Run Security Audit'}
               </button>
 
               <button
-                onClick={() =>
-                  executeAction('firewall', { firewallAction: 'status' })
-                }
+                onClick={() => executeAction('firewall', { firewallAction: 'status' })}
                 disabled={actionLoading !== null}
                 className="flex items-center gap-3 rounded-lg border border-zinc-300 px-4 py-3 font-medium text-zinc-700 transition-colors hover:bg-zinc-50 disabled:opacity-50 dark:border-zinc-600 dark:text-zinc-300 dark:hover:bg-zinc-700"
               >
-                <svg
-                  className="h-5 w-5"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
+                <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
@@ -628,9 +543,7 @@ function ProductionContent() {
                     d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
                   />
                 </svg>
-                {actionLoading === 'firewall-status'
-                  ? 'Checking...'
-                  : 'Check Firewall Status'}
+                {actionLoading === 'firewall-status' ? 'Checking...' : 'Check Firewall Status'}
               </button>
 
               <button
@@ -638,12 +551,7 @@ function ProductionContent() {
                 disabled={actionLoading !== null}
                 className="flex items-center gap-3 rounded-lg border border-yellow-300 bg-yellow-50 px-4 py-3 font-medium text-yellow-700 transition-colors hover:bg-yellow-100 disabled:opacity-50 dark:border-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400 dark:hover:bg-yellow-900/30"
               >
-                <svg
-                  className="h-5 w-5"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
+                <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
@@ -651,9 +559,7 @@ function ProductionContent() {
                     d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
                   />
                 </svg>
-                {actionLoading === 'harden-dry'
-                  ? 'Running...'
-                  : 'Preview Hardening (Dry Run)'}
+                {actionLoading === 'harden-dry' ? 'Running...' : 'Preview Hardening (Dry Run)'}
               </button>
 
               <button
@@ -661,12 +567,7 @@ function ProductionContent() {
                 disabled={actionLoading !== null}
                 className="flex items-center gap-3 rounded-lg bg-orange-600 px-4 py-3 font-medium text-white transition-colors hover:bg-orange-700 disabled:opacity-50"
               >
-                <svg
-                  className="h-5 w-5"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
+                <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
@@ -674,30 +575,21 @@ function ProductionContent() {
                     d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
                   />
                 </svg>
-                {actionLoading === 'harden'
-                  ? 'Hardening...'
-                  : 'Apply Security Hardening'}
+                {actionLoading === 'harden' ? 'Hardening...' : 'Apply Security Hardening'}
               </button>
             </div>
           </div>
 
           {/* Deployment Actions */}
           <div className="rounded-xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-zinc-700 dark:bg-zinc-800">
-            <h3 className="mb-4 text-lg font-semibold text-zinc-900 dark:text-white">
-              Deployment
-            </h3>
+            <h3 className="mb-4 text-lg font-semibold text-zinc-900 dark:text-white">Deployment</h3>
             <div className="grid gap-3">
               <button
                 onClick={() => executeAction('deploy', { dryRun: true })}
                 disabled={!status?.configured || actionLoading !== null}
                 className="flex items-center gap-3 rounded-lg border border-zinc-300 px-4 py-3 font-medium text-zinc-700 transition-colors hover:bg-zinc-50 disabled:opacity-50 dark:border-zinc-600 dark:text-zinc-300 dark:hover:bg-zinc-700"
               >
-                <svg
-                  className="h-5 w-5"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
+                <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
@@ -711,9 +603,7 @@ function ProductionContent() {
                     d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
                   />
                 </svg>
-                {actionLoading === 'deploy-dry'
-                  ? 'Running...'
-                  : 'Preview Deploy (Dry Run)'}
+                {actionLoading === 'deploy-dry' ? 'Running...' : 'Preview Deploy (Dry Run)'}
               </button>
 
               <button
@@ -721,12 +611,7 @@ function ProductionContent() {
                 disabled={!status?.configured || actionLoading !== null}
                 className="flex items-center gap-3 rounded-lg bg-red-600 px-4 py-3 font-medium text-white transition-colors hover:bg-red-700 disabled:opacity-50"
               >
-                <svg
-                  className="h-5 w-5"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
+                <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
@@ -734,9 +619,7 @@ function ProductionContent() {
                     d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
                   />
                 </svg>
-                {actionLoading === 'deploy'
-                  ? 'Deploying...'
-                  : 'Deploy to Production (Rolling)'}
+                {actionLoading === 'deploy' ? 'Deploying...' : 'Deploy to Production (Rolling)'}
               </button>
             </div>
           </div>
@@ -792,9 +675,7 @@ function ProductionContent() {
                   </svg>
                 )}
               </div>
-              <span className="text-zinc-700 dark:text-zinc-300">
-                Generate production secrets
-              </span>
+              <span className="text-zinc-700 dark:text-zinc-300">Generate production secrets</span>
             </div>
             <div className="flex items-center gap-3">
               <div
@@ -816,9 +697,7 @@ function ProductionContent() {
                   </svg>
                 )}
               </div>
-              <span className="text-zinc-700 dark:text-zinc-300">
-                Configure SSL certificates
-              </span>
+              <span className="text-zinc-700 dark:text-zinc-300">Configure SSL certificates</span>
             </div>
             <div className="flex items-center gap-3">
               <div
@@ -840,21 +719,15 @@ function ProductionContent() {
                   </svg>
                 )}
               </div>
-              <span className="text-zinc-700 dark:text-zinc-300">
-                Disable debug mode
-              </span>
+              <span className="text-zinc-700 dark:text-zinc-300">Disable debug mode</span>
             </div>
             <div className="flex items-center gap-3">
               <div className="h-5 w-5 rounded-full bg-zinc-300" />
-              <span className="text-zinc-700 dark:text-zinc-300">
-                Run security audit
-              </span>
+              <span className="text-zinc-700 dark:text-zinc-300">Run security audit</span>
             </div>
             <div className="flex items-center gap-3">
               <div className="h-5 w-5 rounded-full bg-zinc-300" />
-              <span className="text-zinc-700 dark:text-zinc-300">
-                Deploy to production
-              </span>
+              <span className="text-zinc-700 dark:text-zinc-300">Deploy to production</span>
             </div>
           </div>
         </div>

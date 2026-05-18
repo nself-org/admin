@@ -23,10 +23,7 @@ jest.mock('@/lib/database', () => ({
 // Stub global fetch to simulate vibe_api being unreachable.
 const originalFetch = global.fetch
 
-function makePostRequest(
-  url: string,
-  body: Record<string, unknown>,
-): NextRequest {
+function makePostRequest(url: string, body: Record<string, unknown>): NextRequest {
   return new NextRequest(url, {
     method: 'POST',
     headers: {
@@ -58,7 +55,7 @@ describe('vibe routes — vibe_api offline returns 503, no stub data', () => {
     global.fetch = jest.fn().mockRejectedValue(
       Object.assign(new Error('fetch failed'), {
         cause: { code: 'ECONNREFUSED' },
-      }),
+      })
     )
   })
 
@@ -109,7 +106,7 @@ describe('vibe routes — vibe_api offline returns 503, no stub data', () => {
     it('returns 503 with X-Service-Required: vibe_api when vibe_api is unreachable', async () => {
       const { GET } = await import('../stream/route')
       const req = makeGetRequest(
-        'http://localhost:3021/api/vibe/stream?session_id=sess-001&generation_id=gen-001',
+        'http://localhost:3021/api/vibe/stream?session_id=sess-001&generation_id=gen-001'
       )
       const res = await GET(req)
 

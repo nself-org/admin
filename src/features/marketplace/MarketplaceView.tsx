@@ -13,21 +13,17 @@ interface MarketplaceViewProps {
 
 export function MarketplaceView({ initialCategory }: MarketplaceViewProps) {
   const [search, setSearch] = useState('')
-  const [category, setCategory] = useState<PluginCategory | 'all'>(
-    initialCategory ?? 'all',
-  )
+  const [category, setCategory] = useState<PluginCategory | 'all'>(initialCategory ?? 'all')
 
   const { data, error, isLoading } = useSWR<{ plugins: MarketplacePlugin[] }>(
     '/api/marketplace/plugins',
-    fetcher,
+    fetcher
   )
   const { data: installedData } = useSWR<{ plugins: Array<{ name: string }> }>(
     '/api/plugins/installed',
-    fetcher,
+    fetcher
   )
-  const installedNames = new Set(
-    installedData?.plugins.map((p) => p.name) ?? [],
-  )
+  const installedNames = new Set(installedData?.plugins.map((p) => p.name) ?? [])
 
   const plugins = (data?.plugins ?? []).filter((p) => {
     const matchesSearch =
@@ -70,9 +66,7 @@ export function MarketplaceView({ initialCategory }: MarketplaceViewProps) {
         </div>
         <select
           value={category}
-          onChange={(e) =>
-            setCategory(e.target.value as PluginCategory | 'all')
-          }
+          onChange={(e) => setCategory(e.target.value as PluginCategory | 'all')}
           className="rounded-lg border border-gray-800 bg-gray-900 px-3 py-2 text-sm text-gray-200 focus:border-indigo-500 focus:outline-none"
         >
           <option value="all">All categories</option>
@@ -86,9 +80,7 @@ export function MarketplaceView({ initialCategory }: MarketplaceViewProps) {
       </div>
 
       {plugins.length === 0 ? (
-        <div className="py-12 text-center text-sm text-gray-500">
-          No plugins match your search.
-        </div>
+        <div className="py-12 text-center text-sm text-gray-500">No plugins match your search.</div>
       ) : (
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {plugins.map((plugin) => {
@@ -101,9 +93,7 @@ export function MarketplaceView({ initialCategory }: MarketplaceViewProps) {
                 <div className="mb-2 flex items-start justify-between">
                   <div className="flex items-center gap-2">
                     <Plug className="h-4 w-4 text-indigo-400" />
-                    <span className="text-sm font-medium text-gray-200">
-                      {plugin.name}
-                    </span>
+                    <span className="text-sm font-medium text-gray-200">{plugin.name}</span>
                   </div>
                   {isInstalled && (
                     <span className="rounded-full bg-green-900/40 px-2 py-0.5 text-xs text-green-400">
@@ -111,9 +101,7 @@ export function MarketplaceView({ initialCategory }: MarketplaceViewProps) {
                     </span>
                   )}
                 </div>
-                <p className="line-clamp-2 text-xs text-gray-400">
-                  {plugin.description}
-                </p>
+                <p className="line-clamp-2 text-xs text-gray-400">{plugin.description}</p>
               </div>
             )
           })}

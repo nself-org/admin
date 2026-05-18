@@ -84,11 +84,7 @@ export function EnvImportExport({
 
   return (
     <div className="relative">
-      <Button
-        variant="outline"
-        onClick={() => setShowMenu(!showMenu)}
-        title="Bulk operations"
-      >
+      <Button variant="outline" onClick={() => setShowMenu(!showMenu)} title="Bulk operations">
         <Icons.MoreVertical className="h-3 w-3" />
       </Button>
 
@@ -199,9 +195,7 @@ export function EnvImportExport({
                 />
               </div>
               <div>
-                <label className="mb-1 block text-sm font-medium">
-                  Replace with
-                </label>
+                <label className="mb-1 block text-sm font-medium">Replace with</label>
                 <input
                   type="text"
                   value={replaceText}
@@ -236,14 +230,12 @@ export function EnvImportExport({
       {showCopyFrom && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
           <div className="w-full max-w-md rounded-xl bg-white p-6 shadow-xl dark:bg-zinc-800">
-            <h3 className="mb-4 text-lg font-semibold">
-              Copy from Environment
-            </h3>
+            <h3 className="mb-4 text-lg font-semibold">Copy from Environment</h3>
             <div className="space-y-3">
               <p className="text-sm text-zinc-600 dark:text-zinc-400">
                 Copy all variables from another environment to{' '}
-                <span className="font-mono">.env.{environment}</span>. This will
-                overwrite existing values.
+                <span className="font-mono">.env.{environment}</span>. This will overwrite existing
+                values.
               </p>
               <select
                 value={sourceEnv}

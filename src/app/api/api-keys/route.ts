@@ -26,7 +26,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to fetch API keys',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -67,7 +67,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     if (!body.name || !body.scope) {
       return NextResponse.json(
         { success: false, error: 'name and scope are required' },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -79,7 +79,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           success: false,
           error: `Invalid scope. Must be one of: ${validScopes.join(', ')}`,
         },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -92,7 +92,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         key: result.key,
         secretKey: result.secretKey, // Only shown once!
       },
-      { status: 201 },
+      { status: 201 }
     )
   } catch (error) {
     return NextResponse.json(
@@ -101,7 +101,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to create API key',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

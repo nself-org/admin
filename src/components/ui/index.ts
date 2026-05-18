@@ -55,26 +55,13 @@ export { FormSection } from './form-section'
 export { Input } from './input'
 export { Label } from './label'
 export { MultiSelect } from './multi-select'
-export {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from './select'
+export { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './select'
 export { Switch } from './switch'
 export { Textarea } from './textarea'
 export { TimePicker } from './time-picker'
 
 // Layout Components
-export {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from './card'
+export { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from './card'
 export {
   Dialog,
   DialogClose,

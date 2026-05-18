@@ -23,10 +23,7 @@ export async function GET(): Promise<NextResponse> {
       const dockerComposePath = path.join(projectPath, 'docker-compose.yml')
 
       try {
-        const dockerComposeContent = await fs.readFile(
-          dockerComposePath,
-          'utf8',
-        )
+        const dockerComposeContent = await fs.readFile(dockerComposePath, 'utf8')
         const projectMatch = dockerComposeContent.match(/# Project: ([^\s\n]+)/)
         if (projectMatch) {
           projectPrefix = projectMatch[1].trim()
@@ -57,7 +54,7 @@ export async function GET(): Promise<NextResponse> {
         lowerName.startsWith('nself-') ||
         // Also check if container name contains common nself service names
         ['postgres', 'hasura', 'grafana', 'prometheus'].some((service) =>
-          lowerName.includes(service),
+          lowerName.includes(service)
         )
       )
     })
@@ -83,9 +80,7 @@ export async function GET(): Promise<NextResponse> {
 
           // Filter for network interface lines (eth0, eth1, ens1, etc.)
           const lines = stdout.split('\n')
-          const interfaceLine = lines.find((line) =>
-            /^\s*(eth[0-9]+|ens[0-9]+):/.test(line),
-          )
+          const interfaceLine = lines.find((line) => /^\s*(eth[0-9]+|ens[0-9]+):/.test(line))
 
           if (interfaceLine) {
             // Parse the network stats line
@@ -117,7 +112,7 @@ export async function GET(): Promise<NextResponse> {
             txBytes: 0,
           }
         }
-      }),
+      })
     )
 
     return NextResponse.json({
@@ -128,7 +123,7 @@ export async function GET(): Promise<NextResponse> {
   } catch {
     return NextResponse.json(
       { success: false, error: 'Failed to get Docker network statistics' },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

@@ -34,9 +34,7 @@ function EnvironmentsContent() {
   // Create form state
   const [showCreateForm, setShowCreateForm] = useState(false)
   const [newEnvName, setNewEnvName] = useState('')
-  const [newEnvTemplate, setNewEnvTemplate] = useState<
-    'local' | 'staging' | 'prod'
-  >('local')
+  const [newEnvTemplate, setNewEnvTemplate] = useState<'local' | 'staging' | 'prod'>('local')
 
   const fetchEnvironments = useCallback(async () => {
     try {
@@ -58,10 +56,7 @@ function EnvironmentsContent() {
     fetchEnvironments()
   }, [fetchEnvironments])
 
-  const executeAction = async (
-    action: string,
-    options: Record<string, unknown> = {},
-  ) => {
+  const executeAction = async (action: string, options: Record<string, unknown> = {}) => {
     setActionLoading(action)
     setActionResult(null)
 
@@ -120,12 +115,7 @@ function EnvironmentsContent() {
     switch (type) {
       case 'local':
         return (
-          <svg
-            className="h-5 w-5"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
+          <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -136,12 +126,7 @@ function EnvironmentsContent() {
         )
       case 'staging':
         return (
-          <svg
-            className="h-5 w-5"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
+          <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -152,12 +137,7 @@ function EnvironmentsContent() {
         )
       case 'production':
         return (
-          <svg
-            className="h-5 w-5"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
+          <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -168,12 +148,7 @@ function EnvironmentsContent() {
         )
       default:
         return (
-          <svg
-            className="h-5 w-5"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
+          <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -209,20 +184,14 @@ function EnvironmentsContent() {
                 Environments
               </h1>
               <p className="mt-3 text-lg text-zinc-600 dark:text-zinc-400">
-                Manage deployment environments for local, staging, and
-                production
+                Manage deployment environments for local, staging, and production
               </p>
             </div>
             <button
               onClick={() => setShowCreateForm(true)}
               className="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 font-medium text-white transition-colors hover:bg-blue-700"
             >
-              <svg
-                className="h-5 w-5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
+              <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -279,9 +248,7 @@ function EnvironmentsContent() {
                   <select
                     value={newEnvTemplate}
                     onChange={(e) =>
-                      setNewEnvTemplate(
-                        e.target.value as 'local' | 'staging' | 'prod',
-                      )
+                      setNewEnvTemplate(e.target.value as 'local' | 'staging' | 'prod')
                     }
                     className="w-full rounded-lg border border-zinc-300 bg-white px-4 py-2 text-zinc-900 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none dark:border-zinc-600 dark:bg-zinc-800 dark:text-white"
                   >
@@ -297,9 +264,7 @@ function EnvironmentsContent() {
                   disabled={!newEnvName || actionLoading === 'create'}
                   className="rounded-lg bg-blue-600 px-4 py-2 font-medium text-white transition-colors hover:bg-blue-700 disabled:opacity-50"
                 >
-                  {actionLoading === 'create'
-                    ? 'Creating...'
-                    : 'Create Environment'}
+                  {actionLoading === 'create' ? 'Creating...' : 'Create Environment'}
                 </button>
                 <button
                   type="button"
@@ -364,12 +329,7 @@ function EnvironmentsContent() {
                 onClick={() => setActionResult(null)}
                 className="text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300"
               >
-                <svg
-                  className="h-5 w-5"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
+                <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
@@ -404,19 +364,13 @@ function EnvironmentsContent() {
               No Environments Found
             </h3>
             <p className="mb-6 text-zinc-600 dark:text-zinc-400">
-              Create your first environment to get started with
-              multi-environment deployment.
+              Create your first environment to get started with multi-environment deployment.
             </p>
             <button
               onClick={() => setShowCreateForm(true)}
               className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 font-medium text-white transition-colors hover:bg-blue-700"
             >
-              <svg
-                className="h-5 w-5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
+              <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -447,9 +401,7 @@ function EnvironmentsContent() {
                       {getTypeIcon(env.type)}
                     </div>
                     <div>
-                      <h3 className="font-semibold text-zinc-900 dark:text-white">
-                        {env.name}
-                      </h3>
+                      <h3 className="font-semibold text-zinc-900 dark:text-white">{env.name}</h3>
                       <span
                         className={`inline-block rounded px-2 py-0.5 text-xs font-medium capitalize ${getTypeColor(env.type)}`}
                       >
@@ -470,25 +422,19 @@ function EnvironmentsContent() {
                     <div
                       className={`h-2 w-2 rounded-full ${env.hasEnv ? 'bg-green-500' : 'bg-red-500'}`}
                     />
-                    <span className="text-zinc-600 dark:text-zinc-400">
-                      .env file
-                    </span>
+                    <span className="text-zinc-600 dark:text-zinc-400">.env file</span>
                   </div>
                   <div className="flex items-center gap-2 text-sm">
                     <div
                       className={`h-2 w-2 rounded-full ${env.hasSecrets ? 'bg-green-500' : 'bg-yellow-500'}`}
                     />
-                    <span className="text-zinc-600 dark:text-zinc-400">
-                      .env.secrets
-                    </span>
+                    <span className="text-zinc-600 dark:text-zinc-400">.env.secrets</span>
                   </div>
                   <div className="flex items-center gap-2 text-sm">
                     <div
                       className={`h-2 w-2 rounded-full ${env.hasServer ? 'bg-green-500' : 'bg-zinc-300'}`}
                     />
-                    <span className="text-zinc-600 dark:text-zinc-400">
-                      server.json
-                    </span>
+                    <span className="text-zinc-600 dark:text-zinc-400">server.json</span>
                   </div>
                 </div>
 
@@ -510,21 +456,15 @@ function EnvironmentsContent() {
                 <div className="flex gap-2">
                   {!env.isCurrent && (
                     <button
-                      onClick={() =>
-                        executeAction('switch', { name: env.name })
-                      }
+                      onClick={() => executeAction('switch', { name: env.name })}
                       disabled={actionLoading !== null}
                       className="flex-1 rounded-lg border border-zinc-300 px-3 py-2 text-sm font-medium text-zinc-700 transition-colors hover:bg-zinc-50 disabled:opacity-50 dark:border-zinc-600 dark:text-zinc-300 dark:hover:bg-zinc-700"
                     >
-                      {actionLoading === `switch-${env.name}`
-                        ? 'Switching...'
-                        : 'Switch'}
+                      {actionLoading === `switch-${env.name}` ? 'Switching...' : 'Switch'}
                     </button>
                   )}
                   <button
-                    onClick={() =>
-                      executeAction('validate', { name: env.name })
-                    }
+                    onClick={() => executeAction('validate', { name: env.name })}
                     disabled={actionLoading !== null}
                     className="flex-1 rounded-lg border border-zinc-300 px-3 py-2 text-sm font-medium text-zinc-700 transition-colors hover:bg-zinc-50 disabled:opacity-50 dark:border-zinc-600 dark:text-zinc-300 dark:hover:bg-zinc-700"
                   >
@@ -532,9 +472,7 @@ function EnvironmentsContent() {
                   </button>
                   {env.type !== 'local' && !env.isCurrent && (
                     <button
-                      onClick={() =>
-                        executeAction('delete', { name: env.name, force: true })
-                      }
+                      onClick={() => executeAction('delete', { name: env.name, force: true })}
                       disabled={actionLoading !== null}
                       className="rounded-lg border border-red-300 px-3 py-2 text-sm font-medium text-red-600 transition-colors hover:bg-red-50 disabled:opacity-50 dark:border-red-800 dark:text-red-400 dark:hover:bg-red-900/20"
                     >
@@ -566,28 +504,27 @@ function EnvironmentsContent() {
           </h3>
           <div className="space-y-2 font-mono text-sm">
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-blue-500">nself env list</span> - List all
-              environments
+              <span className="text-blue-500">nself env list</span> - List all environments
             </p>
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-blue-500">nself env create</span>{' '}
-              &lt;name&gt; [template] - Create environment
+              <span className="text-blue-500">nself env create</span> &lt;name&gt; [template] -
+              Create environment
             </p>
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-blue-500">nself env switch</span>{' '}
-              &lt;name&gt; - Switch to environment
+              <span className="text-blue-500">nself env switch</span> &lt;name&gt; - Switch to
+              environment
             </p>
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-blue-500">nself env status</span> - Show
-              current environment status
+              <span className="text-blue-500">nself env status</span> - Show current environment
+              status
             </p>
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-blue-500">nself env diff</span> &lt;env1&gt;
-              &lt;env2&gt; - Compare environments
+              <span className="text-blue-500">nself env diff</span> &lt;env1&gt; &lt;env2&gt; -
+              Compare environments
             </p>
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-blue-500">nself env validate</span> [name] -
-              Validate environment config
+              <span className="text-blue-500">nself env validate</span> [name] - Validate
+              environment config
             </p>
           </div>
         </div>

@@ -12,19 +12,12 @@ export interface TokenHealthTableProps {
   onBulkInvalidate?: (ids: string[]) => void
 }
 
-export function TokenHealthTable({
-  tokens,
-  isLoading,
-  onBulkInvalidate,
-}: TokenHealthTableProps) {
+export function TokenHealthTable({ tokens, isLoading, onBulkInvalidate }: TokenHealthTableProps) {
   if (isLoading) {
     return (
       <div className="space-y-2">
         {[1, 2, 3, 4, 5].map((n) => (
-          <div
-            key={n}
-            className="h-10 animate-pulse rounded bg-zinc-100 dark:bg-zinc-800"
-          />
+          <div key={n} className="h-10 animate-pulse rounded bg-zinc-100 dark:bg-zinc-800" />
         ))}
       </div>
     )
@@ -99,9 +92,7 @@ export function TokenHealthTable({
                   )}
                 </td>
                 <td className="px-4 py-3 text-zinc-500 dark:text-zinc-400">
-                  {token.lastSeen
-                    ? new Date(token.lastSeen).toLocaleDateString()
-                    : '—'}
+                  {token.lastSeen ? new Date(token.lastSeen).toLocaleDateString() : '—'}
                 </td>
               </tr>
             ))}

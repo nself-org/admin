@@ -11,12 +11,7 @@
  */
 
 import en from '../../locales/en.json'
-import {
-  DEFAULT_LOCALE,
-  type Locale,
-  type Messages,
-  SUPPORTED_LOCALES,
-} from './types'
+import { DEFAULT_LOCALE, type Locale, type Messages, SUPPORTED_LOCALES } from './types'
 
 const BUNDLES: Record<Locale, Messages> = {
   en: en as Messages,
@@ -42,10 +37,7 @@ function resolveKey(messages: Messages, keyPath: string): string {
 }
 
 /** Interpolate {placeholder} tokens from a params record. */
-function interpolate(
-  template: string,
-  params?: Record<string, string | number>,
-): string {
+function interpolate(template: string, params?: Record<string, string | number>): string {
   if (params === undefined) return template
   return template.replace(/\{(\w+)\}/g, (_match, name: string) => {
     const val = params[name]
@@ -60,7 +52,7 @@ function interpolate(
 export function translate(
   locale: Locale,
   keyPath: string,
-  params?: Record<string, string | number>,
+  params?: Record<string, string | number>
 ): string {
   const bundle = BUNDLES[locale] ?? BUNDLES[DEFAULT_LOCALE]
   const raw = resolveKey(bundle, keyPath)

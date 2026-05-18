@@ -4,13 +4,7 @@ import { TableSkeleton } from '@/components/skeletons'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import {
@@ -103,7 +97,6 @@ function DatabaseSchemaContent() {
     }
   }, [])
 
-
   useEffect(() => {
     fetchSchema()
   }, [fetchSchema])
@@ -123,9 +116,7 @@ function DatabaseSchemaContent() {
           if (!col.nullable) modifiers.push('not null')
           if (col.default) modifiers.push(`default: ${col.default}`)
           if (col.isForeignKey && col.references) {
-            modifiers.push(
-              `ref: > ${col.references.table}.${col.references.column}`,
-            )
+            modifiers.push(`ref: > ${col.references.table}.${col.references.column}`)
           }
           if (modifiers.length > 0) {
             colDef += ` [${modifiers.join(', ')}]`
@@ -160,9 +151,7 @@ function DatabaseSchemaContent() {
   const filteredTables = tables.filter(
     (table) =>
       table.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      table.columns.some((col) =>
-        col.name.toLowerCase().includes(searchQuery.toLowerCase()),
-      ),
+      table.columns.some((col) => col.name.toLowerCase().includes(searchQuery.toLowerCase()))
   )
 
   const formatNumber = (num: number) => {
@@ -172,18 +161,13 @@ function DatabaseSchemaContent() {
   const totalRows = tables.reduce((acc, t) => acc + t.rowCount, 0)
   const totalColumns = tables.reduce((acc, t) => acc + t.columns.length, 0)
   const totalIndexes = tables.reduce((acc, t) => acc + t.indexes.length, 0)
-  const totalForeignKeys = tables.reduce(
-    (acc, t) => acc + t.foreignKeys.length,
-    0,
-  )
+  const totalForeignKeys = tables.reduce((acc, t) => acc + t.foreignKeys.length, 0)
 
   if (isLoading) {
     return (
       <div className="space-y-6 p-6">
         <div>
-          <h1 className="text-2xl font-bold text-zinc-900 dark:text-white">
-            Database Schema
-          </h1>
+          <h1 className="text-2xl font-bold text-zinc-900 dark:text-white">Database Schema</h1>
           <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
             View and explore your database schema
           </p>
@@ -198,9 +182,7 @@ function DatabaseSchemaContent() {
   return (
     <div className="space-y-6 p-6">
       <div>
-        <h1 className="text-2xl font-bold text-zinc-900 dark:text-white">
-          Database Schema
-        </h1>
+        <h1 className="text-2xl font-bold text-zinc-900 dark:text-white">Database Schema</h1>
         <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
           View and explore your database schema
         </p>
@@ -211,8 +193,8 @@ function DatabaseSchemaContent() {
           <Database className="h-4 w-4" />
           <AlertTitle>Schema Viewer</AlertTitle>
           <AlertDescription>
-            Explore your database tables, columns, indexes, and relationships.
-            Click on a table to view detailed information.
+            Explore your database tables, columns, indexes, and relationships. Click on a table to
+            view detailed information.
           </AlertDescription>
         </Alert>
 
@@ -261,12 +243,8 @@ function DatabaseSchemaContent() {
             <CardContent className="pt-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-zinc-500">
-                    Total Rows
-                  </p>
-                  <p className="mt-1 text-2xl font-bold">
-                    {formatNumber(totalRows)}
-                  </p>
+                  <p className="text-sm font-medium text-zinc-500">Total Rows</p>
+                  <p className="mt-1 text-2xl font-bold">{formatNumber(totalRows)}</p>
                 </div>
                 <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-sky-500/10">
                   <Database className="h-6 w-6 text-sky-500" />
@@ -288,9 +266,7 @@ function DatabaseSchemaContent() {
             />
           </div>
           <Button variant="outline" onClick={fetchSchema} disabled={isLoading}>
-            <RefreshCw
-              className={`mr-2 h-4 w-4 ${isLoading ? 'animate-spin' : ''}`}
-            />
+            <RefreshCw className={`mr-2 h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} />
             Refresh
           </Button>
           <Button onClick={exportDBML} disabled={isExporting}>
@@ -360,9 +336,7 @@ function DatabaseSchemaContent() {
                             <p className="font-medium text-zinc-900 dark:text-white">
                               {table.name}
                             </p>
-                            <p className="text-xs text-zinc-500">
-                              {table.schema}
-                            </p>
+                            <p className="text-xs text-zinc-500">{table.schema}</p>
                           </div>
                         </div>
                       </td>
@@ -376,9 +350,7 @@ function DatabaseSchemaContent() {
                         <Badge
                           variant="outline"
                           className={
-                            table.foreignKeys.length > 0
-                              ? 'bg-sky-500/10 text-sky-500'
-                              : ''
+                            table.foreignKeys.length > 0 ? 'bg-sky-500/10 text-sky-500' : ''
                           }
                         >
                           {table.foreignKeys.length}
@@ -408,9 +380,7 @@ function DatabaseSchemaContent() {
                 <Link2 className="h-5 w-5" />
                 Table Relationships
               </CardTitle>
-              <CardDescription>
-                Foreign key relationships between tables
-              </CardDescription>
+              <CardDescription>Foreign key relationships between tables</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-3">
@@ -424,28 +394,21 @@ function DatabaseSchemaContent() {
                       >
                         <div className="flex items-center gap-2">
                           <Badge variant="outline">{table.name}</Badge>
-                          <span className="text-sm text-zinc-500">
-                            .{fk.column}
-                          </span>
+                          <span className="text-sm text-zinc-500">.{fk.column}</span>
                         </div>
                         <ArrowRight className="h-4 w-4 text-zinc-400" />
                         <div className="flex items-center gap-2">
-                          <Badge
-                            variant="outline"
-                            className="bg-sky-500/10 text-sky-500"
-                          >
+                          <Badge variant="outline" className="bg-sky-500/10 text-sky-500">
                             {fk.referencesTable}
                           </Badge>
-                          <span className="text-sm text-zinc-500">
-                            .{fk.referencesColumn}
-                          </span>
+                          <span className="text-sm text-zinc-500">.{fk.referencesColumn}</span>
                         </div>
                         <div className="ml-auto flex items-center gap-2 text-xs text-zinc-500">
                           <span>ON DELETE: {fk.onDelete}</span>
                           <span>ON UPDATE: {fk.onUpdate}</span>
                         </div>
                       </div>
-                    )),
+                    ))
                   )}
               </div>
             </CardContent>
@@ -463,8 +426,8 @@ function DatabaseSchemaContent() {
                     {selectedTable.schema}.{selectedTable.name}
                   </SheetTitle>
                   <SheetDescription>
-                    {formatNumber(selectedTable.rowCount)} rows -{' '}
-                    {selectedTable.columns.length} columns
+                    {formatNumber(selectedTable.rowCount)} rows - {selectedTable.columns.length}{' '}
+                    columns
                   </SheetDescription>
                 </SheetHeader>
 
@@ -485,9 +448,7 @@ function DatabaseSchemaContent() {
                           >
                             <div className="flex items-center justify-between">
                               <div className="flex items-center gap-2">
-                                {col.isPrimaryKey && (
-                                  <Key className="h-4 w-4 text-amber-500" />
-                                )}
+                                {col.isPrimaryKey && <Key className="h-4 w-4 text-amber-500" />}
                                 {col.isForeignKey && (
                                   <ExternalLink className="h-4 w-4 text-sky-500" />
                                 )}
@@ -507,28 +468,18 @@ function DatabaseSchemaContent() {
                             <div className="mt-2 flex flex-wrap gap-2">
                               <Badge variant="outline">{col.type}</Badge>
                               {!col.nullable && (
-                                <Badge
-                                  variant="outline"
-                                  className="bg-red-500/10 text-red-500"
-                                >
+                                <Badge variant="outline" className="bg-red-500/10 text-red-500">
                                   NOT NULL
                                 </Badge>
                               )}
                               {col.default && (
-                                <Badge
-                                  variant="outline"
-                                  className="bg-blue-500/10 text-blue-500"
-                                >
+                                <Badge variant="outline" className="bg-blue-500/10 text-blue-500">
                                   DEFAULT: {col.default}
                                 </Badge>
                               )}
                               {col.references && (
-                                <Badge
-                                  variant="outline"
-                                  className="bg-sky-500/10 text-sky-500"
-                                >
-                                  FK: {col.references.table}.
-                                  {col.references.column}
+                                <Badge variant="outline" className="bg-sky-500/10 text-sky-500">
+                                  FK: {col.references.table}.{col.references.column}
                                 </Badge>
                               )}
                             </div>
@@ -541,9 +492,7 @@ function DatabaseSchemaContent() {
                   <TabsContent value="indexes" className="mt-4">
                     <ScrollArea className="h-[calc(100vh-300px)]">
                       {selectedTable.indexes.length === 0 ? (
-                        <div className="py-8 text-center text-zinc-500">
-                          No indexes defined
-                        </div>
+                        <div className="py-8 text-center text-zinc-500">No indexes defined</div>
                       ) : (
                         <div className="space-y-2">
                           {selectedTable.indexes.map((idx) => (
@@ -596,16 +545,12 @@ function DatabaseSchemaContent() {
                               <div className="mt-2 flex items-center gap-2">
                                 <Badge variant="outline">{fk.column}</Badge>
                                 <ArrowRight className="h-4 w-4 text-zinc-400" />
-                                <Badge
-                                  variant="outline"
-                                  className="bg-sky-500/10 text-sky-500"
-                                >
+                                <Badge variant="outline" className="bg-sky-500/10 text-sky-500">
                                   {fk.referencesTable}.{fk.referencesColumn}
                                 </Badge>
                               </div>
                               <div className="mt-2 text-xs text-zinc-500">
-                                ON DELETE: {fk.onDelete} | ON UPDATE:{' '}
-                                {fk.onUpdate}
+                                ON DELETE: {fk.onDelete} | ON UPDATE: {fk.onUpdate}
                               </div>
                             </div>
                           ))}

@@ -1,14 +1,7 @@
 'use client'
 
 import type { OrgMember, Team } from '@/types/tenant'
-import {
-  ChevronDown,
-  ChevronRight,
-  Plus,
-  Settings,
-  Trash2,
-  Users,
-} from 'lucide-react'
+import { ChevronDown, ChevronRight, Plus, Settings, Trash2, Users } from 'lucide-react'
 import { useState } from 'react'
 
 interface OrgTeamTreeProps {
@@ -98,9 +91,7 @@ export function OrgTeamTree({
                     </button>
                     <Users className="h-4 w-4" />
                     <span className="text-sm">{team.name}</span>
-                    <span className="text-xs text-zinc-500">
-                      ({teamMembers.length})
-                    </span>
+                    <span className="text-xs text-zinc-500">({teamMembers.length})</span>
                   </div>
                   <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100">
                     <button

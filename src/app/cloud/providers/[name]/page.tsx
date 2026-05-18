@@ -72,9 +72,7 @@ const credentialFields: Record<
       required: true,
     },
   ],
-  digitalocean: [
-    { name: 'token', label: 'API Token', type: 'password', required: true },
-  ],
+  digitalocean: [{ name: 'token', label: 'API Token', type: 'password', required: true }],
   linode: [
     {
       name: 'token',
@@ -83,15 +81,9 @@ const credentialFields: Record<
       required: true,
     },
   ],
-  vultr: [
-    { name: 'apiKey', label: 'API Key', type: 'password', required: true },
-  ],
-  hetzner: [
-    { name: 'token', label: 'API Token', type: 'password', required: true },
-  ],
-  default: [
-    { name: 'apiKey', label: 'API Key', type: 'password', required: true },
-  ],
+  vultr: [{ name: 'apiKey', label: 'API Key', type: 'password', required: true }],
+  hetzner: [{ name: 'token', label: 'API Token', type: 'password', required: true }],
+  default: [{ name: 'apiKey', label: 'API Key', type: 'password', required: true }],
 }
 
 function ProviderConfigContent({ name }: { name: string }) {
@@ -108,7 +100,7 @@ function ProviderConfigContent({ name }: { name: string }) {
 
   const { data, isLoading, mutate } = useSWR<{ provider: CloudProvider }>(
     `/api/cloud/providers/${providerName}`,
-    fetcher,
+    fetcher
   )
 
   const provider = data?.provider
@@ -146,20 +138,16 @@ function ProviderConfigContent({ name }: { name: string }) {
     setTesting(true)
     setTestResult(null)
     try {
-      const response = await fetch(
-        `/api/cloud/providers/${providerName}/test`,
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ credentials }),
-        },
-      )
+      const response = await fetch(`/api/cloud/providers/${providerName}/test`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ credentials }),
+      })
       const result = await response.json()
       setTestResult({
         success: result.success,
         message:
-          result.message ||
-          (result.success ? 'Connection successful!' : 'Connection failed'),
+          result.message || (result.success ? 'Connection successful!' : 'Connection failed'),
       })
     } catch (_error) {
       setTestResult({
@@ -182,9 +170,7 @@ function ProviderConfigContent({ name }: { name: string }) {
             <ArrowLeft className="h-5 w-5" />
           </Link>
           <div>
-            <h1 className="text-2xl font-semibold text-white">
-              Configure Provider
-            </h1>
+            <h1 className="text-2xl font-semibold text-white">Configure Provider</h1>
             <p className="text-sm text-zinc-400">Loading...</p>
           </div>
         </div>
@@ -207,20 +193,13 @@ function ProviderConfigContent({ name }: { name: string }) {
             <ArrowLeft className="h-5 w-5" />
           </Link>
           <div>
-            <h1 className="text-2xl font-semibold text-white">
-              Provider Not Found
-            </h1>
+            <h1 className="text-2xl font-semibold text-white">Provider Not Found</h1>
           </div>
         </div>
         <div className="flex flex-col items-center justify-center rounded-lg border border-zinc-700/50 bg-zinc-800/50 p-12">
           <AlertCircle className="mb-4 h-12 w-12 text-red-400" />
-          <p className="text-lg text-zinc-300">
-            Provider &quot;{providerName}&quot; not found
-          </p>
-          <Link
-            href="/cloud/providers"
-            className="mt-4 text-emerald-400 hover:text-emerald-300"
-          >
+          <p className="text-lg text-zinc-300">Provider &quot;{providerName}&quot; not found</p>
+          <Link href="/cloud/providers" className="mt-4 text-emerald-400 hover:text-emerald-300">
             Back to providers
           </Link>
         </div>
@@ -244,12 +223,8 @@ function ProviderConfigContent({ name }: { name: string }) {
               <Cloud className="h-6 w-6 text-emerald-400" />
             </div>
             <div>
-              <h1 className="text-2xl font-semibold text-white">
-                {provider.displayName}
-              </h1>
-              <p className="text-sm text-zinc-400">
-                Configure credentials and settings
-              </p>
+              <h1 className="text-2xl font-semibold text-white">{provider.displayName}</h1>
+              <p className="text-sm text-zinc-400">Configure credentials and settings</p>
             </div>
           </div>
         </div>
@@ -291,21 +266,15 @@ function ProviderConfigContent({ name }: { name: string }) {
                 <div key={field.name}>
                   <label className="mb-2 block text-sm font-medium text-zinc-300">
                     {field.label}
-                    {field.required && (
-                      <span className="ml-1 text-red-400">*</span>
-                    )}
+                    {field.required && <span className="ml-1 text-red-400">*</span>}
                   </label>
                   <div className="relative">
                     <input
                       type={
-                        field.type === 'password' && !showSecrets[field.name]
-                          ? 'password'
-                          : 'text'
+                        field.type === 'password' && !showSecrets[field.name] ? 'password' : 'text'
                       }
                       value={credentials[field.name] || ''}
-                      onChange={(e) =>
-                        handleCredentialChange(field.name, e.target.value)
-                      }
+                      onChange={(e) => handleCredentialChange(field.name, e.target.value)}
                       placeholder={`Enter ${field.label.toLowerCase()}`}
                       className="w-full rounded-lg border border-zinc-700 bg-zinc-900 px-4 py-2 pr-10 text-white placeholder-zinc-500 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 focus:outline-none"
                     />
@@ -440,16 +409,9 @@ function ProviderConfigContent({ name }: { name: string }) {
               <h3 className="mb-3 font-medium text-white">Regions</h3>
               <div className="space-y-2">
                 {provider.regions.slice(0, 5).map((region: CloudRegion) => (
-                  <div
-                    key={region.id}
-                    className="flex items-center justify-between text-sm"
-                  >
+                  <div key={region.id} className="flex items-center justify-between text-sm">
                     <span className="text-zinc-400">{region.displayName}</span>
-                    <span
-                      className={
-                        region.available ? 'text-emerald-400' : 'text-zinc-500'
-                      }
-                    >
+                    <span className={region.available ? 'text-emerald-400' : 'text-zinc-500'}>
                       {region.available ? 'Available' : 'Unavailable'}
                     </span>
                   </div>
@@ -469,22 +431,15 @@ function ProviderConfigContent({ name }: { name: string }) {
               <h3 className="mb-3 font-medium text-white">Server Sizes</h3>
               <div className="space-y-2">
                 {provider.sizes.slice(0, 5).map((size: CloudSize) => (
-                  <div
-                    key={size.id}
-                    className="flex items-center justify-between text-sm"
-                  >
+                  <div key={size.id} className="flex items-center justify-between text-sm">
                     <span className="text-zinc-400">
                       {size.vcpu} vCPU / {size.memory}
                     </span>
-                    <span className="text-emerald-400">
-                      ${size.monthlyPrice}/mo
-                    </span>
+                    <span className="text-emerald-400">${size.monthlyPrice}/mo</span>
                   </div>
                 ))}
                 {provider.sizes.length > 5 && (
-                  <p className="text-sm text-zinc-500">
-                    +{provider.sizes.length - 5} more sizes
-                  </p>
+                  <p className="text-sm text-zinc-500">+{provider.sizes.length - 5} more sizes</p>
                 )}
               </div>
             </div>

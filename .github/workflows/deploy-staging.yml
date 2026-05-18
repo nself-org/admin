@@ -55,8 +55,19 @@ jobs:
           cache-from: type=registry,ref=${{ env.DOCKER_IMAGE }}:buildcache
           cache-to: type=registry,ref=${{ env.DOCKER_IMAGE }}:buildcache,mode=max
 
-      - name: Deploy to staging server
+      - name: Check staging host availability
+        id: staging-check
         if: steps.docker-login.outcome == 'success'
+        run: |
+          if [ -z "${{ secrets.STAGING_HOST }}" ]; then
+            echo "available=false" >> $GITHUB_OUTPUT
+            echo "::warning::STAGING_HOST not configured. SSH deploy skipped."
+          else
+            echo "available=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Deploy to staging server
+        if: steps.docker-login.outcome == 'success' && steps.staging-check.outputs.available == 'true'
         uses: appleboy/ssh-action@v1.0.0
         with:
           host: ${{ secrets.STAGING_HOST }}
@@ -77,13 +88,13 @@ jobs:
               ${{ env.DOCKER_IMAGE }}:${{ env.DOCKER_TAG_STAGING }}
 
       - name: Wait for service to be ready
-        if: steps.docker-login.outcome == 'success'
+        if: steps.docker-login.outcome == 'success' && steps.staging-check.outputs.available == 'true'
         run: |
           echo "Waiting for staging service to be ready..."
           sleep 10
 
       - name: Run smoke tests
-        if: steps.docker-login.outcome == 'success'
+        if: steps.docker-login.outcome == 'success' && steps.staging-check.outputs.available == 'true'
         run: |
           STAGING_URL="${{ secrets.STAGING_URL }}"
 
@@ -111,7 +122,7 @@ jobs:
           echo "Version: $version"
 
       - name: Notify deployment
-        if: steps.docker-login.outcome == 'success' && always()
+        if: steps.docker-login.outcome == 'success' && steps.staging-check.outputs.available == 'true' && always()
         uses: 8398a7/action-slack@v3
         with:
           status: ${{ job.status }}

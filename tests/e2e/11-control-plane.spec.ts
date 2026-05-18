@@ -322,7 +322,18 @@ test.describe('Control-Plane Inventory Page', () => {
           body: JSON.stringify({ success: true, action: 'add', name: 'test-server-01' }),
         })
       } else {
-        await route.continue()
+        // Fulfill GET requests with EMPTY_INVENTORY so networkidle resolves in CI
+        // (route.continue() would forward to a real server that doesn't exist in CI)
+        await route.fulfill({
+          status: 200,
+          contentType: 'application/json',
+          body: JSON.stringify({
+            success: true,
+            action: 'list',
+            data: EMPTY_INVENTORY,
+            timestamp: new Date().toISOString(),
+          }),
+        })
       }
     })
 

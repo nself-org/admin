@@ -665,7 +665,9 @@ test.describe('/operations/scale — 7 UI states', () => {
     await mockNselfSuccess(page, SCALE_LIST_JSON)
     await page.goto('/operations/scale', { waitUntil: 'domcontentloaded' })
 
-    await expect(page.locator('text=api')).toBeVisible()
+    // Use exact match scoped to main content to avoid strict-mode violation
+    // (sidebar nav may contain "API Keys" and "API Explorer" which also match 'text=api')
+    await expect(page.locator('main').getByText('api', { exact: true }).first()).toBeVisible()
     await expect(page.locator('input[type="number"]').first()).toBeVisible()
     await expect(page.locator('button:has-text("Apply")').first()).toBeVisible()
   })
@@ -694,7 +696,7 @@ test.describe('/operations/scale — 7 UI states', () => {
     })
 
     await page.goto('/operations/scale', { waitUntil: 'domcontentloaded' })
-    await expect(page.locator('text=api')).toBeVisible()
+    await expect(page.locator('main').getByText('api', { exact: true }).first()).toBeVisible()
     await page.locator('button:has-text("Apply")').first().click()
     await expect(page.locator('.animate-spin').first()).toBeVisible()
     resolve?.()
@@ -708,7 +710,7 @@ test.describe('/operations/scale — 7 UI states', () => {
     )
 
     await page.goto('/operations/scale', { waitUntil: 'domcontentloaded' })
-    await expect(page.locator('text=api')).toBeVisible()
+    await expect(page.locator('main').getByText('api', { exact: true }).first()).toBeVisible()
     await page.locator('button:has-text("Apply")').first().click()
     await page.waitForTimeout(500)
 
@@ -723,7 +725,7 @@ test.describe('/operations/scale — 7 UI states', () => {
     )
 
     await page.goto('/operations/scale', { waitUntil: 'domcontentloaded' })
-    await expect(page.locator('text=api')).toBeVisible()
+    await expect(page.locator('main').getByText('api', { exact: true }).first()).toBeVisible()
     await page.locator('button:has-text("Apply")').first().click()
     await page.waitForTimeout(500)
 
@@ -733,7 +735,7 @@ test.describe('/operations/scale — 7 UI states', () => {
   test('07 invalid-replica — error badge for non-numeric input', async ({ page }) => {
     await mockNselfSuccess(page, SCALE_LIST_JSON)
     await page.goto('/operations/scale', { waitUntil: 'domcontentloaded' })
-    await expect(page.locator('text=api')).toBeVisible()
+    await expect(page.locator('main').getByText('api', { exact: true }).first()).toBeVisible()
 
     // Clear the input and enter an invalid value
     const input = page.locator('input[type="number"]').first()

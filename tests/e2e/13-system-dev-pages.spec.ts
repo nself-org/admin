@@ -262,7 +262,8 @@ test.describe('/system/validate', () => {
   })
 
   test('offline state: shows retry on abort', async ({ page }) => {
-    await page.route('**/api/nself/diagnostics**', (route) => route.abort('failed'))
+    // /system/validate fetches /api/config/validate (not /api/nself/diagnostics)
+    await page.route('**/api/config/validate', (route) => route.abort('failed'))
     await page.goto('/system/validate')
     await page.waitForLoadState('networkidle')
     await expect(page.getByRole('button', { name: /retry/i })).toBeVisible()

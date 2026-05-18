@@ -25,6 +25,7 @@ function DashboardContent() {
   const [isInitialLoad, setIsInitialLoad] = useState(true)
   const [environment] = useState<Environment>('local')
   const [activityEvents, setActivityEvents] = useState<ActivityEvent[]>([])
+  const [dismissedAlertIds, setDismissedAlertIds] = useState<Set<string>>(new Set())
 
   // WebSocket connection for real-time updates
   const { connected, reconnecting } = useWebSocket()
@@ -185,13 +186,13 @@ function DashboardContent() {
       })
     }
 
-    return derived
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    return derived.filter((a) => !dismissedAlertIds.has(a.id))
   }, [
     healthMetrics.cpuUsage,
     healthMetrics.memoryUsage,
     healthMetrics.errorCount,
     services.length,
+    dismissedAlertIds,
   ])
 
   // Service action handlers
@@ -348,7 +349,7 @@ function DashboardContent() {
         <div className="mb-8">
           <Alerts
             alerts={alerts}
-            onDismiss={(id) => setAlerts((prev) => prev.filter((a) => a.id !== id))}
+            onDismiss={(id) => setDismissedAlertIds((prev) => new Set([...prev, id]))}
           />
         </div>
       )}

@@ -65,7 +65,7 @@ function parseServiceUrls(data: UrlsData): ServiceUrl[] {
         .filter((u) => u.url && typeof u.url === 'string' && u.url.startsWith('http'))
         .map((u) => [u.name, u.url] as [string, string])
     : Object.entries(urls as Record<string, string>).filter(
-        ([, url]) => url && typeof url === 'string' && url.startsWith('http'),
+        ([, url]) => url && typeof url === 'string' && url.startsWith('http')
       )
   return entries.map(([name, url]) => {
     const meta = ENDPOINT_LABELS[name.toLowerCase()] ?? {

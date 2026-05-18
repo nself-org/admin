@@ -23,56 +23,15 @@ const nextConfig = {
     minimumCacheTTL: 60,
   },
   // Security headers
-  // NOTE: CSP with nonce injection is handled in middleware.ts (per-request
-  // nonce).  The static headers below set everything EXCEPT CSP so that
-  // middleware's dynamic CSP wins.  CSP here would override middleware on
-  // static assets; we let middleware handle all dynamic routes and rely on
-  // next.config static CSP only as a fallback for static files.
+  // NOTE: CSP is handled entirely by middleware.ts (per-request nonce).
+  // Do NOT set Content-Security-Policy here — a duplicate CSP header from
+  // next.config would be applied alongside middleware's nonce-bearing CSP via
+  // HTTP CSP intersection rules (browsers apply ALL CSP headers, taking the
+  // union of restrictions).  A static "script-src 'self'" header here would
+  // override middleware's "'nonce-<X>'" and block all inline hydration scripts,
+  // causing a blank page (NO_FCP) in Lighthouse and in browsers.
+  // Non-CSP security headers are still set here for defence-in-depth.
   async headers() {
-    const isProd = process.env.NODE_ENV === 'production'
-    // Base CSP without nonce — used for static asset responses only.
-    // Dynamic pages get a per-request nonce injected by middleware.
-    const staticCsp = isProd
-      ? [
-          "default-src 'self'",
-          // No 'unsafe-eval' and no 'unsafe-inline' for script-src in production.
-          // Dynamic pages get a per-request nonce injected by middleware.ts.
-          // This static header is the fallback for static assets (_next/static/*).
-          "script-src 'self'",
-          // 'unsafe-inline' is required for style-src because React JSX style={{...}}
-          // props render as HTML element style attributes.  The CSP spec does not
-          // support nonce/hash for element-level style attributes — only for <style>
-          // blocks.  Removing unsafe-inline would break all dynamic inline styles
-          // (progress bars, computed widths, etc.) throughout the admin UI.
-          "style-src 'self' 'unsafe-inline'",
-          "img-src 'self' data: blob: https:",
-          "font-src 'self' data:",
-          "connect-src 'self' ws: wss:",
-          "worker-src 'self' blob:",
-          "frame-ancestors 'none'",
-          "base-uri 'self'",
-          "form-action 'self'",
-          "object-src 'none'",
-        ].join('; ')
-      : [
-          // Development-only CSP (SEC-T11): 'unsafe-eval' is required by the
-          // Next.js dev server (HMR / fast-refresh module evaluation).  It is
-          // gated exclusively to NODE_ENV !== 'production' via the isProd
-          // ternary above.  The production branch omits both 'unsafe-eval' and
-          // 'unsafe-inline' from script-src entirely.
-          "default-src 'self'",
-          "script-src 'self' 'unsafe-eval' 'unsafe-inline'",
-          "style-src 'self' 'unsafe-inline'",
-          "img-src 'self' data: blob: https:",
-          "font-src 'self' data:",
-          "connect-src 'self' ws: wss:",
-          "worker-src 'self' blob:",
-          "frame-ancestors 'none'",
-          "base-uri 'self'",
-          "form-action 'self'",
-          "object-src 'none'",
-        ].join('; ')
-
     return [
       {
         source: '/:path*',
@@ -103,12 +62,7 @@ const nextConfig = {
           },
           {
             key: 'Permissions-Policy',
-            value:
-              'camera=(), microphone=(), geolocation=(), interest-cohort=()',
-          },
-          {
-            key: 'Content-Security-Policy',
-            value: staticCsp,
+            value: 'camera=(), microphone=(), geolocation=(), interest-cohort=()',
           },
         ],
       },

@@ -91,8 +91,10 @@ async function mockNselfEmpty(page: Page) {
 
 /**
  * Stub /api/nself so that:
- *   - the first POST returns `listResponse` (service list fetch)
- *   - subsequent POSTs return `actionResponse`
+ *   - the first two POSTs return `listResponse` (initial page-load background
+ *     fetches + the scale list fetch; threshold=2 tolerates one extra spurious
+ *     POST from shared layout components before the scale list mounts)
+ *   - subsequent POSTs return `actionResponse` (Apply button action)
  */
 async function mockNselfSequential(
   page: Page,
@@ -105,7 +107,7 @@ async function mockNselfSequential(
       return route.fulfill({ status: 404, body: 'Not Found' })
     }
     callCount++
-    const body = callCount <= 1 ? listResponse : actionResponse
+    const body = callCount <= 2 ? listResponse : actionResponse
     route.fulfill({
       status: 200,
       contentType: 'application/json',

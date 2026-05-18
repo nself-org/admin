@@ -37,7 +37,7 @@ test.describe('/system/urls', () => {
       generatedAt: new Date().toISOString(),
     })
     await page.goto('/system/urls')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
     await expect(page.getByText('Hasura')).toBeVisible()
     // .first() because 'Auth' appears both as a service name and in the
     // URL column; either visible confirms the table rendered correctly.
@@ -47,7 +47,7 @@ test.describe('/system/urls', () => {
   test('offline state: shows retry button on abort', async ({ page }) => {
     await page.route('**/api/nself/urls', (route) => route.abort('failed'))
     await page.goto('/system/urls')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
     const retry = page.getByRole('button', { name: /retry/i })
     await expect(retry).toBeVisible()
   })
@@ -61,7 +61,7 @@ test.describe('/system/urls', () => {
       })
     )
     await page.goto('/system/urls')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
     // Error or offline state shown (depends on message content)
     const hasError = await page
       .getByText(/failed|error|retry/i)
@@ -73,7 +73,7 @@ test.describe('/system/urls', () => {
   test('redirect to login when unauthenticated', async ({ page }) => {
     await page.context().clearCookies()
     await page.goto('/system/urls')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
     const isAtLogin = page.url().includes('/login')
     const hasUnauthContent = await page
       .getByText(/not authenticated|sign in|login/i)
@@ -88,7 +88,7 @@ test.describe('/system/urls', () => {
       generatedAt: new Date().toISOString(),
     })
     await page.goto('/system/urls')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
     const refreshBtn = page.getByRole('button', { name: /refresh/i })
     await expect(refreshBtn).toBeVisible()
   })
@@ -114,7 +114,7 @@ test.describe('/system/version', () => {
       upToDate: true,
     })
     await page.goto('/system/version')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
     const hasVersion = await page
       .getByText(/1\.1\.1|version/i)
       .first()
@@ -125,14 +125,14 @@ test.describe('/system/version', () => {
   test('offline state: shows retry on abort', async ({ page }) => {
     await page.route('**/api/version', (route) => route.abort('failed'))
     await page.goto('/system/version')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
     await expect(page.getByRole('button', { name: /retry/i })).toBeVisible()
   })
 
   test('redirect to login when unauthenticated', async ({ page }) => {
     await page.context().clearCookies()
     await page.goto('/system/version')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
     expect(
       page.url().includes('/login') ||
         (await page
@@ -165,7 +165,7 @@ test.describe('/system/diagnostics', () => {
       runAt: new Date().toISOString(),
     })
     await page.goto('/system/diagnostics')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
     const hasDiag = await page
       .getByText(/CLI binary|Docker daemon|diagnostics/i)
       .first()
@@ -176,7 +176,7 @@ test.describe('/system/diagnostics', () => {
   test('offline state: shows retry on abort', async ({ page }) => {
     await page.route('**/api/nself/diagnostics', (route) => route.abort('failed'))
     await page.goto('/system/diagnostics')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
     await expect(page.getByRole('button', { name: /retry/i })).toBeVisible()
   })
 
@@ -187,7 +187,7 @@ test.describe('/system/diagnostics', () => {
       runAt: new Date().toISOString(),
     })
     await page.goto('/system/diagnostics')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
     const btn = page.getByRole('button', { name: /run diagnostics|refresh/i })
     if (await btn.first().isVisible()) {
       await expect(btn.first()).toBeVisible()
@@ -215,7 +215,7 @@ test.describe('/system/trust', () => {
       checkedAt: new Date().toISOString(),
     })
     await page.goto('/system/trust')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
     const hasTrust = await page
       .getByText(/ssl|dns|port|trust/i)
       .first()
@@ -226,7 +226,7 @@ test.describe('/system/trust', () => {
   test('offline state: shows retry on abort', async ({ page }) => {
     await page.route('**/api/nself/trust', (route) => route.abort('failed'))
     await page.goto('/system/trust')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
     await expect(page.getByRole('button', { name: /retry/i })).toBeVisible()
   })
 })
@@ -253,7 +253,7 @@ test.describe('/system/validate', () => {
       runAt: new Date().toISOString(),
     })
     await page.goto('/system/validate')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
     const hasVal = await page
       .getByText(/config|environment|validate|valid/i)
       .first()
@@ -265,7 +265,7 @@ test.describe('/system/validate', () => {
     // /system/validate fetches /api/config/validate (not /api/nself/diagnostics)
     await page.route('**/api/config/validate', (route) => route.abort('failed'))
     await page.goto('/system/validate')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
     await expect(page.getByRole('button', { name: /retry/i })).toBeVisible()
   })
 })
@@ -301,7 +301,7 @@ test.describe('/system/help', () => {
       version: '1.1.1',
     })
     await page.goto('/system/help')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
     const hasCmd = await page
       .getByText(/start|stop|command/i)
       .first()
@@ -328,7 +328,7 @@ test.describe('/system/help', () => {
       version: '1.1.1',
     })
     await page.goto('/system/help')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
     const searchBox = page.getByPlaceholder(/search commands/i)
     if (await searchBox.isVisible()) {
       await searchBox.fill('status')
@@ -339,14 +339,14 @@ test.describe('/system/help', () => {
   test('offline state: shows retry on abort', async ({ page }) => {
     await page.route('**/api/nself/help', (route) => route.abort('failed'))
     await page.goto('/system/help')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
     await expect(page.getByRole('button', { name: /retry/i })).toBeVisible()
   })
 
   test('redirect to login when unauthenticated', async ({ page }) => {
     await page.context().clearCookies()
     await page.goto('/system/help')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
     expect(
       page.url().includes('/login') ||
         (await page

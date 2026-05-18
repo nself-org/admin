@@ -12,4 +12,5 @@ paths = [
   '''\.env\.example$''',
   '''\.env\.dev$''',
   '''\.env\.staging$''',
+  '''\.gitleaksignore$''',
 ]

@@ -295,8 +295,8 @@ importers:
         specifier: ^16.2.1
         version: 16.2.1
       '@nself/config':
-        specifier: file:../web/packages/config
-        version: file:../web/packages/config(eslint@9.39.4(jiti@2.6.1))(prettier@3.8.1)(typescript@6.0.3)
+        specifier: file:packages/config
+        version: file:packages/config(eslint@9.39.4(jiti@2.6.1))(prettier@3.8.1)(typescript@6.0.3)
       '@playwright/test':
         specifier: ^1.58.2
         version: 1.58.2
@@ -1304,8 +1304,8 @@ packages:
     resolution: {integrity: sha512-nn5ozdjYQpUCZlWGuxcJY/KpxkWQs4DcbMCmKojjyrYDEAGy4Ce19NN4v5MduafTwJlbKc99UA8YhSVqq9yPZA==}
     engines: {node: '>=12.4.0'}
 
-  '@nself/config@file:../web/packages/config':
-    resolution: {directory: ../web/packages/config, type: directory}
+  '@nself/config@file:packages/config':
+    resolution: {directory: packages/config, type: directory}
     engines: {node: '>=18'}
     peerDependencies:
       eslint: '>=9.0.0'
@@ -7669,7 +7669,7 @@ snapshots:
 
   '@nolyfill/is-core-module@1.0.39': {}
 
-  '@nself/config@file:../web/packages/config(eslint@9.39.4(jiti@2.6.1))(prettier@3.8.1)(typescript@6.0.3)':
+  '@nself/config@file:packages/config(eslint@9.39.4(jiti@2.6.1))(prettier@3.8.1)(typescript@6.0.3)':
     optionalDependencies:
       eslint: 9.39.4(jiti@2.6.1)
       prettier: 3.8.1

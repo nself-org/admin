@@ -102,7 +102,11 @@ function buildCsp(nonce: string): string {
   ].join('; ')
 }
 
-function applySecurityHeaders(response: NextResponse, nonce: string): NextResponse {
+function applySecurityHeaders(
+  response: NextResponse,
+  nonce: string,
+  csp: string
+): NextResponse {
   response.headers.set('X-Content-Type-Options', 'nosniff')
   response.headers.set('X-Frame-Options', 'DENY')
   response.headers.set('X-XSS-Protection', '1; mode=block')
@@ -111,10 +115,24 @@ function applySecurityHeaders(response: NextResponse, nonce: string): NextRespon
     'Permissions-Policy',
     'camera=(), microphone=(), geolocation=(), interest-cohort=()'
   )
-  response.headers.set('Content-Security-Policy', buildCsp(nonce))
-  // Expose nonce to the page via header so _document can pick it up
+  response.headers.set('Content-Security-Policy', csp)
+  // Expose nonce to the page via header so server components can pick it up
   response.headers.set('x-nonce', nonce)
   return response
+}
+
+/**
+ * Create a NextResponse that forwards the CSP header (with embedded nonce) to
+ * the Next.js App Router renderer via the request-headers forwarding mechanism.
+ * Next.js reads `content-security-policy` from the *request* headers in
+ * app-render and extracts the nonce to stamp it on generated inline <script>
+ * tags.  Without this, inline hydration scripts are blocked by the strict
+ * nonce-only CSP and Lighthouse sees NO_FCP.
+ */
+function nextResponseWithNonce(request: NextRequest, csp: string): NextResponse {
+  const requestHeaders = new Headers(request.headers)
+  requestHeaders.set('content-security-policy', csp)
+  return NextResponse.next({ request: { headers: requestHeaders } })
 }
 
 // ── Per-minute rate limiting (inline — middleware runs on Edge) ─────────────
@@ -224,8 +242,9 @@ export async function middleware(request: NextRequest) {
   // Allow public routes
   if (PUBLIC_ROUTES.some((route) => pathname.startsWith(route))) {
     const nonce = generateNonce()
-    const response = NextResponse.next()
-    return applySecurityHeaders(response, nonce)
+    const csp = buildCsp(nonce)
+    const response = nextResponseWithNonce(request, csp)
+    return applySecurityHeaders(response, nonce, csp)
   }
 
   // ── SSO header auto-login ────────────────────────────────────────────────
@@ -258,8 +277,9 @@ export async function middleware(request: NextRequest) {
   // Layout redirects to /login if isAuthenticated becomes false.
   if (!pathname.startsWith('/api/')) {
     const nonce = generateNonce()
-    const response = NextResponse.next()
-    return applySecurityHeaders(response, nonce)
+    const csp = buildCsp(nonce)
+    const response = nextResponseWithNonce(request, csp)
+    return applySecurityHeaders(response, nonce, csp)
   }
 
   // For API routes: validate session token via internal API call.
@@ -281,8 +301,9 @@ export async function middleware(request: NextRequest) {
   }
 
   const nonce = generateNonce()
-  const response = NextResponse.next()
-  return applySecurityHeaders(response, nonce)
+  const csp = buildCsp(nonce)
+  const response = nextResponseWithNonce(request, csp)
+  return applySecurityHeaders(response, nonce, csp)
 }
 
 export const config = {

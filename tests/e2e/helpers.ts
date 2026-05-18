@@ -49,12 +49,12 @@ export async function setupAuth(page: Page, password = TEST_PASSWORD) {
   // Mock project status so ProjectStateWrapper doesn't redirect to /init/1.
   await mockProjectStatus(page)
 
-  // waitUntil: 'networkidle' ensures all Next.js JS bundles have been
-  // downloaded and the /api/auth/init check has completed before we
-  // interact with the form.  Without this, the click can fire before React
-  // hydrates — the browser then executes the native form submit (reload to
-  // /login) instead of the React onClick handler.
-  await page.goto('/login', { waitUntil: 'networkidle' })
+  // waitUntil: 'domcontentloaded' is enough here because globalSetup has
+  // already pre-warmed all Next.js JS bundles and compiled all routes.
+  // Using 'networkidle' risks a 30s hang when SSE / polling connections
+  // on adjacent pages keep the network busy.  The waitForSelector call
+  // below already waits for React to hydrate (input becomes enabled).
+  await page.goto('/login', { waitUntil: 'domcontentloaded' })
   // Wait for the password input to become enabled (after /api/auth/init
   // completes and React sets isCheckingSetup → false).
   await page.waitForSelector('input[type="password"]:not([disabled])', {
@@ -67,7 +67,7 @@ export async function setupAuth(page: Page, password = TEST_PASSWORD) {
   // /build, /, /start, or /dashboard depending on race order between
   // Layout's useEffect and the login page's getCorrectRoute call.
   await page.waitForURL((url) => !url.pathname.includes('/login'), {
-    timeout: 20000,
+    timeout: 30000,
   })
   // Let the redirect finish loading before the test body starts navigating.
   // Without this, Firefox aborts the next page.goto() with NS_BINDING_ABORTED

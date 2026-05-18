@@ -49,7 +49,9 @@ const LOG_SERVICE_LIST = JSON.stringify([
 async function mockNselfSuccess(page: Page, stdout = SERVICE_LIST_JSON) {
   await page.route('**/api/nself', (route) => {
     if (route.request().method() !== 'POST') {
-      return route.continue()
+      // Non-POST requests to /api/nself are unexpected; return 404 so they
+      // resolve immediately rather than hanging via route.continue() in CI.
+      return route.fulfill({ status: 404, body: 'Not Found' })
     }
     route.fulfill({
       status: 200,
@@ -63,7 +65,7 @@ async function mockNselfSuccess(page: Page, stdout = SERVICE_LIST_JSON) {
 async function mockNselfError(page: Page, error = 'nself: command not found') {
   await page.route('**/api/nself', (route) => {
     if (route.request().method() !== 'POST') {
-      return route.continue()
+      return route.fulfill({ status: 404, body: 'Not Found' })
     }
     route.fulfill({
       status: 200,
@@ -77,7 +79,7 @@ async function mockNselfError(page: Page, error = 'nself: command not found') {
 async function mockNselfEmpty(page: Page) {
   await page.route('**/api/nself', (route) => {
     if (route.request().method() !== 'POST') {
-      return route.continue()
+      return route.fulfill({ status: 404, body: 'Not Found' })
     }
     route.fulfill({
       status: 200,
@@ -100,7 +102,7 @@ async function mockNselfSequential(
   let callCount = 0
   await page.route('**/api/nself', (route) => {
     if (route.request().method() !== 'POST') {
-      return route.continue()
+      return route.fulfill({ status: 404, body: 'Not Found' })
     }
     callCount++
     const body = callCount <= 1 ? listResponse : actionResponse

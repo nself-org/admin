@@ -32,6 +32,8 @@ WORKDIR /app
 # Copy dependencies from deps stage
 COPY --from=deps /app/node_modules ./node_modules
 COPY package.json pnpm-lock.yaml ./
+# Copy vendored local workspace packages (required for pnpm prune --prod to resolve linked deps)
+COPY packages ./packages
 
 # Copy only necessary source files (improves cache invalidation)
 COPY src ./src

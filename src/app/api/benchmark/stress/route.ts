@@ -20,7 +20,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     if (!target || typeof target !== 'string') {
       return NextResponse.json(
         { success: false, error: 'Stress test target is required' },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -31,7 +31,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           success: false,
           error: `Invalid stress test target. Valid targets: ${VALID_TARGETS.join(', ')}`,
         },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -59,11 +59,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     // Stress tests can take a while
     const result = await executeNselfCommand('bench', args, { timeout: 600000 })
 
-    logger.cli(
-      `nself bench stress ${target} --json`,
-      result.success,
-      Date.now() - startTime,
-    )
+    logger.cli(`nself bench stress ${target} --json`, result.success, Date.now() - startTime)
 
     if (!result.success) {
       return NextResponse.json(
@@ -72,7 +68,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           error: 'Stress test failed',
           details: result.error || result.stderr,
         },
-        { status: 500 },
+        { status: 500 }
       )
     }
 
@@ -102,7 +98,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to run stress test',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

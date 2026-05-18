@@ -88,9 +88,7 @@ function GCPContent() {
   const gceColumns: ColumnDef<GCEInstance>[] = [
     {
       accessorKey: 'name',
-      header: ({ column }) => (
-        <SortableHeader column={column}>Name</SortableHeader>
-      ),
+      header: ({ column }) => <SortableHeader column={column}>Name</SortableHeader>,
     },
     {
       accessorKey: 'machineType',
@@ -123,9 +121,7 @@ function GCPContent() {
       accessorKey: 'externalIP',
       header: 'External IP',
       cell: ({ row }) => (
-        <span className="font-mono text-sm">
-          {row.getValue('externalIP') || '-'}
-        </span>
+        <span className="font-mono text-sm">{row.getValue('externalIP') || '-'}</span>
       ),
     },
     {
@@ -141,9 +137,7 @@ function GCPContent() {
   const cloudSQLColumns: ColumnDef<CloudSQLInstance>[] = [
     {
       accessorKey: 'name',
-      header: ({ column }) => (
-        <SortableHeader column={column}>Name</SortableHeader>
-      ),
+      header: ({ column }) => <SortableHeader column={column}>Name</SortableHeader>,
     },
     {
       accessorKey: 'databaseVersion',
@@ -184,9 +178,7 @@ function GCPContent() {
   const gcsColumns: ColumnDef<GCSBucket>[] = [
     {
       accessorKey: 'name',
-      header: ({ column }) => (
-        <SortableHeader column={column}>Bucket Name</SortableHeader>
-      ),
+      header: ({ column }) => <SortableHeader column={column}>Bucket Name</SortableHeader>,
     },
     {
       accessorKey: 'location',
@@ -223,17 +215,14 @@ function GCPContent() {
           Google Cloud Platform (GCP)
         </h1>
         <p className="mt-2 text-zinc-600 dark:text-zinc-400">
-          Manage GCP resources and deploy to Compute Engine, Cloud SQL, and
-          Cloud Storage
+          Manage GCP resources and deploy to Compute Engine, Cloud SQL, and Cloud Storage
         </p>
       </div>
 
       {/* Connection Status */}
       <Card className="p-6">
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-lg font-semibold text-zinc-900 dark:text-white">
-            GCP Connection
-          </h2>
+          <h2 className="text-lg font-semibold text-zinc-900 dark:text-white">GCP Connection</h2>
           <div
             className={`flex items-center gap-2 rounded-full px-3 py-1 text-sm font-medium ${
               connected
@@ -293,12 +282,8 @@ function GCPContent() {
         ) : (
           <div className="space-y-3">
             <div className="flex items-center justify-between">
-              <span className="text-sm text-zinc-600 dark:text-zinc-400">
-                Project ID
-              </span>
-              <span className="font-mono text-sm text-zinc-900 dark:text-white">
-                {projectId}
-              </span>
+              <span className="text-sm text-zinc-600 dark:text-zinc-400">Project ID</span>
+              <span className="font-mono text-sm text-zinc-900 dark:text-white">{projectId}</span>
             </div>
             <Button variant="outline" onClick={() => setConnected(false)}>
               Disconnect
@@ -317,9 +302,7 @@ function GCPContent() {
                   <Server className="h-5 w-5 text-blue-600 dark:text-blue-400" />
                 </div>
                 <div>
-                  <p className="text-sm text-zinc-600 dark:text-zinc-400">
-                    Compute Instances
-                  </p>
+                  <p className="text-sm text-zinc-600 dark:text-zinc-400">Compute Instances</p>
                   <p className="text-xl font-bold text-zinc-900 dark:text-white">
                     {gceInstances.length}
                   </p>
@@ -333,9 +316,7 @@ function GCPContent() {
                   <Database className="h-5 w-5 text-sky-500 dark:text-sky-400" />
                 </div>
                 <div>
-                  <p className="text-sm text-zinc-600 dark:text-zinc-400">
-                    Cloud SQL
-                  </p>
+                  <p className="text-sm text-zinc-600 dark:text-zinc-400">Cloud SQL</p>
                   <p className="text-xl font-bold text-zinc-900 dark:text-white">
                     {cloudSQLInstances.length}
                   </p>
@@ -349,9 +330,7 @@ function GCPContent() {
                   <HardDrive className="h-5 w-5 text-green-600 dark:text-green-400" />
                 </div>
                 <div>
-                  <p className="text-sm text-zinc-600 dark:text-zinc-400">
-                    Cloud Storage
-                  </p>
+                  <p className="text-sm text-zinc-600 dark:text-zinc-400">Cloud Storage</p>
                   <p className="text-xl font-bold text-zinc-900 dark:text-white">
                     {gcsBuckets.length}
                   </p>
@@ -365,9 +344,7 @@ function GCPContent() {
                   <DollarSign className="h-5 w-5 text-amber-600 dark:text-amber-400" />
                 </div>
                 <div>
-                  <p className="text-sm text-zinc-600 dark:text-zinc-400">
-                    Monthly Cost
-                  </p>
+                  <p className="text-sm text-zinc-600 dark:text-zinc-400">Monthly Cost</p>
                   <p className="text-xl font-bold text-zinc-900 dark:text-white">
                     ${totalCost.toFixed(2)}
                   </p>
@@ -382,9 +359,7 @@ function GCPContent() {
               <div className="flex items-center gap-3">
                 <Cloud className="h-8 w-8 text-blue-600 dark:text-blue-400" />
                 <div>
-                  <h3 className="font-semibold text-blue-900 dark:text-blue-100">
-                    Deploy to GCP
-                  </h3>
+                  <h3 className="font-semibold text-blue-900 dark:text-blue-100">Deploy to GCP</h3>
                   <p className="text-sm text-blue-700 dark:text-blue-200">
                     Deploy your nself project to Google Cloud Platform
                   </p>
@@ -465,8 +440,8 @@ function GCPContent() {
                 GCP Not Connected
               </h3>
               <p className="text-sm text-yellow-700 dark:text-yellow-200">
-                Connect your GCP project to manage Compute Engine, Cloud SQL,
-                and Cloud Storage resources
+                Connect your GCP project to manage Compute Engine, Cloud SQL, and Cloud Storage
+                resources
               </p>
             </div>
           </div>

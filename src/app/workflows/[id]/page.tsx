@@ -5,11 +5,7 @@ import { Card } from '@/components/ui/card'
 import { PageContent } from '@/components/ui/page-content'
 import { PageHeader } from '@/components/ui/page-header'
 import { Skeleton } from '@/components/ui/skeleton'
-import {
-  WorkflowActionConfig,
-  WorkflowCanvas,
-  WorkflowTriggerConfig,
-} from '@/components/workflows'
+import { WorkflowActionConfig, WorkflowCanvas, WorkflowTriggerConfig } from '@/components/workflows'
 import {
   useActivateWorkflow,
   useDeleteWorkflow,
@@ -18,11 +14,7 @@ import {
   useUpdateWorkflow,
   useWorkflow,
 } from '@/hooks/useWorkflows'
-import type {
-  WorkflowAction,
-  WorkflowConnection,
-  WorkflowTrigger,
-} from '@/types/workflow'
+import type { WorkflowAction, WorkflowConnection, WorkflowTrigger } from '@/types/workflow'
 import {
   AlertCircle,
   Archive,
@@ -45,27 +37,17 @@ export default function WorkflowEditorPage() {
   const router = useRouter()
   const workflowId = params.id as string
 
-  const { workflow, isLoading, isError, error, refresh } =
-    useWorkflow(workflowId)
-  const {
-    update,
-    isLoading: isUpdating,
-    error: updateError,
-  } = useUpdateWorkflow(workflowId)
+  const { workflow, isLoading, isError, error, refresh } = useWorkflow(workflowId)
+  const { update, isLoading: isUpdating, error: updateError } = useUpdateWorkflow(workflowId)
   const { activate, isLoading: isActivating } = useActivateWorkflow()
   const { pause, isLoading: isPausing } = usePauseWorkflow()
   const { execute, isLoading: isExecuting } = useExecuteWorkflow()
   const { remove, isLoading: isDeleting } = useDeleteWorkflow()
 
-  const [localTriggers, setLocalTriggers] = React.useState<WorkflowTrigger[]>(
-    [],
-  )
+  const [localTriggers, setLocalTriggers] = React.useState<WorkflowTrigger[]>([])
   const [localActions, setLocalActions] = React.useState<WorkflowAction[]>([])
-  const [localConnections, setLocalConnections] = React.useState<
-    WorkflowConnection[]
-  >([])
-  const [selectedAction, setSelectedAction] =
-    React.useState<WorkflowAction | null>(null)
+  const [localConnections, setLocalConnections] = React.useState<WorkflowConnection[]>([])
+  const [selectedAction, setSelectedAction] = React.useState<WorkflowAction | null>(null)
   const [sidebarMode, setSidebarMode] = React.useState<SidebarMode>('triggers')
   const [hasChanges, setHasChanges] = React.useState(false)
 
@@ -82,10 +64,8 @@ export default function WorkflowEditorPage() {
   React.useEffect(() => {
     if (!workflow) return
 
-    const triggersChanged =
-      JSON.stringify(localTriggers) !== JSON.stringify(workflow.triggers)
-    const actionsChanged =
-      JSON.stringify(localActions) !== JSON.stringify(workflow.actions)
+    const triggersChanged = JSON.stringify(localTriggers) !== JSON.stringify(workflow.triggers)
+    const actionsChanged = JSON.stringify(localActions) !== JSON.stringify(workflow.actions)
     const connectionsChanged =
       JSON.stringify(localConnections) !== JSON.stringify(workflow.connections)
 
@@ -127,20 +107,14 @@ export default function WorkflowEditorPage() {
   const handleExecute = async () => {
     try {
       const execution = await execute({ workflowId })
-      router.push(
-        `/workflows/${workflowId}/executions?highlight=${execution.id}`,
-      )
+      router.push(`/workflows/${workflowId}/executions?highlight=${execution.id}`)
     } catch (_err) {
       // Error is handled by the hook
     }
   }
 
   const handleDelete = async () => {
-    if (
-      !confirm(
-        'Are you sure you want to delete this workflow? This action cannot be undone.',
-      )
-    ) {
+    if (!confirm('Are you sure you want to delete this workflow? This action cannot be undone.')) {
       return
     }
 
@@ -158,25 +132,18 @@ export default function WorkflowEditorPage() {
   }
 
   const handleActionUpdate = (updatedAction: WorkflowAction) => {
-    setLocalActions((prev) =>
-      prev.map((a) => (a.id === updatedAction.id ? updatedAction : a)),
-    )
+    setLocalActions((prev) => prev.map((a) => (a.id === updatedAction.id ? updatedAction : a)))
     setSelectedAction(updatedAction)
   }
 
-  const handleActionMove = (
-    actionId: string,
-    position: { x: number; y: number },
-  ) => {
-    setLocalActions((prev) =>
-      prev.map((a) => (a.id === actionId ? { ...a, position } : a)),
-    )
+  const handleActionMove = (actionId: string, position: { x: number; y: number }) => {
+    setLocalActions((prev) => prev.map((a) => (a.id === actionId ? { ...a, position } : a)))
   }
 
   const handleActionDelete = (actionId: string) => {
     setLocalActions((prev) => prev.filter((a) => a.id !== actionId))
     setLocalConnections((prev) =>
-      prev.filter((c) => c.sourceId !== actionId && c.targetId !== actionId),
+      prev.filter((c) => c.sourceId !== actionId && c.targetId !== actionId)
     )
     if (selectedAction?.id === actionId) {
       setSelectedAction(null)
@@ -184,9 +151,7 @@ export default function WorkflowEditorPage() {
     }
   }
 
-  const handleConnectionCreate = (
-    connection: Omit<WorkflowConnection, 'id'>,
-  ) => {
+  const handleConnectionCreate = (connection: Omit<WorkflowConnection, 'id'>) => {
     const newConnection: WorkflowConnection = {
       ...connection,
       id: `conn-${Date.now()}`,
@@ -286,12 +251,7 @@ export default function WorkflowEditorPage() {
             </Link>
 
             {workflow.status === 'active' ? (
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handlePause}
-                disabled={isProcessing}
-              >
+              <Button variant="outline" size="sm" onClick={handlePause} disabled={isProcessing}>
                 {isPausing ? (
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 ) : (
@@ -300,12 +260,7 @@ export default function WorkflowEditorPage() {
                 Pause
               </Button>
             ) : (
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handleActivate}
-                disabled={isProcessing}
-              >
+              <Button variant="outline" size="sm" onClick={handleActivate} disabled={isProcessing}>
                 {isActivating ? (
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 ) : (
@@ -329,11 +284,7 @@ export default function WorkflowEditorPage() {
               Run Now
             </Button>
 
-            <Button
-              onClick={handleSave}
-              disabled={!hasChanges || isProcessing}
-              size="sm"
-            >
+            <Button onClick={handleSave} disabled={!hasChanges || isProcessing} size="sm">
               {isUpdating ? (
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               ) : (
@@ -410,10 +361,7 @@ export default function WorkflowEditorPage() {
 
             {/* Sidebar Content */}
             {sidebarMode === 'triggers' && (
-              <WorkflowTriggerConfig
-                triggers={localTriggers}
-                onChange={setLocalTriggers}
-              />
+              <WorkflowTriggerConfig triggers={localTriggers} onChange={setLocalTriggers} />
             )}
 
             {sidebarMode === 'action' && selectedAction && (

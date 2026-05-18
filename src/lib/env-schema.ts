@@ -38,8 +38,7 @@ const KNOWN_SCHEMAS: Record<string, EnvVarSchemaEntry> = {
         severity: 'error',
       },
       {
-        test: (v) =>
-          !/^(password|changeme|admin|postgres|default|secret)$/i.test(v),
+        test: (v) => !/^(password|changeme|admin|postgres|default|secret)$/i.test(v),
         message: 'Must not use a common default password',
         severity: 'error',
       },
@@ -86,9 +85,7 @@ const KNOWN_SCHEMAS: Record<string, EnvVarSchemaEntry> = {
         test: (v) => {
           try {
             const parsed = JSON.parse(v)
-            return (
-              typeof parsed === 'object' && parsed !== null && 'key' in parsed
-            )
+            return typeof parsed === 'object' && parsed !== null && 'key' in parsed
           } catch {
             return false
           }
@@ -182,10 +179,7 @@ const FORMAT_RULES: FormatRule[] = [
  * Validate a single env var value against its schema.
  * Returns a validation result if any rule fails, null if valid.
  */
-export function validateEnvVar(
-  key: string,
-  value: string,
-): EnvValidationResult | null {
+export function validateEnvVar(key: string, value: string): EnvValidationResult | null {
   if (!value) return null // Empty values handled separately (required check)
 
   // Check known-schema rules first
@@ -227,7 +221,7 @@ export function getMissingRequired(variableKeys: string[]): string[] {
  * Validate an array of env vars and return all validation failures.
  */
 export function validateEnvVars(
-  variables: Array<{ key: string; value: string }>,
+  variables: Array<{ key: string; value: string }>
 ): EnvValidationResult[] {
   const results: EnvValidationResult[] = []
 

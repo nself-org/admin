@@ -23,10 +23,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     const { action, options } = body
 
     if (!action) {
-      return NextResponse.json(
-        { success: false, error: 'Action is required' },
-        { status: 400 },
-      )
+      return NextResponse.json({ success: false, error: 'Action is required' }, { status: 400 })
     }
 
     let result
@@ -57,7 +54,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         if (!options?.backupPath) {
           return NextResponse.json(
             { success: false, error: 'Backup path is required for restore' },
-            { status: 400 },
+            { status: 400 }
           )
         }
         result = await nselfDbRestore(options.backupPath)
@@ -76,7 +73,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       default:
         return NextResponse.json(
           { success: false, error: `Unknown action: ${action}` },
-          { status: 400 },
+          { status: 400 }
         )
     }
 
@@ -97,7 +94,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           details: result.error || result.stderr,
           output: result.stdout,
         },
-        { status: 500 },
+        { status: 500 }
       )
     }
   } catch (error) {
@@ -107,7 +104,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         error: 'Database operation failed',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -137,17 +134,8 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         return NextResponse.json({
           success: true,
           data: {
-            availableActions: [
-              'sync',
-              'seed',
-              'migrate',
-              'backup',
-              'restore',
-              'reset',
-              'analyze',
-            ],
-            description:
-              'Use POST with action parameter to execute database operations',
+            availableActions: ['sync', 'seed', 'migrate', 'backup', 'restore', 'reset', 'analyze'],
+            description: 'Use POST with action parameter to execute database operations',
           },
         })
     }
@@ -158,7 +146,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to get database status',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

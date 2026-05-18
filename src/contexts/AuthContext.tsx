@@ -3,13 +3,7 @@
 import { useCentralDataStore } from '@/stores/centralDataStore'
 import { useProjectStore } from '@/stores/projectStore'
 import { useRouter } from 'next/navigation'
-import {
-  createContext,
-  ReactNode,
-  useContext,
-  useEffect,
-  useState,
-} from 'react'
+import { createContext, ReactNode, useContext, useEffect, useState } from 'react'
 
 interface AuthContextType {
   isAuthenticated: boolean
@@ -53,10 +47,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     })
   }, [])
 
-  const login = async (
-    password: string,
-    rememberMe: boolean = false,
-  ): Promise<boolean> => {
+  const login = async (password: string, rememberMe: boolean = false): Promise<boolean> => {
     try {
       const response = await fetch('/api/auth/login', {
         method: 'POST',

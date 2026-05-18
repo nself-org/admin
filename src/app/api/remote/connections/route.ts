@@ -26,10 +26,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Host is required.' }, { status: 400 })
     }
     if (body.mode !== 'ssh' && body.mode !== 'api') {
-      return NextResponse.json(
-        { error: 'Mode must be ssh or api.' },
-        { status: 400 },
-      )
+      return NextResponse.json({ error: 'Mode must be ssh or api.' }, { status: 400 })
     }
     const saved = await addConnection(body)
     return NextResponse.json({ connection: saved })

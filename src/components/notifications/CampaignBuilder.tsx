@@ -90,11 +90,7 @@ export function CampaignBuilder({ onSuccess, onCancel }: CampaignBuilderProps) {
   }
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="space-y-6"
-      aria-label="Campaign builder"
-    >
+    <form onSubmit={handleSubmit} className="space-y-6" aria-label="Campaign builder">
       {/* Title / Body */}
       <div className="space-y-4">
         <div>
@@ -176,9 +172,7 @@ export function CampaignBuilder({ onSuccess, onCancel }: CampaignBuilderProps) {
               rows={3}
               className="w-full rounded-md border border-zinc-200 bg-white px-3 py-2 font-mono text-sm placeholder:text-zinc-400 focus:border-zinc-400 focus:outline-none dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100"
             />
-            {segmentError && (
-              <p className="mt-1 text-xs text-red-500">{segmentError}</p>
-            )}
+            {segmentError && <p className="mt-1 text-xs text-red-500">{segmentError}</p>}
           </div>
         )}
       </div>

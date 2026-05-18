@@ -126,7 +126,7 @@ export class EnvFileReader {
         ...merged,
         ...config,
       }),
-      {},
+      {}
     )
   }
 
@@ -135,13 +135,7 @@ export class EnvFileReader {
    */
   async findAndRead(
     directory: string,
-    patterns: string[] = [
-      '.env',
-      '.env.local',
-      '.env.dev',
-      '.env.staging',
-      '.env.prod',
-    ],
+    patterns: string[] = ['.env', '.env.local', '.env.dev', '.env.staging', '.env.prod']
   ): Promise<EnvConfig> {
     const envFiles = patterns
       .map((pattern) => path.join(directory, pattern))

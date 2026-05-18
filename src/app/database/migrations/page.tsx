@@ -4,13 +4,7 @@ import { TableSkeleton } from '@/components/skeletons'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import {
   Dialog,
   DialogContent,
@@ -59,9 +53,7 @@ function DatabaseMigrationsContent() {
   const [isFreshRunning, setIsFreshRunning] = useState(false)
   const [isLoadingStatus, setIsLoadingStatus] = useState(true)
   const [migrations, setMigrations] = useState<Migration[]>([])
-  const [migrationResults, setMigrationResults] = useState<MigrationResult[]>(
-    [],
-  )
+  const [migrationResults, setMigrationResults] = useState<MigrationResult[]>([])
   const [lastOutput, setLastOutput] = useState<string>('')
   const [showCreateDialog, setShowCreateDialog] = useState(false)
   const [showFreshDialog, setShowFreshDialog] = useState(false)
@@ -101,9 +93,7 @@ function DatabaseMigrationsContent() {
       const data = await response.json()
 
       if (!response.ok) {
-        setLastOutput(
-          data.details || data.error || `Error ${response.status}`,
-        )
+        setLastOutput(data.details || data.error || `Error ${response.status}`)
         setMigrations([])
         return
       }
@@ -113,9 +103,7 @@ function DatabaseMigrationsContent() {
       setLastOutput(fetched.length === 0 ? '' : `Loaded ${fetched.length} migration(s)`)
     } catch (error) {
       // Offline / Docker down
-      setLastOutput(
-        error instanceof Error ? error.message : 'Could not reach the admin API',
-      )
+      setLastOutput(error instanceof Error ? error.message : 'Could not reach the admin API')
       setMigrations([])
     } finally {
       setIsLoadingStatus(false)
@@ -129,10 +117,7 @@ function DatabaseMigrationsContent() {
   /**
    * Execute nself db migrate via the CLI API
    */
-  const runMigrate = async (
-    direction: 'up' | 'down' = 'up',
-    steps?: number,
-  ) => {
+  const runMigrate = async (direction: 'up' | 'down' = 'up', steps?: number) => {
     setIsRunning(true)
     setLastOutput('')
 
@@ -215,9 +200,7 @@ function DatabaseMigrationsContent() {
 
       await fetchMigrationStatus()
     } catch (error) {
-      setLastOutput(
-        error instanceof Error ? error.message : 'Fresh migration failed',
-      )
+      setLastOutput(error instanceof Error ? error.message : 'Fresh migration failed')
     } finally {
       setIsFreshRunning(false)
     }
@@ -254,9 +237,7 @@ function DatabaseMigrationsContent() {
         await fetchMigrationStatus()
       }
     } catch (error) {
-      setLastOutput(
-        error instanceof Error ? error.message : 'Failed to create migration',
-      )
+      setLastOutput(error instanceof Error ? error.message : 'Failed to create migration')
     }
   }
 
@@ -289,9 +270,7 @@ function DatabaseMigrationsContent() {
   return (
     <div className="space-y-6 p-6">
       <div>
-        <h1 className="text-2xl font-bold text-zinc-900 dark:text-white">
-          Database Migrations
-        </h1>
+        <h1 className="text-2xl font-bold text-zinc-900 dark:text-white">Database Migrations</h1>
         <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
           Run and manage database schema migrations using{' '}
           <code className="rounded bg-zinc-100 px-1 py-0.5 text-xs dark:bg-zinc-800">
@@ -306,10 +285,8 @@ function DatabaseMigrationsContent() {
           <AlertTitle>nself CLI Integration</AlertTitle>
           <AlertDescription>
             This page executes{' '}
-            <code className="rounded bg-zinc-100 px-1 dark:bg-zinc-800">
-              nself db migrate
-            </code>{' '}
-            to manage your database schema migrations.
+            <code className="rounded bg-zinc-100 px-1 dark:bg-zinc-800">nself db migrate</code> to
+            manage your database schema migrations.
           </AlertDescription>
         </Alert>
 
@@ -320,9 +297,7 @@ function DatabaseMigrationsContent() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm font-medium text-zinc-500">Applied</p>
-                  <p className="mt-1 text-2xl font-bold text-emerald-500">
-                    {appliedCount}
-                  </p>
+                  <p className="mt-1 text-2xl font-bold text-emerald-500">{appliedCount}</p>
                 </div>
                 <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-emerald-500/10">
                   <CheckCircle className="h-6 w-6 text-emerald-500" />
@@ -335,9 +310,7 @@ function DatabaseMigrationsContent() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm font-medium text-zinc-500">Pending</p>
-                  <p className="mt-1 text-2xl font-bold text-amber-500">
-                    {pendingCount}
-                  </p>
+                  <p className="mt-1 text-2xl font-bold text-amber-500">{pendingCount}</p>
                 </div>
                 <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-amber-500/10">
                   <Clock className="h-6 w-6 text-amber-500" />
@@ -350,9 +323,7 @@ function DatabaseMigrationsContent() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm font-medium text-zinc-500">Failed</p>
-                  <p className="mt-1 text-2xl font-bold text-red-500">
-                    {failedCount}
-                  </p>
+                  <p className="mt-1 text-2xl font-bold text-red-500">{failedCount}</p>
                 </div>
                 <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-red-500/10">
                   <XCircle className="h-6 w-6 text-red-500" />
@@ -382,8 +353,7 @@ function DatabaseMigrationsContent() {
             <AlertTitle>Pending Migrations</AlertTitle>
             <AlertDescription>
               You have {pendingCount} pending migration
-              {pendingCount > 1 ? 's' : ''}. Run them to update your database
-              schema.
+              {pendingCount > 1 ? 's' : ''}. Run them to update your database schema.
             </AlertDescription>
           </Alert>
         )}
@@ -396,9 +366,7 @@ function DatabaseMigrationsContent() {
                 <GitBranch className="h-5 w-5 text-blue-600" />
                 <CardTitle>Migration Controls</CardTitle>
               </div>
-              <CardDescription>
-                Run, rollback, or create new migrations
-              </CardDescription>
+              <CardDescription>Run, rollback, or create new migrations</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               {/* Action Buttons */}
@@ -444,10 +412,7 @@ function DatabaseMigrationsContent() {
 
               <div className="grid grid-cols-2 gap-3">
                 {/* Create Migration Dialog */}
-                <Dialog
-                  open={showCreateDialog}
-                  onOpenChange={setShowCreateDialog}
-                >
+                <Dialog open={showCreateDialog} onOpenChange={setShowCreateDialog}>
                   <DialogTrigger asChild>
                     <Button variant="outline" className="w-full">
                       <Plus className="mr-2 h-4 w-4" />
@@ -486,16 +451,10 @@ function DatabaseMigrationsContent() {
                       </div>
                     </div>
                     <DialogFooter>
-                      <Button
-                        variant="outline"
-                        onClick={() => setShowCreateDialog(false)}
-                      >
+                      <Button variant="outline" onClick={() => setShowCreateDialog(false)}>
                         Cancel
                       </Button>
-                      <Button
-                        onClick={createMigration}
-                        disabled={!newMigrationName.trim()}
-                      >
+                      <Button onClick={createMigration} disabled={!newMigrationName.trim()}>
                         <Plus className="mr-2 h-4 w-4" />
                         Create
                       </Button>
@@ -509,9 +468,7 @@ function DatabaseMigrationsContent() {
                   variant="outline"
                   className="w-full"
                 >
-                  <RefreshCw
-                    className={`mr-2 h-4 w-4 ${isLoadingStatus ? 'animate-spin' : ''}`}
-                  />
+                  <RefreshCw className={`mr-2 h-4 w-4 ${isLoadingStatus ? 'animate-spin' : ''}`} />
                   Refresh Status
                 </Button>
               </div>
@@ -530,10 +487,7 @@ function DatabaseMigrationsContent() {
                     </div>
                   </div>
 
-                  <Dialog
-                    open={showFreshDialog}
-                    onOpenChange={setShowFreshDialog}
-                  >
+                  <Dialog open={showFreshDialog} onOpenChange={setShowFreshDialog}>
                     <DialogTrigger asChild>
                       <Button variant="destructive" className="w-full">
                         <Trash2 className="mr-2 h-4 w-4" />
@@ -547,9 +501,8 @@ function DatabaseMigrationsContent() {
                           Fresh Migration Warning
                         </DialogTitle>
                         <DialogDescription className="pt-2">
-                          This will <strong>DROP ALL TABLES</strong> and re-run
-                          all migrations from scratch. All data will be
-                          permanently lost.
+                          This will <strong>DROP ALL TABLES</strong> and re-run all migrations from
+                          scratch. All data will be permanently lost.
                         </DialogDescription>
                       </DialogHeader>
                       <div className="space-y-4 py-4">
@@ -561,19 +514,14 @@ function DatabaseMigrationsContent() {
                           </AlertDescription>
                         </Alert>
                         <div className="space-y-2">
-                          <Label
-                            htmlFor="fresh-confirm"
-                            className="text-red-500"
-                          >
+                          <Label htmlFor="fresh-confirm" className="text-red-500">
                             Type &quot;fresh migrate&quot; to confirm
                           </Label>
                           <Input
                             id="fresh-confirm"
                             placeholder="fresh migrate"
                             value={freshConfirmation}
-                            onChange={(e) =>
-                              setFreshConfirmation(e.target.value)
-                            }
+                            onChange={(e) => setFreshConfirmation(e.target.value)}
                             className="border-red-500"
                           />
                         </div>
@@ -591,10 +539,7 @@ function DatabaseMigrationsContent() {
                         <Button
                           variant="destructive"
                           onClick={runFreshMigration}
-                          disabled={
-                            freshConfirmation !== 'fresh migrate' ||
-                            isFreshRunning
-                          }
+                          disabled={freshConfirmation !== 'fresh migrate' || isFreshRunning}
                         >
                           {isFreshRunning ? (
                             <>
@@ -656,9 +601,7 @@ function DatabaseMigrationsContent() {
               <FileCode className="h-5 w-5" />
               Migration Files
             </CardTitle>
-            <CardDescription>
-              All migration files in your project
-            </CardDescription>
+            <CardDescription>All migration files in your project</CardDescription>
           </CardHeader>
           <CardContent>
             {isLoadingStatus && migrations.length === 0 ? (
@@ -670,9 +613,7 @@ function DatabaseMigrationsContent() {
               <div className="py-8 text-center text-zinc-500">
                 <GitBranch className="mx-auto mb-2 h-8 w-8 opacity-50" />
                 <p>No migrations found</p>
-                <p className="mt-1 text-sm">
-                  Create your first migration above
-                </p>
+                <p className="mt-1 text-sm">Create your first migration above</p>
               </div>
             ) : (
               <div className="overflow-x-auto">
@@ -698,10 +639,7 @@ function DatabaseMigrationsContent() {
                   </thead>
                   <tbody className="divide-y dark:divide-zinc-700">
                     {migrations.map((migration) => (
-                      <tr
-                        key={migration.id}
-                        className="hover:bg-zinc-50 dark:hover:bg-zinc-800/50"
-                      >
+                      <tr key={migration.id} className="hover:bg-zinc-50 dark:hover:bg-zinc-800/50">
                         <td className="px-4 py-3">
                           <div className="flex items-center gap-3">
                             <div
@@ -713,9 +651,7 @@ function DatabaseMigrationsContent() {
                               <p className="text-sm font-medium text-zinc-900 dark:text-white">
                                 {migration.name}
                               </p>
-                              <p className="text-xs text-zinc-500">
-                                ID: {migration.id}
-                              </p>
+                              <p className="text-xs text-zinc-500">ID: {migration.id}</p>
                             </div>
                           </div>
                         </td>
@@ -729,9 +665,7 @@ function DatabaseMigrationsContent() {
                           </Badge>
                         </td>
                         <td className="px-4 py-3 text-sm text-zinc-600 dark:text-zinc-400">
-                          {migration.batch > 0
-                            ? `Batch ${migration.batch}`
-                            : '-'}
+                          {migration.batch > 0 ? `Batch ${migration.batch}` : '-'}
                         </td>
                         <td className="px-4 py-3">
                           {migration.appliedAt ? (
@@ -739,14 +673,10 @@ function DatabaseMigrationsContent() {
                               <Calendar className="h-4 w-4 text-zinc-400" />
                               <div>
                                 <p className="text-sm text-zinc-900 dark:text-white">
-                                  {new Date(
-                                    migration.appliedAt,
-                                  ).toLocaleDateString()}
+                                  {new Date(migration.appliedAt).toLocaleDateString()}
                                 </p>
                                 <p className="text-xs text-zinc-500">
-                                  {new Date(
-                                    migration.appliedAt,
-                                  ).toLocaleTimeString([], {
+                                  {new Date(migration.appliedAt).toLocaleTimeString([], {
                                     hour: '2-digit',
                                     minute: '2-digit',
                                   })}
@@ -795,9 +725,7 @@ function DatabaseMigrationsContent() {
           <Card>
             <CardHeader>
               <CardTitle>Recent Operations</CardTitle>
-              <CardDescription>
-                History of migration operations from this session
-              </CardDescription>
+              <CardDescription>History of migration operations from this session</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-3">
@@ -827,9 +755,7 @@ function DatabaseMigrationsContent() {
                               ? 'Rollback'
                               : 'Fresh Migrate'}
                         </div>
-                        <div className="text-sm text-zinc-500">
-                          {result.timestamp}
-                        </div>
+                        <div className="text-sm text-zinc-500">{result.timestamp}</div>
                       </div>
                     </div>
                     <Badge variant={result.success ? 'default' : 'destructive'}>

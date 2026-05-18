@@ -33,7 +33,11 @@ interface ScaffoldOptions {
 }
 
 const TEMPLATES: { id: TemplateType; label: string; description: string }[] = [
-  { id: 'component', label: 'React Component', description: 'List/detail component with all 7 UI states' },
+  {
+    id: 'component',
+    label: 'React Component',
+    description: 'List/detail component with all 7 UI states',
+  },
   { id: 'hook', label: 'Data Hook', description: 'Custom hook for fetch + mutation' },
   { id: 'api-route', label: 'API Route', description: 'Next.js App Router route handler' },
   { id: 'type', label: 'TypeScript Types', description: 'Type definitions from schema' },
@@ -246,11 +250,16 @@ export type Update${Name} = Partial<Create${Name}>
 
 function generateCode(opts: ScaffoldOptions, table: TableInfo): string {
   switch (opts.template) {
-    case 'component': return generateComponent(table)
-    case 'hook': return generateHook(table)
-    case 'api-route': return generateApiRoute(table)
-    case 'type': return generateTypes(table)
-    default: return ''
+    case 'component':
+      return generateComponent(table)
+    case 'hook':
+      return generateHook(table)
+    case 'api-route':
+      return generateApiRoute(table)
+    case 'type':
+      return generateTypes(table)
+    default:
+      return ''
   }
 }
 
@@ -327,18 +336,18 @@ function ScaffoldContent() {
   // State 5: offline
   if (offline) {
     return (
-      <div className="p-6 space-y-4">
-        <div className="flex items-center gap-3 p-4 rounded-lg bg-yellow-500/10 border border-yellow-500/30">
-          <WifiOff className="h-5 w-5 text-yellow-500 flex-shrink-0" />
+      <div className="space-y-4 p-6">
+        <div className="flex items-center gap-3 rounded-lg border border-yellow-500/30 bg-yellow-500/10 p-4">
+          <WifiOff className="h-5 w-5 flex-shrink-0 text-yellow-500" />
           <div>
             <p className="font-medium text-yellow-400">Cannot reach nself services</p>
-            <p className="text-sm text-gray-400 mt-0.5">
+            <p className="mt-0.5 text-sm text-gray-400">
               Scaffold requires a running Hasura instance to read the schema.
             </p>
           </div>
         </div>
         <Button onClick={fetchSchema} disabled={loading} variant="secondary" size="sm">
-          <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
+          <RefreshCw className={`mr-2 h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
           Retry
         </Button>
       </div>
@@ -348,16 +357,16 @@ function ScaffoldContent() {
   // State 4: error
   if (error && !schema) {
     return (
-      <div className="p-6 space-y-4">
-        <div className="flex items-center gap-3 p-4 rounded-lg bg-red-500/10 border border-red-500/30">
-          <AlertTriangle className="h-5 w-5 text-red-400 flex-shrink-0" />
+      <div className="space-y-4 p-6">
+        <div className="flex items-center gap-3 rounded-lg border border-red-500/30 bg-red-500/10 p-4">
+          <AlertTriangle className="h-5 w-5 flex-shrink-0 text-red-400" />
           <div>
             <p className="font-medium text-red-400">Failed to load schema</p>
-            <p className="text-sm text-gray-400 mt-0.5">{error}</p>
+            <p className="mt-0.5 text-sm text-gray-400">{error}</p>
           </div>
         </div>
         <Button onClick={fetchSchema} disabled={loading} variant="secondary" size="sm">
-          <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
+          <RefreshCw className={`mr-2 h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
           Retry
         </Button>
       </div>
@@ -368,10 +377,16 @@ function ScaffoldContent() {
   if (!schema) {
     return (
       <div className="p-6 text-center text-gray-400">
-        <FileCode className="h-8 w-8 mx-auto mb-2 opacity-50" />
+        <FileCode className="mx-auto mb-2 h-8 w-8 opacity-50" />
         <p>No schema available.</p>
-        <Button onClick={fetchSchema} disabled={loading} variant="secondary" size="sm" className="mt-3">
-          <RefreshCw className="h-4 w-4 mr-2" />
+        <Button
+          onClick={fetchSchema}
+          disabled={loading}
+          variant="secondary"
+          size="sm"
+          className="mt-3"
+        >
+          <RefreshCw className="mr-2 h-4 w-4" />
           Load Schema
         </Button>
       </div>
@@ -380,22 +395,24 @@ function ScaffoldContent() {
 
   // States 6+7: success
   return (
-    <div className="p-6 space-y-6">
+    <div className="space-y-6 p-6">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-xl font-semibold text-white">Code Scaffold</h2>
-          <p className="text-sm text-gray-400 mt-1">Generate boilerplate from your database schema</p>
+          <p className="mt-1 text-sm text-gray-400">
+            Generate boilerplate from your database schema
+          </p>
         </div>
         <Button onClick={fetchSchema} disabled={loading} variant="secondary" size="sm">
           {/* State 2: refresh spinner */}
-          <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
+          <RefreshCw className={`mr-2 h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
           {loading ? 'Loading…' : 'Refresh'}
         </Button>
       </div>
 
       {/* Options form */}
-      <div className="rounded-lg border border-white/10 bg-white/[0.02] p-5 space-y-4">
+      <div className="space-y-4 rounded-lg border border-white/10 bg-white/[0.02] p-5">
         {/* Table selector */}
         <div className="space-y-1.5">
           <label className="text-sm font-medium text-gray-300">Table</label>
@@ -403,7 +420,7 @@ function ScaffoldContent() {
             <select
               value={opts.table}
               onChange={(e) => setOpts((prev) => ({ ...prev, table: e.target.value }))}
-              className="w-full px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-sm text-white appearance-none focus:outline-none focus:border-sky-500/50 transition-colors pr-8"
+              className="w-full appearance-none rounded-lg border border-white/10 bg-white/5 px-3 py-2 pr-8 text-sm text-white transition-colors focus:border-sky-500/50 focus:outline-none"
             >
               {schema.tables.length === 0 ? (
                 <option value="">No tables found</option>
@@ -415,19 +432,19 @@ function ScaffoldContent() {
                 ))
               )}
             </select>
-            <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500 pointer-events-none" />
+            <ChevronDown className="pointer-events-none absolute top-1/2 right-2.5 h-4 w-4 -translate-y-1/2 text-gray-500" />
           </div>
           {schema.tables.length > 0 && (
             <button
               onClick={() => setShowTables((v) => !v)}
-              className="text-xs text-sky-400 hover:text-sky-300 transition-colors"
+              className="text-xs text-sky-400 transition-colors hover:text-sky-300"
             >
               {showTables ? 'Hide' : 'Show'} table columns
             </button>
           )}
           {showTables && opts.table && (
-            <div className="mt-2 rounded-lg border border-white/10 overflow-hidden">
-              <table className="w-full text-xs font-mono">
+            <div className="mt-2 overflow-hidden rounded-lg border border-white/10">
+              <table className="w-full font-mono text-xs">
                 <thead className="bg-white/5">
                   <tr>
                     <th className="px-3 py-2 text-left text-gray-400">Column</th>
@@ -457,14 +474,14 @@ function ScaffoldContent() {
               <button
                 key={t.id}
                 onClick={() => setOpts((prev) => ({ ...prev, template: t.id }))}
-                className={`px-3 py-2 rounded-lg border text-left transition-colors ${
+                className={`rounded-lg border px-3 py-2 text-left transition-colors ${
                   opts.template === t.id
                     ? 'border-sky-500/50 bg-sky-500/10 text-sky-400'
                     : 'border-white/10 bg-white/[0.02] text-gray-300 hover:border-white/20'
                 }`}
               >
                 <p className="text-sm font-medium">{t.label}</p>
-                <p className="text-xs text-gray-400 mt-0.5">{t.description}</p>
+                <p className="mt-0.5 text-xs text-gray-400">{t.description}</p>
               </button>
             ))}
           </div>
@@ -475,18 +492,18 @@ function ScaffoldContent() {
           disabled={!opts.table || schema.tables.length === 0}
           size="sm"
         >
-          <FileCode className="h-4 w-4 mr-2" />
+          <FileCode className="mr-2 h-4 w-4" />
           Generate
         </Button>
       </div>
 
       {/* Generated output */}
       {generated && (
-        <div className="rounded-lg border border-white/10 overflow-hidden">
-          <div className="flex items-center justify-between px-4 py-2 bg-white/5 border-b border-white/10">
+        <div className="overflow-hidden rounded-lg border border-white/10">
+          <div className="flex items-center justify-between border-b border-white/10 bg-white/5 px-4 py-2">
             <div className="flex items-center gap-2">
               <Code2 className="h-4 w-4 text-sky-400" />
-              <span className="text-sm text-gray-300 font-mono">
+              <span className="font-mono text-sm text-gray-300">
                 {opts.template === 'component'
                   ? `${opts.table}-list.tsx`
                   : opts.template === 'hook'
@@ -498,7 +515,7 @@ function ScaffoldContent() {
             </div>
             <button
               onClick={handleCopy}
-              className="flex items-center gap-1.5 text-xs text-gray-400 hover:text-white transition-colors px-2 py-1 rounded hover:bg-white/10"
+              className="flex items-center gap-1.5 rounded px-2 py-1 text-xs text-gray-400 transition-colors hover:bg-white/10 hover:text-white"
             >
               {copied ? (
                 <>
@@ -513,7 +530,7 @@ function ScaffoldContent() {
               )}
             </button>
           </div>
-          <pre className="p-4 text-xs text-gray-300 font-mono whitespace-pre overflow-auto max-h-[32rem] bg-black/20">
+          <pre className="max-h-[32rem] overflow-auto bg-black/20 p-4 font-mono text-xs whitespace-pre text-gray-300">
             {generated}
           </pre>
         </div>

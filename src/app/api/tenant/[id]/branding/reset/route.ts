@@ -6,20 +6,13 @@ interface RouteParams {
   params: Promise<{ id: string }>
 }
 
-export async function POST(
-  request: NextRequest,
-  { params }: RouteParams,
-): Promise<NextResponse> {
+export async function POST(request: NextRequest, { params }: RouteParams): Promise<NextResponse> {
   const authError = await requireAuth(request)
   if (authError) return authError
 
   try {
     const { id } = await params
-    const result = await executeNselfCommand('tenant', [
-      'branding',
-      'reset',
-      `--tenant=${id}`,
-    ])
+    const result = await executeNselfCommand('tenant', ['branding', 'reset', `--tenant=${id}`])
 
     if (!result.success) {
       return NextResponse.json(
@@ -28,7 +21,7 @@ export async function POST(
           error: 'Failed to reset branding',
           details: result.error || result.stderr || 'Unknown error',
         },
-        { status: 500 },
+        { status: 500 }
       )
     }
 
@@ -51,7 +44,7 @@ export async function POST(
         error: 'Failed to reset branding',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

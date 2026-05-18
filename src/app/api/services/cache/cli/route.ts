@@ -10,26 +10,18 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     const body = await request.json()
     const { command } = body as { command?: string }
 
-    if (
-      !command ||
-      typeof command !== 'string' ||
-      command.trim().length === 0
-    ) {
+    if (!command || typeof command !== 'string' || command.trim().length === 0) {
       return NextResponse.json(
         {
           success: false,
           error: 'Invalid command',
           details: 'A non-empty Redis CLI command is required',
         },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
-    const result = await executeNselfCommand('service', [
-      'cache',
-      'cli',
-      command.trim(),
-    ])
+    const result = await executeNselfCommand('service', ['cache', 'cli', command.trim()])
 
     if (!result.success) {
       return NextResponse.json(
@@ -38,7 +30,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           error: 'Cache CLI command failed',
           details: result.error || result.stderr || 'Unknown error',
         },
-        { status: 500 },
+        { status: 500 }
       )
     }
 
@@ -53,7 +45,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         error: 'Cache CLI command failed',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

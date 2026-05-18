@@ -55,12 +55,7 @@ type Tab = 'sessions' | 'identities' | 'tools'
 
 // ── Sessions tab ───────────────────────────────────────────────────────────────
 
-function SessionsTab({
-  clawDown,
-}: {
-  clawDown: boolean
-  onClawDown: () => void
-}) {
+function SessionsTab({ clawDown }: { clawDown: boolean; onClawDown: () => void }) {
   const [sessions, setSessions] = useState<ClawSession[]>([])
   const [loading, setLoading] = useState(true)
 
@@ -96,10 +91,7 @@ function SessionsTab({
     return (
       <div className="space-y-3 pt-2">
         {[1, 2, 3].map((n) => (
-          <div
-            key={n}
-            className="h-12 animate-pulse rounded-xl bg-zinc-800/50"
-          />
+          <div key={n} className="h-12 animate-pulse rounded-xl bg-zinc-800/50" />
         ))}
       </div>
     )
@@ -147,14 +139,10 @@ function SessionsTab({
                 key={s.id}
                 className="border-b border-zinc-700/50 last:border-0 hover:bg-zinc-800/50"
               >
-                <td className="px-4 py-3 font-mono text-xs text-zinc-500">
-                  {s.id.slice(0, 8)}…
-                </td>
+                <td className="px-4 py-3 font-mono text-xs text-zinc-500">{s.id.slice(0, 8)}…</td>
                 <td className="px-4 py-3 text-sm text-zinc-400">{s.user_id}</td>
                 <td className="px-4 py-3 text-sm text-zinc-300">
-                  {s.name ?? (
-                    <span className="text-zinc-600 italic">Unnamed</span>
-                  )}
+                  {s.name ?? <span className="text-zinc-600 italic">Unnamed</span>}
                 </td>
                 <td className="px-4 py-3 text-xs whitespace-nowrap text-zinc-500">
                   {new Date(s.created_at).toLocaleString()}
@@ -194,9 +182,7 @@ function IdentitiesTab({ clawDown }: { clawDown: boolean }) {
   const [identities, setIdentities] = useState<ClawIdentity[]>([])
   const [loading, setLoading] = useState(true)
   const [expandedId, setExpandedId] = useState<string | null>(null)
-  const [drafts, setDrafts] = useState<Record<string, Partial<ClawIdentity>>>(
-    {},
-  )
+  const [drafts, setDrafts] = useState<Record<string, Partial<ClawIdentity>>>({})
   const [saving, setSaving] = useState<string | null>(null)
   const [creatingNew, setCreatingNew] = useState(false)
   const [newDraft, setNewDraft] = useState({
@@ -226,11 +212,7 @@ function IdentitiesTab({ clawDown }: { clawDown: boolean }) {
   const getDraft = (id: string, field: keyof ClawIdentity, fallback: string) =>
     (drafts[id]?.[field] as string | undefined) ?? fallback
 
-  const setDraftField = (
-    id: string,
-    field: keyof ClawIdentity,
-    value: string,
-  ) => {
+  const setDraftField = (id: string, field: keyof ClawIdentity, value: string) => {
     setDrafts((prev) => ({
       ...prev,
       [id]: { ...prev[id], [field]: value },
@@ -304,10 +286,7 @@ function IdentitiesTab({ clawDown }: { clawDown: boolean }) {
     return (
       <div className="space-y-3 pt-2">
         {[1, 2].map((n) => (
-          <div
-            key={n}
-            className="h-16 animate-pulse rounded-xl bg-zinc-800/50"
-          />
+          <div key={n} className="h-16 animate-pulse rounded-xl bg-zinc-800/50" />
         ))}
       </div>
     )
@@ -323,26 +302,20 @@ function IdentitiesTab({ clawDown }: { clawDown: boolean }) {
             type="text"
             placeholder="Name"
             value={newDraft.name}
-            onChange={(e) =>
-              setNewDraft((d) => ({ ...d, name: e.target.value }))
-            }
+            onChange={(e) => setNewDraft((d) => ({ ...d, name: e.target.value }))}
             className="w-full rounded-lg border border-zinc-700/50 bg-zinc-900/50 px-3 py-2 text-sm text-white placeholder-zinc-500 outline-none focus:border-sky-500/50"
           />
           <textarea
             placeholder="Soul (agent personality / instructions)…"
             value={newDraft.soul}
-            onChange={(e) =>
-              setNewDraft((d) => ({ ...d, soul: e.target.value }))
-            }
+            onChange={(e) => setNewDraft((d) => ({ ...d, soul: e.target.value }))}
             rows={4}
             className="w-full resize-none rounded-lg border border-zinc-700/50 bg-zinc-900/50 px-3 py-2 text-sm text-white placeholder-zinc-500 outline-none focus:border-sky-500/50"
           />
           <textarea
             placeholder="User profile (optional)…"
             value={newDraft.user_profile}
-            onChange={(e) =>
-              setNewDraft((d) => ({ ...d, user_profile: e.target.value }))
-            }
+            onChange={(e) => setNewDraft((d) => ({ ...d, user_profile: e.target.value }))}
             rows={2}
             className="w-full resize-none rounded-lg border border-zinc-700/50 bg-zinc-900/50 px-3 py-2 text-sm text-white placeholder-zinc-500 outline-none focus:border-sky-500/50"
           />
@@ -394,16 +367,13 @@ function IdentitiesTab({ clawDown }: { clawDown: boolean }) {
 
       {identities.map((identity) => {
         const isExpanded = expandedId === identity.id
-        const hasDraft =
-          drafts[identity.id] && Object.keys(drafts[identity.id]).length > 0
+        const hasDraft = drafts[identity.id] && Object.keys(drafts[identity.id]).length > 0
 
         return (
           <div
             key={identity.id}
             className={`rounded-xl border bg-zinc-800/50 ${
-              identity.is_active
-                ? 'border-emerald-500/30'
-                : 'border-zinc-700/50'
+              identity.is_active ? 'border-emerald-500/30' : 'border-zinc-700/50'
             }`}
           >
             {/* Row header */}
@@ -416,9 +386,7 @@ function IdentitiesTab({ clawDown }: { clawDown: boolean }) {
                 {identity.is_active && (
                   <Star className="h-4 w-4 shrink-0 fill-emerald-500 text-emerald-500" />
                 )}
-                <span className="text-sm font-medium text-white">
-                  {identity.name}
-                </span>
+                <span className="text-sm font-medium text-white">{identity.name}</span>
                 {identity.is_active && (
                   <span className="rounded-full bg-emerald-900/40 px-2 py-0.5 text-xs text-emerald-300">
                     active
@@ -441,28 +409,20 @@ function IdentitiesTab({ clawDown }: { clawDown: boolean }) {
             {isExpanded && (
               <div className="space-y-3 border-t border-zinc-700/50 px-4 pt-3 pb-4">
                 <div>
-                  <label className="mb-1 block text-xs font-medium text-zinc-500">
-                    Name
-                  </label>
+                  <label className="mb-1 block text-xs font-medium text-zinc-500">Name</label>
                   <input
                     type="text"
                     value={getDraft(identity.id, 'name', identity.name)}
-                    onChange={(e) =>
-                      setDraftField(identity.id, 'name', e.target.value)
-                    }
+                    onChange={(e) => setDraftField(identity.id, 'name', e.target.value)}
                     aria-label="Identity name"
                     className="w-full rounded-lg border border-zinc-700/50 bg-zinc-900/50 px-3 py-2 text-sm text-white outline-none focus:border-sky-500/50"
                   />
                 </div>
                 <div>
-                  <label className="mb-1 block text-xs font-medium text-zinc-500">
-                    Soul
-                  </label>
+                  <label className="mb-1 block text-xs font-medium text-zinc-500">Soul</label>
                   <textarea
                     value={getDraft(identity.id, 'soul', identity.soul)}
-                    onChange={(e) =>
-                      setDraftField(identity.id, 'soul', e.target.value)
-                    }
+                    onChange={(e) => setDraftField(identity.id, 'soul', e.target.value)}
                     rows={6}
                     aria-label="Identity soul"
                     className="w-full resize-none rounded-lg border border-zinc-700/50 bg-zinc-900/50 px-3 py-2 text-sm text-white outline-none focus:border-sky-500/50"
@@ -473,14 +433,8 @@ function IdentitiesTab({ clawDown }: { clawDown: boolean }) {
                     User profile
                   </label>
                   <textarea
-                    value={getDraft(
-                      identity.id,
-                      'user_profile',
-                      identity.user_profile ?? '',
-                    )}
-                    onChange={(e) =>
-                      setDraftField(identity.id, 'user_profile', e.target.value)
-                    }
+                    value={getDraft(identity.id, 'user_profile', identity.user_profile ?? '')}
+                    onChange={(e) => setDraftField(identity.id, 'user_profile', e.target.value)}
                     rows={3}
                     aria-label="User profile"
                     className="w-full resize-none rounded-lg border border-zinc-700/50 bg-zinc-900/50 px-3 py-2 text-sm text-white outline-none focus:border-sky-500/50"
@@ -567,10 +521,7 @@ function ToolsTab({ clawDown }: { clawDown: boolean }) {
     return (
       <div className="space-y-3 pt-2">
         {[1, 2, 3].map((n) => (
-          <div
-            key={n}
-            className="h-12 animate-pulse rounded-xl bg-zinc-800/50"
-          />
+          <div key={n} className="h-12 animate-pulse rounded-xl bg-zinc-800/50" />
         ))}
       </div>
     )
@@ -625,14 +576,10 @@ function ToolsTab({ clawDown }: { clawDown: boolean }) {
                     key={tool.id}
                     className="border-b border-zinc-700/50 last:border-0 hover:bg-zinc-800/50"
                   >
-                    <td className="px-4 py-3 font-mono text-sm text-zinc-200">
-                      {tool.slug}
-                    </td>
+                    <td className="px-4 py-3 font-mono text-sm text-zinc-200">{tool.slug}</td>
                     <td className="max-w-[280px] px-4 py-3 text-sm text-zinc-400">
                       {tool.description ?? (
-                        <span className="text-zinc-600 italic">
-                          No description
-                        </span>
+                        <span className="text-zinc-600 italic">No description</span>
                       )}
                     </td>
                     <td className="px-4 py-3">
@@ -708,10 +655,7 @@ function ClawSessionsContent() {
         <h1 className="text-2xl font-semibold text-white">Claw Sessions</h1>
         <div className="space-y-3">
           {[1, 2, 3].map((n) => (
-            <div
-              key={n}
-              className="h-12 animate-pulse rounded-xl bg-zinc-800/50"
-            />
+            <div key={n} className="h-12 animate-pulse rounded-xl bg-zinc-800/50" />
           ))}
         </div>
       </div>
@@ -726,9 +670,7 @@ function ClawSessionsContent() {
           <div className="flex items-start gap-3">
             <AlertCircle className="mt-0.5 h-5 w-5 shrink-0 text-yellow-400" />
             <div>
-              <p className="font-medium text-yellow-300">
-                nself-claw is not running
-              </p>
+              <p className="font-medium text-yellow-300">nself-claw is not running</p>
               <p className="mt-1 text-sm text-yellow-400/80">
                 Start the claw plugin to manage sessions, identities, and tools.
               </p>

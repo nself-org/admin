@@ -5,15 +5,7 @@ import { TableSkeleton } from '@/components/skeletons'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import {
-  CheckCircle,
-  Database,
-  Download,
-  Loader2,
-  RefreshCw,
-  Upload,
-  XCircle,
-} from 'lucide-react'
+import { CheckCircle, Database, Download, Loader2, RefreshCw, Upload, XCircle } from 'lucide-react'
 import { Suspense, useCallback, useEffect, useState } from 'react'
 
 interface BackupEntry {
@@ -142,9 +134,18 @@ function DataContent() {
   return (
     <PageShell title="Data" description="Export and restore nSelf stack data backups.">
       <div className="space-y-6">
-        <div className="flex items-center gap-3 flex-wrap">
-          <Button variant="outline" size="sm" onClick={() => void fetchBackups()} disabled={loading}>
-            {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <RefreshCw className="h-4 w-4" />}
+        <div className="flex flex-wrap items-center gap-3">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => void fetchBackups()}
+            disabled={loading}
+          >
+            {loading ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <RefreshCw className="h-4 w-4" />
+            )}
             Refresh
           </Button>
           <Button
@@ -153,7 +154,11 @@ function DataContent() {
             disabled={exportInProgress || importInProgress || loading}
             className="gap-2"
           >
-            {exportInProgress ? <Loader2 className="h-4 w-4 animate-spin" /> : <Download className="h-4 w-4" />}
+            {exportInProgress ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <Download className="h-4 w-4" />
+            )}
             {exportInProgress ? 'Exporting…' : 'Export Backup'}
           </Button>
           <Button
@@ -163,7 +168,11 @@ function DataContent() {
             disabled={importInProgress || exportInProgress || loading}
             className="gap-2"
           >
-            {importInProgress ? <Loader2 className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />}
+            {importInProgress ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <Upload className="h-4 w-4" />
+            )}
             {importInProgress ? 'Restoring…' : 'Restore'}
           </Button>
           {exportSuccess && (
@@ -191,7 +200,7 @@ function DataContent() {
         {error && (
           <Card className="border-destructive">
             <CardContent className="pt-6">
-              <div className="flex items-start gap-2 text-destructive">
+              <div className="text-destructive flex items-start gap-2">
                 <XCircle className="h-5 w-5 shrink-0" />
                 <div>
                   <p className="font-medium">Failed to load backups</p>
@@ -204,7 +213,7 @@ function DataContent() {
 
         {!loading && !error && backups.length === 0 && (
           <Card>
-            <CardContent className="pt-6 text-center text-muted-foreground">
+            <CardContent className="text-muted-foreground pt-6 text-center">
               No backups found. Create one to get started.
             </CardContent>
           </Card>
@@ -225,11 +234,15 @@ function DataContent() {
                   <div key={b.id} className="flex items-center justify-between py-3">
                     <div>
                       <p className="font-mono text-sm">{b.name}</p>
-                      <p className="text-xs text-muted-foreground">{b.created}</p>
+                      <p className="text-muted-foreground text-xs">{b.created}</p>
                     </div>
                     <div className="flex items-center gap-3">
-                      <span className="text-sm text-muted-foreground">{b.size}</span>
-                      <Badge variant={b.status === 'ok' || b.status === 'complete' ? 'default' : 'secondary'}>
+                      <span className="text-muted-foreground text-sm">{b.size}</span>
+                      <Badge
+                        variant={
+                          b.status === 'ok' || b.status === 'complete' ? 'default' : 'secondary'
+                        }
+                      >
                         {b.status}
                       </Badge>
                     </div>
@@ -243,10 +256,12 @@ function DataContent() {
         {output && (
           <Card>
             <CardHeader>
-              <CardTitle className="text-sm font-mono text-muted-foreground">{lastCommand}</CardTitle>
+              <CardTitle className="text-muted-foreground font-mono text-sm">
+                {lastCommand}
+              </CardTitle>
             </CardHeader>
             <CardContent>
-              <pre className="overflow-x-auto rounded bg-muted p-4 text-xs">{output}</pre>
+              <pre className="bg-muted overflow-x-auto rounded p-4 text-xs">{output}</pre>
             </CardContent>
           </Card>
         )}

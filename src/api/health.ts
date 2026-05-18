@@ -48,9 +48,7 @@ export interface HealthStatus {
  * @param baseUrl - Base URL of the admin instance (default: http://localhost:3021)
  * @throws When the network request fails or the response body cannot be parsed.
  */
-export async function fetchAdminHealth(
-  baseUrl = 'http://localhost:3021',
-): Promise<HealthStatus> {
+export async function fetchAdminHealth(baseUrl = 'http://localhost:3021'): Promise<HealthStatus> {
   const url = `${baseUrl.replace(/\/$/, '')}/api/health`
   const response = await fetch(url, {
     method: 'GET',
@@ -58,9 +56,7 @@ export async function fetchAdminHealth(
   })
 
   if (!response.ok && response.status !== 503) {
-    throw new Error(
-      `Admin health request failed: ${response.status} ${response.statusText}`,
-    )
+    throw new Error(`Admin health request failed: ${response.status} ${response.statusText}`)
   }
 
   const data: unknown = await response.json()

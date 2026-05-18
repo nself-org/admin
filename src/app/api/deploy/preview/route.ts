@@ -14,14 +14,11 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     const projectPath = getProjectPath()
     const nselfPath = await findNselfPath()
 
-    const { stdout } = await execAsync(
-      `${nselfPath} deploy preview list --json`,
-      {
-        cwd: projectPath,
-        env: { ...process.env, PATH: getEnhancedPath() },
-        timeout: 60000,
-      },
-    )
+    const { stdout } = await execAsync(`${nselfPath} deploy preview list --json`, {
+      cwd: projectPath,
+      env: { ...process.env, PATH: getEnhancedPath() },
+      timeout: 60000,
+    })
 
     const result = JSON.parse(stdout)
 
@@ -40,7 +37,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to list preview environments',
         details: err.message,
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -62,17 +59,13 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     if (name) args.push(`--name=${name}`)
     if (prNumber) args.push(`--pr=${prNumber}`)
     if (ttl) args.push(`--ttl=${ttl}`)
-    if (autoDestroy !== undefined)
-      args.push(autoDestroy ? '--auto-destroy' : '--no-auto-destroy')
+    if (autoDestroy !== undefined) args.push(autoDestroy ? '--auto-destroy' : '--no-auto-destroy')
 
-    const { stdout } = await execAsync(
-      `${nselfPath} ${args.join(' ')} --json`,
-      {
-        cwd: projectPath,
-        env: { ...process.env, PATH: getEnhancedPath() },
-        timeout: 300000,
-      },
-    )
+    const { stdout } = await execAsync(`${nselfPath} ${args.join(' ')} --json`, {
+      cwd: projectPath,
+      env: { ...process.env, PATH: getEnhancedPath() },
+      timeout: 300000,
+    })
 
     const result = JSON.parse(stdout)
 
@@ -96,7 +89,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to create preview environment',
         details: err.message,
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -116,18 +109,15 @@ export async function DELETE(request: NextRequest): Promise<NextResponse> {
     if (!name) {
       return NextResponse.json(
         { success: false, error: 'Preview name is required' },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
-    const { stdout } = await execAsync(
-      `${nselfPath} deploy preview destroy ${name} --json`,
-      {
-        cwd: projectPath,
-        env: { ...process.env, PATH: getEnhancedPath() },
-        timeout: 180000,
-      },
-    )
+    const { stdout } = await execAsync(`${nselfPath} deploy preview destroy ${name} --json`, {
+      cwd: projectPath,
+      env: { ...process.env, PATH: getEnhancedPath() },
+      timeout: 180000,
+    })
 
     const result = JSON.parse(stdout)
 
@@ -147,7 +137,7 @@ export async function DELETE(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to destroy preview environment',
         details: err.message,
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

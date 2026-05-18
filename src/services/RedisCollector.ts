@@ -101,14 +101,8 @@ export class RedisCollector {
       this.validateContainerName(this.containerName)
       const { stdout } = await this.execWithTimeout(
         'docker',
-        [
-          'ps',
-          '--filter',
-          `name=${this.containerName}`,
-          '--format',
-          '{{.Status}}',
-        ],
-        2000,
+        ['ps', '--filter', `name=${this.containerName}`, '--format', '{{.Status}}'],
+        2000
       )
       return stdout.trim().toLowerCase().includes('up')
     } catch {
@@ -124,7 +118,7 @@ export class RedisCollector {
     const { stdout } = await this.execWithTimeout(
       'docker',
       ['exec', this.containerName, 'redis-cli', 'INFO'],
-      5000,
+      5000
     )
     return stdout
   }
@@ -147,8 +141,7 @@ export class RedisCollector {
     const formatBytes = (bytes: number) => {
       if (bytes < 1024) return `${bytes}B`
       if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(2)}KB`
-      if (bytes < 1024 * 1024 * 1024)
-        return `${(bytes / (1024 * 1024)).toFixed(2)}MB`
+      if (bytes < 1024 * 1024 * 1024) return `${(bytes / (1024 * 1024)).toFixed(2)}MB`
       return `${(bytes / (1024 * 1024 * 1024)).toFixed(2)}GB`
     }
 
@@ -185,12 +178,8 @@ export class RedisCollector {
     return {
       connectedClients: parseInt(stats.connected_clients || '0'),
       opsPerSecond: parseInt(stats.instantaneous_ops_per_sec || '0'),
-      hitRate:
-        totalLookups > 0 ? Math.round((keyspaceHits / totalLookups) * 100) : 0,
-      missRate:
-        totalLookups > 0
-          ? Math.round((keyspaceMisses / totalLookups) * 100)
-          : 0,
+      hitRate: totalLookups > 0 ? Math.round((keyspaceHits / totalLookups) * 100) : 0,
+      missRate: totalLookups > 0 ? Math.round((keyspaceMisses / totalLookups) * 100) : 0,
       totalCommands: parseInt(stats.total_commands_processed || '0'),
     }
   }
@@ -210,8 +199,7 @@ export class RedisCollector {
     }
 
     const lastSaveTime = parseInt(stats.rdb_last_save_time || '0')
-    const lastSave =
-      lastSaveTime > 0 ? new Date(lastSaveTime * 1000).toISOString() : 'Never'
+    const lastSave = lastSaveTime > 0 ? new Date(lastSaveTime * 1000).toISOString() : 'Never'
 
     return {
       lastSave,
@@ -250,9 +238,7 @@ export class RedisCollector {
   /**
    * Get empty stats with status
    */
-  private getEmptyStats(
-    status: 'healthy' | 'unhealthy' | 'stopped',
-  ): RedisStats {
+  private getEmptyStats(status: 'healthy' | 'unhealthy' | 'stopped'): RedisStats {
     return {
       status,
       memory: {
@@ -285,7 +271,7 @@ export class RedisCollector {
   private execWithTimeout(
     bin: string,
     args: string[],
-    timeout: number,
+    timeout: number
   ): Promise<{ stdout: string; stderr: string }> {
     return new Promise((resolve, reject) => {
       const controller = new AbortController()

@@ -6,10 +6,7 @@ interface RouteParams {
   params: Promise<{ id: string }>
 }
 
-export async function PUT(
-  request: NextRequest,
-  { params }: RouteParams,
-): Promise<NextResponse> {
+export async function PUT(request: NextRequest, { params }: RouteParams): Promise<NextResponse> {
   const authError = await requireAuth(request)
   if (authError) return authError
 
@@ -32,7 +29,7 @@ export async function PUT(
           error: 'Failed to update colors',
           details: result.error || result.stderr || 'Unknown error',
         },
-        { status: 500 },
+        { status: 500 }
       )
     }
 
@@ -47,7 +44,7 @@ export async function PUT(
         error: 'Failed to update colors',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

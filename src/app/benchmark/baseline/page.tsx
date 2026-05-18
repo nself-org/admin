@@ -67,7 +67,7 @@ function BaselineContent() {
   }
 
   const filteredBaselines = baselines.filter((b) =>
-    b.name.toLowerCase().includes(searchQuery.toLowerCase()),
+    b.name.toLowerCase().includes(searchQuery.toLowerCase())
   )
 
   if (loading) {
@@ -268,8 +268,7 @@ function BaselineContent() {
                                 <span className="text-zinc-500">Success:</span>{' '}
                                 <span className="text-zinc-900 dark:text-white">
                                   {(
-                                    (result.requests.successful /
-                                      result.requests.total) *
+                                    (result.requests.successful / result.requests.total) *
                                     100
                                   ).toFixed(1)}
                                   %
@@ -285,9 +284,7 @@ function BaselineContent() {
                   <div className="ml-4 flex items-center gap-2">
                     <button
                       onClick={() =>
-                        setSelectedBaseline(
-                          selectedBaseline === baseline.id ? null : baseline.id,
-                        )
+                        setSelectedBaseline(selectedBaseline === baseline.id ? null : baseline.id)
                       }
                       className={`rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
                         selectedBaseline === baseline.id
@@ -336,24 +333,19 @@ function BaselineContent() {
           </h3>
           <div className="space-y-2 font-mono text-sm">
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-blue-500">nself bench --save=name</span> -
-              Save results as baseline
+              <span className="text-blue-500">nself bench --save=name</span> - Save results as
+              baseline
             </p>
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-blue-500">nself bench baselines</span> -
-              List all baselines
+              <span className="text-blue-500">nself bench baselines</span> - List all baselines
             </p>
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-blue-500">
-                nself bench baselines --delete=name
-              </span>{' '}
-              - Delete baseline
+              <span className="text-blue-500">nself bench baselines --delete=name</span> - Delete
+              baseline
             </p>
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-blue-500">
-                nself bench baselines --export=name
-              </span>{' '}
-              - Export baseline
+              <span className="text-blue-500">nself bench baselines --export=name</span> - Export
+              baseline
             </p>
           </div>
         </div>

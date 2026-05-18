@@ -19,8 +19,7 @@ async function getMinIOClient(): Promise<Minio.Client> {
   const endPoint = env.MINIO_HOST || 'localhost'
   const port = parseInt(env.MINIO_PORT || env.STORAGE_PORT || '9000', 10)
   const accessKey = env.MINIO_ROOT_USER || env.MINIO_ACCESS_KEY || 'minioadmin'
-  const secretKey =
-    env.MINIO_ROOT_PASSWORD || env.MINIO_SECRET_KEY || 'minioadmin'
+  const secretKey = env.MINIO_ROOT_PASSWORD || env.MINIO_SECRET_KEY || 'minioadmin'
 
   return new Minio.Client({
     endPoint,
@@ -54,7 +53,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
               success: false,
               error: 'Bucket name is required for files action',
             },
-            { status: 400 },
+            { status: 400 }
           )
         }
         return await listFiles(bucketName, filePath)
@@ -66,7 +65,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         if (!bucketName || !searchParams.get('file')) {
           return NextResponse.json(
             { success: false, error: 'Bucket name and file path are required' },
-            { status: 400 },
+            { status: 400 }
           )
         }
         return await downloadFile(bucketName, searchParams.get('file')!)
@@ -74,14 +73,14 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         if (!bucketName || !searchParams.get('file')) {
           return NextResponse.json(
             { success: false, error: 'Bucket name and file path are required' },
-            { status: 400 },
+            { status: 400 }
           )
         }
         return await getFileInfo(bucketName, searchParams.get('file')!)
       default:
         return NextResponse.json(
           { success: false, error: `Unknown action: ${action}` },
-          { status: 400 },
+          { status: 400 }
         )
     }
   } catch (error) {
@@ -91,7 +90,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         error: 'Storage operation failed',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -108,10 +107,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     const { action, bucket, file, options = {} } = await request.json()
 
     if (!action) {
-      return NextResponse.json(
-        { success: false, error: 'Action is required' },
-        { status: 400 },
-      )
+      return NextResponse.json({ success: false, error: 'Action is required' }, { status: 400 })
     }
 
     switch (action) {
@@ -119,7 +115,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         if (!bucket) {
           return NextResponse.json(
             { success: false, error: 'Bucket name is required' },
-            { status: 400 },
+            { status: 400 }
           )
         }
         return await createBucket(bucket, options)
@@ -127,7 +123,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         if (!bucket) {
           return NextResponse.json(
             { success: false, error: 'Bucket name is required' },
-            { status: 400 },
+            { status: 400 }
           )
         }
         return await deleteBucket(bucket, options)
@@ -135,7 +131,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         if (!bucket || !file) {
           return NextResponse.json(
             { success: false, error: 'Bucket name and file are required' },
-            { status: 400 },
+            { status: 400 }
           )
         }
         return await uploadFile(bucket, file, options)
@@ -143,7 +139,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         if (!bucket || !file) {
           return NextResponse.json(
             { success: false, error: 'Bucket name and file path are required' },
-            { status: 400 },
+            { status: 400 }
           )
         }
         return await deleteFile(bucket, file)
@@ -158,20 +154,16 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
               success: false,
               error: 'Bucket name and folder name are required',
             },
-            { status: 400 },
+            { status: 400 }
           )
         }
-        return await createFolder(
-          bucket,
-          options.folderName,
-          options.path || '/',
-        )
+        return await createFolder(bucket, options.folderName, options.path || '/')
       case 'set-permissions':
         return await setFilePermissions(bucket, file, options)
       default:
         return NextResponse.json(
           { success: false, error: `Unknown action: ${action}` },
-          { status: 400 },
+          { status: 400 }
         )
     }
   } catch (error) {
@@ -181,7 +173,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         error: 'Storage operation failed',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -196,7 +188,7 @@ async function getStorageOverview() {
 
     // Check if MinIO container is running
     const { stdout: minioStatus } = await execAsync(
-      `cd "${backendPath}" && docker compose ps --format json minio 2>/dev/null || docker-compose ps minio 2>/dev/null || echo ""`,
+      `cd "${backendPath}" && docker compose ps --format json minio 2>/dev/null || docker-compose ps minio 2>/dev/null || echo ""`
     ).catch(() => ({ stdout: '' }))
 
     const isMinioRunning =
@@ -253,7 +245,7 @@ async function getStorageOverview() {
         error: 'Failed to get storage overview',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -283,7 +275,7 @@ async function listBuckets() {
         error: 'Failed to list buckets',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -347,7 +339,7 @@ async function listFiles(bucketName: string, filePath: string) {
         error: `Failed to list files in bucket '${bucketName}'`,
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -361,7 +353,7 @@ async function getStorageUsage() {
 
     // Docker volume usage
     const { stdout: volumeStdout } = await execAsync(
-      `docker system df -v 2>/dev/null | grep -i volume || echo ""`,
+      `docker system df -v 2>/dev/null | grep -i volume || echo ""`
     ).catch(() => ({ stdout: '' }))
 
     return NextResponse.json({
@@ -380,7 +372,7 @@ async function getStorageUsage() {
         error: 'Failed to get storage usage',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -427,7 +419,7 @@ async function getStorageStats() {
         error: 'Failed to get storage stats',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -456,7 +448,7 @@ async function downloadFile(bucket: string, filePath: string) {
         error: `Failed to generate download URL for '${filePath}'`,
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -474,8 +466,7 @@ async function getFileInfo(bucket: string, filePath: string) {
         size: stat.size,
         lastModified: stat.lastModified.toISOString(),
         etag: stat.etag,
-        contentType:
-          stat.metaData?.['content-type'] ?? 'application/octet-stream',
+        contentType: stat.metaData?.['content-type'] ?? 'application/octet-stream',
         metadata: stat.metaData,
         timestamp: new Date().toISOString(),
       },
@@ -487,7 +478,7 @@ async function getFileInfo(bucket: string, filePath: string) {
         error: `Failed to get file info for '${filePath}'`,
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -503,10 +494,9 @@ async function createBucket(bucketName: string, options: { policy?: string }) {
       return NextResponse.json(
         {
           success: false,
-          error:
-            'Invalid bucket name. Use 3-63 lowercase letters, numbers, dots or hyphens.',
+          error: 'Invalid bucket name. Use 3-63 lowercase letters, numbers, dots or hyphens.',
         },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -516,7 +506,7 @@ async function createBucket(bucketName: string, options: { policy?: string }) {
     if (exists) {
       return NextResponse.json(
         { success: false, error: `Bucket '${bucketName}' already exists` },
-        { status: 409 },
+        { status: 409 }
       )
     }
 
@@ -553,7 +543,7 @@ async function createBucket(bucketName: string, options: { policy?: string }) {
         error: `Failed to create bucket '${bucketName}'`,
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -596,7 +586,7 @@ async function deleteBucket(bucketName: string, options: { force?: boolean }) {
         error: `Failed to delete bucket '${bucketName}'`,
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -609,7 +599,7 @@ async function uploadFile(
     contentType?: string
     size?: number
   },
-  _options: unknown,
+  _options: unknown
 ) {
   try {
     if (!file.name || !file.content) {
@@ -618,7 +608,7 @@ async function uploadFile(
           success: false,
           error: 'File name and base64-encoded content are required',
         },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -628,15 +618,9 @@ async function uploadFile(
     const buffer = Buffer.from(file.content, 'base64')
     const contentType = file.contentType ?? 'application/octet-stream'
 
-    const etag = await client.putObject(
-      bucket,
-      file.name,
-      buffer,
-      buffer.length,
-      {
-        'Content-Type': contentType,
-      },
-    )
+    const etag = await client.putObject(bucket, file.name, buffer, buffer.length, {
+      'Content-Type': contentType,
+    })
 
     return NextResponse.json({
       success: true,
@@ -656,7 +640,7 @@ async function uploadFile(
         error: `Failed to upload file to bucket '${bucket}'`,
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -681,23 +665,18 @@ async function deleteFile(bucket: string, filePath: string) {
         error: `Failed to delete file '${filePath}' from bucket '${bucket}'`,
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
 
-async function createFolder(
-  bucket: string,
-  folderName: string,
-  parentPath: string,
-) {
+async function createFolder(bucket: string, folderName: string, parentPath: string) {
   try {
     const client = await getMinIOClient()
 
     // Normalise paths
     const normalised = parentPath.replace(/^\/+/, '').replace(/\/?$/, '/')
-    const objectName =
-      `${normalised}${folderName.replace(/\/?$/, '/')}`.replace(/^\/+/, '')
+    const objectName = `${normalised}${folderName.replace(/\/?$/, '/')}`.replace(/^\/+/, '')
 
     // MinIO has no real folder concept — create a zero-byte placeholder
     const emptyBuffer = Buffer.alloc(0)
@@ -720,7 +699,7 @@ async function createFolder(
         error: `Failed to create folder '${folderName}' in bucket '${bucket}'`,
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -738,21 +717,15 @@ async function copyFile(options: {
       return NextResponse.json(
         {
           success: false,
-          error:
-            'sourceBucket, sourceObject, destBucket, and destObject are required',
+          error: 'sourceBucket, sourceObject, destBucket, and destObject are required',
         },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
     const client = await getMinIOClient()
     const conds = new Minio.CopyConditions()
-    await client.copyObject(
-      destBucket,
-      destObject,
-      `/${sourceBucket}/${sourceObject}`,
-      conds,
-    )
+    await client.copyObject(destBucket, destObject, `/${sourceBucket}/${sourceObject}`, conds)
 
     return NextResponse.json({
       success: true,
@@ -771,7 +744,7 @@ async function copyFile(options: {
         error: 'Failed to copy file',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -789,10 +762,9 @@ async function moveFile(options: {
       return NextResponse.json(
         {
           success: false,
-          error:
-            'sourceBucket, sourceObject, destBucket, and destObject are required',
+          error: 'sourceBucket, sourceObject, destBucket, and destObject are required',
         },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -800,12 +772,7 @@ async function moveFile(options: {
 
     // Copy then delete — MinIO has no native move
     const conds = new Minio.CopyConditions()
-    await client.copyObject(
-      destBucket,
-      destObject,
-      `/${sourceBucket}/${sourceObject}`,
-      conds,
-    )
+    await client.copyObject(destBucket, destObject, `/${sourceBucket}/${sourceObject}`, conds)
     await client.removeObject(sourceBucket, sourceObject)
 
     return NextResponse.json({
@@ -825,7 +792,7 @@ async function moveFile(options: {
         error: 'Failed to move file',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -833,13 +800,13 @@ async function moveFile(options: {
 async function setFilePermissions(
   bucket: string,
   file: string,
-  options: { isPublic?: boolean; policy?: string },
+  options: { isPublic?: boolean; policy?: string }
 ) {
   try {
     if (!bucket) {
       return NextResponse.json(
         { success: false, error: 'Bucket name is required' },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -889,7 +856,7 @@ async function setFilePermissions(
         error: 'Failed to set permissions',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -902,9 +869,7 @@ function buildBucketShape(name: string, created: Date) {
   return { name, created: created.toISOString() }
 }
 
-async function getMinIOBuckets(): Promise<
-  ReturnType<typeof buildBucketShape>[]
-> {
+async function getMinIOBuckets(): Promise<ReturnType<typeof buildBucketShape>[]> {
   try {
     const client = await getMinIOClient()
     const buckets = await client.listBuckets()
@@ -1008,8 +973,7 @@ async function getBucketStats(bucketName: string): Promise<{
         }
 
         const dotPos = obj.name.lastIndexOf('.')
-        const ext =
-          dotPos !== -1 ? obj.name.substring(dotPos + 1).toLowerCase() : 'other'
+        const ext = dotPos !== -1 ? obj.name.substring(dotPos + 1).toLowerCase() : 'other'
         fileTypes[ext] = (fileTypes[ext] ?? 0) + 1
       })
       stream.on('error', reject)
@@ -1037,9 +1001,7 @@ async function getBucketStats(bucketName: string): Promise<{
 async function getProjectFileStorage() {
   try {
     const backendPath = getProjectPath()
-    const { stdout } = await execAsync(
-      `du -sh "${backendPath}" 2>/dev/null || echo "0B"`,
-    )
+    const { stdout } = await execAsync(`du -sh "${backendPath}" 2>/dev/null || echo "0B"`)
     const size = stdout.split('\t')[0]?.trim() || '0B'
 
     return { path: backendPath, size, type: 'project-files' }
@@ -1052,7 +1014,7 @@ async function getProjectDirectoryUsage() {
   try {
     const backendPath = getProjectPath()
     const { stdout } = await execAsync(
-      `du -sh "${backendPath}"/* 2>/dev/null | sort -hr | head -10`,
+      `du -sh "${backendPath}"/* 2>/dev/null | sort -hr | head -10`
     )
 
     const directories = stdout

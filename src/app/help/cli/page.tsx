@@ -10,9 +10,7 @@ import Link from 'next/link'
 import { Suspense } from 'react'
 
 function CLIHelpContent() {
-  const cliArticles = helpArticlesArray.filter(
-    (a: HelpArticle) => a.category === 'cli',
-  )
+  const cliArticles = helpArticlesArray.filter((a: HelpArticle) => a.category === 'cli')
 
   return (
     <>
@@ -30,10 +28,9 @@ function CLIHelpContent() {
               <div className="flex-1">
                 <h2 className="mb-2 text-xl font-semibold">nself CLI</h2>
                 <p className="text-zinc-600 dark:text-zinc-400">
-                  The nself CLI is the master application. Every operation in
-                  nAdmin executes a corresponding CLI command. You can use the
-                  CLI directly for automation, scripting, or when the UI is not
-                  available.
+                  The nself CLI is the master application. Every operation in nAdmin executes a
+                  corresponding CLI command. You can use the CLI directly for automation, scripting,
+                  or when the UI is not available.
                 </p>
               </div>
             </div>
@@ -45,9 +42,7 @@ function CLIHelpContent() {
               {cliArticles.map((article) => (
                 <Link key={article.id} href={`/help/article/${article.id}`}>
                   <Card className="p-4 transition-shadow hover:shadow-md">
-                    <h3 className="mb-2 font-mono text-sm font-semibold">
-                      {article.title}
-                    </h3>
+                    <h3 className="mb-2 font-mono text-sm font-semibold">{article.title}</h3>
                     <p className="mb-3 text-sm text-zinc-600 dark:text-zinc-400">
                       {article.description}
                     </p>
@@ -66,12 +61,8 @@ function CLIHelpContent() {
               Tip: View complete CLI reference
             </h3>
             <p className="text-sm text-blue-800 dark:text-blue-300">
-              For a complete list of all nself CLI commands organized by
-              category, visit the main{' '}
-              <Link
-                href="/help"
-                className="font-semibold underline hover:no-underline"
-              >
+              For a complete list of all nself CLI commands organized by category, visit the main{' '}
+              <Link href="/help" className="font-semibold underline hover:no-underline">
                 Help page
               </Link>{' '}
               and click the "CLI Reference" tab.

@@ -3,11 +3,7 @@
 import { DeliveryLog } from '@/components/webhooks/DeliveryLog'
 import { DLQPanel } from '@/components/webhooks/DLQPanel'
 import { EndpointList } from '@/components/webhooks/EndpointList'
-import {
-  DLQEntry,
-  WebhookDelivery,
-  WebhookEndpoint,
-} from '@/components/webhooks/types'
+import { DLQEntry, WebhookDelivery, WebhookEndpoint } from '@/components/webhooks/types'
 import { Activity, AlertTriangle, Plus, Webhook, X } from 'lucide-react'
 import { useCallback, useEffect, useRef, useState } from 'react'
 
@@ -46,22 +42,29 @@ function CreateEndpointModal({ onClose, onCreated }: CreateEndpointModalProps) {
     firstInputRef.current?.focus()
 
     function handleKeyDown(e: KeyboardEvent) {
-      if (e.key === 'Escape') { onClose(); return }
+      if (e.key === 'Escape') {
+        onClose()
+        return
+      }
       if (e.key !== 'Tab') return
       const dialog = dialogRef.current
       if (!dialog) return
       const focusable = Array.from(
-        dialog.querySelectorAll<HTMLElement>(
-          'button, input, [tabindex]:not([tabindex="-1"])',
-        ),
+        dialog.querySelectorAll<HTMLElement>('button, input, [tabindex]:not([tabindex="-1"])')
       ).filter((el) => !el.hasAttribute('disabled'))
       if (focusable.length === 0) return
       const first = focusable[0]
       const last = focusable[focusable.length - 1]
       if (e.shiftKey) {
-        if (document.activeElement === first) { e.preventDefault(); last.focus() }
+        if (document.activeElement === first) {
+          e.preventDefault()
+          last.focus()
+        }
       } else {
-        if (document.activeElement === last) { e.preventDefault(); first.focus() }
+        if (document.activeElement === last) {
+          e.preventDefault()
+          first.focus()
+        }
       }
     }
 
@@ -74,7 +77,7 @@ function CreateEndpointModal({ onClose, onCreated }: CreateEndpointModalProps) {
 
   function toggleEvent(event: string) {
     setSelectedEvents((prev) =>
-      prev.includes(event) ? prev.filter((e) => e !== event) : [...prev, event],
+      prev.includes(event) ? prev.filter((e) => e !== event) : [...prev, event]
     )
   }
 
@@ -149,13 +152,12 @@ function CreateEndpointModal({ onClose, onCreated }: CreateEndpointModalProps) {
               value={url}
               onChange={(e) => setUrl(e.target.value)}
               placeholder="https://example.com/webhook"
-              className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500 dark:border-zinc-600 dark:bg-zinc-800 dark:text-white"
+              className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 focus:border-sky-500 focus:ring-1 focus:ring-sky-500 focus:outline-none dark:border-zinc-600 dark:bg-zinc-800 dark:text-white"
             />
           </div>
           <fieldset>
             <legend className="mb-2 block text-xs font-medium text-zinc-600 dark:text-zinc-400">
-              Events{' '}
-              <span className="text-zinc-400">(select at least one)</span>
+              Events <span className="text-zinc-400">(select at least one)</span>
             </legend>
             <div className="grid grid-cols-2 gap-1.5">
               {VALID_EVENTS.map((event) => (
@@ -169,9 +171,7 @@ function CreateEndpointModal({ onClose, onCreated }: CreateEndpointModalProps) {
                     onChange={() => toggleEvent(event)}
                     className="accent-sky-500"
                   />
-                  <span className="font-mono text-zinc-700 dark:text-zinc-300">
-                    {event}
-                  </span>
+                  <span className="font-mono text-zinc-700 dark:text-zinc-300">{event}</span>
                 </label>
               ))}
             </div>
@@ -190,7 +190,7 @@ function CreateEndpointModal({ onClose, onCreated }: CreateEndpointModalProps) {
               value={secret}
               onChange={(e) => setSecret(e.target.value)}
               placeholder="whsec_…"
-              className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500 dark:border-zinc-600 dark:bg-zinc-800 dark:text-white"
+              className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 focus:border-sky-500 focus:ring-1 focus:ring-sky-500 focus:outline-none dark:border-zinc-600 dark:bg-zinc-800 dark:text-white"
             />
           </div>
           {err && (
@@ -275,7 +275,7 @@ function parseWebhookList(output: string): WebhookEndpoint[] {
           /^[a-z0-9_-]{6,}$/i.test(t) &&
           !t.startsWith('http') &&
           t !== 'enabled' &&
-          t !== 'disabled',
+          t !== 'disabled'
       ) ?? `ep-${endpoints.length + 1}`
 
     // Detect enabled/disabled flag anywhere in the line
@@ -331,8 +331,7 @@ export default function WebhooksPage() {
       // Real route: GET /api/auth/webhooks → nself auth webhooks list
       const res = await fetch('/api/auth/webhooks')
       if (res.ok) {
-        const data: { success: boolean; data?: { output?: string } } =
-          await res.json()
+        const data: { success: boolean; data?: { output?: string } } = await res.json()
         // CLI returns text output; parse into endpoint objects when possible.
         // The list command outputs one endpoint per line in text form.
         // Return empty array when output is absent or unparseable — honest-empty.
@@ -398,9 +397,7 @@ export default function WebhooksPage() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ enabled: !ep.enabled }),
     })
-    setEndpoints((prev) =>
-      prev.map((e) => (e.id === id ? { ...e, enabled: !e.enabled } : e)),
-    )
+    setEndpoints((prev) => prev.map((e) => (e.id === id ? { ...e, enabled: !e.enabled } : e)))
   }
 
   const handleRotateSecret = async (id: string) => {
@@ -417,8 +414,7 @@ export default function WebhooksPage() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ id }),
     })
-    const data: { success?: boolean; data?: { output?: string }; error?: string } =
-      await res.json()
+    const data: { success?: boolean; data?: { output?: string }; error?: string } = await res.json()
     return {
       success: res.ok && (data.success ?? false),
       response: data.data?.output,
@@ -452,8 +448,7 @@ export default function WebhooksPage() {
             Webhooks
           </h1>
           <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
-            Manage endpoints, monitor delivery logs, and handle dead-letter
-            queue entries.
+            Manage endpoints, monitor delivery logs, and handle dead-letter queue entries.
           </p>
         </div>
         <button
@@ -506,18 +501,11 @@ export default function WebhooksPage() {
       )}
 
       {activeTab === 'dlq' && (
-        <DLQPanel
-          entries={dlqEntries}
-          isLoading={loadingDLQ}
-          onReEnqueue={handleReEnqueue}
-        />
+        <DLQPanel entries={dlqEntries} isLoading={loadingDLQ} onReEnqueue={handleReEnqueue} />
       )}
 
       {showCreateModal && (
-        <CreateEndpointModal
-          onClose={() => setShowCreateModal(false)}
-          onCreated={fetchEndpoints}
-        />
+        <CreateEndpointModal onClose={() => setShowCreateModal(false)} onCreated={fetchEndpoints} />
       )}
     </div>
   )

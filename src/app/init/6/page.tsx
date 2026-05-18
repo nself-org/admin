@@ -1,14 +1,7 @@
 'use client'
 
 import { useWizardStore } from '@/stores/wizardStore'
-import {
-  ArrowLeft,
-  CheckCircle,
-  ChevronDown,
-  ChevronUp,
-  Hammer,
-  XCircle,
-} from 'lucide-react'
+import { ArrowLeft, CheckCircle, ChevronDown, ChevronUp, Hammer, XCircle } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useCallback, useEffect, useState } from 'react'
 import { StepWrapper } from '../StepWrapper'
@@ -81,308 +74,270 @@ export default function InitStep6() {
   const [dataLoaded, setDataLoaded] = useState(false)
   const [validating, setValidating] = useState(false)
   const [config, setConfig] = useState<ConfigSummary | null>(null)
-  const [validationIssues, setValidationIssues] = useState<ValidationIssue[]>(
-    [],
-  )
+  const [validationIssues, setValidationIssues] = useState<ValidationIssue[]>([])
   const [showIssues, setShowIssues] = useState(false)
   const [autoFixing, setAutoFixing] = useState(false)
   const [fixedIssuesCount, setFixedIssuesCount] = useState(0)
   const [appliedFixes, setAppliedFixes] = useState<string[]>([])
 
-  const validateConfiguration = useCallback(
-    async (summary: ConfigSummary, rawConfig: any) => {
-      setValidating(true)
-      setAutoFixing(true)
-      const issues: ValidationIssue[] = []
-      let fixCount = 0
-      let portFixCount = 0
+  const validateConfiguration = useCallback(async (summary: ConfigSummary, rawConfig: any) => {
+    setValidating(true)
+    setAutoFixing(true)
+    const issues: ValidationIssue[] = []
+    let fixCount = 0
+    let portFixCount = 0
 
-      // Auto-fix configuration issues
-      const fixes: Record<string, string> = {}
-      const portFixes: Record<string, string> = {}
-      const fixDescriptions: string[] = []
+    // Auto-fix configuration issues
+    const fixes: Record<string, string> = {}
+    const portFixes: Record<string, string> = {}
+    const fixDescriptions: string[] = []
 
+    try {
+      // Call validation API endpoint
+      const response = await fetch('/api/wizard/validate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ config: rawConfig }),
+      })
+
+      if (response.ok) {
+        const result = await response.json()
+        if (result.issues) {
+          // Auto-fix known issues ONLY if the values don't already exist
+          for (const issue of result.issues) {
+            if (
+              issue.field === 'HASURA_METADATA_DATABASE_URL' &&
+              !rawConfig.HASURA_METADATA_DATABASE_URL
+            ) {
+              // Auto-construct database URL
+              const dbUser = rawConfig.POSTGRES_USER || rawConfig.postgresUser || 'postgres'
+              const dbPass =
+                rawConfig.POSTGRES_PASSWORD || rawConfig.databasePassword || 'nself-dev-password'
+              const dbName = rawConfig.POSTGRES_DB || rawConfig.databaseName || 'nself'
+              fixes.HASURA_METADATA_DATABASE_URL = `postgres://${dbUser}:${dbPass}@postgres:5432/${dbName}`
+              fixDescriptions.push('Added HASURA_METADATA_DATABASE_URL for database connection')
+              fixCount++
+            } else if (issue.field === 'minio' && !rawConfig.MINIO_ROOT_USER) {
+              fixes.MINIO_ROOT_USER = 'minioadmin'
+              fixes.MINIO_ROOT_PASSWORD = 'minioadmin-password'
+              fixDescriptions.push('Added MinIO credentials for storage service')
+              fixCount++
+            } else if (issue.field === 'search' && !rawConfig.MEILI_MASTER_KEY) {
+              fixes.MEILI_MASTER_KEY = 'meilisearch-master-key-32-chars'
+              fixDescriptions.push('Added MeiliSearch master key for search service')
+              fixCount++
+            } else if (issue.field === 'grafana' && !rawConfig.GRAFANA_ADMIN_PASSWORD) {
+              fixes.GRAFANA_ADMIN_PASSWORD = 'grafana-admin-password'
+              fixDescriptions.push('Added Grafana admin password for monitoring')
+              fixCount++
+            } else if (
+              issue.field === 'monitoring' &&
+              issue.message.includes('TEMPO_ENABLED') &&
+              rawConfig.TEMPO_ENABLED !== 'true'
+            ) {
+              fixes.TEMPO_ENABLED = 'true'
+              if (rawConfig.ALERTMANAGER_ENABLED !== 'true') {
+                fixes.ALERTMANAGER_ENABLED = 'true'
+              }
+              fixDescriptions.push('Enabled missing monitoring services (Tempo, Alertmanager)')
+              fixCount++
+            } else {
+              // Can't auto-fix this issue
+              issues.push(issue)
+            }
+          }
+        }
+      }
+    } catch (error) {
+      console.error('Validation error:', error)
+    }
+
+    // Combine all fixes (config fixes + port fixes)
+    const allFixes = { ...fixes, ...portFixes }
+    const totalFixCount = fixCount + portFixCount
+
+    // Combine fix descriptions
+    if (portFixCount > 0) {
+      fixDescriptions.push(
+        `Fixed ${portFixCount} port conflict${portFixCount > 1 ? 's' : ''} for frontend apps`
+      )
+    }
+
+    // Apply fixes if any
+    if (Object.keys(allFixes).length > 0) {
       try {
-        // Call validation API endpoint
-        const response = await fetch('/api/wizard/validate', {
+        await fetch('/api/wizard/update-env', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ config: rawConfig }),
+          body: JSON.stringify({
+            config: allFixes,
+            step: 'auto-fix',
+          }),
         })
+        // Show the count and descriptions of fixes that were just applied
+        setFixedIssuesCount(totalFixCount)
+        setAppliedFixes(fixDescriptions)
 
-        if (response.ok) {
-          const result = await response.json()
-          if (result.issues) {
-            // Auto-fix known issues ONLY if the values don't already exist
-            for (const issue of result.issues) {
-              if (
-                issue.field === 'HASURA_METADATA_DATABASE_URL' &&
-                !rawConfig.HASURA_METADATA_DATABASE_URL
-              ) {
-                // Auto-construct database URL
-                const dbUser =
-                  rawConfig.POSTGRES_USER ||
-                  rawConfig.postgresUser ||
-                  'postgres'
-                const dbPass =
-                  rawConfig.POSTGRES_PASSWORD ||
-                  rawConfig.databasePassword ||
-                  'nself-dev-password'
-                const dbName =
-                  rawConfig.POSTGRES_DB || rawConfig.databaseName || 'nself'
-                fixes.HASURA_METADATA_DATABASE_URL = `postgres://${dbUser}:${dbPass}@postgres:5432/${dbName}`
-                fixDescriptions.push(
-                  'Added HASURA_METADATA_DATABASE_URL for database connection',
-                )
-                fixCount++
-              } else if (
-                issue.field === 'minio' &&
-                !rawConfig.MINIO_ROOT_USER
-              ) {
-                fixes.MINIO_ROOT_USER = 'minioadmin'
-                fixes.MINIO_ROOT_PASSWORD = 'minioadmin-password'
-                fixDescriptions.push(
-                  'Added MinIO credentials for storage service',
-                )
-                fixCount++
-              } else if (
-                issue.field === 'search' &&
-                !rawConfig.MEILI_MASTER_KEY
-              ) {
-                fixes.MEILI_MASTER_KEY = 'meilisearch-master-key-32-chars'
-                fixDescriptions.push(
-                  'Added MeiliSearch master key for search service',
-                )
-                fixCount++
-              } else if (
-                issue.field === 'grafana' &&
-                !rawConfig.GRAFANA_ADMIN_PASSWORD
-              ) {
-                fixes.GRAFANA_ADMIN_PASSWORD = 'grafana-admin-password'
-                fixDescriptions.push(
-                  'Added Grafana admin password for monitoring',
-                )
-                fixCount++
-              } else if (
-                issue.field === 'monitoring' &&
-                issue.message.includes('TEMPO_ENABLED') &&
-                rawConfig.TEMPO_ENABLED !== 'true'
-              ) {
-                fixes.TEMPO_ENABLED = 'true'
-                if (rawConfig.ALERTMANAGER_ENABLED !== 'true') {
-                  fixes.ALERTMANAGER_ENABLED = 'true'
-                }
-                fixDescriptions.push(
-                  'Enabled missing monitoring services (Tempo, Alertmanager)',
-                )
-                fixCount++
-              } else {
-                // Can't auto-fix this issue
-                issues.push(issue)
-              }
-            }
-          }
-        }
+        // After applying fixes, reload configuration without re-validating
+        // The fixes have been saved, so next time the page loads, no issues will be found
+        setTimeout(() => {
+          // Reload configuration without validation after fixes
+          window.location.reload()
+        }, 500)
       } catch (error) {
-        console.error('Validation error:', error)
+        console.error('Error applying fixes:', error)
       }
+    } else {
+      // No fixes were needed
+      setFixedIssuesCount(0)
+      setAppliedFixes([])
+    }
 
-      // Combine all fixes (config fixes + port fixes)
-      const allFixes = { ...fixes, ...portFixes }
-      const totalFixCount = fixCount + portFixCount
+    // Client-side validation for remaining issues
+    const isDev = summary.environment === 'dev' || summary.environment === 'development'
 
-      // Combine fix descriptions
-      if (portFixCount > 0) {
-        fixDescriptions.push(
-          `Fixed ${portFixCount} port conflict${portFixCount > 1 ? 's' : ''} for frontend apps`,
+    // Only warn about default project name if not in dev
+    if (!isDev && (!summary.projectName || summary.projectName === 'my_project')) {
+      issues.push({
+        field: 'projectName',
+        message: 'Project name is using default value',
+        severity: 'warning',
+      })
+    }
+
+    // Only warn about default password in production/staging
+    if (
+      !isDev &&
+      (!summary.databasePassword || summary.databasePassword === 'nself-dev-password')
+    ) {
+      issues.push({
+        field: 'databasePassword',
+        message: 'Database password is using default (insecure for production)',
+        severity: 'warning',
+      })
+    }
+
+    // Check for port conflicts (errors that can't be auto-fixed)
+    const usedPorts = new Map<number, string>()
+
+    // Add default service ports
+    usedPorts.set(5432, 'PostgreSQL')
+    usedPorts.set(8080, 'Hasura')
+    usedPorts.set(4000, 'Auth')
+    usedPorts.set(80, 'Nginx HTTP')
+    usedPorts.set(443, 'Nginx HTTPS')
+
+    // Add optional service ports if enabled
+    if (summary.redisEnabled) usedPorts.set(6379, 'Redis')
+    if (summary.minioEnabled) {
+      usedPorts.set(9000, 'MinIO API')
+      usedPorts.set(9001, 'MinIO Console')
+    }
+    if (summary.mlflowEnabled) usedPorts.set(5000, 'MLflow')
+    if (summary.mailpitEnabled) {
+      usedPorts.set(1025, 'Mailpit SMTP')
+      usedPorts.set(8025, 'Mailpit Web')
+    }
+    if (summary.searchEnabled) usedPorts.set(7700, 'MeiliSearch')
+    if (summary.monitoringEnabled) {
+      usedPorts.set(9090, 'Prometheus')
+      usedPorts.set(3000, 'Grafana')
+      usedPorts.set(3100, 'Loki')
+      usedPorts.set(3200, 'Tempo')
+      usedPorts.set(9093, 'Alertmanager')
+    }
+    if (summary.nadminEnabled) usedPorts.set(3021, 'nself Admin')
+
+    // Auto-fix port conflicts for custom services
+
+    if (summary.customServices.length > 0) {
+      const fixedCustomServices: any[] = []
+
+      summary.customServices.forEach((service, index) => {
+        if (usedPorts.has(service.port)) {
+          // Find next available port starting from 4001
+          let newPort = 4001
+          while (usedPorts.has(newPort)) {
+            newPort++
+          }
+
+          // Create fixed service
+          const fixedService = { ...service, port: newPort }
+          fixedCustomServices.push(fixedService)
+          usedPorts.set(newPort, service.name)
+
+          // Add to fixes
+          portFixes[`CS_${index + 1}`] =
+            `${service.name}:${service.framework}:${newPort}:${service.route || ''}`
+          portFixCount++
+        } else {
+          fixedCustomServices.push(service)
+          usedPorts.set(service.port, service.name)
+        }
+      })
+
+      // If we fixed any ports, update the store
+      if (
+        fixedCustomServices.some(
+          (service, index) => service.port !== summary.customServices[index]?.port
         )
-      }
-
-      // Apply fixes if any
-      if (Object.keys(allFixes).length > 0) {
+      ) {
         try {
-          await fetch('/api/wizard/update-env', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              config: allFixes,
-              step: 'auto-fix',
-            }),
-          })
-          // Show the count and descriptions of fixes that were just applied
-          setFixedIssuesCount(totalFixCount)
-          setAppliedFixes(fixDescriptions)
-
-          // After applying fixes, reload configuration without re-validating
-          // The fixes have been saved, so next time the page loads, no issues will be found
-          setTimeout(() => {
-            // Reload configuration without validation after fixes
-            window.location.reload()
-          }, 500)
+          const { setCustomServices } = useWizardStore.getState()
+          setCustomServices(fixedCustomServices)
         } catch (error) {
-          console.error('Error applying fixes:', error)
+          console.error('Error updating custom services store:', error)
         }
-      } else {
-        // No fixes were needed
-        setFixedIssuesCount(0)
-        setAppliedFixes([])
       }
+    }
 
-      // Client-side validation for remaining issues
-      const isDev =
-        summary.environment === 'dev' || summary.environment === 'development'
+    // Auto-fix port conflicts for frontend apps
+    if (summary.frontendApps.length > 0) {
+      const fixedFrontendApps: any[] = []
 
-      // Only warn about default project name if not in dev
+      summary.frontendApps.forEach((app, index) => {
+        if (app.localPort && usedPorts.has(app.localPort)) {
+          // Find next available port starting from 3001
+          let newPort = 3001
+          while (usedPorts.has(newPort)) {
+            newPort++
+          }
+
+          // Create fixed app
+          const fixedApp = { ...app, localPort: newPort }
+          fixedFrontendApps.push(fixedApp)
+          usedPorts.set(newPort, app.displayName || 'Frontend App')
+
+          // Add to fixes
+          portFixes[`FRONTEND_APP_${index + 1}_PORT`] = newPort.toString()
+          portFixCount++
+        } else {
+          fixedFrontendApps.push(app)
+          if (app.localPort) {
+            usedPorts.set(app.localPort, app.displayName || 'Frontend App')
+          }
+        }
+      })
+
+      // If we fixed any ports, update the store
       if (
-        !isDev &&
-        (!summary.projectName || summary.projectName === 'my_project')
+        fixedFrontendApps.some(
+          (app, index) => app.localPort !== summary.frontendApps[index]?.localPort
+        )
       ) {
-        issues.push({
-          field: 'projectName',
-          message: 'Project name is using default value',
-          severity: 'warning',
-        })
-      }
-
-      // Only warn about default password in production/staging
-      if (
-        !isDev &&
-        (!summary.databasePassword ||
-          summary.databasePassword === 'nself-dev-password')
-      ) {
-        issues.push({
-          field: 'databasePassword',
-          message:
-            'Database password is using default (insecure for production)',
-          severity: 'warning',
-        })
-      }
-
-      // Check for port conflicts (errors that can't be auto-fixed)
-      const usedPorts = new Map<number, string>()
-
-      // Add default service ports
-      usedPorts.set(5432, 'PostgreSQL')
-      usedPorts.set(8080, 'Hasura')
-      usedPorts.set(4000, 'Auth')
-      usedPorts.set(80, 'Nginx HTTP')
-      usedPorts.set(443, 'Nginx HTTPS')
-
-      // Add optional service ports if enabled
-      if (summary.redisEnabled) usedPorts.set(6379, 'Redis')
-      if (summary.minioEnabled) {
-        usedPorts.set(9000, 'MinIO API')
-        usedPorts.set(9001, 'MinIO Console')
-      }
-      if (summary.mlflowEnabled) usedPorts.set(5000, 'MLflow')
-      if (summary.mailpitEnabled) {
-        usedPorts.set(1025, 'Mailpit SMTP')
-        usedPorts.set(8025, 'Mailpit Web')
-      }
-      if (summary.searchEnabled) usedPorts.set(7700, 'MeiliSearch')
-      if (summary.monitoringEnabled) {
-        usedPorts.set(9090, 'Prometheus')
-        usedPorts.set(3000, 'Grafana')
-        usedPorts.set(3100, 'Loki')
-        usedPorts.set(3200, 'Tempo')
-        usedPorts.set(9093, 'Alertmanager')
-      }
-      if (summary.nadminEnabled) usedPorts.set(3021, 'nself Admin')
-
-      // Auto-fix port conflicts for custom services
-
-      if (summary.customServices.length > 0) {
-        const fixedCustomServices: any[] = []
-
-        summary.customServices.forEach((service, index) => {
-          if (usedPorts.has(service.port)) {
-            // Find next available port starting from 4001
-            let newPort = 4001
-            while (usedPorts.has(newPort)) {
-              newPort++
-            }
-
-            // Create fixed service
-            const fixedService = { ...service, port: newPort }
-            fixedCustomServices.push(fixedService)
-            usedPorts.set(newPort, service.name)
-
-            // Add to fixes
-            portFixes[`CS_${index + 1}`] =
-              `${service.name}:${service.framework}:${newPort}:${service.route || ''}`
-            portFixCount++
-          } else {
-            fixedCustomServices.push(service)
-            usedPorts.set(service.port, service.name)
-          }
-        })
-
-        // If we fixed any ports, update the store
-        if (
-          fixedCustomServices.some(
-            (service, index) =>
-              service.port !== summary.customServices[index]?.port,
-          )
-        ) {
-          try {
-            const { setCustomServices } = useWizardStore.getState()
-            setCustomServices(fixedCustomServices)
-          } catch (error) {
-            console.error('Error updating custom services store:', error)
-          }
+        try {
+          const { setFrontendApps } = useWizardStore.getState()
+          setFrontendApps(fixedFrontendApps)
+        } catch (error) {
+          console.error('Error updating frontend apps store:', error)
         }
       }
+    }
 
-      // Auto-fix port conflicts for frontend apps
-      if (summary.frontendApps.length > 0) {
-        const fixedFrontendApps: any[] = []
-
-        summary.frontendApps.forEach((app, index) => {
-          if (app.localPort && usedPorts.has(app.localPort)) {
-            // Find next available port starting from 3001
-            let newPort = 3001
-            while (usedPorts.has(newPort)) {
-              newPort++
-            }
-
-            // Create fixed app
-            const fixedApp = { ...app, localPort: newPort }
-            fixedFrontendApps.push(fixedApp)
-            usedPorts.set(newPort, app.displayName || 'Frontend App')
-
-            // Add to fixes
-            portFixes[`FRONTEND_APP_${index + 1}_PORT`] = newPort.toString()
-            portFixCount++
-          } else {
-            fixedFrontendApps.push(app)
-            if (app.localPort) {
-              usedPorts.set(app.localPort, app.displayName || 'Frontend App')
-            }
-          }
-        })
-
-        // If we fixed any ports, update the store
-        if (
-          fixedFrontendApps.some(
-            (app, index) =>
-              app.localPort !== summary.frontendApps[index]?.localPort,
-          )
-        ) {
-          try {
-            const { setFrontendApps } = useWizardStore.getState()
-            setFrontendApps(fixedFrontendApps)
-          } catch (error) {
-            console.error('Error updating frontend apps store:', error)
-          }
-        }
-      }
-
-      setValidationIssues(issues)
-      setValidating(false)
-      setAutoFixing(false)
-    },
-    [],
-  )
+    setValidationIssues(issues)
+    setValidating(false)
+    setAutoFixing(false)
+  }, [])
 
   const loadConfiguration = useCallback(
     async (skipValidation = false) => {
@@ -393,20 +348,11 @@ export default function InitStep6() {
           if (data.config) {
             // Merge all config data including raw env vars
             const fullConfig: ConfigSummary = {
-              projectName:
-                data.config.projectName ||
-                data.config.PROJECT_NAME ||
-                'my_project',
-              environment:
-                data.config.environment || data.config.ENV || 'development',
-              domain:
-                data.config.domain || data.config.BASE_DOMAIN || 'localhost',
-              databaseName:
-                data.config.databaseName || data.config.POSTGRES_DB || 'nself',
-              databasePassword:
-                data.config.databasePassword ||
-                data.config.POSTGRES_PASSWORD ||
-                '',
+              projectName: data.config.projectName || data.config.PROJECT_NAME || 'my_project',
+              environment: data.config.environment || data.config.ENV || 'development',
+              domain: data.config.domain || data.config.BASE_DOMAIN || 'localhost',
+              databaseName: data.config.databaseName || data.config.POSTGRES_DB || 'nself',
+              databasePassword: data.config.databasePassword || data.config.POSTGRES_PASSWORD || '',
               hasuraEnabled: data.config.hasuraEnabled !== false, // Always true for required service
               authEnabled: data.config.authEnabled !== false, // Always true for required service
               nadminEnabled:
@@ -414,32 +360,19 @@ export default function InitStep6() {
                 data.config.NSELF_ADMIN_ENABLED === 'true' ||
                 data.config.adminEnabled ||
                 false,
-              redisEnabled:
-                data.config.redisEnabled ||
-                data.config.REDIS_ENABLED === 'true',
+              redisEnabled: data.config.redisEnabled || data.config.REDIS_ENABLED === 'true',
               minioEnabled:
                 data.config.minioEnabled ||
                 data.config.STORAGE_ENABLED === 'true' ||
                 data.config.MINIO_ENABLED === 'true',
-              mlflowEnabled:
-                data.config.mlflowEnabled ||
-                data.config.MLFLOW_ENABLED === 'true',
-              mailpitEnabled:
-                data.config.mailpitEnabled ||
-                data.config.MAILPIT_ENABLED === 'true',
-              searchEnabled:
-                data.config.searchEnabled ||
-                data.config.SEARCH_ENABLED === 'true',
-              searchEngine:
-                data.config.searchEngine ||
-                data.config.SEARCH_ENGINE ||
-                'meilisearch',
+              mlflowEnabled: data.config.mlflowEnabled || data.config.MLFLOW_ENABLED === 'true',
+              mailpitEnabled: data.config.mailpitEnabled || data.config.MAILPIT_ENABLED === 'true',
+              searchEnabled: data.config.searchEnabled || data.config.SEARCH_ENABLED === 'true',
+              searchEngine: data.config.searchEngine || data.config.SEARCH_ENGINE || 'meilisearch',
               functionsEnabled:
-                data.config.functionsEnabled ||
-                data.config.FUNCTIONS_ENABLED === 'true',
+                data.config.functionsEnabled || data.config.FUNCTIONS_ENABLED === 'true',
               monitoringEnabled:
-                data.config.monitoringEnabled ||
-                data.config.MONITORING_ENABLED === 'true',
+                data.config.monitoringEnabled || data.config.MONITORING_ENABLED === 'true',
               // Load individual monitoring service flags
               prometheusEnabled: data.config.PROMETHEUS_ENABLED === 'true',
               grafanaEnabled: data.config.GRAFANA_ENABLED === 'true',
@@ -447,11 +380,9 @@ export default function InitStep6() {
               tempoEnabled: data.config.TEMPO_ENABLED === 'true',
               alertmanagerEnabled: data.config.ALERTMANAGER_ENABLED === 'true',
               nodeExporterEnabled: data.config.NODE_EXPORTER_ENABLED === 'true',
-              postgresExporterEnabled:
-                data.config.POSTGRES_EXPORTER_ENABLED === 'true',
+              postgresExporterEnabled: data.config.POSTGRES_EXPORTER_ENABLED === 'true',
               cadvisorEnabled: data.config.CADVISOR_ENABLED === 'true',
-              customServices:
-                data.config.customServices || data.config.userServices || [],
+              customServices: data.config.customServices || data.config.userServices || [],
               frontendApps: data.config.frontendApps || [],
               backupEnabled:
                 data.config.backupEnabled ||
@@ -472,7 +403,7 @@ export default function InitStep6() {
         setDataLoaded(true)
       }
     },
-    [validateConfiguration],
+    [validateConfiguration]
   )
 
   const checkAndLoadConfiguration = useCallback(async () => {
@@ -578,10 +509,7 @@ export default function InitStep6() {
 
           {/* Summary cards skeletons */}
           {[...Array(4)].map((_, i) => (
-            <div
-              key={i}
-              className="rounded-lg border border-zinc-200 p-4 dark:border-zinc-700"
-            >
+            <div key={i} className="rounded-lg border border-zinc-200 p-4 dark:border-zinc-700">
               <div className="mb-3 h-5 w-32 animate-pulse rounded bg-zinc-200 dark:bg-zinc-700"></div>
               <div className="space-y-2">
                 {[...Array(3)].map((_, j) => (
@@ -670,15 +598,13 @@ export default function InitStep6() {
     monitoringServicesCount // Count actual enabled monitoring services
 
   // Calculate total services (don't use API value as it may be incorrect before build)
-  const totalServices =
-    coreServicesCount + optionalServicesCount + config.customServices.length
+  const totalServices = coreServicesCount + optionalServicesCount + config.customServices.length
 
   return (
     <StepWrapper>
       {/* Auto-fixed issues */}
       {(fixedIssuesCount > 0 ||
-        validationIssues.filter((i) => i.severity === 'warning').length >
-          0) && (
+        validationIssues.filter((i) => i.severity === 'warning').length > 0) && (
         <div className="mb-4 rounded-lg border border-green-200 bg-green-50 p-4 dark:border-green-800 dark:bg-green-900/20">
           <div className="flex items-start gap-2">
             <CheckCircle className="mt-0.5 h-5 w-5 flex-shrink-0 text-green-600 dark:text-green-500" />
@@ -687,24 +613,17 @@ export default function InitStep6() {
                 <h3 className="font-medium text-green-900 dark:text-green-300">
                   {fixedIssuesCount > 0 && (
                     <span>
-                      {fixedIssuesCount}{' '}
-                      {fixedIssuesCount === 1 ? 'issue' : 'issues'}{' '}
-                      automatically fixed
+                      {fixedIssuesCount} {fixedIssuesCount === 1 ? 'issue' : 'issues'} automatically
+                      fixed
                     </span>
                   )}
                   {fixedIssuesCount > 0 &&
-                    validationIssues.filter((i) => i.severity === 'warning')
-                      .length > 0 &&
+                    validationIssues.filter((i) => i.severity === 'warning').length > 0 &&
                     ', '}
-                  {validationIssues.filter((i) => i.severity === 'warning')
-                    .length > 0 && (
+                  {validationIssues.filter((i) => i.severity === 'warning').length > 0 && (
                     <span>
-                      {
-                        validationIssues.filter((i) => i.severity === 'warning')
-                          .length
-                      }{' '}
-                      {validationIssues.filter((i) => i.severity === 'warning')
-                        .length === 1
+                      {validationIssues.filter((i) => i.severity === 'warning').length}{' '}
+                      {validationIssues.filter((i) => i.severity === 'warning').length === 1
                         ? 'warning'
                         : 'warnings'}
                     </span>
@@ -739,12 +658,9 @@ export default function InitStep6() {
                       ))}
                     </>
                   )}
-                  {validationIssues.filter((i) => i.severity === 'warning')
-                    .length > 0 && (
+                  {validationIssues.filter((i) => i.severity === 'warning').length > 0 && (
                     <>
-                      <div className="mt-2 font-medium">
-                        Warnings (non-critical):
-                      </div>
+                      <div className="mt-2 font-medium">Warnings (non-critical):</div>
                       {validationIssues
                         .filter((i) => i.severity === 'warning')
                         .map((issue, index) => (
@@ -773,9 +689,7 @@ export default function InitStep6() {
                   .filter((i) => i.severity === 'error')
                   .map((issue, index) => (
                     <div key={index} className="flex items-start gap-2 text-sm">
-                      <span className="text-red-700 dark:text-red-400">
-                        • {issue.message}
-                      </span>
+                      <span className="text-red-700 dark:text-red-400">• {issue.message}</span>
                     </div>
                   ))}
               </div>
@@ -790,9 +704,7 @@ export default function InitStep6() {
           <div className="flex items-center gap-2">
             <div className="h-4 w-4 animate-spin rounded-full border-b-2 border-blue-600"></div>
             <span className="text-sm text-blue-700 dark:text-blue-400">
-              {autoFixing
-                ? 'Auto-fixing configuration issues...'
-                : 'Validating configuration...'}
+              {autoFixing ? 'Auto-fixing configuration issues...' : 'Validating configuration...'}
             </span>
           </div>
         </div>
@@ -822,9 +734,7 @@ export default function InitStep6() {
       <div className="space-y-4">
         {/* Project Details */}
         <div className="rounded-lg border border-zinc-200 bg-zinc-50 p-4 dark:border-zinc-700 dark:bg-zinc-800/50">
-          <h3 className="mb-3 font-medium text-zinc-900 dark:text-white">
-            Project Details
-          </h3>
+          <h3 className="mb-3 font-medium text-zinc-900 dark:text-white">Project Details</h3>
           <div className="grid grid-cols-2 gap-3 text-sm">
             <div>
               <span className="text-zinc-600 dark:text-zinc-400">Name:</span>
@@ -833,9 +743,7 @@ export default function InitStep6() {
               </span>
             </div>
             <div>
-              <span className="text-zinc-600 dark:text-zinc-400">
-                Environment:
-              </span>
+              <span className="text-zinc-600 dark:text-zinc-400">Environment:</span>
               <span className="ml-2 font-medium text-zinc-900 dark:text-white">
                 {config.environment}
               </span>
@@ -847,9 +755,7 @@ export default function InitStep6() {
               </span>
             </div>
             <div>
-              <span className="text-zinc-600 dark:text-zinc-400">
-                Database:
-              </span>
+              <span className="text-zinc-600 dark:text-zinc-400">Database:</span>
               <span className="ml-2 font-medium text-zinc-900 dark:text-white">
                 {config.databaseName}
               </span>
@@ -859,9 +765,7 @@ export default function InitStep6() {
 
         {/* Services Summary */}
         <div className="rounded-lg border border-zinc-200 bg-zinc-50 p-4 dark:border-zinc-700 dark:bg-zinc-800/50">
-          <h3 className="mb-3 font-medium text-zinc-900 dark:text-white">
-            Services Configuration
-          </h3>
+          <h3 className="mb-3 font-medium text-zinc-900 dark:text-white">Services Configuration</h3>
 
           <div className="space-y-3">
             {/* Core Services - Always Enabled */}
@@ -872,27 +776,19 @@ export default function InitStep6() {
               <div className="ml-2 space-y-2 text-sm">
                 <div className="flex items-center space-x-2">
                   <CheckCircle className="h-4 w-4 text-blue-600" />
-                  <span className="text-zinc-900 dark:text-white">
-                    PostgreSQL Database
-                  </span>
+                  <span className="text-zinc-900 dark:text-white">PostgreSQL Database</span>
                 </div>
                 <div className="flex items-center space-x-2">
                   <CheckCircle className="h-4 w-4 text-blue-600" />
-                  <span className="text-zinc-900 dark:text-white">
-                    Hasura GraphQL Engine
-                  </span>
+                  <span className="text-zinc-900 dark:text-white">Hasura GraphQL Engine</span>
                 </div>
                 <div className="flex items-center space-x-2">
                   <CheckCircle className="h-4 w-4 text-blue-600" />
-                  <span className="text-zinc-900 dark:text-white">
-                    Authentication Service
-                  </span>
+                  <span className="text-zinc-900 dark:text-white">Authentication Service</span>
                 </div>
                 <div className="flex items-center space-x-2">
                   <CheckCircle className="h-4 w-4 text-blue-600" />
-                  <span className="text-zinc-900 dark:text-white">
-                    Nginx Reverse Proxy
-                  </span>
+                  <span className="text-zinc-900 dark:text-white">Nginx Reverse Proxy</span>
                 </div>
               </div>
             </div>
@@ -905,14 +801,9 @@ export default function InitStep6() {
                 </h4>
                 <div className="ml-2 space-y-2 text-sm">
                   {enabledOptionalServices.map((service) => (
-                    <div
-                      key={String(service)}
-                      className="flex items-center space-x-2"
-                    >
+                    <div key={String(service)} className="flex items-center space-x-2">
                       <CheckCircle className="h-4 w-4 text-sky-500" />
-                      <span className="text-zinc-900 dark:text-white">
-                        {service}
-                      </span>
+                      <span className="text-zinc-900 dark:text-white">{service}</span>
                     </div>
                   ))}
                 </div>
@@ -932,9 +823,7 @@ export default function InitStep6() {
                 <div key={index} className="flex items-center space-x-2">
                   <CheckCircle className="h-4 w-4 text-orange-600" />
                   <div className="flex flex-1 items-center justify-between">
-                    <span className="text-zinc-900 dark:text-white">
-                      {service.name}
-                    </span>
+                    <span className="text-zinc-900 dark:text-white">{service.name}</span>
                     <span className="text-zinc-600 dark:text-zinc-400">
                       {service.framework} • Port {service.port}
                       {service.route && ` • ${service.route}.${config.domain}`}
@@ -961,11 +850,8 @@ export default function InitStep6() {
                       {app.displayName || `App ${index + 1}`}
                     </span>
                     <span className="text-zinc-600 dark:text-zinc-400">
-                      {app.productionUrl &&
-                        `${app.productionUrl}.${config.domain} • `}
-                      {app.localPort
-                        ? `Port ${app.localPort}`
-                        : 'No port configured'}
+                      {app.productionUrl && `${app.productionUrl}.${config.domain} • `}
+                      {app.localPort ? `Port ${app.localPort}` : 'No port configured'}
                     </span>
                   </div>
                 </div>
@@ -998,9 +884,7 @@ export default function InitStep6() {
             {config.customServices.length > 0 && (
               <div className="flex justify-between">
                 <span>Custom Services:</span>
-                <span className="font-medium">
-                  {config.customServices.length}
-                </span>
+                <span className="font-medium">{config.customServices.length}</span>
               </div>
             )}
           </div>
@@ -1018,11 +902,7 @@ export default function InitStep6() {
         </button>
         <button
           onClick={handleBuild}
-          disabled={
-            loading ||
-            validating ||
-            validationIssues.some((i) => i.severity === 'error')
-          }
+          disabled={loading || validating || validationIssues.some((i) => i.severity === 'error')}
           className="inline-flex cursor-pointer items-center justify-center gap-0.5 overflow-hidden rounded-full bg-green-600 px-3 py-1 text-sm font-medium text-white transition hover:cursor-pointer hover:bg-green-700 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-green-500/10 dark:text-green-400 dark:ring-1 dark:ring-green-400/20 dark:ring-inset dark:hover:bg-green-400/10 dark:hover:text-green-300 dark:hover:ring-green-300"
         >
           {loading ? (

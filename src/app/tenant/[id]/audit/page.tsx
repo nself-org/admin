@@ -17,10 +17,7 @@ export default function TenantAuditPage() {
   const params = useParams()
   const tenantId = params.id as string
 
-  const { data, error, isLoading } = useSWR(
-    `/api/audit?tenantId=${tenantId}`,
-    fetcher,
-  )
+  const { data, error, isLoading } = useSWR(`/api/audit?tenantId=${tenantId}`, fetcher)
 
   if (isLoading) return <TableSkeleton />
 
@@ -47,12 +44,7 @@ export default function TenantAuditPage() {
         {(data?.logs || []).length > 0 ? (
           <div className="divide-y divide-zinc-700">
             {data.logs.map(
-              (log: {
-                id: string
-                action: string
-                user: string
-                timestamp: string
-              }) => (
+              (log: { id: string; action: string; user: string; timestamp: string }) => (
                 <div key={log.id} className="flex items-center gap-4 p-4">
                   <Activity className="h-5 w-5 text-zinc-500" />
                   <div className="flex-1">
@@ -62,13 +54,12 @@ export default function TenantAuditPage() {
                         <User className="h-3 w-3" /> {log.user}
                       </span>
                       <span className="flex items-center gap-1">
-                        <Clock className="h-3 w-3" />{' '}
-                        {new Date(log.timestamp).toLocaleString()}
+                        <Clock className="h-3 w-3" /> {new Date(log.timestamp).toLocaleString()}
                       </span>
                     </div>
                   </div>
                 </div>
-              ),
+              )
             )}
           </div>
         ) : (

@@ -63,7 +63,6 @@ interface QueryResult {
 const EMPTY_QUERIES: GraphQLQuery[] = []
 const EMPTY_SCHEMA: GraphQLType[] = []
 
-
 function formatDate(dateString: string): string {
   return new Date(dateString).toLocaleString()
 }
@@ -90,9 +89,7 @@ function QueryCard({
     >
       <div className="mb-2 flex items-start justify-between">
         <div className="flex items-center gap-2">
-          <h3 className="text-sm font-medium text-zinc-900 dark:text-white">
-            {query.name}
-          </h3>
+          <h3 className="text-sm font-medium text-zinc-900 dark:text-white">{query.name}</h3>
           {query.favorite && <span className="text-yellow-500">★</span>}
         </div>
         <div className="group relative">
@@ -125,16 +122,10 @@ function QueryCard({
         </div>
       </div>
 
-      <p className="mb-2 font-mono text-xs text-zinc-500">
-        {query.query.split('\n')[0].trim()}...
-      </p>
+      <p className="mb-2 font-mono text-xs text-zinc-500">{query.query.split('\n')[0].trim()}...</p>
 
       <div className="flex items-center justify-between text-xs text-zinc-500">
-        <span>
-          {query.lastExecuted
-            ? formatDate(query.lastExecuted)
-            : 'Never executed'}
-        </span>
+        <span>{query.lastExecuted ? formatDate(query.lastExecuted) : 'Never executed'}</span>
         {query.executionTime && <span>{query.executionTime}ms</span>}
       </div>
     </div>
@@ -242,19 +233,13 @@ function SchemaExplorer({
               <div className="mb-1 flex items-center gap-2">
                 <Icon className={`h-4 w-4 ${colorClass}`} />
                 <span className="text-sm font-medium">{type.name}</span>
-                <span
-                  className={`rounded px-2 py-1 text-xs ${colorClass} bg-opacity-10`}
-                >
+                <span className={`rounded px-2 py-1 text-xs ${colorClass} bg-opacity-10`}>
                   {type.kind}
                 </span>
               </div>
-              {type.description && (
-                <p className="ml-6 text-xs text-zinc-500">{type.description}</p>
-              )}
+              {type.description && <p className="ml-6 text-xs text-zinc-500">{type.description}</p>}
               {type.fields && (
-                <p className="mt-1 ml-6 text-xs text-zinc-400">
-                  {type.fields.length} fields
-                </p>
+                <p className="mt-1 ml-6 text-xs text-zinc-400">{type.fields.length} fields</p>
               )}
             </div>
           )
@@ -291,28 +276,19 @@ function TypeDetails({ type }: { type: GraphQLType }) {
       <div className="flex items-center gap-3">
         <Icon className="h-6 w-6 text-blue-600 dark:text-blue-400" />
         <div>
-          <h2 className="text-xl font-semibold text-zinc-900 dark:text-white">
-            {type.name}
-          </h2>
+          <h2 className="text-xl font-semibold text-zinc-900 dark:text-white">{type.name}</h2>
           <span className="text-sm text-zinc-500">{type.kind}</span>
         </div>
       </div>
 
-      {type.description && (
-        <p className="text-zinc-600 dark:text-zinc-400">{type.description}</p>
-      )}
+      {type.description && <p className="text-zinc-600 dark:text-zinc-400">{type.description}</p>}
 
       {type.fields && (
         <div>
-          <h3 className="mb-3 font-medium text-zinc-900 dark:text-white">
-            Fields
-          </h3>
+          <h3 className="mb-3 font-medium text-zinc-900 dark:text-white">Fields</h3>
           <div className="space-y-2">
             {type.fields.map((field) => (
-              <div
-                key={field.name}
-                className="rounded-lg bg-zinc-50 p-3 dark:bg-zinc-800"
-              >
+              <div key={field.name} className="rounded-lg bg-zinc-50 p-3 dark:bg-zinc-800">
                 <div className="mb-1 flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <span className="text-sm font-medium">{field.name}</span>
@@ -327,9 +303,7 @@ function TypeDetails({ type }: { type: GraphQLType }) {
                   )}
                 </div>
                 {field.description && (
-                  <p className="mb-2 text-xs text-zinc-500">
-                    {field.description}
-                  </p>
+                  <p className="mb-2 text-xs text-zinc-500">{field.description}</p>
                 )}
                 {field.args && field.args.length > 0 && (
                   <div className="text-xs">
@@ -343,9 +317,7 @@ function TypeDetails({ type }: { type: GraphQLType }) {
                   </div>
                 )}
                 {field.deprecationReason && (
-                  <p className="mt-1 text-xs text-red-500">
-                    Deprecated: {field.deprecationReason}
-                  </p>
+                  <p className="mt-1 text-xs text-red-500">Deprecated: {field.deprecationReason}</p>
                 )}
               </div>
             ))}
@@ -355,22 +327,13 @@ function TypeDetails({ type }: { type: GraphQLType }) {
 
       {type.enumValues && (
         <div>
-          <h3 className="mb-3 font-medium text-zinc-900 dark:text-white">
-            Values
-          </h3>
+          <h3 className="mb-3 font-medium text-zinc-900 dark:text-white">Values</h3>
           <div className="space-y-2">
             {type.enumValues.map((value) => (
-              <div
-                key={value.name}
-                className="rounded-lg bg-zinc-50 p-3 dark:bg-zinc-800"
-              >
-                <div className="font-mono text-sm font-medium">
-                  {value.name}
-                </div>
+              <div key={value.name} className="rounded-lg bg-zinc-50 p-3 dark:bg-zinc-800">
+                <div className="font-mono text-sm font-medium">{value.name}</div>
                 {value.description && (
-                  <p className="mt-1 text-xs text-zinc-500">
-                    {value.description}
-                  </p>
+                  <p className="mt-1 text-xs text-zinc-500">{value.description}</p>
                 )}
               </div>
             ))}
@@ -381,21 +344,13 @@ function TypeDetails({ type }: { type: GraphQLType }) {
   )
 }
 
-function QueryResult({
-  result,
-  loading,
-}: {
-  result: QueryResult | null
-  loading: boolean
-}) {
+function QueryResult({ result, loading }: { result: QueryResult | null; loading: boolean }) {
   if (loading) {
     return (
       <div className="flex items-center justify-center p-8">
         <div className="flex items-center gap-2">
           <Activity className="h-5 w-5 animate-spin text-blue-500" />
-          <span className="text-zinc-600 dark:text-zinc-400">
-            Executing query...
-          </span>
+          <span className="text-zinc-600 dark:text-zinc-400">Executing query...</span>
         </div>
       </div>
     )
@@ -416,17 +371,11 @@ function QueryResult({
     <div className="space-y-4">
       {result.errors && result.errors.length > 0 && (
         <div className="rounded-lg border border-red-200 bg-red-50 p-4 dark:border-red-800 dark:bg-red-900/20">
-          <h3 className="mb-2 font-medium text-red-800 dark:text-red-300">
-            Errors
-          </h3>
+          <h3 className="mb-2 font-medium text-red-800 dark:text-red-300">Errors</h3>
           {result.errors.map((error, index) => (
             <div key={index} className="text-sm text-red-700 dark:text-red-400">
               {error.message}
-              {error.path && (
-                <span className="ml-2 text-red-500">
-                  at {error.path.join('.')}
-                </span>
-              )}
+              {error.path && <span className="ml-2 text-red-500">at {error.path.join('.')}</span>}
             </div>
           ))}
         </div>
@@ -434,9 +383,7 @@ function QueryResult({
 
       {result.data && (
         <div>
-          <h3 className="mb-2 font-medium text-zinc-900 dark:text-white">
-            Data
-          </h3>
+          <h3 className="mb-2 font-medium text-zinc-900 dark:text-white">Data</h3>
           <pre className="overflow-x-auto rounded-lg bg-zinc-50 p-4 text-sm dark:bg-zinc-900">
             {JSON.stringify(result.data, null, 2)}
           </pre>
@@ -445,9 +392,7 @@ function QueryResult({
 
       {result.extensions && (
         <div>
-          <h3 className="mb-2 font-medium text-zinc-900 dark:text-white">
-            Extensions
-          </h3>
+          <h3 className="mb-2 font-medium text-zinc-900 dark:text-white">Extensions</h3>
           <pre className="overflow-x-auto rounded-lg bg-zinc-50 p-4 text-sm dark:bg-zinc-900">
             {JSON.stringify(result.extensions, null, 2)}
           </pre>
@@ -485,10 +430,8 @@ function GraphQLToolsContent() {
     if (action === 'favorite') {
       setQueries((prev) =>
         prev.map((query) =>
-          query.id === queryId
-            ? { ...query, favorite: !query.favorite }
-            : query,
-        ),
+          query.id === queryId ? { ...query, favorite: !query.favorite } : query
+        )
       )
     } else if (action === 'duplicate') {
       const query = queries.find((q) => q.id === queryId)
@@ -567,16 +510,15 @@ function GraphQLToolsContent() {
                   lastExecuted: new Date().toISOString(),
                   executionTime,
                 }
-              : query,
-          ),
+              : query
+          )
         )
       }
     } catch (err) {
       setQueryResult({
         errors: [
           {
-            message:
-              err instanceof Error ? err.message : 'Failed to execute query',
+            message: err instanceof Error ? err.message : 'Failed to execute query',
           },
         ],
       })
@@ -596,8 +538,8 @@ function GraphQLToolsContent() {
                 variables: variables || undefined,
                 headers: headers ? JSON.parse(headers) : undefined,
               }
-            : query,
-        ),
+            : query
+        )
       )
     }
   }
@@ -622,9 +564,7 @@ function GraphQLToolsContent() {
         <div className="mb-6">
           <div className="mb-4 flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold text-zinc-900 dark:text-white">
-                GraphQL Tools
-              </h1>
+              <h1 className="text-3xl font-bold text-zinc-900 dark:text-white">GraphQL Tools</h1>
               <p className="mt-1 text-zinc-600 dark:text-zinc-400">
                 GraphiQL interface with schema explorer and query management
               </p>
@@ -681,9 +621,7 @@ function GraphQLToolsContent() {
             {/* Query List */}
             <div className="w-full lg:w-80">
               <div className="mb-4">
-                <h2 className="mb-3 font-semibold text-zinc-900 dark:text-white">
-                  Saved Queries
-                </h2>
+                <h2 className="mb-3 font-semibold text-zinc-900 dark:text-white">Saved Queries</h2>
                 <div className="space-y-2">
                   {queries.map((query) => (
                     <QueryCard
@@ -722,9 +660,7 @@ function GraphQLToolsContent() {
                         <button
                           onClick={() => setShowHeaders(!showHeaders)}
                           className={`rounded px-2 py-1 text-xs ${
-                            showHeaders
-                              ? 'bg-blue-500 text-white'
-                              : 'bg-zinc-100 dark:bg-zinc-700'
+                            showHeaders ? 'bg-blue-500 text-white' : 'bg-zinc-100 dark:bg-zinc-700'
                           }`}
                         >
                           Headers
@@ -732,11 +668,7 @@ function GraphQLToolsContent() {
                       </div>
                     </div>
                     <div className="flex items-center gap-2">
-                      <Button
-                        onClick={handleSaveQuery}
-                        variant="outline"
-                        className="text-xs"
-                      >
+                      <Button onClick={handleSaveQuery} variant="outline" className="text-xs">
                         <Save className="mr-1 h-3 w-3" />
                         Save
                       </Button>
@@ -842,15 +774,10 @@ function GraphQLToolsContent() {
               </div>
 
               {schemaTab === 'explorer' && (
-                <SchemaExplorer
-                  schema={EMPTY_SCHEMA}
-                  onTypeSelect={setSelectedType}
-                />
+                <SchemaExplorer schema={EMPTY_SCHEMA} onTypeSelect={setSelectedType} />
               )}
 
-              {schemaTab === 'details' && selectedType && (
-                <TypeDetails type={selectedType} />
-              )}
+              {schemaTab === 'details' && selectedType && <TypeDetails type={selectedType} />}
 
               {schemaTab === 'details' && !selectedType && (
                 <div className="mt-8 text-center text-zinc-500">
@@ -864,9 +791,7 @@ function GraphQLToolsContent() {
             <div className="flex-1">
               <div className="rounded-lg border border-zinc-200 bg-white p-6 dark:border-zinc-700 dark:bg-zinc-800">
                 <div className="mb-4 flex items-center justify-between">
-                  <h3 className="font-semibold text-zinc-900 dark:text-white">
-                    Schema Overview
-                  </h3>
+                  <h3 className="font-semibold text-zinc-900 dark:text-white">Schema Overview</h3>
                   <div className="flex items-center gap-2">
                     <Button variant="outline" className="text-xs">
                       <Download className="mr-1 h-3 w-3" />
@@ -884,31 +809,22 @@ function GraphQLToolsContent() {
                     { label: 'Types', count: EMPTY_SCHEMA.length, icon: Box },
                     {
                       label: 'Queries',
-                      count:
-                        EMPTY_SCHEMA.find((t) => t.name === 'Query')?.fields
-                          ?.length || 0,
+                      count: EMPTY_SCHEMA.find((t) => t.name === 'Query')?.fields?.length || 0,
                       icon: Search,
                     },
                     {
                       label: 'Mutations',
-                      count:
-                        EMPTY_SCHEMA.find((t) => t.name === 'Mutation')?.fields
-                          ?.length || 0,
+                      count: EMPTY_SCHEMA.find((t) => t.name === 'Mutation')?.fields?.length || 0,
                       icon: Edit3,
                     },
                     { label: 'Subscriptions', count: 0, icon: Activity },
                   ].map((stat, index) => {
                     const Icon = stat.icon
                     return (
-                      <div
-                        key={index}
-                        className="rounded-lg bg-zinc-50 p-4 dark:bg-zinc-700"
-                      >
+                      <div key={index} className="rounded-lg bg-zinc-50 p-4 dark:bg-zinc-700">
                         <div className="flex items-center justify-between">
                           <div>
-                            <p className="text-sm text-zinc-600 dark:text-zinc-400">
-                              {stat.label}
-                            </p>
+                            <p className="text-sm text-zinc-600 dark:text-zinc-400">{stat.label}</p>
                             <p className="text-2xl font-bold">{stat.count}</p>
                           </div>
                           <Icon className="h-6 w-6 text-zinc-400" />
@@ -924,10 +840,7 @@ function GraphQLToolsContent() {
                   <div className="text-center text-zinc-500">
                     <Database className="mx-auto mb-4 h-16 w-16 opacity-30" />
                     <p className="mb-2 text-lg font-medium">GraphQL Schema</p>
-                    <p>
-                      Select a type from the explorer to view its details and
-                      relationships
-                    </p>
+                    <p>Select a type from the explorer to view its details and relationships</p>
                   </div>
                 )}
               </div>

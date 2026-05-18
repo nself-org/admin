@@ -41,12 +41,10 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     return NextResponse.json(
       {
         success: false,
-        error: key
-          ? `Failed to rotate secret '${key}'`
-          : 'Failed to rotate secrets',
+        error: key ? `Failed to rotate secret '${key}'` : 'Failed to rotate secrets',
         details: result.stderr || result.error || 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   } catch (error) {
     return NextResponse.json(
@@ -55,7 +53,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to rotate secrets',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

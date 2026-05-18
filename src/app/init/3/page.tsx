@@ -156,7 +156,7 @@ export default function InitStep3() {
     .filter(
       (v, i) =>
         // Exclude nadmin from "all" calculation since it's always required
-        Object.keys(optionalServices)[i] !== 'nadmin',
+        Object.keys(optionalServices)[i] !== 'nadmin'
     )
     .every((v) => v === true)
 
@@ -164,7 +164,7 @@ export default function InitStep3() {
     .filter(
       (v, i) =>
         // Exclude nadmin from "all" calculation since it's always required
-        Object.keys(optionalServices)[i] !== 'nadmin',
+        Object.keys(optionalServices)[i] !== 'nadmin'
     )
     .every((v) => v === false)
 
@@ -308,10 +308,7 @@ export default function InitStep3() {
         <div className="space-y-4">
           {/* Loading skeleton for service cards */}
           {[...Array(7)].map((_, i) => (
-            <div
-              key={i}
-              className="rounded-lg border-2 border-zinc-200 p-5 dark:border-zinc-700"
-            >
+            <div key={i} className="rounded-lg border-2 border-zinc-200 p-5 dark:border-zinc-700">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
                   <div className="h-10 w-10 animate-pulse rounded bg-zinc-200 dark:bg-zinc-700"></div>
@@ -340,11 +337,7 @@ export default function InitStep3() {
           onClick={toggleAll}
           className="text-xs text-zinc-600 transition-colors hover:text-blue-600 dark:text-zinc-400 dark:hover:text-blue-400"
         >
-          {allEnabled
-            ? 'Disable All'
-            : noneEnabled
-              ? 'Enable All'
-              : 'Toggle All'}
+          {allEnabled ? 'Disable All' : noneEnabled ? 'Enable All' : 'Toggle All'}
         </button>
       </div>
 
@@ -364,9 +357,7 @@ export default function InitStep3() {
                 <div
                   className={`flex flex-1 items-start space-x-4 ${service.required ? '' : 'cursor-pointer'}`}
                   onClick={() =>
-                    !service.required &&
-                    !service.enabled &&
-                    toggleService(service.key)
+                    !service.required && !service.enabled && toggleService(service.key)
                   }
                 >
                   <div
@@ -397,9 +388,7 @@ export default function InitStep3() {
                     <p className="mb-2 text-sm text-zinc-600 dark:text-zinc-400">
                       {service.description}
                     </p>
-                    <p className="text-xs text-zinc-500 dark:text-zinc-500">
-                      {service.details}
-                    </p>
+                    <p className="text-xs text-zinc-500 dark:text-zinc-500">{service.details}</p>
                   </div>
                 </div>
 
@@ -411,9 +400,7 @@ export default function InitStep3() {
                     <input
                       type="checkbox"
                       checked={service.enabled}
-                      onChange={() =>
-                        !service.required && toggleService(service.key)
-                      }
+                      onChange={() => !service.required && toggleService(service.key)}
                       disabled={service.required}
                       className={`h-5 w-5 rounded border-2 focus:ring-2 ${
                         service.enabled
@@ -492,9 +479,7 @@ export default function InitStep3() {
           onClose={() => setModalService(null)}
           service={modalService}
           config={serviceConfigs[modalService]}
-          onSave={(serviceConfig) =>
-            handleSaveConfig(modalService, serviceConfig)
-          }
+          onSave={(serviceConfig) => handleSaveConfig(modalService, serviceConfig)}
         />
       )}
     </StepWrapper>

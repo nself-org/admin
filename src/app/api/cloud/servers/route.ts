@@ -70,7 +70,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         stdout: execError.stdout || '',
         stderr: execError.stderr || '',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

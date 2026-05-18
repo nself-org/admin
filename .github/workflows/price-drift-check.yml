@@ -43,7 +43,7 @@ jobs:
             '\$9\.99/mo'
             '\$99\.99/yr'
             'ClawDE\+'
-            'nMedia'
+            '\bnMedia\b'
           )
 
           FAIL=0

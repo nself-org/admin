@@ -35,7 +35,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to disable TOTP',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

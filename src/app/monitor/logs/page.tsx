@@ -1,22 +1,8 @@
 'use client'
 
 import { LogViewerSkeleton } from '@/components/skeletons'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
-import {
-  Download,
-  Filter,
-  Pause,
-  Play,
-  RefreshCw,
-  Search,
-  Terminal,
-} from 'lucide-react'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Download, Filter, Pause, Play, RefreshCw, Search, Terminal } from 'lucide-react'
 import { Suspense, useCallback, useEffect, useRef, useState } from 'react'
 
 interface LogEntry {
@@ -75,14 +61,9 @@ function LogsContent() {
   }, [logs, streaming])
 
   const filteredLogs = logs.filter((log) => {
-    if (selectedService !== 'all' && log.service !== selectedService)
-      return false
+    if (selectedService !== 'all' && log.service !== selectedService) return false
     if (selectedLevel !== 'all' && log.level !== selectedLevel) return false
-    if (
-      searchQuery &&
-      !log.message.toLowerCase().includes(searchQuery.toLowerCase())
-    )
-      return false
+    if (searchQuery && !log.message.toLowerCase().includes(searchQuery.toLowerCase())) return false
     return true
   })
 
@@ -94,9 +75,7 @@ function LogsContent() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-zinc-900 dark:text-white">
-            Monitoring Logs
-          </h1>
+          <h1 className="text-2xl font-bold text-zinc-900 dark:text-white">Monitoring Logs</h1>
           <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
             Aggregated log viewer for all monitored services
           </p>
@@ -110,11 +89,7 @@ function LogsContent() {
                 : 'border-zinc-200 bg-white text-zinc-700 hover:bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700'
             }`}
           >
-            {streaming ? (
-              <Pause className="h-4 w-4" />
-            ) : (
-              <Play className="h-4 w-4" />
-            )}
+            {streaming ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
             {streaming ? 'Pause' : 'Stream'}
           </button>
           <button
@@ -180,9 +155,7 @@ function LogsContent() {
             <Terminal className="h-5 w-5" />
             Log Output
           </CardTitle>
-          <CardDescription>
-            Showing {filteredLogs.length} log entries
-          </CardDescription>
+          <CardDescription>Showing {filteredLogs.length} log entries</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="max-h-[600px] overflow-y-auto rounded-lg bg-zinc-950 p-4 font-mono text-xs">
@@ -190,10 +163,7 @@ function LogsContent() {
               <p className="text-zinc-500">No logs to display.</p>
             ) : (
               filteredLogs.map((log, i) => (
-                <div
-                  key={i}
-                  className="flex gap-2 border-b border-zinc-900 py-1 last:border-0"
-                >
+                <div key={i} className="flex gap-2 border-b border-zinc-900 py-1 last:border-0">
                   <span className="shrink-0 text-zinc-500">
                     {new Date(log.timestamp).toLocaleTimeString()}
                   </span>

@@ -8,9 +8,7 @@ export async function GET(request: NextRequest): Promise<Response> {
   const writer = stream.writable.getWriter()
 
   // Send initial connection message
-  writer.write(
-    encoder.encode('data: {"type":"connected","message":"SSE connected"}\n\n'),
-  )
+  writer.write(encoder.encode('data: {"type":"connected","message":"SSE connected"}\n\n'))
 
   // Set up periodic updates (example - in production, this would be event-driven)
   const interval = setInterval(async () => {
@@ -26,9 +24,7 @@ export async function GET(request: NextRequest): Promise<Response> {
         },
       }
 
-      await writer.write(
-        encoder.encode(`data: ${JSON.stringify(healthUpdate)}\n\n`),
-      )
+      await writer.write(encoder.encode(`data: ${JSON.stringify(healthUpdate)}\n\n`))
     } catch {
       // Client disconnected
       clearInterval(interval)

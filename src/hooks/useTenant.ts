@@ -4,11 +4,7 @@
 'use client'
 
 import { tenantApi } from '@/lib/tenant'
-import type {
-  CreateTenantInput,
-  Tenant,
-  UpdateTenantInput,
-} from '@/types/tenant'
+import type { CreateTenantInput, Tenant, UpdateTenantInput } from '@/types/tenant'
 import { useCallback, useState } from 'react'
 import useSWR from 'swr'
 
@@ -36,7 +32,7 @@ export function useTenant(tenantId?: string) {
   const { data: stats, mutate: mutateStats } = useSWR(
     tenantId ? `/api/tenant/${tenantId}/stats` : null,
     fetcher,
-    { refreshInterval: 60000 },
+    { refreshInterval: 60000 }
   )
 
   const create = useCallback(async (input: CreateTenantInput) => {
@@ -46,8 +42,7 @@ export function useTenant(tenantId?: string) {
       const newTenant = await tenantApi.create(input)
       return newTenant
     } catch (err) {
-      const message =
-        err instanceof Error ? err.message : 'Failed to create tenant'
+      const message = err instanceof Error ? err.message : 'Failed to create tenant'
       setError(message)
       throw err
     } finally {
@@ -65,15 +60,14 @@ export function useTenant(tenantId?: string) {
         mutateTenant(updated)
         return updated
       } catch (err) {
-        const message =
-          err instanceof Error ? err.message : 'Failed to update tenant'
+        const message = err instanceof Error ? err.message : 'Failed to update tenant'
         setError(message)
         throw err
       } finally {
         setIsLoading(false)
       }
     },
-    [tenantId, mutateTenant],
+    [tenantId, mutateTenant]
   )
 
   const remove = useCallback(async () => {
@@ -83,8 +77,7 @@ export function useTenant(tenantId?: string) {
     try {
       await tenantApi.delete(tenantId)
     } catch (err) {
-      const message =
-        err instanceof Error ? err.message : 'Failed to delete tenant'
+      const message = err instanceof Error ? err.message : 'Failed to delete tenant'
       setError(message)
       throw err
     } finally {
@@ -100,8 +93,7 @@ export function useTenant(tenantId?: string) {
       await tenantApi.suspend(tenantId)
       mutateTenant()
     } catch (err) {
-      const message =
-        err instanceof Error ? err.message : 'Failed to suspend tenant'
+      const message = err instanceof Error ? err.message : 'Failed to suspend tenant'
       setError(message)
       throw err
     } finally {
@@ -117,8 +109,7 @@ export function useTenant(tenantId?: string) {
       await tenantApi.activate(tenantId)
       mutateTenant()
     } catch (err) {
-      const message =
-        err instanceof Error ? err.message : 'Failed to activate tenant'
+      const message = err instanceof Error ? err.message : 'Failed to activate tenant'
       setError(message)
       throw err
     } finally {

@@ -68,8 +68,7 @@ export function useMigrations() {
 
   return {
     migrations: data?.migrations || [],
-    pendingCount:
-      data?.migrations?.filter((m) => m.status === 'pending').length || 0,
+    pendingCount: data?.migrations?.filter((m) => m.status === 'pending').length || 0,
     isLoading,
     isError: !!error,
     mutate,

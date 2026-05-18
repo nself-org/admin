@@ -7,18 +7,12 @@ interface RouteContext {
 }
 
 // GET /api/reports/schedules/[id] - Get a single schedule
-export async function GET(
-  request: NextRequest,
-  context: RouteContext,
-): Promise<NextResponse> {
+export async function GET(request: NextRequest, context: RouteContext): Promise<NextResponse> {
   try {
     const { id } = await context.params
     const schedule = await reports.getScheduleById(id)
     if (!schedule) {
-      return NextResponse.json(
-        { success: false, error: 'Schedule not found' },
-        { status: 404 },
-      )
+      return NextResponse.json({ success: false, error: 'Schedule not found' }, { status: 404 })
     }
 
     return NextResponse.json({
@@ -26,24 +20,19 @@ export async function GET(
       data: schedule,
     })
   } catch (error) {
-    const statusCode =
-      error instanceof Error && error.message.includes('not found') ? 404 : 500
+    const statusCode = error instanceof Error && error.message.includes('not found') ? 404 : 500
     return NextResponse.json(
       {
         success: false,
-        error:
-          error instanceof Error ? error.message : 'Failed to get schedule',
+        error: error instanceof Error ? error.message : 'Failed to get schedule',
       },
-      { status: statusCode },
+      { status: statusCode }
     )
   }
 }
 
 // PATCH /api/reports/schedules/[id] - Update a schedule
-export async function PATCH(
-  request: NextRequest,
-  context: RouteContext,
-): Promise<NextResponse> {
+export async function PATCH(request: NextRequest, context: RouteContext): Promise<NextResponse> {
   const authError = await requireAuth(request)
   if (authError) return authError
 
@@ -60,7 +49,7 @@ export async function PATCH(
             success: false,
             error: `Invalid frequency. Must be one of: ${validFrequencies.join(', ')}`,
           },
-          { status: 400 },
+          { status: 400 }
         )
       }
     }
@@ -74,7 +63,7 @@ export async function PATCH(
             success: false,
             error: `Invalid format. Must be one of: ${validFormats.join(', ')}`,
           },
-          { status: 400 },
+          { status: 400 }
         )
       }
     }
@@ -95,24 +84,19 @@ export async function PATCH(
       data: schedule,
     })
   } catch (error) {
-    const statusCode =
-      error instanceof Error && error.message.includes('not found') ? 404 : 500
+    const statusCode = error instanceof Error && error.message.includes('not found') ? 404 : 500
     return NextResponse.json(
       {
         success: false,
-        error:
-          error instanceof Error ? error.message : 'Failed to update schedule',
+        error: error instanceof Error ? error.message : 'Failed to update schedule',
       },
-      { status: statusCode },
+      { status: statusCode }
     )
   }
 }
 
 // DELETE /api/reports/schedules/[id] - Delete a schedule
-export async function DELETE(
-  request: NextRequest,
-  context: RouteContext,
-): Promise<NextResponse> {
+export async function DELETE(request: NextRequest, context: RouteContext): Promise<NextResponse> {
   const authError = await requireAuth(request)
   if (authError) return authError
 
@@ -126,15 +110,13 @@ export async function DELETE(
       message: 'Schedule deleted successfully',
     })
   } catch (error) {
-    const statusCode =
-      error instanceof Error && error.message.includes('not found') ? 404 : 500
+    const statusCode = error instanceof Error && error.message.includes('not found') ? 404 : 500
     return NextResponse.json(
       {
         success: false,
-        error:
-          error instanceof Error ? error.message : 'Failed to delete schedule',
+        error: error instanceof Error ? error.message : 'Failed to delete schedule',
       },
-      { status: statusCode },
+      { status: statusCode }
     )
   }
 }

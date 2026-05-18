@@ -14,10 +14,9 @@ export async function GET(_request: NextRequest): Promise<NextResponse> {
     return NextResponse.json(
       {
         success: false,
-        error:
-          error instanceof Error ? error.message : 'Failed to get report stats',
+        error: error instanceof Error ? error.message : 'Failed to get report stats',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

@@ -15,14 +15,7 @@ import {
 } from '@/components/ui/select'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Textarea } from '@/components/ui/textarea'
-import {
-  AlertCircle,
-  BarChart3,
-  Copy,
-  Download,
-  PlayCircle,
-  RefreshCw,
-} from 'lucide-react'
+import { AlertCircle, BarChart3, Copy, Download, PlayCircle, RefreshCw } from 'lucide-react'
 import { Suspense, useState } from 'react'
 
 interface MetricData extends Record<string, unknown> {
@@ -100,10 +93,7 @@ function PrometheusContent() {
 
   const handleExport = (format: 'csv' | 'json') => {
     if (format === 'csv') {
-      const csv = [
-        'timestamp,value',
-        ...results.map((r) => `${r.timestamp},${r.value}`),
-      ].join('\n')
+      const csv = ['timestamp,value', ...results.map((r) => `${r.timestamp},${r.value}`)].join('\n')
       const blob = new Blob([csv], { type: 'text/csv' })
       const url = URL.createObjectURL(blob)
       const a = document.createElement('a')
@@ -131,9 +121,7 @@ function PrometheusContent() {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold text-zinc-900 dark:text-white">
-          Prometheus Metrics
-        </h1>
+        <h1 className="text-3xl font-bold text-zinc-900 dark:text-white">Prometheus Metrics</h1>
         <p className="mt-2 text-zinc-600 dark:text-zinc-400">
           Query and visualize Prometheus metrics with PromQL
         </p>
@@ -141,9 +129,7 @@ function PrometheusContent() {
 
       {/* Query Builder */}
       <Card className="p-6">
-        <h2 className="mb-4 text-lg font-semibold text-zinc-900 dark:text-white">
-          Query Builder
-        </h2>
+        <h2 className="mb-4 text-lg font-semibold text-zinc-900 dark:text-white">Query Builder</h2>
 
         <div className="space-y-4">
           {/* Metric Selector */}
@@ -186,12 +172,7 @@ function PrometheusContent() {
           <div>
             <div className="mb-2 flex items-center justify-between">
               <Label htmlFor="query">PromQL Query</Label>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={handleCopyQuery}
-                disabled={!query}
-              >
+              <Button variant="ghost" size="sm" onClick={handleCopyQuery} disabled={!query}>
                 <Copy className="mr-2 h-4 w-4" />
                 Copy
               </Button>
@@ -214,19 +195,11 @@ function PrometheusContent() {
             </Button>
             {results.length > 0 && (
               <>
-                <Button
-                  variant="outline"
-                  onClick={() => handleExport('csv')}
-                  disabled={loading}
-                >
+                <Button variant="outline" onClick={() => handleExport('csv')} disabled={loading}>
                   <Download className="mr-2 h-4 w-4" />
                   Export CSV
                 </Button>
-                <Button
-                  variant="outline"
-                  onClick={() => handleExport('json')}
-                  disabled={loading}
-                >
+                <Button variant="outline" onClick={() => handleExport('json')} disabled={loading}>
                   <Download className="mr-2 h-4 w-4" />
                   Export JSON
                 </Button>
@@ -242,9 +215,7 @@ function PrometheusContent() {
           <div className="flex items-center gap-3">
             <AlertCircle className="h-5 w-5 text-red-600 dark:text-red-400" />
             <div className="flex-1">
-              <h3 className="font-medium text-red-900 dark:text-red-100">
-                Query Failed
-              </h3>
+              <h3 className="font-medium text-red-900 dark:text-red-100">Query Failed</h3>
               <p className="text-sm text-red-700 dark:text-red-200">{error}</p>
             </div>
             <Button variant="outline" onClick={handleExecuteQuery}>
@@ -264,9 +235,7 @@ function PrometheusContent() {
       ) : results.length > 0 ? (
         <Card className="p-6">
           <div className="mb-4 flex items-center justify-between">
-            <h2 className="text-lg font-semibold text-zinc-900 dark:text-white">
-              Results
-            </h2>
+            <h2 className="text-lg font-semibold text-zinc-900 dark:text-white">Results</h2>
             <span className="text-sm text-zinc-500 dark:text-zinc-400">
               {results.length} data points
             </span>
@@ -283,9 +252,7 @@ function PrometheusContent() {
 
           {/* Data Table */}
           <div className="mt-6">
-            <h3 className="mb-3 text-sm font-medium text-zinc-900 dark:text-white">
-              Raw Data
-            </h3>
+            <h3 className="mb-3 text-sm font-medium text-zinc-900 dark:text-white">Raw Data</h3>
             <div className="max-h-96 overflow-auto rounded-lg border border-zinc-200 dark:border-zinc-800">
               <table className="w-full text-sm">
                 <thead className="sticky top-0 bg-zinc-50 dark:bg-zinc-900">
@@ -300,10 +267,7 @@ function PrometheusContent() {
                 </thead>
                 <tbody className="divide-y divide-zinc-200 dark:divide-zinc-800">
                   {results.map((result, index) => (
-                    <tr
-                      key={index}
-                      className="hover:bg-zinc-50 dark:hover:bg-zinc-900/50"
-                    >
+                    <tr key={index} className="hover:bg-zinc-50 dark:hover:bg-zinc-900/50">
                       <td className="px-4 py-2 font-mono text-zinc-700 dark:text-zinc-300">
                         {result.timestamp}
                       </td>

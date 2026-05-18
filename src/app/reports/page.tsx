@@ -47,9 +47,7 @@ function StatsCard({
           <div>
             <p className="text-sm text-zinc-400">{title}</p>
             <p className="mt-1 text-2xl font-semibold text-white">{value}</p>
-            {description && (
-              <p className="mt-1 text-xs text-zinc-500">{description}</p>
-            )}
+            {description && <p className="mt-1 text-xs text-zinc-500">{description}</p>}
           </div>
           <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-zinc-700/50">
             <Icon className="h-5 w-5 text-emerald-400" />
@@ -62,8 +60,9 @@ function StatsCard({
 
 function ReportsContent() {
   const [category, setCategory] = useUrlState<string>('tab', 'all')
-  const { templates: _templates, isLoading: isLoadingTemplates } =
-    useReportTemplates(category === 'all' ? undefined : category)
+  const { templates: _templates, isLoading: isLoadingTemplates } = useReportTemplates(
+    category === 'all' ? undefined : category
+  )
   const { stats, isLoading: isLoadingStats } = useReportStats()
 
   const handleCategoryChange = (value: string) => {
@@ -152,9 +151,7 @@ function ReportsContent() {
                   ))}
                 </div>
               ) : (
-                <ReportTemplateList
-                  category={cat.value === 'all' ? undefined : cat.value}
-                />
+                <ReportTemplateList category={cat.value === 'all' ? undefined : cat.value} />
               )}
             </TabsContent>
           ))}
@@ -164,9 +161,7 @@ function ReportsContent() {
         {stats?.recentExecutions && stats.recentExecutions.length > 0 && (
           <div className="mt-8">
             <div className="mb-4 flex items-center justify-between">
-              <h2 className="text-lg font-semibold text-white">
-                Recent Executions
-              </h2>
+              <h2 className="text-lg font-semibold text-white">Recent Executions</h2>
               <Link
                 href="/reports/executions"
                 className="text-sm text-emerald-400 hover:text-emerald-300"

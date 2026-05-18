@@ -72,7 +72,7 @@ export function Form<T extends z.ZodType>({
 }: FormProps<T>) {
   const [errors, setErrors] = React.useState<Record<string, string>>({})
   const [values, setValues] = React.useState<Record<string, unknown>>(
-    defaultValues as Record<string, unknown>,
+    defaultValues as Record<string, unknown>
   )
 
   const setFieldValue = React.useCallback((name: string, value: unknown) => {
@@ -125,16 +125,12 @@ export function Form<T extends z.ZodType>({
       setFieldValue,
       setFieldError,
     }),
-    [errors, values, isLoading, setFieldValue, setFieldError],
+    [errors, values, isLoading, setFieldValue, setFieldError]
   )
 
   return (
     <FormContext.Provider value={contextValue}>
-      <form
-        className={cn('space-y-6', className)}
-        onSubmit={handleSubmit}
-        {...props}
-      >
+      <form className={cn('space-y-6', className)} onSubmit={handleSubmit} {...props}>
         {children}
       </form>
     </FormContext.Provider>

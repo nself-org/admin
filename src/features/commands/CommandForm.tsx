@@ -40,13 +40,9 @@ function FlagField({ flag, value, onChange }: FlagFieldProps) {
           className="border-nself-border accent-nself-primary h-4 w-4 rounded"
         />
         <span className="flex flex-col gap-0.5">
-          <span className="text-nself-text font-mono text-sm">
-            --{flag.name}
-          </span>
+          <span className="text-nself-text font-mono text-sm">--{flag.name}</span>
           {flag.description && (
-            <span className="text-nself-text-muted text-xs">
-              {flag.description}
-            </span>
+            <span className="text-nself-text-muted text-xs">{flag.description}</span>
           )}
         </span>
       </label>
@@ -59,14 +55,10 @@ function FlagField({ flag, value, onChange }: FlagFieldProps) {
         <label htmlFor={id} className="text-nself-text font-mono text-sm">
           --{flag.name}
           {flag.shorthand && (
-            <span className="text-nself-text-muted ml-1 text-xs">
-              (-{flag.shorthand})
-            </span>
+            <span className="text-nself-text-muted ml-1 text-xs">(-{flag.shorthand})</span>
           )}
         </label>
-        {flag.description && (
-          <p className="text-nself-text-muted text-xs">{flag.description}</p>
-        )}
+        {flag.description && <p className="text-nself-text-muted text-xs">{flag.description}</p>}
         <input
           id={id}
           type="number"
@@ -85,19 +77,13 @@ function FlagField({ flag, value, onChange }: FlagFieldProps) {
       <label htmlFor={id} className="text-nself-text font-mono text-sm">
         --{flag.name}
         {flag.shorthand && (
-          <span className="text-nself-text-muted ml-1 text-xs">
-            (-{flag.shorthand})
-          </span>
+          <span className="text-nself-text-muted ml-1 text-xs">(-{flag.shorthand})</span>
         )}
         {flag.type === 'stringSlice' && (
-          <span className="text-nself-text-muted ml-1 text-xs">
-            (comma-separated)
-          </span>
+          <span className="text-nself-text-muted ml-1 text-xs">(comma-separated)</span>
         )}
       </label>
-      {flag.description && (
-        <p className="text-nself-text-muted text-xs">{flag.description}</p>
-      )}
+      {flag.description && <p className="text-nself-text-muted text-xs">{flag.description}</p>}
       <input
         id={id}
         type="text"
@@ -128,9 +114,7 @@ function OutputPanel({ result }: OutputPanelProps) {
         <span
           className={[
             'rounded px-2 py-0.5 font-mono text-xs font-semibold',
-            result.success
-              ? 'bg-green-500/10 text-green-400'
-              : 'bg-red-500/10 text-red-400',
+            result.success ? 'bg-green-500/10 text-green-400' : 'bg-red-500/10 text-red-400',
           ].join(' ')}
         >
           exit {result.exitCode} &middot; {result.duration}ms
@@ -161,18 +145,14 @@ export function CommandForm({ command, onRun }: CommandFormProps) {
     return vals
   }, [command.flags])
 
-  const [flagValues, setFlagValues] =
-    useState<Record<string, string | boolean>>(initialValues)
+  const [flagValues, setFlagValues] = useState<Record<string, string | boolean>>(initialValues)
   const [loading, setLoading] = useState(false)
   const [result, setResult] = useState<RunCommandResult | null>(null)
   const [error, setError] = useState<string | null>(null)
 
-  const handleFlagChange = useCallback(
-    (name: string, value: string | boolean) => {
-      setFlagValues((prev) => ({ ...prev, [name]: value }))
-    },
-    [],
-  )
+  const handleFlagChange = useCallback((name: string, value: string | boolean) => {
+    setFlagValues((prev) => ({ ...prev, [name]: value }))
+  }, [])
 
   const handleSubmit = useCallback(
     async (e: React.FormEvent<HTMLFormElement>) => {
@@ -213,22 +193,18 @@ export function CommandForm({ command, onRun }: CommandFormProps) {
         setLoading(false)
       }
     },
-    [command.name, flagValues, onRun],
+    [command.name, flagValues, onRun]
   )
 
   return (
     <div className="glass-card flex flex-col gap-6 p-6">
       {/* Header */}
       <div className="flex flex-col gap-1">
-        <h2 className="text-nself-text font-mono text-lg font-bold">
-          nself {command.name}
-        </h2>
+        <h2 className="text-nself-text font-mono text-lg font-bold">nself {command.name}</h2>
         {command.description && (
           <p className="text-nself-text-muted text-sm">{command.description}</p>
         )}
-        <p className="text-nself-text-muted/70 mt-1 font-mono text-xs">
-          {command.usage}
-        </p>
+        <p className="text-nself-text-muted/70 mt-1 font-mono text-xs">{command.usage}</p>
       </div>
 
       {/* Flag form */}
@@ -239,17 +215,13 @@ export function CommandForm({ command, onRun }: CommandFormProps) {
               <FlagField
                 key={flag.name}
                 flag={flag}
-                value={
-                  flagValues[flag.name] ?? (flag.type === 'bool' ? false : '')
-                }
+                value={flagValues[flag.name] ?? (flag.type === 'bool' ? false : '')}
                 onChange={(v) => handleFlagChange(flag.name, v)}
               />
             ))}
           </div>
         ) : (
-          <p className="text-nself-text-muted text-xs italic">
-            No flags for this command.
-          </p>
+          <p className="text-nself-text-muted text-xs italic">No flags for this command.</p>
         )}
 
         {/* Submit */}

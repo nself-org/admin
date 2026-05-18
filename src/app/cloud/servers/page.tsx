@@ -56,7 +56,7 @@ function ServersContent() {
   const { data, isLoading, mutate } = useSWR<{ servers: CloudServer[] }>(
     '/api/cloud/servers',
     fetcher,
-    { refreshInterval: 30000 },
+    { refreshInterval: 30000 }
   )
 
   const servers = data?.servers ?? []
@@ -66,14 +66,13 @@ function ServersContent() {
       server.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       server.ip.includes(searchQuery) ||
       server.provider.toLowerCase().includes(searchQuery.toLowerCase())
-    const matchesStatus =
-      statusFilter === 'all' || server.status === statusFilter
+    const matchesStatus = statusFilter === 'all' || server.status === statusFilter
     return matchesSearch && matchesStatus
   })
 
   const handleServerAction = async (
     serverId: string,
-    action: 'start' | 'stop' | 'restart' | 'delete',
+    action: 'start' | 'stop' | 'restart' | 'delete'
   ) => {
     setActionLoading(serverId)
     try {
@@ -97,9 +96,7 @@ function ServersContent() {
 
   const toggleServerSelection = (serverId: string) => {
     setSelectedServers((prev) =>
-      prev.includes(serverId)
-        ? prev.filter((id) => id !== serverId)
-        : [...prev, serverId],
+      prev.includes(serverId) ? prev.filter((id) => id !== serverId) : [...prev, serverId]
     )
   }
 
@@ -138,8 +135,7 @@ function ServersContent() {
           Cloud Servers
         </h1>
         <p className="mt-2 text-zinc-600 dark:text-zinc-400">
-          {servers.length} servers ({runningCount} running, {stoppedCount}{' '}
-          stopped)
+          {servers.length} servers ({runningCount} running, {stoppedCount} stopped)
         </p>
       </div>
 
@@ -173,9 +169,7 @@ function ServersContent() {
         <div className="flex items-center gap-2">
           {selectedServers.length > 0 && (
             <>
-              <span className="text-sm text-zinc-400">
-                {selectedServers.length} selected
-              </span>
+              <span className="text-sm text-zinc-400">{selectedServers.length} selected</span>
               <button
                 onClick={() => handleBulkAction('start')}
                 className="inline-flex items-center gap-1 rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-1.5 text-sm text-emerald-400 hover:bg-zinc-700"
@@ -225,8 +219,7 @@ function ServersContent() {
                 <input
                   type="checkbox"
                   checked={
-                    selectedServers.length === filteredServers.length &&
-                    filteredServers.length > 0
+                    selectedServers.length === filteredServers.length && filteredServers.length > 0
                   }
                   onChange={toggleSelectAll}
                   className="rounded border-zinc-600 bg-zinc-800 text-emerald-500 focus:ring-emerald-500"
@@ -274,20 +267,14 @@ function ServersContent() {
                         <Server className="h-5 w-5 text-zinc-400" />
                       </div>
                       <div>
-                        <div className="font-medium text-white">
-                          {server.name}
-                        </div>
-                        <div className="text-xs text-zinc-500">
-                          {server.size}
-                        </div>
+                        <div className="font-medium text-white">{server.name}</div>
+                        <div className="text-xs text-zinc-500">{server.size}</div>
                       </div>
                     </Link>
                   </td>
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-2">
-                      <span className="text-sm text-white capitalize">
-                        {server.provider}
-                      </span>
+                      <span className="text-sm text-white capitalize">{server.provider}</span>
                     </div>
                     <div className="flex items-center gap-1 text-xs text-zinc-500">
                       <Globe className="h-3 w-3" />
@@ -329,9 +316,7 @@ function ServersContent() {
                           {server.ip}
                         </code>
                         <button
-                          onClick={() =>
-                            navigator.clipboard.writeText(server.ip)
-                          }
+                          onClick={() => navigator.clipboard.writeText(server.ip)}
                           className="text-zinc-500 hover:text-zinc-300"
                           title="Copy IP"
                         >
@@ -347,9 +332,7 @@ function ServersContent() {
                       {server.status === 'running' ? (
                         <>
                           <button
-                            onClick={() =>
-                              handleServerAction(server.id, 'restart')
-                            }
+                            onClick={() => handleServerAction(server.id, 'restart')}
                             disabled={actionLoading === server.id}
                             className="rounded p-1.5 text-zinc-400 hover:bg-zinc-700 hover:text-white disabled:opacity-50"
                             title="Restart"
@@ -357,9 +340,7 @@ function ServersContent() {
                             <RotateCcw className="h-4 w-4" />
                           </button>
                           <button
-                            onClick={() =>
-                              handleServerAction(server.id, 'stop')
-                            }
+                            onClick={() => handleServerAction(server.id, 'stop')}
                             disabled={actionLoading === server.id}
                             className="rounded p-1.5 text-amber-400 hover:bg-zinc-700 disabled:opacity-50"
                             title="Stop"

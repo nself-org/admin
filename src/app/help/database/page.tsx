@@ -10,9 +10,7 @@ import Link from 'next/link'
 import { Suspense } from 'react'
 
 function DatabaseHelpContent() {
-  const databaseArticles = helpArticlesArray.filter(
-    (a: HelpArticle) => a.category === 'database',
-  )
+  const databaseArticles = helpArticlesArray.filter((a: HelpArticle) => a.category === 'database')
 
   return (
     <>
@@ -28,13 +26,10 @@ function DatabaseHelpContent() {
                 <Database className="h-6 w-6 text-green-600 dark:text-green-400" />
               </div>
               <div className="flex-1">
-                <h2 className="mb-2 text-xl font-semibold">
-                  Database Management
-                </h2>
+                <h2 className="mb-2 text-xl font-semibold">Database Management</h2>
                 <p className="text-zinc-600 dark:text-zinc-400">
-                  nself uses PostgreSQL as the primary database. Learn how to
-                  manage migrations, create backups, restore data, and optimize
-                  performance.
+                  nself uses PostgreSQL as the primary database. Learn how to manage migrations,
+                  create backups, restore data, and optimize performance.
                 </p>
               </div>
             </div>

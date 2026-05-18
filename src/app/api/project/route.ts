@@ -3,10 +3,7 @@
  * POST /api/project  — register a new project
  */
 
-import {
-  addProject,
-  loadProjects,
-} from '@/features/project-picker/project-picker'
+import { addProject, loadProjects } from '@/features/project-picker/project-picker'
 import type { ProjectPickerError } from '@/features/project-picker/types'
 import { requireAuth } from '@/lib/require-auth'
 import { NextRequest, NextResponse } from 'next/server'
@@ -32,7 +29,7 @@ export async function GET(): Promise<NextResponse> {
         error: 'Failed to load projects',
         details: err instanceof Error ? err.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -49,10 +46,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
     body = await request.json()
   } catch {
-    return NextResponse.json(
-      { success: false, error: 'Invalid JSON body' },
-      { status: 400 },
-    )
+    return NextResponse.json({ success: false, error: 'Invalid JSON body' }, { status: 400 })
   }
 
   const { name, path: projectPath } = body as Record<string, unknown>
@@ -62,10 +56,9 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     return NextResponse.json(
       {
         success: false,
-        error:
-          'Invalid name. Must be 1–63 characters: letters, digits, hyphens, underscores.',
+        error: 'Invalid name. Must be 1–63 characters: letters, digits, hyphens, underscores.',
       },
-      { status: 400 },
+      { status: 400 }
     )
   }
 
@@ -73,7 +66,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   if (typeof projectPath !== 'string' || projectPath.trim().length === 0) {
     return NextResponse.json(
       { success: false, error: 'path must be a non-empty string' },
-      { status: 400 },
+      { status: 400 }
     )
   }
 
@@ -97,7 +90,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           details: pickerErr.details,
           code: pickerErr.code,
         },
-        { status: statusMap[pickerErr.code] ?? 500 },
+        { status: statusMap[pickerErr.code] ?? 500 }
       )
     }
     return NextResponse.json(
@@ -106,7 +99,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to add project',
         details: err instanceof Error ? err.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

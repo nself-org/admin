@@ -5,14 +5,7 @@ import { LogoIcon } from '@/components/Logo'
 import { useAuth } from '@/contexts/AuthContext'
 import { VERSION } from '@/lib/constants'
 import { getCorrectRoute } from '@/lib/routing-logic'
-import {
-  AlertCircle,
-  Eye,
-  EyeOff,
-  Loader2,
-  Lock,
-  ShieldCheck,
-} from 'lucide-react'
+import { AlertCircle, Eye, EyeOff, Loader2, Lock, ShieldCheck } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useEffect, useRef, useState } from 'react'
 
@@ -136,7 +129,7 @@ export default function LoginPage() {
     // Check if rate limited
     if (rateLimitInfo.locked) {
       setError(
-        `Too many attempts. Try again in ${rateLimitInfo.remainingSeconds} second${rateLimitInfo.remainingSeconds !== 1 ? 's' : ''}`,
+        `Too many attempts. Try again in ${rateLimitInfo.remainingSeconds} second${rateLimitInfo.remainingSeconds !== 1 ? 's' : ''}`
       )
       return
     }
@@ -226,9 +219,7 @@ export default function LoginPage() {
             remainingSeconds: retryAfter,
             attempts: 5,
           })
-          setError(
-            `Too many login attempts. Please try again in ${retryAfter} seconds.`,
-          )
+          setError(`Too many login attempts. Please try again in ${retryAfter} seconds.`)
           setPassword('')
         } else {
           // Invalid credentials
@@ -262,8 +253,7 @@ export default function LoginPage() {
           className="absolute inset-0 rounded-2xl bg-gradient-to-br from-blue-950 to-black shadow-2xl"
           style={{
             transform: 'rotate(10deg) scaleX(0.9) scaleY(0.95)',
-            boxShadow:
-              '0 0 40px rgba(59, 130, 246, 0.5), 0 0 80px rgba(59, 130, 246, 0.3)',
+            boxShadow: '0 0 40px rgba(59, 130, 246, 0.5), 0 0 80px rgba(59, 130, 246, 0.3)',
           }}
         />
 
@@ -315,10 +305,7 @@ export default function LoginPage() {
                 className="block text-sm font-medium text-zinc-700 dark:text-zinc-300"
               >
                 {isSetupMode ? 'Set Password' : 'Password'}
-                <span
-                  className="text-red-600 dark:text-red-400"
-                  aria-label="required"
-                >
+                <span className="text-red-600 dark:text-red-400" aria-label="required">
                   {' '}
                   *
                 </span>
@@ -333,19 +320,11 @@ export default function LoginPage() {
                   onKeyDown={handleKeyDown}
                   aria-label={isSetupMode ? 'Create password' : 'Password'}
                   aria-describedby={
-                    error
-                      ? 'password-error'
-                      : capsLockOn
-                        ? 'caps-lock-warning'
-                        : undefined
+                    error ? 'password-error' : capsLockOn ? 'caps-lock-warning' : undefined
                   }
                   aria-invalid={error ? 'true' : 'false'}
                   className="w-full rounded-xl border-2 border-blue-500/20 bg-white/50 px-4 py-3 pr-12 text-zinc-900 placeholder-zinc-500 shadow-inner backdrop-blur-sm transition-all focus:border-blue-500/50 focus:bg-white/70 focus:outline-none dark:bg-zinc-800/50 dark:text-white dark:placeholder-zinc-400 dark:focus:bg-zinc-800/70"
-                  placeholder={
-                    isSetupMode
-                      ? 'Create a strong password'
-                      : 'Enter your password'
-                  }
+                  placeholder={isSetupMode ? 'Create a strong password' : 'Enter your password'}
                   required
                   disabled={isCheckingSetup || rateLimitInfo.locked}
                 />
@@ -381,9 +360,7 @@ export default function LoginPage() {
               {isSetupMode && password.length > 0 && (
                 <div className="space-y-1.5" role="status" aria-live="polite">
                   <div className="flex items-center justify-between text-xs">
-                    <span className="text-zinc-600 dark:text-zinc-400">
-                      Password strength:
-                    </span>
+                    <span className="text-zinc-600 dark:text-zinc-400">Password strength:</span>
                     <span
                       className={`font-medium ${
                         passwordStrength.score <= 2
@@ -412,8 +389,7 @@ export default function LoginPage() {
                     />
                   </div>
                   <div className="text-xs text-zinc-500 dark:text-zinc-400">
-                    Use 12+ characters with uppercase, lowercase, numbers, and
-                    symbols
+                    Use 12+ characters with uppercase, lowercase, numbers, and symbols
                   </div>
                 </div>
               )}
@@ -427,10 +403,7 @@ export default function LoginPage() {
                   className="block text-sm font-medium text-zinc-700 dark:text-zinc-300"
                 >
                   Confirm Password
-                  <span
-                    className="text-red-600 dark:text-red-400"
-                    aria-label="required"
-                  >
+                  <span className="text-red-600 dark:text-red-400" aria-label="required">
                     {' '}
                     *
                   </span>
@@ -449,9 +422,7 @@ export default function LoginPage() {
                     type="button"
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                     aria-label={
-                      showConfirmPassword
-                        ? 'Hide confirm password'
-                        : 'Show confirm password'
+                      showConfirmPassword ? 'Hide confirm password' : 'Show confirm password'
                     }
                     className="absolute top-1/2 right-3 -translate-y-1/2 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300"
                     tabIndex={-1}
@@ -463,14 +434,12 @@ export default function LoginPage() {
                     )}
                   </button>
                 </div>
-                {confirmPassword &&
-                  password &&
-                  password === confirmPassword && (
-                    <div className="flex items-center gap-2 text-xs text-green-600 dark:text-green-400">
-                      <ShieldCheck className="h-3.5 w-3.5" />
-                      <span>Passwords match</span>
-                    </div>
-                  )}
+                {confirmPassword && password && password === confirmPassword && (
+                  <div className="flex items-center gap-2 text-xs text-green-600 dark:text-green-400">
+                    <ShieldCheck className="h-3.5 w-3.5" />
+                    <span>Passwords match</span>
+                  </div>
+                )}
               </div>
             )}
 
@@ -502,34 +471,25 @@ export default function LoginPage() {
                 aria-live="assertive"
                 className="flex items-start gap-2 rounded-lg bg-red-50 px-3 py-2.5 text-sm text-red-600 dark:bg-red-900/20 dark:text-red-400"
               >
-                <AlertCircle
-                  className="mt-0.5 h-4 w-4 flex-shrink-0"
-                  aria-hidden="true"
-                />
+                <AlertCircle className="mt-0.5 h-4 w-4 flex-shrink-0" aria-hidden="true" />
                 <span>{error}</span>
               </div>
             )}
 
             {/* Rate Limit Warning */}
-            {!isSetupMode &&
-              rateLimitInfo.attempts >= 3 &&
-              !rateLimitInfo.locked && (
-                <div
-                  role="status"
-                  aria-live="polite"
-                  className="flex items-start gap-2 rounded-lg bg-amber-50 px-3 py-2.5 text-sm text-amber-600 dark:bg-amber-900/20 dark:text-amber-400"
-                >
-                  <AlertCircle
-                    className="mt-0.5 h-4 w-4 flex-shrink-0"
-                    aria-hidden="true"
-                  />
-                  <span>
-                    {5 - rateLimitInfo.attempts} attempt
-                    {5 - rateLimitInfo.attempts !== 1 ? 's' : ''} remaining
-                    before temporary lockout
-                  </span>
-                </div>
-              )}
+            {!isSetupMode && rateLimitInfo.attempts >= 3 && !rateLimitInfo.locked && (
+              <div
+                role="status"
+                aria-live="polite"
+                className="flex items-start gap-2 rounded-lg bg-amber-50 px-3 py-2.5 text-sm text-amber-600 dark:bg-amber-900/20 dark:text-amber-400"
+              >
+                <AlertCircle className="mt-0.5 h-4 w-4 flex-shrink-0" aria-hidden="true" />
+                <span>
+                  {5 - rateLimitInfo.attempts} attempt
+                  {5 - rateLimitInfo.attempts !== 1 ? 's' : ''} remaining before temporary lockout
+                </span>
+              </div>
+            )}
 
             {/* Submit Button */}
             <div className="flex justify-center pt-2">
@@ -544,9 +504,7 @@ export default function LoginPage() {
                 {isLoading ? (
                   <>
                     <Loader2 className="h-5 w-5 animate-spin" />
-                    <span>
-                      {isSetupMode ? 'Setting up...' : 'Signing in...'}
-                    </span>
+                    <span>{isSetupMode ? 'Setting up...' : 'Signing in...'}</span>
                   </>
                 ) : rateLimitInfo.locked ? (
                   <>

@@ -4,13 +4,7 @@ import { ListSkeleton } from '@/components/skeletons'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import type { Backup, DatabaseStatus, Migration } from '@/types/database'
 import {
   Activity,
@@ -63,21 +57,13 @@ function StatCard({
       <CardContent className="pt-6">
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-sm font-medium text-zinc-500 dark:text-zinc-400">
-              {title}
-            </p>
-            <p className="mt-1 text-2xl font-bold text-zinc-900 dark:text-white">
-              {value}
-            </p>
+            <p className="text-sm font-medium text-zinc-500 dark:text-zinc-400">{title}</p>
+            <p className="mt-1 text-2xl font-bold text-zinc-900 dark:text-white">{value}</p>
             {description && (
-              <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">
-                {description}
-              </p>
+              <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">{description}</p>
             )}
             {trend && (
-              <p
-                className={`mt-1 text-xs ${trend.positive ? 'text-emerald-500' : 'text-red-500'}`}
-              >
+              <p className={`mt-1 text-xs ${trend.positive ? 'text-emerald-500' : 'text-red-500'}`}>
                 {trend.positive ? '+' : ''}
                 {trend.value}% from last week
               </p>
@@ -107,9 +93,7 @@ function ConnectionStatus({ status }: { status?: DatabaseStatus }) {
           </CardTitle>
           <div
             className={`flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium ${
-              status.connected
-                ? 'bg-emerald-500/10 text-emerald-500'
-                : 'bg-red-500/10 text-red-500'
+              status.connected ? 'bg-emerald-500/10 text-emerald-500' : 'bg-red-500/10 text-red-500'
             }`}
           >
             <span
@@ -134,18 +118,13 @@ function ConnectionStatus({ status }: { status?: DatabaseStatus }) {
             </p>
           </div>
           <div className="rounded-lg bg-zinc-50 p-3 dark:bg-zinc-800/50">
-            <p className="text-xs text-zinc-500 dark:text-zinc-400">
-              Active Connections
-            </p>
+            <p className="text-xs text-zinc-500 dark:text-zinc-400">Active Connections</p>
             <p className="mt-1 text-sm font-medium text-zinc-900 dark:text-white">
-              {status.connections?.active || 0} /{' '}
-              {status.connections?.max || 100}
+              {status.connections?.active || 0} / {status.connections?.max || 100}
             </p>
           </div>
           <div className="rounded-lg bg-zinc-50 p-3 dark:bg-zinc-800/50">
-            <p className="text-xs text-zinc-500 dark:text-zinc-400">
-              Idle Connections
-            </p>
+            <p className="text-xs text-zinc-500 dark:text-zinc-400">Idle Connections</p>
             <p className="mt-1 text-sm font-medium text-zinc-900 dark:text-white">
               {status.connections?.idle || 0}
             </p>
@@ -213,8 +192,7 @@ function RecentBackups({ backups }: { backups?: Backup[] }) {
                       {backup.name}
                     </p>
                     <p className="text-xs text-zinc-500">
-                      {new Date(backup.createdAt).toLocaleDateString()} -{' '}
-                      {backup.size}
+                      {new Date(backup.createdAt).toLocaleDateString()} - {backup.size}
                     </p>
                   </div>
                 </div>
@@ -232,10 +210,8 @@ function RecentBackups({ backups }: { backups?: Backup[] }) {
 }
 
 function MigrationStatus({ migrations }: { migrations?: Migration[] }) {
-  const pendingCount =
-    migrations?.filter((m) => m.status === 'pending').length || 0
-  const appliedCount =
-    migrations?.filter((m) => m.status === 'applied').length || 0
+  const pendingCount = migrations?.filter((m) => m.status === 'pending').length || 0
+  const appliedCount = migrations?.filter((m) => m.status === 'applied').length || 0
   const lastMigration = migrations?.find((m) => m.status === 'applied')
 
   return (
@@ -298,8 +274,7 @@ function MigrationStatus({ migrations }: { migrations?: Migration[] }) {
               <AlertTitle>Pending Migrations</AlertTitle>
               <AlertDescription>
                 You have {pendingCount} pending migration
-                {pendingCount > 1 ? 's' : ''}. Run them to update your database
-                schema.
+                {pendingCount > 1 ? 's' : ''}. Run them to update your database schema.
               </AlertDescription>
             </Alert>
           )}
@@ -365,11 +340,7 @@ function QuickActions({ onRefresh }: { onRefresh: () => void }) {
               SQL Console
             </Button>
           </Link>
-          <Button
-            variant="outline"
-            className="w-full justify-start"
-            onClick={onRefresh}
-          >
+          <Button variant="outline" className="w-full justify-start" onClick={onRefresh}>
             <RefreshCw className="mr-2 h-4 w-4" />
             Refresh Status
           </Button>
@@ -414,10 +385,7 @@ function DatabaseContent() {
             <div className="mb-6 h-24 rounded-lg bg-zinc-200 dark:bg-zinc-800" />
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
               {[1, 2, 3, 4].map((i) => (
-                <div
-                  key={i}
-                  className="h-32 rounded-lg bg-zinc-200 dark:bg-zinc-800"
-                />
+                <div key={i} className="h-32 rounded-lg bg-zinc-200 dark:bg-zinc-800" />
               ))}
             </div>
           </div>
@@ -437,8 +405,8 @@ function DatabaseContent() {
           <AlertTriangle className="h-4 w-4" />
           <AlertTitle>Connection Error</AlertTitle>
           <AlertDescription>
-            Failed to connect to the database. Please check your configuration
-            and ensure PostgreSQL is running.
+            Failed to connect to the database. Please check your configuration and ensure PostgreSQL
+            is running.
           </AlertDescription>
         </Alert>
         <div className="mt-4">

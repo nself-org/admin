@@ -23,33 +23,25 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     if (!deployment) {
       return NextResponse.json(
         { success: false, error: 'Deployment name is required' },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
     if (replicas === undefined || replicas < 0) {
       return NextResponse.json(
         { success: false, error: 'Valid replica count is required' },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
-    const args: string[] = [
-      'k8s',
-      'scale',
-      deployment,
-      `--replicas=${replicas}`,
-    ]
+    const args: string[] = ['k8s', 'scale', deployment, `--replicas=${replicas}`]
     if (namespace) args.push(`--namespace=${namespace}`)
 
-    const { stdout } = await execAsync(
-      `${nselfPath} ${args.join(' ')} --json`,
-      {
-        cwd: projectPath,
-        env: { ...process.env, PATH: getEnhancedPath() },
-        timeout: 120000,
-      },
-    )
+    const { stdout } = await execAsync(`${nselfPath} ${args.join(' ')} --json`, {
+      cwd: projectPath,
+      env: { ...process.env, PATH: getEnhancedPath() },
+      timeout: 120000,
+    })
 
     const result = JSON.parse(stdout)
 
@@ -70,7 +62,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to scale deployment',
         details: err.message,
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

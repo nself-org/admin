@@ -65,10 +65,7 @@
         <CardContent>
           <div
             dangerouslySetInnerHTML={{
-              __html: emailBody.replace(
-                /\{\{(\w+)\}\}/g,
-                '<span class="text-blue-500">$1</span>',
-              ),
+              __html: emailBody.replace(/\{\{(\w+)\}\}/g, '<span class="text-blue-500">$1</span>'),
             }}
           />
         </CardContent>
@@ -182,18 +179,10 @@
                 </TableCell>
                 <TableCell>{key.ttl}s</TableCell>
                 <TableCell>
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    onClick={() => editTTL(key.name)}
-                  >
+                  <Button size="sm" variant="outline" onClick={() => editTTL(key.name)}>
                     Edit TTL
                   </Button>
-                  <Button
-                    size="sm"
-                    variant="destructive"
-                    onClick={() => deleteKey(key.name)}
-                  >
+                  <Button size="sm" variant="destructive" onClick={() => deleteKey(key.name)}>
                     Delete
                   </Button>
                 </TableCell>
@@ -352,9 +341,7 @@
                 </div>
                 <Switch
                   checked={bucket.public}
-                  onCheckedChange={(checked) =>
-                    toggleBucketAccess(bucket.name, checked)
-                  }
+                  onCheckedChange={(checked) => toggleBucketAccess(bucket.name, checked)}
                 />
               </div>
               <Button
@@ -440,9 +427,7 @@
         <CardContent className="pt-6">
           <Database className="mb-2 h-8 w-8 text-blue-500" />
           <p className="text-sm text-zinc-500">Total Documents</p>
-          <p className="text-3xl font-bold">
-            {indexStats.docCount.toLocaleString()}
-          </p>
+          <p className="text-3xl font-bold">{indexStats.docCount.toLocaleString()}</p>
         </CardContent>
       </Card>
       <Card>
@@ -568,16 +553,9 @@
           </div>
           <div className="space-y-2">
             {synonyms.map((group, idx) => (
-              <div
-                key={idx}
-                className="flex items-center justify-between rounded border p-2"
-              >
+              <div key={idx} className="flex items-center justify-between rounded border p-2">
                 <span className="font-mono text-sm">{group.join(', ')}</span>
-                <Button
-                  size="sm"
-                  variant="destructive"
-                  onClick={() => deleteSynonym(idx)}
-                >
+                <Button size="sm" variant="destructive" onClick={() => deleteSynonym(idx)}>
                   Delete
                 </Button>
               </div>
@@ -741,19 +719,13 @@
           <TableBody>
             {artifacts.map((artifact) => (
               <TableRow key={artifact.id}>
-                <TableCell className="font-mono text-xs">
-                  {artifact.path}
-                </TableCell>
+                <TableCell className="font-mono text-xs">{artifact.path}</TableCell>
                 <TableCell>
                   <Badge>{artifact.type}</Badge>
                 </TableCell>
                 <TableCell>{artifact.size}</TableCell>
                 <TableCell>
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    onClick={() => downloadArtifact(artifact.id)}
-                  >
+                  <Button size="sm" variant="outline" onClick={() => downloadArtifact(artifact.id)}>
                     <Download className="mr-2 h-3 w-3" />
                     Download
                   </Button>
@@ -1171,13 +1143,7 @@ Every service page should follow this structure:
 
 import { PageShell } from '@/components/PageShell'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 // ... other imports
 
 export default function ServicePage() {

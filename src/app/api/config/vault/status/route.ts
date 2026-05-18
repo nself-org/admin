@@ -49,7 +49,7 @@ export async function GET(): Promise<NextResponse> {
         error: 'Failed to get Vault status',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

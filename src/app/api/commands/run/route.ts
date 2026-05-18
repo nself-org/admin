@@ -5,10 +5,7 @@ import { execFile } from 'child_process'
 import { NextRequest, NextResponse } from 'next/server'
 import { promisify } from 'util'
 
-import type {
-  RunCommandRequest,
-  RunCommandResult,
-} from '@/features/commands/types'
+import type { RunCommandRequest, RunCommandResult } from '@/features/commands/types'
 
 const execFileAsync = promisify(execFile)
 
@@ -112,10 +109,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
     body = (await request.json()) as RunCommandRequest
   } catch {
-    return NextResponse.json(
-      { success: false, error: 'Invalid JSON body' },
-      { status: 400 },
-    )
+    return NextResponse.json({ success: false, error: 'Invalid JSON body' }, { status: 400 })
   }
 
   const { command, subcommand, flags = {}, projectPath: reqPath } = body
@@ -124,7 +118,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   if (!command || typeof command !== 'string') {
     return NextResponse.json(
       { success: false, error: 'Missing required field: command' },
-      { status: 400 },
+      { status: 400 }
     )
   }
 
@@ -132,7 +126,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   if (!ALLOWED_COMMANDS.has(command)) {
     return NextResponse.json(
       { success: false, error: `Command not permitted: ${command}` },
-      { status: 403 },
+      { status: 403 }
     )
   }
 
@@ -143,7 +137,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     if (!isValidFlagName(flagArg)) {
       return NextResponse.json(
         { success: false, error: `Invalid flag name: ${rawName}` },
-        { status: 400 },
+        { status: 400 }
       )
     }
   }
@@ -153,7 +147,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     if (typeof subcommand !== 'string') {
       return NextResponse.json(
         { success: false, error: 'Invalid subcommand type' },
-        { status: 400 },
+        { status: 400 }
       )
     }
     const subTokens = subcommand.split(/\s+/).filter(Boolean)
@@ -161,7 +155,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       if (!/^[a-z][a-z0-9-]*$/.test(token)) {
         return NextResponse.json(
           { success: false, error: `Invalid subcommand token: ${token}` },
-          { status: 400 },
+          { status: 400 }
         )
       }
     }
@@ -182,9 +176,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   const cwd = reqPath ?? getProjectPath()
 
   // 7. Resolve timeout
-  const timeoutMs = LONG_RUNNING_COMMANDS.has(command)
-    ? LONG_TIMEOUT_MS
-    : DEFAULT_TIMEOUT_MS
+  const timeoutMs = LONG_RUNNING_COMMANDS.has(command) ? LONG_TIMEOUT_MS : DEFAULT_TIMEOUT_MS
 
   // 8. Execute
   const nselfBin = findNselfPathSync()
@@ -229,7 +221,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           exitCode: 124,
           duration,
         } satisfies Partial<RunCommandResult> & { error: string },
-        { status: 504 },
+        { status: 504 }
       )
     }
 

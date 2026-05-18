@@ -38,9 +38,7 @@ export default function GlobalError({
               </div>
             </div>
 
-            <h1 className="mb-2 text-center text-2xl font-bold text-white">
-              Critical Error
-            </h1>
+            <h1 className="mb-2 text-center text-2xl font-bold text-white">Critical Error</h1>
 
             <p className="mb-6 text-center text-zinc-400">
               {isDev
@@ -54,14 +52,10 @@ export default function GlobalError({
                   {error.name}: {error.message}
                 </p>
                 {error.stack && (
-                  <pre className="max-h-48 overflow-auto text-xs text-zinc-400">
-                    {error.stack}
-                  </pre>
+                  <pre className="max-h-48 overflow-auto text-xs text-zinc-400">{error.stack}</pre>
                 )}
                 {error.digest && (
-                  <p className="mt-2 text-xs text-zinc-500">
-                    Digest: {error.digest}
-                  </p>
+                  <p className="mt-2 text-xs text-zinc-500">Digest: {error.digest}</p>
                 )}
               </div>
             )}

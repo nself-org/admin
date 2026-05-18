@@ -4,14 +4,7 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Label } from '@/components/ui/label'
-import {
-  AlertTriangle,
-  Check,
-  Copy,
-  Eye,
-  EyeOff,
-  ShieldAlert,
-} from 'lucide-react'
+import { AlertTriangle, Check, Copy, Eye, EyeOff, ShieldAlert } from 'lucide-react'
 import { useCallback, useState } from 'react'
 
 interface ApiKeySecretDisplayProps {
@@ -75,21 +68,16 @@ export function ApiKeySecretDisplay({
         <ShieldAlert className="h-4 w-4" />
         <AlertTitle>Save Your API Key Now</AlertTitle>
         <AlertDescription>
-          This is the <strong>only time</strong> you will be able to see this
-          API key. Make sure to copy and store it securely. If you lose it, you
-          will need to generate a new key.
+          This is the <strong>only time</strong> you will be able to see this API key. Make sure to
+          copy and store it securely. If you lose it, you will need to generate a new key.
         </AlertDescription>
       </Alert>
 
       {/* Key Name */}
       {keyName && (
         <div>
-          <p className="text-sm text-zinc-500 dark:text-zinc-400">
-            API Key Name
-          </p>
-          <p className="font-medium text-zinc-900 dark:text-zinc-100">
-            {keyName}
-          </p>
+          <p className="text-sm text-zinc-500 dark:text-zinc-400">API Key Name</p>
+          <p className="font-medium text-zinc-900 dark:text-zinc-100">{keyName}</p>
         </div>
       )}
 
@@ -146,10 +134,7 @@ export function ApiKeySecretDisplay({
 
         <p className="text-xs text-zinc-500 dark:text-zinc-400">
           Use this key in the{' '}
-          <code className="rounded bg-zinc-200 px-1 dark:bg-zinc-800">
-            Authorization
-          </code>{' '}
-          header:
+          <code className="rounded bg-zinc-200 px-1 dark:bg-zinc-800">Authorization</code> header:
           <code className="ml-1 rounded bg-zinc-200 px-1 dark:bg-zinc-800">
             Bearer {'{'}your-key{'}'}
           </code>
@@ -163,10 +148,7 @@ export function ApiKeySecretDisplay({
           Security Best Practices
         </h4>
         <ul className="space-y-1 text-sm text-zinc-600 dark:text-zinc-400">
-          <li>
-            - Store this key in a secure location (password manager, secrets
-            vault)
-          </li>
+          <li>- Store this key in a secure location (password manager, secrets vault)</li>
           <li>- Never commit API keys to version control</li>
           <li>- Use environment variables in your applications</li>
           <li>- Rotate keys regularly and revoke unused ones</li>
@@ -186,8 +168,7 @@ export function ApiKeySecretDisplay({
             I have saved my API key
           </Label>
           <p className="text-sm text-zinc-500 dark:text-zinc-400">
-            I understand that this key will not be shown again and I have stored
-            it securely.
+            I understand that this key will not be shown again and I have stored it securely.
           </p>
         </div>
       </div>

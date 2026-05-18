@@ -94,7 +94,9 @@ function ScaleContent() {
       if (!json.success) {
         setActionError(`${name}: ${json.error || json.details || 'scale failed'}`)
       } else {
-        setActionSuccess(`${name} scaled to ${replicas} replica${Number(replicas) === 1 ? '' : 's'}`)
+        setActionSuccess(
+          `${name} scaled to ${replicas} replica${Number(replicas) === 1 ? '' : 's'}`
+        )
         await fetchServices()
       }
     } catch (err) {
@@ -105,11 +107,23 @@ function ScaleContent() {
   }
 
   return (
-    <PageShell title="Scale Services" description="Scale services up or down by adjusting replica counts.">
+    <PageShell
+      title="Scale Services"
+      description="Scale services up or down by adjusting replica counts."
+    >
       <div className="space-y-6">
-        <div className="flex items-center gap-3 flex-wrap">
-          <Button variant="outline" size="sm" onClick={() => void fetchServices()} disabled={loading}>
-            {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <RefreshCw className="h-4 w-4" />}
+        <div className="flex flex-wrap items-center gap-3">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => void fetchServices()}
+            disabled={loading}
+          >
+            {loading ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <RefreshCw className="h-4 w-4" />
+            )}
             Refresh
           </Button>
           {actionSuccess && (
@@ -127,7 +141,7 @@ function ScaleContent() {
         {error && (
           <Card className="border-destructive">
             <CardContent className="pt-6">
-              <div className="flex items-start gap-2 text-destructive">
+              <div className="text-destructive flex items-start gap-2">
                 <XCircle className="h-5 w-5 shrink-0" />
                 <div>
                   <p className="font-medium">Failed to load services</p>
@@ -140,7 +154,7 @@ function ScaleContent() {
 
         {!loading && !error && services.length === 0 && (
           <Card>
-            <CardContent className="pt-6 text-center text-muted-foreground">
+            <CardContent className="text-muted-foreground pt-6 text-center">
               No services found. Start your nSelf stack first.
             </CardContent>
           </Card>
@@ -165,7 +179,7 @@ function ScaleContent() {
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="flex items-center gap-3 pt-0">
-                    <label className="text-sm text-muted-foreground shrink-0">Replicas</label>
+                    <label className="text-muted-foreground shrink-0 text-sm">Replicas</label>
                     <Input
                       type="number"
                       min={0}
@@ -174,7 +188,7 @@ function ScaleContent() {
                       onChange={(e) =>
                         setReplicaInputs((prev) => ({ ...prev, [svc.name]: e.target.value }))
                       }
-                      className="w-24 h-8 text-sm"
+                      className="h-8 w-24 text-sm"
                       disabled={busy || !!scalingService}
                     />
                     <Button
@@ -183,7 +197,7 @@ function ScaleContent() {
                       disabled={busy || !!scalingService}
                       className="h-8"
                     >
-                      {busy ? <Loader2 className="h-3 w-3 animate-spin mr-1" /> : null}
+                      {busy ? <Loader2 className="mr-1 h-3 w-3 animate-spin" /> : null}
                       Apply
                     </Button>
                   </CardContent>

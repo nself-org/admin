@@ -18,17 +18,13 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       event?: string
     }
 
-    if (
-      !channel ||
-      typeof channel !== 'string' ||
-      channel.trim().length === 0
-    ) {
+    if (!channel || typeof channel !== 'string' || channel.trim().length === 0) {
       return NextResponse.json(
         {
           success: false,
           error: 'Channel name is required.',
         },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -39,21 +35,17 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           error:
             'Invalid channel name. Only letters, numbers, dots, hyphens, underscores, colons, and slashes are allowed.',
         },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
-    if (
-      !message ||
-      typeof message !== 'string' ||
-      message.trim().length === 0
-    ) {
+    if (!message || typeof message !== 'string' || message.trim().length === 0) {
       return NextResponse.json(
         {
           success: false,
           error: 'Message content is required.',
         },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -67,7 +59,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
             error:
               'Invalid event name. Only letters, numbers, dots, hyphens, underscores, and colons are allowed.',
           },
-          { status: 400 },
+          { status: 400 }
         )
       }
       args.push(`--event=${event}`)
@@ -84,7 +76,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           error: 'Failed to send test message',
           details: result.error || result.stderr || 'Unknown error',
         },
-        { status: 500 },
+        { status: 500 }
       )
     }
 
@@ -99,7 +91,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to send test message',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

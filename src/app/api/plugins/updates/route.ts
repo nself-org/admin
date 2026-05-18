@@ -83,11 +83,7 @@ async function fetchManifest(): Promise<ManifestEntry[]> {
       return []
     }
     const data = await response.json()
-    return Array.isArray(data)
-      ? data
-      : Array.isArray(data?.plugins)
-        ? data.plugins
-        : []
+    return Array.isArray(data) ? data : Array.isArray(data?.plugins) ? data.plugins : []
   } catch (err) {
     clearTimeout(timeoutId)
     const e = err as { message?: string }
@@ -100,14 +96,11 @@ async function fetchInstalled(): Promise<InstalledPlugin[]> {
   try {
     const projectPath = getProjectPath()
     const nselfPath = await findNselfPath()
-    const { stdout } = await execAsync(
-      `${nselfPath} plugin list --installed --json`,
-      {
-        cwd: projectPath,
-        env: { ...process.env, PATH: getEnhancedPath() },
-        timeout: 30000,
-      },
-    )
+    const { stdout } = await execAsync(`${nselfPath} plugin list --installed --json`, {
+      cwd: projectPath,
+      env: { ...process.env, PATH: getEnhancedPath() },
+      timeout: 30000,
+    })
     const parsed = JSON.parse(stdout.trim())
     const list = Array.isArray(parsed) ? parsed : parsed.plugins || []
     return list.map((p: { name: string; version?: string; tier?: string }) => ({
@@ -125,10 +118,7 @@ async function fetchInstalled(): Promise<InstalledPlugin[]> {
 export async function GET(_request: NextRequest): Promise<NextResponse> {
   const startTime = Date.now()
   try {
-    const [manifest, installed] = await Promise.all([
-      fetchManifest(),
-      fetchInstalled(),
-    ])
+    const [manifest, installed] = await Promise.all([fetchManifest(), fetchInstalled()])
 
     const latestByName = new Map<string, ManifestEntry>()
     for (const entry of manifest) {
@@ -164,7 +154,7 @@ export async function GET(_request: NextRequest): Promise<NextResponse> {
         headers: {
           'Cache-Control': 'max-age=300',
         },
-      },
+      }
     )
   } catch (err) {
     const e = err as { message?: string }
@@ -175,7 +165,7 @@ export async function GET(_request: NextRequest): Promise<NextResponse> {
         error: 'Failed to check for plugin updates',
         details: e.message || 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

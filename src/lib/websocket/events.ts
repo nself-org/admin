@@ -172,9 +172,7 @@ export const DEFAULT_BATCH_CONFIG: EventBatchConfig = {
 }
 
 // Type guards
-export function isServiceStatusEvent(
-  data: unknown,
-): data is ServiceStatusEvent {
+export function isServiceStatusEvent(data: unknown): data is ServiceStatusEvent {
   return (
     typeof data === 'object' &&
     data !== null &&
@@ -184,9 +182,7 @@ export function isServiceStatusEvent(
   )
 }
 
-export function isBuildProgressEvent(
-  data: unknown,
-): data is BuildProgressEvent {
+export function isBuildProgressEvent(data: unknown): data is BuildProgressEvent {
   return (
     typeof data === 'object' &&
     data !== null &&
@@ -197,9 +193,7 @@ export function isBuildProgressEvent(
   )
 }
 
-export function isDeployProgressEvent(
-  data: unknown,
-): data is DeployProgressEvent {
+export function isDeployProgressEvent(data: unknown): data is DeployProgressEvent {
   return (
     typeof data === 'object' &&
     data !== null &&
@@ -232,9 +226,7 @@ export function isDockerStatsEvent(data: unknown): data is DockerStatsEvent {
   )
 }
 
-export function isDbQueryResultEvent(
-  data: unknown,
-): data is DbQueryResultEvent {
+export function isDbQueryResultEvent(data: unknown): data is DbQueryResultEvent {
   return (
     typeof data === 'object' &&
     data !== null &&
@@ -346,9 +338,7 @@ export function isUserTypingEvent(data: unknown): data is UserTypingEvent {
   )
 }
 
-export function isCursorPositionEvent(
-  data: unknown,
-): data is CursorPositionEvent {
+export function isCursorPositionEvent(data: unknown): data is CursorPositionEvent {
   return (
     typeof data === 'object' &&
     data !== null &&
@@ -359,9 +349,7 @@ export function isCursorPositionEvent(
   )
 }
 
-export function isTextSelectionEvent(
-  data: unknown,
-): data is TextSelectionEvent {
+export function isTextSelectionEvent(data: unknown): data is TextSelectionEvent {
   return (
     typeof data === 'object' &&
     data !== null &&

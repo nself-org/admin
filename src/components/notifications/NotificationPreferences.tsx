@@ -1,13 +1,7 @@
 'use client'
 
 import { Button } from '@/components/ui/button'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import {
@@ -19,10 +13,7 @@ import {
 } from '@/components/ui/select'
 import { Separator } from '@/components/ui/separator'
 import { Switch } from '@/components/ui/switch'
-import {
-  useNotificationPreferences,
-  useUpdatePreferences,
-} from '@/hooks/useNotifications'
+import { useNotificationPreferences, useUpdatePreferences } from '@/hooks/useNotifications'
 import type { NotificationPreferences } from '@/types/notification'
 import { Loader2, Save } from 'lucide-react'
 import { useEffect, useState } from 'react'
@@ -55,9 +46,7 @@ export function NotificationPreferences() {
   const { preferences, isLoading, refresh } = useNotificationPreferences()
   const { updatePreferences, isLoading: isSaving } = useUpdatePreferences()
 
-  const [localPrefs, setLocalPrefs] = useState<NotificationPreferences | null>(
-    null,
-  )
+  const [localPrefs, setLocalPrefs] = useState<NotificationPreferences | null>(null)
   const [hasChanges, setHasChanges] = useState(false)
 
   // Initialize local state when preferences load
@@ -67,9 +56,7 @@ export function NotificationPreferences() {
     }
   }, [preferences, localPrefs])
 
-  const handleChannelToggle = (
-    channel: keyof NotificationPreferences['channels'],
-  ) => {
+  const handleChannelToggle = (channel: keyof NotificationPreferences['channels']) => {
     if (!localPrefs) return
 
     setLocalPrefs({
@@ -134,10 +121,7 @@ export function NotificationPreferences() {
     setHasChanges(true)
   }
 
-  const handleQuietHoursTimeChange = (
-    field: 'start' | 'end',
-    value: string,
-  ) => {
+  const handleQuietHoursTimeChange = (field: 'start' | 'end', value: string) => {
     if (!localPrefs) return
 
     setLocalPrefs({
@@ -187,9 +171,7 @@ export function NotificationPreferences() {
       <Card>
         <CardHeader>
           <CardTitle>Notification Channels</CardTitle>
-          <CardDescription>
-            Choose how you want to receive notifications
-          </CardDescription>
+          <CardDescription>Choose how you want to receive notifications</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="flex items-center justify-between">
@@ -276,9 +258,7 @@ export function NotificationPreferences() {
       <Card>
         <CardHeader>
           <CardTitle>Digest Settings</CardTitle>
-          <CardDescription>
-            Configure how notifications are bundled and delivered
-          </CardDescription>
+          <CardDescription>Configure how notifications are bundled and delivered</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="flex items-center justify-between">
@@ -373,9 +353,7 @@ export function NotificationPreferences() {
                     id="quiet-start"
                     type="time"
                     value={localPrefs.quietHours.start || '22:00'}
-                    onChange={(e) =>
-                      handleQuietHoursTimeChange('start', e.target.value)
-                    }
+                    onChange={(e) => handleQuietHoursTimeChange('start', e.target.value)}
                   />
                 </div>
 
@@ -385,9 +363,7 @@ export function NotificationPreferences() {
                     id="quiet-end"
                     type="time"
                     value={localPrefs.quietHours.end || '08:00'}
-                    onChange={(e) =>
-                      handleQuietHoursTimeChange('end', e.target.value)
-                    }
+                    onChange={(e) => handleQuietHoursTimeChange('end', e.target.value)}
                   />
                 </div>
 

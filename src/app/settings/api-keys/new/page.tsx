@@ -130,24 +130,23 @@ export default function NewApiKeyPage() {
               </CardHeader>
               <CardContent className="space-y-3 text-sm text-zinc-600 dark:text-zinc-400">
                 <p>
-                  <strong>Name your keys descriptively</strong> so you can
-                  easily identify what each key is used for.
+                  <strong>Name your keys descriptively</strong> so you can easily identify what each
+                  key is used for.
                 </p>
                 <p>
-                  <strong>Use the minimum required scope.</strong> Only grant
-                  the permissions your application actually needs.
+                  <strong>Use the minimum required scope.</strong> Only grant the permissions your
+                  application actually needs.
                 </p>
                 <p>
-                  <strong>Set an expiration date</strong> for keys that are only
-                  needed temporarily.
+                  <strong>Set an expiration date</strong> for keys that are only needed temporarily.
                 </p>
                 <p>
-                  <strong>Use IP whitelisting</strong> when possible to restrict
-                  which IP addresses can use the key.
+                  <strong>Use IP whitelisting</strong> when possible to restrict which IP addresses
+                  can use the key.
                 </p>
                 <p>
-                  <strong>Rotate keys regularly</strong> and revoke any keys
-                  that are no longer in use.
+                  <strong>Rotate keys regularly</strong> and revoke any keys that are no longer in
+                  use.
                 </p>
               </CardContent>
             </Card>
@@ -162,8 +161,7 @@ export default function NewApiKeyPage() {
                     Read Only
                   </span>
                   <p className="mt-1 text-zinc-600 dark:text-zinc-400">
-                    Can only read data. Cannot create, update, or delete
-                    resources.
+                    Can only read data. Cannot create, update, or delete resources.
                   </p>
                 </div>
                 <div>
@@ -171,8 +169,7 @@ export default function NewApiKeyPage() {
                     Read & Write
                   </span>
                   <p className="mt-1 text-zinc-600 dark:text-zinc-400">
-                    Can read and modify data. Can create, update, and delete
-                    resources.
+                    Can read and modify data. Can create, update, and delete resources.
                   </p>
                 </div>
                 <div>
@@ -180,8 +177,7 @@ export default function NewApiKeyPage() {
                     Admin
                   </span>
                   <p className="mt-1 text-zinc-600 dark:text-zinc-400">
-                    Full administrative access. Can manage settings and other
-                    API keys.
+                    Full administrative access. Can manage settings and other API keys.
                   </p>
                 </div>
                 <div>
@@ -189,8 +185,7 @@ export default function NewApiKeyPage() {
                     Custom
                   </span>
                   <p className="mt-1 text-zinc-600 dark:text-zinc-400">
-                    Custom permissions. Define exactly which resources and
-                    actions are allowed.
+                    Custom permissions. Define exactly which resources and actions are allowed.
                   </p>
                 </div>
               </CardContent>
@@ -202,8 +197,8 @@ export default function NewApiKeyPage() {
               </CardHeader>
               <CardContent className="space-y-2 text-sm text-zinc-600 dark:text-zinc-400">
                 <p>
-                  Rate limits protect your API from abuse. Choose a limit that
-                  matches your expected usage:
+                  Rate limits protect your API from abuse. Choose a limit that matches your expected
+                  usage:
                 </p>
                 <ul className="list-inside list-disc space-y-1">
                   <li>
@@ -216,8 +211,7 @@ export default function NewApiKeyPage() {
                     <strong>10000/hour</strong> - For batch processing
                   </li>
                   <li>
-                    <strong>Unlimited</strong> - No rate limiting (use with
-                    caution)
+                    <strong>Unlimited</strong> - No rate limiting (use with caution)
                   </li>
                 </ul>
               </CardContent>

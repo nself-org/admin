@@ -80,7 +80,7 @@ export async function getCorrectRoute(): Promise<RoutingResult> {
  */
 export async function ensureCorrectRoute(
   currentPath: string,
-  navigate: (path: string) => void,
+  navigate: (path: string) => void
 ): Promise<boolean> {
   const result = await getCorrectRoute()
 

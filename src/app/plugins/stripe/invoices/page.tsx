@@ -67,13 +67,9 @@ function InvoiceRow({ invoice }: { invoice: StripeInvoice }) {
     <tr className="border-b border-zinc-700/50 hover:bg-zinc-800/50">
       <td className="px-4 py-3">
         <div>
-          <p className="font-mono text-sm font-medium text-white">
-            {invoice.id}
-          </p>
+          <p className="font-mono text-sm font-medium text-white">{invoice.id}</p>
           {invoice.subscriptionId && (
-            <p className="text-xs text-zinc-500">
-              Sub: {invoice.subscriptionId}
-            </p>
+            <p className="text-xs text-zinc-500">Sub: {invoice.subscriptionId}</p>
           )}
         </div>
       </td>
@@ -144,7 +140,7 @@ function StripeInvoicesContent() {
   }>(
     `/api/plugins/stripe/invoices?page=${page}&pageSize=${pageSize}&search=${searchQuery}&status=${statusFilter}`,
     fetcher,
-    { refreshInterval: 60000 },
+    { refreshInterval: 60000 }
   )
 
   const handleSync = async () => {
@@ -215,9 +211,7 @@ function StripeInvoicesContent() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-semibold text-white">Invoices</h1>
-          <p className="text-sm text-zinc-400">
-            {total.toLocaleString()} total invoices
-          </p>
+          <p className="text-sm text-zinc-400">{total.toLocaleString()} total invoices</p>
         </div>
         <button
           onClick={handleSync}
@@ -298,9 +292,7 @@ function StripeInvoicesContent() {
             </thead>
             <tbody>
               {invoices.length > 0 ? (
-                invoices.map((invoice) => (
-                  <InvoiceRow key={invoice.id} invoice={invoice} />
-                ))
+                invoices.map((invoice) => <InvoiceRow key={invoice.id} invoice={invoice} />)
               ) : (
                 <tr>
                   <td colSpan={8} className="px-4 py-12 text-center">
@@ -318,8 +310,7 @@ function StripeInvoicesContent() {
       {totalPages > 1 && (
         <div className="flex items-center justify-between">
           <p className="text-sm text-zinc-400">
-            Showing {(page - 1) * pageSize + 1} to{' '}
-            {Math.min(page * pageSize, total)} of {total}
+            Showing {(page - 1) * pageSize + 1} to {Math.min(page * pageSize, total)} of {total}
           </p>
           <div className="flex items-center gap-2">
             <button

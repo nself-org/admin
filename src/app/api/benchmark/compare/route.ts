@@ -12,26 +12,18 @@ export async function GET(_request: NextRequest): Promise<NextResponse> {
       timeout: 300000,
     })
 
-    logger.cli(
-      'nself bench compare --json',
-      result.success,
-      Date.now() - startTime,
-    )
+    logger.cli('nself bench compare --json', result.success, Date.now() - startTime)
 
     if (!result.success) {
       // No baseline to compare against
-      if (
-        result.stderr?.includes('no baseline') ||
-        result.error?.includes('no baseline')
-      ) {
+      if (result.stderr?.includes('no baseline') || result.error?.includes('no baseline')) {
         return NextResponse.json(
           {
             success: false,
             error: 'No baseline available for comparison',
-            message:
-              'Create a baseline first using POST /api/benchmark/baseline',
+            message: 'Create a baseline first using POST /api/benchmark/baseline',
           },
-          { status: 400 },
+          { status: 400 }
         )
       }
 
@@ -41,7 +33,7 @@ export async function GET(_request: NextRequest): Promise<NextResponse> {
           error: 'Failed to compare to baseline',
           details: result.error || result.stderr,
         },
-        { status: 500 },
+        { status: 500 }
       )
     }
 
@@ -70,7 +62,7 @@ export async function GET(_request: NextRequest): Promise<NextResponse> {
         error: 'Failed to compare to baseline',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

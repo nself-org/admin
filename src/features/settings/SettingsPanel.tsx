@@ -15,12 +15,7 @@ import {
   X,
 } from 'lucide-react'
 import { useCallback, useEffect, useRef, useState } from 'react'
-import type {
-  AdminSettings,
-  CredentialEntry,
-  PluginKeyEntry,
-  Theme,
-} from './types'
+import type { AdminSettings, CredentialEntry, PluginKeyEntry, Theme } from './types'
 
 // ---------------------------------------------------------------------------
 // Utility: masked value display with reveal toggle
@@ -44,11 +39,7 @@ function MaskedValue({ value }: MaskedValueProps) {
         className="text-nself-text-muted hover:text-nself-text transition-colors"
         aria-label={revealed ? 'Hide value' : 'Reveal value'}
       >
-        {revealed ? (
-          <EyeOff className="h-3.5 w-3.5" />
-        ) : (
-          <Eye className="h-3.5 w-3.5" />
-        )}
+        {revealed ? <EyeOff className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}
       </button>
     </span>
   )
@@ -121,11 +112,7 @@ interface CredentialsTabProps {
   onRemove: (key: string) => Promise<void>
 }
 
-function CredentialsTab({
-  credentials,
-  onUpdate,
-  onRemove,
-}: CredentialsTabProps) {
+function CredentialsTab({ credentials, onUpdate, onRemove }: CredentialsTabProps) {
   const [newKey, setNewKey] = useState('')
   const [newValue, setNewValue] = useState('')
   const [newDesc, setNewDesc] = useState('')
@@ -143,9 +130,7 @@ function CredentialsTab({
       setNewValue('')
       setNewDesc('')
     } catch (err) {
-      setAddError(
-        err instanceof Error ? err.message : 'Failed to save credential',
-      )
+      setAddError(err instanceof Error ? err.message : 'Failed to save credential')
     } finally {
       setAdding(false)
     }
@@ -163,8 +148,8 @@ function CredentialsTab({
   return (
     <div className="space-y-4">
       <p className="text-nself-text-muted text-sm">
-        Store sensitive environment variable values for this project. Values are
-        persisted locally in{' '}
+        Store sensitive environment variable values for this project. Values are persisted locally
+        in{' '}
         <code className="bg-nself-bg rounded px-1 font-mono text-xs">
           .nself/admin-settings.json
         </code>
@@ -174,10 +159,7 @@ function CredentialsTab({
       {credentials.length > 0 && (
         <div className="space-y-2">
           {credentials.map((cred) => (
-            <div
-              key={cred.key}
-              className="glass-card-elevated flex items-center gap-3 px-4 py-3"
-            >
+            <div key={cred.key} className="glass-card-elevated flex items-center gap-3 px-4 py-3">
               <div className="min-w-0 flex-1">
                 <p className="text-nself-text truncate font-mono text-sm font-semibold">
                   {cred.key}
@@ -216,9 +198,7 @@ function CredentialsTab({
           <input
             type="text"
             value={newKey}
-            onChange={(e) =>
-              setNewKey(e.target.value.toUpperCase().replace(/[^A-Z0-9_]/g, ''))
-            }
+            onChange={(e) => setNewKey(e.target.value.toUpperCase().replace(/[^A-Z0-9_]/g, ''))}
             placeholder="KEY_NAME"
             className="border-nself-border bg-nself-bg text-nself-text placeholder:text-nself-text-muted focus:border-nself-primary focus:ring-nself-primary rounded-lg border px-3 py-2 font-mono text-sm focus:ring-1 focus:outline-none"
             aria-label="Credential key name"
@@ -250,11 +230,7 @@ function CredentialsTab({
           disabled={!newKey || !newValue || adding}
           className="nself-btn-primary flex items-center gap-2 disabled:cursor-not-allowed disabled:opacity-40"
         >
-          {adding ? (
-            <Loader2 className="h-4 w-4 animate-spin" />
-          ) : (
-            <Plus className="h-4 w-4" />
-          )}
+          {adding ? <Loader2 className="h-4 w-4 animate-spin" /> : <Plus className="h-4 w-4" />}
           Add Credential
         </button>
       </div>
@@ -288,9 +264,7 @@ function PluginKeysTab({ pluginKeys, onUpdate }: PluginKeysTabProps) {
       setNewEnvVar('')
       setNewValue('')
     } catch (err) {
-      setAddError(
-        err instanceof Error ? err.message : 'Failed to save plugin key',
-      )
+      setAddError(err instanceof Error ? err.message : 'Failed to save plugin key')
     } finally {
       setAdding(false)
     }
@@ -300,10 +274,8 @@ function PluginKeysTab({ pluginKeys, onUpdate }: PluginKeysTabProps) {
     <div className="space-y-4">
       <p className="text-nself-text-muted text-sm">
         Store API keys required by installed plugins (e.g.{' '}
-        <code className="bg-nself-bg rounded px-1 font-mono text-xs">
-          OPENAI_API_KEY
-        </code>{' '}
-        for the <strong className="text-nself-text">ai</strong> plugin).
+        <code className="bg-nself-bg rounded px-1 font-mono text-xs">OPENAI_API_KEY</code> for the{' '}
+        <strong className="text-nself-text">ai</strong> plugin).
       </p>
 
       {pluginKeys.length > 0 && (
@@ -335,11 +307,7 @@ function PluginKeysTab({ pluginKeys, onUpdate }: PluginKeysTabProps) {
           <input
             type="text"
             value={newPlugin}
-            onChange={(e) =>
-              setNewPlugin(
-                e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, ''),
-              )
-            }
+            onChange={(e) => setNewPlugin(e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, ''))}
             placeholder="plugin-name"
             className="border-nself-border bg-nself-bg text-nself-text placeholder:text-nself-text-muted focus:border-nself-primary focus:ring-nself-primary rounded-lg border px-3 py-2 font-mono text-sm focus:ring-1 focus:outline-none"
             aria-label="Plugin name"
@@ -349,11 +317,7 @@ function PluginKeysTab({ pluginKeys, onUpdate }: PluginKeysTabProps) {
           <input
             type="text"
             value={newEnvVar}
-            onChange={(e) =>
-              setNewEnvVar(
-                e.target.value.toUpperCase().replace(/[^A-Z0-9_]/g, ''),
-              )
-            }
+            onChange={(e) => setNewEnvVar(e.target.value.toUpperCase().replace(/[^A-Z0-9_]/g, ''))}
             placeholder="ENV_VAR_NAME"
             className="border-nself-border bg-nself-bg text-nself-text placeholder:text-nself-text-muted focus:border-nself-primary focus:ring-nself-primary rounded-lg border px-3 py-2 font-mono text-sm focus:ring-1 focus:outline-none"
             aria-label="Environment variable name"
@@ -377,11 +341,7 @@ function PluginKeysTab({ pluginKeys, onUpdate }: PluginKeysTabProps) {
           disabled={!newPlugin || !newEnvVar || !newValue || adding}
           className="nself-btn-primary flex items-center gap-2 disabled:cursor-not-allowed disabled:opacity-40"
         >
-          {adding ? (
-            <Loader2 className="h-4 w-4 animate-spin" />
-          ) : (
-            <Plus className="h-4 w-4" />
-          )}
+          {adding ? <Loader2 className="h-4 w-4 animate-spin" /> : <Plus className="h-4 w-4" />}
           Add Plugin Key
         </button>
       </div>
@@ -401,13 +361,7 @@ interface EnvVarsTabProps {
   saveStatus: { saved: boolean; error: string | null }
 }
 
-function EnvVarsTab({
-  envVars,
-  onChange,
-  onSave,
-  saving,
-  saveStatus,
-}: EnvVarsTabProps) {
+function EnvVarsTab({ envVars, onChange, onSave, saving, saveStatus }: EnvVarsTabProps) {
   const [newKey, setNewKey] = useState('')
   const [newValue, setNewValue] = useState('')
 
@@ -433,19 +387,14 @@ function EnvVarsTab({
   return (
     <div className="space-y-4">
       <p className="text-nself-text-muted text-sm">
-        Project-level environment variable overrides. These supplement values in
-        your{' '}
-        <code className="bg-nself-bg rounded px-1 font-mono text-xs">.env</code>{' '}
-        files.
+        Project-level environment variable overrides. These supplement values in your{' '}
+        <code className="bg-nself-bg rounded px-1 font-mono text-xs">.env</code> files.
       </p>
 
       {entries.length > 0 && (
         <div className="space-y-2">
           {entries.map(([key, val]) => (
-            <div
-              key={key}
-              className="glass-card-elevated flex items-center gap-2 px-3 py-2"
-            >
+            <div key={key} className="glass-card-elevated flex items-center gap-2 px-3 py-2">
               <span className="text-nself-text w-48 flex-shrink-0 truncate font-mono text-xs font-semibold">
                 {key}
               </span>
@@ -480,9 +429,7 @@ function EnvVarsTab({
           <input
             type="text"
             value={newKey}
-            onChange={(e) =>
-              setNewKey(e.target.value.toUpperCase().replace(/[^A-Z0-9_]/g, ''))
-            }
+            onChange={(e) => setNewKey(e.target.value.toUpperCase().replace(/[^A-Z0-9_]/g, ''))}
             placeholder="KEY_NAME"
             className="border-nself-border bg-nself-bg text-nself-text placeholder:text-nself-text-muted focus:border-nself-primary focus:ring-nself-primary w-48 flex-shrink-0 rounded-lg border px-3 py-2 font-mono text-sm focus:ring-1 focus:outline-none"
             aria-label="Environment variable key"
@@ -566,12 +513,10 @@ function GeneralTab({
       <div className="glass-card p-4">
         <div className="flex items-start justify-between gap-4">
           <div>
-            <p className="text-nself-text text-sm font-semibold">
-              Usage Telemetry
-            </p>
+            <p className="text-nself-text text-sm font-semibold">Usage Telemetry</p>
             <p className="text-nself-text-muted mt-1 text-xs">
-              Send anonymous usage data to help improve nSelf Admin. No
-              credentials or project content is ever transmitted.
+              Send anonymous usage data to help improve nSelf Admin. No credentials or project
+              content is ever transmitted.
             </p>
           </div>
           <button
@@ -631,9 +576,7 @@ function GeneralTab({
       <div className="glass-card p-4">
         <div className="mb-3 flex items-center gap-2">
           <Keyboard className="text-nself-text-muted h-4 w-4" />
-          <p className="text-nself-text text-sm font-semibold">
-            Keyboard Shortcuts
-          </p>
+          <p className="text-nself-text text-sm font-semibold">Keyboard Shortcuts</p>
         </div>
         <div className="space-y-2">
           {shortcuts.map((s) => (
@@ -710,9 +653,7 @@ export function SettingsPanel() {
       setSettings(data)
       setLocalEnvVars(data.envVars)
     } catch (err) {
-      setFetchError(
-        err instanceof Error ? err.message : 'Failed to load settings',
-      )
+      setFetchError(err instanceof Error ? err.message : 'Failed to load settings')
     } finally {
       setLoading(false)
     }
@@ -732,9 +673,7 @@ export function SettingsPanel() {
   // ---------------------------------------------------------------------------
 
   function flashSaved(
-    setter: React.Dispatch<
-      React.SetStateAction<{ saved: boolean; error: string | null }>
-    >,
+    setter: React.Dispatch<React.SetStateAction<{ saved: boolean; error: string | null }>>
   ) {
     setter({ saved: true, error: null })
     savedTimeout.current = setTimeout(() => {
@@ -743,10 +682,8 @@ export function SettingsPanel() {
   }
 
   function flashError(
-    setter: React.Dispatch<
-      React.SetStateAction<{ saved: boolean; error: string | null }>
-    >,
-    message: string,
+    setter: React.Dispatch<React.SetStateAction<{ saved: boolean; error: string | null }>>,
+    message: string
   ) {
     setter({ saved: false, error: message })
     savedTimeout.current = setTimeout(() => {
@@ -758,11 +695,7 @@ export function SettingsPanel() {
   // Handlers: credential operations (individual API routes)
   // ---------------------------------------------------------------------------
 
-  async function handleUpdateCredential(
-    key: string,
-    value: string,
-    description?: string,
-  ) {
+  async function handleUpdateCredential(key: string, value: string, description?: string) {
     const res = await fetch('/api/settings/credentials', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -792,18 +725,12 @@ export function SettingsPanel() {
   // Handlers: plugin key operations
   // ---------------------------------------------------------------------------
 
-  async function handleUpdatePluginKey(
-    pluginName: string,
-    envVar: string,
-    value: string,
-  ) {
+  async function handleUpdatePluginKey(pluginName: string, envVar: string, value: string) {
     if (!settings) return
     const updated: AdminSettings = {
       ...settings,
       pluginKeys: [
-        ...settings.pluginKeys.filter(
-          (p) => !(p.pluginName === pluginName && p.envVar === envVar),
-        ),
+        ...settings.pluginKeys.filter((p) => !(p.pluginName === pluginName && p.envVar === envVar)),
         { pluginName, envVar, value },
       ],
     }
@@ -840,10 +767,7 @@ export function SettingsPanel() {
       await loadSettings()
       flashSaved(setEnvVarsStatus)
     } catch (err) {
-      flashError(
-        setEnvVarsStatus,
-        err instanceof Error ? err.message : 'Failed to save',
-      )
+      flashError(setEnvVarsStatus, err instanceof Error ? err.message : 'Failed to save')
     } finally {
       setEnvVarsSaving(false)
     }
@@ -874,10 +798,7 @@ export function SettingsPanel() {
       await loadSettings()
       flashSaved(setGeneralStatus)
     } catch (err) {
-      flashError(
-        setGeneralStatus,
-        err instanceof Error ? err.message : 'Failed to save',
-      )
+      flashError(setGeneralStatus, err instanceof Error ? err.message : 'Failed to save')
     } finally {
       setGeneralSaving(false)
     }
@@ -898,14 +819,8 @@ export function SettingsPanel() {
   if (fetchError || !settings) {
     return (
       <div className="glass-card p-6 text-center">
-        <p className="text-sm text-red-400">
-          {fetchError ?? 'Failed to load settings'}
-        </p>
-        <button
-          type="button"
-          onClick={loadSettings}
-          className="nself-btn-primary mt-4"
-        >
+        <p className="text-sm text-red-400">{fetchError ?? 'Failed to load settings'}</p>
+        <button type="button" onClick={loadSettings} className="nself-btn-primary mt-4">
           Retry
         </button>
       </div>
@@ -945,8 +860,7 @@ export function SettingsPanel() {
       <div className="nself-gradient px-6 py-4">
         <h2 className="text-lg font-semibold text-white">Settings</h2>
         <p className="mt-0.5 text-sm text-white/70">
-          Manage credentials, plugin keys, environment variables, and
-          preferences.
+          Manage credentials, plugin keys, environment variables, and preferences.
         </p>
       </div>
 
@@ -977,10 +891,7 @@ export function SettingsPanel() {
             />
           )}
           {activeTab === 'plugin-keys' && (
-            <PluginKeysTab
-              pluginKeys={settings.pluginKeys}
-              onUpdate={handleUpdatePluginKey}
-            />
+            <PluginKeysTab pluginKeys={settings.pluginKeys} onUpdate={handleUpdatePluginKey} />
           )}
           {activeTab === 'env-vars' && (
             <EnvVarsTab

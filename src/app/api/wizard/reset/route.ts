@@ -22,18 +22,15 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
     // Execute nself reset command with force flag
     try {
-      const { stdout, stderr } = await execAsync(
-        `echo "Y" | ${nselfCommand} reset --force`,
-        {
-          cwd: absoluteProjectPath,
-          env: {
-            ...process.env,
-            PATH: getEnhancedPath(),
-          },
-          maxBuffer: 10 * 1024 * 1024, // 10MB buffer for output
-          timeout: 30000, // 30 second timeout
+      const { stdout, stderr } = await execAsync(`echo "Y" | ${nselfCommand} reset --force`, {
+        cwd: absoluteProjectPath,
+        env: {
+          ...process.env,
+          PATH: getEnhancedPath(),
         },
-      )
+        maxBuffer: 10 * 1024 * 1024, // 10MB buffer for output
+        timeout: 30000, // 30 second timeout
+      })
 
       if (stderr) {
       }
@@ -161,7 +158,7 @@ POSTGRES_PORT=5433
         await fs.writeFile(envPath, basicEnvContent, 'utf8')
       } catch (error) {
         errors.push(
-          `Failed to create .env.dev: ${error instanceof Error ? error.message : 'Unknown error'}`,
+          `Failed to create .env.dev: ${error instanceof Error ? error.message : 'Unknown error'}`
         )
       }
 
@@ -183,7 +180,7 @@ POSTGRES_PORT=5433
         error: 'Failed to reset project',
         details: 'Reset failed. Check server logs for details.',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

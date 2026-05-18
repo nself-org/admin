@@ -117,9 +117,7 @@ function ProfileContent() {
         {profile && (
           <div className="mb-8 rounded-xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-zinc-700 dark:bg-zinc-800">
             <div className="mb-4 flex items-center justify-between">
-              <h3 className="text-lg font-semibold text-zinc-900 dark:text-white">
-                Last Profile
-              </h3>
+              <h3 className="text-lg font-semibold text-zinc-900 dark:text-white">Last Profile</h3>
               <div className="flex items-center gap-4 text-sm text-zinc-500">
                 <span>{new Date(profile.timestamp).toLocaleString()}</span>
                 <span>Duration: {profile.duration}ms</span>
@@ -136,9 +134,7 @@ function ProfileContent() {
               <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-100 dark:bg-blue-900/30">
                 <Cpu className="h-5 w-5 text-blue-600 dark:text-blue-400" />
               </div>
-              <h3 className="text-lg font-semibold text-zinc-900 dark:text-white">
-                CPU
-              </h3>
+              <h3 className="text-lg font-semibold text-zinc-900 dark:text-white">CPU</h3>
             </div>
             <div className="space-y-4">
               <div className="flex justify-between">
@@ -160,9 +156,7 @@ function ProfileContent() {
                 </span>
               </div>
               <div className="flex justify-between">
-                <span className="text-zinc-600 dark:text-zinc-400">
-                  Load Average (1m/5m/15m)
-                </span>
+                <span className="text-zinc-600 dark:text-zinc-400">Load Average (1m/5m/15m)</span>
                 <span className="font-medium text-zinc-900 dark:text-white">
                   {profile?.system.cpu.loadAvg.join(' / ')}
                 </span>
@@ -176,9 +170,7 @@ function ProfileContent() {
               <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-green-100 dark:bg-green-900/30">
                 <MemoryStick className="h-5 w-5 text-green-600 dark:text-green-400" />
               </div>
-              <h3 className="text-lg font-semibold text-zinc-900 dark:text-white">
-                Memory
-              </h3>
+              <h3 className="text-lg font-semibold text-zinc-900 dark:text-white">Memory</h3>
             </div>
             <div className="space-y-4">
               <div className="flex justify-between">
@@ -216,9 +208,7 @@ function ProfileContent() {
               <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-sky-100 dark:bg-sky-900/30">
                 <HardDrive className="h-5 w-5 text-sky-500 dark:text-sky-400" />
               </div>
-              <h3 className="text-lg font-semibold text-zinc-900 dark:text-white">
-                Disk
-              </h3>
+              <h3 className="text-lg font-semibold text-zinc-900 dark:text-white">Disk</h3>
             </div>
             <div className="space-y-4">
               <div className="flex justify-between">
@@ -254,40 +244,30 @@ function ProfileContent() {
               <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-orange-100 dark:bg-orange-900/30">
                 <Network className="h-5 w-5 text-orange-600 dark:text-orange-400" />
               </div>
-              <h3 className="text-lg font-semibold text-zinc-900 dark:text-white">
-                Network
-              </h3>
+              <h3 className="text-lg font-semibold text-zinc-900 dark:text-white">Network</h3>
             </div>
             <div className="space-y-4">
               <div className="flex justify-between">
-                <span className="text-zinc-600 dark:text-zinc-400">
-                  Bytes In
-                </span>
+                <span className="text-zinc-600 dark:text-zinc-400">Bytes In</span>
                 <span className="font-medium text-zinc-900 dark:text-white">
                   {formatBytes((profile?.system.network.bytesIn || 0) / 1024)}/s
                 </span>
               </div>
               <div className="flex justify-between">
-                <span className="text-zinc-600 dark:text-zinc-400">
-                  Bytes Out
-                </span>
+                <span className="text-zinc-600 dark:text-zinc-400">Bytes Out</span>
                 <span className="font-medium text-zinc-900 dark:text-white">
                   {formatBytes((profile?.system.network.bytesOut || 0) / 1024)}
                   /s
                 </span>
               </div>
               <div className="flex justify-between">
-                <span className="text-zinc-600 dark:text-zinc-400">
-                  Packets In
-                </span>
+                <span className="text-zinc-600 dark:text-zinc-400">Packets In</span>
                 <span className="font-medium text-zinc-900 dark:text-white">
                   {profile?.system.network.packetsIn.toLocaleString()}
                 </span>
               </div>
               <div className="flex justify-between">
-                <span className="text-zinc-600 dark:text-zinc-400">
-                  Packets Out
-                </span>
+                <span className="text-zinc-600 dark:text-zinc-400">Packets Out</span>
                 <span className="font-medium text-zinc-900 dark:text-white">
                   {profile?.system.network.packetsOut.toLocaleString()}
                 </span>
@@ -309,9 +289,7 @@ function ProfileContent() {
             </div>
             <div className="grid gap-6 md:grid-cols-3">
               <div className="rounded-lg bg-zinc-50 p-4 dark:bg-zinc-900">
-                <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                  Connections
-                </p>
+                <p className="text-sm text-zinc-500 dark:text-zinc-400">Connections</p>
                 <p className="mt-1 text-2xl font-bold text-zinc-900 dark:text-white">
                   {dbProfile.connections.active} / {dbProfile.connections.max}
                 </p>
@@ -320,36 +298,26 @@ function ProfileContent() {
                 </p>
               </div>
               <div className="rounded-lg bg-zinc-50 p-4 dark:bg-zinc-900">
-                <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                  Cache Hit Ratio
-                </p>
+                <p className="text-sm text-zinc-500 dark:text-zinc-400">Cache Hit Ratio</p>
                 <p className="mt-1 text-2xl font-bold text-zinc-900 dark:text-white">
                   {dbProfile.cacheHitRatio.toFixed(1)}%
                 </p>
-                <p className="mt-1 text-sm text-green-600 dark:text-green-400">
-                  Excellent
-                </p>
+                <p className="mt-1 text-sm text-green-600 dark:text-green-400">Excellent</p>
               </div>
               <div className="rounded-lg bg-zinc-50 p-4 dark:bg-zinc-900">
-                <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                  Transactions/sec
-                </p>
+                <p className="text-sm text-zinc-500 dark:text-zinc-400">Transactions/sec</p>
                 <p className="mt-1 text-2xl font-bold text-zinc-900 dark:text-white">
                   {dbProfile.transactionsPerSecond}
                 </p>
               </div>
               <div className="rounded-lg bg-zinc-50 p-4 dark:bg-zinc-900">
-                <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                  Avg Query Time
-                </p>
+                <p className="text-sm text-zinc-500 dark:text-zinc-400">Avg Query Time</p>
                 <p className="mt-1 text-2xl font-bold text-zinc-900 dark:text-white">
                   {dbProfile.avgQueryTime.toFixed(1)}ms
                 </p>
               </div>
               <div className="rounded-lg bg-zinc-50 p-4 dark:bg-zinc-900">
-                <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                  Slow Queries
-                </p>
+                <p className="text-sm text-zinc-500 dark:text-zinc-400">Slow Queries</p>
                 <p className="mt-1 text-2xl font-bold text-zinc-900 dark:text-white">
                   {dbProfile.slowQueries}
                 </p>
@@ -361,9 +329,7 @@ function ProfileContent() {
                 </Link>
               </div>
               <div className="rounded-lg bg-zinc-50 p-4 dark:bg-zinc-900">
-                <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                  Deadlocks
-                </p>
+                <p className="text-sm text-zinc-500 dark:text-zinc-400">Deadlocks</p>
                 <p className="mt-1 text-2xl font-bold text-zinc-900 dark:text-white">
                   {dbProfile.deadlocks}
                 </p>
@@ -390,9 +356,7 @@ function ProfileContent() {
                   className="rounded-lg border border-zinc-200 p-4 dark:border-zinc-700"
                 >
                   <div className="mb-3 flex items-center justify-between">
-                    <h4 className="font-medium text-zinc-900 dark:text-white">
-                      {service.name}
-                    </h4>
+                    <h4 className="font-medium text-zinc-900 dark:text-white">{service.name}</h4>
                     <span
                       className={`rounded-full px-2 py-1 text-xs font-medium ${
                         (service.errorRate || 0) < 0.01
@@ -405,33 +369,25 @@ function ProfileContent() {
                   </div>
                   <div className="grid gap-4 md:grid-cols-4">
                     <div>
-                      <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                        CPU
-                      </p>
+                      <p className="text-sm text-zinc-500 dark:text-zinc-400">CPU</p>
                       <p className="font-medium text-zinc-900 dark:text-white">
                         {service.cpu.toFixed(1)}%
                       </p>
                     </div>
                     <div>
-                      <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                        Memory
-                      </p>
+                      <p className="text-sm text-zinc-500 dark:text-zinc-400">Memory</p>
                       <p className="font-medium text-zinc-900 dark:text-white">
                         {service.memory.used}MB / {service.memory.limit}MB
                       </p>
                     </div>
                     <div>
-                      <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                        Avg Response
-                      </p>
+                      <p className="text-sm text-zinc-500 dark:text-zinc-400">Avg Response</p>
                       <p className="font-medium text-zinc-900 dark:text-white">
                         {service.responseTime?.avg.toFixed(1)}ms
                       </p>
                     </div>
                     <div>
-                      <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                        Req/s
-                      </p>
+                      <p className="text-sm text-zinc-500 dark:text-zinc-400">Req/s</p>
                       <p className="font-medium text-zinc-900 dark:text-white">
                         {service.requestsPerSecond}
                       </p>

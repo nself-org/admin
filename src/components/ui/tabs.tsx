@@ -26,32 +26,29 @@ const Tabs = React.forwardRef<
       }
       onValueChange?.(newValue)
     },
-    [value, onValueChange],
+    [value, onValueChange]
   )
 
   return (
-    <TabsContext.Provider
-      value={{ value: currentValue, onValueChange: handleValueChange }}
-    >
+    <TabsContext.Provider value={{ value: currentValue, onValueChange: handleValueChange }}>
       <div ref={ref} className={cn('w-full', className)} {...props} />
     </TabsContext.Provider>
   )
 })
 Tabs.displayName = 'Tabs'
 
-const TabsList = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => (
-  <div
-    ref={ref}
-    className={cn(
-      'inline-flex h-10 items-center justify-center rounded-md bg-zinc-100 p-1 text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400',
-      className,
-    )}
-    {...props}
-  />
-))
+const TabsList = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
+  ({ className, ...props }, ref) => (
+    <div
+      ref={ref}
+      className={cn(
+        'inline-flex h-10 items-center justify-center rounded-md bg-zinc-100 p-1 text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400',
+        className
+      )}
+      {...props}
+    />
+  )
+)
 TabsList.displayName = 'TabsList'
 
 const TabsTrigger = React.forwardRef<
@@ -68,7 +65,7 @@ const TabsTrigger = React.forwardRef<
         context?.value === value
           ? 'bg-white text-zinc-950 shadow-sm dark:bg-zinc-950 dark:text-zinc-50'
           : 'hover:bg-white/50 dark:hover:bg-zinc-950/50',
-        className,
+        className
       )}
       onClick={() => context?.onValueChange(value)}
       {...props}
@@ -90,7 +87,7 @@ const TabsContent = React.forwardRef<
       ref={ref}
       className={cn(
         'mt-2 ring-offset-white focus-visible:ring-2 focus-visible:ring-zinc-950 focus-visible:ring-offset-2 focus-visible:outline-none dark:ring-offset-zinc-950 dark:focus-visible:ring-zinc-300',
-        className,
+        className
       )}
       {...props}
     />

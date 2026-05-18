@@ -3,13 +3,7 @@
 import { PageShell } from '@/components/PageShell'
 import { FormSkeleton } from '@/components/skeletons'
 import { Button } from '@/components/ui/button'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Progress } from '@/components/ui/progress'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Switch } from '@/components/ui/switch'
@@ -68,8 +62,7 @@ function parseFindingsFromOutput(output: string): Finding[] {
   try {
     const parsed = JSON.parse(output)
     if (Array.isArray(parsed)) return parsed
-    if (parsed.findings && Array.isArray(parsed.findings))
-      return parsed.findings
+    if (parsed.findings && Array.isArray(parsed.findings)) return parsed.findings
   } catch {
     // Not JSON
   }
@@ -109,13 +102,9 @@ function getSeverityIcon(severity: Severity) {
     case 'critical':
       return <XCircle className="h-4 w-4 text-red-600 dark:text-red-400" />
     case 'high':
-      return (
-        <ShieldAlert className="h-4 w-4 text-orange-600 dark:text-orange-400" />
-      )
+      return <ShieldAlert className="h-4 w-4 text-orange-600 dark:text-orange-400" />
     case 'medium':
-      return (
-        <AlertTriangle className="h-4 w-4 text-yellow-600 dark:text-yellow-400" />
-      )
+      return <AlertTriangle className="h-4 w-4 text-yellow-600 dark:text-yellow-400" />
     case 'low':
       return <Info className="h-4 w-4 text-blue-600 dark:text-blue-400" />
     case 'info':
@@ -246,9 +235,7 @@ function SecurityContent() {
       const data = await res.json()
 
       if (!data.success) {
-        setError(
-          data.details || data.error || 'Failed to generate security report',
-        )
+        setError(data.details || data.error || 'Failed to generate security report')
         setOutput(data.details || data.error || '')
         return
       }
@@ -295,9 +282,7 @@ function SecurityContent() {
             </CardHeader>
             <CardContent>
               <div className="text-center">
-                <span
-                  className={`text-5xl font-bold ${getScoreColor(securityScore)}`}
-                >
+                <span className={`text-5xl font-bold ${getScoreColor(securityScore)}`}>
                   {securityScore}
                 </span>
                 <span className="text-2xl text-zinc-400">/100</span>
@@ -330,45 +315,35 @@ function SecurityContent() {
                     <XCircle className="h-4 w-4" />
                     Critical
                   </span>
-                  <span className="font-mono text-sm font-bold">
-                    {criticalCount}
-                  </span>
+                  <span className="font-mono text-sm font-bold">{criticalCount}</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="flex items-center gap-2 text-sm text-orange-600 dark:text-orange-400">
                     <ShieldAlert className="h-4 w-4" />
                     High
                   </span>
-                  <span className="font-mono text-sm font-bold">
-                    {highCount}
-                  </span>
+                  <span className="font-mono text-sm font-bold">{highCount}</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="flex items-center gap-2 text-sm text-yellow-600 dark:text-yellow-400">
                     <AlertTriangle className="h-4 w-4" />
                     Medium
                   </span>
-                  <span className="font-mono text-sm font-bold">
-                    {mediumCount}
-                  </span>
+                  <span className="font-mono text-sm font-bold">{mediumCount}</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="flex items-center gap-2 text-sm text-blue-600 dark:text-blue-400">
                     <Info className="h-4 w-4" />
                     Low
                   </span>
-                  <span className="font-mono text-sm font-bold">
-                    {lowCount}
-                  </span>
+                  <span className="font-mono text-sm font-bold">{lowCount}</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="flex items-center gap-2 text-sm text-zinc-500">
                     <Info className="h-4 w-4" />
                     Info
                   </span>
-                  <span className="font-mono text-sm font-bold">
-                    {infoCount}
-                  </span>
+                  <span className="font-mono text-sm font-bold">{infoCount}</span>
                 </div>
               </div>
             </CardContent>
@@ -381,25 +356,17 @@ function SecurityContent() {
                 <RefreshCw className="h-5 w-5" />
                 Scan Controls
               </CardTitle>
-              <CardDescription>
-                Configure and run security scans
-              </CardDescription>
+              <CardDescription>Configure and run security scans</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm font-medium">Full Scan</p>
-                  <p className="text-xs text-zinc-500">
-                    Deep analysis (up to 2 min)
-                  </p>
+                  <p className="text-xs text-zinc-500">Deep analysis (up to 2 min)</p>
                 </div>
                 <Switch checked={fullScan} onCheckedChange={setFullScan} />
               </div>
-              <Button
-                onClick={handleScan}
-                disabled={scanning}
-                className="w-full"
-              >
+              <Button onClick={handleScan} disabled={scanning} className="w-full">
                 {scanning ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -453,9 +420,7 @@ function SecurityContent() {
                 <FileText className="h-5 w-5" />
                 Scan Findings
               </CardTitle>
-              <CardDescription>
-                Detailed findings organized by severity.
-              </CardDescription>
+              <CardDescription>Detailed findings organized by severity.</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-3">
@@ -503,9 +468,7 @@ function SecurityContent() {
                 <Clock className="h-5 w-5" />
                 Audit Trail
               </CardTitle>
-              <CardDescription>
-                Recent security events and authentication activity.
-              </CardDescription>
+              <CardDescription>Recent security events and authentication activity.</CardDescription>
             </CardHeader>
             <CardContent>
               <Table>
@@ -521,9 +484,7 @@ function SecurityContent() {
                 <TableBody>
                   {auditEvents.map((event, idx) => (
                     <TableRow key={`${event.timestamp}-${idx}`}>
-                      <TableCell className="font-mono text-xs">
-                        {event.timestamp}
-                      </TableCell>
+                      <TableCell className="font-mono text-xs">{event.timestamp}</TableCell>
                       <TableCell>{event.action}</TableCell>
                       <TableCell>{event.user}</TableCell>
                       <TableCell>

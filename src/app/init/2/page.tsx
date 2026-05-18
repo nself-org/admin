@@ -1,15 +1,7 @@
 'use client'
 
 import ServiceConfigModal from '@/components/ServiceConfigModal'
-import {
-  ArrowLeft,
-  ArrowRight,
-  Database,
-  Globe,
-  Server,
-  Shield,
-  Wrench,
-} from 'lucide-react'
+import { ArrowLeft, ArrowRight, Database, Globe, Server, Shield, Wrench } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useCallback, useEffect, useState } from 'react'
 import { StepWrapper } from '../StepWrapper'
@@ -19,9 +11,7 @@ export default function InitStep2() {
   const [loading, setLoading] = useState(false)
   const [dataLoaded, setDataLoaded] = useState(false)
   const [modalService, setModalService] = useState<string | null>(null)
-  const [initialConfig, setInitialConfig] = useState<Record<string, unknown>>(
-    {},
-  )
+  const [initialConfig, setInitialConfig] = useState<Record<string, unknown>>({})
   const [serviceConfigs, setServiceConfigs] = useState<Record<string, any>>({
     postgresql: {},
     hasura: {},
@@ -219,10 +209,7 @@ export default function InitStep2() {
         <div className="space-y-4">
           {/* Loading skeleton for service cards */}
           {[...Array(4)].map((_, i) => (
-            <div
-              key={i}
-              className="rounded-lg border-2 border-zinc-200 p-4 dark:border-zinc-700"
-            >
+            <div key={i} className="rounded-lg border-2 border-zinc-200 p-4 dark:border-zinc-700">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <div className="h-8 w-8 animate-pulse rounded bg-zinc-200 dark:bg-zinc-700"></div>
@@ -255,12 +242,8 @@ export default function InitStep2() {
                   <Icon className="h-6 w-6 text-blue-600 dark:text-blue-400" />
                 </div>
                 <div>
-                  <h3 className="font-medium text-zinc-900 dark:text-white">
-                    {service.name}
-                  </h3>
-                  <p className="text-sm text-zinc-600 dark:text-zinc-400">
-                    {service.description}
-                  </p>
+                  <h3 className="font-medium text-zinc-900 dark:text-white">{service.name}</h3>
+                  <p className="text-sm text-zinc-600 dark:text-zinc-400">{service.description}</p>
                 </div>
               </div>
               <div className="flex flex-col items-end space-y-1">

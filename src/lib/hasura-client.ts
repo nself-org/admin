@@ -4,8 +4,7 @@
  * when the Stripe plugin is not installed (tables don't exist).
  */
 
-const HASURA_ENDPOINT =
-  process.env.HASURA_GRAPHQL_ENDPOINT || 'http://localhost:8080/v1/graphql'
+const HASURA_ENDPOINT = process.env.HASURA_GRAPHQL_ENDPOINT || 'http://localhost:8080/v1/graphql'
 const HASURA_ADMIN_SECRET = process.env.HASURA_GRAPHQL_ADMIN_SECRET
 
 // ── Startup guard ───────────────────────────────────────────────────────────
@@ -30,11 +29,32 @@ function _isKnownBadSecret(s: string): boolean {
   )
 }
 
-// ── End of module-level declarations ─────────────────────────────────────────
-// NOTE: Secret validation has been intentionally moved into hasuraQuery() to
-// avoid throwing at module-load time during `pnpm build` (CI build phase has
-// no runtime env vars). The validation still fires on the first real query in
-// production, giving early warning without breaking the build. (ADM-T04)
+// ── Module-load startup guard (production runtime only) ──────────────────────
+// Fires when NODE_ENV === 'production' AND we are NOT in the Next.js build phase.
+// During `next build`, NEXT_PHASE === 'phase-production-build'; route modules are
+// evaluated to collect page data but HASURA_GRAPHQL_ADMIN_SECRET is not available
+// as a build-time secret — this is correct and expected. The guard must not throw
+// during build; it only makes sense at runtime when the server is actually serving.
+// Pattern mirrors database.ts which already gates on NEXT_PHASE for the same reason.
+const _isBuildPhase = process.env.NEXT_PHASE === 'phase-production-build'
+if (process.env.NODE_ENV === 'production' && !_isBuildPhase) {
+  if (!HASURA_ADMIN_SECRET) {
+    throw new Error(
+      'FATAL: HASURA_GRAPHQL_ADMIN_SECRET is not set. ' + 'Generate with: openssl rand -hex 32'
+    )
+  }
+  if (_isKnownBadSecret(HASURA_ADMIN_SECRET)) {
+    throw new Error(
+      'FATAL: HASURA_GRAPHQL_ADMIN_SECRET is set to a known insecure dev-stub value. ' +
+        'Set a real secret in your .env.secrets file. Generate with: openssl rand -hex 32'
+    )
+  }
+  if (HASURA_ADMIN_SECRET.length < 32) {
+    throw new Error(
+      'FATAL: HASURA_GRAPHQL_ADMIN_SECRET must be at least 32 characters in production.'
+    )
+  }
+}
 
 export interface HasuraQueryResult<T = unknown> {
   data: T | null
@@ -46,31 +66,8 @@ export interface HasuraQueryResult<T = unknown> {
  */
 export async function hasuraQuery<T = unknown>(
   query: string,
-  variables?: Record<string, unknown>,
+  variables?: Record<string, unknown>
 ): Promise<HasuraQueryResult<T>> {
-  // ── Runtime secret validation (moved from module-level per ADM-T04) ─────────
-  // Validate on first call in production so `pnpm build` succeeds without env.
-  if (process.env.NODE_ENV === 'production') {
-    if (!HASURA_ADMIN_SECRET) {
-      throw new Error(
-        'FATAL: HASURA_GRAPHQL_ADMIN_SECRET is not set. ' +
-          'Generate with: openssl rand -hex 32',
-      )
-    }
-    if (_isKnownBadSecret(HASURA_ADMIN_SECRET)) {
-      throw new Error(
-        'FATAL: HASURA_GRAPHQL_ADMIN_SECRET is set to a known insecure dev-stub value. ' +
-          'Set a real secret in your .env.secrets file. Generate with: openssl rand -hex 32',
-      )
-    }
-    if (HASURA_ADMIN_SECRET.length < 32) {
-      throw new Error(
-        'FATAL: HASURA_GRAPHQL_ADMIN_SECRET must be at least 32 characters in production.',
-      )
-    }
-  }
-  // ── End runtime secret validation ────────────────────────────────────────────
-
   if (!HASURA_ADMIN_SECRET) {
     return {
       data: null,

@@ -30,15 +30,13 @@ function K8sNamespacesContent() {
 
   const { data, isLoading, error, mutate } = useSWR<{ namespaces: K8sNamespace[] }>(
     '/api/k8s/namespaces',
-    fetcher,
+    fetcher
   )
 
   const namespaces = data?.namespaces ?? []
 
   const filteredNamespaces = namespaces.filter((ns) => {
-    const matchesSearch = ns.name
-      .toLowerCase()
-      .includes(searchQuery.toLowerCase())
+    const matchesSearch = ns.name.toLowerCase().includes(searchQuery.toLowerCase())
     const matchesSystem = showSystem || !ns.name.startsWith('kube-')
     return matchesSearch && matchesSystem
   })
@@ -64,7 +62,7 @@ function K8sNamespacesContent() {
   const handleDelete = async (namespaceName: string) => {
     if (
       !confirm(
-        `Are you sure you want to delete namespace "${namespaceName}"? This will delete all resources in it.`,
+        `Are you sure you want to delete namespace "${namespaceName}"? This will delete all resources in it.`
       )
     ) {
       return
@@ -93,7 +91,10 @@ function K8sNamespacesContent() {
     return (
       <div className="space-y-6">
         <div className="flex items-center gap-4">
-          <Link href="/k8s" className="rounded-lg border border-zinc-700 bg-zinc-800 p-2 hover:bg-zinc-700">
+          <Link
+            href="/k8s"
+            className="rounded-lg border border-zinc-700 bg-zinc-800 p-2 hover:bg-zinc-700"
+          >
             <ArrowLeft className="h-5 w-5" />
           </Link>
           <h1 className="text-2xl font-semibold text-white">Namespaces</h1>
@@ -130,9 +131,7 @@ function K8sNamespacesContent() {
           </Link>
           <div>
             <h1 className="text-2xl font-semibold text-white">Namespaces</h1>
-            <p className="text-sm text-zinc-400">
-              {namespaces.length} namespaces
-            </p>
+            <p className="text-sm text-zinc-400">{namespaces.length} namespaces</p>
           </div>
         </div>
 
@@ -213,13 +212,9 @@ function K8sNamespacesContent() {
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-3">
                       <FolderTree
-                        className={`h-4 w-4 ${
-                          isSystem ? 'text-zinc-500' : 'text-blue-400'
-                        }`}
+                        className={`h-4 w-4 ${isSystem ? 'text-zinc-500' : 'text-blue-400'}`}
                       />
-                      <span className="font-medium text-white">
-                        {namespace.name}
-                      </span>
+                      <span className="font-medium text-white">{namespace.name}</span>
                       {isSystem && (
                         <span className="rounded bg-zinc-700 px-2 py-0.5 text-xs text-zinc-400">
                           System
@@ -260,8 +255,7 @@ function K8sNamespacesContent() {
                     </div>
                   </td>
                   <td className="px-4 py-3">
-                    {namespace.labels &&
-                    Object.keys(namespace.labels).length > 0 ? (
+                    {namespace.labels && Object.keys(namespace.labels).length > 0 ? (
                       <div className="flex flex-wrap gap-1">
                         {Object.entries(namespace.labels)
                           .filter(([key]) => !key.includes('kubernetes.io'))
@@ -274,13 +268,12 @@ function K8sNamespacesContent() {
                               {key}={value}
                             </span>
                           ))}
-                        {Object.keys(namespace.labels).filter(
-                          (k) => !k.includes('kubernetes.io'),
-                        ).length > 2 && (
+                        {Object.keys(namespace.labels).filter((k) => !k.includes('kubernetes.io'))
+                          .length > 2 && (
                           <span className="text-xs text-zinc-500">
                             +
                             {Object.keys(namespace.labels).filter(
-                              (k) => !k.includes('kubernetes.io'),
+                              (k) => !k.includes('kubernetes.io')
                             ).length - 2}
                           </span>
                         )}
@@ -323,13 +316,9 @@ function K8sNamespacesContent() {
       {showCreateModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
           <div className="w-full max-w-md rounded-lg border border-zinc-700 bg-zinc-800 p-6">
-            <h2 className="mb-4 text-lg font-semibold text-white">
-              Create Namespace
-            </h2>
+            <h2 className="mb-4 text-lg font-semibold text-white">Create Namespace</h2>
             <div className="mb-4">
-              <label className="mb-1 block text-sm text-zinc-400">
-                Namespace Name
-              </label>
+              <label className="mb-1 block text-sm text-zinc-400">Namespace Name</label>
               <input
                 type="text"
                 value={newNamespace}

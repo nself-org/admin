@@ -44,11 +44,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         const files = await fs.readdir(dir)
 
         for (const file of files) {
-          if (
-            file.endsWith('.sql') ||
-            file.endsWith('.sql.gz') ||
-            file.endsWith('.dump')
-          ) {
+          if (file.endsWith('.sql') || file.endsWith('.sql.gz') || file.endsWith('.dump')) {
             const filePath = path.join(dir, file)
             const stats = await fs.stat(filePath)
 
@@ -56,19 +52,13 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
               const sizes = ['B', 'KB', 'MB', 'GB']
               if (bytes === 0) return '0 B'
               const i = Math.floor(Math.log(bytes) / Math.log(1024))
-              return (
-                Math.round((bytes / Math.pow(1024, i)) * 100) / 100 +
-                ' ' +
-                sizes[i]
-              )
+              return Math.round((bytes / Math.pow(1024, i)) * 100) / 100 + ' ' + sizes[i]
             }
 
             // Parse filename for metadata
             const isCompressed = file.endsWith('.gz')
-            const isDataOnly =
-              file.includes('data-only') || file.includes('_data_')
-            const isSchemaOnly =
-              file.includes('schema-only') || file.includes('_schema_')
+            const isDataOnly = file.includes('data-only') || file.includes('_data_')
+            const isSchemaOnly = file.includes('schema-only') || file.includes('_schema_')
 
             backups.push({
               id: file,
@@ -94,10 +84,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     }
 
     // Sort by creation date, newest first
-    backups.sort(
-      (a, b) =>
-        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
-    )
+    backups.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
 
     logger.api('GET', '/api/database/backup', 200, Date.now() - startTime)
 
@@ -116,7 +103,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to list backups',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -136,10 +123,9 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     return NextResponse.json(
       {
         success: false,
-        error:
-          'Rate limit exceeded. Please wait before creating another backup.',
+        error: 'Rate limit exceeded. Please wait before creating another backup.',
       },
-      { status: 429 },
+      { status: 429 }
     )
   }
 
@@ -175,11 +161,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       args.push('--tables', tables.join(','))
     }
 
-    if (
-      excludeTables &&
-      Array.isArray(excludeTables) &&
-      excludeTables.length > 0
-    ) {
+    if (excludeTables && Array.isArray(excludeTables) && excludeTables.length > 0) {
       args.push('--exclude-tables', excludeTables.join(','))
     }
 
@@ -199,7 +181,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           error: 'Database backup failed',
           details: result.error || result.stderr,
         },
-        { status: 500 },
+        { status: 500 }
       )
     }
 
@@ -210,9 +192,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         backupInfo = JSON.parse(result.stdout)
       } catch (_e) {
         // Extract filename from output if possible
-        const filenameMatch = result.stdout.match(
-          /Created backup:\s*(.+\.(?:sql|dump)(?:\.gz)?)/i,
-        )
+        const filenameMatch = result.stdout.match(/Created backup:\s*(.+\.(?:sql|dump)(?:\.gz)?)/i)
         if (filenameMatch) {
           backupInfo.filename = filenameMatch[1].trim()
         }
@@ -241,7 +221,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to create backup',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -249,9 +229,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 /**
  * Detect environment from backup filename
  */
-function detectEnvironment(
-  filename: string,
-): 'local' | 'staging' | 'production' {
+function detectEnvironment(filename: string): 'local' | 'staging' | 'production' {
   const lower = filename.toLowerCase()
   if (lower.includes('prod') || lower.includes('production')) {
     return 'production'

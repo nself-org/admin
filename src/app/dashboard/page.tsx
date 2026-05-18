@@ -49,11 +49,7 @@ function MetricCard({
   let mouseX = useMotionValue(0)
   let mouseY = useMotionValue(0)
 
-  function onMouseMove({
-    currentTarget,
-    clientX,
-    clientY,
-  }: React.MouseEvent<HTMLDivElement>) {
+  function onMouseMove({ currentTarget, clientX, clientY }: React.MouseEvent<HTMLDivElement>) {
     let { left, top } = currentTarget.getBoundingClientRect()
     mouseX.set(clientX - left)
     mouseY.set(clientY - top)
@@ -74,17 +70,13 @@ function MetricCard({
       <div className="absolute inset-0 rounded-2xl ring-1 ring-zinc-900/10 transition-colors duration-300 ring-inset group-hover:ring-blue-500/50 dark:ring-white/20 dark:group-hover:ring-blue-400/60" />
       <div className="relative">
         <div className="flex items-center justify-between">
-          <h3 className="text-sm font-semibold text-zinc-900 dark:text-white">
-            {title}
-          </h3>
+          <h3 className="text-sm font-semibold text-zinc-900 dark:text-white">{title}</h3>
           <div className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-500/20 transition-colors duration-300 group-hover:bg-blue-500/40 dark:bg-blue-400/20 dark:group-hover:bg-blue-400/40">
             <Icon className="h-4 w-4 text-blue-600 group-hover:text-blue-500 dark:text-blue-400 dark:group-hover:text-blue-300" />
           </div>
         </div>
         <div className="mt-4">
-          <div className="text-2xl font-bold text-zinc-900 dark:text-white">
-            {value}
-          </div>
+          <div className="text-2xl font-bold text-zinc-900 dark:text-white">{value}</div>
           {percentage !== undefined && (
             <div className="mt-2 h-2 rounded-full bg-zinc-200 dark:bg-zinc-800">
               <div
@@ -94,9 +86,7 @@ function MetricCard({
             </div>
           )}
         </div>
-        <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
-          {description}
-        </p>
+        <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">{description}</p>
       </div>
     </div>
   )
@@ -135,9 +125,7 @@ function StatusCard({
     <div className="group relative rounded-2xl bg-zinc-50 p-6 transition-colors duration-300 hover:bg-zinc-100/50 dark:bg-white/2.5 dark:hover:bg-zinc-800/20">
       <div className="relative">
         <div className="flex items-center justify-between">
-          <h3 className="text-sm font-semibold text-zinc-900 dark:text-white">
-            {title}
-          </h3>
+          <h3 className="text-sm font-semibold text-zinc-900 dark:text-white">{title}</h3>
           <div
             className={`flex h-8 w-8 items-center justify-center rounded-full transition-colors duration-300 ${colorClasses[color]}`}
           >
@@ -145,9 +133,7 @@ function StatusCard({
           </div>
         </div>
         <div className="mt-4">
-          <div className="text-2xl font-bold text-zinc-900 dark:text-white">
-            {count}
-          </div>
+          <div className="text-2xl font-bold text-zinc-900 dark:text-white">{count}</div>
         </div>
       </div>
     </div>
@@ -182,29 +168,19 @@ function ServiceCard({
           <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-500/10 dark:bg-blue-400/10">
             <Icon className="h-5 w-5 text-blue-600 dark:text-blue-400" />
           </div>
-          <span className={`text-sm font-medium ${statusColors[status]}`}>
-            {status}
-          </span>
+          <span className={`text-sm font-medium ${statusColors[status]}`}>{status}</span>
         </div>
 
-        <h3 className="mb-1 text-lg font-semibold text-zinc-900 dark:text-white">
-          {name}
-        </h3>
+        <h3 className="mb-1 text-lg font-semibold text-zinc-900 dark:text-white">{name}</h3>
 
-        <p className="mb-4 text-sm text-zinc-600 dark:text-zinc-400">
-          {description}
-        </p>
+        <p className="mb-4 text-sm text-zinc-600 dark:text-zinc-400">{description}</p>
 
         {metrics && metrics.length > 0 && (
           <div className="space-y-2 border-t border-zinc-200 pt-4 dark:border-zinc-700">
             {metrics.map((metric, index) => (
               <div key={index} className="flex justify-between text-xs">
-                <span className="text-zinc-500 dark:text-zinc-400">
-                  {metric.label}
-                </span>
-                <span className="font-medium text-zinc-900 dark:text-white">
-                  {metric.value}
-                </span>
+                <span className="text-zinc-500 dark:text-zinc-400">{metric.label}</span>
+                <span className="font-medium text-zinc-900 dark:text-white">{metric.value}</span>
               </div>
             ))}
           </div>
@@ -224,13 +200,11 @@ function DashboardContent() {
   const { isConnected, error } = useConnectionStatus()
 
   // Performance metrics from store
-  const { apiCallsCount, cacheHits, cacheMisses } = useCentralDataStore(
-    (state) => ({
-      apiCallsCount: state.apiCallsCount,
-      cacheHits: state.cacheHits,
-      cacheMisses: state.cacheMisses,
-    }),
-  )
+  const { apiCallsCount, cacheHits, cacheMisses } = useCentralDataStore((state) => ({
+    apiCallsCount: state.apiCallsCount,
+    cacheHits: state.cacheHits,
+    cacheMisses: state.cacheMisses,
+  }))
 
   // Ensure data collection service is running
   useEffect(() => {
@@ -248,9 +222,7 @@ function DashboardContent() {
 
   // Calculate cache hit rate
   const cacheHitRate =
-    cacheHits + cacheMisses > 0
-      ? Math.round((cacheHits / (cacheHits + cacheMisses)) * 100)
-      : 0
+    cacheHits + cacheMisses > 0 ? Math.round((cacheHits / (cacheHits + cacheMisses)) * 100) : 0
 
   // Check if we have data
   const hasData = docker || system || containers.length > 0
@@ -267,24 +239,16 @@ function DashboardContent() {
         <HeroPattern />
         <div className="mx-auto max-w-7xl">
           <div className="mb-8">
-            <h1 className="text-4xl font-bold text-zinc-900 dark:text-white">
-              Dashboard
-            </h1>
-            <p className="mt-2 text-zinc-600 dark:text-zinc-400">
-              System overview and metrics
-            </p>
+            <h1 className="text-4xl font-bold text-zinc-900 dark:text-white">Dashboard</h1>
+            <p className="mt-2 text-zinc-600 dark:text-zinc-400">System overview and metrics</p>
           </div>
 
           <div className="rounded-lg border border-red-200 bg-red-50 p-6 dark:border-red-800 dark:bg-red-900/20">
             <div className="flex items-center gap-3">
               <AlertCircle className="h-5 w-5 text-red-600 dark:text-red-400" />
               <div>
-                <h3 className="font-semibold text-red-900 dark:text-red-100">
-                  Connection Error
-                </h3>
-                <p className="mt-1 text-sm text-red-700 dark:text-red-300">
-                  {error}
-                </p>
+                <h3 className="font-semibold text-red-900 dark:text-red-100">Connection Error</h3>
+                <p className="mt-1 text-sm text-red-700 dark:text-red-300">{error}</p>
               </div>
             </div>
           </div>
@@ -302,12 +266,8 @@ function DashboardContent() {
         <div className="mb-8">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-4xl font-bold text-zinc-900 dark:text-white">
-                Dashboard
-              </h1>
-              <p className="mt-2 text-zinc-600 dark:text-zinc-400">
-                System overview and metrics
-              </p>
+              <h1 className="text-4xl font-bold text-zinc-900 dark:text-white">Dashboard</h1>
+              <p className="mt-2 text-zinc-600 dark:text-zinc-400">System overview and metrics</p>
             </div>
             <div className="flex items-center gap-2">
               <div
@@ -318,9 +278,7 @@ function DashboardContent() {
                 }`}
               >
                 <div
-                  className={`h-2 w-2 rounded-full ${
-                    isConnected ? 'bg-green-500' : 'bg-red-500'
-                  }`}
+                  className={`h-2 w-2 rounded-full ${isConnected ? 'bg-green-500' : 'bg-red-500'}`}
                 />
                 {isConnected ? 'Connected' : 'Disconnected'}
               </div>
@@ -339,10 +297,7 @@ function DashboardContent() {
                 </h3>
                 <div className="mt-2 space-y-1">
                   {alerts.slice(0, 3).map((alert) => (
-                    <p
-                      key={alert.id}
-                      className="text-sm text-yellow-700 dark:text-yellow-200"
-                    >
+                    <p key={alert.id} className="text-sm text-yellow-700 dark:text-yellow-200">
                       • {alert.message}
                     </p>
                   ))}
@@ -385,7 +340,7 @@ function DashboardContent() {
               (((docker?.network?.rx || 0) + (docker?.network?.tx || 0)) /
                 (docker?.network?.maxSpeed || 1000)) *
                 100,
-              100,
+              100
             )}
             description={`↓ ${docker?.network?.rx || 0} ↑ ${docker?.network?.tx || 0} Mbps`}
             icon={Network}
@@ -427,17 +382,14 @@ function DashboardContent() {
 
         {/* Services Overview */}
         <div className="mb-8">
-          <h2 className="mb-6 text-2xl font-bold text-zinc-900 dark:text-white">
-            Services
-          </h2>
+          <h2 className="mb-6 text-2xl font-bold text-zinc-900 dark:text-white">Services</h2>
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {/* PostgreSQL */}
             <ServiceCard
               name="PostgreSQL"
               status={
-                servicesHealth.find((s) =>
-                  s.name.toLowerCase().includes('postgres'),
-                )?.status || 'stopped'
+                servicesHealth.find((s) => s.name.toLowerCase().includes('postgres'))?.status ||
+                'stopped'
               }
               icon={Database}
               description="Primary database"
@@ -448,9 +400,7 @@ function DashboardContent() {
                 },
                 {
                   label: 'Size',
-                  value:
-                    useCentralDataStore.getState().postgres?.databaseSize ||
-                    'Unknown',
+                  value: useCentralDataStore.getState().postgres?.databaseSize || 'Unknown',
                 },
               ]}
             />
@@ -459,24 +409,20 @@ function DashboardContent() {
             <ServiceCard
               name="Hasura GraphQL"
               status={
-                servicesHealth.find((s) =>
-                  s.name.toLowerCase().includes('hasura'),
-                )?.status || 'stopped'
+                servicesHealth.find((s) => s.name.toLowerCase().includes('hasura'))?.status ||
+                'stopped'
               }
               icon={Globe}
               description="GraphQL API engine"
               metrics={[
                 {
                   label: 'Tables',
-                  value:
-                    useCentralDataStore.getState().hasura?.metadata?.tables ||
-                    0,
+                  value: useCentralDataStore.getState().hasura?.metadata?.tables || 0,
                 },
                 {
                   label: 'Subscriptions',
                   value:
-                    useCentralDataStore.getState().hasura?.performance
-                      ?.activeSubscriptions || 0,
+                    useCentralDataStore.getState().hasura?.performance?.activeSubscriptions || 0,
                 },
               ]}
             />
@@ -485,9 +431,8 @@ function DashboardContent() {
             <ServiceCard
               name="Redis Cache"
               status={
-                servicesHealth.find((s) =>
-                  s.name.toLowerCase().includes('redis'),
-                )?.status || 'stopped'
+                servicesHealth.find((s) => s.name.toLowerCase().includes('redis'))?.status ||
+                'stopped'
               }
               icon={Zap}
               description="In-memory cache"
@@ -507,9 +452,8 @@ function DashboardContent() {
             <ServiceCard
               name="Authentication"
               status={
-                servicesHealth.find((s) =>
-                  s.name.toLowerCase().includes('auth'),
-                )?.status || 'stopped'
+                servicesHealth.find((s) => s.name.toLowerCase().includes('auth'))?.status ||
+                'stopped'
               }
               icon={Shield}
               description="Auth & JWT service"
@@ -519,9 +463,8 @@ function DashboardContent() {
             <ServiceCard
               name="Nginx Proxy"
               status={
-                servicesHealth.find((s) =>
-                  s.name.toLowerCase().includes('nginx'),
-                )?.status || 'stopped'
+                servicesHealth.find((s) => s.name.toLowerCase().includes('nginx'))?.status ||
+                'stopped'
               }
               icon={Network}
               description="Reverse proxy & load balancer"
@@ -531,9 +474,8 @@ function DashboardContent() {
             <ServiceCard
               name="MinIO Storage"
               status={
-                servicesHealth.find((s) =>
-                  s.name.toLowerCase().includes('minio'),
-                )?.status || 'stopped'
+                servicesHealth.find((s) => s.name.toLowerCase().includes('minio'))?.status ||
+                'stopped'
               }
               icon={HardDrive}
               description="S3-compatible object storage"
@@ -547,21 +489,15 @@ function DashboardContent() {
             <div className="flex items-center gap-6">
               <span className="text-zinc-600 dark:text-zinc-400">
                 API Calls:{' '}
-                <span className="font-medium text-zinc-900 dark:text-white">
-                  {apiCallsCount}
-                </span>
+                <span className="font-medium text-zinc-900 dark:text-white">{apiCallsCount}</span>
               </span>
               <span className="text-zinc-600 dark:text-zinc-400">
                 Cache Hits:{' '}
-                <span className="font-medium text-green-600 dark:text-green-400">
-                  {cacheHits}
-                </span>
+                <span className="font-medium text-green-600 dark:text-green-400">{cacheHits}</span>
               </span>
               <span className="text-zinc-600 dark:text-zinc-400">
                 Cache Misses:{' '}
-                <span className="font-medium text-red-600 dark:text-red-400">
-                  {cacheMisses}
-                </span>
+                <span className="font-medium text-red-600 dark:text-red-400">{cacheMisses}</span>
               </span>
               <span className="text-zinc-600 dark:text-zinc-400">
                 Hit Rate:{' '}
@@ -572,9 +508,7 @@ function DashboardContent() {
             </div>
             <span className="text-xs text-zinc-500 dark:text-zinc-400">
               Last update:{' '}
-              {useCentralDataStore
-                .getState()
-                .lastUpdate?.toLocaleTimeString() || 'Never'}
+              {useCentralDataStore.getState().lastUpdate?.toLocaleTimeString() || 'Never'}
             </span>
           </div>
         </div>

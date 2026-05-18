@@ -27,9 +27,7 @@ function K8sConvertContent() {
   })
   const [converting, setConverting] = useState(false)
   const [manifests, setManifests] = useState<K8sManifest[]>([])
-  const [selectedManifest, setSelectedManifest] = useState<K8sManifest | null>(
-    null,
-  )
+  const [selectedManifest, setSelectedManifest] = useState<K8sManifest | null>(null)
   const [copied, setCopied] = useState(false)
 
   const handleConvert = async () => {
@@ -72,12 +70,8 @@ function K8sConvertContent() {
           <ArrowLeft className="h-5 w-5" />
         </Link>
         <div>
-          <h1 className="text-2xl font-semibold text-white">
-            Convert to Kubernetes
-          </h1>
-          <p className="text-sm text-zinc-400">
-            Generate Kubernetes manifests from Docker Compose
-          </p>
+          <h1 className="text-2xl font-semibold text-white">Convert to Kubernetes</h1>
+          <p className="text-sm text-zinc-400">Generate Kubernetes manifests from Docker Compose</p>
         </div>
       </div>
 
@@ -92,37 +86,27 @@ function K8sConvertContent() {
 
             <div className="space-y-4">
               <div>
-                <label className="mb-1 block text-sm text-zinc-400">
-                  Namespace
-                </label>
+                <label className="mb-1 block text-sm text-zinc-400">Namespace</label>
                 <input
                   type="text"
                   value={options.namespace}
-                  onChange={(e) =>
-                    setOptions({ ...options, namespace: e.target.value })
-                  }
+                  onChange={(e) => setOptions({ ...options, namespace: e.target.value })}
                   className="w-full rounded-lg border border-zinc-700 bg-zinc-900 px-3 py-2 text-white focus:border-blue-500 focus:outline-none"
                 />
               </div>
 
               <div>
-                <label className="mb-1 block text-sm text-zinc-400">
-                  Output Directory
-                </label>
+                <label className="mb-1 block text-sm text-zinc-400">Output Directory</label>
                 <input
                   type="text"
                   value={options.outputDir}
-                  onChange={(e) =>
-                    setOptions({ ...options, outputDir: e.target.value })
-                  }
+                  onChange={(e) => setOptions({ ...options, outputDir: e.target.value })}
                   className="w-full rounded-lg border border-zinc-700 bg-zinc-900 px-3 py-2 text-white focus:border-blue-500 focus:outline-none"
                 />
               </div>
 
               <div>
-                <label className="mb-1 block text-sm text-zinc-400">
-                  Default Replicas
-                </label>
+                <label className="mb-1 block text-sm text-zinc-400">Default Replicas</label>
                 <input
                   type="number"
                   min="1"
@@ -139,15 +123,11 @@ function K8sConvertContent() {
               </div>
 
               <div>
-                <label className="mb-1 block text-sm text-zinc-400">
-                  Image Tag
-                </label>
+                <label className="mb-1 block text-sm text-zinc-400">Image Tag</label>
                 <input
                   type="text"
                   value={options.imageTag || ''}
-                  onChange={(e) =>
-                    setOptions({ ...options, imageTag: e.target.value })
-                  }
+                  onChange={(e) => setOptions({ ...options, imageTag: e.target.value })}
                   placeholder="latest"
                   className="w-full rounded-lg border border-zinc-700 bg-zinc-900 px-3 py-2 text-white placeholder-zinc-500 focus:border-blue-500 focus:outline-none"
                 />
@@ -176,9 +156,7 @@ function K8sConvertContent() {
 
               {options.ingressEnabled && (
                 <div>
-                  <label className="mb-1 block text-sm text-zinc-400">
-                    Ingress Class
-                  </label>
+                  <label className="mb-1 block text-sm text-zinc-400">Ingress Class</label>
                   <select
                     value={options.ingressClassName || 'nginx'}
                     onChange={(e) =>
@@ -219,9 +197,7 @@ function K8sConvertContent() {
 
           {/* CLI Command */}
           <div className="rounded-lg border border-zinc-700/50 bg-zinc-800/50 p-4">
-            <h3 className="mb-2 text-sm font-medium text-zinc-400">
-              Or use CLI
-            </h3>
+            <h3 className="mb-2 text-sm font-medium text-zinc-400">Or use CLI</h3>
             <code className="block rounded bg-zinc-900 p-3 text-sm text-blue-400">
               nself k8s convert --namespace={options.namespace} --replicas=
               {options.replicas}
@@ -259,9 +235,7 @@ function K8sConvertContent() {
                   <div className="flex items-center gap-3">
                     <FileCode className="h-5 w-5 text-blue-400" />
                     <div>
-                      <div className="font-medium text-white">
-                        {manifest.filename}
-                      </div>
+                      <div className="font-medium text-white">{manifest.filename}</div>
                       <div className="text-sm text-zinc-400">
                         {manifest.kind}: {manifest.name}
                       </div>
@@ -309,14 +283,10 @@ function K8sConvertContent() {
           {selectedManifest ? (
             <div className="mt-4 overflow-hidden rounded-lg border border-zinc-700/50 bg-zinc-900">
               <div className="border-b border-zinc-700/50 bg-zinc-800/50 px-4 py-2">
-                <span className="font-mono text-sm text-zinc-400">
-                  {selectedManifest.filename}
-                </span>
+                <span className="font-mono text-sm text-zinc-400">{selectedManifest.filename}</span>
               </div>
               <pre className="max-h-[500px] overflow-auto p-4">
-                <code className="font-mono text-sm text-zinc-300">
-                  {selectedManifest.content}
-                </code>
+                <code className="font-mono text-sm text-zinc-300">{selectedManifest.content}</code>
               </pre>
             </div>
           ) : (
@@ -334,12 +304,10 @@ function K8sConvertContent() {
           <div className="flex items-start gap-3">
             <CheckCircle className="mt-0.5 h-5 w-5 text-emerald-400" />
             <div>
-              <h3 className="font-medium text-emerald-400">
-                Manifests Generated Successfully
-              </h3>
+              <h3 className="font-medium text-emerald-400">Manifests Generated Successfully</h3>
               <p className="mt-1 text-sm text-zinc-400">
-                {manifests.length} manifest files have been generated. You can
-                now deploy them to your cluster.
+                {manifests.length} manifest files have been generated. You can now deploy them to
+                your cluster.
               </p>
               <div className="mt-3 flex items-center gap-3">
                 <Link

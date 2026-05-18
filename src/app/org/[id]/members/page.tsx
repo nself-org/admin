@@ -1,20 +1,10 @@
 'use client'
 
-import {
-  OrgInviteModal,
-  OrgMemberRoleMatrix,
-  RoleBadge,
-} from '@/components/org'
+import { OrgInviteModal, OrgMemberRoleMatrix, RoleBadge } from '@/components/org'
 import { DashboardSkeleton, TableSkeleton } from '@/components/skeletons'
 import { useOrganization } from '@/hooks/useOrganization'
 import type { OrgRole } from '@/types/tenant'
-import {
-  ArrowLeft,
-  MoreHorizontal,
-  Search,
-  UserMinus,
-  UserPlus,
-} from 'lucide-react'
+import { ArrowLeft, MoreHorizontal, Search, UserMinus, UserPlus } from 'lucide-react'
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
 import { useState } from 'react'
@@ -22,15 +12,8 @@ import { useState } from 'react'
 export default function OrgMembersPage() {
   const params = useParams()
   const orgId = params.id as string
-  const {
-    org,
-    members,
-    isLoading,
-    error,
-    addMember,
-    removeMember,
-    updateMemberRole,
-  } = useOrganization(orgId)
+  const { org, members, isLoading, error, addMember, removeMember, updateMemberRole } =
+    useOrganization(orgId)
   const [searchQuery, setSearchQuery] = useState('')
   const [showInviteModal, setShowInviteModal] = useState(false)
   const [openMenu, setOpenMenu] = useState<string | null>(null)
@@ -49,14 +32,10 @@ export default function OrgMembersPage() {
   const filteredMembers = members.filter(
     (member) =>
       member.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      member.email.toLowerCase().includes(searchQuery.toLowerCase()),
+      member.email.toLowerCase().includes(searchQuery.toLowerCase())
   )
 
-  const handleInvite = async (
-    email: string,
-    role: OrgRole,
-    _message?: string,
-  ) => {
+  const handleInvite = async (email: string, role: OrgRole, _message?: string) => {
     await addMember(email, role)
   }
 
@@ -137,9 +116,7 @@ export default function OrgMembersPage() {
                 </div>
                 <div>
                   <div className="flex items-center gap-2">
-                    <span className="font-medium text-white">
-                      {member.name}
-                    </span>
+                    <span className="font-medium text-white">{member.name}</span>
                     <RoleBadge role={member.role} />
                   </div>
                   <p className="text-sm text-zinc-500">{member.email}</p>
@@ -155,9 +132,7 @@ export default function OrgMembersPage() {
                 )}
                 <div className="relative">
                   <button
-                    onClick={() =>
-                      setOpenMenu(openMenu === member.id ? null : member.id)
-                    }
+                    onClick={() => setOpenMenu(openMenu === member.id ? null : member.id)}
                     className="rounded p-1 text-zinc-400 hover:bg-zinc-700 hover:text-white"
                   >
                     <MoreHorizontal className="h-4 w-4" />
@@ -191,9 +166,7 @@ export default function OrgMembersPage() {
             {searchQuery ? 'No members found' : 'No members yet'}
           </h3>
           <p className="mb-4 text-sm text-zinc-400">
-            {searchQuery
-              ? 'Try a different search'
-              : 'Invite your first team member'}
+            {searchQuery ? 'Try a different search' : 'Invite your first team member'}
           </p>
           {!searchQuery && (
             <button

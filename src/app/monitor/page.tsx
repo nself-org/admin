@@ -126,12 +126,7 @@ function MonitorContent() {
         const containersJson = await containersRes.value.json()
         if (containersJson.success && containersJson.data) {
           const serviceList: Service[] = containersJson.data.map(
-            (c: {
-              name: string
-              state: string
-              health: string
-              status: string
-            }) => {
+            (c: { name: string; state: string; health: string; status: string }) => {
               let status: 'healthy' | 'warning' | 'critical' = 'healthy'
               if (c.state !== 'running') status = 'critical'
               else if (c.health === 'unhealthy') status = 'critical'
@@ -148,7 +143,7 @@ function MonitorContent() {
                 responseTime: 0,
                 lastCheck: 'now',
               }
-            },
+            }
           )
           setServices(serviceList)
         }
@@ -176,8 +171,8 @@ function MonitorContent() {
                 source: a.source,
                 timestamp: a.timestamp,
                 acknowledged: a.acknowledged,
-              }),
-            ),
+              })
+            )
           )
         }
       }
@@ -238,8 +233,7 @@ function MonitorContent() {
     activeAlerts: alerts.filter((a) => !a.acknowledged).length,
     healthyServices: services.filter((s) => s.status === 'healthy').length,
     totalServices: services.length,
-    avgResponseTime:
-      services.reduce((acc, s) => acc + s.responseTime, 0) / services.length,
+    avgResponseTime: services.reduce((acc, s) => acc + s.responseTime, 0) / services.length,
   }
 
   return (
@@ -249,9 +243,7 @@ function MonitorContent() {
         <div className="mb-8">
           <div className="mb-6 flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold text-zinc-900 dark:text-white">
-                System Monitor
-              </h1>
+              <h1 className="text-3xl font-bold text-zinc-900 dark:text-white">System Monitor</h1>
               <p className="mt-1 text-zinc-600 dark:text-zinc-400">
                 Real-time system metrics, health monitoring, and alerts
               </p>
@@ -273,9 +265,7 @@ function MonitorContent() {
                 variant={autoRefresh ? 'filled' : 'outline'}
                 className="flex items-center gap-2"
               >
-                <RefreshCw
-                  className={`h-4 w-4 ${autoRefresh ? 'animate-spin' : ''}`}
-                />
+                <RefreshCw className={`h-4 w-4 ${autoRefresh ? 'animate-spin' : ''}`} />
                 {autoRefresh ? 'Auto' : 'Manual'}
               </Button>
               <Button variant="outline" className="flex items-center gap-2">
@@ -294,12 +284,8 @@ function MonitorContent() {
             <div className="rounded-lg border border-zinc-200 bg-white p-4 dark:border-zinc-700 dark:bg-zinc-800">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-zinc-600 dark:text-zinc-400">
-                    CPU Usage
-                  </p>
-                  <p className="text-2xl font-bold">
-                    {currentMetrics.cpu.toFixed(1)}%
-                  </p>
+                  <p className="text-sm text-zinc-600 dark:text-zinc-400">CPU Usage</p>
+                  <p className="text-2xl font-bold">{currentMetrics.cpu.toFixed(1)}%</p>
                 </div>
                 <Cpu className="h-8 w-8 text-blue-500" />
               </div>
@@ -314,12 +300,8 @@ function MonitorContent() {
             <div className="rounded-lg border border-zinc-200 bg-white p-4 dark:border-zinc-700 dark:bg-zinc-800">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-zinc-600 dark:text-zinc-400">
-                    Memory
-                  </p>
-                  <p className="text-2xl font-bold">
-                    {currentMetrics.memory.toFixed(1)}%
-                  </p>
+                  <p className="text-sm text-zinc-600 dark:text-zinc-400">Memory</p>
+                  <p className="text-2xl font-bold">{currentMetrics.memory.toFixed(1)}%</p>
                 </div>
                 <MemoryStick className="h-8 w-8 text-green-500" />
               </div>
@@ -334,12 +316,8 @@ function MonitorContent() {
             <div className="rounded-lg border border-zinc-200 bg-white p-4 dark:border-zinc-700 dark:bg-zinc-800">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-zinc-600 dark:text-zinc-400">
-                    Active Alerts
-                  </p>
-                  <p className="text-2xl font-bold text-red-600">
-                    {stats.activeAlerts}
-                  </p>
+                  <p className="text-sm text-zinc-600 dark:text-zinc-400">Active Alerts</p>
+                  <p className="text-2xl font-bold text-red-600">{stats.activeAlerts}</p>
                 </div>
                 <AlertCircle className="h-8 w-8 text-red-500" />
               </div>
@@ -348,9 +326,7 @@ function MonitorContent() {
             <div className="rounded-lg border border-zinc-200 bg-white p-4 dark:border-zinc-700 dark:bg-zinc-800">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-zinc-600 dark:text-zinc-400">
-                    Healthy Services
-                  </p>
+                  <p className="text-sm text-zinc-600 dark:text-zinc-400">Healthy Services</p>
                   <p className="text-2xl font-bold text-green-600">
                     {stats.healthyServices}/{stats.totalServices}
                   </p>
@@ -362,12 +338,8 @@ function MonitorContent() {
             <div className="rounded-lg border border-zinc-200 bg-white p-4 dark:border-zinc-700 dark:bg-zinc-800">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-zinc-600 dark:text-zinc-400">
-                    Avg Response
-                  </p>
-                  <p className="text-2xl font-bold">
-                    {stats.avgResponseTime.toFixed(0)}ms
-                  </p>
+                  <p className="text-sm text-zinc-600 dark:text-zinc-400">Avg Response</p>
+                  <p className="text-2xl font-bold">{stats.avgResponseTime.toFixed(0)}ms</p>
                 </div>
                 <Zap className="h-8 w-8 text-yellow-500" />
               </div>
@@ -536,9 +508,7 @@ function MonitorContent() {
                     }`}
                   >
                     <div className="flex items-start gap-3">
-                      <AlertIcon
-                        className={`mt-0.5 h-5 w-5 ${getStatusColor(alert.severity)}`}
-                      />
+                      <AlertIcon className={`mt-0.5 h-5 w-5 ${getStatusColor(alert.severity)}`} />
                       <div className="flex-1">
                         <div className="mb-1 flex items-center gap-2">
                           <h4 className="font-medium text-zinc-900 dark:text-white">
@@ -554,19 +524,13 @@ function MonitorContent() {
                             {alert.acknowledged ? 'Acknowledged' : 'Active'}
                           </span>
                         </div>
-                        <p className="mb-2 text-zinc-600 dark:text-zinc-400">
-                          {alert.message}
-                        </p>
+                        <p className="mb-2 text-zinc-600 dark:text-zinc-400">{alert.message}</p>
                         <div className="flex items-center gap-4 text-sm text-zinc-500">
                           <span>{alert.source}</span>
-                          <span>
-                            {new Date(alert.timestamp).toLocaleString()}
-                          </span>
+                          <span>{new Date(alert.timestamp).toLocaleString()}</span>
                         </div>
                       </div>
-                      {!alert.acknowledged && (
-                        <Button variant="outline">Acknowledge</Button>
-                      )}
+                      {!alert.acknowledged && <Button variant="outline">Acknowledge</Button>}
                     </div>
                   </div>
                 )
@@ -590,9 +554,7 @@ function MonitorContent() {
                   }`}
                 >
                   <div className="mb-3 flex items-center justify-between">
-                    <h3 className="font-medium text-zinc-900 dark:text-white">
-                      {service.name}
-                    </h3>
+                    <h3 className="font-medium text-zinc-900 dark:text-white">{service.name}</h3>
                     <span
                       className={`rounded-full px-2 py-1 text-xs font-medium ${
                         service.status === 'healthy'
@@ -607,23 +569,15 @@ function MonitorContent() {
                   </div>
                   <div className="space-y-2 text-sm">
                     <div className="flex justify-between">
-                      <span className="text-zinc-600 dark:text-zinc-400">
-                        Uptime
-                      </span>
+                      <span className="text-zinc-600 dark:text-zinc-400">Uptime</span>
                       <span className="font-medium">{service.uptime}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-zinc-600 dark:text-zinc-400">
-                        Response Time
-                      </span>
-                      <span className="font-medium">
-                        {service.responseTime}ms
-                      </span>
+                      <span className="text-zinc-600 dark:text-zinc-400">Response Time</span>
+                      <span className="font-medium">{service.responseTime}ms</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-zinc-600 dark:text-zinc-400">
-                        Last Check
-                      </span>
+                      <span className="text-zinc-600 dark:text-zinc-400">Last Check</span>
                       <span className="font-medium">{service.lastCheck}</span>
                     </div>
                   </div>
@@ -643,28 +597,18 @@ function MonitorContent() {
                 Detailed system performance metrics and historical data analysis
               </p>
               <div className="grid gap-4 lg:grid-cols-2">
-                <Button
-                  variant="outline"
-                  className="flex h-auto items-center gap-2 p-4"
-                >
+                <Button variant="outline" className="flex h-auto items-center gap-2 p-4">
                   <BarChart3 className="h-5 w-5" />
                   <div className="text-left">
                     <div className="font-medium">Performance Dashboard</div>
-                    <div className="text-sm text-zinc-500">
-                      Detailed system metrics
-                    </div>
+                    <div className="text-sm text-zinc-500">Detailed system metrics</div>
                   </div>
                 </Button>
-                <Button
-                  variant="outline"
-                  className="flex h-auto items-center gap-2 p-4"
-                >
+                <Button variant="outline" className="flex h-auto items-center gap-2 p-4">
                   <TrendingUp className="h-5 w-5" />
                   <div className="text-left">
                     <div className="font-medium">Trend Analysis</div>
-                    <div className="text-sm text-zinc-500">
-                      Historical data patterns
-                    </div>
+                    <div className="text-sm text-zinc-500">Historical data patterns</div>
                   </div>
                 </Button>
               </div>

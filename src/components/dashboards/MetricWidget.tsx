@@ -46,12 +46,10 @@ export function MetricWidget({ widget, className }: MetricWidgetProps) {
     hasValidDataSource ? dataSource.endpoint : null,
     fetcher,
     {
-      refreshInterval: dataSource?.refreshInterval
-        ? dataSource.refreshInterval * 1000
-        : 0,
+      refreshInterval: dataSource?.refreshInterval ? dataSource.refreshInterval * 1000 : 0,
       revalidateOnFocus: false,
       dedupingInterval: 5000,
-    },
+    }
   )
 
   // Determine color based on thresholds
@@ -106,9 +104,7 @@ export function MetricWidget({ widget, className }: MetricWidgetProps) {
 
   if (isLoading) {
     return (
-      <div
-        className={cn('flex h-full items-center justify-center p-6', className)}
-      >
+      <div className={cn('flex h-full items-center justify-center p-6', className)}>
         <div className="text-center">
           <div className="mx-auto h-8 w-24 animate-pulse rounded bg-zinc-200 dark:bg-zinc-800" />
           <div className="mx-auto mt-2 h-4 w-16 animate-pulse rounded bg-zinc-100 dark:bg-zinc-900" />
@@ -119,17 +115,13 @@ export function MetricWidget({ widget, className }: MetricWidgetProps) {
 
   if (error) {
     return (
-      <div
-        className={cn('flex h-full items-center justify-center p-6', className)}
-      >
+      <div className={cn('flex h-full items-center justify-center p-6', className)}>
         <div className="text-center">
           <p className="text-sm text-red-500">
             {error instanceof Error ? error.message : 'Failed to load data'}
           </p>
           {!hasValidDataSource && (
-            <p className="mt-1 text-xs text-zinc-400">
-              Invalid data source configuration
-            </p>
+            <p className="mt-1 text-xs text-zinc-400">Invalid data source configuration</p>
           )}
         </div>
       </div>
@@ -138,9 +130,7 @@ export function MetricWidget({ widget, className }: MetricWidgetProps) {
 
   if (!data) {
     return (
-      <div
-        className={cn('flex h-full items-center justify-center p-6', className)}
-      >
+      <div className={cn('flex h-full items-center justify-center p-6', className)}>
         <div className="text-center">
           <p className="text-sm text-zinc-500">No data available</p>
         </div>
@@ -156,21 +146,17 @@ export function MetricWidget({ widget, className }: MetricWidgetProps) {
       {/* Main value */}
       <div className="text-center">
         <div className="flex items-center justify-center gap-1">
-          {data.prefix && (
-            <span className="text-2xl text-zinc-400">{data.prefix}</span>
-          )}
+          {data.prefix && <span className="text-2xl text-zinc-400">{data.prefix}</span>}
           <span
             className={cn(
               'text-4xl font-bold text-zinc-900 dark:text-zinc-100',
-              getThresholdColor(data.value),
+              getThresholdColor(data.value)
             )}
           >
             {formatValue(data.value)}
           </span>
           {data.unit && (
-            <span className="text-lg text-zinc-500 dark:text-zinc-400">
-              {data.unit}
-            </span>
+            <span className="text-lg text-zinc-500 dark:text-zinc-400">{data.unit}</span>
           )}
         </div>
 
@@ -180,7 +166,7 @@ export function MetricWidget({ widget, className }: MetricWidgetProps) {
             <div
               className={cn(
                 'flex items-center gap-1 rounded-full px-2 py-1',
-                trendIndicator.bgColor,
+                trendIndicator.bgColor
               )}
             >
               <TrendIcon className={cn('h-3.5 w-3.5', trendIndicator.color)} />
@@ -199,17 +185,13 @@ export function MetricWidget({ widget, className }: MetricWidgetProps) {
             {thresholds.warning && (
               <div className="flex items-center gap-1">
                 <div className="h-2 w-2 rounded-full bg-yellow-500" />
-                <span className="text-zinc-500">
-                  Warning: {thresholds.warning}
-                </span>
+                <span className="text-zinc-500">Warning: {thresholds.warning}</span>
               </div>
             )}
             {thresholds.critical && (
               <div className="flex items-center gap-1">
                 <div className="h-2 w-2 rounded-full bg-red-500" />
-                <span className="text-zinc-500">
-                  Critical: {thresholds.critical}
-                </span>
+                <span className="text-zinc-500">Critical: {thresholds.critical}</span>
               </div>
             )}
           </div>

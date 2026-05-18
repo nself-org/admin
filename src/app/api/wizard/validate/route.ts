@@ -67,8 +67,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       if (!env.MINIO_ROOT_USER || !env.MINIO_ROOT_PASSWORD) {
         issues.push({
           field: 'minio',
-          message:
-            'MinIO credentials missing (MINIO_ROOT_USER, MINIO_ROOT_PASSWORD)',
+          message: 'MinIO credentials missing (MINIO_ROOT_USER, MINIO_ROOT_PASSWORD)',
           severity: 'warning',
         })
       }
@@ -101,9 +100,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         'TEMPO_ENABLED',
         'ALERTMANAGER_ENABLED',
       ]
-      const missingMonitoring = monitoringServices.filter(
-        (s) => env[s] !== 'true',
-      )
+      const missingMonitoring = monitoringServices.filter((s) => env[s] !== 'true')
       if (env.MONITORING_ENABLED === 'true' && missingMonitoring.length > 0) {
         issues.push({
           field: 'monitoring',
@@ -234,8 +231,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       // If docker-compose exists, warn that rebuild might be needed
       issues.push({
         field: 'docker',
-        message:
-          'Project already built. Configuration changes will require rebuild.',
+        message: 'Project already built. Configuration changes will require rebuild.',
         severity: 'warning',
       })
     }
@@ -257,7 +253,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to validate configuration',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

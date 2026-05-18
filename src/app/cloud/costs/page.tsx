@@ -20,11 +20,7 @@ import useSWR from 'swr'
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json())
 
-
-const sizeLabels: Record<
-  ServerSize,
-  { label: string; description: string; icon: typeof Cpu }
-> = {
+const sizeLabels: Record<ServerSize, { label: string; description: string; icon: typeof Cpu }> = {
   tiny: { label: 'Tiny', description: '1 vCPU, 1-2 GB RAM', icon: Zap },
   small: { label: 'Small', description: '1-2 vCPU, 2-4 GB RAM', icon: Cpu },
   medium: {
@@ -51,7 +47,7 @@ function CostsContent() {
 
   const { data, isLoading, mutate } = useSWR<{ costs: CostComparison[] }>(
     '/api/cloud/costs',
-    fetcher,
+    fetcher
   )
 
   const costData = data?.costs ?? []
@@ -88,9 +84,7 @@ function CostsContent() {
       <div className="space-y-6">
         <div>
           <h1 className="text-2xl font-semibold text-white">Cost Comparison</h1>
-          <p className="text-sm text-zinc-400">
-            Compare pricing across providers
-          </p>
+          <p className="text-sm text-zinc-400">Compare pricing across providers</p>
         </div>
         <div className="animate-pulse space-y-4">
           <div className="h-24 rounded-lg bg-zinc-800/50" />
@@ -129,9 +123,7 @@ function CostsContent() {
           const sizeInfo = sizeLabels[size]
           const Icon = sizeInfo.icon
           const costInfo = costData.find((c) => c.size === size)
-          const cheapest = costInfo
-            ? Math.min(...costInfo.providers.map((p) => p.monthlyPrice))
-            : 0
+          const cheapest = costInfo ? Math.min(...costInfo.providers.map((p) => p.monthlyPrice)) : 0
 
           return (
             <button
@@ -145,9 +137,7 @@ function CostsContent() {
             >
               <div className="flex items-center justify-between">
                 <Icon className="h-5 w-5 text-emerald-400" />
-                {selectedSize === size && (
-                  <CheckCircle className="h-4 w-4 text-emerald-400" />
-                )}
+                {selectedSize === size && <CheckCircle className="h-4 w-4 text-emerald-400" />}
               </div>
               <h3 className="mt-2 font-medium text-white">{sizeInfo.label}</h3>
               <p className="text-sm text-zinc-400">{sizeInfo.description}</p>
@@ -172,10 +162,9 @@ function CostsContent() {
                 Save up to{' '}
                 <span className="font-medium text-emerald-400">
                   {Math.round(
-                    ((Math.max(...sortedProviders.map((p) => p.monthlyPrice)) -
-                      lowestPrice) /
+                    ((Math.max(...sortedProviders.map((p) => p.monthlyPrice)) - lowestPrice) /
                       Math.max(...sortedProviders.map((p) => p.monthlyPrice))) *
-                      100,
+                      100
                   )}
                   %
                 </span>{' '}
@@ -220,8 +209,7 @@ function CostsContent() {
           <tbody className="divide-y divide-zinc-700/50">
             {sortedProviders.map((provider, index) => {
               const priceDiff = provider.monthlyPrice - lowestPrice
-              const priceDiffPercent =
-                lowestPrice > 0 ? (priceDiff / lowestPrice) * 100 : 0
+              const priceDiffPercent = lowestPrice > 0 ? (priceDiff / lowestPrice) * 100 : 0
 
               return (
                 <tr
@@ -237,9 +225,7 @@ function CostsContent() {
                       </div>
                       <div>
                         <div className="flex items-center gap-2">
-                          <span className="font-medium text-white">
-                            {provider.displayName}
-                          </span>
+                          <span className="font-medium text-white">{provider.displayName}</span>
                           {provider.badge && (
                             <span className="inline-flex items-center gap-1 rounded-full bg-emerald-900/30 px-2 py-0.5 text-xs text-emerald-400">
                               <Star className="h-3 w-3" />
@@ -247,20 +233,14 @@ function CostsContent() {
                             </span>
                           )}
                         </div>
-                        {index === 0 &&
-                          sortBy === 'price' &&
-                          sortOrder === 'asc' && (
-                            <span className="text-xs text-emerald-400">
-                              Lowest price
-                            </span>
-                          )}
+                        {index === 0 && sortBy === 'price' && sortOrder === 'asc' && (
+                          <span className="text-xs text-emerald-400">Lowest price</span>
+                        )}
                       </div>
                     </div>
                   </td>
                   <td className="px-4 py-4">
-                    <span className="text-sm text-zinc-400">
-                      {provider.specs}
-                    </span>
+                    <span className="text-sm text-zinc-400">{provider.specs}</span>
                   </td>
                   <td className="px-4 py-4">
                     <span className="text-lg font-bold text-white">
@@ -300,10 +280,9 @@ function CostsContent() {
           <div>
             <h3 className="font-medium text-white">About these prices</h3>
             <p className="text-sm text-zinc-400">
-              Prices are estimated based on standard compute instances and may
-              vary based on region, availability, and promotional offers. AWS
-              prices include on-demand pricing for t3 instances. Storage and
-              bandwidth costs may apply additionally.
+              Prices are estimated based on standard compute instances and may vary based on region,
+              availability, and promotional offers. AWS prices include on-demand pricing for t3
+              instances. Storage and bandwidth costs may apply additionally.
             </p>
           </div>
         </div>

@@ -23,21 +23,18 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     if (!context) {
       return NextResponse.json(
         { success: false, error: 'Cluster context is required' },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
     const args: string[] = ['k8s', 'clusters', 'connect', context]
     if (kubeconfig) args.push(`--kubeconfig=${kubeconfig}`)
 
-    const { stdout } = await execAsync(
-      `${nselfPath} ${args.join(' ')} --json`,
-      {
-        cwd: projectPath,
-        env: { ...process.env, PATH: getEnhancedPath() },
-        timeout: 60000,
-      },
-    )
+    const { stdout } = await execAsync(`${nselfPath} ${args.join(' ')} --json`, {
+      cwd: projectPath,
+      env: { ...process.env, PATH: getEnhancedPath() },
+      timeout: 60000,
+    })
 
     const result = JSON.parse(stdout)
 
@@ -57,7 +54,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to connect to K8s cluster',
         details: err.message,
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

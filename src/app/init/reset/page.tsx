@@ -6,9 +6,7 @@ import { useCallback, useEffect, useState } from 'react'
 
 export default function InitReset() {
   const router = useRouter()
-  const [status, setStatus] = useState<'resetting' | 'success' | 'error'>(
-    'resetting',
-  )
+  const [status, setStatus] = useState<'resetting' | 'success' | 'error'>('resetting')
   const [message, setMessage] = useState('Resetting project to blank state...')
   const [errorMessage, setErrorMessage] = useState('')
   const [details, setDetails] = useState<string[]>([])
@@ -24,11 +22,7 @@ export default function InitReset() {
       setDetails(['✓ Starting reset process', 'Stopping services...'])
 
       await new Promise((resolve) => setTimeout(resolve, 500))
-      setDetails([
-        '✓ Starting reset process',
-        '✓ Stopping services',
-        'Removing Docker volumes...',
-      ])
+      setDetails(['✓ Starting reset process', '✓ Stopping services', 'Removing Docker volumes...'])
 
       await new Promise((resolve) => setTimeout(resolve, 500))
       setDetails([
@@ -92,9 +86,7 @@ export default function InitReset() {
     } catch (error) {
       console.error('Error resetting project:', error)
       setStatus('error')
-      setErrorMessage(
-        error instanceof Error ? error.message : 'Unknown error occurred',
-      )
+      setErrorMessage(error instanceof Error ? error.message : 'Unknown error occurred')
       setMessage('Reset failed')
 
       setTimeout(() => {
@@ -140,9 +132,7 @@ export default function InitReset() {
           </h2>
 
           {errorMessage && (
-            <p className="mt-2 text-sm text-red-600 dark:text-red-400">
-              {errorMessage}
-            </p>
+            <p className="mt-2 text-sm text-red-600 dark:text-red-400">{errorMessage}</p>
           )}
 
           {/* Show progress details */}

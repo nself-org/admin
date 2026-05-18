@@ -28,17 +28,14 @@ function getDeviceId(): string {
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> },
+  { params }: { params: Promise<{ id: string }> }
 ): Promise<NextResponse> {
   const authError = await requireAuth(request)
   if (authError) return authError
 
   const token = request.cookies.get('nself-session')?.value
   if (!token || !(await validateSessionToken(token))) {
-    return NextResponse.json(
-      { success: false, error: 'Unauthorized' },
-      { status: 401 },
-    )
+    return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 })
   }
 
   const { id } = await params
@@ -47,28 +44,25 @@ export async function POST(
   if (!AUTH_URL) {
     return NextResponse.json(
       { success: false, error: 'NSELF_AUTH_URL not configured' },
-      { status: 503 },
+      { status: 503 }
     )
   }
 
   try {
-    const upstream = await fetch(
-      `${AUTH_URL}/account/licenses/${id}/activate`,
-      {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ deviceId }),
+    const upstream = await fetch(`${AUTH_URL}/account/licenses/${id}/activate`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
       },
-    )
+      body: JSON.stringify({ deviceId }),
+    })
 
     if (!upstream.ok) {
       const body = await upstream.json().catch(() => ({}))
       return NextResponse.json(
         { success: false, error: body.error || 'Activation failed' },
-        { status: upstream.status },
+        { status: upstream.status }
       )
     }
 
@@ -81,7 +75,7 @@ export async function POST(
         error: 'Auth service unavailable',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 503 },
+      { status: 503 }
     )
   }
 }

@@ -26,7 +26,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       default:
         return NextResponse.json(
           { success: false, error: `Unknown action: ${action}` },
-          { status: 400 },
+          { status: 400 }
         )
     }
   } catch (error) {
@@ -36,7 +36,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         error: 'Redis operation failed',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -61,7 +61,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       default:
         return NextResponse.json(
           { success: false, error: `Unknown action: ${action}` },
-          { status: 400 },
+          { status: 400 }
         )
     }
   } catch (error) {
@@ -71,7 +71,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         error: 'Redis operation failed',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -129,13 +129,11 @@ async function getRedisInfo() {
       keyspace: Object.keys(info)
         .filter((key) => key.startsWith('db'))
         .reduce((acc: any, key) => {
-          const dbInfo = info[key]
-            .split(',')
-            .reduce((dbAcc: any, item: string) => {
-              const [k, v] = item.split('=')
-              dbAcc[k] = parseInt(v)
-              return dbAcc
-            }, {})
+          const dbInfo = info[key].split(',').reduce((dbAcc: any, item: string) => {
+            const [k, v] = item.split('=')
+            dbAcc[k] = parseInt(v)
+            return dbAcc
+          }, {})
           acc[key] = dbInfo
           return acc
         }, {}),
@@ -146,7 +144,7 @@ async function getRedisInfo() {
 
 async function getRedisKeys() {
   const { stdout: keysOutput } = await execAsync(
-    'docker exec nself-redis redis-cli --scan --pattern "*" | head -100',
+    'docker exec nself-redis redis-cli --scan --pattern "*" | head -100'
   )
 
   const keys = keysOutput.trim().split('\n').filter(Boolean)
@@ -155,13 +153,13 @@ async function getRedisKeys() {
     keys.slice(0, 20).map(async (key) => {
       try {
         const { stdout: typeOutput } = await execAsync(
-          `docker exec nself-redis redis-cli TYPE "${key}"`,
+          `docker exec nself-redis redis-cli TYPE "${key}"`
         )
         const { stdout: ttlOutput } = await execAsync(
-          `docker exec nself-redis redis-cli TTL "${key}"`,
+          `docker exec nself-redis redis-cli TTL "${key}"`
         )
         const { stdout: sizeOutput } = await execAsync(
-          `docker exec nself-redis redis-cli MEMORY USAGE "${key}"`,
+          `docker exec nself-redis redis-cli MEMORY USAGE "${key}"`
         )
 
         let value = null
@@ -169,22 +167,22 @@ async function getRedisKeys() {
 
         if (type === 'string') {
           const { stdout: valueOutput } = await execAsync(
-            `docker exec nself-redis redis-cli GET "${key}"`,
+            `docker exec nself-redis redis-cli GET "${key}"`
           )
           value = valueOutput.trim()
         } else if (type === 'list') {
           const { stdout: lenOutput } = await execAsync(
-            `docker exec nself-redis redis-cli LLEN "${key}"`,
+            `docker exec nself-redis redis-cli LLEN "${key}"`
           )
           value = `List with ${lenOutput.trim()} items`
         } else if (type === 'set') {
           const { stdout: cardOutput } = await execAsync(
-            `docker exec nself-redis redis-cli SCARD "${key}"`,
+            `docker exec nself-redis redis-cli SCARD "${key}"`
           )
           value = `Set with ${cardOutput.trim()} members`
         } else if (type === 'hash') {
           const { stdout: lenOutput } = await execAsync(
-            `docker exec nself-redis redis-cli HLEN "${key}"`,
+            `docker exec nself-redis redis-cli HLEN "${key}"`
           )
           value = `Hash with ${lenOutput.trim()} fields`
         }
@@ -205,7 +203,7 @@ async function getRedisKeys() {
           value: null,
         }
       }
-    }),
+    })
   )
 
   return NextResponse.json({
@@ -220,9 +218,7 @@ async function getRedisKeys() {
 }
 
 async function getRedisStats() {
-  const { stdout } = await execAsync(
-    'docker exec nself-redis redis-cli INFO stats',
-  )
+  const { stdout } = await execAsync('docker exec nself-redis redis-cli INFO stats')
 
   const stats = stdout.split('\n').reduce((acc: any, line) => {
     if (line && !line.startsWith('#')) {
@@ -248,9 +244,8 @@ async function getRedisStats() {
         stats.keyspace_hits && stats.keyspace_misses
           ? Math.round(
               (parseInt(stats.keyspace_hits) /
-                (parseInt(stats.keyspace_hits) +
-                  parseInt(stats.keyspace_misses))) *
-                100,
+                (parseInt(stats.keyspace_hits) + parseInt(stats.keyspace_misses))) *
+                100
             )
           : 0,
       expiredKeys: parseInt(stats.expired_keys || '0'),
@@ -261,9 +256,7 @@ async function getRedisStats() {
 }
 
 async function getRedisMemory() {
-  const { stdout } = await execAsync(
-    'docker exec nself-redis redis-cli MEMORY STATS',
-  )
+  const { stdout } = await execAsync('docker exec nself-redis redis-cli MEMORY STATS')
 
   const lines = stdout.trim().split('\n')
   const memory: any = {}
@@ -299,9 +292,7 @@ async function getRedisMemory() {
 }
 
 async function getRedisClients() {
-  const { stdout } = await execAsync(
-    'docker exec nself-redis redis-cli CLIENT LIST',
-  )
+  const { stdout } = await execAsync('docker exec nself-redis redis-cli CLIENT LIST')
 
   const clients = stdout
     .trim()
@@ -339,9 +330,7 @@ async function getRedisClients() {
 }
 
 async function getRedisConfig() {
-  const { stdout } = await execAsync(
-    'docker exec nself-redis redis-cli CONFIG GET "*"',
-  )
+  const { stdout } = await execAsync('docker exec nself-redis redis-cli CONFIG GET "*"')
 
   const lines = stdout.trim().split('\n')
   const config: any = {}
@@ -367,7 +356,7 @@ async function setRedisKey(key: string, value: string, ttl?: number) {
   if (!key || value === undefined) {
     return NextResponse.json(
       { success: false, error: 'Key and value are required' },
-      { status: 400 },
+      { status: 400 }
     )
   }
 
@@ -392,15 +381,10 @@ async function setRedisKey(key: string, value: string, ttl?: number) {
 
 async function deleteRedisKey(key: string) {
   if (!key) {
-    return NextResponse.json(
-      { success: false, error: 'Key is required' },
-      { status: 400 },
-    )
+    return NextResponse.json({ success: false, error: 'Key is required' }, { status: 400 })
   }
 
-  const { stdout } = await execAsync(
-    `docker exec nself-redis redis-cli DEL "${key}"`,
-  )
+  const { stdout } = await execAsync(`docker exec nself-redis redis-cli DEL "${key}"`)
 
   return NextResponse.json({
     success: true,
@@ -417,14 +401,12 @@ async function flushRedis(pattern?: string) {
 
   if (pattern) {
     const { stdout: keysOutput } = await execAsync(
-      `docker exec nself-redis redis-cli --scan --pattern "${pattern}"`,
+      `docker exec nself-redis redis-cli --scan --pattern "${pattern}"`
     )
     const keys = keysOutput.trim().split('\n').filter(Boolean)
 
     if (keys.length > 0) {
-      const { stdout } = await execAsync(
-        `docker exec nself-redis redis-cli DEL ${keys.join(' ')}`,
-      )
+      const { stdout } = await execAsync(`docker exec nself-redis redis-cli DEL ${keys.join(' ')}`)
 
       return NextResponse.json({
         success: true,
@@ -445,9 +427,7 @@ async function flushRedis(pattern?: string) {
       },
     })
   } else {
-    const { stdout } = await execAsync(
-      'docker exec nself-redis redis-cli FLUSHDB',
-    )
+    const { stdout } = await execAsync('docker exec nself-redis redis-cli FLUSHDB')
 
     return NextResponse.json({
       success: true,
@@ -461,29 +441,18 @@ async function flushRedis(pattern?: string) {
 
 async function executeRedisCommand(command: string) {
   if (!command) {
-    return NextResponse.json(
-      { success: false, error: 'Command is required' },
-      { status: 400 },
-    )
+    return NextResponse.json({ success: false, error: 'Command is required' }, { status: 400 })
   }
 
-  const dangerousCommands = [
-    'FLUSHALL',
-    'SHUTDOWN',
-    'CONFIG SET',
-    'SLAVEOF',
-    'REPLICAOF',
-  ]
+  const dangerousCommands = ['FLUSHALL', 'SHUTDOWN', 'CONFIG SET', 'SLAVEOF', 'REPLICAOF']
   if (dangerousCommands.some((cmd) => command.toUpperCase().includes(cmd))) {
     return NextResponse.json(
       { success: false, error: 'Command not allowed for security reasons' },
-      { status: 403 },
+      { status: 403 }
     )
   }
 
-  const { stdout } = await execAsync(
-    `docker exec nself-redis redis-cli ${command}`,
-  )
+  const { stdout } = await execAsync(`docker exec nself-redis redis-cli ${command}`)
 
   return NextResponse.json({
     success: true,

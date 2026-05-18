@@ -22,7 +22,7 @@ export async function POST(request: NextRequest) {
     if (!url) {
       return NextResponse.json(
         { success: false, error: 'Backend URL is required.' },
-        { status: 400 },
+        { status: 400 }
       )
     }
 

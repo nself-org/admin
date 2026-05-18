@@ -1,11 +1,6 @@
 'use client'
 
-import {
-  motion,
-  useMotionTemplate,
-  useMotionValue,
-  type MotionValue,
-} from 'framer-motion'
+import { motion, useMotionTemplate, useMotionValue, type MotionValue } from 'framer-motion'
 
 import { GridPattern } from '@/components/GridPattern'
 import { Cpu, HardDrive, MemoryStick, Network } from 'lucide-react'
@@ -90,11 +85,7 @@ function ResourceCard({
   let mouseX = useMotionValue(0)
   let mouseY = useMotionValue(0)
 
-  function onMouseMove({
-    currentTarget,
-    clientX,
-    clientY,
-  }: React.MouseEvent<HTMLDivElement>) {
+  function onMouseMove({ currentTarget, clientX, clientY }: React.MouseEvent<HTMLDivElement>) {
     let { left, top } = currentTarget.getBoundingClientRect()
     mouseX.set(clientX - left)
     mouseY.set(clientY - top)
@@ -109,17 +100,13 @@ function ResourceCard({
       <div className="absolute inset-0 rounded-2xl ring-1 ring-zinc-900/7.5 transition-colors duration-300 ring-inset group-hover:ring-blue-500/20 dark:ring-white/10 dark:group-hover:ring-blue-400/30" />
       <div className="relative">
         <div className="flex items-center justify-between">
-          <h3 className="text-sm font-semibold text-zinc-900 dark:text-white">
-            {title}
-          </h3>
+          <h3 className="text-sm font-semibold text-zinc-900 dark:text-white">{title}</h3>
           <div className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-500/10 transition-colors duration-300 group-hover:bg-blue-500/20 dark:bg-blue-400/10 dark:group-hover:bg-blue-400/20">
             <Icon className="h-4 w-4 text-blue-600 dark:text-blue-400" />
           </div>
         </div>
         <div className="mt-4">
-          <div className="text-2xl font-bold text-zinc-900 dark:text-white">
-            {value}
-          </div>
+          <div className="text-2xl font-bold text-zinc-900 dark:text-white">{value}</div>
           <div className="mt-2 h-2 rounded-full bg-zinc-200 dark:bg-zinc-800">
             <div
               className="h-2 rounded-full bg-gradient-to-r from-blue-500 to-blue-600 transition-all duration-300"
@@ -127,9 +114,7 @@ function ResourceCard({
             />
           </div>
         </div>
-        <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
-          {description}
-        </p>
+        <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">{description}</p>
       </div>
     </div>
   )
@@ -138,14 +123,10 @@ function ResourceCard({
 export function Resources({ systemMetrics, dockerMetrics }: ResourcesProps) {
   const cpuUsage = dockerMetrics?.cpu.usage || 0
   const memoryPercentage = systemMetrics?.memory.total
-    ? Math.round(
-        ((dockerMetrics?.memory.used || 0) / systemMetrics.memory.total) * 100,
-      )
+    ? Math.round(((dockerMetrics?.memory.used || 0) / systemMetrics.memory.total) * 100)
     : 0
   const diskPercentage = systemMetrics?.disk.total
-    ? Math.round(
-        ((dockerMetrics?.storage.used || 0) / systemMetrics.disk.total) * 100,
-      )
+    ? Math.round(((dockerMetrics?.storage.used || 0) / systemMetrics.disk.total) * 100)
     : 0
   const totalNetwork = (
     (dockerMetrics?.network.rx || 0) + (dockerMetrics?.network.tx || 0)

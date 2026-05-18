@@ -72,8 +72,7 @@ export function RelatedPlugins({
 
   if (relatedPlugins.length === 0) return null
 
-  const heading =
-    bundle && bundleName ? `More plugins in ${bundleName}` : 'Related plugins'
+  const heading = bundle && bundleName ? `More plugins in ${bundleName}` : 'Related plugins'
 
   return (
     <div className="space-y-3">

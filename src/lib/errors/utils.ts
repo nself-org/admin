@@ -258,7 +258,7 @@ export function getErrorStack(error: unknown): string | undefined {
  */
 export function isErrorOfType<T extends Error>(
   error: unknown,
-  errorClass: new (...args: unknown[]) => T,
+  errorClass: new (...args: unknown[]) => T
 ): error is T {
   return error instanceof errorClass
 }

@@ -28,7 +28,7 @@ export async function GET() {
     if (!res.ok) {
       return NextResponse.json(
         { error: `alert-router upstream error: ${res.status}` },
-        { status: res.status },
+        { status: res.status }
       )
     }
 
@@ -39,11 +39,7 @@ export async function GET() {
 
     // Return empty list when the plugin is not running so the admin UI
     // renders the "no routes configured" empty state instead of an error.
-    if (
-      msg.includes('ECONNREFUSED') ||
-      msg.includes('fetch failed') ||
-      msg.includes('timeout')
-    ) {
+    if (msg.includes('ECONNREFUSED') || msg.includes('fetch failed') || msg.includes('timeout')) {
       const empty: AlertRoutesResponse = { routes: [], total: 0 }
       return NextResponse.json(empty)
     }

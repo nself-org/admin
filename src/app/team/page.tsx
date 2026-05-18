@@ -12,11 +12,7 @@
 
 import { HeroPattern } from '@/components/HeroPattern'
 import { InviteForm } from '@/components/admin-account/InviteForm'
-import {
-  TeamSeatRow,
-  type TeamRole,
-  type TeamSeat,
-} from '@/components/admin-account/TeamSeatRow'
+import { TeamSeatRow, type TeamRole, type TeamSeat } from '@/components/admin-account/TeamSeatRow'
 import { AlertCircle, Lock, RefreshCw, Users, WifiOff } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { Suspense, useCallback, useEffect, useRef, useState } from 'react'
@@ -25,10 +21,7 @@ function TeamSkeleton() {
   return (
     <div aria-busy="true" aria-label="Loading team">
       {[1, 2].map((i) => (
-        <div
-          key={i}
-          className="mb-3 h-16 animate-pulse rounded-xl bg-zinc-100 dark:bg-zinc-800"
-        />
+        <div key={i} className="mb-3 h-16 animate-pulse rounded-xl bg-zinc-100 dark:bg-zinc-800" />
       ))}
     </div>
   )
@@ -40,10 +33,7 @@ function MultiUserDisabledPage() {
       <HeroPattern />
       <main id="main-content" className="relative mx-auto max-w-3xl">
         <div className="rounded-xl border border-zinc-200 bg-white p-12 text-center shadow-sm dark:border-zinc-700 dark:bg-zinc-800">
-          <Lock
-            className="mx-auto mb-4 h-12 w-12 text-zinc-400"
-            aria-hidden="true"
-          />
+          <Lock className="mx-auto mb-4 h-12 w-12 text-zinc-400" aria-hidden="true" />
           <h1 className="text-xl font-bold text-zinc-900 dark:text-white">
             Multi-user admin is disabled
           </h1>
@@ -165,10 +155,7 @@ function TeamContent() {
           <div className="flex items-start justify-between">
             <div className="flex items-center gap-3">
               <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-100 dark:bg-blue-900/30">
-                <Users
-                  className="h-5 w-5 text-blue-600 dark:text-blue-400"
-                  aria-hidden="true"
-                />
+                <Users className="h-5 w-5 text-blue-600 dark:text-blue-400" aria-hidden="true" />
               </div>
               <div>
                 <h1
@@ -220,10 +207,7 @@ function TeamContent() {
             aria-live="assertive"
             className="flex items-start gap-3 rounded-xl border border-red-200 bg-red-50 p-4 dark:border-red-800 dark:bg-red-900/20"
           >
-            <AlertCircle
-              className="h-5 w-5 flex-shrink-0 text-red-500"
-              aria-hidden="true"
-            />
+            <AlertCircle className="h-5 w-5 flex-shrink-0 text-red-500" aria-hidden="true" />
             <p className="text-sm text-red-700 dark:text-red-400">{error}</p>
           </div>
         )}
@@ -234,13 +218,8 @@ function TeamContent() {
         {/* Empty state */}
         {!loading && !error && seats.length === 0 && (
           <div className="rounded-xl border border-dashed border-zinc-300 bg-zinc-50 p-12 text-center dark:border-zinc-700 dark:bg-zinc-800/50">
-            <Users
-              className="mx-auto mb-3 h-10 w-10 text-zinc-400"
-              aria-hidden="true"
-            />
-            <h2 className="text-lg font-semibold text-zinc-900 dark:text-white">
-              No team members
-            </h2>
+            <Users className="mx-auto mb-3 h-10 w-10 text-zinc-400" aria-hidden="true" />
+            <h2 className="text-lg font-semibold text-zinc-900 dark:text-white">No team members</h2>
             <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
               Use the form above to invite your first team member.
             </p>

@@ -1,0 +1,42 @@
+{
+  "name": "@nself/config",
+  "version": "0.1.1",
+  "description": "Shared TypeScript, ESLint, and Prettier configuration for the nSelf ecosystem. Vendored into admin/ for CI compatibility (avoids cross-repo file: dep on private web/ repo).",
+  "license": "MIT",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.js",
+    "./tsconfig/base.json": "./tsconfig/base.json",
+    "./tsconfig/next.json": "./tsconfig/next.json",
+    "./tsconfig/react-vite.json": "./tsconfig/react-vite.json",
+    "./eslint/base": "./eslint/base.js",
+    "./eslint/next": "./eslint/next.js",
+    "./eslint/react-vite": "./eslint/react-vite.js",
+    "./prettier": "./prettier/index.js"
+  },
+  "files": [
+    "tsconfig",
+    "eslint",
+    "prettier",
+    "src"
+  ],
+  "peerDependencies": {
+    "eslint": ">=9.0.0",
+    "prettier": ">=3.0.0",
+    "typescript": ">=5.0.0"
+  },
+  "peerDependenciesMeta": {
+    "eslint": {
+      "optional": true
+    },
+    "prettier": {
+      "optional": true
+    },
+    "typescript": {
+      "optional": true
+    }
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

@@ -106,10 +106,7 @@ export function Pagination({
       {pages.map((page, index) => {
         if (page === 'ellipsis') {
           return (
-            <div
-              key={`ellipsis-${index}`}
-              className="flex h-9 w-9 items-center justify-center"
-            >
+            <div key={`ellipsis-${index}`} className="flex h-9 w-9 items-center justify-center">
               <MoreHorizontal className="text-muted-foreground h-4 w-4" />
             </div>
           )
@@ -155,24 +152,16 @@ export function Pagination({
   )
 }
 
-const PaginationContent = React.forwardRef<
-  HTMLUListElement,
-  React.ComponentPropsWithoutRef<'ul'>
->(({ className, ...props }, ref) => (
-  <ul
-    ref={ref}
-    className={cn('flex flex-row items-center gap-1', className)}
-    {...props}
-  />
-))
+const PaginationContent = React.forwardRef<HTMLUListElement, React.ComponentPropsWithoutRef<'ul'>>(
+  ({ className, ...props }, ref) => (
+    <ul ref={ref} className={cn('flex flex-row items-center gap-1', className)} {...props} />
+  )
+)
 PaginationContent.displayName = 'PaginationContent'
 
-const PaginationItem = React.forwardRef<
-  HTMLLIElement,
-  React.ComponentPropsWithoutRef<'li'>
->(({ className, ...props }, ref) => (
-  <li ref={ref} className={cn('', className)} {...props} />
-))
+const PaginationItem = React.forwardRef<HTMLLIElement, React.ComponentPropsWithoutRef<'li'>>(
+  ({ className, ...props }, ref) => <li ref={ref} className={cn('', className)} {...props} />
+)
 PaginationItem.displayName = 'PaginationItem'
 
 export { PaginationContent, PaginationItem }

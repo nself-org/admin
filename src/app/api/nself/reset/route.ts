@@ -66,13 +66,10 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       } else {
         // For full reset, we should at least try to clean up docker
         try {
-          const dockerResult = await execAsync(
-            'docker-compose down -v 2>/dev/null || true',
-            {
-              cwd: projectPath,
-              timeout: 5000,
-            },
-          )
+          const dockerResult = await execAsync('docker-compose down -v 2>/dev/null || true', {
+            cwd: projectPath,
+            timeout: 5000,
+          })
           stdout = 'Docker containers cleaned: ' + dockerResult.stdout
         } catch {
           stdout = 'Reset attempted'
@@ -142,7 +139,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to reset project',
         details: 'Reset failed. Check server logs for details.',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

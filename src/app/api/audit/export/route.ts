@@ -13,14 +13,11 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
           error: 'Invalid format',
           details: 'Format must be "json" or "csv"',
         },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
-    const result = await executeNselfCommand('audit', [
-      '--export',
-      `--format=${format}`,
-    ])
+    const result = await executeNselfCommand('audit', ['--export', `--format=${format}`])
 
     if (!result.success) {
       return NextResponse.json(
@@ -29,7 +26,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
           error: 'Failed to export audit log',
           details: result.error || result.stderr || 'Unknown error',
         },
-        { status: 500 },
+        { status: 500 }
       )
     }
 
@@ -44,7 +41,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to export audit log',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

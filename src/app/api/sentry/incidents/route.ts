@@ -6,8 +6,7 @@ import { NextResponse } from 'next/server'
  * Returns honest empty when the plugin is not running.
  */
 
-const INCIDENT_MGMT_URL =
-  process.env.INCIDENT_MGMT_URL ?? 'http://127.0.0.1:3833'
+const INCIDENT_MGMT_URL = process.env.INCIDENT_MGMT_URL ?? 'http://127.0.0.1:3833'
 
 export async function GET() {
   try {
@@ -19,21 +18,16 @@ export async function GET() {
     if (!res.ok) {
       return NextResponse.json(
         { error: `nself-incident-mgmt upstream error: ${res.status}` },
-        { status: res.status },
+        { status: res.status }
       )
     }
 
     const data: unknown = await res.json()
     return NextResponse.json(data)
   } catch (err) {
-    const msg =
-      err instanceof Error ? err.message : 'Failed to reach nself-incident-mgmt'
+    const msg = err instanceof Error ? err.message : 'Failed to reach nself-incident-mgmt'
 
-    if (
-      msg.includes('ECONNREFUSED') ||
-      msg.includes('fetch failed') ||
-      msg.includes('timeout')
-    ) {
+    if (msg.includes('ECONNREFUSED') || msg.includes('fetch failed') || msg.includes('timeout')) {
       return NextResponse.json({ incidents: [], generatedAt: new Date().toISOString() })
     }
 

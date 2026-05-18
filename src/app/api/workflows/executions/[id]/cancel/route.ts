@@ -10,10 +10,7 @@ interface RouteParams {
  * POST /api/workflows/executions/[id]/cancel
  * Cancel a running or pending workflow execution
  */
-export async function POST(
-  request: NextRequest,
-  { params }: RouteParams,
-): Promise<NextResponse> {
+export async function POST(request: NextRequest, { params }: RouteParams): Promise<NextResponse> {
   const authError = await requireAuth(request)
   if (authError) return authError
 
@@ -23,10 +20,7 @@ export async function POST(
     const execution = await workflowsApi.cancelExecution(id)
 
     if (!execution) {
-      return NextResponse.json(
-        { success: false, error: 'Execution not found' },
-        { status: 404 },
-      )
+      return NextResponse.json({ success: false, error: 'Execution not found' }, { status: 404 })
     }
 
     return NextResponse.json({
@@ -37,10 +31,9 @@ export async function POST(
     return NextResponse.json(
       {
         success: false,
-        error:
-          error instanceof Error ? error.message : 'Failed to cancel execution',
+        error: error instanceof Error ? error.message : 'Failed to cancel execution',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

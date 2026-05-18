@@ -1,9 +1,8 @@
 'use client'
 
-import { Suspense, useCallback, useState } from 'react'
-import { TableSkeleton } from '@/components/skeletons'
 import { Button } from '@/components/Button'
 import { HeroPattern } from '@/components/HeroPattern'
+import { TableSkeleton } from '@/components/skeletons'
 import {
   AlertCircle,
   Archive,
@@ -18,6 +17,7 @@ import {
   Trash2,
   Upload,
 } from 'lucide-react'
+import { Suspense, useCallback, useState } from 'react'
 import useSWR from 'swr'
 
 interface Backup {
@@ -43,10 +43,7 @@ interface BackupConfig {
 const fetcher = (url: string) => fetch(url).then((res) => res.json())
 
 function SystemBackupsContent() {
-  const { data, error, mutate } = useSWR<{ backups: Backup[] }>(
-    '/api/system/backups',
-    fetcher,
-  )
+  const { data, error, mutate } = useSWR<{ backups: Backup[] }>('/api/system/backups', fetcher)
   const [config, setConfig] = useState<BackupConfig>({
     autoBackup: true,
     schedule: 'daily',
@@ -141,9 +138,7 @@ function SystemBackupsContent() {
             <div className="rounded-lg border border-zinc-200 bg-white p-6 dark:border-zinc-700 dark:bg-zinc-800">
               <div className="flex items-start justify-between">
                 <div>
-                  <p className="text-sm text-zinc-600 dark:text-zinc-400">
-                    Total Backups
-                  </p>
+                  <p className="text-sm text-zinc-600 dark:text-zinc-400">Total Backups</p>
                   <p className="text-2xl font-bold">{backups.length}</p>
                 </div>
                 <Archive className="h-8 w-8 text-blue-500" />
@@ -153,13 +148,9 @@ function SystemBackupsContent() {
             <div className="rounded-lg border border-zinc-200 bg-white p-6 dark:border-zinc-700 dark:bg-zinc-800">
               <div className="flex items-start justify-between">
                 <div>
-                  <p className="text-sm text-zinc-600 dark:text-zinc-400">
-                    Total Size
-                  </p>
+                  <p className="text-sm text-zinc-600 dark:text-zinc-400">Total Size</p>
                   <p className="text-2xl font-bold">
-                    {formatBytes(
-                      backups.reduce((sum, b) => sum + b.size, 0),
-                    )}
+                    {formatBytes(backups.reduce((sum, b) => sum + b.size, 0))}
                   </p>
                 </div>
                 <HardDrive className="h-8 w-8 text-blue-500" />
@@ -169,9 +160,7 @@ function SystemBackupsContent() {
             <div className="rounded-lg border border-zinc-200 bg-white p-6 dark:border-zinc-700 dark:bg-zinc-800">
               <div className="flex items-start justify-between">
                 <div>
-                  <p className="text-sm text-zinc-600 dark:text-zinc-400">
-                    Last Backup
-                  </p>
+                  <p className="text-sm text-zinc-600 dark:text-zinc-400">Last Backup</p>
                   <p className="text-2xl font-bold">
                     {backups.length > 0
                       ? new Date(backups[0].createdAt).toLocaleDateString()
@@ -194,9 +183,7 @@ function SystemBackupsContent() {
               {backups.length === 0 ? (
                 <div className="p-12 text-center">
                   <Archive className="mx-auto mb-4 h-12 w-12 text-zinc-400" />
-                  <p className="text-zinc-600 dark:text-zinc-400">
-                    No backups yet
-                  </p>
+                  <p className="text-zinc-600 dark:text-zinc-400">No backups yet</p>
                 </div>
               ) : (
                 <div className="divide-y divide-zinc-200 dark:divide-zinc-700">
@@ -207,9 +194,7 @@ function SystemBackupsContent() {
                           <h4 className="mb-1 font-medium">{backup.name}</h4>
                           <div className="flex items-center gap-3 text-sm text-zinc-600 dark:text-zinc-400">
                             <span>{formatBytes(backup.size)}</span>
-                            <span>
-                              {new Date(backup.createdAt).toLocaleString()}
-                            </span>
+                            <span>{new Date(backup.createdAt).toLocaleString()}</span>
                             <span
                               className={`rounded px-2 py-1 text-xs ${
                                 backup.status === 'completed'
@@ -252,9 +237,7 @@ function SystemBackupsContent() {
                   <input
                     type="checkbox"
                     checked={config.autoBackup}
-                    onChange={(e) =>
-                      setConfig({ ...config, autoBackup: e.target.checked })
-                    }
+                    onChange={(e) => setConfig({ ...config, autoBackup: e.target.checked })}
                     className="h-4 w-4 rounded text-blue-600"
                   />
                   <span className="text-sm">Enable auto-backup</span>
@@ -263,9 +246,7 @@ function SystemBackupsContent() {
                 {config.autoBackup && (
                   <div className="ml-6 space-y-3">
                     <div>
-                      <label className="mb-1 block text-sm font-medium">
-                        Schedule
-                      </label>
+                      <label className="mb-1 block text-sm font-medium">Schedule</label>
                       <select
                         value={config.schedule}
                         onChange={(e) =>
@@ -283,9 +264,7 @@ function SystemBackupsContent() {
                     </div>
 
                     <div>
-                      <label className="mb-1 block text-sm font-medium">
-                        Retention (days)
-                      </label>
+                      <label className="mb-1 block text-sm font-medium">Retention (days)</label>
                       <input
                         type="number"
                         min="1"
@@ -312,9 +291,7 @@ function SystemBackupsContent() {
               <div className="flex items-center gap-3">
                 <Calendar className="h-5 w-5 text-blue-500" />
                 <div>
-                  <p className="text-sm text-zinc-600 dark:text-zinc-400">
-                    Scheduled for
-                  </p>
+                  <p className="text-sm text-zinc-600 dark:text-zinc-400">Scheduled for</p>
                   <p className="font-medium">Tomorrow at 2:00 AM</p>
                 </div>
               </div>

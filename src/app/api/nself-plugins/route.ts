@@ -11,11 +11,7 @@ import { NextResponse } from 'next/server'
 interface NselfPlugin {
   name: string
   version: string
-  tier:
-    | 'free'
-    | 'bundle'
-    | 'nself-plus'
-    | 'cloud'
+  tier: 'free' | 'bundle' | 'nself-plus' | 'cloud'
   installed: boolean
   enabled: boolean
   bundle: string | null

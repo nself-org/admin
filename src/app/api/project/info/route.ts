@@ -29,13 +29,7 @@ export async function GET(_request: NextRequest): Promise<NextResponse> {
     // Read .env.dev for project configuration (or .env.prod, .env.staging based on ENV)
     try {
       // Try multiple env files in order of priority
-      const envFiles = [
-        '.env.dev',
-        '.env.staging',
-        '.env.prod',
-        '.env.local',
-        '.env',
-      ]
+      const envFiles = ['.env.dev', '.env.staging', '.env.prod', '.env.local', '.env']
       let envContent = ''
 
       for (const envFile of envFiles) {
@@ -55,9 +49,7 @@ export async function GET(_request: NextRequest): Promise<NextResponse> {
         const dbPasswordMatch = envContent.match(/POSTGRES_PASSWORD=(.+)/)
         const backupEnabledMatch = envContent.match(/BACKUP_ENABLED=(.+)/)
         const backupScheduleMatch = envContent.match(/BACKUP_SCHEDULE=(.+)/)
-        const monitoringEnabledMatch = envContent.match(
-          /MONITORING_ENABLED=(.+)/,
-        )
+        const monitoringEnabledMatch = envContent.match(/MONITORING_ENABLED=(.+)/)
         const frontendAppsMatch = envContent.match(/FRONTEND_APPS="(.+)"/)
 
         // Count enabled services from env file
@@ -66,12 +58,10 @@ export async function GET(_request: NextRequest): Promise<NextResponse> {
         const mailpitEnabled = envContent.match(/MAILPIT_ENABLED=true/)
         // Support both SEARCH_ENABLED and MEILISEARCH_ENABLED
         const searchEnabled =
-          envContent.match(/SEARCH_ENABLED=true/) ||
-          envContent.match(/MEILISEARCH_ENABLED=true/)
+          envContent.match(/SEARCH_ENABLED=true/) || envContent.match(/MEILISEARCH_ENABLED=true/)
         // Support both STORAGE_ENABLED and MINIO_ENABLED
         const storageEnabled =
-          envContent.match(/STORAGE_ENABLED=true/) ||
-          envContent.match(/MINIO_ENABLED=true/)
+          envContent.match(/STORAGE_ENABLED=true/) || envContent.match(/MINIO_ENABLED=true/)
         const functionsEnabled = envContent.match(/FUNCTIONS_ENABLED=true/)
         const nselfAdminEnabled = envContent.match(/NSELF_ADMIN_ENABLED=true/)
 
@@ -86,19 +76,15 @@ export async function GET(_request: NextRequest): Promise<NextResponse> {
           }
         }
 
-        if (projectNameMatch)
-          projectInfo.projectName = projectNameMatch[1].trim()
+        if (projectNameMatch) projectInfo.projectName = projectNameMatch[1].trim()
         if (envMatch) projectInfo.environment = envMatch[1].trim()
         if (domainMatch) projectInfo.domain = domainMatch[1].trim()
         if (dbNameMatch) projectInfo.databaseName = dbNameMatch[1].trim()
         if (dbPasswordMatch) projectInfo.dbPassword = dbPasswordMatch[1].trim()
-        if (backupEnabledMatch)
-          projectInfo.backupEnabled = backupEnabledMatch[1].trim() === 'true'
-        if (backupScheduleMatch)
-          projectInfo.backupSchedule = backupScheduleMatch[1].trim()
+        if (backupEnabledMatch) projectInfo.backupEnabled = backupEnabledMatch[1].trim() === 'true'
+        if (backupScheduleMatch) projectInfo.backupSchedule = backupScheduleMatch[1].trim()
         if (monitoringEnabledMatch)
-          projectInfo.monitoringEnabled =
-            monitoringEnabledMatch[1].trim() === 'true'
+          projectInfo.monitoringEnabled = monitoringEnabledMatch[1].trim() === 'true'
 
         // Calculate total services based on enabled flags
         let totalServices = 4 // Core services: PostgreSQL, Hasura, Auth, Nginx (always enabled)
@@ -114,10 +100,7 @@ export async function GET(_request: NextRequest): Promise<NextResponse> {
 
         // Monitoring adds 8 services when enabled:
         // Prometheus, Grafana, Loki, Tempo, Alertmanager, Node Exporter, PostgreSQL Exporter, cAdvisor
-        if (
-          monitoringEnabledMatch &&
-          monitoringEnabledMatch[1].trim() === 'true'
-        ) {
+        if (monitoringEnabledMatch && monitoringEnabledMatch[1].trim() === 'true') {
           totalServices += 8
         }
 
@@ -175,10 +158,7 @@ export async function GET(_request: NextRequest): Promise<NextResponse> {
           if (inServices && line.match(/^ {2}[a-zA-Z][a-zA-Z0-9_-]*:/)) {
             const serviceName = line.trim().replace(':', '')
             // Skip duplicates and helper services
-            if (
-              !allServices.includes(serviceName) &&
-              serviceName !== 'mlflow-init'
-            ) {
+            if (!allServices.includes(serviceName) && serviceName !== 'mlflow-init') {
               allServices.push(serviceName)
             }
           }
@@ -190,10 +170,7 @@ export async function GET(_request: NextRequest): Promise<NextResponse> {
 
     // Parse custom services from docker-compose.custom.yml
     try {
-      const customComposePath = path.join(
-        projectPath,
-        'docker-compose.custom.yml',
-      )
+      const customComposePath = path.join(projectPath, 'docker-compose.custom.yml')
       if (fs.existsSync(customComposePath)) {
         const customComposeContent = fs.readFileSync(customComposePath, 'utf8')
 
@@ -338,7 +315,7 @@ export async function GET(_request: NextRequest): Promise<NextResponse> {
           {
             cwd: projectPath,
             timeout: 5000,
-          },
+          }
         )
 
         const servicesList = servicesOutput.split('\n').filter((s) => s.trim())
@@ -386,19 +363,17 @@ export async function GET(_request: NextRequest): Promise<NextResponse> {
 
           // Sort required services in specific order
           const requiredOrder = ['postgres', 'hasura', 'auth', 'nginx']
-          projectInfo.servicesByCategory.required.sort(
-            (a: string, b: string) => {
-              const aLower = a.toLowerCase()
-              const bLower = b.toLowerCase()
-              const aIndex = requiredOrder.indexOf(aLower)
-              const bIndex = requiredOrder.indexOf(bLower)
+          projectInfo.servicesByCategory.required.sort((a: string, b: string) => {
+            const aLower = a.toLowerCase()
+            const bLower = b.toLowerCase()
+            const aIndex = requiredOrder.indexOf(aLower)
+            const bIndex = requiredOrder.indexOf(bLower)
 
-              if (aIndex !== -1 && bIndex !== -1) {
-                return aIndex - bIndex
-              }
-              return 0
-            },
-          )
+            if (aIndex !== -1 && bIndex !== -1) {
+              return aIndex - bIndex
+            }
+            return 0
+          })
 
           // Apply the same sorting to optional services
           const optionalOrder = [
@@ -421,25 +396,19 @@ export async function GET(_request: NextRequest): Promise<NextResponse> {
             'cadvisor',
           ]
 
-          projectInfo.servicesByCategory.optional.sort(
-            (a: string, b: string) => {
-              const aLower = a.toLowerCase()
-              const bLower = b.toLowerCase()
-              const aIndex = optionalOrder.findIndex(
-                (service) => aLower === service,
-              )
-              const bIndex = optionalOrder.findIndex(
-                (service) => bLower === service,
-              )
+          projectInfo.servicesByCategory.optional.sort((a: string, b: string) => {
+            const aLower = a.toLowerCase()
+            const bLower = b.toLowerCase()
+            const aIndex = optionalOrder.findIndex((service) => aLower === service)
+            const bIndex = optionalOrder.findIndex((service) => bLower === service)
 
-              if (aIndex !== -1 && bIndex !== -1) {
-                return aIndex - bIndex
-              }
-              if (aIndex !== -1) return -1
-              if (bIndex !== -1) return 1
-              return 0
-            },
-          )
+            if (aIndex !== -1 && bIndex !== -1) {
+              return aIndex - bIndex
+            }
+            if (aIndex !== -1) return -1
+            if (bIndex !== -1) return 1
+            return 0
+          })
         }
       } catch {}
     }
@@ -454,7 +423,7 @@ export async function GET(_request: NextRequest): Promise<NextResponse> {
         success: false,
         error: 'Failed to get project info',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

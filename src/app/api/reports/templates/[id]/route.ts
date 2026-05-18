@@ -7,18 +7,12 @@ interface RouteContext {
 }
 
 // GET /api/reports/templates/[id] - Get a single template
-export async function GET(
-  request: NextRequest,
-  context: RouteContext,
-): Promise<NextResponse> {
+export async function GET(request: NextRequest, context: RouteContext): Promise<NextResponse> {
   try {
     const { id } = await context.params
     const template = await reports.getTemplateById(id)
     if (!template) {
-      return NextResponse.json(
-        { success: false, error: 'Template not found' },
-        { status: 404 },
-      )
+      return NextResponse.json({ success: false, error: 'Template not found' }, { status: 404 })
     }
 
     return NextResponse.json({
@@ -26,24 +20,19 @@ export async function GET(
       data: template,
     })
   } catch (error) {
-    const statusCode =
-      error instanceof Error && error.message.includes('not found') ? 404 : 500
+    const statusCode = error instanceof Error && error.message.includes('not found') ? 404 : 500
     return NextResponse.json(
       {
         success: false,
-        error:
-          error instanceof Error ? error.message : 'Failed to get template',
+        error: error instanceof Error ? error.message : 'Failed to get template',
       },
-      { status: statusCode },
+      { status: statusCode }
     )
   }
 }
 
 // PATCH /api/reports/templates/[id] - Update a template
-export async function PATCH(
-  request: NextRequest,
-  context: RouteContext,
-): Promise<NextResponse> {
+export async function PATCH(request: NextRequest, context: RouteContext): Promise<NextResponse> {
   const authError = await requireAuth(request)
   if (authError) return authError
 
@@ -68,24 +57,19 @@ export async function PATCH(
       data: template,
     })
   } catch (error) {
-    const statusCode =
-      error instanceof Error && error.message.includes('not found') ? 404 : 500
+    const statusCode = error instanceof Error && error.message.includes('not found') ? 404 : 500
     return NextResponse.json(
       {
         success: false,
-        error:
-          error instanceof Error ? error.message : 'Failed to update template',
+        error: error instanceof Error ? error.message : 'Failed to update template',
       },
-      { status: statusCode },
+      { status: statusCode }
     )
   }
 }
 
 // DELETE /api/reports/templates/[id] - Delete a template
-export async function DELETE(
-  request: NextRequest,
-  context: RouteContext,
-): Promise<NextResponse> {
+export async function DELETE(request: NextRequest, context: RouteContext): Promise<NextResponse> {
   const authError = await requireAuth(request)
   if (authError) return authError
 
@@ -99,15 +83,13 @@ export async function DELETE(
       message: 'Template deleted successfully',
     })
   } catch (error) {
-    const statusCode =
-      error instanceof Error && error.message.includes('not found') ? 404 : 500
+    const statusCode = error instanceof Error && error.message.includes('not found') ? 404 : 500
     return NextResponse.json(
       {
         success: false,
-        error:
-          error instanceof Error ? error.message : 'Failed to delete template',
+        error: error instanceof Error ? error.message : 'Failed to delete template',
       },
-      { status: statusCode },
+      { status: statusCode }
     )
   }
 }

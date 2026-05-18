@@ -9,10 +9,7 @@ export async function GET(_request: NextRequest): Promise<NextResponse> {
     const sessionToken = cookieStore.get('session')?.value
 
     if (!sessionToken) {
-      return NextResponse.json(
-        { success: false, error: 'Not authenticated' },
-        { status: 401 },
-      )
+      return NextResponse.json({ success: false, error: 'Not authenticated' }, { status: 401 })
     }
 
     // Get all sessions for admin user
@@ -54,7 +51,7 @@ export async function GET(_request: NextRequest): Promise<NextResponse> {
         error: 'Failed to fetch sessions',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

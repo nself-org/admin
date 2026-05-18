@@ -27,8 +27,7 @@ const isDevelopment = process.env.NODE_ENV === 'development'
 const isCI = process.env.CI === 'true'
 const DB_NAME = 'nadmin.db'
 const isBuildPhase =
-  process.env.NEXT_PHASE === 'phase-production-build' ||
-  process.env.VERCEL === '1'
+  process.env.NEXT_PHASE === 'phase-production-build' || process.env.VERCEL === '1'
 const DB_PATH =
   isDevelopment || isBuildPhase
     ? path.join(process.cwd(), 'data', DB_NAME) // Local dev path or build mock
@@ -67,8 +66,7 @@ let tenantDomainsCollection: Collection<TenantDomain> | null = null
 // Collaboration collections (v0.7.0)
 let userPresenceCollection: Collection<UserPresenceItem> | null = null
 let documentStateCollection: Collection<DocumentStateItem> | null = null
-let collaborationCursorCollection: Collection<CollaborationCursorItem> | null =
-  null
+let collaborationCursorCollection: Collection<CollaborationCursorItem> | null = null
 
 // Type definitions
 export interface ConfigItem {
@@ -199,8 +197,7 @@ export async function initDatabase(): Promise<void> {
     collaborationCursorCollection = null
   }
   if (global.__lokiIsInitialized === true) isInitialized = true
-  if (global.__lokiInitPromise !== undefined)
-    initializationPromise = global.__lokiInitPromise
+  if (global.__lokiInitPromise !== undefined) initializationPromise = global.__lokiInitPromise
 
   // If already initialized (possibly by another bundle), wire up collections
   if (isInitialized && db && !configCollection) {
@@ -440,7 +437,7 @@ export async function createSession(
   userId: string,
   ip?: string,
   userAgent?: string,
-  rememberMe: boolean = false,
+  rememberMe: boolean = false
 ): Promise<string> {
   await initDatabase()
 
@@ -449,9 +446,7 @@ export async function createSession(
   const durationHours = customDuration || SESSION_DURATION_HOURS
 
   // Remember me extends session to 30 days
-  const sessionDuration = rememberMe
-    ? 30 * 24 * 60 * 60 * 1000
-    : durationHours * 60 * 60 * 1000
+  const sessionDuration = rememberMe ? 30 * 24 * 60 * 60 * 1000 : durationHours * 60 * 60 * 1000
 
   const token = crypto.randomBytes(32).toString('hex')
   const csrfToken = crypto.randomBytes(32).toString('hex')
@@ -526,8 +521,7 @@ export async function getSession(token: string): Promise<SessionItem | null> {
   // Update lastActive on every request
   const now = new Date()
   const timeSinceLastActivity = session.lastActive
-    ? (now.getTime() - new Date(session.lastActive).getTime()) /
-      (1000 * 60 * 60) // hours
+    ? (now.getTime() - new Date(session.lastActive).getTime()) / (1000 * 60 * 60) // hours
     : 24
 
   // Update lastActive if it's been more than 1 minute
@@ -595,7 +589,7 @@ export async function revokeSession(token: string): Promise<void> {
 
 export async function revokeAllSessionsExcept(
   userId: string,
-  exceptToken: string,
+  exceptToken: string
 ): Promise<number> {
   await initDatabase()
   const sessions =
@@ -608,18 +602,12 @@ export async function revokeAllSessionsExcept(
     sessionsCollection?.remove(session)
   })
 
-  await addAuditLog(
-    'sessions_revoked',
-    { userId, count: sessions.length },
-    true,
-  )
+  await addAuditLog('sessions_revoked', { userId, count: sessions.length }, true)
 
   return sessions.length
 }
 
-export async function refreshSession(
-  token: string,
-): Promise<SessionItem | null> {
+export async function refreshSession(token: string): Promise<SessionItem | null> {
   await initDatabase()
   const session = sessionsCollection?.findOne({ token }) ?? null
 
@@ -661,9 +649,7 @@ export async function refreshSession(
  * fixation.  Deletes the old token, creates a new one with the same metadata,
  * and returns the new token + new CSRF token.
  */
-export async function rotateSession(
-  oldToken: string,
-): Promise<SessionItem | null> {
+export async function rotateSession(oldToken: string): Promise<SessionItem | null> {
   await initDatabase()
   const session = sessionsCollection?.findOne({ token: oldToken }) ?? null
   if (!session) return null
@@ -705,10 +691,7 @@ export async function getCachedProjectInfo(key: string): Promise<any> {
   const item = projectCacheCollection?.findOne({ key })
 
   // Check if cache is older than 5 minutes
-  if (
-    item &&
-    new Date().getTime() - new Date(item.cachedAt).getTime() > 5 * 60 * 1000
-  ) {
+  if (item && new Date().getTime() - new Date(item.cachedAt).getTime() > 5 * 60 * 1000) {
     projectCacheCollection?.remove(item)
     return null
   }
@@ -716,10 +699,7 @@ export async function getCachedProjectInfo(key: string): Promise<any> {
   return item?.value
 }
 
-export async function setCachedProjectInfo(
-  key: string,
-  value: any,
-): Promise<void> {
+export async function setCachedProjectInfo(key: string, value: any): Promise<void> {
   await initDatabase()
   const existing = projectCacheCollection?.findOne({ key })
 
@@ -741,7 +721,7 @@ export async function addAuditLog(
   action: string,
   details: any = {},
   success: boolean = true,
-  userId?: string,
+  userId?: string
 ): Promise<void> {
   await initDatabase()
 
@@ -757,7 +737,7 @@ export async function addAuditLog(
 export async function getAuditLogs(
   limit: number = 100,
   offset: number = 0,
-  filter?: { action?: string; userId?: string },
+  filter?: { action?: string; userId?: string }
 ): Promise<AuditLogItem[]> {
   await initDatabase()
 
@@ -837,10 +817,7 @@ export async function listTenants(): Promise<Tenant[]> {
   return tenantsCollection?.find() || []
 }
 
-export async function updateTenant(
-  id: string,
-  updates: Partial<Tenant>,
-): Promise<Tenant | null> {
+export async function updateTenant(id: string, updates: Partial<Tenant>): Promise<Tenant | null> {
   await initDatabase()
   const tenant = tenantsCollection?.findOne({ id })
   if (!tenant) return null
@@ -864,33 +841,22 @@ export async function deleteTenant(id: string): Promise<void> {
 // Organization Operations (with tenant isolation)
 // =============================================================================
 
-export async function createOrganization(
-  org: Organization,
-): Promise<Organization> {
+export async function createOrganization(org: Organization): Promise<Organization> {
   await initDatabase()
   const inserted = organizationsCollection?.insert(org)
   if (!inserted) throw new Error('Failed to create organization')
-  await addAuditLog(
-    'organization_created',
-    { tenantId: org.tenantId, orgId: org.id },
-    true,
-  )
+  await addAuditLog('organization_created', { tenantId: org.tenantId, orgId: org.id }, true)
   return inserted
 }
 
-export async function getOrganization(
-  id: string,
-  tenantId?: string,
-): Promise<Organization | null> {
+export async function getOrganization(id: string, tenantId?: string): Promise<Organization | null> {
   await initDatabase()
   const query: any = { id }
   if (tenantId) query.tenantId = tenantId
   return organizationsCollection?.findOne(query) || null
 }
 
-export async function listOrganizations(
-  tenantId?: string,
-): Promise<Organization[]> {
+export async function listOrganizations(tenantId?: string): Promise<Organization[]> {
   await initDatabase()
   const query = tenantId ? { tenantId } : {}
   return organizationsCollection?.find(query) || []
@@ -898,7 +864,7 @@ export async function listOrganizations(
 
 export async function listOrganizationsByParent(
   parentId: string,
-  tenantId?: string,
+  tenantId?: string
 ): Promise<Organization[]> {
   await initDatabase()
   const query: any = { parentId }
@@ -909,7 +875,7 @@ export async function listOrganizationsByParent(
 export async function updateOrganization(
   id: string,
   updates: Partial<Organization>,
-  tenantId?: string,
+  tenantId?: string
 ): Promise<Organization | null> {
   await initDatabase()
   const query: any = { id }
@@ -920,18 +886,11 @@ export async function updateOrganization(
 
   Object.assign(org, updates, { updatedAt: new Date().toISOString() })
   organizationsCollection?.update(org)
-  await addAuditLog(
-    'organization_updated',
-    { tenantId: org.tenantId, orgId: id },
-    true,
-  )
+  await addAuditLog('organization_updated', { tenantId: org.tenantId, orgId: id }, true)
   return org
 }
 
-export async function deleteOrganization(
-  id: string,
-  tenantId?: string,
-): Promise<void> {
+export async function deleteOrganization(id: string, tenantId?: string): Promise<void> {
   await initDatabase()
   const query: any = { id }
   if (tenantId) query.tenantId = tenantId
@@ -939,11 +898,7 @@ export async function deleteOrganization(
   const org = organizationsCollection?.findOne(query)
   if (org) {
     organizationsCollection?.remove(org)
-    await addAuditLog(
-      'organization_deleted',
-      { tenantId: org.tenantId, orgId: id },
-      true,
-    )
+    await addAuditLog('organization_deleted', { tenantId: org.tenantId, orgId: id }, true)
   }
 }
 
@@ -951,31 +906,24 @@ export async function deleteOrganization(
 // Tenant Member Operations
 // =============================================================================
 
-export async function createTenantMember(
-  member: TenantMember,
-): Promise<TenantMember> {
+export async function createTenantMember(member: TenantMember): Promise<TenantMember> {
   await initDatabase()
   const inserted = tenantMembersCollection?.insert(member)
   if (!inserted) throw new Error('Failed to add tenant member')
   await addAuditLog(
     'tenant_member_added',
     { tenantId: member.tenantId, userId: member.userId },
-    true,
+    true
   )
   return inserted
 }
 
-export async function getTenantMember(
-  id: string,
-  tenantId: string,
-): Promise<TenantMember | null> {
+export async function getTenantMember(id: string, tenantId: string): Promise<TenantMember | null> {
   await initDatabase()
   return tenantMembersCollection?.findOne({ id, tenantId }) || null
 }
 
-export async function listTenantMembers(
-  tenantId: string,
-): Promise<TenantMember[]> {
+export async function listTenantMembers(tenantId: string): Promise<TenantMember[]> {
   await initDatabase()
   return tenantMembersCollection?.find({ tenantId }) || []
 }
@@ -983,7 +931,7 @@ export async function listTenantMembers(
 export async function updateTenantMember(
   id: string,
   tenantId: string,
-  updates: Partial<TenantMember>,
+  updates: Partial<TenantMember>
 ): Promise<TenantMember | null> {
   await initDatabase()
   const member = tenantMembersCollection?.findOne({ id, tenantId })
@@ -991,27 +939,16 @@ export async function updateTenantMember(
 
   Object.assign(member, updates)
   tenantMembersCollection?.update(member)
-  await addAuditLog(
-    'tenant_member_updated',
-    { tenantId, userId: member.userId },
-    true,
-  )
+  await addAuditLog('tenant_member_updated', { tenantId, userId: member.userId }, true)
   return member
 }
 
-export async function deleteTenantMember(
-  id: string,
-  tenantId: string,
-): Promise<void> {
+export async function deleteTenantMember(id: string, tenantId: string): Promise<void> {
   await initDatabase()
   const member = tenantMembersCollection?.findOne({ id, tenantId })
   if (member) {
     tenantMembersCollection?.remove(member)
-    await addAuditLog(
-      'tenant_member_removed',
-      { tenantId, userId: member.userId },
-      true,
-    )
+    await addAuditLog('tenant_member_removed', { tenantId, userId: member.userId }, true)
   }
 }
 
@@ -1023,18 +960,11 @@ export async function createOrgMember(member: OrgMember): Promise<OrgMember> {
   await initDatabase()
   const inserted = orgMembersCollection?.insert(member)
   if (!inserted) throw new Error('Failed to add org member')
-  await addAuditLog(
-    'org_member_added',
-    { orgId: member.orgId, userId: member.userId },
-    true,
-  )
+  await addAuditLog('org_member_added', { orgId: member.orgId, userId: member.userId }, true)
   return inserted
 }
 
-export async function getOrgMember(
-  id: string,
-  orgId: string,
-): Promise<OrgMember | null> {
+export async function getOrgMember(id: string, orgId: string): Promise<OrgMember | null> {
   await initDatabase()
   return orgMembersCollection?.findOne({ id, orgId }) || null
 }
@@ -1047,7 +977,7 @@ export async function listOrgMembers(orgId: string): Promise<OrgMember[]> {
 export async function updateOrgMember(
   id: string,
   orgId: string,
-  updates: Partial<OrgMember>,
+  updates: Partial<OrgMember>
 ): Promise<OrgMember | null> {
   await initDatabase()
   const member = orgMembersCollection?.findOne({ id, orgId })
@@ -1055,27 +985,16 @@ export async function updateOrgMember(
 
   Object.assign(member, updates)
   orgMembersCollection?.update(member)
-  await addAuditLog(
-    'org_member_updated',
-    { orgId, userId: member.userId },
-    true,
-  )
+  await addAuditLog('org_member_updated', { orgId, userId: member.userId }, true)
   return member
 }
 
-export async function deleteOrgMember(
-  id: string,
-  orgId: string,
-): Promise<void> {
+export async function deleteOrgMember(id: string, orgId: string): Promise<void> {
   await initDatabase()
   const member = orgMembersCollection?.findOne({ id, orgId })
   if (member) {
     orgMembersCollection?.remove(member)
-    await addAuditLog(
-      'org_member_removed',
-      { orgId, userId: member.userId },
-      true,
-    )
+    await addAuditLog('org_member_removed', { orgId, userId: member.userId }, true)
   }
 }
 
@@ -1087,11 +1006,7 @@ export async function createTeam(team: Team): Promise<Team> {
   await initDatabase()
   const inserted = teamsCollection?.insert(team)
   if (!inserted) throw new Error('Failed to create team')
-  await addAuditLog(
-    'team_created',
-    { orgId: team.orgId, teamId: team.id },
-    true,
-  )
+  await addAuditLog('team_created', { orgId: team.orgId, teamId: team.id }, true)
   return inserted
 }
 
@@ -1108,7 +1023,7 @@ export async function listTeams(orgId: string): Promise<Team[]> {
 export async function updateTeam(
   id: string,
   orgId: string,
-  updates: Partial<Team>,
+  updates: Partial<Team>
 ): Promise<Team | null> {
   await initDatabase()
   const team = teamsCollection?.findOne({ id, orgId })
@@ -1133,31 +1048,23 @@ export async function deleteTeam(id: string, orgId: string): Promise<void> {
 // Tenant Domain Operations
 // =============================================================================
 
-export async function createTenantDomain(
-  domain: TenantDomain,
-): Promise<TenantDomain> {
+export async function createTenantDomain(domain: TenantDomain): Promise<TenantDomain> {
   await initDatabase()
   const inserted = tenantDomainsCollection?.insert(domain)
   if (!inserted) throw new Error('Failed to add domain')
-  await addAuditLog(
-    'domain_added',
-    { tenantId: domain.tenantId, domain: domain.domain },
-    true,
-  )
+  await addAuditLog('domain_added', { tenantId: domain.tenantId, domain: domain.domain }, true)
   return inserted
 }
 
 export async function getTenantDomain(
   domain: string,
-  tenantId: string,
+  tenantId: string
 ): Promise<TenantDomain | null> {
   await initDatabase()
   return tenantDomainsCollection?.findOne({ domain, tenantId }) || null
 }
 
-export async function listTenantDomains(
-  tenantId: string,
-): Promise<TenantDomain[]> {
+export async function listTenantDomains(tenantId: string): Promise<TenantDomain[]> {
   await initDatabase()
   return tenantDomainsCollection?.find({ tenantId }) || []
 }
@@ -1165,7 +1072,7 @@ export async function listTenantDomains(
 export async function updateTenantDomain(
   domain: string,
   tenantId: string,
-  updates: Partial<TenantDomain>,
+  updates: Partial<TenantDomain>
 ): Promise<TenantDomain | null> {
   await initDatabase()
   const domainRecord = tenantDomainsCollection?.findOne({ domain, tenantId })
@@ -1177,10 +1084,7 @@ export async function updateTenantDomain(
   return domainRecord
 }
 
-export async function deleteTenantDomain(
-  domain: string,
-  tenantId: string,
-): Promise<void> {
+export async function deleteTenantDomain(domain: string, tenantId: string): Promise<void> {
   await initDatabase()
   const domainRecord = tenantDomainsCollection?.findOne({ domain, tenantId })
   if (domainRecord) {
@@ -1196,9 +1100,7 @@ export async function deleteTenantDomain(
 /**
  * Update or create user presence
  */
-export async function updateUserPresence(
-  presence: UserPresenceItem,
-): Promise<void> {
+export async function updateUserPresence(presence: UserPresenceItem): Promise<void> {
   await initDatabase()
   const existing = userPresenceCollection?.findOne({ userId: presence.userId })
 
@@ -1225,9 +1127,7 @@ export async function getOnlineUsers(): Promise<UserPresenceItem[]> {
 /**
  * Get presence for specific user
  */
-export async function getUserPresence(
-  userId: string,
-): Promise<UserPresenceItem | null> {
+export async function getUserPresence(userId: string): Promise<UserPresenceItem | null> {
   await initDatabase()
   return userPresenceCollection?.findOne({ userId }) || null
 }
@@ -1248,9 +1148,7 @@ export async function removeUserPresence(userId: string): Promise<void> {
 /**
  * Get or create document state
  */
-export async function getDocumentState(
-  documentId: string,
-): Promise<DocumentStateItem | null> {
+export async function getDocumentState(documentId: string): Promise<DocumentStateItem | null> {
   await initDatabase()
   return documentStateCollection?.findOne({ documentId }) || null
 }
@@ -1260,7 +1158,7 @@ export async function getDocumentState(
  */
 export async function createDocumentState(
   documentId: string,
-  content: string,
+  content: string
 ): Promise<DocumentStateItem> {
   await initDatabase()
   const docState: DocumentStateItem = {
@@ -1288,7 +1186,7 @@ export async function applyDocumentOperation(
     text?: string
     length?: number
     version: number
-  },
+  }
 ): Promise<DocumentStateItem | null> {
   await initDatabase()
   const docState = documentStateCollection?.findOne({ documentId })
@@ -1310,7 +1208,7 @@ export async function applyDocumentOperation(
     operation.type,
     operation.position,
     operation.text,
-    operation.length,
+    operation.length
   )
 
   documentStateCollection?.update(docState)
@@ -1326,7 +1224,7 @@ function applyOperationToContent(
   type: 'insert' | 'delete' | 'replace',
   position: { line: number; column: number },
   text?: string,
-  length?: number,
+  length?: number
 ): string {
   const lines = content.split('\n')
 
@@ -1349,8 +1247,7 @@ function applyOperationToContent(
       lines[position.line] = before + after.substring(length || 0)
       break
     case 'replace':
-      lines[position.line] =
-        before + (text || '') + after.substring(length || 0)
+      lines[position.line] = before + (text || '') + after.substring(length || 0)
       break
   }
 
@@ -1360,10 +1257,7 @@ function applyOperationToContent(
 /**
  * Lock document for editing
  */
-export async function lockDocument(
-  documentId: string,
-  userId: string,
-): Promise<boolean> {
+export async function lockDocument(documentId: string, userId: string): Promise<boolean> {
   await initDatabase()
   const docState = documentStateCollection?.findOne({ documentId })
   if (!docState) return false
@@ -1380,10 +1274,7 @@ export async function lockDocument(
 /**
  * Unlock document
  */
-export async function unlockDocument(
-  documentId: string,
-  userId: string,
-): Promise<boolean> {
+export async function unlockDocument(documentId: string, userId: string): Promise<boolean> {
   await initDatabase()
   const docState = documentStateCollection?.findOne({ documentId })
   if (!docState) return false
@@ -1400,9 +1291,7 @@ export async function unlockDocument(
 /**
  * Update cursor position for user
  */
-export async function updateCursorPosition(
-  cursor: CollaborationCursorItem,
-): Promise<void> {
+export async function updateCursorPosition(cursor: CollaborationCursorItem): Promise<void> {
   await initDatabase()
   const existing = collaborationCursorCollection
     ?.chain()
@@ -1423,9 +1312,7 @@ export async function updateCursorPosition(
 /**
  * Get all cursors for a document
  */
-export async function getDocumentCursors(
-  documentId: string,
-): Promise<CollaborationCursorItem[]> {
+export async function getDocumentCursors(documentId: string): Promise<CollaborationCursorItem[]> {
   await initDatabase()
   return collaborationCursorCollection?.find({ documentId }) || []
 }
@@ -1433,15 +1320,9 @@ export async function getDocumentCursors(
 /**
  * Remove cursor (on user disconnect or leave document)
  */
-export async function removeCursor(
-  userId: string,
-  documentId: string,
-): Promise<void> {
+export async function removeCursor(userId: string, documentId: string): Promise<void> {
   await initDatabase()
-  const cursor = collaborationCursorCollection
-    ?.chain()
-    .find({ userId, documentId })
-    .data()[0]
+  const cursor = collaborationCursorCollection?.chain().find({ userId, documentId }).data()[0]
   if (cursor) {
     collaborationCursorCollection?.remove(cursor)
   }

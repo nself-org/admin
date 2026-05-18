@@ -75,43 +75,43 @@ function categoryIcon(cat: ComponentStatus['category']) {
 function OverallBanner({ overall }: { overall: StatusData['overall'] }) {
   if (overall === 'operational') {
     return (
-      <div className="flex items-center gap-4 p-5 rounded-xl bg-green-500/10 border border-green-500/30">
-        <CheckCircle className="h-7 w-7 text-green-400 flex-shrink-0" />
+      <div className="flex items-center gap-4 rounded-xl border border-green-500/30 bg-green-500/10 p-5">
+        <CheckCircle className="h-7 w-7 flex-shrink-0 text-green-400" />
         <div>
           <p className="text-lg font-semibold text-green-400">All systems operational</p>
-          <p className="text-sm text-gray-400 mt-0.5">Every component is running normally.</p>
+          <p className="mt-0.5 text-sm text-gray-400">Every component is running normally.</p>
         </div>
       </div>
     )
   }
   if (overall === 'degraded') {
     return (
-      <div className="flex items-center gap-4 p-5 rounded-xl bg-yellow-500/10 border border-yellow-500/30">
-        <AlertTriangle className="h-7 w-7 text-yellow-400 flex-shrink-0" />
+      <div className="flex items-center gap-4 rounded-xl border border-yellow-500/30 bg-yellow-500/10 p-5">
+        <AlertTriangle className="h-7 w-7 flex-shrink-0 text-yellow-400" />
         <div>
           <p className="text-lg font-semibold text-yellow-400">Partial system degradation</p>
-          <p className="text-sm text-gray-400 mt-0.5">Some components are experiencing issues.</p>
+          <p className="mt-0.5 text-sm text-gray-400">Some components are experiencing issues.</p>
         </div>
       </div>
     )
   }
   if (overall === 'major_outage') {
     return (
-      <div className="flex items-center gap-4 p-5 rounded-xl bg-red-500/10 border border-red-500/30">
-        <XCircle className="h-7 w-7 text-red-400 flex-shrink-0" />
+      <div className="flex items-center gap-4 rounded-xl border border-red-500/30 bg-red-500/10 p-5">
+        <XCircle className="h-7 w-7 flex-shrink-0 text-red-400" />
         <div>
           <p className="text-lg font-semibold text-red-400">Major outage in progress</p>
-          <p className="text-sm text-gray-400 mt-0.5">Critical components are unavailable.</p>
+          <p className="mt-0.5 text-sm text-gray-400">Critical components are unavailable.</p>
         </div>
       </div>
     )
   }
   return (
-    <div className="flex items-center gap-4 p-5 rounded-xl bg-blue-500/10 border border-blue-500/30">
-      <Clock className="h-7 w-7 text-blue-400 flex-shrink-0" />
+    <div className="flex items-center gap-4 rounded-xl border border-blue-500/30 bg-blue-500/10 p-5">
+      <Clock className="h-7 w-7 flex-shrink-0 text-blue-400" />
       <div>
         <p className="text-lg font-semibold text-blue-400">Scheduled maintenance</p>
-        <p className="text-sm text-gray-400 mt-0.5">System maintenance is in progress.</p>
+        <p className="mt-0.5 text-sm text-gray-400">System maintenance is in progress.</p>
       </div>
     </div>
   )
@@ -120,9 +120,9 @@ function OverallBanner({ overall }: { overall: StatusData['overall'] }) {
 function UptimePill({ label, value }: { label: string; value: number }) {
   const color = value >= 99.9 ? 'text-green-400' : value >= 99 ? 'text-yellow-400' : 'text-red-400'
   return (
-    <div className="text-center px-4 py-2 rounded-lg bg-white/[0.03] border border-white/10">
+    <div className="rounded-lg border border-white/10 bg-white/[0.03] px-4 py-2 text-center">
       <p className={`text-lg font-bold ${color}`}>{value.toFixed(2)}%</p>
-      <p className="text-xs text-gray-500 mt-0.5">{label}</p>
+      <p className="mt-0.5 text-xs text-gray-500">{label}</p>
     </div>
   )
 }
@@ -183,18 +183,18 @@ function StatusContent() {
   // State 5: offline
   if (offline) {
     return (
-      <div className="p-6 space-y-4">
-        <div className="flex items-center gap-3 p-4 rounded-lg bg-yellow-500/10 border border-yellow-500/30">
-          <WifiOff className="h-5 w-5 text-yellow-500 flex-shrink-0" />
+      <div className="space-y-4 p-6">
+        <div className="flex items-center gap-3 rounded-lg border border-yellow-500/30 bg-yellow-500/10 p-4">
+          <WifiOff className="h-5 w-5 flex-shrink-0 text-yellow-500" />
           <div>
             <p className="font-medium text-yellow-400">Cannot reach backend</p>
-            <p className="text-sm text-gray-400 mt-0.5">
+            <p className="mt-0.5 text-sm text-gray-400">
               Status monitoring requires a running nself stack.
             </p>
           </div>
         </div>
         <Button onClick={fetchStatus} disabled={loading} variant="secondary" size="sm">
-          <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
+          <RefreshCw className={`mr-2 h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
           Retry
         </Button>
       </div>
@@ -204,16 +204,16 @@ function StatusContent() {
   // State 4: error
   if (error && !data) {
     return (
-      <div className="p-6 space-y-4">
-        <div className="flex items-center gap-3 p-4 rounded-lg bg-red-500/10 border border-red-500/30">
-          <AlertTriangle className="h-5 w-5 text-red-400 flex-shrink-0" />
+      <div className="space-y-4 p-6">
+        <div className="flex items-center gap-3 rounded-lg border border-red-500/30 bg-red-500/10 p-4">
+          <AlertTriangle className="h-5 w-5 flex-shrink-0 text-red-400" />
           <div>
             <p className="font-medium text-red-400">Failed to load status</p>
-            <p className="text-sm text-gray-400 mt-0.5">{error}</p>
+            <p className="mt-0.5 text-sm text-gray-400">{error}</p>
           </div>
         </div>
         <Button onClick={fetchStatus} disabled={loading} variant="secondary" size="sm">
-          <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
+          <RefreshCw className={`mr-2 h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
           Retry
         </Button>
       </div>
@@ -224,10 +224,16 @@ function StatusContent() {
   if (!data) {
     return (
       <div className="p-6 text-center text-gray-400">
-        <Server className="h-8 w-8 mx-auto mb-2 opacity-50" />
+        <Server className="mx-auto mb-2 h-8 w-8 opacity-50" />
         <p>No status data available.</p>
-        <Button onClick={fetchStatus} disabled={loading} variant="secondary" size="sm" className="mt-3">
-          <RefreshCw className="h-4 w-4 mr-2" />
+        <Button
+          onClick={fetchStatus}
+          disabled={loading}
+          variant="secondary"
+          size="sm"
+          className="mt-3"
+        >
+          <RefreshCw className="mr-2 h-4 w-4" />
           Load Status
         </Button>
       </div>
@@ -242,17 +248,17 @@ function StatusContent() {
 
   // States 6+7: success
   return (
-    <div className="p-6 space-y-6">
+    <div className="space-y-6 p-6">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-xl font-semibold text-white">System Status</h2>
-          <p className="text-sm text-gray-400 mt-1">
+          <p className="mt-1 text-sm text-gray-400">
             {data.components.length} components monitored
           </p>
         </div>
         <Button onClick={fetchStatus} disabled={loading} variant="secondary" size="sm">
-          <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
+          <RefreshCw className={`mr-2 h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
           {loading ? 'Checking…' : 'Refresh'}
         </Button>
       </div>
@@ -270,24 +276,24 @@ function StatusContent() {
       {/* Component groups */}
       {grouped.map(({ cat, components }) => (
         <div key={cat} className="space-y-2">
-          <h3 className="text-xs font-semibold uppercase tracking-wide text-gray-500 flex items-center gap-2">
+          <h3 className="flex items-center gap-2 text-xs font-semibold tracking-wide text-gray-500 uppercase">
             {categoryIcon(cat)}
             {CATEGORY_LABELS[cat]}
           </h3>
-          <div className="rounded-lg border border-white/10 overflow-hidden divide-y divide-white/5">
+          <div className="divide-y divide-white/5 overflow-hidden rounded-lg border border-white/10">
             {components.map((comp) => (
               <div
                 key={comp.id}
-                className="flex items-center gap-3 px-4 py-3 bg-white/[0.01] hover:bg-white/[0.03] transition-colors"
+                className="flex items-center gap-3 bg-white/[0.01] px-4 py-3 transition-colors hover:bg-white/[0.03]"
               >
                 {statusIcon(comp.status)}
-                <div className="flex-1 min-w-0">
+                <div className="min-w-0 flex-1">
                   <p className="text-sm font-medium text-white">{comp.name}</p>
                   {comp.description && (
-                    <p className="text-xs text-gray-500 truncate">{comp.description}</p>
+                    <p className="truncate text-xs text-gray-500">{comp.description}</p>
                   )}
                 </div>
-                <div className="text-right flex-shrink-0 space-y-0.5">
+                <div className="flex-shrink-0 space-y-0.5 text-right">
                   <p className={`text-xs font-medium ${statusColor(comp.status)}`}>
                     {statusLabel(comp.status)}
                   </p>

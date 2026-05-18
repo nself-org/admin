@@ -17,7 +17,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         error: 'Rate limit exceeded',
         retryAfter: Math.ceil((info.resetTime - Date.now()) / 1000),
       },
-      { status: 429 },
+      { status: 429 }
     )
   }
 
@@ -33,14 +33,14 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           error: 'Validation failed',
           details: validation.errors.format(),
         },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
     const { query, database, timeout: rawTimeout = 30000 } = validation.data
     const timeout = Math.max(
       1000,
-      Math.min(typeof rawTimeout === 'number' ? rawTimeout : 30000, 300000),
+      Math.min(typeof rawTimeout === 'number' ? rawTimeout : 30000, 300000)
     )
 
     // Execute query using nself CLI
@@ -56,7 +56,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           error: result.error || 'Query execution failed',
           stderr: result.stderr,
         },
-        { status: 500 },
+        { status: 500 }
       )
     }
 
@@ -90,7 +90,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         error: 'Query execution failed',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -107,7 +107,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
           success: false,
           error: 'Failed to fetch databases',
         },
-        { status: 500 },
+        { status: 500 }
       )
     }
 
@@ -123,7 +123,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         success: false,
         error: 'Failed to fetch databases',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

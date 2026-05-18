@@ -6,10 +6,7 @@ interface RouteParams {
   params: Promise<{ id: string; uid: string }>
 }
 
-export async function PUT(
-  request: NextRequest,
-  { params }: RouteParams,
-): Promise<NextResponse> {
+export async function PUT(request: NextRequest, { params }: RouteParams): Promise<NextResponse> {
   const authError = await requireAuth(request)
   if (authError) return authError
 
@@ -19,10 +16,7 @@ export async function PUT(
     const { role } = body
 
     if (!role) {
-      return NextResponse.json(
-        { success: false, error: 'Role is required' },
-        { status: 400 },
-      )
+      return NextResponse.json({ success: false, error: 'Role is required' }, { status: 400 })
     }
 
     const result = await executeNselfCommand('tenant', [
@@ -41,7 +35,7 @@ export async function PUT(
           error: 'Failed to update member role',
           details: result.error || result.stderr || 'Unknown error',
         },
-        { status: 500 },
+        { status: 500 }
       )
     }
 
@@ -56,15 +50,12 @@ export async function PUT(
         error: 'Failed to update member role',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
 
-export async function DELETE(
-  request: NextRequest,
-  { params }: RouteParams,
-): Promise<NextResponse> {
+export async function DELETE(request: NextRequest, { params }: RouteParams): Promise<NextResponse> {
   const authError = await requireAuth(request)
   if (authError) return authError
 
@@ -85,7 +76,7 @@ export async function DELETE(
           error: 'Failed to remove member',
           details: result.error || result.stderr || 'Unknown error',
         },
-        { status: 500 },
+        { status: 500 }
       )
     }
 
@@ -100,7 +91,7 @@ export async function DELETE(
         error: 'Failed to remove member',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

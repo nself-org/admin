@@ -24,19 +24,13 @@ interface RouteParams {
  * GET /api/cloud/servers/[name] - Get server status
  * Executes: nself cloud server status {name} --json
  */
-export async function GET(
-  request: NextRequest,
-  { params }: RouteParams,
-): Promise<NextResponse> {
+export async function GET(request: NextRequest, { params }: RouteParams): Promise<NextResponse> {
   const startTime = Date.now()
   const { name } = await params
 
   // Validate name parameter
   if (!validateSafeName(name)) {
-    return NextResponse.json(
-      { success: false, error: 'Invalid server name' },
-      { status: 400 },
-    )
+    return NextResponse.json({ success: false, error: 'Invalid server name' }, { status: 400 })
   }
 
   try {
@@ -51,7 +45,7 @@ export async function GET(
         cwd: projectPath,
         env: { ...process.env, PATH: getEnhancedPath() },
         timeout: 30000,
-      },
+      }
     )
 
     let server: CloudServer | null = null
@@ -63,11 +57,7 @@ export async function GET(
       logger.warn('Failed to parse server status JSON', { stdout })
     }
 
-    logger.cli(
-      `nself cloud server status ${name} --json`,
-      true,
-      Date.now() - startTime,
-    )
+    logger.cli(`nself cloud server status ${name} --json`, true, Date.now() - startTime)
 
     return NextResponse.json({
       success: true,
@@ -81,11 +71,7 @@ export async function GET(
       stderr?: string
     }
 
-    logger.cli(
-      `nself cloud server status ${name}`,
-      false,
-      Date.now() - startTime,
-    )
+    logger.cli(`nself cloud server status ${name}`, false, Date.now() - startTime)
     logger.error('Failed to get server status', {
       server: name,
       error: execError.message,
@@ -99,7 +85,7 @@ export async function GET(
         stdout: execError.stdout || '',
         stderr: execError.stderr || '',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -108,10 +94,7 @@ export async function GET(
  * DELETE /api/cloud/servers/[name] - Destroy server
  * Executes: nself cloud server destroy {name}
  */
-export async function DELETE(
-  request: NextRequest,
-  { params }: RouteParams,
-): Promise<NextResponse> {
+export async function DELETE(request: NextRequest, { params }: RouteParams): Promise<NextResponse> {
   const authError = await requireAuth(request)
   if (authError) return authError
 
@@ -120,10 +103,7 @@ export async function DELETE(
 
   // Validate name parameter
   if (!validateSafeName(name)) {
-    return NextResponse.json(
-      { success: false, error: 'Invalid server name' },
-      { status: 400 },
-    )
+    return NextResponse.json({ success: false, error: 'Invalid server name' }, { status: 400 })
   }
 
   try {
@@ -138,14 +118,10 @@ export async function DELETE(
         cwd: projectPath,
         env: { ...process.env, PATH: getEnhancedPath() },
         timeout: 120000, // 2 minute timeout for destruction
-      },
+      }
     )
 
-    logger.cli(
-      `nself cloud server destroy ${name} --yes`,
-      true,
-      Date.now() - startTime,
-    )
+    logger.cli(`nself cloud server destroy ${name} --yes`, true, Date.now() - startTime)
 
     return NextResponse.json({
       success: true,
@@ -160,11 +136,7 @@ export async function DELETE(
       stderr?: string
     }
 
-    logger.cli(
-      `nself cloud server destroy ${name}`,
-      false,
-      Date.now() - startTime,
-    )
+    logger.cli(`nself cloud server destroy ${name}`, false, Date.now() - startTime)
     logger.error('Failed to destroy server', {
       server: name,
       error: execError.message,
@@ -178,7 +150,7 @@ export async function DELETE(
         stdout: execError.stdout || '',
         stderr: execError.stderr || '',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

@@ -35,10 +35,7 @@ function PluginStatusBadge({ status }: { status: string }) {
   const label = statusLabels[status] ?? status
 
   return (
-    <span
-      data-testid="plugin-status-badge"
-      className={`rounded-full px-2 py-0.5 text-xs ${color}`}
-    >
+    <span data-testid="plugin-status-badge" className={`rounded-full px-2 py-0.5 text-xs ${color}`}>
       {label}
     </span>
   )
@@ -77,10 +74,7 @@ function DlqBadge() {
   if (count === null) return <span data-testid="dlq-badge-loading">…</span>
 
   return (
-    <span
-      data-testid="dlq-badge"
-      className="rounded-full bg-red-500 px-2 text-xs text-white"
-    >
+    <span data-testid="dlq-badge" className="rounded-full bg-red-500 px-2 text-xs text-white">
       {count}
     </span>
   )
@@ -147,9 +141,7 @@ describe('PluginConfigForm', () => {
 
     await user.click(screen.getByRole('button', { name: /save/i }))
 
-    expect(screen.getByTestId('validation-error')).toHaveTextContent(
-      'API Key is required',
-    )
+    expect(screen.getByTestId('validation-error')).toHaveTextContent('API Key is required')
     expect(onSubmit).not.toHaveBeenCalled()
   })
 })

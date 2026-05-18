@@ -58,10 +58,7 @@ function TreeItem({ node, depth = 0 }: { node: TreeNode; depth?: number }) {
           role="treeitem"
           aria-expanded={true}
         >
-          <FolderOpen
-            className="h-3.5 w-3.5 flex-shrink-0 text-yellow-500/70"
-            aria-hidden="true"
-          />
+          <FolderOpen className="h-3.5 w-3.5 flex-shrink-0 text-yellow-500/70" aria-hidden="true" />
           <span className="text-xs font-medium">{node.name}/</span>
         </div>
         {node.children && node.children.length > 0 && (
@@ -81,27 +78,19 @@ function TreeItem({ node, depth = 0 }: { node: TreeNode; depth?: number }) {
       className="flex cursor-default items-center gap-1.5 rounded px-1 py-0.5 text-zinc-300 transition-colors hover:bg-zinc-800/50 hover:text-white"
       style={{ paddingLeft: indent + 8 }}
     >
-      <File
-        className="h-3.5 w-3.5 flex-shrink-0 text-sky-400/70"
-        aria-hidden="true"
-      />
+      <File className="h-3.5 w-3.5 flex-shrink-0 text-sky-400/70" aria-hidden="true" />
       <span className="font-mono text-xs">{node.name}</span>
     </li>
   )
 }
 
 export function FileTree({ generation }: FileTreeProps) {
-  const hasFiles =
-    generation?.ui_files && Object.keys(generation.ui_files).length > 0
+  const hasFiles = generation?.ui_files && Object.keys(generation.ui_files).length > 0
   const hasMigration = Boolean(generation?.migration_sql)
   const hasPermissions = Boolean(generation?.permissions_json)
 
   return (
-    <section
-      role="region"
-      aria-label="File tree"
-      className="flex h-full flex-col"
-    >
+    <section role="region" aria-label="File tree" className="flex h-full flex-col">
       <h2 className="border-b border-zinc-800 px-4 py-3 text-sm font-semibold text-zinc-100">
         Generated Files
       </h2>
@@ -114,14 +103,8 @@ export function FileTree({ generation }: FileTreeProps) {
         ) : (
           <ul role="tree" aria-label="Generated files" className="space-y-0.5">
             {hasMigration && (
-              <li
-                role="treeitem"
-                className="flex items-center gap-1.5 px-2 py-0.5 text-zinc-300"
-              >
-                <File
-                  className="h-3.5 w-3.5 flex-shrink-0 text-amber-400/70"
-                  aria-hidden="true"
-                />
+              <li role="treeitem" className="flex items-center gap-1.5 px-2 py-0.5 text-zinc-300">
+                <File className="h-3.5 w-3.5 flex-shrink-0 text-amber-400/70" aria-hidden="true" />
                 <span className="font-mono text-xs">migration.sql</span>
                 <span className="ml-auto rounded bg-amber-500/10 px-1 text-xs text-amber-500/70">
                   SQL
@@ -129,14 +112,8 @@ export function FileTree({ generation }: FileTreeProps) {
               </li>
             )}
             {hasPermissions && (
-              <li
-                role="treeitem"
-                className="flex items-center gap-1.5 px-2 py-0.5 text-zinc-300"
-              >
-                <File
-                  className="h-3.5 w-3.5 flex-shrink-0 text-purple-400/70"
-                  aria-hidden="true"
-                />
+              <li role="treeitem" className="flex items-center gap-1.5 px-2 py-0.5 text-zinc-300">
+                <File className="h-3.5 w-3.5 flex-shrink-0 text-purple-400/70" aria-hidden="true" />
                 <span className="font-mono text-xs">permissions.json</span>
                 <span className="ml-auto rounded bg-purple-500/10 px-1 text-xs text-purple-500/70">
                   JSON
@@ -155,9 +132,7 @@ export function FileTree({ generation }: FileTreeProps) {
       {generation && (
         <div className="border-t border-zinc-800 p-3">
           <div className="space-y-0.5 text-xs text-zinc-500">
-            {generation.tokens_used && (
-              <p>Tokens: {generation.tokens_used.toLocaleString()}</p>
-            )}
+            {generation.tokens_used && <p>Tokens: {generation.tokens_used.toLocaleString()}</p>}
             <p className="font-mono text-zinc-600">{generation.ai_model}</p>
           </div>
         </div>

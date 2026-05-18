@@ -24,9 +24,7 @@ function K8sScalePageContent() {
   const initialDeployment = searchParams.get('deployment') || ''
 
   const [selectedDeployment] = useState(initialDeployment)
-  const [targetReplicas, setTargetReplicas] = useState<Record<string, number>>(
-    {},
-  )
+  const [targetReplicas, setTargetReplicas] = useState<Record<string, number>>({})
   const [scaling, setScaling] = useState<string | null>(null)
   const [scaleResult, setScaleResult] = useState<{
     deployment: string
@@ -48,14 +46,11 @@ function K8sScalePageContent() {
     setScaleResult(null)
 
     try {
-      const res = await fetch(
-        `/api/k8s/deployments/${encodeURIComponent(deploymentName)}/scale`,
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ replicas: target }),
-        },
-      )
+      const res = await fetch(`/api/k8s/deployments/${encodeURIComponent(deploymentName)}/scale`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ replicas: target }),
+      })
       if (!res.ok) throw new Error(`HTTP ${res.status}`)
       setScaleResult({
         deployment: deploymentName,
@@ -67,10 +62,7 @@ function K8sScalePageContent() {
       setScaleResult({
         deployment: deploymentName,
         success: false,
-        message:
-          err instanceof Error
-            ? err.message
-            : `Failed to scale ${deploymentName}`,
+        message: err instanceof Error ? err.message : `Failed to scale ${deploymentName}`,
       })
     } finally {
       setScaling(null)
@@ -88,9 +80,7 @@ function K8sScalePageContent() {
     return (
       <div className="space-y-6">
         <div>
-          <h1 className="text-2xl font-semibold text-white">
-            Scale Deployments
-          </h1>
+          <h1 className="text-2xl font-semibold text-white">Scale Deployments</h1>
           <p className="text-sm text-zinc-400">Loading...</p>
         </div>
         <div className="animate-pulse space-y-4">
@@ -106,15 +96,11 @@ function K8sScalePageContent() {
     return (
       <div className="space-y-6">
         <div>
-          <h1 className="text-2xl font-semibold text-white">
-            Scale Deployments
-          </h1>
+          <h1 className="text-2xl font-semibold text-white">Scale Deployments</h1>
         </div>
         <div className="rounded-lg border border-red-500/30 bg-red-900/20 p-6">
           <p className="text-red-400">
-            {error instanceof Error
-              ? error.message
-              : 'Failed to load deployments'}
+            {error instanceof Error ? error.message : 'Failed to load deployments'}
           </p>
           <button
             onClick={() => mutate()}
@@ -131,9 +117,7 @@ function K8sScalePageContent() {
     return (
       <div className="space-y-6">
         <div>
-          <h1 className="text-2xl font-semibold text-white">
-            Scale Deployments
-          </h1>
+          <h1 className="text-2xl font-semibold text-white">Scale Deployments</h1>
         </div>
         <div className="rounded-lg border border-zinc-700/50 bg-zinc-800/50 p-12 text-center">
           <AlertCircle className="mx-auto mb-4 h-10 w-10 text-zinc-500" />
@@ -158,12 +142,8 @@ function K8sScalePageContent() {
             <ArrowLeft className="h-5 w-5" />
           </Link>
           <div>
-            <h1 className="text-2xl font-semibold text-white">
-              Scale Deployments
-            </h1>
-            <p className="text-sm text-zinc-400">
-              Adjust replica counts for your deployments
-            </p>
+            <h1 className="text-2xl font-semibold text-white">Scale Deployments</h1>
+            <p className="text-sm text-zinc-400">Adjust replica counts for your deployments</p>
           </div>
         </div>
 
@@ -199,8 +179,7 @@ function K8sScalePageContent() {
         {deployments.map((deployment) => {
           const currentReplicas = getReplicaCount(deployment)
           const changed = hasChanges(deployment)
-          const isHealthy =
-            deployment.replicas.ready === deployment.replicas.desired
+          const isHealthy = deployment.replicas.ready === deployment.replicas.desired
 
           return (
             <div
@@ -219,9 +198,7 @@ function K8sScalePageContent() {
                     <Layers className="h-5 w-5 text-blue-400" />
                   </div>
                   <div>
-                    <h3 className="font-medium text-white">
-                      {deployment.name}
-                    </h3>
+                    <h3 className="font-medium text-white">{deployment.name}</h3>
                     <p className="text-sm text-zinc-400">{deployment.image}</p>
                   </div>
                 </div>
@@ -255,20 +232,14 @@ function K8sScalePageContent() {
                   <div
                     className="h-2 rounded-full bg-blue-500 transition-all"
                     style={{
-                      width: `${
-                        (deployment.replicas.ready /
-                          deployment.replicas.desired) *
-                        100
-                      }%`,
+                      width: `${(deployment.replicas.ready / deployment.replicas.desired) * 100}%`,
                     }}
                   />
                 </div>
               </div>
 
               <div className="mb-4">
-                <label className="mb-2 block text-sm text-zinc-400">
-                  Target Replicas
-                </label>
+                <label className="mb-2 block text-sm text-zinc-400">Target Replicas</label>
                 <div className="flex items-center gap-3">
                   <button
                     onClick={() =>
@@ -291,10 +262,7 @@ function K8sScalePageContent() {
                     onChange={(e) =>
                       setTargetReplicas((prev) => ({
                         ...prev,
-                        [deployment.name]: Math.max(
-                          0,
-                          Math.min(20, parseInt(e.target.value) || 0),
-                        ),
+                        [deployment.name]: Math.max(0, Math.min(20, parseInt(e.target.value) || 0)),
                       }))
                     }
                     className="w-20 rounded-lg border border-zinc-700 bg-zinc-900 px-3 py-2 text-center text-lg font-bold text-white focus:border-blue-500 focus:outline-none"
@@ -404,10 +372,7 @@ export default function K8sScalePage() {
           <div className="h-10 w-48 animate-pulse rounded bg-zinc-800" />
           <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
             {[1, 2, 3, 4].map((i) => (
-              <div
-                key={i}
-                className="h-48 animate-pulse rounded-lg bg-zinc-800/50"
-              />
+              <div key={i} className="h-48 animate-pulse rounded-lg bg-zinc-800/50" />
             ))}
           </div>
         </div>

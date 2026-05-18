@@ -163,9 +163,7 @@ function DeploymentHistoryContent() {
             <div className="flex items-center gap-3">
               <Rocket className="h-8 w-8 text-sky-500" />
               <div>
-                <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                  Total Deployments
-                </p>
+                <p className="text-sm text-zinc-500 dark:text-zinc-400">Total Deployments</p>
                 <p className="text-2xl font-bold text-zinc-900 dark:text-white">
                   {deployments.length}
                 </p>
@@ -176,9 +174,7 @@ function DeploymentHistoryContent() {
             <div className="flex items-center gap-3">
               <CheckCircle className="h-8 w-8 text-green-500" />
               <div>
-                <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                  Successful
-                </p>
+                <p className="text-sm text-zinc-500 dark:text-zinc-400">Successful</p>
                 <p className="text-2xl font-bold text-zinc-900 dark:text-white">
                   {deployments.filter((d) => d.status === 'success').length}
                 </p>
@@ -189,9 +185,7 @@ function DeploymentHistoryContent() {
             <div className="flex items-center gap-3">
               <XCircle className="h-8 w-8 text-red-500" />
               <div>
-                <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                  Failed
-                </p>
+                <p className="text-sm text-zinc-500 dark:text-zinc-400">Failed</p>
                 <p className="text-2xl font-bold text-zinc-900 dark:text-white">
                   {deployments.filter((d) => d.status === 'failed').length}
                 </p>
@@ -202,13 +196,11 @@ function DeploymentHistoryContent() {
             <div className="flex items-center gap-3">
               <Clock className="h-8 w-8 text-blue-500" />
               <div>
-                <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                  Avg Duration
-                </p>
+                <p className="text-sm text-zinc-500 dark:text-zinc-400">Avg Duration</p>
                 <p className="text-2xl font-bold text-zinc-900 dark:text-white">
                   {Math.round(
                     deployments.reduce((acc, d) => acc + (d.duration || 0), 0) /
-                      deployments.length || 0,
+                      deployments.length || 0
                   )}
                   s
                 </p>
@@ -221,16 +213,12 @@ function DeploymentHistoryContent() {
         <div className="mb-6 flex flex-wrap gap-4">
           <div className="flex items-center gap-2">
             <Filter className="h-4 w-4 text-zinc-500" />
-            <span className="text-sm text-zinc-600 dark:text-zinc-400">
-              Filters:
-            </span>
+            <span className="text-sm text-zinc-600 dark:text-zinc-400">Filters:</span>
           </div>
           <div className="relative">
             <select
               value={filterEnv}
-              onChange={(e) =>
-                setFilterEnv(e.target.value as Environment | 'all')
-              }
+              onChange={(e) => setFilterEnv(e.target.value as Environment | 'all')}
               className="appearance-none rounded-lg border border-zinc-300 bg-white px-4 py-2 pr-10 text-sm text-zinc-900 capitalize focus:border-sky-500 focus:ring-1 focus:ring-sky-500 focus:outline-none dark:border-zinc-600 dark:bg-zinc-800 dark:text-white"
             >
               {environments.map((env) => (
@@ -268,10 +256,7 @@ function DeploymentHistoryContent() {
           ) : (
             <div className="divide-y divide-zinc-200 dark:divide-zinc-700">
               {deployments.map((deployment) => (
-                <div
-                  key={deployment.id}
-                  className="p-4 hover:bg-zinc-50 dark:hover:bg-zinc-700/50"
-                >
+                <div key={deployment.id} className="p-4 hover:bg-zinc-50 dark:hover:bg-zinc-700/50">
                   <div className="flex items-start justify-between">
                     <div className="flex items-start gap-4">
                       {getStatusIcon(deployment.status)}
@@ -312,12 +297,11 @@ function DeploymentHistoryContent() {
                           )}
                         </div>
 
-                        {deployment.changes &&
-                          deployment.changes.length > 0 && (
-                            <p className="mb-2 text-sm text-zinc-600 dark:text-zinc-400">
-                              Changes: {deployment.changes.join(', ')}
-                            </p>
-                          )}
+                        {deployment.changes && deployment.changes.length > 0 && (
+                          <p className="mb-2 text-sm text-zinc-600 dark:text-zinc-400">
+                            Changes: {deployment.changes.join(', ')}
+                          </p>
+                        )}
 
                         {deployment.error && (
                           <p className="text-sm text-red-600 dark:text-red-400">
@@ -326,9 +310,7 @@ function DeploymentHistoryContent() {
                         )}
 
                         <div className="mt-2 flex items-center gap-4 text-xs text-zinc-500 dark:text-zinc-400">
-                          <span>
-                            {new Date(deployment.startedAt).toLocaleString()}
-                          </span>
+                          <span>{new Date(deployment.startedAt).toLocaleString()}</span>
                           <span>{deployment.deployedBy}</span>
                         </div>
                       </div>
@@ -365,22 +347,18 @@ function DeploymentHistoryContent() {
           </h3>
           <div className="space-y-2 font-mono text-sm">
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-sky-500">nself deployments</span> - List
-              deployment history
+              <span className="text-sky-500">nself deployments</span> - List deployment history
             </p>
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-sky-500">
-                nself deployments --env=production
-              </span>{' '}
-              - Filter by environment
+              <span className="text-sky-500">nself deployments --env=production</span> - Filter by
+              environment
             </p>
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-sky-500">nself deploy show deploy-1</span> -
-              Show deployment details
+              <span className="text-sky-500">nself deploy show deploy-1</span> - Show deployment
+              details
             </p>
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-sky-500">nself rollback --to=v1.2.5</span> -
-              Rollback to version
+              <span className="text-sky-500">nself rollback --to=v1.2.5</span> - Rollback to version
             </p>
           </div>
         </div>

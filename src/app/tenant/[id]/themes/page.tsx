@@ -20,10 +20,7 @@ export default function TenantThemesPage() {
   const tenantId = params.id as string
   const [applying, setApplying] = useState<string | null>(null)
 
-  const { data, error, isLoading, mutate } = useSWR(
-    `/api/tenant/${tenantId}/themes`,
-    fetcher,
-  )
+  const { data, error, isLoading, mutate } = useSWR(`/api/tenant/${tenantId}/themes`, fetcher)
 
   const handleApply = async (themeId: string) => {
     setApplying(themeId)
@@ -58,12 +55,7 @@ export default function TenantThemesPage() {
 
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
         {(data?.themes || []).map(
-          (theme: {
-            id: string
-            name: string
-            description: string
-            isDefault: boolean
-          }) => (
+          (theme: { id: string; name: string; description: string; isDefault: boolean }) => (
             <div
               key={theme.id}
               className={`relative rounded-lg border p-4 transition-colors ${
@@ -92,7 +84,7 @@ export default function TenantThemesPage() {
                 </button>
               )}
             </div>
-          ),
+          )
         )}
       </div>
     </div>

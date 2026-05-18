@@ -1,14 +1,6 @@
 'use client'
 
-import {
-  AlertCircle,
-  CheckCircle2,
-  ChevronDown,
-  FolderOpen,
-  Loader2,
-  Plus,
-  X,
-} from 'lucide-react'
+import { AlertCircle, CheckCircle2, ChevronDown, FolderOpen, Loader2, Plus, X } from 'lucide-react'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import type { ProjectEntry } from './types'
 
@@ -72,9 +64,7 @@ function AddProjectForm({ onAdd, onCancel, loading }: AddProjectFormProps) {
       return
     }
     if (!/^[a-zA-Z0-9_-]{1,63}$/.test(trimmedName)) {
-      setFormError(
-        'Name must be 1–63 characters: letters, digits, hyphens, underscores.',
-      )
+      setFormError('Name must be 1–63 characters: letters, digits, hyphens, underscores.')
       return
     }
     if (trimmedPath.length === 0) {
@@ -85,9 +75,7 @@ function AddProjectForm({ onAdd, onCancel, loading }: AddProjectFormProps) {
     try {
       await onAdd(trimmedName, trimmedPath)
     } catch (err) {
-      setFormError(
-        err instanceof Error ? err.message : 'Failed to add project.',
-      )
+      setFormError(err instanceof Error ? err.message : 'Failed to add project.')
     }
   }
 
@@ -109,10 +97,7 @@ function AddProjectForm({ onAdd, onCancel, loading }: AddProjectFormProps) {
 
       {/* Name field */}
       <div className="mb-2">
-        <label
-          htmlFor="pp-name"
-          className="text-nself-text-muted mb-1 block text-xs font-medium"
-        >
+        <label htmlFor="pp-name" className="text-nself-text-muted mb-1 block text-xs font-medium">
           Display name
         </label>
         <input
@@ -131,10 +116,7 @@ function AddProjectForm({ onAdd, onCancel, loading }: AddProjectFormProps) {
 
       {/* Path field */}
       <div className="mb-3">
-        <label
-          htmlFor="pp-path"
-          className="text-nself-text-muted mb-1 block text-xs font-medium"
-        >
+        <label htmlFor="pp-path" className="text-nself-text-muted mb-1 block text-xs font-medium">
           Absolute path
         </label>
         <input
@@ -275,10 +257,7 @@ export function ProjectPicker({ onSelect }: ProjectPickerProps) {
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
-      if (
-        dropdownRef.current !== null &&
-        !dropdownRef.current.contains(e.target as Node)
-      ) {
+      if (dropdownRef.current !== null && !dropdownRef.current.contains(e.target as Node)) {
         setDropdownOpen(false)
         setShowAddForm(false)
         setPendingRemoveId(null)
@@ -317,16 +296,12 @@ export function ProjectPicker({ onSelect }: ProjectPickerProps) {
         details?: string
       }
       if (!res.ok) {
-        throw new Error(
-          data.details ?? data.error ?? 'Failed to select project.',
-        )
+        throw new Error(data.details ?? data.error ?? 'Failed to select project.')
       }
       if (data.project !== undefined) {
         setActiveProjectId(id)
         setProjects((prev) =>
-          prev.map((p) =>
-            p.id === id ? { ...p, lastUsedAt: data.project!.lastUsedAt } : p,
-          ),
+          prev.map((p) => (p.id === id ? { ...p, lastUsedAt: data.project!.lastUsedAt } : p))
         )
         onSelect?.(data.project)
       }
@@ -384,9 +359,7 @@ export function ProjectPicker({ onSelect }: ProjectPickerProps) {
       })
       if (!res.ok) {
         const data = (await res.json()) as { error?: string; details?: string }
-        throw new Error(
-          data.details ?? data.error ?? 'Failed to remove project.',
-        )
+        throw new Error(data.details ?? data.error ?? 'Failed to remove project.')
       }
       setProjects((prev) => prev.filter((p) => p.id !== id))
       if (activeProjectId === id) {
@@ -430,9 +403,7 @@ export function ProjectPicker({ onSelect }: ProjectPickerProps) {
             className="text-nself-text truncate text-sm font-semibold"
             title={activeProject?.path}
           >
-            {activeProject !== null
-              ? activeProject.name
-              : 'No project selected'}
+            {activeProject !== null ? activeProject.name : 'No project selected'}
           </span>
           {activeProject !== null && (
             <span
@@ -509,9 +480,7 @@ export function ProjectPicker({ onSelect }: ProjectPickerProps) {
                         tabIndex={isActive ? -1 : 0}
                       >
                         {/* Env dot */}
-                        <span
-                          className={`h-2 w-2 flex-shrink-0 rounded-full ${envCfg.dotClass}`}
-                        />
+                        <span className={`h-2 w-2 flex-shrink-0 rounded-full ${envCfg.dotClass}`} />
                         {/* Project name + path */}
                         <div className="min-w-0 flex-1">
                           <p className="truncate text-sm leading-none font-medium">
@@ -530,11 +499,7 @@ export function ProjectPicker({ onSelect }: ProjectPickerProps) {
                           type="button"
                           onClick={(e) => {
                             e.stopPropagation()
-                            setPendingRemoveId(
-                              project.id === pendingRemoveId
-                                ? null
-                                : project.id,
-                            )
+                            setPendingRemoveId(project.id === pendingRemoveId ? null : project.id)
                           }}
                           className="text-nself-text-muted ml-1 flex-shrink-0 rounded p-0.5 transition-colors hover:bg-red-500/15 hover:text-red-400"
                           aria-label={`Remove project ${project.name}`}

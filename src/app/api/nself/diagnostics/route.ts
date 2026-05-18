@@ -29,8 +29,15 @@ function parseChecks(stdout: string): DiagnosticCheck[] {
     const trimmed = line.trim()
     if (!trimmed) continue
 
-    if (trimmed.includes('✓') || trimmed.toLowerCase().includes('[ok]') || trimmed.toLowerCase().includes('[pass]')) {
-      const msg = trimmed.replace(/[✓\[\]]/g, '').replace(/ok|pass/i, '').trim()
+    if (
+      trimmed.includes('✓') ||
+      trimmed.toLowerCase().includes('[ok]') ||
+      trimmed.toLowerCase().includes('[pass]')
+    ) {
+      const msg = trimmed
+        .replace(/[✓\[\]]/g, '')
+        .replace(/ok|pass/i, '')
+        .trim()
       if (msg) {
         const [name, ...rest] = msg.split(':')
         checks.push({
@@ -45,7 +52,10 @@ function parseChecks(stdout: string): DiagnosticCheck[] {
       trimmed.toLowerCase().includes('[error]') ||
       trimmed.toLowerCase().includes('error:')
     ) {
-      const msg = trimmed.replace(/[✗\[\]]/g, '').replace(/fail|error/i, '').trim()
+      const msg = trimmed
+        .replace(/[✗\[\]]/g, '')
+        .replace(/fail|error/i, '')
+        .trim()
       if (msg) {
         const [name, ...rest] = msg.split(':')
         checks.push({
@@ -59,7 +69,10 @@ function parseChecks(stdout: string): DiagnosticCheck[] {
       trimmed.toLowerCase().includes('[warn]') ||
       trimmed.toLowerCase().includes('warning:')
     ) {
-      const msg = trimmed.replace(/[⚠\[\]]/g, '').replace(/warn(ing)?/i, '').trim()
+      const msg = trimmed
+        .replace(/[⚠\[\]]/g, '')
+        .replace(/warn(ing)?/i, '')
+        .trim()
       if (msg) {
         const [name, ...rest] = msg.split(':')
         checks.push({
@@ -114,9 +127,6 @@ export async function GET(): Promise<NextResponse> {
     return NextResponse.json(result)
   } catch (error) {
     const msg = error instanceof Error ? error.message : 'Unknown error'
-    return NextResponse.json(
-      { error: 'Failed to run diagnostics', details: msg },
-      { status: 500 },
-    )
+    return NextResponse.json({ error: 'Failed to run diagnostics', details: msg }, { status: 500 })
   }
 }

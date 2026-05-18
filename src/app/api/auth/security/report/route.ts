@@ -12,7 +12,7 @@ export async function GET(): Promise<NextResponse> {
           error: 'Failed to generate security report',
           details: result.error || result.stderr || 'Unknown error',
         },
-        { status: 500 },
+        { status: 500 }
       )
     }
 
@@ -27,7 +27,7 @@ export async function GET(): Promise<NextResponse> {
         error: 'Failed to generate security report',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

@@ -18,15 +18,14 @@ jest.mock('../../auth-db', () => ({
  */
 function _createMockSocket(
   id: string = 'test-socket-1',
-  overrides: Record<string, unknown> = {},
+  overrides: Record<string, unknown> = {}
 ): {
   socket: any
   handlers: Map<string, (...args: any[]) => void>
   middleware: Array<(packet: any, next: (err?: Error) => void) => void>
 } {
   const handlers = new Map<string, (...args: any[]) => void>()
-  const middleware: Array<(packet: any, next: (err?: Error) => void) => void> =
-    []
+  const middleware: Array<(packet: any, next: (err?: Error) => void) => void> = []
 
   const socket = {
     id,
@@ -122,14 +121,7 @@ describe('WebSocketServer', () => {
 
     it('should accept valid room IDs with alphanumeric chars', () => {
       // Valid room IDs: alphanumeric, hyphens, underscores
-      const validIds = [
-        'metrics',
-        'logs-stream',
-        'room_123',
-        'a',
-        'A-B_C-123',
-        'a'.repeat(128),
-      ]
+      const validIds = ['metrics', 'logs-stream', 'room_123', 'a', 'A-B_C-123', 'a'.repeat(128)]
 
       for (const roomId of validIds) {
         // isValidRoomId is private, so we test via the pattern it uses
@@ -315,16 +307,14 @@ describe('WebSocketServer', () => {
 
     it('should handle broadcast when not initialized', () => {
       // Should not throw, just silently return
-      expect(() =>
-        server.broadcast(EventType.SERVICE_STATUS, { test: true }),
-      ).not.toThrow()
+      expect(() => server.broadcast(EventType.SERVICE_STATUS, { test: true })).not.toThrow()
     })
 
     it('should handle emitToSocket when not initialized', () => {
       expect(() =>
         server.emitToSocket('socket-1', EventType.SERVICE_STATUS, {
           test: true,
-        }),
+        })
       ).not.toThrow()
     })
 
@@ -332,7 +322,7 @@ describe('WebSocketServer', () => {
       expect(() =>
         server.broadcastToRoom('room-1', EventType.SERVICE_STATUS, {
           test: true,
-        }),
+        })
       ).not.toThrow()
     })
   })
@@ -344,7 +334,7 @@ describe('WebSocketServer', () => {
       expect(() =>
         server.batchEvent('room-1', EventType.DOCKER_STATS, {
           cpu: 50,
-        }),
+        })
       ).not.toThrow()
     })
 

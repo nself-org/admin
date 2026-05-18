@@ -3,10 +3,7 @@ import type { RemoteError } from '@/features/remote/types'
 import { requireAuth } from '@/lib/require-auth'
 import { NextRequest, NextResponse } from 'next/server'
 
-export async function POST(
-  request: NextRequest,
-  context: { params: Promise<{ id: string }> },
-) {
+export async function POST(request: NextRequest, context: { params: Promise<{ id: string }> }) {
   const authError = await requireAuth(request)
   if (authError) return authError
 

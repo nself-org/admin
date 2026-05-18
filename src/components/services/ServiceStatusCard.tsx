@@ -101,9 +101,7 @@ export function ServiceStatusCard({
   }
 
   const memoryPercent =
-    status.memory && status.memoryLimit
-      ? (status.memory / status.memoryLimit) * 100
-      : 0
+    status.memory && status.memoryLimit ? (status.memory / status.memoryLimit) * 100 : 0
 
   return (
     <Card>
@@ -124,9 +122,7 @@ export function ServiceStatusCard({
               <Clock className="h-4 w-4" />
               <span>Uptime</span>
             </div>
-            <span className="font-mono text-sm font-medium">
-              {status.uptime}
-            </span>
+            <span className="font-mono text-sm font-medium">{status.uptime}</span>
           </div>
         )}
 
@@ -164,17 +160,11 @@ export function ServiceStatusCard({
         {/* Network I/O */}
         {status.network && (
           <div className="flex items-center justify-between text-sm">
-            <span className="text-zinc-600 dark:text-zinc-400">
-              Network I/O
-            </span>
+            <span className="text-zinc-600 dark:text-zinc-400">Network I/O</span>
             <span className="font-mono text-xs">
-              <span className="text-green-600 dark:text-green-400">
-                ↓ {status.network.rx}
-              </span>
+              <span className="text-green-600 dark:text-green-400">↓ {status.network.rx}</span>
               {' / '}
-              <span className="text-blue-600 dark:text-blue-400">
-                ↑ {status.network.tx}
-              </span>
+              <span className="text-blue-600 dark:text-blue-400">↑ {status.network.tx}</span>
             </span>
           </div>
         )}
@@ -188,23 +178,13 @@ export function ServiceStatusCard({
             </Button>
           )}
           {status.running && onStop && (
-            <Button
-              onClick={onStop}
-              variant="outline"
-              disabled={loading}
-              className="flex-1"
-            >
+            <Button onClick={onStop} variant="outline" disabled={loading} className="flex-1">
               <Pause className="mr-1 h-4 w-4" />
               Stop
             </Button>
           )}
           {status.running && onRestart && (
-            <Button
-              onClick={onRestart}
-              variant="outline"
-              disabled={loading}
-              className="flex-1"
-            >
+            <Button onClick={onRestart} variant="outline" disabled={loading} className="flex-1">
               <RotateCw className="mr-1 h-4 w-4" />
               Restart
             </Button>

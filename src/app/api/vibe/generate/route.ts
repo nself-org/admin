@@ -14,10 +14,7 @@ import { z } from 'zod'
 const VIBE_ENABLED = process.env.NSELF_VIBE_ENABLED === 'true'
 const VIBE_API_PORT = process.env.NSELF_VIBE_PORT ?? '8003'
 const VIBE_API_BASE = `http://127.0.0.1:${VIBE_API_PORT}`
-const MAX_PROMPT_TOKENS = parseInt(
-  process.env.NSELF_VIBE_MAX_PROMPT_TOKENS ?? '16000',
-  10,
-)
+const MAX_PROMPT_TOKENS = parseInt(process.env.NSELF_VIBE_MAX_PROMPT_TOKENS ?? '16000', 10)
 
 const GenerateSchema = z.object({
   session_id: z.string().min(1),
@@ -34,7 +31,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   if (!VIBE_ENABLED) {
     return NextResponse.json(
       { error: 'Vibe-Code is disabled. Set NSELF_VIBE_ENABLED=true.' },
-      { status: 503 },
+      { status: 503 }
     )
   }
 
@@ -49,7 +46,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   if (!parsed.success) {
     return NextResponse.json(
       { error: 'Invalid request', details: parsed.error.flatten() },
-      { status: 400 },
+      { status: 400 }
     )
   }
 
@@ -61,7 +58,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   if (inflightSessions.has(session_id)) {
     return NextResponse.json(
       { error: 'A generation is already in progress for this session.' },
-      { status: 429 },
+      { status: 429 }
     )
   }
 
@@ -105,7 +102,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           {
             status: 503,
             headers: { 'X-Service-Required': 'vibe_api' },
-          },
+          }
         )
       }
       throw fetchErr
@@ -129,9 +126,6 @@ function sanitizePrompt(prompt: string): string {
   // We don't block legitimate mentions of SQL keywords in feature descriptions
   // Just strip explicit executable injection attempts
   return prompt
-    .replace(
-      /;\s*(DROP|TRUNCATE|DELETE\s+FROM\s+\w+\s*;|ALTER\s+TABLE)/gi,
-      '; [BLOCKED DDL]',
-    )
+    .replace(/;\s*(DROP|TRUNCATE|DELETE\s+FROM\s+\w+\s*;|ALTER\s+TABLE)/gi, '; [BLOCKED DDL]')
     .trim()
 }

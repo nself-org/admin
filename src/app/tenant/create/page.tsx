@@ -32,9 +32,7 @@ export default function CreateTenantPage() {
         >
           <ArrowLeft className="h-4 w-4" /> Back to Tenants
         </Link>
-        <h1 className="mt-4 text-2xl font-semibold text-white">
-          Create Tenant
-        </h1>
+        <h1 className="mt-4 text-2xl font-semibold text-white">Create Tenant</h1>
         <p className="text-sm text-zinc-400">
           Set up a new tenant with custom branding and settings
         </p>

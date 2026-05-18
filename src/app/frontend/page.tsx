@@ -132,12 +132,8 @@ function FrontendContent() {
             <div className="flex items-center gap-3">
               <Layers className="h-8 w-8 text-cyan-500" />
               <div>
-                <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                  Total Apps
-                </p>
-                <p className="text-2xl font-bold text-zinc-900 dark:text-white">
-                  {apps.length}
-                </p>
+                <p className="text-sm text-zinc-500 dark:text-zinc-400">Total Apps</p>
+                <p className="text-2xl font-bold text-zinc-900 dark:text-white">{apps.length}</p>
               </div>
             </div>
           </div>
@@ -145,9 +141,7 @@ function FrontendContent() {
             <div className="flex items-center gap-3">
               <Activity className="h-8 w-8 text-green-500" />
               <div>
-                <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                  Running
-                </p>
+                <p className="text-sm text-zinc-500 dark:text-zinc-400">Running</p>
                 <p className="text-2xl font-bold text-zinc-900 dark:text-white">
                   {apps.filter((a) => a.status === 'running').length}
                 </p>
@@ -158,9 +152,7 @@ function FrontendContent() {
             <div className="flex items-center gap-3">
               <Server className="h-8 w-8 text-blue-500" />
               <div>
-                <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                  Total Requests
-                </p>
+                <p className="text-sm text-zinc-500 dark:text-zinc-400">Total Requests</p>
                 <p className="text-2xl font-bold text-zinc-900 dark:text-white">
                   {apps
                     .reduce((acc, app) => acc + (app.metrics?.requests || 0), 0)
@@ -173,17 +165,13 @@ function FrontendContent() {
             <div className="flex items-center gap-3">
               <Zap className="h-8 w-8 text-yellow-500" />
               <div>
-                <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                  Avg Latency
-                </p>
+                <p className="text-sm text-zinc-500 dark:text-zinc-400">Avg Latency</p>
                 <p className="text-2xl font-bold text-zinc-900 dark:text-white">
                   {Math.round(
                     apps
                       .filter((a) => a.metrics?.latency)
-                      .reduce(
-                        (acc, app) => acc + (app.metrics?.latency || 0),
-                        0,
-                      ) / apps.filter((a) => a.metrics?.latency).length || 0,
+                      .reduce((acc, app) => acc + (app.metrics?.latency || 0), 0) /
+                      apps.filter((a) => a.metrics?.latency).length || 0
                   )}
                   ms
                 </p>
@@ -209,9 +197,7 @@ function FrontendContent() {
                     <h3 className="text-lg font-semibold text-zinc-900 dark:text-white">
                       {app.name}
                     </h3>
-                    <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                      {app.framework}
-                    </p>
+                    <p className="text-sm text-zinc-500 dark:text-zinc-400">{app.framework}</p>
                   </div>
                 </div>
                 <ChevronRight className="h-5 w-5 text-zinc-400 transition-transform group-hover:translate-x-1" />
@@ -239,25 +225,19 @@ function FrontendContent() {
               {app.metrics && (
                 <div className="grid grid-cols-3 gap-4 border-t border-zinc-100 pt-4 dark:border-zinc-700">
                   <div>
-                    <p className="text-xs text-zinc-500 dark:text-zinc-400">
-                      Requests
-                    </p>
+                    <p className="text-xs text-zinc-500 dark:text-zinc-400">Requests</p>
                     <p className="font-semibold text-zinc-900 dark:text-white">
                       {app.metrics.requests.toLocaleString()}
                     </p>
                   </div>
                   <div>
-                    <p className="text-xs text-zinc-500 dark:text-zinc-400">
-                      Latency
-                    </p>
+                    <p className="text-xs text-zinc-500 dark:text-zinc-400">Latency</p>
                     <p className="font-semibold text-zinc-900 dark:text-white">
                       {app.metrics.latency}ms
                     </p>
                   </div>
                   <div>
-                    <p className="text-xs text-zinc-500 dark:text-zinc-400">
-                      Errors
-                    </p>
+                    <p className="text-xs text-zinc-500 dark:text-zinc-400">Errors</p>
                     <p
                       className={`font-semibold ${app.metrics.errors > 0 ? 'text-red-600 dark:text-red-400' : 'text-zinc-900 dark:text-white'}`}
                     >
@@ -276,8 +256,7 @@ function FrontendContent() {
 
               {app.lastDeployed && (
                 <p className="mt-4 text-xs text-zinc-500 dark:text-zinc-400">
-                  Last deployed:{' '}
-                  {new Date(app.lastDeployed).toLocaleDateString()}
+                  Last deployed: {new Date(app.lastDeployed).toLocaleDateString()}
                   {app.buildTime && ` (${app.buildTime}s build)`}
                 </p>
               )}
@@ -292,24 +271,18 @@ function FrontendContent() {
           </h3>
           <div className="space-y-2 font-mono text-sm">
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-cyan-500">nself frontend</span> - List
-              frontend apps
+              <span className="text-cyan-500">nself frontend</span> - List frontend apps
             </p>
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-cyan-500">nself frontend add</span> - Add
-              new frontend app
+              <span className="text-cyan-500">nself frontend add</span> - Add new frontend app
             </p>
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-cyan-500">
-                nself frontend deploy main-website
-              </span>{' '}
-              - Deploy specific app
+              <span className="text-cyan-500">nself frontend deploy main-website</span> - Deploy
+              specific app
             </p>
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-cyan-500">
-                nself frontend logs main-website
-              </span>{' '}
-              - View app logs
+              <span className="text-cyan-500">nself frontend logs main-website</span> - View app
+              logs
             </p>
           </div>
         </div>

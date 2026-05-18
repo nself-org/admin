@@ -36,21 +36,9 @@ const gapClasses = {
   lg: 'gap-6',
 }
 
-export function CardGrid({
-  children,
-  columns = 3,
-  gap = 'md',
-  className,
-}: CardGridProps) {
+export function CardGrid({ children, columns = 3, gap = 'md', className }: CardGridProps) {
   return (
-    <div
-      className={cn(
-        'grid grid-cols-1',
-        columnClasses[columns],
-        gapClasses[gap],
-        className,
-      )}
-    >
+    <div className={cn('grid grid-cols-1', columnClasses[columns], gapClasses[gap], className)}>
       {children}
     </div>
   )

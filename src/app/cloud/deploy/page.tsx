@@ -24,15 +24,12 @@ const fetcher = (url: string) => fetch(url).then((res) => res.json())
 
 type DeployStep = 'provider' | 'target' | 'config' | 'deploy'
 
-
 function QuickDeployContent() {
   const router = useRouter()
   const [step, setStep] = useState<DeployStep>('provider')
   const [selectedProvider, setSelectedProvider] = useState<string>('')
   const [selectedServer, setSelectedServer] = useState<string>('')
-  const [deployTarget, setDeployTarget] = useState<'existing' | 'new'>(
-    'existing',
-  )
+  const [deployTarget, setDeployTarget] = useState<'existing' | 'new'>('existing')
   const [deploying, setDeploying] = useState(false)
   const [deployStatus, setDeployStatus] = useState<{
     step: string
@@ -42,18 +39,13 @@ function QuickDeployContent() {
 
   const { data: providerData } = useSWR<{ providers: CloudProvider[] }>(
     '/api/cloud/providers/configured',
-    fetcher,
+    fetcher
   )
 
-  const { data: serverData } = useSWR<{ servers: CloudServer[] }>(
-    '/api/cloud/servers',
-    fetcher,
-  )
+  const { data: serverData } = useSWR<{ servers: CloudServer[] }>('/api/cloud/servers', fetcher)
 
   const providers = providerData?.providers ?? []
-  const servers = (serverData?.servers ?? []).filter(
-    (s) => s.status === 'running',
-  )
+  const servers = (serverData?.servers ?? []).filter((s) => s.status === 'running')
 
   const handleDeploy = async () => {
     setDeploying(true)
@@ -167,9 +159,7 @@ function QuickDeployContent() {
               </div>
               {i < 3 && (
                 <ArrowRight
-                  className={`mx-2 h-4 w-4 ${
-                    isPast ? 'text-emerald-500' : 'text-zinc-700'
-                  }`}
+                  className={`mx-2 h-4 w-4 ${isPast ? 'text-emerald-500' : 'text-zinc-700'}`}
                 />
               )}
             </div>
@@ -182,12 +172,8 @@ function QuickDeployContent() {
         {/* Step 1: Select Provider */}
         {step === 'provider' && (
           <div className="space-y-4">
-            <h2 className="text-lg font-semibold text-white">
-              Select Cloud Provider
-            </h2>
-            <p className="text-sm text-zinc-400">
-              Choose a cloud provider for your deployment
-            </p>
+            <h2 className="text-lg font-semibold text-white">Select Cloud Provider</h2>
+            <p className="text-sm text-zinc-400">Choose a cloud provider for your deployment</p>
 
             {providers.length > 0 ? (
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -206,12 +192,8 @@ function QuickDeployContent() {
                         <Cloud className="h-6 w-6 text-emerald-400" />
                       </div>
                       <div>
-                        <h3 className="font-medium text-white">
-                          {provider.displayName}
-                        </h3>
-                        <p className="text-sm text-zinc-400 capitalize">
-                          {provider.category}
-                        </p>
+                        <h3 className="font-medium text-white">{provider.displayName}</h3>
+                        <p className="text-sm text-zinc-400 capitalize">{provider.category}</p>
                       </div>
                       {selectedProvider === provider.name && (
                         <CheckCircle className="ml-auto h-5 w-5 text-emerald-400" />
@@ -238,9 +220,7 @@ function QuickDeployContent() {
         {/* Step 2: Select Target */}
         {step === 'target' && (
           <div className="space-y-4">
-            <h2 className="text-lg font-semibold text-white">
-              Select Deployment Target
-            </h2>
+            <h2 className="text-lg font-semibold text-white">Select Deployment Target</h2>
             <p className="text-sm text-zinc-400">
               Deploy to an existing server or create a new one
             </p>
@@ -256,9 +236,7 @@ function QuickDeployContent() {
               >
                 <Server className="mb-2 h-6 w-6 text-emerald-400" />
                 <h3 className="font-medium text-white">Existing Server</h3>
-                <p className="text-sm text-zinc-400">
-                  Deploy to a server you already have
-                </p>
+                <p className="text-sm text-zinc-400">Deploy to a server you already have</p>
               </button>
 
               <button
@@ -271,17 +249,13 @@ function QuickDeployContent() {
               >
                 <Rocket className="mb-2 h-6 w-6 text-emerald-400" />
                 <h3 className="font-medium text-white">New Server</h3>
-                <p className="text-sm text-zinc-400">
-                  Provision a new server for deployment
-                </p>
+                <p className="text-sm text-zinc-400">Provision a new server for deployment</p>
               </button>
             </div>
 
             {deployTarget === 'existing' && (
               <div className="mt-4 space-y-2">
-                <h3 className="text-sm font-medium text-white">
-                  Select Server
-                </h3>
+                <h3 className="text-sm font-medium text-white">Select Server</h3>
                 {servers.length > 0 ? (
                   servers.map((server) => (
                     <button
@@ -296,19 +270,13 @@ function QuickDeployContent() {
                       <div className="flex items-center gap-3">
                         <Server className="h-5 w-5 text-zinc-400" />
                         <div>
-                          <span className="font-medium text-white">
-                            {server.name}
-                          </span>
-                          <span className="ml-2 text-sm text-zinc-500">
-                            {server.ip}
-                          </span>
+                          <span className="font-medium text-white">{server.name}</span>
+                          <span className="ml-2 text-sm text-zinc-500">{server.ip}</span>
                         </div>
                       </div>
                       <div className="flex items-center gap-2">
                         <Globe className="h-4 w-4 text-zinc-500" />
-                        <span className="text-sm text-zinc-400">
-                          {server.region}
-                        </span>
+                        <span className="text-sm text-zinc-400">{server.region}</span>
                         {selectedServer === server.id && (
                           <CheckCircle className="ml-2 h-5 w-5 text-emerald-400" />
                         )}
@@ -317,9 +285,7 @@ function QuickDeployContent() {
                   ))
                 ) : (
                   <div className="rounded-lg border border-zinc-700/50 bg-zinc-800/50 p-4 text-center">
-                    <p className="text-sm text-zinc-400">
-                      No running servers available
-                    </p>
+                    <p className="text-sm text-zinc-400">No running servers available</p>
                     <button
                       onClick={() => setDeployTarget('new')}
                       className="mt-2 text-sm text-emerald-400 hover:text-emerald-300"
@@ -336,19 +302,13 @@ function QuickDeployContent() {
         {/* Step 3: Configure */}
         {step === 'config' && (
           <div className="space-y-4">
-            <h2 className="text-lg font-semibold text-white">
-              Configure Deployment
-            </h2>
-            <p className="text-sm text-zinc-400">
-              Review and customize your deployment settings
-            </p>
+            <h2 className="text-lg font-semibold text-white">Configure Deployment</h2>
+            <p className="text-sm text-zinc-400">Review and customize your deployment settings</p>
 
             <div className="space-y-4 rounded-lg border border-zinc-700/50 bg-zinc-800/50 p-4">
               <div className="flex items-center justify-between border-b border-zinc-700 pb-4">
                 <span className="text-zinc-400">Provider</span>
-                <span className="font-medium text-white capitalize">
-                  {selectedProvider}
-                </span>
+                <span className="font-medium text-white capitalize">{selectedProvider}</span>
               </div>
               <div className="flex items-center justify-between border-b border-zinc-700 pb-4">
                 <span className="text-zinc-400">Target Server</span>
@@ -375,9 +335,7 @@ function QuickDeployContent() {
               <div className="flex items-start gap-3">
                 <AlertCircle className="mt-0.5 h-5 w-5 text-amber-400" />
                 <div>
-                  <h3 className="font-medium text-amber-400">
-                    Deployment will:
-                  </h3>
+                  <h3 className="font-medium text-amber-400">Deployment will:</h3>
                   <ul className="mt-2 space-y-1 text-sm text-zinc-400">
                     <li>- Install Docker and Docker Compose if not present</li>
                     <li>- Clone your project repository</li>
@@ -419,16 +377,11 @@ function QuickDeployContent() {
             <div className="rounded-lg border border-zinc-700/50 bg-zinc-900 p-4">
               <div className="mb-2 flex items-center gap-2">
                 <Terminal className="h-4 w-4 text-zinc-400" />
-                <span className="text-sm font-medium text-zinc-400">
-                  Deployment Logs
-                </span>
+                <span className="text-sm font-medium text-zinc-400">Deployment Logs</span>
               </div>
               <div className="h-64 overflow-y-auto font-mono text-sm">
                 {deployStatus?.logs.map((log, i) => (
-                  <div
-                    key={i}
-                    className="flex items-center gap-2 border-b border-zinc-800 py-1"
-                  >
+                  <div key={i} className="flex items-center gap-2 border-b border-zinc-800 py-1">
                     <CheckCircle className="h-3 w-3 text-emerald-400" />
                     <span className="text-zinc-300">{log}</span>
                   </div>
@@ -448,9 +401,7 @@ function QuickDeployContent() {
                 <div className="flex items-center gap-3">
                   <CheckCircle className="h-6 w-6 text-emerald-400" />
                   <div>
-                    <h3 className="font-medium text-emerald-400">
-                      Deployment Successful!
-                    </h3>
+                    <h3 className="font-medium text-emerald-400">Deployment Successful!</h3>
                     <p className="text-sm text-zinc-400">
                       Your application is now running at{' '}
                       <a
@@ -477,11 +428,7 @@ function QuickDeployContent() {
               <button
                 onClick={() =>
                   setStep(
-                    step === 'target'
-                      ? 'provider'
-                      : step === 'config'
-                        ? 'target'
-                        : 'provider',
+                    step === 'target' ? 'provider' : step === 'config' ? 'target' : 'provider'
                   )
                 }
                 className="rounded-lg border border-zinc-700 bg-zinc-800 px-6 py-2 text-white hover:bg-zinc-700"

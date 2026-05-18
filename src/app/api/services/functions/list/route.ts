@@ -16,7 +16,7 @@ export async function GET(): Promise<NextResponse> {
           error: 'Failed to list functions',
           details: result.error || result.stderr || 'Unknown error',
         },
-        { status: 500 },
+        { status: 500 }
       )
     }
 
@@ -40,7 +40,7 @@ export async function GET(): Promise<NextResponse> {
         error: 'Failed to list functions',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

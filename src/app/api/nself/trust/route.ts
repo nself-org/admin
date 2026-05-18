@@ -67,7 +67,7 @@ export async function GET(): Promise<NextResponse> {
     const msg = error instanceof Error ? error.message : 'Unknown error'
     return NextResponse.json(
       { error: 'Failed to retrieve trust status', details: msg },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

@@ -46,7 +46,7 @@ export function StepWrapper({ children }: StepWrapperProps) {
   const handleReset = () => {
     if (
       confirm(
-        'Are you sure you want to reset the wizard? This will clear all progress and start over.',
+        'Are you sure you want to reset the wizard? This will clear all progress and start over.'
       )
     ) {
       // Clear all wizard state

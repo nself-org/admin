@@ -61,11 +61,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 
           // Broadcast to appropriate rooms
           if (service && service !== 'all') {
-            wsServer.broadcastToRoom(
-              `logs:${service}`,
-              EventType.LOGS_STREAM,
-              logEvent,
-            )
+            wsServer.broadcastToRoom(`logs:${service}`, EventType.LOGS_STREAM, logEvent)
           }
           wsServer.broadcastToRoom('logs:all', EventType.LOGS_STREAM, logEvent)
         })
@@ -75,7 +71,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       },
       (code) => {
         console.warn('Log stream closed with code:', code)
-      },
+      }
     )
 
     // Clean up on request abort
@@ -95,7 +91,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to start log stream',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -125,7 +121,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           error: 'Failed to fetch logs',
           stderr: result.stderr,
         },
-        { status: 500 },
+        { status: 500 }
       )
     }
 
@@ -143,7 +139,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to fetch logs',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

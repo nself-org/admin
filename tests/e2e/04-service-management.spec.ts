@@ -12,10 +12,7 @@ test.describe('Service Management Flow', () => {
     await expect(servicesPage.page).toHaveURL(/\/services/)
   })
 
-  test.skip('should display service cards with status', async ({
-    servicesPage,
-    page,
-  }) => {
+  test.skip('should display service cards with status', async ({ servicesPage, page }) => {
     // Skipped: requires a running nself installation to populate service cards.
     // [data-testid="service-card"] is not rendered without an active nself project.
     await servicesPage.goto()
@@ -39,9 +36,7 @@ test.describe('Service Management Flow', () => {
     await servicesPage.goto()
 
     // Find a stopped service
-    const stoppedService = page.locator(
-      '[data-testid="service-card"]:has-text("Stopped")',
-    )
+    const stoppedService = page.locator('[data-testid="service-card"]:has-text("Stopped")')
 
     if ((await stoppedService.count()) > 0) {
       await stoppedService.first().locator('button:has-text("Start")').click()
@@ -58,9 +53,7 @@ test.describe('Service Management Flow', () => {
     await servicesPage.goto()
 
     // Find a running service
-    const runningService = page.locator(
-      '[data-testid="service-card"]:has-text("Running")',
-    )
+    const runningService = page.locator('[data-testid="service-card"]:has-text("Running")')
 
     if ((await runningService.count()) > 0) {
       await runningService.first().locator('button:has-text("Stop")').click()

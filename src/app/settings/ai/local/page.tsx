@@ -114,9 +114,7 @@ export default function LocalModelsPage() {
       setRecommended(rRes.ok ? ((await rRes.json()).recommended ?? []) : [])
       setPageState('ready')
     } catch (e) {
-      setError(
-        e instanceof Error ? e.message : 'Failed to load local AI status.',
-      )
+      setError(e instanceof Error ? e.message : 'Failed to load local AI status.')
       setPageState('error')
     }
   }, [])
@@ -136,9 +134,7 @@ export default function LocalModelsPage() {
       if (!res.ok) throw new Error(`HTTP ${res.status}`)
       const data: InstallJob = await res.json()
       setInstallJobId(data.id)
-      const es = new EventSource(
-        `${AI_API}/ai/local/install/jobs/${data.id}/events`,
-      )
+      const es = new EventSource(`${AI_API}/ai/local/install/jobs/${data.id}/events`)
       eventSourceRef.current = es
       es.onmessage = (ev) => {
         const msg = JSON.parse(ev.data)
@@ -232,9 +228,7 @@ export default function LocalModelsPage() {
       })
       if (!res.ok) throw new Error(`HTTP ${res.status}`)
       const job = await res.json()
-      const es = new EventSource(
-        `${AI_API}/ai/local/benchmark/jobs/${job.id}/events`,
-      )
+      const es = new EventSource(`${AI_API}/ai/local/benchmark/jobs/${job.id}/events`)
       es.onmessage = (ev) => {
         const msg = JSON.parse(ev.data)
         if (msg.type === 'done' || msg.type === 'error') {
@@ -291,17 +285,13 @@ export default function LocalModelsPage() {
   if (pageState === 'not-installed') {
     return (
       <div className="mx-auto max-w-3xl p-6">
-        <h1 className="mb-6 text-2xl font-semibold text-zinc-100">
-          Local Models
-        </h1>
+        <h1 className="mb-6 text-2xl font-semibold text-zinc-100">Local Models</h1>
         <div className="rounded-xl border border-zinc-700/50 bg-zinc-800/50 p-8 text-center">
           <Cpu className="mx-auto mb-4 h-12 w-12 text-zinc-500" />
-          <h2 className="mb-2 text-lg font-medium text-zinc-200">
-            Ollama Not Installed
-          </h2>
+          <h2 className="mb-2 text-lg font-medium text-zinc-200">Ollama Not Installed</h2>
           <p className="mb-6 text-sm text-zinc-400">
-            Install Ollama to run AI models locally on your machine. No API keys
-            needed, completely private.
+            Install Ollama to run AI models locally on your machine. No API keys needed, completely
+            private.
           </p>
           <div className="flex items-center justify-center gap-3">
             <button
@@ -327,9 +317,7 @@ export default function LocalModelsPage() {
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
             <div className="w-full max-w-lg rounded-xl border border-zinc-700 bg-zinc-900 p-6">
               <div className="mb-4 flex items-center justify-between">
-                <h3 className="text-lg font-medium text-zinc-100">
-                  Installing Ollama
-                </h3>
+                <h3 className="text-lg font-medium text-zinc-100">Installing Ollama</h3>
                 {installDone && (
                   <button
                     onClick={() => {
@@ -345,8 +333,7 @@ export default function LocalModelsPage() {
               <div className="max-h-64 overflow-y-auto rounded-lg bg-black/40 p-3 font-mono text-xs text-zinc-300">
                 {installLogs.length === 0 ? (
                   <div className="flex items-center gap-2 text-zinc-500">
-                    <Loader2 className="h-3 w-3 animate-spin" /> Starting
-                    install...
+                    <Loader2 className="h-3 w-3 animate-spin" /> Starting install...
                   </div>
                 ) : (
                   installLogs.map((line, i) => (
@@ -354,9 +341,7 @@ export default function LocalModelsPage() {
                       {installDone && i === installLogs.length - 1 ? (
                         <CheckCircle2 className="mt-0.5 h-3 w-3 flex-shrink-0 text-green-400" />
                       ) : (
-                        <span className="mt-0.5 h-3 w-3 flex-shrink-0 text-zinc-600">
-                          &bull;
-                        </span>
+                        <span className="mt-0.5 h-3 w-3 flex-shrink-0 text-zinc-600">&bull;</span>
                       )}
                       <span>{line}</span>
                     </div>
@@ -386,15 +371,10 @@ export default function LocalModelsPage() {
   if (pageState === 'loading') {
     return (
       <div className="mx-auto max-w-3xl p-6">
-        <h1 className="mb-6 text-2xl font-semibold text-zinc-100">
-          Local Models
-        </h1>
+        <h1 className="mb-6 text-2xl font-semibold text-zinc-100">Local Models</h1>
         <div className="space-y-4">
           {[1, 2, 3].map((n) => (
-            <div
-              key={n}
-              className="h-16 animate-pulse rounded-xl bg-zinc-800/50"
-            />
+            <div key={n} className="h-16 animate-pulse rounded-xl bg-zinc-800/50" />
           ))}
         </div>
       </div>
@@ -406,9 +386,7 @@ export default function LocalModelsPage() {
   if (pageState === 'error') {
     return (
       <div className="mx-auto max-w-3xl p-6">
-        <h1 className="mb-6 text-2xl font-semibold text-zinc-100">
-          Local Models
-        </h1>
+        <h1 className="mb-6 text-2xl font-semibold text-zinc-100">Local Models</h1>
         <div className="rounded-xl border border-red-500/30 bg-red-500/5 p-6 text-center">
           <AlertCircle className="mx-auto mb-3 h-8 w-8 text-red-400" />
           <p className="mb-4 text-sm text-red-300">{error}</p>
@@ -462,9 +440,7 @@ export default function LocalModelsPage() {
           </div>
           <div>
             <span className="text-zinc-500">Uptime</span>
-            <p className="text-zinc-200">
-              {status ? formatUptime(status.uptime_seconds) : '-'}
-            </p>
+            <p className="text-zinc-200">{status ? formatUptime(status.uptime_seconds) : '-'}</p>
           </div>
           <div>
             <span className="text-zinc-500">RAM</span>
@@ -492,9 +468,7 @@ export default function LocalModelsPage() {
       {/* ── Installed Models ──────────────────────────────────────────────── */}
       <section className="rounded-xl border border-zinc-700/50 bg-zinc-800/50 p-5">
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-lg font-medium text-zinc-200">
-            Installed Models
-          </h2>
+          <h2 className="text-lg font-medium text-zinc-200">Installed Models</h2>
           <button
             onClick={() => setShowAddModel(true)}
             className="rounded-lg bg-sky-500/20 px-3 py-1.5 text-xs text-sky-300 transition hover:bg-sky-500/30"
@@ -519,11 +493,7 @@ export default function LocalModelsPage() {
               disabled={addingModel}
               className="rounded bg-sky-500 px-3 py-1 text-xs text-white disabled:opacity-50"
             >
-              {addingModel ? (
-                <Loader2 className="h-3 w-3 animate-spin" />
-              ) : (
-                'Pull'
-              )}
+              {addingModel ? <Loader2 className="h-3 w-3 animate-spin" /> : 'Pull'}
             </button>
             <button
               onClick={() => setShowAddModel(false)}
@@ -555,9 +525,7 @@ export default function LocalModelsPage() {
                 {models.map((m) => (
                   <tr key={m.name} className="border-b border-zinc-800/50">
                     <td className="py-3 pr-4 text-zinc-200">{m.name}</td>
-                    <td className="py-3 pr-4 text-zinc-400">
-                      {m.size_gb.toFixed(1)} GB
-                    </td>
+                    <td className="py-3 pr-4 text-zinc-400">{m.size_gb.toFixed(1)} GB</td>
                     <td className="py-3 pr-4">
                       <div className="flex flex-wrap gap-1">
                         {m.tasks.map((t) => (
@@ -571,9 +539,7 @@ export default function LocalModelsPage() {
                       </div>
                     </td>
                     <td className="py-3 pr-4">
-                      {m.is_default && (
-                        <CheckCircle2 className="h-4 w-4 text-green-400" />
-                      )}
+                      {m.is_default && <CheckCircle2 className="h-4 w-4 text-green-400" />}
                     </td>
                     <td className="py-3 pr-4 text-zinc-400">
                       {benchmarking === m.name ? (
@@ -584,9 +550,7 @@ export default function LocalModelsPage() {
                     </td>
                     <td className="relative py-3">
                       <button
-                        onClick={() =>
-                          setMenuOpen(menuOpen === m.name ? null : m.name)
-                        }
+                        onClick={() => setMenuOpen(menuOpen === m.name ? null : m.name)}
                         className="text-zinc-500 hover:text-zinc-300"
                       >
                         <MoreVertical className="h-4 w-4" />
@@ -607,8 +571,7 @@ export default function LocalModelsPage() {
                             onClick={() => benchmarkModel(m.name)}
                             className="w-full px-3 py-1.5 text-left text-xs text-zinc-400 hover:bg-zinc-800 hover:text-zinc-200"
                           >
-                            <Zap className="mr-1.5 inline h-3 w-3" /> Run
-                            benchmark
+                            <Zap className="mr-1.5 inline h-3 w-3" /> Run benchmark
                           </button>
                           <hr className="my-1 border-zinc-800" />
                           <button
@@ -630,31 +593,20 @@ export default function LocalModelsPage() {
 
       {/* ── Task Assignment ───────────────────────────────────────────────── */}
       <section className="rounded-xl border border-zinc-700/50 bg-zinc-800/50 p-5">
-        <h2 className="mb-4 text-lg font-medium text-zinc-200">
-          Task Assignment
-        </h2>
+        <h2 className="mb-4 text-lg font-medium text-zinc-200">Task Assignment</h2>
         <div className="grid gap-3 sm:grid-cols-2">
           {TASK_CLASSES.map((task) => {
             const a = assignments.find((x) => x.task === task)
             return (
-              <div
-                key={task}
-                className="rounded-lg border border-zinc-700/50 bg-zinc-900/50 p-3"
-              >
+              <div key={task} className="rounded-lg border border-zinc-700/50 bg-zinc-900/50 p-3">
                 <div className="mb-2 flex items-center justify-between">
-                  <span className="text-sm font-medium text-zinc-200 capitalize">
-                    {task}
-                  </span>
+                  <span className="text-sm font-medium text-zinc-200 capitalize">{task}</span>
                   <button
                     onClick={() => testTask(task)}
                     disabled={testing === task}
                     className="rounded bg-zinc-700/50 px-2 py-0.5 text-xs text-zinc-400 hover:text-zinc-200 disabled:opacity-50"
                   >
-                    {testing === task ? (
-                      <Loader2 className="h-3 w-3 animate-spin" />
-                    ) : (
-                      'Test'
-                    )}
+                    {testing === task ? <Loader2 className="h-3 w-3 animate-spin" /> : 'Test'}
                   </button>
                 </div>
                 <select
@@ -670,9 +622,7 @@ export default function LocalModelsPage() {
                   ))}
                 </select>
                 {a?.latency_ms != null && (
-                  <p className="mt-1 text-xs text-zinc-500">
-                    Last test: {a.latency_ms}ms
-                  </p>
+                  <p className="mt-1 text-xs text-zinc-500">Last test: {a.latency_ms}ms</p>
                 )}
               </div>
             )
@@ -683,25 +633,16 @@ export default function LocalModelsPage() {
       {/* ── Recommended Models ────────────────────────────────────────────── */}
       {recommended.length > 0 && (
         <section className="rounded-xl border border-zinc-700/50 bg-zinc-800/50 p-5">
-          <h2 className="mb-4 text-lg font-medium text-zinc-200">
-            Recommended for Your Hardware
-          </h2>
+          <h2 className="mb-4 text-lg font-medium text-zinc-200">Recommended for Your Hardware</h2>
           <div className="grid gap-3 sm:grid-cols-2">
             {recommended.map((r) => (
-              <div
-                key={r.name}
-                className="rounded-lg border border-zinc-700/50 bg-zinc-900/50 p-3"
-              >
+              <div key={r.name} className="rounded-lg border border-zinc-700/50 bg-zinc-900/50 p-3">
                 <div className="mb-1 flex items-center justify-between">
-                  <span className="text-sm font-medium text-zinc-200">
-                    {r.name}
-                  </span>
+                  <span className="text-sm font-medium text-zinc-200">{r.name}</span>
                   <span className="text-xs text-zinc-500">{r.size_gb} GB</span>
                 </div>
                 <p className="mb-2 text-xs text-zinc-400">{r.description}</p>
-                <p className="text-xs text-zinc-500">
-                  Requires {r.min_ram_gb} GB RAM
-                </p>
+                <p className="text-xs text-zinc-500">Requires {r.min_ram_gb} GB RAM</p>
               </div>
             ))}
           </div>

@@ -25,7 +25,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   if (!VIBE_ENABLED) {
     return NextResponse.json(
       { error: 'Vibe-Code is disabled. Set NSELF_VIBE_ENABLED=true.' },
-      { status: 503 },
+      { status: 503 }
     )
   }
 
@@ -40,7 +40,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   if (!parsed.success) {
     return NextResponse.json(
       { error: 'Invalid request', details: parsed.error.flatten() },
-      { status: 400 },
+      { status: 400 }
     )
   }
 
@@ -56,7 +56,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           error:
             'Production target requires NSELF_VIBE_TARGET_ENV=prod to be explicitly set by an admin.',
         },
-        { status: 403 },
+        { status: 403 }
       )
     }
   }
@@ -79,7 +79,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         {
           status: 503,
           headers: { 'X-Service-Required': 'vibe_api' },
-        },
+        }
       )
     }
 
@@ -95,7 +95,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       {
         status: 503,
         headers: { 'X-Service-Required': 'vibe_api' },
-      },
+      }
     )
   }
 }
@@ -120,7 +120,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         {
           status: 503,
           headers: { 'X-Service-Required': 'vibe_api' },
-        },
+        }
       )
     }
 
@@ -136,7 +136,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       {
         status: 503,
         headers: { 'X-Service-Required': 'vibe_api' },
-      },
+      }
     )
   }
 }

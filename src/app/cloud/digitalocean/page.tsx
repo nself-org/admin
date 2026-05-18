@@ -85,9 +85,7 @@ function DigitalOceanContent() {
   const dropletColumns: ColumnDef<Droplet>[] = [
     {
       accessorKey: 'name',
-      header: ({ column }) => (
-        <SortableHeader column={column}>Name</SortableHeader>
-      ),
+      header: ({ column }) => <SortableHeader column={column}>Name</SortableHeader>,
     },
     {
       accessorKey: 'size',
@@ -120,9 +118,7 @@ function DigitalOceanContent() {
       accessorKey: 'publicIP',
       header: 'Public IP',
       cell: ({ row }) => (
-        <span className="font-mono text-sm">
-          {row.getValue('publicIP') || '-'}
-        </span>
+        <span className="font-mono text-sm">{row.getValue('publicIP') || '-'}</span>
       ),
     },
     {
@@ -138,9 +134,7 @@ function DigitalOceanContent() {
   const databaseColumns: ColumnDef<DODatabase>[] = [
     {
       accessorKey: 'name',
-      header: ({ column }) => (
-        <SortableHeader column={column}>Name</SortableHeader>
-      ),
+      header: ({ column }) => <SortableHeader column={column}>Name</SortableHeader>,
     },
     {
       accessorKey: 'engine',
@@ -189,9 +183,7 @@ function DigitalOceanContent() {
   const spaceColumns: ColumnDef<Space>[] = [
     {
       accessorKey: 'name',
-      header: ({ column }) => (
-        <SortableHeader column={column}>Space Name</SortableHeader>
-      ),
+      header: ({ column }) => <SortableHeader column={column}>Space Name</SortableHeader>,
     },
     {
       accessorKey: 'region',
@@ -220,12 +212,9 @@ function DigitalOceanContent() {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold text-zinc-900 dark:text-white">
-          DigitalOcean
-        </h1>
+        <h1 className="text-3xl font-bold text-zinc-900 dark:text-white">DigitalOcean</h1>
         <p className="mt-2 text-zinc-600 dark:text-zinc-400">
-          Manage DigitalOcean resources and deploy to Droplets, Databases, and
-          Spaces
+          Manage DigitalOcean resources and deploy to Droplets, Databases, and Spaces
         </p>
       </div>
 
@@ -282,9 +271,7 @@ function DigitalOceanContent() {
         ) : (
           <div className="space-y-3">
             <div className="flex items-center justify-between">
-              <span className="text-sm text-zinc-600 dark:text-zinc-400">
-                API Token
-              </span>
+              <span className="text-sm text-zinc-600 dark:text-zinc-400">API Token</span>
               <span className="font-mono text-sm text-zinc-900 dark:text-white">
                 {apiToken.substring(0, 10)}...
               </span>
@@ -306,9 +293,7 @@ function DigitalOceanContent() {
                   <Server className="h-5 w-5 text-blue-600 dark:text-blue-400" />
                 </div>
                 <div>
-                  <p className="text-sm text-zinc-600 dark:text-zinc-400">
-                    Droplets
-                  </p>
+                  <p className="text-sm text-zinc-600 dark:text-zinc-400">Droplets</p>
                   <p className="text-xl font-bold text-zinc-900 dark:text-white">
                     {droplets.length}
                   </p>
@@ -322,9 +307,7 @@ function DigitalOceanContent() {
                   <Database className="h-5 w-5 text-sky-500 dark:text-sky-400" />
                 </div>
                 <div>
-                  <p className="text-sm text-zinc-600 dark:text-zinc-400">
-                    Databases
-                  </p>
+                  <p className="text-sm text-zinc-600 dark:text-zinc-400">Databases</p>
                   <p className="text-xl font-bold text-zinc-900 dark:text-white">
                     {databases.length}
                   </p>
@@ -338,12 +321,8 @@ function DigitalOceanContent() {
                   <HardDrive className="h-5 w-5 text-green-600 dark:text-green-400" />
                 </div>
                 <div>
-                  <p className="text-sm text-zinc-600 dark:text-zinc-400">
-                    Spaces
-                  </p>
-                  <p className="text-xl font-bold text-zinc-900 dark:text-white">
-                    {spaces.length}
-                  </p>
+                  <p className="text-sm text-zinc-600 dark:text-zinc-400">Spaces</p>
+                  <p className="text-xl font-bold text-zinc-900 dark:text-white">{spaces.length}</p>
                 </div>
               </div>
             </Card>
@@ -354,9 +333,7 @@ function DigitalOceanContent() {
                   <DollarSign className="h-5 w-5 text-amber-600 dark:text-amber-400" />
                 </div>
                 <div>
-                  <p className="text-sm text-zinc-600 dark:text-zinc-400">
-                    Monthly Cost
-                  </p>
+                  <p className="text-sm text-zinc-600 dark:text-zinc-400">Monthly Cost</p>
                   <p className="text-xl font-bold text-zinc-900 dark:text-white">
                     ${totalCost.toFixed(2)}
                   </p>
@@ -394,9 +371,7 @@ function DigitalOceanContent() {
             </Card>
           ) : droplets.length > 0 ? (
             <Card className="p-6">
-              <h2 className="mb-4 text-lg font-semibold text-zinc-900 dark:text-white">
-                Droplets
-              </h2>
+              <h2 className="mb-4 text-lg font-semibold text-zinc-900 dark:text-white">Droplets</h2>
               <DataTable
                 columns={dropletColumns}
                 data={droplets}
@@ -454,8 +429,7 @@ function DigitalOceanContent() {
                 DigitalOcean Not Connected
               </h3>
               <p className="text-sm text-yellow-700 dark:text-yellow-200">
-                Connect your DigitalOcean account to manage Droplets, Databases,
-                and Spaces
+                Connect your DigitalOcean account to manage Droplets, Databases, and Spaces
               </p>
             </div>
           </div>

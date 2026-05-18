@@ -25,19 +25,29 @@ const EnvironmentActionSchema = z.object({
   action: z.enum(['create', 'diff', 'delete', 'list']),
   environment: z
     .string()
-    .regex(IDENTIFIER_PATTERN, 'environment must be lowercase alphanumeric with no leading or trailing hyphen')
+    .regex(
+      IDENTIFIER_PATTERN,
+      'environment must be lowercase alphanumeric with no leading or trailing hyphen'
+    )
     .optional(),
   options: z
     .object({
       template: z
         .string()
-        .refine((t): t is (typeof KNOWN_TEMPLATES)[number] => (KNOWN_TEMPLATES as readonly string[]).includes(t), {
-          message: 'template must be one of: ' + KNOWN_TEMPLATES.join(', '),
-        })
+        .refine(
+          (t): t is (typeof KNOWN_TEMPLATES)[number] =>
+            (KNOWN_TEMPLATES as readonly string[]).includes(t),
+          {
+            message: 'template must be one of: ' + KNOWN_TEMPLATES.join(', '),
+          }
+        )
         .optional(),
       compare: z
         .string()
-        .regex(IDENTIFIER_PATTERN, 'compare must be lowercase alphanumeric with no leading or trailing hyphen')
+        .regex(
+          IDENTIFIER_PATTERN,
+          'compare must be lowercase alphanumeric with no leading or trailing hyphen'
+        )
         .optional(),
       force: z.boolean().optional(),
     })
@@ -156,7 +166,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         stderr: err.stderr,
         stdout: err.stdout,
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

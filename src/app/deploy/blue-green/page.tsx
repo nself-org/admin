@@ -3,13 +3,7 @@
 import { HeroPattern } from '@/components/HeroPattern'
 import { FormSkeleton } from '@/components/skeletons'
 import type { BlueGreenDeployment } from '@/types/deployment'
-import {
-  ArrowLeft,
-  ArrowLeftRight,
-  CheckCircle,
-  Circle,
-  RefreshCw,
-} from 'lucide-react'
+import { ArrowLeft, ArrowLeftRight, CheckCircle, Circle, RefreshCw } from 'lucide-react'
 import Link from 'next/link'
 import { Suspense, useCallback, useEffect, useState } from 'react'
 
@@ -135,12 +129,8 @@ function BlueGreenDeployContent() {
                       <Circle className="h-6 w-6 fill-blue-500 text-blue-500" />
                     </div>
                     <div>
-                      <h3 className="text-xl font-bold text-zinc-900 dark:text-white">
-                        Blue
-                      </h3>
-                      <p className="text-sm text-zinc-500">
-                        {deployment.blueVersion}
-                      </p>
+                      <h3 className="text-xl font-bold text-zinc-900 dark:text-white">Blue</h3>
+                      <p className="text-sm text-zinc-500">{deployment.blueVersion}</p>
                     </div>
                   </div>
                   <span
@@ -163,9 +153,7 @@ function BlueGreenDeployContent() {
                     </div>
                   )}
                   {deployment.blueStatus === 'standby' && (
-                    <p className="text-sm text-zinc-500">
-                      Ready for traffic switch
-                    </p>
+                    <p className="text-sm text-zinc-500">Ready for traffic switch</p>
                   )}
                 </div>
               </div>
@@ -184,12 +172,8 @@ function BlueGreenDeployContent() {
                       <Circle className="h-6 w-6 fill-green-500 text-green-500" />
                     </div>
                     <div>
-                      <h3 className="text-xl font-bold text-zinc-900 dark:text-white">
-                        Green
-                      </h3>
-                      <p className="text-sm text-zinc-500">
-                        {deployment.greenVersion}
-                      </p>
+                      <h3 className="text-xl font-bold text-zinc-900 dark:text-white">Green</h3>
+                      <p className="text-sm text-zinc-500">{deployment.greenVersion}</p>
                     </div>
                   </div>
                   <span
@@ -212,9 +196,7 @@ function BlueGreenDeployContent() {
                     </div>
                   )}
                   {deployment.greenStatus === 'standby' && (
-                    <p className="text-sm text-zinc-500">
-                      Ready for traffic switch
-                    </p>
+                    <p className="text-sm text-zinc-500">Ready for traffic switch</p>
                   )}
                 </div>
               </div>
@@ -222,9 +204,7 @@ function BlueGreenDeployContent() {
 
             {/* Actions */}
             <div className="mb-8 rounded-xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-zinc-700 dark:bg-zinc-800">
-              <h3 className="mb-4 text-lg font-semibold text-zinc-900 dark:text-white">
-                Actions
-              </h3>
+              <h3 className="mb-4 text-lg font-semibold text-zinc-900 dark:text-white">Actions</h3>
               <div className="flex flex-wrap gap-4">
                 <button
                   onClick={switchEnvironment}
@@ -236,8 +216,7 @@ function BlueGreenDeployContent() {
                   ) : (
                     <ArrowLeftRight className="h-5 w-5" />
                   )}
-                  Switch Traffic to{' '}
-                  {deployment.activeColor === 'blue' ? 'Green' : 'Blue'}
+                  Switch Traffic to {deployment.activeColor === 'blue' ? 'Green' : 'Blue'}
                 </button>
                 <button
                   onClick={deployToStandby}
@@ -249,9 +228,7 @@ function BlueGreenDeployContent() {
                   ) : (
                     <CheckCircle className="h-5 w-5" />
                   )}
-                  Deploy to{' '}
-                  {deployment.activeColor === 'blue' ? 'Green' : 'Blue'}{' '}
-                  (Standby)
+                  Deploy to {deployment.activeColor === 'blue' ? 'Green' : 'Blue'} (Standby)
                 </button>
               </div>
               {deployment.canRollback && (
@@ -262,8 +239,7 @@ function BlueGreenDeployContent() {
               )}
               {deployment.lastSwitch && (
                 <p className="mt-2 text-sm text-zinc-500">
-                  Last switch:{' '}
-                  {new Date(deployment.lastSwitch).toLocaleString()}
+                  Last switch: {new Date(deployment.lastSwitch).toLocaleString()}
                 </p>
               )}
             </div>
@@ -282,32 +258,25 @@ function BlueGreenDeployContent() {
                     Deploy to Standby
                   </h4>
                   <p className="text-sm text-zinc-600 dark:text-zinc-400">
-                    Deploy new version to the inactive environment without
-                    affecting live traffic.
+                    Deploy new version to the inactive environment without affecting live traffic.
                   </p>
                 </div>
                 <div className="rounded-lg bg-zinc-50 p-4 dark:bg-zinc-900">
                   <div className="mb-2 flex h-8 w-8 items-center justify-center rounded-full bg-green-100 text-green-600 dark:bg-green-900/50">
                     2
                   </div>
-                  <h4 className="mb-1 font-medium text-zinc-900 dark:text-white">
-                    Test & Verify
-                  </h4>
+                  <h4 className="mb-1 font-medium text-zinc-900 dark:text-white">Test & Verify</h4>
                   <p className="text-sm text-zinc-600 dark:text-zinc-400">
-                    Test the new version in the standby environment before
-                    switching traffic.
+                    Test the new version in the standby environment before switching traffic.
                   </p>
                 </div>
                 <div className="rounded-lg bg-zinc-50 p-4 dark:bg-zinc-900">
                   <div className="mb-2 flex h-8 w-8 items-center justify-center rounded-full bg-sky-100 text-sky-500 dark:bg-sky-900/50">
                     3
                   </div>
-                  <h4 className="mb-1 font-medium text-zinc-900 dark:text-white">
-                    Switch Traffic
-                  </h4>
+                  <h4 className="mb-1 font-medium text-zinc-900 dark:text-white">Switch Traffic</h4>
                   <p className="text-sm text-zinc-600 dark:text-zinc-400">
-                    Instantly switch all traffic to the new version. Rollback
-                    instantly if needed.
+                    Instantly switch all traffic to the new version. Rollback instantly if needed.
                   </p>
                 </div>
               </div>
@@ -322,20 +291,17 @@ function BlueGreenDeployContent() {
           </h3>
           <div className="space-y-2 font-mono text-sm">
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-blue-500">nself blue-green status</span> -
-              Show current status
+              <span className="text-blue-500">nself blue-green status</span> - Show current status
             </p>
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-blue-500">nself blue-green deploy</span> -
-              Deploy to standby
+              <span className="text-blue-500">nself blue-green deploy</span> - Deploy to standby
             </p>
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-blue-500">nself blue-green switch</span> -
-              Switch traffic
+              <span className="text-blue-500">nself blue-green switch</span> - Switch traffic
             </p>
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-blue-500">nself blue-green rollback</span> -
-              Switch back to previous
+              <span className="text-blue-500">nself blue-green rollback</span> - Switch back to
+              previous
             </p>
           </div>
         </div>

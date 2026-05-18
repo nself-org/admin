@@ -148,11 +148,7 @@ function LogEntry({
             onClick={onToggle}
             className="rounded p-1 hover:bg-zinc-200 dark:hover:bg-zinc-700"
           >
-            {expanded ? (
-              <ChevronDown className="h-4 w-4" />
-            ) : (
-              <ChevronRight className="h-4 w-4" />
-            )}
+            {expanded ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
           </button>
           <Icon className={`h-4 w-4 ${levelConfig.color}`} />
         </div>
@@ -164,9 +160,7 @@ function LogEntry({
             </span>
             <div className="flex items-center gap-1">
               <ServiceIcon className="h-3 w-3 text-zinc-400" />
-              <span className="text-xs text-zinc-600 dark:text-zinc-400">
-                {entry.service}
-              </span>
+              <span className="text-xs text-zinc-600 dark:text-zinc-400">{entry.service}</span>
             </div>
             <span
               className={`rounded-full px-2 py-0.5 text-xs font-medium ${levelConfig.bg} ${levelConfig.color}`}
@@ -208,9 +202,7 @@ function LogEntry({
       {expanded && entry.metadata && Object.keys(entry.metadata).length > 0 && (
         <div className="ml-9 px-4 pb-4">
           <div className="rounded-lg border border-zinc-200 bg-zinc-50 p-3 dark:border-zinc-700 dark:bg-zinc-900/50">
-            <h4 className="mb-2 text-xs font-medium text-zinc-600 dark:text-zinc-400">
-              Metadata
-            </h4>
+            <h4 className="mb-2 text-xs font-medium text-zinc-600 dark:text-zinc-400">Metadata</h4>
             <pre className="overflow-x-auto text-xs text-zinc-800 dark:text-zinc-200">
               {JSON.stringify(entry.metadata, null, 2)}
             </pre>
@@ -335,9 +327,7 @@ function LogFilters({
           </label>
           <select
             value={filters.timeRange}
-            onChange={(e) =>
-              onChange({ ...filters, timeRange: e.target.value })
-            }
+            onChange={(e) => onChange({ ...filters, timeRange: e.target.value })}
             className="w-full rounded-lg border border-zinc-200 bg-white px-3 py-2 dark:border-zinc-700 dark:bg-zinc-900"
           >
             <option value="1h">Last Hour</option>
@@ -356,9 +346,7 @@ function LogFilters({
                 <input
                   type="checkbox"
                   checked={filters.regex}
-                  onChange={(e) =>
-                    onChange({ ...filters, regex: e.target.checked })
-                  }
+                  onChange={(e) => onChange({ ...filters, regex: e.target.checked })}
                   className="h-4 w-4 rounded text-blue-600"
                 />
                 <span className="text-sm">Regular expression</span>
@@ -368,9 +356,7 @@ function LogFilters({
                 <input
                   type="checkbox"
                   checked={filters.caseSensitive}
-                  onChange={(e) =>
-                    onChange({ ...filters, caseSensitive: e.target.checked })
-                  }
+                  onChange={(e) => onChange({ ...filters, caseSensitive: e.target.checked })}
                   className="h-4 w-4 rounded text-blue-600"
                 />
                 <span className="text-sm">Case sensitive</span>
@@ -408,9 +394,7 @@ function LogStats({ stats }: { stats: LogStats }) {
       <div className="rounded-lg border border-zinc-200 bg-white p-4 dark:border-zinc-700 dark:bg-zinc-800">
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-sm text-zinc-600 dark:text-zinc-400">
-              Total Logs
-            </p>
+            <p className="text-sm text-zinc-600 dark:text-zinc-400">Total Logs</p>
             <p className="text-2xl font-bold">{stats.total.toLocaleString()}</p>
           </div>
           <FileText className="h-8 w-8 text-blue-500" />
@@ -420,12 +404,8 @@ function LogStats({ stats }: { stats: LogStats }) {
       <div className="rounded-lg border border-zinc-200 bg-white p-4 dark:border-zinc-700 dark:bg-zinc-800">
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-sm text-zinc-600 dark:text-zinc-400">
-              Error Rate
-            </p>
-            <p className="text-2xl font-bold text-red-600">
-              {stats.errorRate.toFixed(2)}%
-            </p>
+            <p className="text-sm text-zinc-600 dark:text-zinc-400">Error Rate</p>
+            <p className="text-2xl font-bold text-red-600">{stats.errorRate.toFixed(2)}%</p>
           </div>
           <AlertCircle className="h-8 w-8 text-red-500" />
         </div>
@@ -435,9 +415,7 @@ function LogStats({ stats }: { stats: LogStats }) {
         <div className="flex items-center justify-between">
           <div>
             <p className="text-sm text-zinc-600 dark:text-zinc-400">Errors</p>
-            <p className="text-2xl font-bold text-red-600">
-              {stats.levels.error || 0}
-            </p>
+            <p className="text-2xl font-bold text-red-600">{stats.levels.error || 0}</p>
           </div>
           <XCircle className="h-8 w-8 text-red-500" />
         </div>
@@ -447,9 +425,7 @@ function LogStats({ stats }: { stats: LogStats }) {
         <div className="flex items-center justify-between">
           <div>
             <p className="text-sm text-zinc-600 dark:text-zinc-400">Warnings</p>
-            <p className="text-2xl font-bold text-yellow-600">
-              {stats.levels.warn || 0}
-            </p>
+            <p className="text-2xl font-bold text-yellow-600">{stats.levels.warn || 0}</p>
           </div>
           <AlertTriangle className="h-8 w-8 text-yellow-500" />
         </div>
@@ -478,16 +454,12 @@ function LogRetentionSettings() {
         <div className="flex items-center justify-between">
           <div>
             <label className="text-sm font-medium">Log Retention</label>
-            <p className="text-xs text-zinc-500">
-              Automatically manage log storage
-            </p>
+            <p className="text-xs text-zinc-500">Automatically manage log storage</p>
           </div>
           <input
             type="checkbox"
             checked={retention.enabled}
-            onChange={(e) =>
-              setRetention({ ...retention, enabled: e.target.checked })
-            }
+            onChange={(e) => setRetention({ ...retention, enabled: e.target.checked })}
             className="h-4 w-4 rounded text-blue-600"
           />
         </div>
@@ -662,10 +634,7 @@ function SystemLogsContent() {
       const newLog = JSON.parse(event.data)
       setLogs((prev) => [newLog, ...prev.slice(0, pageSize - 1)])
 
-      if (
-        soundEnabled &&
-        (newLog.level === 'error' || newLog.level === 'critical')
-      ) {
+      if (soundEnabled && (newLog.level === 'error' || newLog.level === 'critical')) {
         // Play notification sound
         const audio = new Audio('/sounds/alert.wav')
         audio.play().catch(() => {}) // Ignore audio play errors
@@ -769,11 +738,7 @@ function SystemLogsContent() {
                 variant={followMode ? 'primary' : 'outline'}
                 className="flex items-center gap-2"
               >
-                {followMode ? (
-                  <Pause className="h-4 w-4" />
-                ) : (
-                  <Play className="h-4 w-4" />
-                )}
+                {followMode ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
                 {followMode ? 'Stop' : 'Follow'}
               </Button>
 
@@ -782,11 +747,7 @@ function SystemLogsContent() {
                 variant="outline"
                 className="flex items-center gap-2"
               >
-                {soundEnabled ? (
-                  <Volume2 className="h-4 w-4" />
-                ) : (
-                  <VolumeX className="h-4 w-4" />
-                )}
+                {soundEnabled ? <Volume2 className="h-4 w-4" /> : <VolumeX className="h-4 w-4" />}
               </Button>
 
               <Button
@@ -798,20 +759,12 @@ function SystemLogsContent() {
                 {showFilters ? 'Hide' : 'Show'} Filters
               </Button>
 
-              <Button
-                onClick={exportLogs}
-                variant="outline"
-                className="flex items-center gap-2"
-              >
+              <Button onClick={exportLogs} variant="outline" className="flex items-center gap-2">
                 <Download className="h-4 w-4" />
                 Export
               </Button>
 
-              <Button
-                onClick={fetchLogs}
-                variant="outline"
-                className="flex items-center gap-2"
-              >
+              <Button onClick={fetchLogs} variant="outline" className="flex items-center gap-2">
                 <RefreshCw className="h-4 w-4" />
                 Refresh
               </Button>
@@ -821,16 +774,10 @@ function SystemLogsContent() {
           <LogStats stats={stats} />
         </div>
 
-        <div
-          className={`grid gap-6 ${showFilters ? 'grid-cols-1 lg:grid-cols-4' : 'grid-cols-1'}`}
-        >
+        <div className={`grid gap-6 ${showFilters ? 'grid-cols-1 lg:grid-cols-4' : 'grid-cols-1'}`}>
           {showFilters && (
             <div className="space-y-6">
-              <LogFilters
-                filters={filters}
-                onChange={setFilters}
-                services={services}
-              />
+              <LogFilters filters={filters} onChange={setFilters} services={services} />
               <LogRetentionSettings />
             </div>
           )}
@@ -877,16 +824,11 @@ function SystemLogsContent() {
                 </div>
               </div>
 
-              <div
-                ref={logContainerRef}
-                className="max-h-[600px] overflow-y-auto"
-              >
+              <div ref={logContainerRef} className="max-h-[600px] overflow-y-auto">
                 {loading ? (
                   <div className="flex items-center justify-center py-12">
                     <Loader2 className="h-8 w-8 animate-spin text-blue-500" />
-                    <span className="ml-2 text-zinc-600 dark:text-zinc-400">
-                      Loading logs...
-                    </span>
+                    <span className="ml-2 text-zinc-600 dark:text-zinc-400">Loading logs...</span>
                   </div>
                 ) : logs.length === 0 ? (
                   <div className="py-12 text-center">
@@ -914,11 +856,7 @@ function SystemLogsContent() {
                   </div>
 
                   <div className="flex items-center gap-2">
-                    <Button
-                      onClick={() => setPage(1)}
-                      disabled={page === 1}
-                      variant="outline"
-                    >
+                    <Button onClick={() => setPage(1)} disabled={page === 1} variant="outline">
                       <ChevronsLeft className="h-4 w-4" />
                     </Button>
                     <Button

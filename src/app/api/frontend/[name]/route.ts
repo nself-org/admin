@@ -12,24 +12,18 @@ interface RouteParams {
   params: Promise<{ name: string }>
 }
 
-export async function GET(
-  request: NextRequest,
-  { params }: RouteParams,
-): Promise<NextResponse> {
+export async function GET(request: NextRequest, { params }: RouteParams): Promise<NextResponse> {
   const startTime = Date.now()
   try {
     const { name } = await params
     const projectPath = getProjectPath()
     const nselfPath = await findNselfPath()
 
-    const { stdout } = await execAsync(
-      `${nselfPath} frontend get ${name} --json`,
-      {
-        cwd: projectPath,
-        env: { ...process.env, PATH: getEnhancedPath() },
-        timeout: 60000,
-      },
-    )
+    const { stdout } = await execAsync(`${nselfPath} frontend get ${name} --json`, {
+      cwd: projectPath,
+      env: { ...process.env, PATH: getEnhancedPath() },
+      timeout: 60000,
+    })
 
     const result = JSON.parse(stdout)
 
@@ -52,15 +46,12 @@ export async function GET(
         error: 'Failed to get frontend app',
         details: err.message,
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
 
-export async function PUT(
-  request: NextRequest,
-  { params }: RouteParams,
-): Promise<NextResponse> {
+export async function PUT(request: NextRequest, { params }: RouteParams): Promise<NextResponse> {
   const authError = await requireAuth(request)
   if (authError) return authError
 
@@ -83,14 +74,11 @@ export async function PUT(
       })
     }
 
-    const { stdout } = await execAsync(
-      `${nselfPath} ${args.join(' ')} --json`,
-      {
-        cwd: projectPath,
-        env: { ...process.env, PATH: getEnhancedPath() },
-        timeout: 60000,
-      },
-    )
+    const { stdout } = await execAsync(`${nselfPath} ${args.join(' ')} --json`, {
+      cwd: projectPath,
+      env: { ...process.env, PATH: getEnhancedPath() },
+      timeout: 60000,
+    })
 
     const result = JSON.parse(stdout)
 
@@ -108,15 +96,12 @@ export async function PUT(
         error: 'Failed to update frontend app',
         details: err.message,
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
 
-export async function DELETE(
-  request: NextRequest,
-  { params }: RouteParams,
-): Promise<NextResponse> {
+export async function DELETE(request: NextRequest, { params }: RouteParams): Promise<NextResponse> {
   const authError = await requireAuth(request)
   if (authError) return authError
 
@@ -126,14 +111,11 @@ export async function DELETE(
     const projectPath = getProjectPath()
     const nselfPath = await findNselfPath()
 
-    const { stdout } = await execAsync(
-      `${nselfPath} frontend remove ${name} --json`,
-      {
-        cwd: projectPath,
-        env: { ...process.env, PATH: getEnhancedPath() },
-        timeout: 60000,
-      },
-    )
+    const { stdout } = await execAsync(`${nselfPath} frontend remove ${name} --json`, {
+      cwd: projectPath,
+      env: { ...process.env, PATH: getEnhancedPath() },
+      timeout: 60000,
+    })
 
     const result = JSON.parse(stdout)
 
@@ -151,7 +133,7 @@ export async function DELETE(
         error: 'Failed to remove frontend app',
         details: err.message,
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

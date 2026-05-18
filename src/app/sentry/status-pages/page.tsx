@@ -1,15 +1,8 @@
 'use client'
 
-import { StatusBadge } from '@/components/sentry/StatusBadge'
 import type { SentryStatus } from '@/components/sentry/StatusBadge'
-import {
-  AlertTriangle,
-  ExternalLink,
-  Loader2,
-  PlusCircle,
-  RefreshCw,
-  XCircle,
-} from 'lucide-react'
+import { StatusBadge } from '@/components/sentry/StatusBadge'
+import { AlertTriangle, ExternalLink, Loader2, PlusCircle, RefreshCw, XCircle } from 'lucide-react'
 import { useCallback, useEffect, useState } from 'react'
 
 interface StatusPage {
@@ -67,9 +60,7 @@ export default function SentryStatusPagesPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="nself-gradient-text text-xl font-semibold">
-            ɳSentry — Status Pages
-          </h1>
+          <h1 className="nself-gradient-text text-xl font-semibold">ɳSentry — Status Pages</h1>
           {data !== null && (
             <p className="text-nself-text-muted mt-0.5 text-xs">
               {data.pages.length} page
@@ -114,22 +105,17 @@ export default function SentryStatusPagesPage() {
           </p>
           {data.pages.length === 0 ? (
             <p className="text-nself-text-muted text-xs">
-              No status pages yet. Create your first status page to communicate
-              service health to users.
+              No status pages yet. Create your first status page to communicate service health to
+              users.
             </p>
           ) : (
             <ul className="space-y-2">
               {data.pages.map((page) => (
-                <li
-                  key={page.id}
-                  className="border-nself-border rounded-lg border px-4 py-3"
-                >
+                <li key={page.id} className="border-nself-border rounded-lg border px-4 py-3">
                   <div className="flex items-start gap-3">
-                    <div className="flex-1 min-w-0">
+                    <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-2">
-                        <p className="text-nself-text text-sm font-medium">
-                          {page.name}
-                        </p>
+                        <p className="text-nself-text text-sm font-medium">{page.name}</p>
                         {page.activeIncidents > 0 && (
                           <span className="flex items-center gap-1 rounded-full border border-red-500/40 bg-red-500/10 px-2 py-0.5 text-xs text-red-400">
                             <AlertTriangle className="h-3 w-3" />

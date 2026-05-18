@@ -17,7 +17,7 @@ function notImplemented(action: string): NextResponse {
       message: `Awaiting nself service ${action} CLI command (filed as G-009 CLI gap in .claude/docs/doctrines/nself-first-cli-gaps.md)`,
       cliGap: 'G-009',
     },
-    { status: 501 },
+    { status: 501 }
   )
 }
 
@@ -25,7 +25,7 @@ function notImplemented(action: string): NextResponse {
 const docker = new Docker(
   process.env.DOCKER_HOST
     ? { host: process.env.DOCKER_HOST }
-    : { socketPath: getDockerSocketPath() },
+    : { socketPath: getDockerSocketPath() }
 )
 
 export async function GET(request: NextRequest): Promise<NextResponse> {
@@ -41,7 +41,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         if (!service) {
           return NextResponse.json(
             { success: false, error: 'Service name is required for details' },
-            { status: 400 },
+            { status: 400 }
           )
         }
         return await getServiceDetails(service)
@@ -49,7 +49,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         if (!service) {
           return NextResponse.json(
             { success: false, error: 'Service name is required for logs' },
-            { status: 400 },
+            { status: 400 }
           )
         }
         return await getServiceLogs(service, searchParams)
@@ -60,7 +60,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       default:
         return NextResponse.json(
           { success: false, error: `Unknown action: ${action}` },
-          { status: 400 },
+          { status: 400 }
         )
     }
   } catch (error) {
@@ -71,7 +71,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         details: error instanceof Error ? error.message : 'Unknown error',
         data: { services: [] },
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -84,10 +84,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     const { action, service, services, options = {} } = await request.json()
 
     if (!action) {
-      return NextResponse.json(
-        { success: false, error: 'Action is required' },
-        { status: 400 },
-      )
+      return NextResponse.json({ success: false, error: 'Action is required' }, { status: 400 })
     }
 
     const _backendPath = getProjectPath()
@@ -108,7 +105,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       default:
         return NextResponse.json(
           { success: false, error: `Unknown action: ${action}` },
-          { status: 400 },
+          { status: 400 }
         )
     }
   } catch (error) {
@@ -118,7 +115,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         error: 'Service operation failed',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -164,10 +161,7 @@ async function getServicesList() {
             entrypoint: inspect.Config.Entrypoint,
             cmd: inspect.Config.Cmd,
             env: inspect.Config.Env?.filter(
-              (env) =>
-                !env.includes('PASSWORD') &&
-                !env.includes('SECRET') &&
-                !env.includes('KEY'),
+              (env) => !env.includes('PASSWORD') && !env.includes('SECRET') && !env.includes('KEY')
             ), // Filter out sensitive data
           },
           mounts: inspect.Mounts?.map((mount) => ({
@@ -183,7 +177,7 @@ async function getServicesList() {
             gateway: inspect.NetworkSettings.Gateway,
           },
         }
-      }),
+      })
     )
 
     // Group services by category and type
@@ -218,7 +212,7 @@ async function getServicesList() {
         details: error instanceof Error ? error.message : 'Unknown error',
         data: { services: [] },
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -226,9 +220,7 @@ async function getServicesList() {
 async function getServiceDetails(serviceName: string) {
   try {
     const containers = await docker.listContainers({ all: true })
-    const container = containers.find((c) =>
-      c.Names.some((name) => name.includes(serviceName)),
-    )
+    const container = containers.find((c) => c.Names.some((name) => name.includes(serviceName)))
 
     if (!container) {
       return NextResponse.json(
@@ -236,7 +228,7 @@ async function getServiceDetails(serviceName: string) {
           success: false,
           error: `Service '${serviceName}' not found`,
         },
-        { status: 404 },
+        { status: 404 }
       )
     }
 
@@ -259,20 +251,15 @@ async function getServiceDetails(serviceName: string) {
         error: `Failed to get details for service '${serviceName}'`,
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
 
-async function getServiceLogs(
-  serviceName: string,
-  searchParams: URLSearchParams,
-) {
+async function getServiceLogs(serviceName: string, searchParams: URLSearchParams) {
   try {
     const containers = await docker.listContainers({ all: true })
-    const container = containers.find((c) =>
-      c.Names.some((name) => name.includes(serviceName)),
-    )
+    const container = containers.find((c) => c.Names.some((name) => name.includes(serviceName)))
 
     if (!container) {
       return NextResponse.json(
@@ -280,7 +267,7 @@ async function getServiceLogs(
           success: false,
           error: `Service '${serviceName}' not found`,
         },
-        { status: 404 },
+        { status: 404 }
       )
     }
 
@@ -311,7 +298,7 @@ async function getServiceLogs(
         error: `Failed to get logs for service '${serviceName}'`,
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -340,7 +327,7 @@ async function getServicesStats() {
             timestamp: new Date().toISOString(),
           }
         }
-      }),
+      })
     )
 
     return NextResponse.json({
@@ -354,7 +341,7 @@ async function getServicesStats() {
         error: 'Failed to get services stats',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -384,24 +371,25 @@ async function getServicesHealth() {
         error: 'Failed to get services health',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
 
 async function controlService(serviceName: string, operation: string) {
   if (!serviceName) {
-    return NextResponse.json(
-      { success: false, error: 'Service name is required' },
-      { status: 400 },
-    )
+    return NextResponse.json({ success: false, error: 'Service name is required' }, { status: 400 })
   }
 
   // Sanitize: shared validateServiceName (no leading/trailing hyphen, alphanumeric + interior hyphens).
   if (!validateServiceName(serviceName)) {
     return NextResponse.json(
-      { success: false, error: 'Invalid service name: must be lowercase alphanumeric with no leading or trailing hyphen' },
-      { status: 400 },
+      {
+        success: false,
+        error:
+          'Invalid service name: must be lowercase alphanumeric with no leading or trailing hyphen',
+      },
+      { status: 400 }
     )
   }
 
@@ -422,7 +410,7 @@ async function controlService(serviceName: string, operation: string) {
     default:
       return NextResponse.json(
         { success: false, error: `Unknown operation: ${operation}` },
-        { status: 400 },
+        { status: 400 }
       )
   }
 }
@@ -432,8 +420,12 @@ async function scaleService(serviceName: string, _replicas: number) {
   // when G-009 ships and this becomes a real CLI call.
   if (!serviceName || !validateServiceName(serviceName)) {
     return NextResponse.json(
-      { success: false, error: 'Invalid or missing service name: must be lowercase alphanumeric with no leading or trailing hyphen' },
-      { status: 400 },
+      {
+        success: false,
+        error:
+          'Invalid or missing service name: must be lowercase alphanumeric with no leading or trailing hyphen',
+      },
+      { status: 400 }
     )
   }
 
@@ -449,7 +441,7 @@ async function batchServiceControl(services: string[], operation: string) {
         success: false,
         error: 'Services list is required',
       },
-      { status: 400 },
+      { status: 400 }
     )
   }
 
@@ -465,7 +457,7 @@ async function batchServiceControl(services: string[], operation: string) {
           error: error instanceof Error ? error.message : 'Unknown error',
         }
       }
-    }),
+    })
   )
 
   return NextResponse.json({
@@ -483,8 +475,12 @@ async function updateService(serviceName: string, _options: unknown) {
   // Sanitize input even though we return 501.
   if (!serviceName || !validateServiceName(serviceName)) {
     return NextResponse.json(
-      { success: false, error: 'Invalid or missing service name: must be lowercase alphanumeric with no leading or trailing hyphen' },
-      { status: 400 },
+      {
+        success: false,
+        error:
+          'Invalid or missing service name: must be lowercase alphanumeric with no leading or trailing hyphen',
+      },
+      { status: 400 }
     )
   }
 
@@ -541,8 +537,7 @@ function getServiceCategory(containerName: string, labels: any): string {
 function getHealthStatus(status: string, state: string): string {
   if (state === 'running') {
     if (status.includes('unhealthy')) return 'unhealthy'
-    if (status.includes('starting') || status.includes('health: starting'))
-      return 'starting'
+    if (status.includes('starting') || status.includes('health: starting')) return 'starting'
     return 'healthy'
   }
 

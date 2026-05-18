@@ -1,14 +1,14 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
-import { AlertCircle, CheckCircle, Gauge, Loader2, Save, WifiOff } from 'lucide-react'
+import { FormSkeleton } from '@/components/skeletons'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Switch } from '@/components/ui/switch'
-import { FormSkeleton } from '@/components/skeletons'
+import { AlertCircle, CheckCircle, Gauge, Loader2, Save, WifiOff } from 'lucide-react'
+import { useCallback, useEffect, useState } from 'react'
 
 interface RateLimits {
   apiEnabled: string
@@ -86,12 +86,12 @@ function RateLimitsContent() {
   const markDirty = (updated: RateLimits) => {
     setIsDirty(
       updated.apiEnabled !== config.apiEnabled ||
-      updated.apiRequests !== config.apiRequests ||
-      updated.apiWindow !== config.apiWindow ||
-      updated.globalEnabled !== config.globalEnabled ||
-      updated.globalMaxRequests !== config.globalMaxRequests ||
-      updated.globalWindowSeconds !== config.globalWindowSeconds ||
-      updated.globalBurst !== config.globalBurst
+        updated.apiRequests !== config.apiRequests ||
+        updated.apiWindow !== config.apiWindow ||
+        updated.globalEnabled !== config.globalEnabled ||
+        updated.globalMaxRequests !== config.globalMaxRequests ||
+        updated.globalWindowSeconds !== config.globalWindowSeconds ||
+        updated.globalBurst !== config.globalBurst
     )
   }
 
@@ -153,11 +153,20 @@ function RateLimitsContent() {
   // ── State: unauth ──────────────────────────────────────────────────────────
   if (pageState === 'unauth') {
     return (
-      <div className="flex flex-col items-center justify-center py-24 gap-4">
-        <AlertCircle className="h-10 w-10 text-destructive" />
+      <div className="flex flex-col items-center justify-center gap-4 py-24">
+        <AlertCircle className="text-destructive h-10 w-10" />
         <p className="text-lg font-medium">Not authenticated</p>
-        <p className="text-sm text-muted-foreground">Please log in to manage rate limit configuration.</p>
-        <Button variant="outline" onClick={() => { window.location.href = '/login' }}>Go to Login</Button>
+        <p className="text-muted-foreground text-sm">
+          Please log in to manage rate limit configuration.
+        </p>
+        <Button
+          variant="outline"
+          onClick={() => {
+            window.location.href = '/login'
+          }}
+        >
+          Go to Login
+        </Button>
       </div>
     )
   }
@@ -165,11 +174,13 @@ function RateLimitsContent() {
   // ── State: offline ─────────────────────────────────────────────────────────
   if (pageState === 'offline') {
     return (
-      <div className="flex flex-col items-center justify-center py-24 gap-4">
-        <WifiOff className="h-10 w-10 text-muted-foreground" />
+      <div className="flex flex-col items-center justify-center gap-4 py-24">
+        <WifiOff className="text-muted-foreground h-10 w-10" />
         <p className="text-lg font-medium">Cannot connect to admin API</p>
-        <p className="text-sm text-muted-foreground">{errorMessage}</p>
-        <Button variant="outline" onClick={load}>Retry</Button>
+        <p className="text-muted-foreground text-sm">{errorMessage}</p>
+        <Button variant="outline" onClick={load}>
+          Retry
+        </Button>
       </div>
     )
   }
@@ -177,11 +188,13 @@ function RateLimitsContent() {
   // ── State: error ───────────────────────────────────────────────────────────
   if (pageState === 'error') {
     return (
-      <div className="flex flex-col items-center justify-center py-24 gap-4">
-        <AlertCircle className="h-10 w-10 text-destructive" />
+      <div className="flex flex-col items-center justify-center gap-4 py-24">
+        <AlertCircle className="text-destructive h-10 w-10" />
         <p className="text-lg font-medium">Failed to load rate limit configuration</p>
-        <p className="text-sm text-muted-foreground">{errorMessage}</p>
-        <Button variant="outline" onClick={load}>Retry</Button>
+        <p className="text-muted-foreground text-sm">{errorMessage}</p>
+        <Button variant="outline" onClick={load}>
+          Retry
+        </Button>
       </div>
     )
   }
@@ -193,15 +206,15 @@ function RateLimitsContent() {
 
   // ── States: empty / partial / success ─────────────────────────────────────
   return (
-    <div className="space-y-6 max-w-2xl">
+    <div className="max-w-2xl space-y-6">
       <div>
-        <h1 className="text-2xl font-bold flex items-center gap-2">
+        <h1 className="flex items-center gap-2 text-2xl font-bold">
           <Gauge className="h-6 w-6" />
           Rate Limits
         </h1>
-        <p className="text-sm text-muted-foreground mt-1">
-          Configure request rate limiting for the API and global Nginx traffic.
-          Changes trigger <code className="text-xs bg-muted px-1 rounded">nself build</code> to apply.
+        <p className="text-muted-foreground mt-1 text-sm">
+          Configure request rate limiting for the API and global Nginx traffic. Changes trigger{' '}
+          <code className="bg-muted rounded px-1 text-xs">nself build</code> to apply.
         </p>
       </div>
 
@@ -210,7 +223,7 @@ function RateLimitsContent() {
           <CheckCircle className="h-4 w-4 text-green-600" />
           <AlertDescription className="text-green-700 dark:text-green-300">
             Rate limit configuration saved.
-            {buildStatus && <span className="block text-xs mt-1">{buildStatus}</span>}
+            {buildStatus && <span className="mt-1 block text-xs">{buildStatus}</span>}
           </AlertDescription>
         </Alert>
       )}
@@ -232,8 +245,10 @@ function RateLimitsContent() {
                 Per-client request limits applied by the application middleware.
               </CardDescription>
             </div>
-            <div className="flex items-center gap-2 mt-0.5">
-              <Label htmlFor="api-enabled" className="text-sm text-muted-foreground">Enabled</Label>
+            <div className="mt-0.5 flex items-center gap-2">
+              <Label htmlFor="api-enabled" className="text-muted-foreground text-sm">
+                Enabled
+              </Label>
               <Switch
                 id="api-enabled"
                 checked={form.apiEnabled === 'true'}
@@ -256,7 +271,7 @@ function RateLimitsContent() {
                 value={form.apiRequests}
                 onChange={(e) => handleField('apiRequests', e.target.value)}
               />
-              <p className="text-xs text-muted-foreground mt-1">Max requests per window</p>
+              <p className="text-muted-foreground mt-1 text-xs">Max requests per window</p>
             </div>
             <div>
               <Label htmlFor="api-window">API_RATE_LIMIT_WINDOW</Label>
@@ -270,7 +285,7 @@ function RateLimitsContent() {
                 value={form.apiWindow}
                 onChange={(e) => handleField('apiWindow', e.target.value)}
               />
-              <p className="text-xs text-muted-foreground mt-1">Window duration in seconds</p>
+              <p className="text-muted-foreground mt-1 text-xs">Window duration in seconds</p>
             </div>
           </div>
         </CardContent>
@@ -283,11 +298,14 @@ function RateLimitsContent() {
             <div>
               <CardTitle className="text-base">Nginx Rate Limits</CardTitle>
               <CardDescription className="mt-1">
-                Global rate limiting applied at the Nginx reverse-proxy level. Applies to all traffic.
+                Global rate limiting applied at the Nginx reverse-proxy level. Applies to all
+                traffic.
               </CardDescription>
             </div>
-            <div className="flex items-center gap-2 mt-0.5">
-              <Label htmlFor="global-enabled" className="text-sm text-muted-foreground">Enabled</Label>
+            <div className="mt-0.5 flex items-center gap-2">
+              <Label htmlFor="global-enabled" className="text-muted-foreground text-sm">
+                Enabled
+              </Label>
               <Switch
                 id="global-enabled"
                 checked={form.globalEnabled === 'true'}
@@ -310,7 +328,7 @@ function RateLimitsContent() {
                 value={form.globalMaxRequests}
                 onChange={(e) => handleField('globalMaxRequests', e.target.value)}
               />
-              <p className="text-xs text-muted-foreground mt-1">Max requests/window</p>
+              <p className="text-muted-foreground mt-1 text-xs">Max requests/window</p>
             </div>
             <div>
               <Label htmlFor="global-window">RATE_LIMIT_WINDOW_SECONDS</Label>
@@ -324,7 +342,7 @@ function RateLimitsContent() {
                 value={form.globalWindowSeconds}
                 onChange={(e) => handleField('globalWindowSeconds', e.target.value)}
               />
-              <p className="text-xs text-muted-foreground mt-1">Window in seconds</p>
+              <p className="text-muted-foreground mt-1 text-xs">Window in seconds</p>
             </div>
             <div>
               <Label htmlFor="global-burst">RATE_LIMIT_BURST</Label>
@@ -338,24 +356,18 @@ function RateLimitsContent() {
                 value={form.globalBurst}
                 onChange={(e) => handleField('globalBurst', e.target.value)}
               />
-              <p className="text-xs text-muted-foreground mt-1">Burst allowance</p>
+              <p className="text-muted-foreground mt-1 text-xs">Burst allowance</p>
             </div>
           </div>
         </CardContent>
       </Card>
 
       <div className="flex items-center justify-between">
-        <Button
-          onClick={handleSave}
-          disabled={saving || !isDirty}
-          className="gap-2"
-        >
+        <Button onClick={handleSave} disabled={saving || !isDirty} className="gap-2">
           {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
           {saving ? 'Saving…' : 'Save & Apply'}
         </Button>
-        {isDirty && (
-          <span className="text-xs text-muted-foreground">You have unsaved changes</span>
-        )}
+        {isDirty && <span className="text-muted-foreground text-xs">You have unsaved changes</span>}
       </div>
     </div>
   )

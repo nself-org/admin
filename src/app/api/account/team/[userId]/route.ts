@@ -14,7 +14,7 @@ const AUTH_URL = process.env.NSELF_AUTH_URL || ''
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: Promise<{ userId: string }> },
+  { params }: { params: Promise<{ userId: string }> }
 ): Promise<NextResponse> {
   const authError = await requireAuth(request)
   if (authError) return authError
@@ -23,19 +23,15 @@ export async function DELETE(
     return NextResponse.json(
       {
         error: 'not_available',
-        message:
-          'Multi-user mode disabled. Set NSELF_ADMIN_MULTIUSER=true to enable.',
+        message: 'Multi-user mode disabled. Set NSELF_ADMIN_MULTIUSER=true to enable.',
       },
-      { status: 404 },
+      { status: 404 }
     )
   }
 
   const token = request.cookies.get('nself-session')?.value
   if (!token || !(await validateSessionToken(token))) {
-    return NextResponse.json(
-      { success: false, error: 'Unauthorized' },
-      { status: 401 },
-    )
+    return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 })
   }
 
   const { userId } = await params
@@ -43,7 +39,7 @@ export async function DELETE(
   if (!AUTH_URL) {
     return NextResponse.json(
       { success: false, error: 'NSELF_AUTH_URL not configured' },
-      { status: 503 },
+      { status: 503 }
     )
   }
 
@@ -60,7 +56,7 @@ export async function DELETE(
       const body = await upstream.json().catch(() => ({}))
       return NextResponse.json(
         { success: false, error: body.error || 'Revoke failed' },
-        { status: upstream.status },
+        { status: upstream.status }
       )
     }
 
@@ -72,7 +68,7 @@ export async function DELETE(
         error: 'Auth service unavailable',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 503 },
+      { status: 503 }
     )
   }
 }

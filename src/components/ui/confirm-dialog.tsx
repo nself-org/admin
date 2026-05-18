@@ -80,18 +80,10 @@ export function ConfirmDialog({
           {description && <DialogDescription>{description}</DialogDescription>}
         </DialogHeader>
         <DialogFooter>
-          <Button
-            variant="outline"
-            onClick={handleCancel}
-            disabled={isLoading || loading}
-          >
+          <Button variant="outline" onClick={handleCancel} disabled={isLoading || loading}>
             {cancelText}
           </Button>
-          <Button
-            variant={confirmVariant}
-            onClick={handleConfirm}
-            disabled={isLoading || loading}
-          >
+          <Button variant={confirmVariant} onClick={handleConfirm} disabled={isLoading || loading}>
             {isLoading || loading ? 'Processing...' : confirmText}
           </Button>
         </DialogFooter>

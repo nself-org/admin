@@ -2,10 +2,7 @@
 
 import { HeroPattern } from '@/components/HeroPattern'
 import { ChartSkeleton } from '@/components/skeletons'
-import type {
-  BenchmarkBaseline,
-  BenchmarkComparison,
-} from '@/types/performance'
+import type { BenchmarkBaseline, BenchmarkComparison } from '@/types/performance'
 import {
   ArrowDown,
   ArrowLeft,
@@ -77,7 +74,7 @@ function CompareContent() {
           metric: string,
           baseVal: number,
           currVal: number,
-          lowerIsBetter: boolean,
+          lowerIsBetter: boolean
         ) => {
           const change = currVal - baseVal
           const changePercentage = (change / baseVal) * 100
@@ -99,39 +96,37 @@ function CompareContent() {
               'Average Latency (ms)',
               baselineResult.latency.avg,
               currentResult.latency.avg,
-              true,
+              true
             ),
             calcChange(
               'P95 Latency (ms)',
               baselineResult.latency.p95,
               currentResult.latency.p95,
-              true,
+              true
             ),
             calcChange(
               'P99 Latency (ms)',
               baselineResult.latency.p99,
               currentResult.latency.p99,
-              true,
+              true
             ),
             calcChange(
               'Throughput (req/s)',
               baselineResult.throughput.requestsPerSecond,
               currentResult.throughput.requestsPerSecond,
-              false,
+              false
             ),
             calcChange(
               'Total Requests',
               baselineResult.requests.total,
               currentResult.requests.total,
-              false,
+              false
             ),
             calcChange(
               'Error Rate (%)',
-              (baselineResult.requests.failed / baselineResult.requests.total) *
-                100,
-              (currentResult.requests.failed / currentResult.requests.total) *
-                100,
-              true,
+              (baselineResult.requests.failed / baselineResult.requests.total) * 100,
+              (currentResult.requests.failed / currentResult.requests.total) * 100,
+              true
             ),
           ],
         })
@@ -280,14 +275,10 @@ function CompareContent() {
                           : 'bg-red-50 dark:bg-red-900/20'
                     }`}
                   >
-                    <p className="mb-1 text-sm text-zinc-600 dark:text-zinc-400">
-                      {change.metric}
-                    </p>
+                    <p className="mb-1 text-sm text-zinc-600 dark:text-zinc-400">{change.metric}</p>
                     <div className="flex items-center justify-between">
                       <p className="text-xl font-bold text-zinc-900 dark:text-white">
-                        {change.current.toFixed(
-                          change.metric.includes('%') ? 3 : 1,
-                        )}
+                        {change.current.toFixed(change.metric.includes('%') ? 3 : 1)}
                       </p>
                       <div
                         className={`flex items-center gap-1 text-sm font-medium ${
@@ -389,14 +380,10 @@ function CompareContent() {
                           {change.metric}
                         </td>
                         <td className="py-3 text-right text-zinc-600 dark:text-zinc-400">
-                          {change.baseline.toFixed(
-                            change.metric.includes('%') ? 3 : 1,
-                          )}
+                          {change.baseline.toFixed(change.metric.includes('%') ? 3 : 1)}
                         </td>
                         <td className="py-3 text-right text-zinc-600 dark:text-zinc-400">
-                          {change.current.toFixed(
-                            change.metric.includes('%') ? 3 : 1,
-                          )}
+                          {change.current.toFixed(change.metric.includes('%') ? 3 : 1)}
                         </td>
                         <td
                           className={`py-3 text-right font-medium ${
@@ -440,9 +427,7 @@ function CompareContent() {
         {!comparison && selectedBaseline && selectedCurrent && (
           <div className="rounded-xl border border-zinc-200 bg-white p-12 text-center shadow-sm dark:border-zinc-700 dark:bg-zinc-800">
             <RefreshCw className="mx-auto mb-4 h-12 w-12 animate-spin text-zinc-400" />
-            <p className="text-zinc-600 dark:text-zinc-400">
-              Calculating comparison...
-            </p>
+            <p className="text-zinc-600 dark:text-zinc-400">Calculating comparison...</p>
           </div>
         )}
 
@@ -465,20 +450,16 @@ function CompareContent() {
           </h3>
           <div className="space-y-2 font-mono text-sm">
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-green-500">
-                nself bench --compare=baseline-name
-              </span>{' '}
-              - Compare with baseline
+              <span className="text-green-500">nself bench --compare=baseline-name</span> - Compare
+              with baseline
             </p>
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-green-500">
-                nself bench compare baseline1 baseline2
-              </span>{' '}
-              - Compare two baselines
+              <span className="text-green-500">nself bench compare baseline1 baseline2</span> -
+              Compare two baselines
             </p>
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-green-500">nself bench compare --json</span>{' '}
-              - Output comparison as JSON
+              <span className="text-green-500">nself bench compare --json</span> - Output comparison
+              as JSON
             </p>
           </div>
         </div>

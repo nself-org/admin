@@ -74,16 +74,13 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     const { template, name } = body
 
     if (!template || typeof template !== 'string') {
-      return NextResponse.json(
-        { success: false, error: 'Template is required' },
-        { status: 400 },
-      )
+      return NextResponse.json({ success: false, error: 'Template is required' }, { status: 400 })
     }
 
     if (!name || typeof name !== 'string') {
       return NextResponse.json(
         { success: false, error: 'Service name is required' },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -94,7 +91,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           success: false,
           error: `Invalid template: ${template}. Use GET /api/services/scaffold for available templates.`,
         },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -107,7 +104,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           error:
             'Service name must start with a letter and contain only letters, numbers, hyphens, and underscores (max 64 chars)',
         },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -124,7 +121,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           error: 'Failed to scaffold service',
           details: result.error || result.stderr || 'Unknown error',
         },
-        { status: 500 },
+        { status: 500 }
       )
     }
 
@@ -143,7 +140,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to scaffold service',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -163,7 +160,7 @@ export async function GET(): Promise<NextResponse> {
           error: 'Failed to list scaffold templates',
           details: result.error || result.stderr || 'Unknown error',
         },
-        { status: 500 },
+        { status: 500 }
       )
     }
 
@@ -178,7 +175,7 @@ export async function GET(): Promise<NextResponse> {
         error: 'Failed to list scaffold templates',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

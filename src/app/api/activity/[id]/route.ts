@@ -6,7 +6,7 @@ import { NextResponse } from 'next/server'
  */
 export async function GET(
   _request: Request,
-  { params }: { params: Promise<{ id: string }> },
+  { params }: { params: Promise<{ id: string }> }
 ): Promise<NextResponse> {
   try {
     const { id } = await params
@@ -14,17 +14,14 @@ export async function GET(
     if (!id) {
       return NextResponse.json(
         { success: false, error: 'Activity ID is required' },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
     const activity = await activityApi.getActivityById(id)
 
     if (!activity) {
-      return NextResponse.json(
-        { success: false, error: 'Activity not found' },
-        { status: 404 },
-      )
+      return NextResponse.json({ success: false, error: 'Activity not found' }, { status: 404 })
     }
 
     return NextResponse.json({
@@ -35,10 +32,9 @@ export async function GET(
     return NextResponse.json(
       {
         success: false,
-        error:
-          error instanceof Error ? error.message : 'Failed to fetch activity',
+        error: error instanceof Error ? error.message : 'Failed to fetch activity',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

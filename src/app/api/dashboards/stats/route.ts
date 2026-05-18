@@ -16,12 +16,9 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     return NextResponse.json(
       {
         success: false,
-        error:
-          error instanceof Error
-            ? error.message
-            : 'Failed to fetch dashboard stats',
+        error: error instanceof Error ? error.message : 'Failed to fetch dashboard stats',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

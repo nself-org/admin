@@ -70,9 +70,7 @@ function QuotaCard({
         <Icon className="h-4 w-4 text-zinc-500" />
       </div>
       <div className="mb-2">
-        <span className="text-2xl font-bold text-white">
-          {formatValue(used)}
-        </span>
+        <span className="text-2xl font-bold text-white">{formatValue(used)}</span>
         <span className="text-sm text-zinc-500"> / {formatValue(limit)}</span>
       </div>
       <div className="h-2 overflow-hidden rounded-full bg-zinc-700">

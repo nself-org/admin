@@ -18,7 +18,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           error: 'Invalid tenant ID',
           details: 'A valid tenant ID is required',
         },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -31,7 +31,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           error: 'Tenant not found',
           details: 'The specified tenant does not exist',
         },
-        { status: 404 },
+        { status: 404 }
       )
     }
 
@@ -56,7 +56,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to switch tenant',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

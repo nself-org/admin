@@ -21,17 +21,14 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     const nselfPath = await findNselfPath()
 
     // First, run nself init --full to create all env files
-    const { stdout: initOut, stderr: initErr } = await execAsync(
-      `${nselfPath} init --full`,
-      {
-        cwd: projectPath,
-        env: {
-          ...process.env,
-          PATH: getEnhancedPath(),
-        },
-        timeout: 30000,
+    const { stdout: initOut, stderr: initErr } = await execAsync(`${nselfPath} init --full`, {
+      cwd: projectPath,
+      env: {
+        ...process.env,
+        PATH: getEnhancedPath(),
       },
-    )
+      timeout: 30000,
+    })
 
     if (initErr && !initErr.includes('warning')) {
       console.error('Init stderr:', initErr)
@@ -74,39 +71,24 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       const optionalServices = config.services.optional
 
       // Redis
-      envMap.set(
-        'ENABLE_REDIS',
-        optionalServices.includes('redis') ? 'true' : 'false',
-      )
+      envMap.set('ENABLE_REDIS', optionalServices.includes('redis') ? 'true' : 'false')
 
       // MinIO Storage
-      envMap.set(
-        'ENABLE_MINIO',
-        optionalServices.includes('minio') ? 'true' : 'false',
-      )
+      envMap.set('ENABLE_MINIO', optionalServices.includes('minio') ? 'true' : 'false')
 
       // Monitoring Stack (includes Grafana, Prometheus, Loki, Tempo, AlertManager)
-      envMap.set(
-        'ENABLE_MONITORING',
-        optionalServices.includes('monitoring') ? 'true' : 'false',
-      )
+      envMap.set('ENABLE_MONITORING', optionalServices.includes('monitoring') ? 'true' : 'false')
 
       // ML/AI Stack
-      envMap.set(
-        'ENABLE_MLFLOW',
-        optionalServices.includes('mlflow') ? 'true' : 'false',
-      )
+      envMap.set('ENABLE_MLFLOW', optionalServices.includes('mlflow') ? 'true' : 'false')
 
       // Email/SMTP
-      envMap.set(
-        'ENABLE_MAILPIT',
-        optionalServices.includes('mailpit') ? 'true' : 'false',
-      )
+      envMap.set('ENABLE_MAILPIT', optionalServices.includes('mailpit') ? 'true' : 'false')
 
       // Search
       envMap.set(
         'ENABLE_ELASTICSEARCH',
-        optionalServices.includes('elasticsearch') ? 'true' : 'false',
+        optionalServices.includes('elasticsearch') ? 'true' : 'false'
       )
     }
 
@@ -136,10 +118,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         const app = config.frontendApps[i]
         const appNum = i + 1
         envMap.set(`FRONTEND_APP_${appNum}_NAME`, app.name)
-        envMap.set(
-          `FRONTEND_APP_${appNum}_FRAMEWORK`,
-          app.framework || 'nextjs',
-        )
+        envMap.set(`FRONTEND_APP_${appNum}_FRAMEWORK`, app.framework || 'nextjs')
         envMap.set(`FRONTEND_APP_${appNum}_PORT`, String(3000 + appNum))
       }
       envMap.set('FRONTEND_APP_COUNT', String(config.frontendApps.length))
@@ -150,10 +129,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       envMap.set('ENABLE_BACKUP', config.backup.enabled ? 'true' : 'false')
       if (config.backup.enabled) {
         envMap.set('BACKUP_SCHEDULE', config.backup.schedule || '0 2 * * *')
-        envMap.set(
-          'BACKUP_RETENTION_DAYS',
-          String(config.backup.retentionDays || 7),
-        )
+        envMap.set('BACKUP_RETENTION_DAYS', String(config.backup.retentionDays || 7))
         envMap.set('BACKUP_STORAGE', config.backup.storage || 'local')
       }
     }
@@ -178,7 +154,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to initialize project',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

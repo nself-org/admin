@@ -15,10 +15,7 @@
 
 function sanitizePrompt(prompt: string): string {
   return prompt
-    .replace(
-      /;\s*(DROP|TRUNCATE|DELETE\s+FROM\s+\w+\s*;|ALTER\s+TABLE)/gi,
-      '; [BLOCKED DDL]',
-    )
+    .replace(/;\s*(DROP|TRUNCATE|DELETE\s+FROM\s+\w+\s*;|ALTER\s+TABLE)/gi, '; [BLOCKED DDL]')
     .trim()
 }
 
@@ -111,9 +108,7 @@ function validateApply(params: {
 
 describe('validateApply', () => {
   it('requires confirm=true', () => {
-    expect(validateApply({ confirm: false, targetEnv: 'local' })).toBe(
-      'requires_confirmation',
-    )
+    expect(validateApply({ confirm: false, targetEnv: 'local' })).toBe('requires_confirmation')
   })
 
   it('allows local apply with confirm=true', () => {
@@ -130,7 +125,7 @@ describe('validateApply', () => {
         confirm: true,
         targetEnv: 'prod',
         confirmPhrase: 'wrong',
-      }),
+      })
     ).toBe('requires_prod_phrase')
   })
 
@@ -140,14 +135,12 @@ describe('validateApply', () => {
         confirm: true,
         targetEnv: 'prod',
         confirmPhrase: 'confirm-prod',
-      }),
+      })
     ).toBeNull()
   })
 
   it('blocks prod apply with no phrase', () => {
-    expect(validateApply({ confirm: true, targetEnv: 'prod' })).toBe(
-      'requires_prod_phrase',
-    )
+    expect(validateApply({ confirm: true, targetEnv: 'prod' })).toBe('requires_prod_phrase')
   })
 })
 
@@ -194,7 +187,7 @@ describe('validatePermissionsJSON', () => {
       validatePermissionsJSON({
         type: 'table',
         table: { schema: 'public', name: 'np_comments' },
-      }),
+      })
     ).toBe(false)
   })
 
@@ -204,7 +197,7 @@ describe('validatePermissionsJSON', () => {
         type: 'table',
         table: { schema: 'public' },
         role: 'user',
-      }),
+      })
     ).toBe(false)
   })
 })
@@ -226,9 +219,7 @@ function isValidStreamChunk(data: unknown): boolean {
 
 describe('isValidStreamChunk', () => {
   it('accepts token chunk', () => {
-    expect(isValidStreamChunk({ type: 'token', content: 'CREATE TABLE' })).toBe(
-      true,
-    )
+    expect(isValidStreamChunk({ type: 'token', content: 'CREATE TABLE' })).toBe(true)
   })
 
   it('accepts status chunk', () => {
@@ -236,14 +227,12 @@ describe('isValidStreamChunk', () => {
       isValidStreamChunk({
         type: 'status',
         content: 'Running migration agent...',
-      }),
+      })
     ).toBe(true)
   })
 
   it('accepts done chunk', () => {
-    expect(
-      isValidStreamChunk({ type: 'done', content: 'Generation complete' }),
-    ).toBe(true)
+    expect(isValidStreamChunk({ type: 'done', content: 'Generation complete' })).toBe(true)
   })
 
   it('accepts error chunk', () => {

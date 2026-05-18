@@ -124,15 +124,7 @@ function getCategory(key: string): string {
   }
 
   // Core Project Settings
-  if (
-    [
-      'ENV',
-      'PROJECT_NAME',
-      'BASE_DOMAIN',
-      'DB_ENV_SEEDS',
-      'ALWAYS_AUTOFIX',
-    ].includes(k)
-  ) {
+  if (['ENV', 'PROJECT_NAME', 'BASE_DOMAIN', 'DB_ENV_SEEDS', 'ALWAYS_AUTOFIX'].includes(k)) {
     return '1. Core Project'
   }
 
@@ -177,11 +169,7 @@ function getCategory(key: string): string {
   }
 
   // API & Frontend
-  if (
-    k.includes('API') ||
-    k.includes('FRONTEND') ||
-    k.includes('NEXT_PUBLIC')
-  ) {
+  if (k.includes('API') || k.includes('FRONTEND') || k.includes('NEXT_PUBLIC')) {
     return '10. API & Frontend'
   }
 
@@ -221,9 +209,7 @@ function parseEnvFile(content: string): Record<string, string> {
 }
 
 // Format env file content with proper sections
-function formatEnvFile(
-  vars: Record<string, { value: string; category?: string }>,
-): string {
+function formatEnvFile(vars: Record<string, { value: string; category?: string }>): string {
   const categories: Record<string, Array<{ key: string; value: string }>> = {}
 
   // Group by category
@@ -238,28 +224,17 @@ function formatEnvFile(
   const sortedCategories = Object.keys(categories).sort()
 
   const sectionHeaders: Record<string, string> = {
-    '0. Admin Settings':
-      '# ==================== ADMIN SETTINGS ====================',
-    '1. Core Project':
-      '\n# ==================== CORE PROJECT SETTINGS ====================',
-    '2. PostgreSQL':
-      '\n# ==================== PostgreSQL Database ====================',
-    '3. Hasura GraphQL':
-      '\n# ==================== Hasura GraphQL Engine ====================',
-    '4. Authentication':
-      '\n# ==================== Authentication Service ====================',
-    '5. File Storage':
-      '\n# ==================== File Storage (MinIO) ====================',
-    '6. Nginx & SSL':
-      '\n# ==================== Nginx & SSL ====================',
-    '7. Redis Cache':
-      '\n# ==================== Redis Cache ====================',
-    '8. Email':
-      '\n# ==================== Email Configuration ====================',
-    '9. Monitoring':
-      '\n# ==================== Monitoring & Logging ====================',
-    '10. API & Frontend':
-      '\n# ==================== API & Frontend ====================',
+    '0. Admin Settings': '# ==================== ADMIN SETTINGS ====================',
+    '1. Core Project': '\n# ==================== CORE PROJECT SETTINGS ====================',
+    '2. PostgreSQL': '\n# ==================== PostgreSQL Database ====================',
+    '3. Hasura GraphQL': '\n# ==================== Hasura GraphQL Engine ====================',
+    '4. Authentication': '\n# ==================== Authentication Service ====================',
+    '5. File Storage': '\n# ==================== File Storage (MinIO) ====================',
+    '6. Nginx & SSL': '\n# ==================== Nginx & SSL ====================',
+    '7. Redis Cache': '\n# ==================== Redis Cache ====================',
+    '8. Email': '\n# ==================== Email Configuration ====================',
+    '9. Monitoring': '\n# ==================== Monitoring & Logging ====================',
+    '10. API & Frontend': '\n# ==================== API & Frontend ====================',
     '11. Other': '\n# ==================== Other Settings ====================',
   }
 
@@ -289,8 +264,7 @@ function formatEnvFile(
 
     for (const { key, value } of sortedVars) {
       // Add quotes if value contains spaces or special characters
-      const quotedValue =
-        value.includes(' ') || value.includes('#') ? `"${value}"` : value
+      const quotedValue = value.includes(' ') || value.includes('#') ? `"${value}"` : value
       content += `${key}=${quotedValue}\n`
     }
   }
@@ -316,7 +290,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     if (!isValidEnvironment(envParam)) {
       return NextResponse.json(
         { success: false, error: 'Invalid environment parameter' },
-        { status: 400 },
+        { status: 400 }
       )
     }
     const environment = envParam
@@ -343,10 +317,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     const resolvedPath = path.resolve(envFile)
     const resolvedBackend = path.resolve(backendPath)
     if (!resolvedPath.startsWith(resolvedBackend)) {
-      return NextResponse.json(
-        { success: false, error: 'Invalid path' },
-        { status: 400 },
-      )
+      return NextResponse.json({ success: false, error: 'Invalid path' }, { status: 400 })
     }
 
     try {
@@ -404,7 +375,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
   } catch {
     return NextResponse.json(
       { success: false, error: 'Failed to read environment variables' },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -422,7 +393,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       if (!environment || !isValidEnvironment(environment)) {
         return NextResponse.json(
           { success: false, error: 'Invalid environment parameter' },
-          { status: 400 },
+          { status: 400 }
         )
       }
 
@@ -450,15 +421,11 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       const resolvedPath = path.resolve(envFile)
       const resolvedBackend = path.resolve(backendPath)
       if (!resolvedPath.startsWith(resolvedBackend)) {
-        return NextResponse.json(
-          { success: false, error: 'Invalid path' },
-          { status: 400 },
-        )
+        return NextResponse.json({ success: false, error: 'Invalid path' }, { status: 400 })
       }
 
       // Prepare variables for saving
-      const varsToSave: Record<string, { value: string; category?: string }> =
-        {}
+      const varsToSave: Record<string, { value: string; category?: string }> = {}
       for (const variable of variables) {
         if (variable.value || variable.source === 'env') {
           varsToSave[variable.key] = {
@@ -474,17 +441,14 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       try {
         await fs.writeFile(envFile, content, 'utf-8')
       } catch (writeError) {
-        const msg =
-          writeError instanceof Error
-            ? writeError.message
-            : 'Unknown write error'
+        const msg = writeError instanceof Error ? writeError.message : 'Unknown write error'
         console.error('Failed to write environment file:', writeError)
         return NextResponse.json(
           {
             success: false,
             error: `Failed to write environment file: ${msg}`,
           },
-          { status: 500 },
+          { status: 500 }
         )
       }
 
@@ -510,7 +474,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       if (!environment || !isValidEnvironment(environment)) {
         return NextResponse.json(
           { success: false, error: 'Invalid environment parameter' },
-          { status: 400 },
+          { status: 400 }
         )
       }
 
@@ -518,7 +482,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       if (!key || typeof key !== 'string') {
         return NextResponse.json(
           { success: false, error: 'Variable key is required' },
-          { status: 400 },
+          { status: 400 }
         )
       }
 
@@ -527,10 +491,9 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         return NextResponse.json(
           {
             success: false,
-            error:
-              'Invalid variable name. Use only letters, numbers, and underscores.',
+            error: 'Invalid variable name. Use only letters, numbers, and underscores.',
           },
-          { status: 400 },
+          { status: 400 }
         )
       }
 
@@ -546,10 +509,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       const resolvedPath = path.resolve(envFile)
       const resolvedBackend = path.resolve(backendPath)
       if (!resolvedPath.startsWith(resolvedBackend)) {
-        return NextResponse.json(
-          { success: false, error: 'Invalid path' },
-          { status: 400 },
-        )
+        return NextResponse.json({ success: false, error: 'Invalid path' }, { status: 400 })
       }
 
       // Read existing file, append variable
@@ -564,8 +524,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       existingVars[key] = value || ''
 
       // Rebuild with categories
-      const varsToSave: Record<string, { value: string; category?: string }> =
-        {}
+      const varsToSave: Record<string, { value: string; category?: string }> = {}
       for (const [k, v] of Object.entries(existingVars)) {
         varsToSave[k] = { value: v, category: getCategory(k) }
       }
@@ -590,7 +549,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       if (!environment || !isValidEnvironment(environment)) {
         return NextResponse.json(
           { success: false, error: 'Invalid environment parameter' },
-          { status: 400 },
+          { status: 400 }
         )
       }
 
@@ -598,7 +557,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       if (!key || typeof key !== 'string') {
         return NextResponse.json(
           { success: false, error: 'Variable key is required' },
-          { status: 400 },
+          { status: 400 }
         )
       }
 
@@ -614,10 +573,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       const resolvedPath = path.resolve(envFile)
       const resolvedBackend = path.resolve(backendPath)
       if (!resolvedPath.startsWith(resolvedBackend)) {
-        return NextResponse.json(
-          { success: false, error: 'Invalid path' },
-          { status: 400 },
-        )
+        return NextResponse.json({ success: false, error: 'Invalid path' }, { status: 400 })
       }
 
       let existingContent = ''
@@ -626,7 +582,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       } catch {
         return NextResponse.json(
           { success: false, error: 'Environment file not found' },
-          { status: 404 },
+          { status: 404 }
         )
       }
 
@@ -634,8 +590,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       delete existingVars[key]
 
       // Rebuild file
-      const varsToSave: Record<string, { value: string; category?: string }> =
-        {}
+      const varsToSave: Record<string, { value: string; category?: string }> = {}
       for (const [k, v] of Object.entries(existingVars)) {
         varsToSave[k] = { value: v, category: getCategory(k) }
       }
@@ -659,7 +614,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         success: false,
         error: `Failed to save environment variables: ${error instanceof Error ? error.message : 'Unknown error'}`,
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

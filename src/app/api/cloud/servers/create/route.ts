@@ -36,11 +36,7 @@ function validateRegion(input: string): boolean {
 }
 
 function validateImage(input: string): boolean {
-  return (
-    SAFE_IMAGE_PATTERN.test(input) &&
-    !input.includes('..') &&
-    !input.startsWith('/')
-  )
+  return SAFE_IMAGE_PATTERN.test(input) && !input.includes('..') && !input.startsWith('/')
 }
 
 function validateSshKeyId(input: string): boolean {
@@ -78,51 +74,33 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           error: 'Missing required fields',
           details: 'provider, name, region, and size are required',
         },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
     // Validate all inputs
     if (!validateProvider(provider)) {
-      return NextResponse.json(
-        { success: false, error: 'Invalid provider name' },
-        { status: 400 },
-      )
+      return NextResponse.json({ success: false, error: 'Invalid provider name' }, { status: 400 })
     }
 
     if (!validateSafeName(name)) {
-      return NextResponse.json(
-        { success: false, error: 'Invalid server name' },
-        { status: 400 },
-      )
+      return NextResponse.json({ success: false, error: 'Invalid server name' }, { status: 400 })
     }
 
     if (!validateRegion(region)) {
-      return NextResponse.json(
-        { success: false, error: 'Invalid region' },
-        { status: 400 },
-      )
+      return NextResponse.json({ success: false, error: 'Invalid region' }, { status: 400 })
     }
 
     if (!validateSize(size)) {
-      return NextResponse.json(
-        { success: false, error: 'Invalid size' },
-        { status: 400 },
-      )
+      return NextResponse.json({ success: false, error: 'Invalid size' }, { status: 400 })
     }
 
     if (sshKeyId && !validateSshKeyId(sshKeyId)) {
-      return NextResponse.json(
-        { success: false, error: 'Invalid SSH key ID' },
-        { status: 400 },
-      )
+      return NextResponse.json({ success: false, error: 'Invalid SSH key ID' }, { status: 400 })
     }
 
     if (image && !validateImage(image)) {
-      return NextResponse.json(
-        { success: false, error: 'Invalid image name' },
-        { status: 400 },
-      )
+      return NextResponse.json({ success: false, error: 'Invalid image name' }, { status: 400 })
     }
 
     // Validate tags if provided
@@ -131,13 +109,13 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         if (!validateTagKey(key)) {
           return NextResponse.json(
             { success: false, error: `Invalid tag key: ${key}` },
-            { status: 400 },
+            { status: 400 }
           )
         }
         if (typeof value === 'string' && !validateTagValue(value)) {
           return NextResponse.json(
             { success: false, error: `Invalid tag value for key: ${key}` },
-            { status: 400 },
+            { status: 400 }
           )
         }
       }
@@ -211,7 +189,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         stdout: execError.stdout || '',
         stderr: execError.stderr || '',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

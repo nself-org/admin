@@ -1,10 +1,7 @@
 'use client'
 
 import { HeroPattern } from '@/components/HeroPattern'
-import {
-  ActivityEvent,
-  ActivityFeed,
-} from '@/components/dashboard/ActivityFeed'
+import { ActivityEvent, ActivityFeed } from '@/components/dashboard/ActivityFeed'
 import { Alert, Alerts } from '@/components/dashboard/Alerts'
 import {
   Environment,
@@ -13,23 +10,13 @@ import {
 } from '@/components/dashboard/EnvironmentBadge'
 import { HealthMetrics, HealthScore } from '@/components/dashboard/HealthScore'
 import { ResourceSparkline } from '@/components/dashboard/ResourceSparkline'
-import {
-  ServiceCard,
-  ServiceCardData,
-} from '@/components/dashboard/ServiceCard'
+import { ServiceCard, ServiceCardData } from '@/components/dashboard/ServiceCard'
 import { DashboardSkeleton } from '@/components/skeletons/DashboardSkeleton'
 import { useServiceStatus } from '@/hooks/useServiceStatus'
 import { useWebSocket } from '@/hooks/useWebSocket'
 import { ensureCorrectRoute } from '@/lib/routing-logic'
 import { useProjectStore } from '@/stores/projectStore'
-import {
-  Box,
-  FolderOpen,
-  RefreshCw,
-  Settings,
-  Wifi,
-  WifiOff,
-} from 'lucide-react'
+import { Box, FolderOpen, RefreshCw, Settings, Wifi, WifiOff } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { Suspense, useEffect, useState } from 'react'
 
@@ -48,15 +35,11 @@ function DashboardContent() {
   const systemMetrics = useProjectStore((state) => state.systemMetrics)
   const containerStats = useProjectStore((state) => state.containerStats)
   const isLoadingMetrics = useProjectStore((state) => state.isLoadingMetrics)
-  const isLoadingContainers = useProjectStore(
-    (state) => state.isLoadingContainers,
-  )
+  const isLoadingContainers = useProjectStore((state) => state.isLoadingContainers)
   const fetchAllData = useProjectStore((state) => state.fetchAllData)
   const projectStatus = useProjectStore((state) => state.projectStatus)
   const containersRunning = useProjectStore((state) => state.containersRunning)
-  const checkProjectStatus = useProjectStore(
-    (state) => state.checkProjectStatus,
-  )
+  const checkProjectStatus = useProjectStore((state) => state.checkProjectStatus)
 
   // Mark initial load complete after first render
   useEffect(() => {
@@ -75,8 +58,7 @@ function DashboardContent() {
 
       // Check if services were recently started
       const recentlyStarted = localStorage.getItem('services_recently_started')
-      const isRecent =
-        recentlyStarted && Date.now() - parseInt(recentlyStarted) < 30000
+      const isRecent = recentlyStarted && Date.now() - parseInt(recentlyStarted) < 30000
 
       if (isRecent) {
         setTimeout(() => {
@@ -112,11 +94,7 @@ function DashboardContent() {
       status = realtimeStatus.status as ServiceCardData['status']
     } else if (c.health === 'healthy' || (c.state === 'running' && !c.health)) {
       status = 'running'
-    } else if (
-      c.health === 'unhealthy' ||
-      c.state === 'exited' ||
-      c.state === 'dead'
-    ) {
+    } else if (c.health === 'unhealthy' || c.state === 'exited' || c.state === 'dead') {
       status = 'error'
     } else if (c.state === 'restarting') {
       status = 'starting'
@@ -145,14 +123,11 @@ function DashboardContent() {
   const healthMetrics: HealthMetrics = {
     servicesRunning: services.filter((s) => s.status === 'running').length,
     servicesTotal: services.length,
-    errorCount: services.filter(
-      (s) => s.status === 'error' || s.health === 'unhealthy',
-    ).length,
+    errorCount: services.filter((s) => s.status === 'error' || s.health === 'unhealthy').length,
     cpuUsage: systemMetrics?.docker?.cpu || 0,
     memoryUsage: systemMetrics?.docker?.memory?.percentage || 0,
     diskUsage:
-      ((systemMetrics?.docker?.storage?.used || 0) /
-        (systemMetrics?.docker?.storage?.total || 1)) *
+      ((systemMetrics?.docker?.storage?.used || 0) / (systemMetrics?.docker?.storage?.total || 1)) *
       100,
   }
 
@@ -166,13 +141,9 @@ function DashboardContent() {
   }
 
   const cpuHistory = generateSparklineData(systemMetrics?.docker?.cpu || 0)
-  const memoryHistory = generateSparklineData(
-    systemMetrics?.docker?.memory?.percentage || 0,
-  )
+  const memoryHistory = generateSparklineData(systemMetrics?.docker?.memory?.percentage || 0)
   const networkHistory = generateSparklineData(
-    ((systemMetrics?.system?.network?.rx || 0) +
-      (systemMetrics?.system?.network?.tx || 0)) /
-      10,
+    ((systemMetrics?.system?.network?.rx || 0) + (systemMetrics?.system?.network?.tx || 0)) / 10
   )
 
   // Generate sample alerts based on system state
@@ -180,9 +151,7 @@ function DashboardContent() {
     const newAlerts: Alert[] = []
 
     // Critical: Services down
-    const errorServices = services.filter(
-      (s) => s.status === 'error' || s.health === 'unhealthy',
-    )
+    const errorServices = services.filter((s) => s.status === 'error' || s.health === 'unhealthy')
     if (errorServices.length > 0) {
       newAlerts.push({
         id: 'critical-services-down',
@@ -269,13 +238,9 @@ function DashboardContent() {
 
   // Check if services are running
   const showServices =
-    containerStats.length > 0 ||
-    containersRunning > 0 ||
-    projectStatus === 'running'
+    containerStats.length > 0 || containersRunning > 0 || projectStatus === 'running'
 
-  const loading =
-    isInitialLoad ||
-    (!systemMetrics && !containerStats.length && isLoadingMetrics)
+  const loading = isInitialLoad || (!systemMetrics && !containerStats.length && isLoadingMetrics)
 
   // Loading State
   if (loading) {
@@ -312,10 +277,7 @@ function DashboardContent() {
               No Services Found
             </h2>
             <p className="mb-6 text-zinc-600 dark:text-zinc-400">
-              Run{' '}
-              <code className="rounded bg-zinc-100 px-2 py-1 dark:bg-zinc-800">
-                nself init
-              </code>{' '}
+              Run <code className="rounded bg-zinc-100 px-2 py-1 dark:bg-zinc-800">nself init</code>{' '}
               to set up your project
             </p>
             <div className="flex justify-center gap-3">
@@ -368,11 +330,7 @@ function DashboardContent() {
                     : 'Disconnected'
               }
             >
-              {connected ? (
-                <Wifi className="h-3 w-3" />
-              ) : (
-                <WifiOff className="h-3 w-3" />
-              )}
+              {connected ? <Wifi className="h-3 w-3" /> : <WifiOff className="h-3 w-3" />}
               {connected ? 'Live' : reconnecting ? 'Reconnecting' : 'Offline'}
             </div>
             <EnvironmentBadge environment={environment} size="lg" />
@@ -385,9 +343,7 @@ function DashboardContent() {
         <div className="mb-8">
           <Alerts
             alerts={alerts}
-            onDismiss={(id) =>
-              setAlerts((prev) => prev.filter((a) => a.id !== id))
-            }
+            onDismiss={(id) => setAlerts((prev) => prev.filter((a) => a.id !== id))}
           />
         </div>
       )}
@@ -398,11 +354,7 @@ function DashboardContent() {
         <HealthScore metrics={healthMetrics} />
 
         {/* Environment Details */}
-        <EnvironmentBadgeWithDetails
-          environment={environment}
-          version="0.4.0"
-          uptime="2h 34m"
-        />
+        <EnvironmentBadgeWithDetails environment={environment} version="0.4.0" uptime="2h 34m" />
 
         {/* Quick Stats */}
         <div className="rounded-lg border border-zinc-200 bg-white p-4 sm:p-6 dark:border-zinc-700 dark:bg-zinc-900/50">
@@ -419,17 +371,13 @@ function DashboardContent() {
               </span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-xs text-zinc-600 sm:text-sm dark:text-zinc-400">
-                Running
-              </span>
+              <span className="text-xs text-zinc-600 sm:text-sm dark:text-zinc-400">Running</span>
               <span className="text-base font-bold text-green-600 sm:text-lg dark:text-green-400">
                 {healthMetrics.servicesRunning}
               </span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-xs text-zinc-600 sm:text-sm dark:text-zinc-400">
-                Errors
-              </span>
+              <span className="text-xs text-zinc-600 sm:text-sm dark:text-zinc-400">Errors</span>
               <span
                 className={`text-base font-bold sm:text-lg ${healthMetrics.errorCount > 0 ? 'text-red-600 dark:text-red-400' : 'text-green-600 dark:text-green-400'}`}
               >
@@ -441,10 +389,7 @@ function DashboardContent() {
       </div>
 
       {/* Resource Usage Sparklines */}
-      <section
-        className="mb-6 sm:mb-8"
-        aria-labelledby="resource-usage-heading"
-      >
+      <section className="mb-6 sm:mb-8" aria-labelledby="resource-usage-heading">
         <h2
           id="resource-usage-heading"
           className="mb-3 text-lg font-bold text-zinc-900 sm:mb-4 sm:text-xl dark:text-white"
@@ -516,10 +461,7 @@ function DashboardContent() {
         </section>
 
         {/* Activity Feed Column (1/3 width on desktop, hidden on mobile) */}
-        <aside
-          className="hidden lg:col-span-1 lg:block"
-          aria-label="Activity feed"
-        >
+        <aside className="hidden lg:col-span-1 lg:block" aria-label="Activity feed">
           <ActivityFeed events={activityEvents} maxEvents={10} />
         </aside>
       </div>

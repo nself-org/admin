@@ -112,8 +112,7 @@ export async function GET(_request: NextRequest): Promise<NextResponse> {
               if (value) {
                 const apps = value.split(',')
                 config.frontendApps = apps.map((a) => {
-                  const [name, displayName, tablePrefix, port, subdomain] =
-                    a.split(':')
+                  const [name, displayName, tablePrefix, port, subdomain] = a.split(':')
                   return {
                     name,
                     displayName,
@@ -145,7 +144,7 @@ export async function GET(_request: NextRequest): Promise<NextResponse> {
     console.error('Error loading env config:', error)
     return NextResponse.json(
       { success: false, error: 'Failed to load configuration' },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

@@ -108,18 +108,11 @@ function AddFrontendContent() {
   const addEnvVar = () => {
     setFormData({
       ...formData,
-      environmentVariables: [
-        ...formData.environmentVariables,
-        { key: '', value: '' },
-      ],
+      environmentVariables: [...formData.environmentVariables, { key: '', value: '' }],
     })
   }
 
-  const updateEnvVar = (
-    index: number,
-    field: 'key' | 'value',
-    value: string,
-  ) => {
+  const updateEnvVar = (index: number, field: 'key' | 'value', value: string) => {
     const updated = [...formData.environmentVariables]
     updated[index][field] = value
     setFormData({ ...formData, environmentVariables: updated })
@@ -194,9 +187,7 @@ function AddFrontendContent() {
               </div>
               <span
                 className={`ml-3 text-sm font-medium ${
-                  s <= step
-                    ? 'text-zinc-900 dark:text-white'
-                    : 'text-zinc-400 dark:text-zinc-500'
+                  s <= step ? 'text-zinc-900 dark:text-white' : 'text-zinc-400 dark:text-zinc-500'
                 }`}
               >
                 {s === 1 ? 'Framework' : s === 2 ? 'Repository' : 'Settings'}
@@ -226,15 +217,11 @@ function AddFrontendContent() {
               <input
                 type="text"
                 value={formData.name}
-                onChange={(e) =>
-                  setFormData({ ...formData, name: e.target.value })
-                }
+                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                 placeholder="my-frontend-app"
                 className="w-full rounded-lg border border-zinc-300 bg-white px-4 py-2.5 text-zinc-900 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 focus:outline-none dark:border-zinc-600 dark:bg-zinc-900 dark:text-white"
               />
-              <p className="mt-1 text-sm text-zinc-500">
-                This will be used as the app identifier
-              </p>
+              <p className="mt-1 text-sm text-zinc-500">This will be used as the app identifier</p>
             </div>
 
             <div className="grid gap-4 md:grid-cols-2">
@@ -259,9 +246,7 @@ function AddFrontendContent() {
                     >
                       <Icon className={`h-5 w-5 ${fw.color}`} />
                     </div>
-                    <span className="font-medium text-zinc-900 dark:text-white">
-                      {fw.name}
-                    </span>
+                    <span className="font-medium text-zinc-900 dark:text-white">{fw.name}</span>
                     {formData.framework === fw.id && (
                       <Check className="ml-auto h-5 w-5 text-cyan-600 dark:text-cyan-400" />
                     )}
@@ -288,9 +273,7 @@ function AddFrontendContent() {
                 <input
                   type="text"
                   value={formData.repository}
-                  onChange={(e) =>
-                    setFormData({ ...formData, repository: e.target.value })
-                  }
+                  onChange={(e) => setFormData({ ...formData, repository: e.target.value })}
                   placeholder="https://github.com/user/repo"
                   className="w-full rounded-lg border border-zinc-300 bg-white py-2.5 pr-4 pl-10 text-zinc-900 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 focus:outline-none dark:border-zinc-600 dark:bg-zinc-900 dark:text-white"
                 />
@@ -307,9 +290,7 @@ function AddFrontendContent() {
                   <input
                     type="text"
                     value={formData.branch}
-                    onChange={(e) =>
-                      setFormData({ ...formData, branch: e.target.value })
-                    }
+                    onChange={(e) => setFormData({ ...formData, branch: e.target.value })}
                     placeholder="main"
                     className="w-full rounded-lg border border-zinc-300 bg-white py-2.5 pr-4 pl-10 text-zinc-900 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 focus:outline-none dark:border-zinc-600 dark:bg-zinc-900 dark:text-white"
                   />
@@ -322,9 +303,7 @@ function AddFrontendContent() {
                 <input
                   type="text"
                   value={formData.rootDirectory}
-                  onChange={(e) =>
-                    setFormData({ ...formData, rootDirectory: e.target.value })
-                  }
+                  onChange={(e) => setFormData({ ...formData, rootDirectory: e.target.value })}
                   placeholder="./"
                   className="w-full rounded-lg border border-zinc-300 bg-white px-4 py-2.5 text-zinc-900 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 focus:outline-none dark:border-zinc-600 dark:bg-zinc-900 dark:text-white"
                 />
@@ -336,8 +315,8 @@ function AddFrontendContent() {
               <div className="text-sm text-blue-700 dark:text-blue-300">
                 <p className="font-medium">Repository Access</p>
                 <p>
-                  Make sure the repository is accessible. For private repos,
-                  configure your Git credentials in the settings.
+                  Make sure the repository is accessible. For private repos, configure your Git
+                  credentials in the settings.
                 </p>
               </div>
             </div>
@@ -378,9 +357,7 @@ function AddFrontendContent() {
                   <input
                     type="text"
                     value={formData.buildCommand}
-                    onChange={(e) =>
-                      setFormData({ ...formData, buildCommand: e.target.value })
-                    }
+                    onChange={(e) => setFormData({ ...formData, buildCommand: e.target.value })}
                     placeholder="npm run build"
                     className="w-full rounded-lg border border-zinc-300 bg-white px-4 py-2.5 font-mono text-sm text-zinc-900 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 focus:outline-none dark:border-zinc-600 dark:bg-zinc-900 dark:text-white"
                   />
@@ -425,18 +402,14 @@ function AddFrontendContent() {
                     <input
                       type="text"
                       value={env.key}
-                      onChange={(e) =>
-                        updateEnvVar(index, 'key', e.target.value)
-                      }
+                      onChange={(e) => updateEnvVar(index, 'key', e.target.value)}
                       placeholder="KEY"
                       className="flex-1 rounded-lg border border-zinc-300 bg-white px-4 py-2 font-mono text-sm text-zinc-900 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 focus:outline-none dark:border-zinc-600 dark:bg-zinc-900 dark:text-white"
                     />
                     <input
                       type="text"
                       value={env.value}
-                      onChange={(e) =>
-                        updateEnvVar(index, 'value', e.target.value)
-                      }
+                      onChange={(e) => updateEnvVar(index, 'value', e.target.value)}
                       placeholder="value"
                       className="flex-1 rounded-lg border border-zinc-300 bg-white px-4 py-2 font-mono text-sm text-zinc-900 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 focus:outline-none dark:border-zinc-600 dark:bg-zinc-900 dark:text-white"
                     />

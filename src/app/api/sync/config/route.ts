@@ -29,14 +29,11 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     if (dryRun) args.push('--dry-run')
     if (force) args.push('--force')
 
-    const { stdout } = await execAsync(
-      `${nselfPath} ${args.join(' ')} --json`,
-      {
-        cwd: projectPath,
-        env: { ...process.env, PATH: getEnhancedPath() },
-        timeout: 120000,
-      },
-    )
+    const { stdout } = await execAsync(`${nselfPath} ${args.join(' ')} --json`, {
+      cwd: projectPath,
+      env: { ...process.env, PATH: getEnhancedPath() },
+      timeout: 120000,
+    })
 
     const result = JSON.parse(stdout)
 
@@ -53,7 +50,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     logger.error('Failed to sync config', { error: err.message })
     return NextResponse.json(
       { success: false, error: 'Failed to sync config', details: err.message },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

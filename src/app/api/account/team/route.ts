@@ -17,20 +17,16 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     return NextResponse.json(
       {
         error: 'not_available',
-        message:
-          'Multi-user mode disabled. Set NSELF_ADMIN_MULTIUSER=true to enable.',
+        message: 'Multi-user mode disabled. Set NSELF_ADMIN_MULTIUSER=true to enable.',
         docs: 'https://docs.nself.org/admin/single-user-posture',
       },
-      { status: 404 },
+      { status: 404 }
     )
   }
 
   const token = request.cookies.get('nself-session')?.value
   if (!token || !(await validateSessionToken(token))) {
-    return NextResponse.json(
-      { success: false, error: 'Unauthorized' },
-      { status: 401 },
-    )
+    return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 })
   }
 
   if (!AUTH_URL) {
@@ -48,7 +44,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     if (!upstream.ok) {
       return NextResponse.json(
         { success: false, error: 'Failed to fetch team' },
-        { status: upstream.status },
+        { status: upstream.status }
       )
     }
 
@@ -61,7 +57,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         error: 'Auth service unavailable',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 503 },
+      { status: 503 }
     )
   }
 }

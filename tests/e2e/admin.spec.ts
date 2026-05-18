@@ -12,15 +12,11 @@ const BASE = process.env.NSELF_ADMIN_URL ?? 'http://localhost:3021'
 
 test.use({ baseURL: BASE })
 
-const adminRunning =
-  !!process.env.NSELF_ADMIN_URL || process.env.CI === undefined
+const adminRunning = !!process.env.NSELF_ADMIN_URL || process.env.CI === undefined
 
 test.describe('nAdmin', () => {
   test('dashboard loads with correct title', async ({ page }) => {
-    test.skip(
-      !adminRunning,
-      'nAdmin not available — set NSELF_ADMIN_URL or run nself admin start',
-    )
+    test.skip(!adminRunning, 'nAdmin not available — set NSELF_ADMIN_URL or run nself admin start')
 
     await page.goto('/')
     await expect(page).toHaveTitle(/nAdmin|nself/i)
@@ -47,9 +43,7 @@ test.describe('nAdmin', () => {
     test.skip(!adminRunning, 'nAdmin not available')
 
     await page.goto('/services')
-    const status = page
-      .locator('[data-testid="service-status"], table, ul')
-      .first()
+    const status = page.locator('[data-testid="service-status"], table, ul').first()
     await expect(status).toBeVisible()
   })
 

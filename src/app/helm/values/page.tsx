@@ -98,7 +98,7 @@ function HelmValuesContent() {
 
   const { data: valuesData } = useSWR<{ values: HelmValues }>(
     releaseParam ? `/api/helm/releases/${releaseParam}/values` : null,
-    fetcher,
+    fetcher
   )
 
   // Load values if editing existing release
@@ -184,18 +184,14 @@ function HelmValuesContent() {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
           <Link
-            href={
-              releaseParam ? `/helm?release=${releaseParam}` : '/helm/install'
-            }
+            href={releaseParam ? `/helm?release=${releaseParam}` : '/helm/install'}
             className="rounded-lg border border-zinc-700 bg-zinc-800 p-2 hover:bg-zinc-700"
           >
             <ArrowLeft className="h-5 w-5" />
           </Link>
           <div>
             <h1 className="text-2xl font-semibold text-white">{title}</h1>
-            <p className="text-sm text-zinc-400">
-              Customize chart values before installation
-            </p>
+            <p className="text-sm text-zinc-400">Customize chart values before installation</p>
           </div>
         </div>
 
@@ -259,9 +255,7 @@ function HelmValuesContent() {
                 <button
                   onClick={() => setViewMode('edit')}
                   className={`inline-flex items-center gap-1 rounded px-3 py-1.5 text-sm ${
-                    viewMode === 'edit'
-                      ? 'bg-sky-500 text-white'
-                      : 'text-zinc-400 hover:text-white'
+                    viewMode === 'edit' ? 'bg-sky-500 text-white' : 'text-zinc-400 hover:text-white'
                   }`}
                 >
                   <Code className="h-4 w-4" />
@@ -319,9 +313,7 @@ function HelmValuesContent() {
               />
             ) : (
               <pre className="h-[600px] overflow-auto bg-zinc-900 p-4">
-                <code className="font-mono text-sm text-zinc-300">
-                  {values}
-                </code>
+                <code className="font-mono text-sm text-zinc-300">{values}</code>
               </pre>
             )}
           </div>
@@ -337,7 +329,7 @@ function HelmValuesContent() {
                 onClick={() => {
                   const withIngress = values.replace(
                     'ingress:\n  enabled: false',
-                    'ingress:\n  enabled: true',
+                    'ingress:\n  enabled: true'
                   )
                   setValues(withIngress)
                 }}
@@ -349,7 +341,7 @@ function HelmValuesContent() {
                 onClick={() => {
                   const withAutoscaling = values.replace(
                     'autoscaling:\n  enabled: false',
-                    'autoscaling:\n  enabled: true',
+                    'autoscaling:\n  enabled: true'
                   )
                   setValues(withAutoscaling)
                 }}
@@ -359,9 +351,7 @@ function HelmValuesContent() {
               </button>
               <button
                 onClick={() => {
-                  setValues(
-                    values.replace('replicaCount: 1', 'replicaCount: 3'),
-                  )
+                  setValues(values.replace('replicaCount: 1', 'replicaCount: 3'))
                 }}
                 className="w-full rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2 text-left text-sm text-white hover:bg-zinc-700"
               >
@@ -408,13 +398,10 @@ function HelmValuesContent() {
 
           {/* CLI Command */}
           <div className="rounded-lg border border-zinc-700/50 bg-zinc-800/50 p-4">
-            <h3 className="mb-2 text-sm font-medium text-zinc-400">
-              CLI Command
-            </h3>
+            <h3 className="mb-2 text-sm font-medium text-zinc-400">CLI Command</h3>
             <code className="block rounded bg-zinc-900 p-3 text-sm text-sky-400">
               helm install {releaseParam || 'RELEASE'}{' '}
-              {repoParam ? `${repoParam}/${chartParam || 'CHART'}` : 'CHART'} -f
-              values.yaml
+              {repoParam ? `${repoParam}/${chartParam || 'CHART'}` : 'CHART'} -f values.yaml
             </code>
           </div>
         </div>
@@ -429,9 +416,7 @@ export default function HelmValuesPage() {
       fallback={
         <div className="space-y-6">
           <div>
-            <h1 className="text-2xl font-semibold text-white">
-              Helm Values Editor
-            </h1>
+            <h1 className="text-2xl font-semibold text-white">Helm Values Editor</h1>
             <p className="text-sm text-zinc-400">Loading...</p>
           </div>
           <div className="animate-pulse">

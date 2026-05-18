@@ -205,15 +205,7 @@ services:
       - PORT=3021 # Renamed from ADMIN_PORT
       # Remove ADMIN_PASSWORD (now in database)
     healthcheck:
-      test:
-        [
-          'CMD',
-          'wget',
-          '--quiet',
-          '--tries=1',
-          '--spider',
-          'http://localhost:3021/api/health',
-        ]
+      test: ['CMD', 'wget', '--quiet', '--tries=1', '--spider', 'http://localhost:3021/api/health']
       interval: 30s
       timeout: 10s
       retries: 3

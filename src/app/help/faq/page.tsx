@@ -182,17 +182,14 @@ const categories = [
 function FAQContent() {
   const [searchQuery, setSearchQuery] = React.useState('')
   const [selectedCategory, setSelectedCategory] = React.useState('All')
-  const [feedbackGiven, setFeedbackGiven] = React.useState<Set<string>>(
-    new Set(),
-  )
+  const [feedbackGiven, setFeedbackGiven] = React.useState<Set<string>>(new Set())
 
   const filteredFAQs = faqData.filter((faq) => {
     const matchesSearch =
       searchQuery === '' ||
       faq.question.toLowerCase().includes(searchQuery.toLowerCase()) ||
       faq.answer.toLowerCase().includes(searchQuery.toLowerCase())
-    const matchesCategory =
-      selectedCategory === 'All' || faq.category === selectedCategory
+    const matchesCategory = selectedCategory === 'All' || faq.category === selectedCategory
     return matchesSearch && matchesCategory
   })
 
@@ -202,7 +199,7 @@ function FAQContent() {
       acc[category] = filteredFAQs.filter((faq) => faq.category === category)
       return acc
     },
-    {} as Record<string, FAQItem[]>,
+    {} as Record<string, FAQItem[]>
   )
 
   const handleFeedback = async (faqId: string, helpful: boolean) => {
@@ -314,9 +311,7 @@ function FAQContent() {
                             <p className="mb-4">{faq.answer}</p>
                             <div className="flex items-center justify-between border-t border-zinc-200 pt-3 dark:border-zinc-700">
                               <div className="flex items-center gap-3">
-                                <span className="text-sm text-zinc-500">
-                                  Was this helpful?
-                                </span>
+                                <span className="text-sm text-zinc-500">Was this helpful?</span>
                                 <button
                                   onClick={() => handleFeedback(faq.id, true)}
                                   disabled={feedbackGiven.has(faq.id)}
@@ -340,7 +335,7 @@ function FAQContent() {
                       }))}
                     />
                   </div>
-                ) : null,
+                ) : null
               )}
             </div>
           ) : (

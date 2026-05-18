@@ -561,14 +561,9 @@ function getCategories(): string[] {
 }
 
 export async function GET(
-  request: NextRequest,
+  request: NextRequest
 ): Promise<
-  NextResponse<
-    | SuccessAllResponse
-    | SuccessOneResponse
-    | SuccessManyResponse
-    | ErrorResponse
-  >
+  NextResponse<SuccessAllResponse | SuccessOneResponse | SuccessManyResponse | ErrorResponse>
 > {
   const { searchParams } = new URL(request.url)
   const codeParam = searchParams.get('code')
@@ -580,7 +575,7 @@ export async function GET(
     if (!found) {
       return NextResponse.json(
         { success: false, error: `Error code ${upper} not found` },
-        { status: 404 },
+        { status: 404 }
       )
     }
     return NextResponse.json({ success: true, code: found })

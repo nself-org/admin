@@ -1,15 +1,7 @@
 'use client'
 
 import type { TenantDomain } from '@/types/tenant'
-import {
-  CheckCircle,
-  Globe,
-  Plus,
-  Shield,
-  Star,
-  Trash2,
-  XCircle,
-} from 'lucide-react'
+import { CheckCircle, Globe, Plus, Shield, Star, Trash2, XCircle } from 'lucide-react'
 import { useState } from 'react'
 
 interface TenantDomainManagerProps {
@@ -49,9 +41,7 @@ export function TenantDomainManager({
     <div className="space-y-6">
       {/* Add Domain */}
       <div className="rounded-lg border border-zinc-700 bg-zinc-800/50 p-4">
-        <h3 className="mb-3 text-sm font-medium text-white">
-          Add Custom Domain
-        </h3>
+        <h3 className="mb-3 text-sm font-medium text-white">Add Custom Domain</h3>
         <div className="flex gap-2">
           <input
             type="text"
@@ -76,9 +66,7 @@ export function TenantDomainManager({
         {domains.length === 0 ? (
           <div className="rounded-lg border border-zinc-700 bg-zinc-800/30 p-8 text-center">
             <Globe className="mx-auto mb-3 h-8 w-8 text-zinc-600" />
-            <p className="text-sm text-zinc-400">
-              No custom domains configured
-            </p>
+            <p className="text-sm text-zinc-400">No custom domains configured</p>
           </div>
         ) : (
           domains.map((domain) => (
@@ -90,9 +78,7 @@ export function TenantDomainManager({
                 <Globe className="h-5 w-5 text-zinc-400" />
                 <div>
                   <div className="flex items-center gap-2">
-                    <span className="font-medium text-white">
-                      {domain.domain}
-                    </span>
+                    <span className="font-medium text-white">{domain.domain}</span>
                     {domain.primary && (
                       <span className="rounded-full bg-yellow-500/20 px-2 py-0.5 text-xs text-yellow-400">
                         Primary
@@ -163,9 +149,7 @@ export function TenantDomainManager({
       {/* DNS Instructions */}
       {domains.some((d) => !d.verified) && (
         <div className="rounded-lg border border-yellow-500/30 bg-yellow-500/10 p-4">
-          <h4 className="mb-2 text-sm font-medium text-yellow-400">
-            DNS Configuration Required
-          </h4>
+          <h4 className="mb-2 text-sm font-medium text-yellow-400">DNS Configuration Required</h4>
           <p className="text-xs text-yellow-300/80">
             Add the following DNS records to verify your domain ownership:
           </p>

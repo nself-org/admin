@@ -44,7 +44,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
               error: 'Failed to retrieve database stats',
               details: result.error,
             },
-            { status: 500 },
+            { status: 500 }
           )
         }
         const data = JSON.parse(result.stdout || '{}')
@@ -61,7 +61,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
               error: 'Failed to retrieve table list',
               details: result.error,
             },
-            { status: 500 },
+            { status: 500 }
           )
         }
         const tables = JSON.parse(result.stdout || '[]')
@@ -75,39 +75,21 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         const offsetStr = searchParams.get('offset') || '0'
 
         if (!tableName) {
-          return NextResponse.json(
-            { error: 'Table name is required' },
-            { status: 400 },
-          )
+          return NextResponse.json({ error: 'Table name is required' }, { status: 400 })
         }
 
         if (!validateIdentifier(tableName)) {
-          return NextResponse.json(
-            { error: 'Invalid table name' },
-            { status: 400 },
-          )
+          return NextResponse.json({ error: 'Invalid table name' }, { status: 400 })
         }
 
         if (!validateIdentifier(schema)) {
-          return NextResponse.json(
-            { error: 'Invalid schema name' },
-            { status: 400 },
-          )
+          return NextResponse.json({ error: 'Invalid schema name' }, { status: 400 })
         }
 
         const limit = parseInt(limitStr, 10)
         const offset = parseInt(offsetStr, 10)
-        if (
-          isNaN(limit) ||
-          isNaN(offset) ||
-          limit < 1 ||
-          limit > 1000 ||
-          offset < 0
-        ) {
-          return NextResponse.json(
-            { error: 'Invalid limit or offset' },
-            { status: 400 },
-          )
+        if (isNaN(limit) || isNaN(offset) || limit < 1 || limit > 1000 || offset < 0) {
+          return NextResponse.json({ error: 'Invalid limit or offset' }, { status: 400 })
         }
 
         // Delegate to `nself db query --json` with a safe parameterised-equivalent query.
@@ -132,7 +114,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
               error: 'Failed to retrieve table data',
               details: result.error,
             },
-            { status: 500 },
+            { status: 500 }
           )
         }
 
@@ -148,12 +130,9 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       {
         success: false,
         error: 'Database operation failed',
-        details:
-          error instanceof Error
-            ? error?.message || 'Unknown error'
-            : 'Unknown error',
+        details: error instanceof Error ? error?.message || 'Unknown error' : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -178,18 +157,13 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           'DROP, TRUNCATE, DELETE (without WHERE), ALTER, and CREATE operations are blocked. ' +
           'Use nself CLI for database management operations.',
       },
-      { status: 403 },
+      { status: 403 }
     )
   }
 
   try {
     // Delegate to `nself db query --sql <query> --json`
-    const result = await executeNselfCommand('db', [
-      'query',
-      '--sql',
-      query,
-      '--json',
-    ])
+    const result = await executeNselfCommand('db', ['query', '--sql', query, '--json'])
 
     if (!result.success) {
       return NextResponse.json(
@@ -198,7 +172,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           error: 'Query execution failed',
           details: result.error,
         },
-        { status: 500 },
+        { status: 500 }
       )
     }
 
@@ -209,12 +183,9 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       {
         success: false,
         error: 'Query execution failed',
-        details:
-          error instanceof Error
-            ? error?.message || 'Unknown error'
-            : 'Unknown error',
+        details: error instanceof Error ? error?.message || 'Unknown error' : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

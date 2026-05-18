@@ -72,7 +72,7 @@ export async function GET(): Promise<NextResponse> {
         error: 'Failed to read frontend apps configuration',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

@@ -12,7 +12,7 @@ function OrganizationsContent() {
   const [searchQuery, setSearchQuery] = useState('')
 
   const filteredOrgs = organizations.filter((org) =>
-    org.name.toLowerCase().includes(searchQuery.toLowerCase()),
+    org.name.toLowerCase().includes(searchQuery.toLowerCase())
   )
 
   if (error) {
@@ -28,9 +28,7 @@ function OrganizationsContent() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-semibold text-white">Organizations</h1>
-          <p className="text-sm text-zinc-400">
-            Manage your organizations ({total} total)
-          </p>
+          <p className="text-sm text-zinc-400">Manage your organizations ({total} total)</p>
         </div>
         <Link
           href="/org/create"
@@ -68,9 +66,7 @@ function OrganizationsContent() {
             {searchQuery ? 'No organizations found' : 'No organizations yet'}
           </h3>
           <p className="mb-4 text-sm text-zinc-400">
-            {searchQuery
-              ? 'Try a different search'
-              : 'Create your first organization'}
+            {searchQuery ? 'Try a different search' : 'Create your first organization'}
           </p>
           {!searchQuery && (
             <Link

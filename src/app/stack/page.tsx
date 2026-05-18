@@ -5,13 +5,7 @@ import { CardGridSkeleton } from '@/components/skeletons'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import {
-  CheckCircle,
-  Layers,
-  Loader2,
-  RefreshCw,
-  XCircle,
-} from 'lucide-react'
+import { CheckCircle, Layers, Loader2, RefreshCw, XCircle } from 'lucide-react'
 import { Suspense, useCallback, useEffect, useState } from 'react'
 
 interface StackService {
@@ -79,7 +73,7 @@ function StackContent() {
   }, [fetchStatus])
 
   const runningCount = services.filter(
-    (s) => s.status === 'running' || s.status === 'healthy' || s.status === 'up',
+    (s) => s.status === 'running' || s.status === 'healthy' || s.status === 'up'
   ).length
 
   return (
@@ -87,7 +81,11 @@ function StackContent() {
       <div className="space-y-6">
         <div className="flex items-center gap-3">
           <Button variant="outline" size="sm" onClick={() => void fetchStatus()} disabled={loading}>
-            {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <RefreshCw className="h-4 w-4" />}
+            {loading ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <RefreshCw className="h-4 w-4" />
+            )}
             Refresh
           </Button>
           {!loading && services.length > 0 && (
@@ -103,7 +101,7 @@ function StackContent() {
         {error && (
           <Card className="border-destructive">
             <CardContent className="pt-6">
-              <div className="flex items-start gap-2 text-destructive">
+              <div className="text-destructive flex items-start gap-2">
                 <XCircle className="h-5 w-5 shrink-0" />
                 <div>
                   <p className="font-medium">Failed to load stack status</p>
@@ -116,8 +114,9 @@ function StackContent() {
 
         {!loading && !error && services.length === 0 && (
           <Card>
-            <CardContent className="pt-6 text-center text-muted-foreground">
-              No services found. Run <code className="text-xs">nself start</code> to start the stack.
+            <CardContent className="text-muted-foreground pt-6 text-center">
+              No services found. Run <code className="text-xs">nself start</code> to start the
+              stack.
             </CardContent>
           </Card>
         )}
@@ -143,17 +142,15 @@ function StackContent() {
                       <div>
                         <p className="font-mono text-sm font-medium">{svc.name}</p>
                         {svc.version && (
-                          <p className="text-xs text-muted-foreground">{svc.version}</p>
+                          <p className="text-muted-foreground text-xs">{svc.version}</p>
                         )}
-                        {svc.port && (
-                          <p className="text-xs text-muted-foreground">:{svc.port}</p>
-                        )}
+                        {svc.port && <p className="text-muted-foreground text-xs">:{svc.port}</p>}
                       </div>
                       <div className="flex items-center gap-1">
                         {isRunning ? (
                           <CheckCircle className="h-4 w-4 text-green-600" />
                         ) : (
-                          <XCircle className="h-4 w-4 text-destructive" />
+                          <XCircle className="text-destructive h-4 w-4" />
                         )}
                         <Badge
                           variant={isRunning ? 'default' : 'secondary'}
@@ -173,12 +170,12 @@ function StackContent() {
         {output && (
           <Card>
             <CardHeader>
-              <CardTitle className="text-sm font-mono text-muted-foreground">
+              <CardTitle className="text-muted-foreground font-mono text-sm">
                 nself server status --json
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <pre className="overflow-x-auto rounded bg-muted p-4 text-xs">{output}</pre>
+              <pre className="bg-muted overflow-x-auto rounded p-4 text-xs">{output}</pre>
             </CardContent>
           </Card>
         )}

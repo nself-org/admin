@@ -144,35 +144,24 @@ function BiosSummary({ bios }: { bios: BiosStatus | null }) {
       <dl className="grid grid-cols-2 gap-2 text-xs">
         <div>
           <dt className="text-zinc-500">Active level</dt>
-          <dd className="text-zinc-300">
-            {levelLabels[bios.level] ?? `L${bios.level}`}
-          </dd>
+          <dd className="text-zinc-300">{levelLabels[bios.level] ?? `L${bios.level}`}</dd>
         </div>
         <div>
           <dt className="text-zinc-500">Drift count</dt>
-          <dd
-            className={
-              bios.drift_count > 0 ? 'text-amber-400' : 'text-zinc-300'
-            }
-          >
+          <dd className={bios.drift_count > 0 ? 'text-amber-400' : 'text-zinc-300'}>
             {bios.drift_count}
           </dd>
         </div>
         <div>
           <dt className="text-zinc-500">Prompt hash</dt>
-          <dd className="font-mono text-zinc-400">
-            {bios.prompt_hash.slice(0, 8)}&hellip;
-          </dd>
+          <dd className="font-mono text-zinc-400">{bios.prompt_hash.slice(0, 8)}&hellip;</dd>
         </div>
         <div>
           <dt className="text-zinc-500">Last snapshot</dt>
           <dd className="text-zinc-300">{timeAgo(bios.last_snapshot)}</dd>
         </div>
       </dl>
-      <Link
-        href="/claw/bios"
-        className="block text-right text-xs text-sky-400 hover:text-sky-300"
-      >
+      <Link href="/claw/bios" className="block text-right text-xs text-sky-400 hover:text-sky-300">
         View details
       </Link>
     </div>
@@ -245,9 +234,7 @@ export default function ClawDashboardPage() {
       <div className="flex items-start justify-between">
         <div>
           <h1 className="text-xl font-semibold text-zinc-100">ɳClaw</h1>
-          <p className="mt-0.5 text-sm text-zinc-500">
-            AI assistant data management
-          </p>
+          <p className="mt-0.5 text-sm text-zinc-500">AI assistant data management</p>
         </div>
         <div className="flex items-center gap-3">
           <StatusBadge status={pluginStatus} />
@@ -256,9 +243,7 @@ export default function ClawDashboardPage() {
             disabled={refreshing}
             className="flex items-center gap-1.5 rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-1.5 text-xs font-medium text-zinc-300 transition-colors hover:border-zinc-600 hover:bg-zinc-700 disabled:opacity-50"
           >
-            <RefreshCw
-              className={`h-3 w-3 ${refreshing ? 'animate-spin' : ''}`}
-            />
+            <RefreshCw className={`h-3 w-3 ${refreshing ? 'animate-spin' : ''}`} />
             Refresh
           </button>
         </div>
@@ -269,9 +254,7 @@ export default function ClawDashboardPage() {
         <div className="flex items-start gap-3 rounded-xl border border-amber-500/20 bg-amber-900/10 p-4">
           <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-amber-400" />
           <div>
-            <p className="text-sm font-medium text-amber-300">
-              claw plugin is not running
-            </p>
+            <p className="text-sm font-medium text-amber-300">claw plugin is not running</p>
             <p className="mt-0.5 text-xs text-amber-400/70">
               Install via:{' '}
               <code className="rounded bg-amber-900/30 px-1 font-mono">
@@ -290,12 +273,7 @@ export default function ClawDashboardPage() {
           value={stats?.conversation_count ?? '—'}
           href="/claw/conversations"
         />
-        <StatCard
-          icon={Tag}
-          label="Topics"
-          value={stats?.topic_count ?? '—'}
-          href="/claw/topics"
-        />
+        <StatCard icon={Tag} label="Topics" value={stats?.topic_count ?? '—'} href="/claw/topics" />
         <StatCard
           icon={Globe}
           label="Entities"
@@ -319,17 +297,13 @@ export default function ClawDashboardPage() {
       {/* BIOS summary */}
       <div className="grid gap-4 lg:grid-cols-2">
         <div>
-          <h2 className="mb-3 text-sm font-medium text-zinc-400">
-            BIOS Status
-          </h2>
+          <h2 className="mb-3 text-sm font-medium text-zinc-400">BIOS Status</h2>
           <BiosSummary bios={bios} />
         </div>
 
         {/* Quick nav */}
         <div>
-          <h2 className="mb-3 text-sm font-medium text-zinc-400">
-            Quick access
-          </h2>
+          <h2 className="mb-3 text-sm font-medium text-zinc-400">Quick access</h2>
           <div className="grid grid-cols-2 gap-2">
             {[
               { href: '/claw/conversations', label: 'Conversations' },

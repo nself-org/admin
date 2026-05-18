@@ -5,17 +5,7 @@ import { DashboardSkeleton } from '@/components/skeletons'
 import { useOrganization } from '@/hooks/useOrganization'
 import { usePermissions } from '@/hooks/usePermissions'
 import type { OrgRole, OrgRoleDefinition } from '@/types/tenant'
-import {
-  ArrowLeft,
-  Crown,
-  Edit2,
-  Eye,
-  Plus,
-  Shield,
-  Trash2,
-  User,
-  X,
-} from 'lucide-react'
+import { ArrowLeft, Crown, Edit2, Eye, Plus, Shield, Trash2, User, X } from 'lucide-react'
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
 import { useState } from 'react'
@@ -41,9 +31,7 @@ export default function OrgRolesPage() {
     deleteRole,
   } = usePermissions(orgId)
 
-  const [selectedRole, setSelectedRole] = useState<OrgRoleDefinition | null>(
-    null,
-  )
+  const [selectedRole, setSelectedRole] = useState<OrgRoleDefinition | null>(null)
   const [showCreateModal, setShowCreateModal] = useState(false)
   const [newRoleName, setNewRoleName] = useState('')
   const [newRoleDescription, setNewRoleDescription] = useState('')
@@ -57,9 +45,7 @@ export default function OrgRolesPage() {
   if (orgError || rolesError || !org) {
     return (
       <div className="rounded-lg border border-red-500/30 bg-red-900/20 p-4">
-        <p className="text-red-400">
-          {orgError || rolesError || 'Organization not found'}
-        </p>
+        <p className="text-red-400">{orgError || rolesError || 'Organization not found'}</p>
       </div>
     )
   }
@@ -84,9 +70,7 @@ export default function OrgRolesPage() {
       setNewRoleDescription('')
       setSelectedRole(role)
     } catch (err) {
-      setCreateError(
-        err instanceof Error ? err.message : 'Failed to create role',
-      )
+      setCreateError(err instanceof Error ? err.message : 'Failed to create role')
     }
   }
 
@@ -125,9 +109,7 @@ export default function OrgRolesPage() {
           <ArrowLeft className="h-4 w-4" /> Back to {org.name}
         </Link>
         <h1 className="mt-4 text-2xl font-semibold text-white">Roles</h1>
-        <p className="text-sm text-zinc-400">
-          Manage roles and their permissions
-        </p>
+        <p className="text-sm text-zinc-400">Manage roles and their permissions</p>
       </div>
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
@@ -169,12 +151,8 @@ export default function OrgRolesPage() {
                       />
                     </div>
                     <div>
-                      <p className="text-sm font-medium text-white">
-                        {role.name}
-                      </p>
-                      <p className="text-xs text-zinc-500">
-                        {role.permissions.length} permissions
-                      </p>
+                      <p className="text-sm font-medium text-white">{role.name}</p>
+                      <p className="text-xs text-zinc-500">{role.permissions.length} permissions</p>
                     </div>
                   </div>
 
@@ -203,9 +181,7 @@ export default function OrgRolesPage() {
 
           {/* Default Role Previews */}
           <div className="mt-6">
-            <h3 className="mb-3 text-sm font-medium text-zinc-400">
-              Role Hierarchy
-            </h3>
+            <h3 className="mb-3 text-sm font-medium text-zinc-400">Role Hierarchy</h3>
             <div className="space-y-2">
               {(['owner', 'admin', 'member', 'viewer'] as const).map((role) => (
                 <div
@@ -232,9 +208,7 @@ export default function OrgRolesPage() {
             ) : (
               <div className="flex flex-col items-center justify-center py-16 text-center">
                 <Shield className="mb-4 h-12 w-12 text-zinc-600" />
-                <h3 className="mb-2 text-lg font-medium text-white">
-                  Select a Role
-                </h3>
+                <h3 className="mb-2 text-lg font-medium text-white">Select a Role</h3>
                 <p className="text-sm text-zinc-400">
                   Choose a role from the list to view and edit its permissions
                 </p>
@@ -249,9 +223,7 @@ export default function OrgRolesPage() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
           <div className="w-full max-w-md rounded-xl border border-zinc-700 bg-zinc-900 shadow-xl">
             <div className="flex items-center justify-between border-b border-zinc-700 px-6 py-4">
-              <h2 className="text-lg font-semibold text-white">
-                Create Custom Role
-              </h2>
+              <h2 className="text-lg font-semibold text-white">Create Custom Role</h2>
               <button
                 onClick={() => setShowCreateModal(false)}
                 className="text-zinc-400 hover:text-white"
@@ -263,9 +235,7 @@ export default function OrgRolesPage() {
             <form onSubmit={handleCreateRole} className="p-6">
               <div className="space-y-4">
                 <div>
-                  <label className="mb-2 block text-sm text-zinc-400">
-                    Role Name *
-                  </label>
+                  <label className="mb-2 block text-sm text-zinc-400">Role Name *</label>
                   <input
                     type="text"
                     value={newRoleName}
@@ -276,9 +246,7 @@ export default function OrgRolesPage() {
                 </div>
 
                 <div>
-                  <label className="mb-2 block text-sm text-zinc-400">
-                    Description
-                  </label>
+                  <label className="mb-2 block text-sm text-zinc-400">Description</label>
                   <textarea
                     value={newRoleDescription}
                     onChange={(e) => setNewRoleDescription(e.target.value)}
@@ -288,9 +256,7 @@ export default function OrgRolesPage() {
                   />
                 </div>
 
-                {createError && (
-                  <p className="text-sm text-red-400">{createError}</p>
-                )}
+                {createError && <p className="text-sm text-red-400">{createError}</p>}
               </div>
 
               <div className="mt-6 flex justify-end gap-3">

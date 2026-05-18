@@ -36,7 +36,7 @@ describe('Activity Tracking', () => {
             resourceId: `resource_${i}`,
             description: `Test activity ${i}`,
           },
-          true,
+          true
         )
       }
 
@@ -106,8 +106,7 @@ describe('Activity Tracking', () => {
 
       const logs = await getAuditLogs(100)
       const serviceLog = logs.find(
-        (log) =>
-          log.action === 'started' && log.details?.resourceName === 'postgres',
+        (log) => log.action === 'started' && log.details?.resourceName === 'postgres'
       )
 
       if (serviceLog) {
@@ -141,7 +140,7 @@ describe('Activity Tracking', () => {
           { field: 'PORT', oldValue: '3000', newValue: '3021' },
           { field: 'DEBUG', oldValue: false, newValue: true },
         ],
-        'admin',
+        'admin'
       )
 
       const logs = await getAuditLogs(100)
@@ -198,7 +197,7 @@ describe('Activity Tracking', () => {
           resourceName: 'test-service',
         },
         true,
-        'admin',
+        'admin'
       )
 
       // Get recent activities

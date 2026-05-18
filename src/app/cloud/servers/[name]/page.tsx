@@ -47,11 +47,7 @@ function MetricCard({
   const mouseX = useMotionValue(0)
   const mouseY = useMotionValue(0)
 
-  function onMouseMove({
-    currentTarget,
-    clientX,
-    clientY,
-  }: React.MouseEvent<HTMLDivElement>) {
+  function onMouseMove({ currentTarget, clientX, clientY }: React.MouseEvent<HTMLDivElement>) {
     const { left, top } = currentTarget.getBoundingClientRect()
     mouseX.set(clientX - left)
     mouseY.set(clientY - top)
@@ -72,17 +68,13 @@ function MetricCard({
       <div className="absolute inset-0 rounded-2xl ring-1 ring-zinc-900/10 transition-colors duration-300 ring-inset group-hover:ring-emerald-500/50 dark:ring-white/20 dark:group-hover:ring-emerald-400/60" />
       <div className="relative">
         <div className="flex items-center justify-between">
-          <h3 className="text-sm font-semibold text-zinc-900 dark:text-white">
-            {title}
-          </h3>
+          <h3 className="text-sm font-semibold text-zinc-900 dark:text-white">{title}</h3>
           <div className="flex h-8 w-8 items-center justify-center rounded-full bg-emerald-500/20">
             <Icon className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
           </div>
         </div>
         <div className="mt-4">
-          <div className="text-2xl font-bold text-zinc-900 dark:text-white">
-            {value}
-          </div>
+          <div className="text-2xl font-bold text-zinc-900 dark:text-white">{value}</div>
           {percentage !== undefined && (
             <div className="mt-2 h-2 rounded-full bg-zinc-200 dark:bg-zinc-800">
               <div
@@ -93,9 +85,7 @@ function MetricCard({
           )}
         </div>
         {description && (
-          <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
-            {description}
-          </p>
+          <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">{description}</p>
         )}
       </div>
     </div>
@@ -123,10 +113,7 @@ function ServerDetailContent({ name }: { name: string }) {
     error: serverError,
     isLoading: serverLoading,
     mutate,
-  } = useSWR<{ server: CloudServer }>(
-    `/api/cloud/servers/${serverName}`,
-    fetcher,
-  )
+  } = useSWR<{ server: CloudServer }>(`/api/cloud/servers/${serverName}`, fetcher)
 
   const { data: metricsData, isLoading: _metricsLoading } = useSWR<{
     metrics: ServerMetrics
@@ -137,9 +124,7 @@ function ServerDetailContent({ name }: { name: string }) {
   const server = serverData?.server ?? null
   const metrics = metricsData?.metrics ?? null
 
-  const handleAction = async (
-    action: 'start' | 'stop' | 'restart' | 'delete',
-  ) => {
+  const handleAction = async (action: 'start' | 'stop' | 'restart' | 'delete') => {
     setActionLoading(action)
     try {
       await fetch(`/api/cloud/servers/${serverName}/${action}`, {
@@ -199,9 +184,7 @@ function ServerDetailContent({ name }: { name: string }) {
 
   const formatBytes = (bytes: number) => {
     const gb = bytes / (1024 * 1024 * 1024)
-    return gb >= 1
-      ? `${gb.toFixed(1)} GB`
-      : `${(bytes / (1024 * 1024)).toFixed(0)} MB`
+    return gb >= 1 ? `${gb.toFixed(1)} GB` : `${(bytes / (1024 * 1024)).toFixed(0)} MB`
   }
 
   const formatUptime = (createdAt: string) => {
@@ -248,9 +231,7 @@ function ServerDetailContent({ name }: { name: string }) {
               <Server className="h-6 w-6 text-emerald-400" />
             </div>
             <div>
-              <h1 className="text-2xl font-semibold text-white">
-                {server.name}
-              </h1>
+              <h1 className="text-2xl font-semibold text-white">{server.name}</h1>
               <div className="flex items-center gap-3 text-sm text-zinc-400">
                 <span className="capitalize">{server.provider}</span>
                 <span>|</span>
@@ -269,12 +250,8 @@ function ServerDetailContent({ name }: { name: string }) {
           <span
             className={`rounded-full px-3 py-1 text-sm font-medium capitalize ${statusColors[server.status]}`}
           >
-            {server.status === 'running' && (
-              <CheckCircle className="mr-1 inline h-3 w-3" />
-            )}
-            {server.status === 'error' && (
-              <AlertCircle className="mr-1 inline h-3 w-3" />
-            )}
+            {server.status === 'running' && <CheckCircle className="mr-1 inline h-3 w-3" />}
+            {server.status === 'error' && <AlertCircle className="mr-1 inline h-3 w-3" />}
             {server.status}
           </span>
 
@@ -368,9 +345,7 @@ function ServerDetailContent({ name }: { name: string }) {
                 />
                 <MetricCard
                   title="Network"
-                  value={formatBytes(
-                    metrics.network.bytesIn + metrics.network.bytesOut,
-                  )}
+                  value={formatBytes(metrics.network.bytesIn + metrics.network.bytesOut)}
                   description="In + Out"
                   icon={Network}
                 />
@@ -379,9 +354,7 @@ function ServerDetailContent({ name }: { name: string }) {
 
             {/* Connection Info */}
             <div className="rounded-lg border border-zinc-700/50 bg-zinc-800/50 p-4">
-              <h3 className="mb-4 text-lg font-semibold text-white">
-                Connection
-              </h3>
+              <h3 className="mb-4 text-lg font-semibold text-white">Connection</h3>
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
                   <span className="text-zinc-400">IP Address</span>
@@ -442,9 +415,7 @@ function ServerDetailContent({ name }: { name: string }) {
               <div className="space-y-3 text-sm">
                 <div className="flex items-center justify-between">
                   <span className="text-zinc-400">Provider</span>
-                  <span className="text-white capitalize">
-                    {server.provider}
-                  </span>
+                  <span className="text-white capitalize">{server.provider}</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-zinc-400">Region</span>
@@ -523,9 +494,7 @@ function ServerDetailContent({ name }: { name: string }) {
         <div className="rounded-lg border border-zinc-700/50 bg-zinc-800/50 p-12 text-center">
           <Activity className="mx-auto mb-4 h-12 w-12 text-zinc-500" />
           <p className="text-lg text-zinc-400">Detailed metrics coming soon</p>
-          <p className="text-sm text-zinc-500">
-            Real-time CPU, memory, disk, and network graphs
-          </p>
+          <p className="text-sm text-zinc-500">Real-time CPU, memory, disk, and network graphs</p>
         </div>
       )}
 
@@ -533,9 +502,7 @@ function ServerDetailContent({ name }: { name: string }) {
         <div className="rounded-lg border border-zinc-700/50 bg-zinc-800/50 p-12 text-center">
           <Terminal className="mx-auto mb-4 h-12 w-12 text-zinc-500" />
           <p className="text-lg text-zinc-400">Server logs coming soon</p>
-          <p className="text-sm text-zinc-500">
-            View system logs and application output
-          </p>
+          <p className="text-sm text-zinc-500">View system logs and application output</p>
         </div>
       )}
 
@@ -543,20 +510,14 @@ function ServerDetailContent({ name }: { name: string }) {
         <div className="rounded-lg border border-zinc-700/50 bg-zinc-800/50 p-12 text-center">
           <Terminal className="mx-auto mb-4 h-12 w-12 text-zinc-500" />
           <p className="text-lg text-zinc-400">Web console coming soon</p>
-          <p className="text-sm text-zinc-500">
-            Access your server directly from the browser
-          </p>
+          <p className="text-sm text-zinc-500">Access your server directly from the browser</p>
         </div>
       )}
     </div>
   )
 }
 
-export default async function ServerDetailPage({
-  params,
-}: {
-  params: Promise<{ name: string }>
-}) {
+export default async function ServerDetailPage({ params }: { params: Promise<{ name: string }> }) {
   const { name } = await params
   return (
     <Suspense fallback={<ServiceDetailSkeleton />}>

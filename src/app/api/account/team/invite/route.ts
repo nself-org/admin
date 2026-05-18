@@ -26,28 +26,21 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     return NextResponse.json(
       {
         error: 'not_available',
-        message:
-          'Multi-user mode disabled. Set NSELF_ADMIN_MULTIUSER=true to enable.',
+        message: 'Multi-user mode disabled. Set NSELF_ADMIN_MULTIUSER=true to enable.',
         docs: 'https://docs.nself.org/admin/single-user-posture',
       },
-      { status: 404 },
+      { status: 404 }
     )
   }
 
   const token = request.cookies.get('nself-session')?.value
   if (!token || !(await validateSessionToken(token))) {
-    return NextResponse.json(
-      { success: false, error: 'Unauthorized' },
-      { status: 401 },
-    )
+    return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 })
   }
 
   const body = await request.json().catch(() => null)
   if (!body) {
-    return NextResponse.json(
-      { success: false, error: 'Invalid request body' },
-      { status: 400 },
-    )
+    return NextResponse.json({ success: false, error: 'Invalid request body' }, { status: 400 })
   }
 
   const parsed = inviteSchema.safeParse(body)
@@ -58,14 +51,14 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         error: 'Validation failed',
         details: parsed.error.format(),
       },
-      { status: 400 },
+      { status: 400 }
     )
   }
 
   if (!AUTH_URL) {
     return NextResponse.json(
       { success: false, error: 'NSELF_AUTH_URL not configured' },
-      { status: 503 },
+      { status: 503 }
     )
   }
 
@@ -83,7 +76,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       const upstreamBody = await upstream.json().catch(() => ({}))
       return NextResponse.json(
         { success: false, error: upstreamBody.error || 'Invite failed' },
-        { status: upstream.status },
+        { status: upstream.status }
       )
     }
 
@@ -96,7 +89,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         error: 'Auth service unavailable',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 503 },
+      { status: 503 }
     )
   }
 }

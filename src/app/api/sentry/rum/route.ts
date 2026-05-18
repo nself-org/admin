@@ -18,21 +18,16 @@ export async function GET() {
     if (!res.ok) {
       return NextResponse.json(
         { error: `nself-rum upstream error: ${res.status}` },
-        { status: res.status },
+        { status: res.status }
       )
     }
 
     const data: unknown = await res.json()
     return NextResponse.json(data)
   } catch (err) {
-    const msg =
-      err instanceof Error ? err.message : 'Failed to reach nself-rum'
+    const msg = err instanceof Error ? err.message : 'Failed to reach nself-rum'
 
-    if (
-      msg.includes('ECONNREFUSED') ||
-      msg.includes('fetch failed') ||
-      msg.includes('timeout')
-    ) {
+    if (msg.includes('ECONNREFUSED') || msg.includes('fetch failed') || msg.includes('timeout')) {
       return NextResponse.json({
         eventCount24h: 0,
         activeSessionCount: 0,

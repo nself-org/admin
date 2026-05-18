@@ -24,7 +24,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           success: false,
           error: 'Environment is required',
         },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -34,7 +34,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           success: false,
           error: 'Configuration content is required',
         },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -45,7 +45,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           success: false,
           error: `Invalid environment. Allowed: ${allowedEnvs.join(', ')}`,
         },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -53,10 +53,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
     // Write content to a temporary file for nself to process
     const projectPath = getProjectPath()
-    const tmpFile = path.join(
-      projectPath,
-      `.nself-import-${Date.now()}.${importFormat}`,
-    )
+    const tmpFile = path.join(projectPath, `.nself-import-${Date.now()}.${importFormat}`)
 
     try {
       await fs.writeFile(tmpFile, content, 'utf-8')
@@ -104,7 +101,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         error: 'Config import failed',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

@@ -71,15 +71,13 @@ export function ServiceCard({
   const [showDetails, setShowDetails] = useState(false)
   const [showMenu, setShowMenu] = useState(false)
 
-  const displayName = container.name
-    .replace(/^nself[-_]/, '')
-    .replace(/_/g, '-')
+  const displayName = container.name.replace(/^nself[-_]/, '').replace(/_/g, '-')
   const ServiceIcon = getServiceIcon(container.name)
   const healthColor = getHealthColor(container.health || 'stopped')
   const healthText = getHealthText(container.health || 'stopped')
   const serviceUrl = getServiceUrl(container)
   const primaryPort = container.ports?.find(
-    (p: { private: number; public: number; type: string }) => p.public,
+    (p: { private: number; public: number; type: string }) => p.public
   )
   const uptime = getUptimeString(container.created, container.state)
 
@@ -92,17 +90,12 @@ export function ServiceCard({
               <ServiceIcon className="h-5 w-5 text-blue-600 dark:text-blue-400" />
             </div>
             <div>
-              <h3 className="font-medium text-zinc-900 dark:text-zinc-100">
-                {displayName}
-              </h3>
+              <h3 className="font-medium text-zinc-900 dark:text-zinc-100">{displayName}</h3>
               <div className="mt-0.5 flex items-center gap-2">
                 <span
                   className={`inline-flex items-center gap-1 rounded-md px-1.5 py-0.5 text-xs font-medium ${healthColor}`}
                 >
-                  <span
-                    className="h-1.5 w-1.5 rounded-full bg-current"
-                    aria-hidden="true"
-                  />
+                  <span className="h-1.5 w-1.5 rounded-full bg-current" aria-hidden="true" />
                   <span className="sr-only">Service status: </span>
                   {healthText}
                 </span>
@@ -185,10 +178,7 @@ export function ServiceCard({
                       <Icons.Terminal className="h-4 w-4" aria-hidden="true" />
                       Terminal
                     </button>
-                    <hr
-                      className="my-1 border-zinc-200 dark:border-zinc-700"
-                      aria-hidden="true"
-                    />
+                    <hr className="my-1 border-zinc-200 dark:border-zinc-700" aria-hidden="true" />
                     <button
                       onClick={() => {
                         onAction('remove', container.id)
@@ -208,10 +198,7 @@ export function ServiceCard({
         </div>
 
         <div className="mt-2 flex items-center gap-2">
-          <span
-            className="truncate font-mono text-xs text-zinc-500"
-            title={container.image}
-          >
+          <span className="truncate font-mono text-xs text-zinc-500" title={container.image}>
             {container.image.split(':')[0].split('/').pop()}:
             {container.image.split(':')[1] || 'latest'}
           </span>
@@ -254,9 +241,7 @@ export function ServiceCard({
                 Memory
               </span>
               <span className="text-[10px] font-semibold text-zinc-900 dark:text-white">
-                {(container.stats.memory.usage / (1024 * 1024 * 1024)).toFixed(
-                  1,
-                )}
+                {(container.stats.memory.usage / (1024 * 1024 * 1024)).toFixed(1)}
                 GB
               </span>
             </div>
@@ -352,22 +337,18 @@ export function ServiceCard({
               Environment
             </h4>
             <div className="space-y-1">
-              {container.details?.env
-                ?.slice(0, 3)
-                .map((env: string, i: number) => {
-                  const [key, value] = env.split('=')
-                  return (
-                    <div key={i} className="font-mono text-xs">
-                      <span className="text-zinc-600 dark:text-zinc-400">
-                        {key}=
-                      </span>
-                      <span className="text-zinc-800 dark:text-zinc-200">
-                        {value?.substring(0, 30)}
-                        {value?.length > 30 ? '...' : ''}
-                      </span>
-                    </div>
-                  )
-                })}
+              {container.details?.env?.slice(0, 3).map((env: string, i: number) => {
+                const [key, value] = env.split('=')
+                return (
+                  <div key={i} className="font-mono text-xs">
+                    <span className="text-zinc-600 dark:text-zinc-400">{key}=</span>
+                    <span className="text-zinc-800 dark:text-zinc-200">
+                      {value?.substring(0, 30)}
+                      {value?.length > 30 ? '...' : ''}
+                    </span>
+                  </div>
+                )
+              })}
               {container.details?.env && container.details.env.length > 3 && (
                 <div className="text-xs text-zinc-500">
                   +{container.details.env.length - 3} more
@@ -378,21 +359,13 @@ export function ServiceCard({
 
           {container.details?.mounts && container.details.mounts.length > 0 && (
             <div>
-              <h4 className="mb-1 text-xs font-medium text-zinc-700 dark:text-zinc-300">
-                Volumes
-              </h4>
+              <h4 className="mb-1 text-xs font-medium text-zinc-700 dark:text-zinc-300">Volumes</h4>
               <div className="space-y-1">
-                {container.details.mounts
-                  .slice(0, 2)
-                  .map((mount: any, i: number) => (
-                    <div
-                      key={i}
-                      className="text-xs text-zinc-600 dark:text-zinc-400"
-                    >
-                      {mount.Source?.split('/').pop() || mount.Name} →{' '}
-                      {mount.Destination}
-                    </div>
-                  ))}
+                {container.details.mounts.slice(0, 2).map((mount: any, i: number) => (
+                  <div key={i} className="text-xs text-zinc-600 dark:text-zinc-400">
+                    {mount.Source?.split('/').pop() || mount.Name} → {mount.Destination}
+                  </div>
+                ))}
               </div>
             </div>
           )}

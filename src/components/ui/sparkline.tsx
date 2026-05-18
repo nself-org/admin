@@ -44,8 +44,7 @@ export function Sparkline({
 
   // Calculate trend
   const trend = data.length >= 2 ? data[data.length - 1] - data[0] : 0
-  const trendPercentage =
-    data[0] !== 0 ? ((trend / data[0]) * 100).toFixed(1) : '0.0'
+  const trendPercentage = data[0] !== 0 ? ((trend / data[0]) * 100).toFixed(1) : '0.0'
 
   // Determine color
   const variantColors = {
@@ -54,29 +53,20 @@ export function Sparkline({
     danger: '#ef4444',
   }
 
-  const lineColor =
-    variant !== 'default' ? variantColors[variant] : variantColors.default
+  const lineColor = variant !== 'default' ? variantColors[variant] : variantColors.default
 
   return (
     <div className={cn('flex items-center gap-2', className)} {...props}>
       <ResponsiveContainer width="100%" height={height}>
         <LineChart data={chartData}>
-          <Line
-            type="monotone"
-            dataKey="value"
-            stroke={lineColor}
-            strokeWidth={2}
-            dot={false}
-          />
+          <Line type="monotone" dataKey="value" stroke={lineColor} strokeWidth={2} dot={false} />
         </LineChart>
       </ResponsiveContainer>
       {showTrend && (
         <span
           className={cn(
             'text-xs font-medium',
-            trend >= 0
-              ? 'text-green-600 dark:text-green-400'
-              : 'text-red-600 dark:text-red-400',
+            trend >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'
           )}
         >
           {trend >= 0 ? '+' : ''}

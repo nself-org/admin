@@ -1,13 +1,6 @@
 'use client'
 
-import {
-  Clock,
-  Database,
-  FileText,
-  HardDrive,
-  Image,
-  Shield,
-} from 'lucide-react'
+import { Clock, Database, FileText, HardDrive, Image, Shield } from 'lucide-react'
 import { useState } from 'react'
 
 interface BackupConfig {
@@ -34,19 +27,14 @@ interface BackupConfigurationProps {
   onChange: (config: BackupConfig) => void
 }
 
-export function BackupConfiguration({
-  value,
-  onChange,
-}: BackupConfigurationProps) {
+export function BackupConfiguration({ value, onChange }: BackupConfigurationProps) {
   const [showAdvanced, setShowAdvanced] = useState(false)
 
   const updateConfig = (updates: Partial<BackupConfig>) => {
     onChange({ ...value, ...updates })
   }
 
-  const updateSchedule = (
-    scheduleUpdates: Partial<BackupConfig['schedule']>,
-  ) => {
+  const updateSchedule = (scheduleUpdates: Partial<BackupConfig['schedule']>) => {
     onChange({
       ...value,
       schedule: { ...value.schedule, ...scheduleUpdates },
@@ -62,8 +50,7 @@ export function BackupConfiguration({
 
   // Generate cron expression from schedule
   const getCronExpression = () => {
-    const { frequency, time, dayOfWeek, dayOfMonth, customCron } =
-      value.schedule
+    const { frequency, time, dayOfWeek, dayOfMonth, customCron } = value.schedule
 
     if (frequency === 'custom' && customCron) {
       return customCron
@@ -111,9 +98,7 @@ export function BackupConfiguration({
               >
                 <Shield
                   className={`h-4 w-4 transition-colors ${
-                    value.enabled
-                      ? 'text-white'
-                      : 'text-zinc-400 dark:text-zinc-500'
+                    value.enabled ? 'text-white' : 'text-zinc-400 dark:text-zinc-500'
                   }`}
                 />
               </div>
@@ -134,11 +119,7 @@ export function BackupConfiguration({
               } `}
             >
               {value.enabled && (
-                <svg
-                  className="h-3 w-3 text-white"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
+                <svg className="h-3 w-3 text-white" fill="currentColor" viewBox="0 0 20 20">
                   <path
                     fillRule="evenodd"
                     d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
@@ -169,9 +150,7 @@ export function BackupConfiguration({
                   <input
                     type="checkbox"
                     checked={value.types.database}
-                    onChange={(e) =>
-                      updateTypes({ database: e.target.checked })
-                    }
+                    onChange={(e) => updateTypes({ database: e.target.checked })}
                     className="sr-only"
                   />
                   <Database
@@ -268,8 +247,7 @@ export function BackupConfiguration({
                       value={value.schedule.frequency}
                       onChange={(e) =>
                         updateSchedule({
-                          frequency: e.target
-                            .value as BackupConfig['schedule']['frequency'],
+                          frequency: e.target.value as BackupConfig['schedule']['frequency'],
                         })
                       }
                       className="focus:ring-opacity-20 w-full rounded-lg border border-zinc-300 bg-white px-2 py-1.5 text-xs text-zinc-900 focus:ring-2 focus:ring-zinc-500 focus:outline-none dark:border-zinc-600 dark:bg-zinc-800 dark:text-white"
@@ -295,9 +273,7 @@ export function BackupConfiguration({
                 {value.schedule.frequency === 'weekly' && (
                   <select
                     value={value.schedule.dayOfWeek || 0}
-                    onChange={(e) =>
-                      updateSchedule({ dayOfWeek: parseInt(e.target.value) })
-                    }
+                    onChange={(e) => updateSchedule({ dayOfWeek: parseInt(e.target.value) })}
                     className="focus:ring-opacity-20 w-full rounded-lg border border-zinc-300 bg-white px-2 py-1.5 text-xs text-zinc-900 focus:ring-2 focus:ring-zinc-500 focus:outline-none dark:border-zinc-600 dark:bg-zinc-800 dark:text-white"
                   >
                     <option value="0">Sunday</option>
@@ -316,9 +292,7 @@ export function BackupConfiguration({
                     min="1"
                     max="28"
                     value={value.schedule.dayOfMonth || 1}
-                    onChange={(e) =>
-                      updateSchedule({ dayOfMonth: parseInt(e.target.value) })
-                    }
+                    onChange={(e) => updateSchedule({ dayOfMonth: parseInt(e.target.value) })}
                     className="focus:ring-opacity-20 w-full rounded-lg border border-zinc-300 bg-white px-2 py-1.5 text-xs text-zinc-900 focus:ring-2 focus:ring-zinc-500 focus:outline-none dark:border-zinc-600 dark:bg-zinc-800 dark:text-white"
                     placeholder="Day of month (1-28)"
                   />
@@ -328,9 +302,7 @@ export function BackupConfiguration({
                   <input
                     type="text"
                     value={value.schedule.customCron || ''}
-                    onChange={(e) =>
-                      updateSchedule({ customCron: e.target.value })
-                    }
+                    onChange={(e) => updateSchedule({ customCron: e.target.value })}
                     className="focus:ring-opacity-20 w-full rounded-lg border border-zinc-300 bg-white px-2 py-1.5 text-xs text-zinc-900 focus:ring-2 focus:ring-zinc-500 focus:outline-none dark:border-zinc-600 dark:bg-zinc-800 dark:text-white"
                     placeholder="0 2 * * * (Cron expression)"
                   />
@@ -386,9 +358,7 @@ export function BackupConfiguration({
                       <input
                         type="checkbox"
                         checked={value.compression}
-                        onChange={(e) =>
-                          updateConfig({ compression: e.target.checked })
-                        }
+                        onChange={(e) => updateConfig({ compression: e.target.checked })}
                         className="h-3.5 w-3.5 rounded border-gray-300 bg-gray-100 text-zinc-600 focus:ring-2 focus:ring-zinc-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-zinc-600"
                       />
                       <span className="text-xs text-zinc-700 dark:text-zinc-300">
@@ -401,9 +371,7 @@ export function BackupConfiguration({
                       <input
                         type="checkbox"
                         checked={value.encryption}
-                        onChange={(e) =>
-                          updateConfig({ encryption: e.target.checked })
-                        }
+                        onChange={(e) => updateConfig({ encryption: e.target.checked })}
                         className="h-3.5 w-3.5 rounded border-gray-300 bg-gray-100 text-zinc-600 focus:ring-2 focus:ring-zinc-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-zinc-600"
                       />
                       <span className="text-xs text-zinc-700 dark:text-zinc-300">

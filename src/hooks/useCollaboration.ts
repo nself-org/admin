@@ -45,29 +45,24 @@ function getUserColor(userId: string): string {
  * Hook for tracking online users and their presence
  */
 export function usePresence(roomId?: string) {
-  const [onlineUsers, setOnlineUsers] = useState<
-    Map<string, UserPresenceEvent>
-  >(new Map())
+  const [onlineUsers, setOnlineUsers] = useState<Map<string, UserPresenceEvent>>(new Map())
   const [isConnected, setIsConnected] = useState(false)
 
   useEffect(() => {
     const wsClient = getWebSocketClient()
 
     // Subscribe to presence updates
-    const unsubscribePresence = wsClient.on<UserPresenceEvent>(
-      EventType.USER_PRESENCE,
-      (data) => {
-        setOnlineUsers((prev) => {
-          const next = new Map(prev)
-          if (data.status === 'offline') {
-            next.delete(data.userId)
-          } else {
-            next.set(data.userId, data)
-          }
-          return next
-        })
-      },
-    )
+    const unsubscribePresence = wsClient.on<UserPresenceEvent>(EventType.USER_PRESENCE, (data) => {
+      setOnlineUsers((prev) => {
+        const next = new Map(prev)
+        if (data.status === 'offline') {
+          next.delete(data.userId)
+        } else {
+          next.set(data.userId, data)
+        }
+        return next
+      })
+    })
 
     // Subscribe to connection status
     const unsubscribeStatus = wsClient.onStatusChange((status) => {
@@ -90,11 +85,7 @@ export function usePresence(roomId?: string) {
   }, [roomId])
 
   const updatePresence = useCallback(
-    (
-      status: 'online' | 'away' | 'offline',
-      currentPage?: string,
-      currentDocument?: string,
-    ) => {
+    (status: 'online' | 'away' | 'offline', currentPage?: string, currentDocument?: string) => {
       const wsClient = getWebSocketClient()
       const { userId, userName } = getCurrentUser()
 
@@ -112,7 +103,7 @@ export function usePresence(roomId?: string) {
 
       wsClient.emit(EventType.USER_PRESENCE, presenceData)
     },
-    [],
+    []
   )
 
   return {
@@ -126,12 +117,8 @@ export function usePresence(roomId?: string) {
  * Hook for collaborative editing with cursor synchronization
  */
 export function useCollaborativeEditor(documentId: string, roomId?: string) {
-  const [cursors, setCursors] = useState<Map<string, CursorPositionEvent>>(
-    new Map(),
-  )
-  const [selections, setSelections] = useState<Map<string, TextSelectionEvent>>(
-    new Map(),
-  )
+  const [cursors, setCursors] = useState<Map<string, CursorPositionEvent>>(new Map())
+  const [selections, setSelections] = useState<Map<string, TextSelectionEvent>>(new Map())
   const [typingUsers, setTypingUsers] = useState<Set<string>>(new Set())
   const [documentVersion, setDocumentVersion] = useState(0)
 
@@ -149,7 +136,7 @@ export function useCollaborativeEditor(documentId: string, roomId?: string) {
             return next
           })
         }
-      },
+      }
     )
 
     // Subscribe to text selection updates
@@ -163,36 +150,30 @@ export function useCollaborativeEditor(documentId: string, roomId?: string) {
             return next
           })
         }
-      },
+      }
     )
 
     // Subscribe to typing indicators
-    const unsubscribeTyping = wsClient.on<UserTypingEvent>(
-      EventType.USER_TYPING,
-      (data) => {
-        if (data.documentId === documentId) {
-          setTypingUsers((prev) => {
-            const next = new Set(prev)
-            if (data.isTyping) {
-              next.add(data.userId)
-            } else {
-              next.delete(data.userId)
-            }
-            return next
-          })
-        }
-      },
-    )
+    const unsubscribeTyping = wsClient.on<UserTypingEvent>(EventType.USER_TYPING, (data) => {
+      if (data.documentId === documentId) {
+        setTypingUsers((prev) => {
+          const next = new Set(prev)
+          if (data.isTyping) {
+            next.add(data.userId)
+          } else {
+            next.delete(data.userId)
+          }
+          return next
+        })
+      }
+    })
 
     // Subscribe to document edits
-    const unsubscribeEdit = wsClient.on<DocumentEditEvent>(
-      EventType.DOCUMENT_EDIT,
-      (data) => {
-        if (data.documentId === documentId) {
-          setDocumentVersion(data.version)
-        }
-      },
-    )
+    const unsubscribeEdit = wsClient.on<DocumentEditEvent>(EventType.DOCUMENT_EDIT, (data) => {
+      if (data.documentId === documentId) {
+        setDocumentVersion(data.version)
+      }
+    })
 
     // Connect and join room
     wsClient.connect()
@@ -227,16 +208,11 @@ export function useCollaborativeEditor(documentId: string, roomId?: string) {
 
       wsClient.emit(EventType.CURSOR_POSITION, cursorData)
     },
-    [documentId],
+    [documentId]
   )
 
   const updateSelection = useCallback(
-    (
-      startLine: number,
-      startColumn: number,
-      endLine: number,
-      endColumn: number,
-    ) => {
+    (startLine: number, startColumn: number, endLine: number, endColumn: number) => {
       const wsClient = getWebSocketClient()
       const { userId, userName } = getCurrentUser()
 
@@ -254,7 +230,7 @@ export function useCollaborativeEditor(documentId: string, roomId?: string) {
 
       wsClient.emit(EventType.TEXT_SELECTION, selectionData)
     },
-    [documentId],
+    [documentId]
   )
 
   const setTyping = useCallback(
@@ -272,7 +248,7 @@ export function useCollaborativeEditor(documentId: string, roomId?: string) {
 
       wsClient.emit(EventType.USER_TYPING, typingData)
     },
-    [documentId],
+    [documentId]
   )
 
   const applyEdit = useCallback(
@@ -281,7 +257,7 @@ export function useCollaborativeEditor(documentId: string, roomId?: string) {
       line: number,
       column: number,
       text?: string,
-      length?: number,
+      length?: number
     ) => {
       const wsClient = getWebSocketClient()
       const { userId, userName } = getCurrentUser()
@@ -305,7 +281,7 @@ export function useCollaborativeEditor(documentId: string, roomId?: string) {
       wsClient.emit(EventType.DOCUMENT_EDIT, editData)
       setDocumentVersion((v) => v + 1)
     },
-    [documentId, documentVersion],
+    [documentId, documentVersion]
   )
 
   return {

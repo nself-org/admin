@@ -17,10 +17,9 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     return NextResponse.json(
       {
         success: false,
-        error:
-          error instanceof Error ? error.message : 'Failed to fetch dashboards',
+        error: error instanceof Error ? error.message : 'Failed to fetch dashboards',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -39,7 +38,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           success: false,
           error: 'Dashboard name is required',
         },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -49,7 +48,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           success: false,
           error: 'createdBy is required',
         },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -60,16 +59,15 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         success: true,
         dashboard,
       },
-      { status: 201 },
+      { status: 201 }
     )
   } catch (error) {
     return NextResponse.json(
       {
         success: false,
-        error:
-          error instanceof Error ? error.message : 'Failed to create dashboard',
+        error: error instanceof Error ? error.message : 'Failed to create dashboard',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

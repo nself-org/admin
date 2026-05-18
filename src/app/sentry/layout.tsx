@@ -4,10 +4,6 @@ export const metadata: Metadata = {
   title: 'ɳSentry',
 }
 
-export default function SentryLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
+export default function SentryLayout({ children }: { children: React.ReactNode }) {
   return <>{children}</>
 }

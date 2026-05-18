@@ -17,8 +17,7 @@ const BASE_URL = '/api/org'
 export async function createOrg(input: CreateOrgInput): Promise<Organization> {
   const response = await api.post(BASE_URL, input)
   const data = await response.json()
-  if (!data.success)
-    throw new Error(data.error || 'Failed to create organization')
+  if (!data.success) throw new Error(data.error || 'Failed to create organization')
   return data.data
 }
 
@@ -34,22 +33,17 @@ export async function getOrg(id: string): Promise<Organization> {
   return data.data
 }
 
-export async function updateOrg(
-  id: string,
-  input: Partial<CreateOrgInput>,
-): Promise<Organization> {
+export async function updateOrg(id: string, input: Partial<CreateOrgInput>): Promise<Organization> {
   const response = await api.put(`${BASE_URL}/${id}`, input)
   const data = await response.json()
-  if (!data.success)
-    throw new Error(data.error || 'Failed to update organization')
+  if (!data.success) throw new Error(data.error || 'Failed to update organization')
   return data.data
 }
 
 export async function deleteOrg(id: string): Promise<void> {
   const response = await api.delete(`${BASE_URL}/${id}`)
   const data = await response.json()
-  if (!data.success)
-    throw new Error(data.error || 'Failed to delete organization')
+  if (!data.success) throw new Error(data.error || 'Failed to delete organization')
 }
 
 // Member management
@@ -63,7 +57,7 @@ export async function listOrgMembers(orgId: string): Promise<OrgMember[]> {
 export async function addOrgMember(
   orgId: string,
   email: string,
-  role: OrgMember['role'],
+  role: OrgMember['role']
 ): Promise<OrgMember> {
   const response = await api.post(`${BASE_URL}/${orgId}/members`, {
     email,
@@ -74,10 +68,7 @@ export async function addOrgMember(
   return data.data
 }
 
-export async function removeOrgMember(
-  orgId: string,
-  userId: string,
-): Promise<void> {
+export async function removeOrgMember(orgId: string, userId: string): Promise<void> {
   const response = await api.delete(`${BASE_URL}/${orgId}/members/${userId}`)
   const data = await response.json()
   if (!data.success) throw new Error(data.error || 'Failed to remove member')
@@ -86,14 +77,13 @@ export async function removeOrgMember(
 export async function updateOrgMemberRole(
   orgId: string,
   userId: string,
-  role: OrgMember['role'],
+  role: OrgMember['role']
 ): Promise<OrgMember> {
   const response = await api.put(`${BASE_URL}/${orgId}/members/${userId}`, {
     role,
   })
   const data = await response.json()
-  if (!data.success)
-    throw new Error(data.error || 'Failed to update member role')
+  if (!data.success) throw new Error(data.error || 'Failed to update member role')
   return data.data
 }
 
@@ -105,10 +95,7 @@ export async function listTeams(orgId: string): Promise<Team[]> {
   return data.data.teams
 }
 
-export async function createTeam(
-  orgId: string,
-  input: CreateTeamInput,
-): Promise<Team> {
+export async function createTeam(orgId: string, input: CreateTeamInput): Promise<Team> {
   const response = await api.post(`${BASE_URL}/${orgId}/teams`, input)
   const data = await response.json()
   if (!data.success) throw new Error(data.error || 'Failed to create team')
@@ -125,7 +112,7 @@ export async function getTeam(orgId: string, teamId: string): Promise<Team> {
 export async function updateTeam(
   orgId: string,
   teamId: string,
-  input: Partial<CreateTeamInput>,
+  input: Partial<CreateTeamInput>
 ): Promise<Team> {
   const response = await api.put(`${BASE_URL}/${orgId}/teams/${teamId}`, input)
   const data = await response.json()

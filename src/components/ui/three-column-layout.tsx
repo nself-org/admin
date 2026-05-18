@@ -58,7 +58,7 @@ export function ThreeColumnLayout({
         hasLeftSidebar && hasRightSidebar && 'xl:grid-cols-[auto,1fr,auto]',
         hasLeftSidebar && !hasRightSidebar && 'xl:grid-cols-[auto,1fr]',
         !hasLeftSidebar && hasRightSidebar && 'xl:grid-cols-[1fr,auto]',
-        className,
+        className
       )}
     >
       {/* Left Sidebar */}
@@ -73,9 +73,7 @@ export function ThreeColumnLayout({
       )}
 
       {/* Main Content */}
-      <main className={cn('min-w-0', hasLeftSidebar ? 'order-2' : 'order-1')}>
-        {children}
-      </main>
+      <main className={cn('min-w-0', hasLeftSidebar ? 'order-2' : 'order-1')}>{children}</main>
 
       {/* Right Sidebar */}
       {hasRightSidebar && (

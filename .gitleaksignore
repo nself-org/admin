@@ -28,3 +28,23 @@ de380efade95986b7d6e886827f1683c6d03c3fb:docs/architecture/database.md:generic-a
 
 # nsf_ci_abcdef... placeholder token in settings/page.tsx (UI example)
 807a5b2fab1a25b3a6c1f62b107912e980794ef9:src/app/settings/page.tsx:generic-api-key:423
+
+# cadfc1d prettier reformat — same false positives at new line numbers
+# pk_test_abc123 placeholder in plugin-config.test.ts (line shifted by prettier)
+cadfc1d2e0192b204224b0c2402e896da37dc20c:src/tests/plugin-config.test.ts:generic-api-key:76
+
+# nself_ab_1234... placeholder in api-keys test (line shifted by prettier)
+cadfc1d2e0192b204224b0c2402e896da37dc20c:src/lib/api-keys/__tests__/api-keys.test.ts:generic-api-key:377
+
+# token: "a3f2d8c9b1e4..." placeholder in database.md (line shifted by prettier)
+cadfc1d2e0192b204224b0c2402e896da37dc20c:.github/wiki/architecture/database.md:generic-api-key:84
+
+# Slack T00000000/B00000000/XXX... example URL in webhooks/page.tsx (line shifted by prettier)
+cadfc1d2e0192b204224b0c2402e896da37dc20c:src/app/tools/webhooks/page.tsx:slack-webhook-url:737
+
+# nsf_ci_abcdef... placeholder token in settings/page.tsx (line shifted by prettier)
+cadfc1d2e0192b204224b0c2402e896da37dc20c:src/app/settings/page.tsx:generic-api-key:484
+
+# SSH key FORMAT example (-----BEGIN/END OPENSSH PRIVATE KEY----- comment block) in docs/CICD.md
+# File deleted in later commit; this is historical false-positive from docs example block
+9dd678b0842b1842eab69d48cd6c48a0043d701d:docs/CICD.md:private-key:964

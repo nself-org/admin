@@ -9,10 +9,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     const { query, range } = await request.json()
 
     if (!query) {
-      return NextResponse.json(
-        { success: false, error: 'Query is required' },
-        { status: 400 },
-      )
+      return NextResponse.json({ success: false, error: 'Query is required' }, { status: 400 })
     }
 
     const lokiUrl = process.env.LOKI_URL || process.env.NSELF_LOKI_URL
@@ -28,8 +25,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
     // Map range to Loki time window
     const now = Math.floor(Date.now() / 1000)
-    const rangeSeconds =
-      range === '5m' ? 300 : range === '1h' ? 3600 : 86400
+    const rangeSeconds = range === '5m' ? 300 : range === '1h' ? 3600 : 86400
     const start = (now - rangeSeconds) * 1_000_000_000 // nanoseconds
     const end = now * 1_000_000_000
 
@@ -46,7 +42,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       {
         headers: { 'Content-Type': 'application/json' },
         signal: AbortSignal.timeout(10_000),
-      },
+      }
     )
 
     if (!lokiResponse.ok) {
@@ -57,7 +53,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           error: `Loki returned ${lokiResponse.status}`,
           details: text.slice(0, 500),
         },
-        { status: 502 },
+        { status: 502 }
       )
     }
 
@@ -97,7 +93,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to execute query',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

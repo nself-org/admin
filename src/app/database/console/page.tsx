@@ -1,9 +1,6 @@
 'use client'
 
-import {
-  QueryHistory,
-  QueryHistoryItem,
-} from '@/components/database/QueryHistory'
+import { QueryHistory, QueryHistoryItem } from '@/components/database/QueryHistory'
 import { ResultsTable } from '@/components/database/ResultsTable'
 import { SQLEditor } from '@/components/database/SQLEditor'
 import { SavedQueries, SavedQuery } from '@/components/database/SavedQueries'
@@ -64,8 +61,7 @@ const QUERY_TEMPLATES = [
   },
   {
     name: 'List All Tables',
-    query:
-      "SELECT table_name\nFROM information_schema.tables\nWHERE table_schema = 'public';",
+    query: "SELECT table_name\nFROM information_schema.tables\nWHERE table_schema = 'public';",
   },
   {
     name: 'Count Rows',
@@ -236,8 +232,7 @@ function DatabaseConsoleContent() {
       setQueryHistory((prev) => [historyItem, ...prev.slice(0, 49)])
       toast.success(`Query executed (${queryResult.executionTime}ms)`)
     } catch (err) {
-      const errorMessage =
-        err instanceof Error ? err.message : 'Query execution failed'
+      const errorMessage = err instanceof Error ? err.message : 'Query execution failed'
       setError(errorMessage)
 
       const historyItem: QueryHistoryItem = {
@@ -314,9 +309,7 @@ function DatabaseConsoleContent() {
 
   const handleToggleHistoryStar = (id: string) => {
     setQueryHistory((prev) =>
-      prev.map((item) =>
-        item.id === id ? { ...item, starred: !item.starred } : item,
-      ),
+      prev.map((item) => (item.id === id ? { ...item, starred: !item.starred } : item))
     )
   }
 
@@ -326,15 +319,11 @@ function DatabaseConsoleContent() {
   }
 
   const handleToggleSavedStar = (id: string) => {
-    setSavedQueries((prev) =>
-      prev.map((q) => (q.id === id ? { ...q, starred: !q.starred } : q)),
-    )
+    setSavedQueries((prev) => prev.map((q) => (q.id === id ? { ...q, starred: !q.starred } : q)))
   }
 
   const handleUpdateSavedQuery = (id: string, updates: Partial<SavedQuery>) => {
-    setSavedQueries((prev) =>
-      prev.map((q) => (q.id === id ? { ...q, ...updates } : q)),
-    )
+    setSavedQueries((prev) => prev.map((q) => (q.id === id ? { ...q, ...updates } : q)))
   }
 
   const handleExportQueries = () => {
@@ -358,9 +347,7 @@ function DatabaseConsoleContent() {
     return (
       <div className="space-y-6 p-6">
         <div>
-          <h1 className="text-2xl font-bold text-zinc-900 dark:text-white">
-            Database Console
-          </h1>
+          <h1 className="text-2xl font-bold text-zinc-900 dark:text-white">Database Console</h1>
           <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
             Interactive PostgreSQL console
           </p>
@@ -373,12 +360,10 @@ function DatabaseConsoleContent() {
   return (
     <div className="space-y-6 p-6">
       <div>
-        <h1 className="text-2xl font-bold text-zinc-900 dark:text-white">
-          Database Console
-        </h1>
+        <h1 className="text-2xl font-bold text-zinc-900 dark:text-white">Database Console</h1>
         <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
-          Interactive PostgreSQL console with SQL editor, schema browser, and
-          query history. Destructive statements require confirmation.
+          Interactive PostgreSQL console with SQL editor, schema browser, and query history.
+          Destructive statements require confirmation.
         </p>
       </div>
       <div className="space-y-6">
@@ -395,10 +380,7 @@ function DatabaseConsoleContent() {
                   </Badge>
                 </div>
 
-                <Select
-                  value={selectedDatabase}
-                  onValueChange={setSelectedDatabase}
-                >
+                <Select value={selectedDatabase} onValueChange={setSelectedDatabase}>
                   <SelectTrigger className="w-48">
                     <SelectValue />
                   </SelectTrigger>
@@ -455,13 +437,7 @@ function DatabaseConsoleContent() {
           )}
 
           {/* Main Editor */}
-          <div
-            className={
-              showSchema
-                ? 'col-span-12 lg:col-span-9'
-                : 'col-span-12 lg:col-span-8'
-            }
-          >
+          <div className={showSchema ? 'col-span-12 lg:col-span-9' : 'col-span-12 lg:col-span-8'}>
             <Card>
               <CardHeader>
                 <div className="flex items-center justify-between">
@@ -470,9 +446,7 @@ function DatabaseConsoleContent() {
                     <Select
                       value=""
                       onValueChange={(value) => {
-                        const template = QUERY_TEMPLATES.find(
-                          (t) => t.name === value,
-                        )
+                        const template = QUERY_TEMPLATES.find((t) => t.name === value)
                         if (template) setQuery(template.query)
                       }}
                     >
@@ -541,12 +515,8 @@ function DatabaseConsoleContent() {
                     <div className="flex items-start gap-2">
                       <XCircle className="mt-0.5 h-5 w-5 flex-shrink-0 text-red-500" />
                       <div className="flex-1">
-                        <h4 className="font-medium text-red-800 dark:text-red-200">
-                          Query Error
-                        </h4>
-                        <p className="mt-1 text-sm text-red-700 dark:text-red-300">
-                          {error}
-                        </p>
+                        <h4 className="font-medium text-red-800 dark:text-red-200">Query Error</h4>
+                        <p className="mt-1 text-sm text-red-700 dark:text-red-300">{error}</p>
                       </div>
                     </div>
                   </div>
@@ -568,12 +538,9 @@ function DatabaseConsoleContent() {
                   <CardContent className="py-12">
                     <div className="text-center">
                       <AlertCircle className="mx-auto h-12 w-12 text-zinc-400" />
-                      <h3 className="mt-4 text-lg font-medium">
-                        Ready to execute
-                      </h3>
+                      <h3 className="mt-4 text-lg font-medium">Ready to execute</h3>
                       <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
-                        Press the Execute button or use ⌘+Enter to run your
-                        query
+                        Press the Execute button or use ⌘+Enter to run your query
                       </p>
                     </div>
                   </CardContent>
@@ -624,9 +591,7 @@ function DatabaseConsoleContent() {
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Save Query</DialogTitle>
-            <DialogDescription>
-              Save this query for quick access later
-            </DialogDescription>
+            <DialogDescription>Save this query for quick access later</DialogDescription>
           </DialogHeader>
           <div className="space-y-4 py-4">
             <div className="space-y-2">

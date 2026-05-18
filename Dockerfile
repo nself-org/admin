@@ -11,6 +11,8 @@ WORKDIR /app
 
 # Copy package files first for better layer caching
 COPY package.json pnpm-lock.yaml ./
+# Copy vendored local workspace packages (referenced in pnpm-lock.yaml as type:directory)
+COPY packages ./packages
 
 # Disable hardlinks: pnpm defaults to hardlink import which fails under QEMU (arm64
 # emulation) because the cache mount and the workdir are on different virtual
@@ -30,6 +32,8 @@ WORKDIR /app
 # Copy dependencies from deps stage
 COPY --from=deps /app/node_modules ./node_modules
 COPY package.json pnpm-lock.yaml ./
+# Copy vendored local workspace packages (required for pnpm prune --prod to resolve linked deps)
+COPY packages ./packages
 
 # Copy only necessary source files (improves cache invalidation)
 COPY src ./src
@@ -84,7 +88,7 @@ RUN ARCH=$(uname -m) && \
     chmod +x /usr/local/bin/mkcert
 
 # Install nself CLI pre-built binary
-ARG NSELF_VERSION=1.1.3
+ARG NSELF_VERSION=1.1.2
 RUN ARCH=$(uname -m) && \
     if [ "$ARCH" = "x86_64" ]; then NSELF_ARCH="amd64"; \
     elif [ "$ARCH" = "aarch64" ]; then NSELF_ARCH="arm64"; \

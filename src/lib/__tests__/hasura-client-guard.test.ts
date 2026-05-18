@@ -29,22 +29,19 @@ describe('hasura-client production startup guard', () => {
 
   afterEach(() => {
     process.env = originalEnv
+    delete process.env.NEXT_PHASE
     jest.resetModules()
   })
 
   describe('missing secret', () => {
     it('throws FATAL when HASURA_GRAPHQL_ADMIN_SECRET is not set in production', () => {
       delete process.env.HASURA_GRAPHQL_ADMIN_SECRET
-      expect(() => freshModule()).toThrow(
-        /HASURA_GRAPHQL_ADMIN_SECRET is not set/,
-      )
+      expect(() => freshModule()).toThrow(/HASURA_GRAPHQL_ADMIN_SECRET is not set/)
     })
 
     it('throws FATAL when HASURA_GRAPHQL_ADMIN_SECRET is empty string in production', () => {
       process.env.HASURA_GRAPHQL_ADMIN_SECRET = ''
-      expect(() => freshModule()).toThrow(
-        /HASURA_GRAPHQL_ADMIN_SECRET is not set/,
-      )
+      expect(() => freshModule()).toThrow(/HASURA_GRAPHQL_ADMIN_SECRET is not set/)
     })
   })
 
@@ -62,7 +59,7 @@ describe('hasura-client production startup guard', () => {
       it(`throws FATAL for known-bad secret: "${bad}"`, () => {
         process.env.HASURA_GRAPHQL_ADMIN_SECRET = bad
         expect(() => freshModule()).toThrow(
-          /HASURA_GRAPHQL_ADMIN_SECRET is (not set|set to a known insecure|must be at least)/,
+          /HASURA_GRAPHQL_ADMIN_SECRET is (not set|set to a known insecure|must be at least)/
         )
       })
     })
@@ -100,6 +97,25 @@ describe('hasura-client production startup guard', () => {
       ;(process.env as { NODE_ENV: string }).NODE_ENV = 'development'
       process.env.HASURA_GRAPHQL_ADMIN_SECRET = 'hasura-admin-secret-dev'
       expect(() => freshModule()).not.toThrow()
+    })
+  })
+
+  describe('Next.js build phase — guard is not enforced', () => {
+    // During `next build`, Next.js sets NEXT_PHASE=phase-production-build and
+    // evaluates route modules to collect page data. HASURA_GRAPHQL_ADMIN_SECRET
+    // is not available as a build-time secret. The guard must not throw here.
+    it('does not throw when NEXT_PHASE=phase-production-build even in production', () => {
+      ;(process.env as { NODE_ENV: string }).NODE_ENV = 'production'
+      process.env.NEXT_PHASE = 'phase-production-build'
+      delete process.env.HASURA_GRAPHQL_ADMIN_SECRET
+      expect(() => freshModule()).not.toThrow()
+    })
+
+    it('does throw when NEXT_PHASE is not set (runtime server)', () => {
+      ;(process.env as { NODE_ENV: string }).NODE_ENV = 'production'
+      delete process.env.NEXT_PHASE
+      delete process.env.HASURA_GRAPHQL_ADMIN_SECRET
+      expect(() => freshModule()).toThrow(/HASURA_GRAPHQL_ADMIN_SECRET is not set/)
     })
   })
 })

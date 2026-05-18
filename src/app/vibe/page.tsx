@@ -30,23 +30,12 @@ export default function VibePage() {
     resetGeneration,
   } = useVibeSession()
 
-  const { chunks, isStreaming, statusMessage, startStream, clearStream } =
-    useVibeStream()
+  const { chunks, isStreaming, statusMessage, startStream, clearStream } = useVibeStream()
 
   const [_focusedPanel, setFocusedPanel] = useState<number>(0)
   const [highContrast, setHighContrast] = useState(false)
-  const panelRefs = useRef<Array<HTMLDivElement | null>>([
-    null,
-    null,
-    null,
-    null,
-  ])
-  const lastFocusRefs = useRef<Array<HTMLElement | null>>([
-    null,
-    null,
-    null,
-    null,
-  ])
+  const panelRefs = useRef<Array<HTMLDivElement | null>>([null, null, null, null])
+  const lastFocusRefs = useRef<Array<HTMLElement | null>>([null, null, null, null])
 
   // High contrast from localStorage
   useEffect(() => {
@@ -68,13 +57,7 @@ export default function VibePage() {
       clearStream()
       startStream(session.id, generation.id)
     }
-  }, [
-    generation?.id,
-    generation?.status,
-    session?.id,
-    startStream,
-    clearStream,
-  ])
+  }, [generation?.id, generation?.status, session?.id, startStream, clearStream])
 
   // Handle keyboard panel switching (Alt+1..4)
   useEffect(() => {
@@ -92,7 +75,7 @@ export default function VibePage() {
         } else {
           // First time: focus first interactive element
           const first = panel.querySelector<HTMLElement>(
-            'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+            'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
           )
           if (first) first.focus()
         }
@@ -102,10 +85,7 @@ export default function VibePage() {
     return () => window.removeEventListener('keydown', handler)
   }, [])
 
-  const isDisabled =
-    !session ||
-    generation?.status === 'generating' ||
-    applyStatus === 'applying'
+  const isDisabled = !session || generation?.status === 'generating' || applyStatus === 'applying'
 
   const handleSubmitPrompt = useCallback(
     (prompt: string) => {
@@ -113,7 +93,7 @@ export default function VibePage() {
       resetGeneration()
       submitPrompt(prompt)
     },
-    [clearStream, resetGeneration, submitPrompt],
+    [clearStream, resetGeneration, submitPrompt]
   )
 
   const VIBE_ENABLED = process.env.NEXT_PUBLIC_NSELF_VIBE_ENABLED !== 'false'
@@ -122,16 +102,10 @@ export default function VibePage() {
     return (
       <main className="flex h-screen items-center justify-center bg-zinc-950">
         <div className="text-center">
-          <Sparkles
-            className="mx-auto mb-3 h-10 w-10 text-zinc-600"
-            aria-hidden="true"
-          />
-          <h1 className="text-lg font-semibold text-zinc-300">
-            Vibe-Code is disabled
-          </h1>
+          <Sparkles className="mx-auto mb-3 h-10 w-10 text-zinc-600" aria-hidden="true" />
+          <h1 className="text-lg font-semibold text-zinc-300">Vibe-Code is disabled</h1>
           <p className="mt-1 text-sm text-zinc-500">
-            Set <code className="text-sky-400">NSELF_VIBE_ENABLED=true</code> to
-            enable.
+            Set <code className="text-sky-400">NSELF_VIBE_ENABLED=true</code> to enable.
           </p>
         </div>
       </main>
@@ -150,9 +124,7 @@ export default function VibePage() {
         <div className="flex items-center gap-2">
           <Sparkles className="h-4 w-4 text-sky-400" aria-hidden="true" />
           <h1 className="text-sm font-semibold text-zinc-100">Vibe-Code</h1>
-          <span className="text-xs text-zinc-600">
-            Full-stack AI code generation
-          </span>
+          <span className="text-xs text-zinc-600">Full-stack AI code generation</span>
         </div>
 
         <div className="flex items-center gap-3">
@@ -169,13 +141,8 @@ export default function VibePage() {
           {/* Session status */}
           {session ? (
             <div className="flex items-center gap-2">
-              <span
-                className="h-1.5 w-1.5 rounded-full bg-emerald-400"
-                aria-hidden="true"
-              />
-              <span className="text-xs text-zinc-400">
-                {session.target_env} session
-              </span>
+              <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" aria-hidden="true" />
+              <span className="text-xs text-zinc-400">{session.target_env} session</span>
             </div>
           ) : (
             <div className="flex items-center gap-2">
@@ -193,10 +160,7 @@ export default function VibePage() {
                   ].join(' ')}
                 >
                   {isCreatingSession ? (
-                    <Loader2
-                      className="mr-1 inline h-3 w-3 animate-spin"
-                      aria-hidden="true"
-                    />
+                    <Loader2 className="mr-1 inline h-3 w-3 animate-spin" aria-hidden="true" />
                   ) : null}
                   {env}
                 </button>
@@ -213,10 +177,7 @@ export default function VibePage() {
           className="flex items-center justify-between gap-3 border-b border-red-900/50 bg-red-950/40 px-4 py-2"
         >
           <div className="flex items-center gap-2 text-xs text-red-300">
-            <AlertCircle
-              className="h-3.5 w-3.5 flex-shrink-0"
-              aria-hidden="true"
-            />
+            <AlertCircle className="h-3.5 w-3.5 flex-shrink-0" aria-hidden="true" />
             {error}
           </div>
           <button
@@ -234,28 +195,21 @@ export default function VibePage() {
 
       {/* Keyboard shortcut hint */}
       <div className="sr-only" aria-live="assertive">
-        Press Alt+1 for Chat, Alt+2 for Diff viewer, Alt+3 for File tree, Alt+4
-        for Terminal
+        Press Alt+1 for Chat, Alt+2 for Diff viewer, Alt+3 for File tree, Alt+4 for Terminal
       </div>
 
       {/* No session state */}
       {!session && (
         <div className="flex flex-1 items-center justify-center">
           <div className="max-w-md text-center">
-            <TerminalSquare
-              className="mx-auto mb-4 h-12 w-12 text-zinc-700"
-              aria-hidden="true"
-            />
-            <h2 className="text-base font-semibold text-zinc-300">
-              Start a Vibe-Code session
-            </h2>
+            <TerminalSquare className="mx-auto mb-4 h-12 w-12 text-zinc-700" aria-hidden="true" />
+            <h2 className="text-base font-semibold text-zinc-300">Start a Vibe-Code session</h2>
             <p className="mt-2 text-sm text-zinc-500">
-              Choose an environment above to start generating full-stack
-              features with AI. Local mode works with zero cloud dependencies.
+              Choose an environment above to start generating full-stack features with AI. Local
+              mode works with zero cloud dependencies.
             </p>
             <p className="mt-3 text-xs text-zinc-600">
-              Keyboard: Alt+1 Chat &middot; Alt+2 Diff &middot; Alt+3 Files
-              &middot; Alt+4 Terminal
+              Keyboard: Alt+1 Chat &middot; Alt+2 Diff &middot; Alt+3 Files &middot; Alt+4 Terminal
             </p>
           </div>
         </div>

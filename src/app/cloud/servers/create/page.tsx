@@ -1,12 +1,7 @@
 'use client'
 
 import { FormSkeleton } from '@/components/skeletons'
-import type {
-  CloudProvider,
-  CloudRegion,
-  CloudSize,
-  ServerSize,
-} from '@/types/cloud'
+import type { CloudProvider, CloudRegion, CloudSize, ServerSize } from '@/types/cloud'
 import {
   AlertCircle,
   ArrowLeft,
@@ -26,7 +21,6 @@ import { Suspense, useState } from 'react'
 import useSWR from 'swr'
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json())
-
 
 function CreateServerContent() {
   const router = useRouter()
@@ -54,12 +48,10 @@ function CreateServerContent() {
 
   const configuredProviders = data?.providers ?? []
   const selectedProviderData = configuredProviders.find(
-    (p) => p.provider.name === formData.provider,
+    (p) => p.provider.name === formData.provider
   )
 
-  const selectedSize = selectedProviderData?.sizes.find(
-    (s) => s.name === formData.size,
-  )
+  const selectedSize = selectedProviderData?.sizes.find((s) => s.name === formData.size)
 
   const handleProviderSelect = (providerName: string) => {
     setFormData({
@@ -87,12 +79,7 @@ function CreateServerContent() {
   }
 
   const handleCreate = async () => {
-    if (
-      !formData.provider ||
-      !formData.name ||
-      !formData.region ||
-      !formData.size
-    ) {
+    if (!formData.provider || !formData.name || !formData.region || !formData.size) {
       setError('Please fill in all required fields')
       return
     }
@@ -121,8 +108,7 @@ function CreateServerContent() {
     }
   }
 
-  const isFormValid =
-    formData.provider && formData.name && formData.region && formData.size
+  const isFormValid = formData.provider && formData.name && formData.region && formData.size
 
   return (
     <div className="space-y-6">
@@ -135,9 +121,7 @@ function CreateServerContent() {
           <ArrowLeft className="h-5 w-5" />
         </Link>
         <div>
-          <h1 className="text-2xl font-semibold text-white">
-            Provision Server
-          </h1>
+          <h1 className="text-2xl font-semibold text-white">Provision Server</h1>
           <p className="text-sm text-zinc-400">Create a new cloud server</p>
         </div>
       </div>
@@ -176,9 +160,7 @@ function CreateServerContent() {
             </button>
             {i < 2 && (
               <div
-                className={`mx-2 h-0.5 w-12 ${
-                  step > s.num ? 'bg-emerald-500' : 'bg-zinc-700'
-                }`}
+                className={`mx-2 h-0.5 w-12 ${step > s.num ? 'bg-emerald-500' : 'bg-zinc-700'}`}
               />
             )}
           </div>
@@ -196,9 +178,7 @@ function CreateServerContent() {
       {/* Step 1: Select Provider */}
       {step === 1 && (
         <div className="space-y-4">
-          <h2 className="text-lg font-semibold text-white">
-            Select Cloud Provider
-          </h2>
+          <h2 className="text-lg font-semibold text-white">Select Cloud Provider</h2>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {configuredProviders.map(({ provider }) => (
               <button
@@ -215,12 +195,8 @@ function CreateServerContent() {
                     <Cloud className="h-6 w-6 text-emerald-400" />
                   </div>
                   <div>
-                    <h3 className="font-medium text-white">
-                      {provider.displayName}
-                    </h3>
-                    <p className="text-sm text-zinc-400 capitalize">
-                      {provider.category}
-                    </p>
+                    <h3 className="font-medium text-white">{provider.displayName}</h3>
+                    <p className="text-sm text-zinc-400 capitalize">{provider.category}</p>
                   </div>
                 </div>
               </button>
@@ -254,9 +230,7 @@ function CreateServerContent() {
               <input
                 type="text"
                 value={formData.name}
-                onChange={(e) =>
-                  setFormData({ ...formData, name: e.target.value })
-                }
+                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                 placeholder="e.g., prod-api-1"
                 className="w-full rounded-lg border border-zinc-700 bg-zinc-900 px-4 py-2 text-white placeholder-zinc-500 focus:border-emerald-500 focus:outline-none"
               />
@@ -272,9 +246,7 @@ function CreateServerContent() {
                 {selectedProviderData.regions.map((region) => (
                   <button
                     key={region.id}
-                    onClick={() =>
-                      setFormData({ ...formData, region: region.id })
-                    }
+                    onClick={() => setFormData({ ...formData, region: region.id })}
                     disabled={!region.available}
                     className={`rounded-lg border px-4 py-2 text-sm ${
                       formData.region === region.id
@@ -285,9 +257,7 @@ function CreateServerContent() {
                     }`}
                   >
                     {region.displayName}
-                    <span className="ml-1 text-xs text-zinc-500">
-                      ({region.country})
-                    </span>
+                    <span className="ml-1 text-xs text-zinc-500">({region.country})</span>
                   </button>
                 ))}
               </div>
@@ -316,20 +286,14 @@ function CreateServerContent() {
                     }`}
                   >
                     <div>
-                      <div className="font-medium text-white capitalize">
-                        {size.name}
-                      </div>
+                      <div className="font-medium text-white capitalize">{size.name}</div>
                       <div className="text-sm text-zinc-400">
                         {size.vcpu} vCPU / {size.memory} / {size.storage}
                       </div>
                     </div>
                     <div className="text-right">
-                      <div className="font-medium text-emerald-400">
-                        ${size.monthlyPrice}/mo
-                      </div>
-                      <div className="text-sm text-zinc-500">
-                        ${size.hourlyPrice}/hr
-                      </div>
+                      <div className="font-medium text-emerald-400">${size.monthlyPrice}/mo</div>
+                      <div className="text-sm text-zinc-500">${size.hourlyPrice}/hr</div>
                     </div>
                   </button>
                 ))}
@@ -345,9 +309,7 @@ function CreateServerContent() {
               <input
                 type="text"
                 value={formData.sshKeyId}
-                onChange={(e) =>
-                  setFormData({ ...formData, sshKeyId: e.target.value })
-                }
+                onChange={(e) => setFormData({ ...formData, sshKeyId: e.target.value })}
                 placeholder="SSH Key ID or fingerprint"
                 className="w-full rounded-lg border border-zinc-700 bg-zinc-900 px-4 py-2 text-white placeholder-zinc-500 focus:border-emerald-500 focus:outline-none"
               />
@@ -363,18 +325,14 @@ function CreateServerContent() {
                 <input
                   type="text"
                   value={tagInput.key}
-                  onChange={(e) =>
-                    setTagInput({ ...tagInput, key: e.target.value })
-                  }
+                  onChange={(e) => setTagInput({ ...tagInput, key: e.target.value })}
                   placeholder="Key"
                   className="flex-1 rounded-lg border border-zinc-700 bg-zinc-900 px-3 py-2 text-sm text-white placeholder-zinc-500"
                 />
                 <input
                   type="text"
                   value={tagInput.value}
-                  onChange={(e) =>
-                    setTagInput({ ...tagInput, value: e.target.value })
-                  }
+                  onChange={(e) => setTagInput({ ...tagInput, value: e.target.value })}
                   placeholder="Value"
                   className="flex-1 rounded-lg border border-zinc-700 bg-zinc-900 px-3 py-2 text-sm text-white placeholder-zinc-500"
                 />
@@ -432,9 +390,7 @@ function CreateServerContent() {
               <div className="space-y-4">
                 <div className="flex items-center justify-between border-b border-zinc-700 pb-4">
                   <span className="text-zinc-400">Server</span>
-                  <span className="font-medium text-white">
-                    ${selectedSize.monthlyPrice}/mo
-                  </span>
+                  <span className="font-medium text-white">${selectedSize.monthlyPrice}/mo</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-zinc-400">Total</span>
@@ -457,9 +413,7 @@ function CreateServerContent() {
       {step === 3 && selectedProviderData && (
         <div className="space-y-6">
           <div className="rounded-lg border border-zinc-700/50 bg-zinc-800/50 p-6">
-            <h2 className="mb-4 text-lg font-semibold text-white">
-              Review Configuration
-            </h2>
+            <h2 className="mb-4 text-lg font-semibold text-white">Review Configuration</h2>
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <span className="text-sm text-zinc-400">Provider</span>
@@ -477,24 +431,19 @@ function CreateServerContent() {
               </div>
               <div>
                 <span className="text-sm text-zinc-400">Size</span>
-                <p className="font-medium text-white capitalize">
-                  {formData.size}
-                </p>
+                <p className="font-medium text-white capitalize">{formData.size}</p>
               </div>
               {selectedSize && (
                 <>
                   <div>
                     <span className="text-sm text-zinc-400">Specs</span>
                     <p className="font-medium text-white">
-                      {selectedSize.vcpu} vCPU / {selectedSize.memory} /{' '}
-                      {selectedSize.storage}
+                      {selectedSize.vcpu} vCPU / {selectedSize.memory} / {selectedSize.storage}
                     </p>
                   </div>
                   <div>
                     <span className="text-sm text-zinc-400">Monthly Cost</span>
-                    <p className="font-medium text-emerald-400">
-                      ${selectedSize.monthlyPrice}/mo
-                    </p>
+                    <p className="font-medium text-emerald-400">${selectedSize.monthlyPrice}/mo</p>
                   </div>
                 </>
               )}

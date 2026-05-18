@@ -57,17 +57,9 @@ export function FormActions({
   }[align]
 
   return (
-    <div
-      className={cn('flex items-center gap-3 pt-4', alignClass, className)}
-      {...props}
-    >
+    <div className={cn('flex items-center gap-3 pt-4', alignClass, className)} {...props}>
       {showCancel && (
-        <Button
-          type="button"
-          variant="outline"
-          onClick={onCancel}
-          disabled={isLoading}
-        >
+        <Button type="button" variant="outline" onClick={onCancel} disabled={isLoading}>
           {cancelText}
         </Button>
       )}

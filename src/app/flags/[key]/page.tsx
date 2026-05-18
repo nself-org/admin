@@ -109,9 +109,7 @@ function RolloutSlider({
   return (
     <div className="space-y-3 rounded-xl border border-zinc-700/50 bg-zinc-800/50 p-4">
       <div className="flex items-center justify-between">
-        <span className="text-sm font-medium text-zinc-300">
-          Rollout Percentage
-        </span>
+        <span className="text-sm font-medium text-zinc-300">Rollout Percentage</span>
         <span className="text-lg font-semibold text-sky-400">{pct}%</span>
       </div>
       <input
@@ -196,19 +194,13 @@ function AuditLog({ entries }: { entries: AuditEntry[] }) {
               className="border-b border-zinc-700/50 last:border-0 hover:bg-zinc-800/50"
             >
               <td className="px-4 py-3 text-xs text-zinc-400">
-                <span title={new Date(e.ts).toISOString()}>
-                  {formatRelative(e.ts)}
-                </span>
+                <span title={new Date(e.ts).toISOString()}>{formatRelative(e.ts)}</span>
               </td>
-              <td className="px-4 py-3 font-mono text-xs text-zinc-300">
-                {e.actor}
-              </td>
+              <td className="px-4 py-3 font-mono text-xs text-zinc-300">{e.actor}</td>
               <td className="px-4 py-3">
                 <ActionBadge action={e.action} />
               </td>
-              <td className="px-4 py-3 text-xs text-zinc-400">
-                {e.reason ?? '—'}
-              </td>
+              <td className="px-4 py-3 text-xs text-zinc-400">{e.reason ?? '—'}</td>
             </tr>
           ))}
         </tbody>
@@ -227,9 +219,7 @@ function ActionBadge({ action }: { action: string }) {
     delete: 'text-red-600',
   }
   return (
-    <span
-      className={`text-xs font-medium capitalize ${colors[action] ?? 'text-zinc-400'}`}
-    >
+    <span className={`text-xs font-medium capitalize ${colors[action] ?? 'text-zinc-400'}`}>
       {action}
     </span>
   )
@@ -361,9 +351,7 @@ export default function FlagDetailPage() {
         <div className="rounded-xl border border-yellow-500/30 bg-yellow-900/20 p-6">
           <div className="flex items-start gap-3">
             <AlertCircle className="mt-0.5 h-5 w-5 shrink-0 text-yellow-400" />
-            <p className="font-medium text-yellow-300">
-              feature-flags plugin is not running.
-            </p>
+            <p className="font-medium text-yellow-300">feature-flags plugin is not running.</p>
           </div>
         </div>
       </div>
@@ -376,10 +364,7 @@ export default function FlagDetailPage() {
         <Breadcrumb flagKey={flagKey} />
         <div className="space-y-3">
           {[1, 2, 3].map((n) => (
-            <div
-              key={n}
-              className="h-16 animate-pulse rounded-xl bg-zinc-800/50"
-            />
+            <div key={n} className="h-16 animate-pulse rounded-xl bg-zinc-800/50" />
           ))}
         </div>
       </div>
@@ -397,9 +382,7 @@ export default function FlagDetailPage() {
       <div className="flex items-start justify-between">
         <div>
           <div className="flex items-center gap-3">
-            <h1 className="font-mono text-2xl font-semibold text-white">
-              {flag.key}
-            </h1>
+            <h1 className="font-mono text-2xl font-semibold text-white">{flag.key}</h1>
             {typeMeta && (
               <span
                 className={`inline-flex items-center rounded border px-2 py-0.5 text-xs font-medium ${typeMeta.color}`}
@@ -417,12 +400,8 @@ export default function FlagDetailPage() {
               </span>
             )}
           </div>
-          {flag.name && (
-            <p className="mt-1 text-sm text-zinc-400">{flag.name}</p>
-          )}
-          {flag.description && (
-            <p className="mt-0.5 text-sm text-zinc-500">{flag.description}</p>
-          )}
+          {flag.name && <p className="mt-1 text-sm text-zinc-400">{flag.name}</p>}
+          {flag.description && <p className="mt-0.5 text-sm text-zinc-500">{flag.description}</p>}
         </div>
 
         {/* Toggle + Kill actions */}
@@ -461,8 +440,8 @@ export default function FlagDetailPage() {
       {killOpen && (
         <div className="space-y-3 rounded-xl border border-red-500/30 bg-red-900/10 p-4">
           <p className="text-sm font-medium text-red-300">
-            Kill-switch this flag. This immediately sets enabled=false and
-            broadcasts cache invalidation to all SDK consumers.
+            Kill-switch this flag. This immediately sets enabled=false and broadcasts cache
+            invalidation to all SDK consumers.
           </p>
           <div>
             <label className="mb-1 block text-xs font-medium text-zinc-400">
@@ -478,9 +457,7 @@ export default function FlagDetailPage() {
               placeholder="e.g. CVE-2026-1234 mitigation"
               className="w-full rounded-lg border border-zinc-700 bg-zinc-900 px-3 py-2 text-sm text-white placeholder-zinc-500 focus:border-red-500 focus:outline-none"
             />
-            {killError && (
-              <p className="mt-1 text-xs text-red-400">{killError}</p>
-            )}
+            {killError && <p className="mt-1 text-xs text-red-400">{killError}</p>}
           </div>
           <div className="flex items-center gap-2">
             <button
@@ -522,15 +499,11 @@ export default function FlagDetailPage() {
               </div>
               <div className="flex justify-between">
                 <dt className="text-zinc-500">Created</dt>
-                <dd className="text-zinc-400">
-                  {formatRelative(flag.created_at)}
-                </dd>
+                <dd className="text-zinc-400">{formatRelative(flag.created_at)}</dd>
               </div>
               <div className="flex justify-between">
                 <dt className="text-zinc-500">Updated</dt>
-                <dd className="text-zinc-400">
-                  {formatRelative(flag.updated_at)}
-                </dd>
+                <dd className="text-zinc-400">{formatRelative(flag.updated_at)}</dd>
               </div>
               <div className="flex justify-between">
                 <dt className="text-zinc-500">Default value</dt>
@@ -562,9 +535,7 @@ export default function FlagDetailPage() {
                   {JSON.stringify(flag.rules, null, 2)}
                 </pre>
               ) : (
-                <p className="text-sm text-zinc-500">
-                  No rules configured — uses default value.
-                </p>
+                <p className="text-sm text-zinc-500">No rules configured — uses default value.</p>
               )}
             </div>
           </div>
@@ -585,10 +556,7 @@ export default function FlagDetailPage() {
 function Breadcrumb({ flagKey }: { flagKey: string }) {
   return (
     <nav className="flex items-center gap-1.5 text-sm text-zinc-500">
-      <Link
-        href="/flags"
-        className="flex items-center gap-1 hover:text-zinc-300"
-      >
+      <Link href="/flags" className="flex items-center gap-1 hover:text-zinc-300">
         <ArrowLeft className="h-4 w-4" />
         Feature Flags
       </Link>

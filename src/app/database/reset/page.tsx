@@ -3,24 +3,11 @@
 import { FormSkeleton } from '@/components/skeletons'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { ScrollArea } from '@/components/ui/scroll-area'
-import {
-  AlertTriangle,
-  CheckCircle,
-  Loader2,
-  RefreshCw,
-  Terminal,
-  XCircle,
-} from 'lucide-react'
+import { AlertTriangle, CheckCircle, Loader2, RefreshCw, Terminal, XCircle } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { Suspense, useCallback, useState } from 'react'
 
@@ -65,9 +52,7 @@ function DatabaseResetContent() {
       setOutput(data.data?.output || 'Database reset completed.')
       setStatus('success')
     } catch (err) {
-      setErrorDetail(
-        err instanceof Error ? err.message : 'Could not reach the admin API',
-      )
+      setErrorDetail(err instanceof Error ? err.message : 'Could not reach the admin API')
       setStatus('error')
     }
   }, [confirmValid, router])
@@ -82,9 +67,7 @@ function DatabaseResetContent() {
   return (
     <div className="space-y-6 p-6">
       <div>
-        <h1 className="text-2xl font-bold text-zinc-900 dark:text-white">
-          Reset Database
-        </h1>
+        <h1 className="text-2xl font-bold text-zinc-900 dark:text-white">Reset Database</h1>
         <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
           Runs{' '}
           <code className="rounded bg-zinc-100 px-1 py-0.5 text-xs dark:bg-zinc-800">
@@ -99,9 +82,8 @@ function DatabaseResetContent() {
         <AlertTriangle className="h-4 w-4" />
         <AlertTitle>Destructive operation</AlertTitle>
         <AlertDescription>
-          This will permanently erase all data in the database and restore the
-          schema to its initial state. This cannot be undone. Create a backup
-          first if you need to preserve your data.
+          This will permanently erase all data in the database and restore the schema to its initial
+          state. This cannot be undone. Create a backup first if you need to preserve your data.
         </AlertDescription>
       </Alert>
 
@@ -109,9 +91,7 @@ function DatabaseResetContent() {
       {status === 'success' && (
         <Alert className="border-emerald-500/30 bg-emerald-50 dark:bg-emerald-900/10">
           <CheckCircle className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
-          <AlertTitle className="text-emerald-700 dark:text-emerald-400">
-            Reset complete
-          </AlertTitle>
+          <AlertTitle className="text-emerald-700 dark:text-emerald-400">Reset complete</AlertTitle>
           <AlertDescription className="text-emerald-600 dark:text-emerald-300">
             The database has been reset to its initial state.
           </AlertDescription>
@@ -153,10 +133,7 @@ function DatabaseResetContent() {
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
-              <Label
-                htmlFor="confirm"
-                className="text-red-600 dark:text-red-400"
-              >
+              <Label htmlFor="confirm" className="text-red-600 dark:text-red-400">
                 Confirmation phrase
               </Label>
               <Input
@@ -209,9 +186,7 @@ function DatabaseResetContent() {
         <Card>
           <CardContent className="flex flex-col items-center gap-4 py-12">
             <Loader2 className="h-10 w-10 animate-spin text-red-500" />
-            <p className="text-sm text-zinc-500">
-              Resetting database — this may take a moment...
-            </p>
+            <p className="text-sm text-zinc-500">Resetting database — this may take a moment...</p>
           </CardContent>
         </Card>
       )}
@@ -227,9 +202,7 @@ function DatabaseResetContent() {
           </CardHeader>
           <CardContent>
             <ScrollArea className="h-48 rounded-lg bg-zinc-950 p-4">
-              <pre className="font-mono text-xs whitespace-pre-wrap text-zinc-300">
-                {output}
-              </pre>
+              <pre className="font-mono text-xs whitespace-pre-wrap text-zinc-300">{output}</pre>
             </ScrollArea>
           </CardContent>
         </Card>

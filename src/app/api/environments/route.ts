@@ -13,14 +13,11 @@ export async function GET(_request: NextRequest): Promise<NextResponse> {
     const projectPath = getProjectPath()
     const nselfPath = await findNselfPath()
 
-    const { stdout } = await execAsync(
-      `${nselfPath} deploy environments --json`,
-      {
-        cwd: projectPath,
-        env: { ...process.env, PATH: getEnhancedPath() },
-        timeout: 60000,
-      },
-    )
+    const { stdout } = await execAsync(`${nselfPath} deploy environments --json`, {
+      cwd: projectPath,
+      env: { ...process.env, PATH: getEnhancedPath() },
+      timeout: 60000,
+    })
 
     const result = JSON.parse(stdout)
 
@@ -39,7 +36,7 @@ export async function GET(_request: NextRequest): Promise<NextResponse> {
         error: 'Failed to list environments',
         details: err.message,
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

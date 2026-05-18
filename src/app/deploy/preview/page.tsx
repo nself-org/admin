@@ -3,15 +3,7 @@
 import { HeroPattern } from '@/components/HeroPattern'
 import { FormSkeleton } from '@/components/skeletons'
 import type { PreviewEnvironment } from '@/types/deployment'
-import {
-  ArrowLeft,
-  Clock,
-  ExternalLink,
-  GitBranch,
-  Plus,
-  RefreshCw,
-  Trash2,
-} from 'lucide-react'
+import { ArrowLeft, Clock, ExternalLink, GitBranch, Plus, RefreshCw, Trash2 } from 'lucide-react'
 import Link from 'next/link'
 import { Suspense, useCallback, useEffect, useState } from 'react'
 
@@ -237,10 +229,7 @@ function PreviewDeployContent() {
                 {/* Services */}
                 <div className="mb-4 grid gap-3 md:grid-cols-3">
                   {preview.services.map((service) => (
-                    <div
-                      key={service.name}
-                      className="rounded-lg bg-zinc-50 p-3 dark:bg-zinc-900"
-                    >
+                    <div key={service.name} className="rounded-lg bg-zinc-50 p-3 dark:bg-zinc-900">
                       <div className="mb-1 flex items-center justify-between">
                         <span className="font-medium text-zinc-900 dark:text-white">
                           {service.name}
@@ -272,9 +261,7 @@ function PreviewDeployContent() {
                     Created {new Date(preview.createdAt).toLocaleDateString()}
                   </span>
                   {preview.expiresAt && (
-                    <span>
-                      Expires {new Date(preview.expiresAt).toLocaleDateString()}
-                    </span>
+                    <span>Expires {new Date(preview.expiresAt).toLocaleDateString()}</span>
                   )}
                   <span>By {preview.createdBy}</span>
                 </div>
@@ -290,20 +277,15 @@ function PreviewDeployContent() {
           </h3>
           <div className="space-y-2 font-mono text-sm">
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-teal-500">nself preview</span> - List
-              preview environments
+              <span className="text-teal-500">nself preview</span> - List preview environments
             </p>
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-teal-500">
-                nself preview create feature/my-feature
-              </span>{' '}
-              - Create preview
+              <span className="text-teal-500">nself preview create feature/my-feature</span> -
+              Create preview
             </p>
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-teal-500">
-                nself preview delete preview-id
-              </span>{' '}
-              - Delete preview
+              <span className="text-teal-500">nself preview delete preview-id</span> - Delete
+              preview
             </p>
           </div>
         </div>

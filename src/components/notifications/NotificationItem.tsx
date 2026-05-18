@@ -20,36 +20,34 @@ interface NotificationItemProps {
   compact?: boolean
 }
 
-const typeConfig: Record<
-  NotificationType,
-  { icon: typeof Info; color: string; bgColor: string }
-> = {
-  info: {
-    icon: Info,
-    color: 'text-blue-500',
-    bgColor: 'bg-blue-50 dark:bg-blue-950',
-  },
-  success: {
-    icon: CheckCircle,
-    color: 'text-green-500',
-    bgColor: 'bg-green-50 dark:bg-green-950',
-  },
-  warning: {
-    icon: AlertTriangle,
-    color: 'text-yellow-500',
-    bgColor: 'bg-yellow-50 dark:bg-yellow-950',
-  },
-  error: {
-    icon: AlertCircle,
-    color: 'text-red-500',
-    bgColor: 'bg-red-50 dark:bg-red-950',
-  },
-  system: {
-    icon: Settings,
-    color: 'text-zinc-500',
-    bgColor: 'bg-zinc-50 dark:bg-zinc-900',
-  },
-}
+const typeConfig: Record<NotificationType, { icon: typeof Info; color: string; bgColor: string }> =
+  {
+    info: {
+      icon: Info,
+      color: 'text-blue-500',
+      bgColor: 'bg-blue-50 dark:bg-blue-950',
+    },
+    success: {
+      icon: CheckCircle,
+      color: 'text-green-500',
+      bgColor: 'bg-green-50 dark:bg-green-950',
+    },
+    warning: {
+      icon: AlertTriangle,
+      color: 'text-yellow-500',
+      bgColor: 'bg-yellow-50 dark:bg-yellow-950',
+    },
+    error: {
+      icon: AlertCircle,
+      color: 'text-red-500',
+      bgColor: 'bg-red-50 dark:bg-red-950',
+    },
+    system: {
+      icon: Settings,
+      color: 'text-zinc-500',
+      bgColor: 'bg-zinc-50 dark:bg-zinc-900',
+    },
+  }
 
 function formatTimeAgo(dateString: string): string {
   const date = new Date(dateString)
@@ -96,8 +94,7 @@ export function NotificationItem({
       className={cn(
         'group relative flex gap-3 rounded-lg p-3 transition-colors',
         !notification.read && 'bg-zinc-50 dark:bg-zinc-900',
-        notification.actionUrl &&
-          'cursor-pointer hover:bg-zinc-100 dark:hover:bg-zinc-800',
+        notification.actionUrl && 'cursor-pointer hover:bg-zinc-100 dark:hover:bg-zinc-800'
       )}
       onClick={handleClick}
     >
@@ -105,7 +102,7 @@ export function NotificationItem({
       <div
         className={cn(
           'flex h-8 w-8 shrink-0 items-center justify-center rounded-full',
-          config.bgColor,
+          config.bgColor
         )}
       >
         <Icon className={cn('h-4 w-4', config.color)} />
@@ -120,7 +117,7 @@ export function NotificationItem({
                 'text-sm font-medium',
                 !notification.read
                   ? 'text-zinc-900 dark:text-zinc-50'
-                  : 'text-zinc-700 dark:text-zinc-300',
+                  : 'text-zinc-700 dark:text-zinc-300'
               )}
             >
               {notification.title}
@@ -156,9 +153,7 @@ export function NotificationItem({
           </span>
 
           {/* Unread indicator */}
-          {!notification.read && (
-            <span className="h-2 w-2 rounded-full bg-blue-500" />
-          )}
+          {!notification.read && <span className="h-2 w-2 rounded-full bg-blue-500" />}
 
           {/* Action button */}
           {notification.actionUrl && notification.actionLabel && (
@@ -177,14 +172,13 @@ export function NotificationItem({
           )}
 
           {/* Priority indicator for high/urgent */}
-          {(notification.priority === 'high' ||
-            notification.priority === 'urgent') && (
+          {(notification.priority === 'high' || notification.priority === 'urgent') && (
             <span
               className={cn(
                 'rounded px-1.5 py-0.5 text-xs font-medium',
                 notification.priority === 'urgent'
                   ? 'bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300'
-                  : 'bg-orange-100 text-orange-700 dark:bg-orange-900 dark:text-orange-300',
+                  : 'bg-orange-100 text-orange-700 dark:bg-orange-900 dark:text-orange-300'
               )}
             >
               {notification.priority}

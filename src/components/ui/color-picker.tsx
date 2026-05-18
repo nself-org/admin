@@ -84,20 +84,13 @@ export function ColorPicker({
         <Button
           variant="outline"
           disabled={disabled}
-          className={cn(
-            'w-full justify-start text-left font-normal',
-            className,
-          )}
+          className={cn('w-full justify-start text-left font-normal', className)}
         >
           <div
             className="mr-2 h-5 w-5 rounded border border-zinc-300 dark:border-zinc-700"
             style={{ backgroundColor: value }}
           />
-          {value || (
-            <span className="text-zinc-500 dark:text-zinc-400">
-              {placeholder}
-            </span>
-          )}
+          {value || <span className="text-zinc-500 dark:text-zinc-400">{placeholder}</span>}
         </Button>
       </Popover.Trigger>
       <Popover.Portal>
@@ -119,7 +112,7 @@ export function ColorPicker({
                       'h-8 w-8 rounded border-2 transition-all hover:scale-110',
                       value === color
                         ? 'border-zinc-900 dark:border-zinc-50'
-                        : 'border-zinc-200 dark:border-zinc-800',
+                        : 'border-zinc-200 dark:border-zinc-800'
                     )}
                     style={{ backgroundColor: color }}
                     aria-label={color}

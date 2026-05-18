@@ -2,13 +2,7 @@
 
 import type { MarketplacePlugin } from '@/types/plugins'
 import { AnimatePresence, motion } from 'framer-motion'
-import {
-  AlertCircle,
-  CheckCircle,
-  ExternalLink,
-  Loader2,
-  X,
-} from 'lucide-react'
+import { AlertCircle, CheckCircle, ExternalLink, Loader2, X } from 'lucide-react'
 import { useEffect, useState } from 'react'
 
 export interface InstallModalProps {
@@ -27,15 +21,11 @@ interface LicenseStatus {
   pluginsAllowed: string[] | null
 }
 
-export function InstallModal({
-  plugin,
-  onClose,
-  onInstalled,
-}: InstallModalProps) {
+export function InstallModal({ plugin, onClose, onInstalled }: InstallModalProps) {
   const isPro = plugin.tier === 'pro' || plugin.licenseRequired
 
   const [licenseState, setLicenseState] = useState<LicenseState>(
-    isPro ? 'checking' : 'not-required',
+    isPro ? 'checking' : 'not-required'
   )
   const [installState, setInstallState] = useState<InstallState>('idle')
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
@@ -71,8 +61,7 @@ export function InstallModal({
     return () => clearTimeout(timer)
   }, [installState, plugin.name, onInstalled, onClose])
 
-  const licenseReady =
-    licenseState === 'not-required' || licenseState === 'valid'
+  const licenseReady = licenseState === 'not-required' || licenseState === 'valid'
   const canInstall = installState === 'idle' && licenseReady
 
   async function handleInstall() {
@@ -187,9 +176,7 @@ export function InstallModal({
                 {licenseState === 'checking' && (
                   <>
                     <Loader2 className="mt-0.5 h-4 w-4 shrink-0 animate-spin text-zinc-400" />
-                    <p className="text-sm text-zinc-400">
-                      Checking license status…
-                    </p>
+                    <p className="text-sm text-zinc-400">Checking license status…</p>
                   </>
                 )}
                 {licenseState === 'valid' && (
@@ -202,9 +189,7 @@ export function InstallModal({
                   <>
                     <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-amber-400" />
                     <div className="flex-1">
-                      <p className="text-sm text-amber-300">
-                        This plugin requires a Pro license.
-                      </p>
+                      <p className="text-sm text-amber-300">This plugin requires a Pro license.</p>
                       <a
                         href="https://nself.org/pricing"
                         target="_blank"
@@ -232,9 +217,7 @@ export function InstallModal({
             {installState === 'success' && (
               <div className="flex items-center gap-3 rounded-lg border border-emerald-500/30 bg-emerald-900/30 p-3">
                 <CheckCircle className="h-4 w-4 shrink-0 text-emerald-400" />
-                <p className="text-sm text-emerald-300">
-                  Plugin installed successfully.
-                </p>
+                <p className="text-sm text-emerald-300">Plugin installed successfully.</p>
               </div>
             )}
           </div>

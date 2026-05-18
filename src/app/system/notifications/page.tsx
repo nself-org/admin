@@ -91,9 +91,7 @@ function SystemNotificationsContent() {
                 <input
                   type="checkbox"
                   checked={email.enabled}
-                  onChange={(e) =>
-                    setEmail({ ...email, enabled: e.target.checked })
-                  }
+                  onChange={(e) => setEmail({ ...email, enabled: e.target.checked })}
                   className="h-4 w-4 rounded text-blue-600"
                 />
                 <span className="text-sm">Enabled</span>
@@ -104,22 +102,16 @@ function SystemNotificationsContent() {
               <div className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="mb-1 block text-sm font-medium">
-                      SMTP Host
-                    </label>
+                    <label className="mb-1 block text-sm font-medium">SMTP Host</label>
                     <input
                       type="text"
                       value={email.smtpHost}
-                      onChange={(e) =>
-                        setEmail({ ...email, smtpHost: e.target.value })
-                      }
+                      onChange={(e) => setEmail({ ...email, smtpHost: e.target.value })}
                       className="w-full rounded-lg border border-zinc-200 px-3 py-2 dark:border-zinc-700 dark:bg-zinc-900"
                     />
                   </div>
                   <div>
-                    <label className="mb-1 block text-sm font-medium">
-                      SMTP Port
-                    </label>
+                    <label className="mb-1 block text-sm font-medium">SMTP Port</label>
                     <input
                       type="number"
                       value={email.smtpPort}
@@ -136,28 +128,20 @@ function SystemNotificationsContent() {
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="mb-1 block text-sm font-medium">
-                      Username
-                    </label>
+                    <label className="mb-1 block text-sm font-medium">Username</label>
                     <input
                       type="text"
                       value={email.smtpUser}
-                      onChange={(e) =>
-                        setEmail({ ...email, smtpUser: e.target.value })
-                      }
+                      onChange={(e) => setEmail({ ...email, smtpUser: e.target.value })}
                       className="w-full rounded-lg border border-zinc-200 px-3 py-2 dark:border-zinc-700 dark:bg-zinc-900"
                     />
                   </div>
                   <div>
-                    <label className="mb-1 block text-sm font-medium">
-                      Password
-                    </label>
+                    <label className="mb-1 block text-sm font-medium">Password</label>
                     <input
                       type="password"
                       value={email.smtpPassword}
-                      onChange={(e) =>
-                        setEmail({ ...email, smtpPassword: e.target.value })
-                      }
+                      onChange={(e) => setEmail({ ...email, smtpPassword: e.target.value })}
                       className="w-full rounded-lg border border-zinc-200 px-3 py-2 dark:border-zinc-700 dark:bg-zinc-900"
                     />
                   </div>
@@ -200,9 +184,7 @@ function SystemNotificationsContent() {
                 <input
                   type="checkbox"
                   checked={slack.enabled}
-                  onChange={(e) =>
-                    setSlack({ ...slack, enabled: e.target.checked })
-                  }
+                  onChange={(e) => setSlack({ ...slack, enabled: e.target.checked })}
                   className="h-4 w-4 rounded text-blue-600"
                 />
                 <span className="text-sm">Enabled</span>
@@ -212,30 +194,22 @@ function SystemNotificationsContent() {
             {slack.enabled && (
               <div className="space-y-4">
                 <div>
-                  <label className="mb-1 block text-sm font-medium">
-                    Webhook URL
-                  </label>
+                  <label className="mb-1 block text-sm font-medium">Webhook URL</label>
                   <input
                     type="text"
                     value={slack.webhookUrl}
-                    onChange={(e) =>
-                      setSlack({ ...slack, webhookUrl: e.target.value })
-                    }
+                    onChange={(e) => setSlack({ ...slack, webhookUrl: e.target.value })}
                     placeholder="https://hooks.slack.com/services/..."
                     className="w-full rounded-lg border border-zinc-200 px-3 py-2 dark:border-zinc-700 dark:bg-zinc-900"
                   />
                 </div>
 
                 <div>
-                  <label className="mb-1 block text-sm font-medium">
-                    Channel
-                  </label>
+                  <label className="mb-1 block text-sm font-medium">Channel</label>
                   <input
                     type="text"
                     value={slack.channel}
-                    onChange={(e) =>
-                      setSlack({ ...slack, channel: e.target.value })
-                    }
+                    onChange={(e) => setSlack({ ...slack, channel: e.target.value })}
                     className="w-full rounded-lg border border-zinc-200 px-3 py-2 dark:border-zinc-700 dark:bg-zinc-900"
                   />
                 </div>
@@ -280,9 +254,7 @@ function SystemNotificationsContent() {
             </div>
 
             <div className="rounded-lg border border-zinc-200 p-4 text-center dark:border-zinc-700">
-              <p className="text-sm text-zinc-500">
-                No webhooks configured yet
-              </p>
+              <p className="text-sm text-zinc-500">No webhooks configured yet</p>
             </div>
           </div>
 

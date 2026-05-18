@@ -15,10 +15,8 @@ export async function GET(): Promise<NextResponse> {
     dockerAPI: {
       events: 'Docker provides /events endpoint for real-time container events',
       stats: 'Docker provides /containers/{id}/stats for streaming stats',
-      example:
-        'curl --unix-socket /var/run/docker.sock http://localhost/v1.43/events',
+      example: 'curl --unix-socket /var/run/docker.sock http://localhost/v1.43/events',
     },
-    recommendation:
-      'Current polling approach with 1-2s interval is efficient enough for dashboard',
+    recommendation: 'Current polling approach with 1-2s interval is efficient enough for dashboard',
   })
 }

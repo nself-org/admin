@@ -1,15 +1,7 @@
 'use client'
 
 import { cn } from '@/lib/utils'
-import {
-  FileText,
-  Loader2,
-  MoreVertical,
-  Play,
-  RotateCw,
-  Square,
-  Terminal,
-} from 'lucide-react'
+import { FileText, Loader2, MoreVertical, Play, RotateCw, Square, Terminal } from 'lucide-react'
 import { useState } from 'react'
 import { Button } from './button'
 
@@ -110,11 +102,7 @@ export function ServiceActions({
             title="Start"
             aria-label="Start service"
           >
-            {loading ? (
-              <Loader2 className="h-4 w-4 animate-spin" />
-            ) : (
-              <Play className="h-4 w-4" />
-            )}
+            {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Play className="h-4 w-4" />}
           </Button>
         )}
         <Button
@@ -155,10 +143,7 @@ export function ServiceActions({
             </Button>
             {showMenu && (
               <>
-                <div
-                  className="fixed inset-0 z-10"
-                  onClick={() => setShowMenu(false)}
-                />
+                <div className="fixed inset-0 z-10" onClick={() => setShowMenu(false)} />
                 <div className="absolute right-0 z-20 mt-1 w-48 rounded-lg border border-zinc-200 bg-white shadow-lg dark:border-zinc-700 dark:bg-zinc-800">
                   <button
                     onClick={() => {

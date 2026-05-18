@@ -1,13 +1,7 @@
 'use client'
 
 import { BurnMeter } from '@/components/sentry/BurnMeter'
-import {
-  CheckCircle2,
-  Loader2,
-  PlusCircle,
-  RefreshCw,
-  XCircle,
-} from 'lucide-react'
+import { CheckCircle2, Loader2, PlusCircle, RefreshCw, XCircle } from 'lucide-react'
 import { useCallback, useEffect, useState } from 'react'
 
 interface SloBreachEvent {
@@ -77,9 +71,7 @@ export default function SentrySlosPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="nself-gradient-text text-xl font-semibold">
-            ɳSentry — SLOs
-          </h1>
+          <h1 className="nself-gradient-text text-xl font-semibold">ɳSentry — SLOs</h1>
           {data !== null && (
             <p className="text-nself-text-muted mt-0.5 text-xs">
               {data.slos.length} service level objective
@@ -119,9 +111,7 @@ export default function SentrySlosPage() {
       {/* SLOs list */}
       {data !== null && (
         <div className="glass-card p-4">
-          <p className="text-nself-text mb-3 text-sm font-semibold">
-            SLOs ({data.slos.length})
-          </p>
+          <p className="text-nself-text mb-3 text-sm font-semibold">SLOs ({data.slos.length})</p>
           {data.slos.length === 0 ? (
             <p className="text-nself-text-muted text-xs">
               No SLOs configured. Add an SLO to track error budgets.
@@ -129,23 +119,16 @@ export default function SentrySlosPage() {
           ) : (
             <div className="space-y-4">
               {data.slos.map((slo) => (
-                <div
-                  key={slo.id}
-                  className="border-nself-border rounded-lg border px-4 py-4"
-                >
+                <div key={slo.id} className="border-nself-border rounded-lg border px-4 py-4">
                   {/* Name + current vs target */}
                   <div className="mb-3 flex items-start justify-between gap-3">
                     <div>
-                      <p className="text-nself-text text-sm font-medium">
-                        {slo.name}
-                      </p>
+                      <p className="text-nself-text text-sm font-medium">{slo.name}</p>
                       {slo.description.length > 0 && (
-                        <p className="text-nself-text-muted text-xs">
-                          {slo.description}
-                        </p>
+                        <p className="text-nself-text-muted text-xs">{slo.description}</p>
                       )}
                     </div>
-                    <div className="text-right shrink-0">
+                    <div className="shrink-0 text-right">
                       <div className="flex items-center gap-1.5">
                         {slo.currentPct >= slo.targetPct ? (
                           <CheckCircle2 className="h-4 w-4 text-green-400" />
@@ -179,46 +162,31 @@ export default function SentrySlosPage() {
                   {/* Burn rate table */}
                   <div className="flex gap-4">
                     <span className="text-nself-text-muted text-xs">
-                      1h burn:{' '}
-                      <span className="text-nself-text">
-                        {slo.burnRate1h.toFixed(2)}×
-                      </span>
+                      1h burn: <span className="text-nself-text">{slo.burnRate1h.toFixed(2)}×</span>
                     </span>
                     <span className="text-nself-text-muted text-xs">
-                      6h burn:{' '}
-                      <span className="text-nself-text">
-                        {slo.burnRate6h.toFixed(2)}×
-                      </span>
+                      6h burn: <span className="text-nself-text">{slo.burnRate6h.toFixed(2)}×</span>
                     </span>
                     <span className="text-nself-text-muted text-xs">
                       24h burn:{' '}
-                      <span className="text-nself-text">
-                        {slo.burnRate24h.toFixed(2)}×
-                      </span>
+                      <span className="text-nself-text">{slo.burnRate24h.toFixed(2)}×</span>
                     </span>
                   </div>
 
                   {/* Breach history */}
                   {slo.breaches7d.length > 0 && (
-                    <div className="mt-3 border-t border-nself-border pt-3">
+                    <div className="border-nself-border mt-3 border-t pt-3">
                       <p className="text-nself-text-muted mb-1.5 text-xs font-medium">
                         Breaches (last 7 days)
                       </p>
                       <ul className="space-y-1">
                         {slo.breaches7d.map((breach, i) => (
-                          <li
-                            key={i}
-                            className="flex items-center gap-3 text-xs"
-                          >
+                          <li key={i} className="flex items-center gap-3 text-xs">
                             <span className="text-nself-text-muted font-mono">
                               {new Date(breach.date).toLocaleDateString()}
                             </span>
-                            <span className="text-nself-text">
-                              {breach.durationMinutes} min
-                            </span>
-                            <span className="text-red-400">
-                              {breach.burnRate.toFixed(1)}× burn
-                            </span>
+                            <span className="text-nself-text">{breach.durationMinutes} min</span>
+                            <span className="text-red-400">{breach.burnRate.toFixed(1)}× burn</span>
                           </li>
                         ))}
                       </ul>

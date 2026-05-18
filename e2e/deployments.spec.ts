@@ -17,9 +17,7 @@ test.beforeAll(async ({ playwright }) => {
 })
 
 test.describe('Deployments UI', () => {
-  test('Deployments page loads and displays active environments', async ({
-    page,
-  }) => {
+  test('Deployments page loads and displays active environments', async ({ page }) => {
     test.skip(!adminReachable, 'nAdmin not reachable')
 
     const resp = await page.goto('/deployments')
@@ -30,13 +28,11 @@ test.describe('Deployments UI', () => {
       page
         .locator('h1, h2')
         .filter({ hasText: /Deployments|Environments/i })
-        .first(),
+        .first()
     ).toBeVisible()
 
     // Check for a deployment list or table
-    const list = page
-      .locator('[data-testid="deployment-list"], table tbody tr')
-      .first()
+    const list = page.locator('[data-testid="deployment-list"], table tbody tr').first()
     // It might be empty if no deployments, so we just ensure the container exists
     await expect(page.locator('main').first()).toBeVisible()
   })
@@ -48,16 +44,14 @@ test.describe('Deployments UI', () => {
 
     // Look for a logs button or link
     const logsButton = page
-      .locator(
-        'button:has-text("Logs"), a:has-text("Logs"), [data-testid="view-logs"]',
-      )
+      .locator('button:has-text("Logs"), a:has-text("Logs"), [data-testid="view-logs"]')
       .first()
 
     if (await logsButton.isVisible()) {
       await logsButton.click()
       // Wait for the modal or log container to appear
       await expect(
-        page.locator('[data-testid="logs-viewer"], .font-mono, pre').first(),
+        page.locator('[data-testid="logs-viewer"], .font-mono, pre').first()
       ).toBeVisible({ timeout: 5000 })
     }
   })

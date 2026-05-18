@@ -11,11 +11,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
   try {
     const result = await executeNselfCommand('perf', ['profile', '--json'])
 
-    logger.cli(
-      'nself perf profile --json',
-      result.success,
-      Date.now() - startTime,
-    )
+    logger.cli('nself perf profile --json', result.success, Date.now() - startTime)
 
     if (!result.success) {
       return NextResponse.json(
@@ -24,7 +20,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
           error: 'Failed to get performance profile',
           details: result.error || result.stderr,
         },
-        { status: 500 },
+        { status: 500 }
       )
     }
 
@@ -54,7 +50,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to get performance profile',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -73,7 +69,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     if (!service || typeof service !== 'string') {
       return NextResponse.json(
         { success: false, error: 'Service name is required' },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -81,21 +77,13 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     if (!/^[a-z][a-z0-9_-]*$/i.test(service)) {
       return NextResponse.json(
         { success: false, error: 'Invalid service name format' },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
-    const result = await executeNselfCommand('perf', [
-      'profile',
-      service,
-      '--json',
-    ])
+    const result = await executeNselfCommand('perf', ['profile', service, '--json'])
 
-    logger.cli(
-      `nself perf profile ${service} --json`,
-      result.success,
-      Date.now() - startTime,
-    )
+    logger.cli(`nself perf profile ${service} --json`, result.success, Date.now() - startTime)
 
     if (!result.success) {
       return NextResponse.json(
@@ -104,7 +92,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           error: 'Failed to profile service',
           details: result.error || result.stderr,
         },
-        { status: 500 },
+        { status: 500 }
       )
     }
 
@@ -134,7 +122,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to profile service',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

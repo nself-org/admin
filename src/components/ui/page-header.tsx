@@ -49,12 +49,7 @@ export function PageHeader({
   showCopyLink = true,
 }: PageHeaderProps) {
   return (
-    <div
-      className={cn(
-        'mb-8 border-b border-zinc-200 pb-6 dark:border-zinc-800',
-        className,
-      )}
-    >
+    <div className={cn('mb-8 border-b border-zinc-200 pb-6 dark:border-zinc-800', className)}>
       {breadcrumbs && breadcrumbs.length > 0 && (
         <nav
           className="mb-2 flex items-center space-x-1 text-sm text-zinc-500 dark:text-zinc-400"
@@ -77,16 +72,11 @@ export function PageHeader({
                 </svg>
               )}
               {crumb.href ? (
-                <a
-                  href={crumb.href}
-                  className="hover:text-zinc-700 dark:hover:text-zinc-300"
-                >
+                <a href={crumb.href} className="hover:text-zinc-700 dark:hover:text-zinc-300">
                   {crumb.label}
                 </a>
               ) : (
-                <span className="font-medium text-zinc-900 dark:text-zinc-100">
-                  {crumb.label}
-                </span>
+                <span className="font-medium text-zinc-900 dark:text-zinc-100">{crumb.label}</span>
               )}
             </div>
           ))}
@@ -99,9 +89,7 @@ export function PageHeader({
             {title}
           </h1>
           {description && (
-            <p className="mt-2 text-base text-zinc-600 dark:text-zinc-400">
-              {description}
-            </p>
+            <p className="mt-2 text-base text-zinc-600 dark:text-zinc-400">{description}</p>
           )}
         </div>
 

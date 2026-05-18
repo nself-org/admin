@@ -1,6 +1,6 @@
+import { requireAuth } from '@/lib/require-auth'
 import { execFileSync } from 'child_process'
 import { NextRequest, NextResponse } from 'next/server'
-import { requireAuth } from '@/lib/require-auth'
 
 /**
  * POST /api/admin/backups/restore — restore a named backup

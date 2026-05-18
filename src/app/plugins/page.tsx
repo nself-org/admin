@@ -27,10 +27,7 @@ import useSWR from 'swr'
 const fetcher = (url: string) => fetch(url).then((res) => res.json())
 
 // Plugin icon mapping
-const pluginIcons: Record<
-  string,
-  React.ComponentType<{ className?: string }>
-> = {
+const pluginIcons: Record<string, React.ComponentType<{ className?: string }>> = {
   stripe: CreditCard,
   shopify: ShoppingCart,
   github: Github,
@@ -60,11 +57,7 @@ function MetricCard({
   const mouseX = useMotionValue(0)
   const mouseY = useMotionValue(0)
 
-  function onMouseMove({
-    currentTarget,
-    clientX,
-    clientY,
-  }: React.MouseEvent<HTMLDivElement>) {
+  function onMouseMove({ currentTarget, clientX, clientY }: React.MouseEvent<HTMLDivElement>) {
     const { left, top } = currentTarget.getBoundingClientRect()
     mouseX.set(clientX - left)
     mouseY.set(clientY - top)
@@ -85,22 +78,16 @@ function MetricCard({
       <div className="absolute inset-0 rounded-2xl ring-1 ring-zinc-900/10 transition-colors duration-300 ring-inset group-hover:ring-emerald-500/50 dark:ring-white/20 dark:group-hover:ring-emerald-400/60" />
       <div className="relative">
         <div className="flex items-center justify-between">
-          <h3 className="text-sm font-semibold text-zinc-900 dark:text-white">
-            {title}
-          </h3>
+          <h3 className="text-sm font-semibold text-zinc-900 dark:text-white">{title}</h3>
           <div className="flex h-8 w-8 items-center justify-center rounded-full bg-emerald-500/20 transition-colors duration-300 group-hover:bg-emerald-500/40 dark:bg-emerald-400/20 dark:group-hover:bg-emerald-400/40">
             <Icon className="h-4 w-4 text-emerald-600 group-hover:text-emerald-500 dark:text-emerald-400 dark:group-hover:text-emerald-300" />
           </div>
         </div>
         <div className="mt-4">
-          <div className="text-2xl font-bold text-zinc-900 dark:text-white">
-            {value}
-          </div>
+          <div className="text-2xl font-bold text-zinc-900 dark:text-white">{value}</div>
         </div>
         {description && (
-          <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
-            {description}
-          </p>
+          <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">{description}</p>
         )}
       </div>
     </div>
@@ -152,9 +139,7 @@ function PluginCard({
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h3 className="font-medium text-white capitalize">
-                {plugin.name}
-              </h3>
+              <h3 className="font-medium text-white capitalize">{plugin.name}</h3>
               {hasUpdate && (
                 <span className="rounded-full bg-yellow-500/20 px-1.5 py-0.5 text-xs text-yellow-400">
                   Update
@@ -165,9 +150,7 @@ function PluginCard({
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <span
-            className={`rounded-full px-2 py-0.5 text-xs ${statusColors[plugin.status]}`}
-          >
+          <span className={`rounded-full px-2 py-0.5 text-xs ${statusColors[plugin.status]}`}>
             {statusLabels[plugin.status]}
           </span>
           {isActive && (
@@ -181,26 +164,20 @@ function PluginCard({
         </div>
       </div>
 
-      <p className="mb-4 line-clamp-2 text-sm text-zinc-400">
-        {plugin.description}
-      </p>
+      <p className="mb-4 line-clamp-2 text-sm text-zinc-400">{plugin.description}</p>
 
       {isActive && syncStatus && (
         <div className="mb-4 rounded-lg bg-zinc-900/50 p-3">
           <div className="flex items-center justify-between text-xs">
             <span className="text-zinc-500">Last sync</span>
             <span className="text-zinc-400">
-              {syncStatus.lastSync
-                ? new Date(syncStatus.lastSync).toLocaleString()
-                : 'Never'}
+              {syncStatus.lastSync ? new Date(syncStatus.lastSync).toLocaleString() : 'Never'}
             </span>
           </div>
           {syncStatus.recordsTotal > 0 && (
             <div className="mt-2 flex items-center justify-between text-xs">
               <span className="text-zinc-500">Records</span>
-              <span className="text-zinc-400">
-                {syncStatus.recordsTotal.toLocaleString()}
-              </span>
+              <span className="text-zinc-400">{syncStatus.recordsTotal.toLocaleString()}</span>
             </div>
           )}
         </div>
@@ -248,9 +225,7 @@ function PluginCard({
               disabled={isSyncing}
               className="flex items-center justify-center gap-2 rounded-lg bg-emerald-600/20 px-3 py-2 text-sm text-emerald-400 transition-colors hover:bg-emerald-600/30 disabled:opacity-50"
             >
-              <RefreshCw
-                className={`h-4 w-4 ${isSyncing ? 'animate-spin' : ''}`}
-              />
+              <RefreshCw className={`h-4 w-4 ${isSyncing ? 'animate-spin' : ''}`} />
               {isSyncing ? 'Syncing...' : 'Sync'}
             </button>
           </>
@@ -273,10 +248,7 @@ function PluginsContent() {
   const [searchQuery, setSearchQuery] = useUrlState<string>('q', '', {
     debounce: 300,
   })
-  const [filterActive, setFilterActive] = useUrlState<string>(
-    'filter.status',
-    'all',
-  )
+  const [filterActive, setFilterActive] = useUrlState<string>('filter.status', 'all')
   const [sortBy, setSortBy] = useState<'name' | 'date'>('date')
 
   const { data, error, isLoading, mutate } = useSWR<{
@@ -322,7 +294,7 @@ function PluginsContent() {
     plugins = plugins.filter(
       (p) =>
         p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        p.description.toLowerCase().includes(searchQuery.toLowerCase()),
+        p.description.toLowerCase().includes(searchQuery.toLowerCase())
     )
   }
 
@@ -346,18 +318,13 @@ function PluginsContent() {
     }
   })
 
-  const installedCount = (data?.plugins || []).filter(
-    (p) => p.status === 'installed',
-  ).length
+  const installedCount = (data?.plugins || []).filter((p) => p.status === 'installed').length
   const activeCount = plugins.filter(
     (p) =>
       p.status === 'installed' &&
-      syncStatuses.find((s) => s.pluginName === p.name)?.status !== 'error',
+      syncStatuses.find((s) => s.pluginName === p.name)?.status !== 'error'
   ).length
-  const totalRecords = syncStatuses.reduce(
-    (acc, s) => acc + (s.recordsTotal || 0),
-    0,
-  )
+  const totalRecords = syncStatuses.reduce((acc, s) => acc + (s.recordsTotal || 0), 0)
 
   if (isLoading) {
     return (
@@ -365,17 +332,12 @@ function PluginsContent() {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-semibold text-white">Plugins</h1>
-            <p className="text-sm text-zinc-400">
-              Manage third-party integrations
-            </p>
+            <p className="text-sm text-zinc-400">Manage third-party integrations</p>
           </div>
         </div>
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
           {[1, 2, 3].map((i) => (
-            <div
-              key={i}
-              className="h-48 animate-pulse rounded-lg bg-zinc-800/50"
-            />
+            <div key={i} className="h-48 animate-pulse rounded-lg bg-zinc-800/50" />
           ))}
         </div>
       </div>
@@ -388,9 +350,7 @@ function PluginsContent() {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-semibold text-white">Plugins</h1>
-            <p className="text-sm text-zinc-400">
-              Manage third-party integrations
-            </p>
+            <p className="text-sm text-zinc-400">Manage third-party integrations</p>
           </div>
         </div>
         <div className="rounded-lg border border-red-500/30 bg-red-900/20 p-4">
@@ -409,9 +369,7 @@ function PluginsContent() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-semibold text-white">Plugins</h1>
-          <p className="text-sm text-zinc-400">
-            Manage third-party integrations
-          </p>
+          <p className="text-sm text-zinc-400">Manage third-party integrations</p>
         </div>
         <Link
           href="/plugins/marketplace"
@@ -438,9 +396,7 @@ function PluginsContent() {
           <div className="flex items-center gap-2">
             <select
               value={filterActive}
-              onChange={(e) =>
-                setFilterActive(e.target.value as 'all' | 'active' | 'updates')
-              }
+              onChange={(e) => setFilterActive(e.target.value as 'all' | 'active' | 'updates')}
               className="rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2 text-sm text-white focus:border-emerald-500 focus:outline-none"
             >
               <option value="all">All Plugins</option>
@@ -485,9 +441,7 @@ function PluginsContent() {
           value={
             syncStatuses.length > 0
               ? new Date(
-                  Math.max(
-                    ...syncStatuses.map((s) => new Date(s.lastSync).getTime()),
-                  ),
+                  Math.max(...syncStatuses.map((s) => new Date(s.lastSync).getTime()))
                 ).toLocaleDateString()
               : 'N/A'
           }
@@ -502,10 +456,8 @@ function PluginsContent() {
           <ArrowUpCircle className="h-4 w-4 shrink-0" />
           <span>
             Showing plugins with updates available. Run{' '}
-            <code className="rounded bg-yellow-900/40 px-1 font-mono">
-              nself plugin update
-            </code>{' '}
-            to update all at once.
+            <code className="rounded bg-yellow-900/40 px-1 font-mono">nself plugin update</code> to
+            update all at once.
           </span>
           <button
             onClick={() => setFilterActive('all')}
@@ -523,9 +475,7 @@ function PluginsContent() {
             <PluginCard
               key={plugin.name}
               plugin={plugin}
-              syncStatus={syncStatuses.find(
-                (s) => s.pluginName === plugin.name,
-              )}
+              syncStatus={syncStatuses.find((s) => s.pluginName === plugin.name)}
               onSync={handleSync}
               onDisable={handleDisable}
               onRemove={handleRemove}
@@ -537,9 +487,7 @@ function PluginsContent() {
           {filterActive === 'updates' ? (
             <>
               <CheckCircle className="mb-4 h-12 w-12 text-emerald-600" />
-              <h3 className="mb-2 text-lg font-medium text-white">
-                All plugins are up to date
-              </h3>
+              <h3 className="mb-2 text-lg font-medium text-white">All plugins are up to date</h3>
               <p className="mb-4 text-sm text-zinc-400">
                 No updates available for your installed plugins
               </p>
@@ -553,9 +501,7 @@ function PluginsContent() {
           ) : (
             <>
               <Zap className="mb-4 h-12 w-12 text-zinc-600" />
-              <h3 className="mb-2 text-lg font-medium text-white">
-                No plugins installed
-              </h3>
+              <h3 className="mb-2 text-lg font-medium text-white">No plugins installed</h3>
               <p className="mb-4 text-sm text-zinc-400">
                 Get started by installing plugins from the marketplace
               </p>

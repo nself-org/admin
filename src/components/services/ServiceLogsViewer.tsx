@@ -12,15 +12,7 @@ import {
 } from '@/components/ui/select'
 import { useWebSocket } from '@/hooks/useWebSocket'
 import { EventType, LogStreamEvent } from '@/lib/websocket/events'
-import {
-  Download,
-  Pause,
-  Play,
-  RefreshCw,
-  Trash2,
-  Wifi,
-  WifiOff,
-} from 'lucide-react'
+import { Download, Pause, Play, RefreshCw, Trash2, Wifi, WifiOff } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 
 export interface LogEntry {
@@ -89,8 +81,7 @@ export function ServiceLogsViewer({
   const filteredLogs = allLogs.filter((log) => {
     const matchesLevel = levelFilter === 'all' || log.level === levelFilter
     const matchesSearch =
-      searchTerm === '' ||
-      log.message.toLowerCase().includes(searchTerm.toLowerCase())
+      searchTerm === '' || log.message.toLowerCase().includes(searchTerm.toLowerCase())
     return matchesLevel && matchesSearch
   })
 
@@ -153,19 +144,9 @@ export function ServiceLogsViewer({
                     ? 'bg-yellow-50 text-yellow-700 dark:bg-yellow-900/20 dark:text-yellow-400'
                     : 'bg-red-50 text-red-700 dark:bg-red-900/20 dark:text-red-400'
               }`}
-              title={
-                connected
-                  ? 'Live streaming'
-                  : reconnecting
-                    ? 'Reconnecting...'
-                    : 'Offline'
-              }
+              title={connected ? 'Live streaming' : reconnecting ? 'Reconnecting...' : 'Offline'}
             >
-              {connected ? (
-                <Wifi className="h-3 w-3" />
-              ) : (
-                <WifiOff className="h-3 w-3" />
-              )}
+              {connected ? <Wifi className="h-3 w-3" /> : <WifiOff className="h-3 w-3" />}
             </div>
 
             <input
@@ -187,11 +168,7 @@ export function ServiceLogsViewer({
                 <SelectItem value="error">Error</SelectItem>
               </SelectContent>
             </Select>
-            <Button
-              onClick={handleToggleStreaming}
-              variant="outline"
-              className="text-xs"
-            >
+            <Button onClick={handleToggleStreaming} variant="outline" className="text-xs">
               {isStreaming ? (
                 <>
                   <Pause className="mr-1 h-3 w-3" />
@@ -210,11 +187,7 @@ export function ServiceLogsViewer({
               </Button>
             )}
             {onDownload && (
-              <Button
-                onClick={onDownload}
-                variant="outline"
-                className="text-xs"
-              >
+              <Button onClick={onDownload} variant="outline" className="text-xs">
                 <Download className="h-3 w-3" />
               </Button>
             )}
@@ -241,9 +214,7 @@ export function ServiceLogsViewer({
                     className={`flex gap-3 rounded px-2 py-1 font-mono text-xs ${getLevelBg(log.level)}`}
                   >
                     <span className="text-zinc-400">{log.timestamp}</span>
-                    <span
-                      className={`w-12 uppercase ${getLevelColor(log.level)}`}
-                    >
+                    <span className={`w-12 uppercase ${getLevelColor(log.level)}`}>
                       {log.level}
                     </span>
                     <span className="flex-1 text-zinc-300">{log.message}</span>

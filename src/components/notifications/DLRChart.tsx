@@ -18,10 +18,7 @@ export function DLRChart({ data, isLoading }: DLRChartProps) {
   const BAR_GAP = 6
   const LABEL_HEIGHT = 24
 
-  const maxValue = useMemo(
-    () => Math.max(...data.map((d) => d.sent), 1),
-    [data],
-  )
+  const maxValue = useMemo(() => Math.max(...data.map((d) => d.sent), 1), [data])
 
   if (isLoading) {
     return (
@@ -39,10 +36,7 @@ export function DLRChart({ data, isLoading }: DLRChartProps) {
     )
   }
 
-  const barGroupWidth = Math.max(
-    20,
-    Math.floor((400 - BAR_GAP * (data.length - 1)) / data.length),
-  )
+  const barGroupWidth = Math.max(20, Math.floor((400 - BAR_GAP * (data.length - 1)) / data.length))
   const barWidth = Math.floor((barGroupWidth - BAR_GAP) / 3)
   const totalWidth = data.length * barGroupWidth + (data.length - 1) * BAR_GAP
 

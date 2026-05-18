@@ -30,10 +30,7 @@ function parseEnvFile(content: string): Record<string, string> {
 }
 
 /** Write/update specific env keys in-place, preserving unrelated lines. */
-async function writeEnvKeys(
-  filePath: string,
-  updates: Record<string, string>,
-): Promise<void> {
+async function writeEnvKeys(filePath: string, updates: Record<string, string>): Promise<void> {
   let content = ''
   try {
     content = await fs.readFile(filePath, 'utf-8')
@@ -60,9 +57,7 @@ async function writeEnvKeys(
 
   for (const [key, val] of Object.entries(updates)) {
     if (!written.has(key)) {
-      newLines.push(
-        `${key}=${val.includes(' ') || val.includes('#') ? `"${val}"` : val}`,
-      )
+      newLines.push(`${key}=${val.includes(' ') || val.includes('#') ? `"${val}"` : val}`)
     }
   }
 
@@ -116,7 +111,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     console.error('[email/route] GET error:', error)
     return NextResponse.json(
       { success: false, error: 'Failed to read email configuration' },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -176,7 +171,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     console.error('[email/route] POST error:', error)
     return NextResponse.json(
       { success: false, error: 'Failed to save email configuration' },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

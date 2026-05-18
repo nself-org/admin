@@ -50,11 +50,7 @@ function MetricCard({
   const mouseX = useMotionValue(0)
   const mouseY = useMotionValue(0)
 
-  function onMouseMove({
-    currentTarget,
-    clientX,
-    clientY,
-  }: React.MouseEvent<HTMLDivElement>) {
+  function onMouseMove({ currentTarget, clientX, clientY }: React.MouseEvent<HTMLDivElement>) {
     const { left, top } = currentTarget.getBoundingClientRect()
     mouseX.set(clientX - left)
     mouseY.set(clientY - top)
@@ -77,17 +73,13 @@ function MetricCard({
       <div className="absolute inset-0 rounded-2xl ring-1 ring-zinc-900/10 transition-colors duration-300 ring-inset group-hover:ring-purple-500/50 dark:ring-white/20 dark:group-hover:ring-purple-400/60" />
       <div className="relative">
         <div className="flex items-center justify-between">
-          <h3 className="text-sm font-semibold text-zinc-900 dark:text-white">
-            {title}
-          </h3>
+          <h3 className="text-sm font-semibold text-zinc-900 dark:text-white">{title}</h3>
           <div className="flex h-8 w-8 items-center justify-center rounded-full bg-purple-500/20 transition-colors duration-300 group-hover:bg-purple-500/40 dark:bg-purple-400/20 dark:group-hover:bg-purple-400/40">
             <Icon className="h-4 w-4 text-purple-600 group-hover:text-purple-500 dark:text-purple-400 dark:group-hover:text-purple-300" />
           </div>
         </div>
         <div className="mt-4">
-          <div className="text-2xl font-bold text-zinc-900 dark:text-white">
-            {value}
-          </div>
+          <div className="text-2xl font-bold text-zinc-900 dark:text-white">{value}</div>
           {change !== undefined && (
             <div className="mt-2 flex items-center gap-1">
               {isPositive ? (
@@ -103,9 +95,7 @@ function MetricCard({
                 {isPositive ? '+' : ''}
                 {change.toFixed(1)}%
               </span>
-              {changeLabel && (
-                <span className="text-sm text-zinc-500">{changeLabel}</span>
-              )}
+              {changeLabel && <span className="text-sm text-zinc-500">{changeLabel}</span>}
             </div>
           )}
         </div>
@@ -204,19 +194,12 @@ function StripeDashboardContent() {
           </Link>
         </div>
         <div>
-          <h1 className="text-2xl font-semibold text-white">
-            Stripe Dashboard
-          </h1>
-          <p className="text-sm text-zinc-400">
-            Revenue metrics and customer insights
-          </p>
+          <h1 className="text-2xl font-semibold text-white">Stripe Dashboard</h1>
+          <p className="text-sm text-zinc-400">Revenue metrics and customer insights</p>
         </div>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
           {[1, 2, 3, 4].map((i) => (
-            <div
-              key={i}
-              className="h-32 animate-pulse rounded-lg bg-zinc-800/50"
-            />
+            <div key={i} className="h-32 animate-pulse rounded-lg bg-zinc-800/50" />
           ))}
         </div>
       </div>
@@ -270,12 +253,8 @@ function StripeDashboardContent() {
 
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-semibold text-white">
-            Stripe Dashboard
-          </h1>
-          <p className="text-sm text-zinc-400">
-            Revenue metrics and customer insights
-          </p>
+          <h1 className="text-2xl font-semibold text-white">Stripe Dashboard</h1>
+          <p className="text-sm text-zinc-400">Revenue metrics and customer insights</p>
         </div>
         <button
           onClick={handleSync}
@@ -303,9 +282,7 @@ function StripeDashboardContent() {
         />
         <MetricCard
           title="Total Revenue"
-          value={
-            stats ? formatCurrency(stats.totalRevenue, stats.currency) : '$0'
-          }
+          value={stats ? formatCurrency(stats.totalRevenue, stats.currency) : '$0'}
           icon={CreditCard}
         />
         <MetricCard
@@ -320,9 +297,7 @@ function StripeDashboardContent() {
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
         <div className="rounded-xl border border-zinc-700/50 bg-zinc-800/50 p-5">
           <div className="flex items-center justify-between">
-            <h3 className="text-sm font-medium text-zinc-400">
-              Active Subscriptions
-            </h3>
+            <h3 className="text-sm font-medium text-zinc-400">Active Subscriptions</h3>
             <Users className="h-5 w-5 text-emerald-400" />
           </div>
           <p className="mt-2 text-3xl font-bold text-white">
@@ -331,9 +306,7 @@ function StripeDashboardContent() {
         </div>
         <div className="rounded-xl border border-zinc-700/50 bg-zinc-800/50 p-5">
           <div className="flex items-center justify-between">
-            <h3 className="text-sm font-medium text-zinc-400">
-              Total Customers
-            </h3>
+            <h3 className="text-sm font-medium text-zinc-400">Total Customers</h3>
             <Users className="h-5 w-5 text-blue-400" />
           </div>
           <p className="mt-2 text-3xl font-bold text-white">
@@ -346,31 +319,21 @@ function StripeDashboardContent() {
             <RefreshCw className="h-5 w-5 text-zinc-400" />
           </div>
           <p className="mt-2 text-lg font-medium text-white">
-            {stats?.lastUpdated
-              ? new Date(stats.lastUpdated).toLocaleString()
-              : 'Never'}
+            {stats?.lastUpdated ? new Date(stats.lastUpdated).toLocaleString() : 'Never'}
           </p>
         </div>
       </div>
 
       {/* Revenue Chart */}
       <div>
-        <h2 className="mb-4 text-lg font-semibold text-white">
-          Revenue Trend (Last 12 Months)
-        </h2>
+        <h2 className="mb-4 text-lg font-semibold text-white">Revenue Trend (Last 12 Months)</h2>
         <div className="rounded-xl border border-zinc-700/50 bg-zinc-800/50 p-6">
           <div className="flex h-64 items-end justify-between gap-2">
             {revenueChart.map((item, i) => {
-              const maxRevenue = Math.max(
-                ...revenueChart.map((r) => r.revenue),
-                1,
-              )
+              const maxRevenue = Math.max(...revenueChart.map((r) => r.revenue), 1)
               const height = (item.revenue / maxRevenue) * 100
               return (
-                <div
-                  key={i}
-                  className="flex flex-1 flex-col items-center gap-2"
-                >
+                <div key={i} className="flex flex-1 flex-col items-center gap-2">
                   <div className="relative w-full">
                     <div
                       className="w-full rounded-t-lg bg-gradient-to-t from-purple-600 to-purple-400 transition-all hover:from-purple-500 hover:to-purple-300"
@@ -387,9 +350,7 @@ function StripeDashboardContent() {
 
       {/* Recent Transactions */}
       <div>
-        <h2 className="mb-4 text-lg font-semibold text-white">
-          Recent Transactions
-        </h2>
+        <h2 className="mb-4 text-lg font-semibold text-white">Recent Transactions</h2>
         <div className="rounded-xl border border-zinc-700/50 bg-zinc-800/50">
           <table className="w-full">
             <thead className="border-b border-zinc-700/50 bg-zinc-900/50">
@@ -414,12 +375,8 @@ function StripeDashboardContent() {
             <tbody>
               {recentTransactions.slice(0, 20).map((tx) => (
                 <tr key={tx.id} className="border-b border-zinc-700/50">
-                  <td className="px-4 py-3 font-mono text-sm text-zinc-400">
-                    {tx.id}
-                  </td>
-                  <td className="px-4 py-3 text-sm text-zinc-300">
-                    {tx.customer}
-                  </td>
+                  <td className="px-4 py-3 font-mono text-sm text-zinc-400">{tx.id}</td>
+                  <td className="px-4 py-3 text-sm text-zinc-300">{tx.customer}</td>
                   <td className="px-4 py-3 text-sm font-medium text-white">
                     {formatCurrency(tx.amount, tx.currency)}
                   </td>

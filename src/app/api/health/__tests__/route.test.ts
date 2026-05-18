@@ -35,8 +35,7 @@ const getMockExecAsync = () =>
   (global as typeof global & { __mockExecAsync: jest.Mock }).__mockExecAsync
 
 // Helper: minimal Request with no query params (default GET behaviour)
-const makeRequest = (url = 'http://localhost:3021/api/health') =>
-  new Request(url)
+const makeRequest = (url = 'http://localhost:3021/api/health') => new Request(url)
 
 describe('GET /api/health', () => {
   beforeEach(() => {
@@ -59,7 +58,7 @@ describe('GET /api/health', () => {
     ;(fs.unlink as jest.Mock).mockResolvedValue(undefined)
     ;(fs.access as jest.Mock).mockResolvedValue(undefined)
     ;(fs.readFile as jest.Mock).mockResolvedValue(
-      'MemTotal: 8000000 kB\nMemAvailable: 4000000 kB\ncpu 100 100 100 100',
+      'MemTotal: 8000000 kB\nMemAvailable: 4000000 kB\ncpu 100 100 100 100'
     )
 
     const response = await GET(makeRequest())
@@ -79,7 +78,7 @@ describe('GET /api/health', () => {
     ;(fs.unlink as jest.Mock).mockResolvedValue(undefined)
     ;(fs.access as jest.Mock).mockResolvedValue(undefined)
     ;(fs.readFile as jest.Mock).mockResolvedValue(
-      'MemTotal: 8000000 kB\nMemAvailable: 4000000 kB\ncpu 100 100 100 100',
+      'MemTotal: 8000000 kB\nMemAvailable: 4000000 kB\ncpu 100 100 100 100'
     )
 
     const response = await GET(makeRequest())
@@ -95,11 +94,9 @@ describe('GET /api/health', () => {
       stdout: 'Docker version 20.10.0',
       stderr: '',
     })
-    ;(fs.writeFile as jest.Mock).mockRejectedValue(
-      new Error('Permission denied'),
-    )
+    ;(fs.writeFile as jest.Mock).mockRejectedValue(new Error('Permission denied'))
     ;(fs.readFile as jest.Mock).mockResolvedValue(
-      'MemTotal: 8000000 kB\nMemAvailable: 4000000 kB\ncpu 100 100 100 100',
+      'MemTotal: 8000000 kB\nMemAvailable: 4000000 kB\ncpu 100 100 100 100'
     )
 
     const response = await GET(makeRequest())
@@ -116,7 +113,7 @@ describe('GET /api/health', () => {
     ;(fs.unlink as jest.Mock).mockResolvedValue(undefined)
     ;(fs.access as jest.Mock).mockResolvedValue(undefined)
     ;(fs.readFile as jest.Mock).mockResolvedValue(
-      'MemTotal: 8000000 kB\nMemAvailable: 4000000 kB\ncpu 100 100 100 100',
+      'MemTotal: 8000000 kB\nMemAvailable: 4000000 kB\ncpu 100 100 100 100'
     )
 
     const response = await GET(makeRequest())
@@ -133,7 +130,7 @@ describe('GET /api/health', () => {
     ;(fs.unlink as jest.Mock).mockResolvedValue(undefined)
     ;(fs.access as jest.Mock).mockResolvedValue(undefined)
     ;(fs.readFile as jest.Mock).mockResolvedValue(
-      'MemTotal: 8000000 kB\nMemAvailable: 4000000 kB\ncpu 100 100 100 100',
+      'MemTotal: 8000000 kB\nMemAvailable: 4000000 kB\ncpu 100 100 100 100'
     )
 
     const response = await GET(makeRequest())

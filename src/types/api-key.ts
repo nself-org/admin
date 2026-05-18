@@ -91,14 +91,7 @@ export interface CreateApiKeyResult {
 export interface ApiKeyLog {
   id: string
   keyId: string
-  action:
-    | 'created'
-    | 'updated'
-    | 'activated'
-    | 'deactivated'
-    | 'revoked'
-    | 'used'
-    | 'rate_limited'
+  action: 'created' | 'updated' | 'activated' | 'deactivated' | 'revoked' | 'used' | 'rate_limited'
   details?: Record<string, unknown>
   ipAddress?: string
   timestamp: string

@@ -77,7 +77,7 @@ export function appendAuditFile(entry: AuditFileEntry): void {
  * Extract source IP from request headers.
  */
 export function extractSourceIp(
-  headers: Headers | Record<string, string | string[] | undefined>,
+  headers: Headers | Record<string, string | string[] | undefined>
 ): string {
   const get = (key: string): string | null => {
     if (headers instanceof Headers) return headers.get(key)

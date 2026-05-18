@@ -13,19 +13,13 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     const sessionToken = cookieStore.get('session')?.value
 
     if (!sessionToken) {
-      return NextResponse.json(
-        { success: false, error: 'Not authenticated' },
-        { status: 401 },
-      )
+      return NextResponse.json({ success: false, error: 'Not authenticated' }, { status: 401 })
     }
 
     // Validate CSRF token
     const csrfValid = await validateCSRFToken(request, sessionToken)
     if (!csrfValid) {
-      return NextResponse.json(
-        { success: false, error: 'Invalid CSRF token' },
-        { status: 403 },
-      )
+      return NextResponse.json({ success: false, error: 'Invalid CSRF token' }, { status: 403 })
     }
 
     const body = await request.json()
@@ -45,7 +39,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       if (token === sessionToken) {
         return NextResponse.json(
           { success: false, error: 'Cannot revoke current session' },
-          { status: 400 },
+          { status: 400 }
         )
       }
 
@@ -58,7 +52,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     } else {
       return NextResponse.json(
         { success: false, error: 'Missing token or revokeAll parameter' },
-        { status: 400 },
+        { status: 400 }
       )
     }
   } catch (error) {
@@ -69,7 +63,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to revoke session',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

@@ -10,13 +10,7 @@ import type {
   ActivityResourceType,
   ActivityFilter as FilterType,
 } from '@/types/activity'
-import {
-  format,
-  formatDistanceToNow,
-  isSameDay,
-  isToday,
-  isYesterday,
-} from 'date-fns'
+import { format, formatDistanceToNow, isSameDay, isToday, isYesterday } from 'date-fns'
 import {
   Database,
   Key,
@@ -68,10 +62,7 @@ export interface ActivityTimelineProps {
 }
 
 /** Map action types to timeline variants */
-const actionVariants: Record<
-  ActivityAction,
-  'default' | 'success' | 'warning' | 'danger'
-> = {
+const actionVariants: Record<ActivityAction, 'default' | 'success' | 'warning' | 'danger'> = {
   created: 'success',
   updated: 'default',
   deleted: 'danger',
@@ -177,11 +168,7 @@ function buildDescription(activity: Activity): string | undefined {
 /** Get icon for activity */
 function getActivityIcon(activity: Activity): LucideIcon {
   // Prefer action icon for certain actions
-  if (
-    ['started', 'stopped', 'restarted', 'deployed', 'rollback'].includes(
-      activity.action,
-    )
-  ) {
+  if (['started', 'stopped', 'restarted', 'deployed', 'rollback'].includes(activity.action)) {
     return actionIcons[activity.action]
   }
 
@@ -234,7 +221,7 @@ export function ActivityTimeline({
       resourceType: resourceType || filter.resourceType,
       resourceId: resourceId || filter.resourceId,
     }),
-    [filter, resourceType, resourceId],
+    [filter, resourceType, resourceId]
   )
 
   const { activities, isLoading, isError } = useActivityFeed({
@@ -283,9 +270,7 @@ export function ActivityTimeline({
     return (
       <div className="rounded-lg border border-zinc-200 bg-zinc-50 p-8 text-center dark:border-zinc-800 dark:bg-zinc-900">
         <Zap className="mx-auto h-8 w-8 text-zinc-400" />
-        <p className="mt-2 text-sm text-zinc-500 dark:text-zinc-400">
-          No activity to display
-        </p>
+        <p className="mt-2 text-sm text-zinc-500 dark:text-zinc-400">No activity to display</p>
       </div>
     )
   }
@@ -300,8 +285,7 @@ export function ActivityTimeline({
             {group.activities.map((activity, index) => {
               const Icon = getActivityIcon(activity)
               const isLast =
-                groupIndex === groupedActivities.length - 1 &&
-                index === group.activities.length - 1
+                groupIndex === groupedActivities.length - 1 && index === group.activities.length - 1
 
               return (
                 <TimelineItem

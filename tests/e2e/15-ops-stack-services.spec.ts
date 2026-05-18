@@ -22,9 +22,9 @@
  * Tests that need two sequential API responses use request-count logic.
  */
 
+import type { Page } from '@playwright/test'
 import { expect, test } from './fixtures'
 import { setupAuth } from './helpers'
-import type { Page } from '@playwright/test'
 
 // ── Mock data ──────────────────────────────────────────────────────────────────
 
@@ -95,7 +95,7 @@ async function mockNselfEmpty(page: Page) {
 async function mockNselfSequential(
   page: Page,
   listResponse: { success: boolean; data?: { stdout: string; stderr: string }; error?: string },
-  actionResponse: { success: boolean; data?: { stdout: string; stderr: string }; error?: string },
+  actionResponse: { success: boolean; data?: { stdout: string; stderr: string }; error?: string }
 ) {
   let callCount = 0
   await page.route('**/api/nself', (route) => {
@@ -122,7 +122,9 @@ test.describe('/services/nestjs — 7 UI states', () => {
   test('01 loading — skeleton visible during Suspense', async ({ page }) => {
     // Hold the response so the skeleton stays visible long enough to assert.
     let resolve: (() => void) | undefined
-    const gate = new Promise<void>((r) => { resolve = r })
+    const gate = new Promise<void>((r) => {
+      resolve = r
+    })
     await page.route('**/api/nself', async (route) => {
       await gate
       await route.fulfill({
@@ -168,9 +170,13 @@ test.describe('/services/nestjs — 7 UI states', () => {
     await expect(page.locator('text=running')).toBeVisible()
   })
 
-  test('05 action-in-progress — restart spinner shown while request in flight', async ({ page }) => {
+  test('05 action-in-progress — restart spinner shown while request in flight', async ({
+    page,
+  }) => {
     let resolve: (() => void) | undefined
-    const gate = new Promise<void>((r) => { resolve = r })
+    const gate = new Promise<void>((r) => {
+      resolve = r
+    })
     let callCount = 0
     await page.route('**/api/nself', async (route) => {
       callCount++
@@ -206,7 +212,7 @@ test.describe('/services/nestjs — 7 UI states', () => {
     await mockNselfSequential(
       page,
       { success: true, data: { stdout: SERVICE_LIST_JSON, stderr: '' } },
-      { success: true, data: { stdout: '', stderr: '' } },
+      { success: true, data: { stdout: '', stderr: '' } }
     )
 
     await page.goto('/services/nestjs', { waitUntil: 'networkidle' })
@@ -222,7 +228,7 @@ test.describe('/services/nestjs — 7 UI states', () => {
     await mockNselfSequential(
       page,
       { success: true, data: { stdout: SERVICE_LIST_JSON, stderr: '' } },
-      { success: false, error: 'restart failed: timeout' },
+      { success: false, error: 'restart failed: timeout' }
     )
 
     await page.goto('/services/nestjs', { waitUntil: 'networkidle' })
@@ -279,7 +285,7 @@ test.describe('/services/bullmq — 7 UI states', () => {
     await mockNselfSequential(
       page,
       { success: true, data: { stdout: SERVICE_LIST_JSON, stderr: '' } },
-      { success: true, data: { stdout: '', stderr: '' } },
+      { success: true, data: { stdout: '', stderr: '' } }
     )
 
     await page.goto('/services/bullmq', { waitUntil: 'networkidle' })
@@ -294,7 +300,7 @@ test.describe('/services/bullmq — 7 UI states', () => {
     await mockNselfSequential(
       page,
       { success: true, data: { stdout: SERVICE_LIST_JSON, stderr: '' } },
-      { success: false, error: 'stop failed: permission denied' },
+      { success: false, error: 'stop failed: permission denied' }
     )
 
     await page.goto('/services/bullmq', { waitUntil: 'networkidle' })
@@ -351,7 +357,7 @@ test.describe('/services/custom — 7 UI states', () => {
     await mockNselfSequential(
       page,
       { success: true, data: { stdout: SERVICE_LIST_JSON, stderr: '' } },
-      { success: true, data: { stdout: '', stderr: '' } },
+      { success: true, data: { stdout: '', stderr: '' } }
     )
 
     await page.goto('/services/custom', { waitUntil: 'networkidle' })
@@ -365,7 +371,7 @@ test.describe('/services/custom — 7 UI states', () => {
     await mockNselfSequential(
       page,
       { success: true, data: { stdout: SERVICE_LIST_JSON, stderr: '' } },
-      { success: false, error: 'restart failed' },
+      { success: false, error: 'restart failed' }
     )
 
     await page.goto('/services/custom', { waitUntil: 'networkidle' })
@@ -419,7 +425,9 @@ test.describe('/services/python — 7 UI states', () => {
 
   test('05 action-in-progress — spinner during restart', async ({ page }) => {
     let resolve: (() => void) | undefined
-    const gate = new Promise<void>((r) => { resolve = r })
+    const gate = new Promise<void>((r) => {
+      resolve = r
+    })
     let callCount = 0
     await page.route('**/api/nself', async (route) => {
       callCount++
@@ -449,7 +457,7 @@ test.describe('/services/python — 7 UI states', () => {
     await mockNselfSequential(
       page,
       { success: true, data: { stdout: stopped, stderr: '' } },
-      { success: true, data: { stdout: '', stderr: '' } },
+      { success: true, data: { stdout: '', stderr: '' } }
     )
 
     await page.goto('/services/python', { waitUntil: 'networkidle' })
@@ -464,7 +472,7 @@ test.describe('/services/python — 7 UI states', () => {
     await mockNselfSequential(
       page,
       { success: true, data: { stdout: stopped, stderr: '' } },
-      { success: false, error: 'start failed: port in use' },
+      { success: false, error: 'start failed: port in use' }
     )
 
     await page.goto('/services/python', { waitUntil: 'networkidle' })
@@ -507,7 +515,9 @@ test.describe('/services/logs — 7 UI states', () => {
   test('04 logs-loading — loading state while fetching logs', async ({ page }) => {
     let callCount = 0
     let resolveLog: (() => void) | undefined
-    const logGate = new Promise<void>((r) => { resolveLog = r })
+    const logGate = new Promise<void>((r) => {
+      resolveLog = r
+    })
 
     await page.route('**/api/nself', async (route) => {
       callCount++
@@ -524,14 +534,20 @@ test.describe('/services/logs — 7 UI states', () => {
       return route.fulfill({
         status: 200,
         contentType: 'application/json',
-        body: JSON.stringify({ success: true, data: { stdout: 'log line 1\nlog line 2', stderr: '' } }),
+        body: JSON.stringify({
+          success: true,
+          data: { stdout: 'log line 1\nlog line 2', stderr: '' },
+        }),
       })
     })
 
     await page.goto('/services/logs', { waitUntil: 'networkidle' })
     // Spinner for logs loading
     const spinner = page.locator('.animate-spin')
-    const spinnerVisible = await spinner.first().isVisible().catch(() => false)
+    const spinnerVisible = await spinner
+      .first()
+      .isVisible()
+      .catch(() => false)
     // Loading text alternative
     const loadingText = page.locator('text=Loading logs')
     const loadingVisible = await loadingText.isVisible().catch(() => false)
@@ -577,7 +593,10 @@ test.describe('/services/logs — 7 UI states', () => {
       return route.fulfill({
         status: 200,
         contentType: 'application/json',
-        body: JSON.stringify({ success: true, data: { stdout: '2024-01-01 startup complete', stderr: '' } }),
+        body: JSON.stringify({
+          success: true,
+          data: { stdout: '2024-01-01 startup complete', stderr: '' },
+        }),
       })
     })
 
@@ -589,7 +608,10 @@ test.describe('/services/logs — 7 UI states', () => {
   test('07 refresh-logs — Refresh Logs button triggers new log fetch', async ({ page }) => {
     let logCallCount = 0
     await page.route('**/api/nself', async (route) => {
-      const body = JSON.parse(route.request().postData() ?? '{}') as { command: string; args: string[] }
+      const body = JSON.parse(route.request().postData() ?? '{}') as {
+        command: string
+        args: string[]
+      }
       if (body.command === 'service' && body.args[0] === 'ps') {
         return route.fulfill({
           status: 200,
@@ -601,7 +623,10 @@ test.describe('/services/logs — 7 UI states', () => {
       return route.fulfill({
         status: 200,
         contentType: 'application/json',
-        body: JSON.stringify({ success: true, data: { stdout: `line ${String(logCallCount)}`, stderr: '' } }),
+        body: JSON.stringify({
+          success: true,
+          data: { stdout: `line ${String(logCallCount)}`, stderr: '' },
+        }),
       })
     })
 
@@ -646,7 +671,9 @@ test.describe('/operations/scale — 7 UI states', () => {
 
   test('04 action-in-progress — Apply spinner shown', async ({ page }) => {
     let resolve: (() => void) | undefined
-    const gate = new Promise<void>((r) => { resolve = r })
+    const gate = new Promise<void>((r) => {
+      resolve = r
+    })
     let callCount = 0
     await page.route('**/api/nself', async (route) => {
       callCount++
@@ -676,7 +703,7 @@ test.describe('/operations/scale — 7 UI states', () => {
     await mockNselfSequential(
       page,
       { success: true, data: { stdout: SCALE_LIST_JSON, stderr: '' } },
-      { success: true, data: { stdout: '', stderr: '' } },
+      { success: true, data: { stdout: '', stderr: '' } }
     )
 
     await page.goto('/operations/scale', { waitUntil: 'networkidle' })
@@ -691,7 +718,7 @@ test.describe('/operations/scale — 7 UI states', () => {
     await mockNselfSequential(
       page,
       { success: true, data: { stdout: SCALE_LIST_JSON, stderr: '' } },
-      { success: false, error: 'scale failed: quota exceeded' },
+      { success: false, error: 'scale failed: quota exceeded' }
     )
 
     await page.goto('/operations/scale', { waitUntil: 'networkidle' })
@@ -720,13 +747,13 @@ test.describe('/operations/scale — 7 UI states', () => {
 // ── Stack services — shared pattern test (nginx / redis / minio / mailhog / postgresql / auth / hasura) ──
 
 const STACK_PAGES = [
-  { path: '/stack/nginx',      title: 'nginx',      emptyMsg: undefined },
-  { path: '/stack/redis',      title: 'redis',      emptyMsg: undefined },
-  { path: '/stack/minio',      title: 'minio',      emptyMsg: undefined },
-  { path: '/stack/mailhog',    title: 'mailhog',    emptyMsg: undefined },
+  { path: '/stack/nginx', title: 'nginx', emptyMsg: undefined },
+  { path: '/stack/redis', title: 'redis', emptyMsg: undefined },
+  { path: '/stack/minio', title: 'minio', emptyMsg: undefined },
+  { path: '/stack/mailhog', title: 'mailhog', emptyMsg: undefined },
   { path: '/stack/postgresql', title: 'postgresql', emptyMsg: undefined },
-  { path: '/stack/auth',       title: 'auth',       emptyMsg: undefined },
-  { path: '/stack/hasura',     title: 'hasura',     emptyMsg: undefined },
+  { path: '/stack/auth', title: 'auth', emptyMsg: undefined },
+  { path: '/stack/hasura', title: 'hasura', emptyMsg: undefined },
 ]
 
 for (const { path, title } of STACK_PAGES) {
@@ -739,7 +766,9 @@ for (const { path, title } of STACK_PAGES) {
       await mockNselfError(page, `${title} unavailable`)
       await page.goto(path, { waitUntil: 'networkidle' })
       // All stack pages show a destructive error card
-      await expect(page.locator('[class*="destructive"], [class*="border-destructive"]').first()).toBeVisible()
+      await expect(
+        page.locator('[class*="destructive"], [class*="border-destructive"]').first()
+      ).toBeVisible()
     })
 
     test('page renders without crash on success', async ({ page }) => {
@@ -755,12 +784,12 @@ for (const { path, title } of STACK_PAGES) {
 // ── Operations pages — shared error / empty / success ─────────────────────────
 
 const OPS_PAGES = [
-  { path: '/operations/cleanup',   errorText: 'Failed to' },
-  { path: '/operations/data',      errorText: 'Failed to' },
-  { path: '/operations/monitor',   errorText: 'Failed to' },
+  { path: '/operations/cleanup', errorText: 'Failed to' },
+  { path: '/operations/data', errorText: 'Failed to' },
+  { path: '/operations/monitor', errorText: 'Failed to' },
   { path: '/operations/snapshots', errorText: 'Failed to' },
-  { path: '/operations/deploy',    errorText: 'Failed to' },
-  { path: '/operations/rollback',  errorText: 'Failed to' },
+  { path: '/operations/deploy', errorText: 'Failed to' },
+  { path: '/operations/rollback', errorText: 'Failed to' },
 ]
 
 for (const { path } of OPS_PAGES) {

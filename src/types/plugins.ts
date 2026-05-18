@@ -10,12 +10,7 @@ export type PluginCategory =
   | 'communication'
   | 'finance'
 
-export type PluginStatus =
-  | 'installed'
-  | 'available'
-  | 'update_available'
-  | 'installing'
-  | 'error'
+export type PluginStatus = 'installed' | 'available' | 'update_available' | 'installing' | 'error'
 
 export interface Plugin {
   name: string

@@ -22,47 +22,26 @@ function getServiceCategory(name: string): 'required' | 'optional' | 'user' {
   const lowerName = name.toLowerCase()
 
   // Required services (core stack)
-  if (
-    ['postgres', 'postgresql', 'database', 'db'].some((n) =>
-      lowerName.includes(n),
-    )
-  )
+  if (['postgres', 'postgresql', 'database', 'db'].some((n) => lowerName.includes(n)))
     return 'required'
-  if (['hasura', 'graphql'].some((n) => lowerName.includes(n)))
-    return 'required'
-  if (['auth', 'keycloak', 'supabase'].some((n) => lowerName.includes(n)))
-    return 'required'
-  if (
-    ['nginx', 'proxy', 'gateway', 'traefik'].some((n) => lowerName.includes(n))
-  )
-    return 'required'
+  if (['hasura', 'graphql'].some((n) => lowerName.includes(n))) return 'required'
+  if (['auth', 'keycloak', 'supabase'].some((n) => lowerName.includes(n))) return 'required'
+  if (['nginx', 'proxy', 'gateway', 'traefik'].some((n) => lowerName.includes(n))) return 'required'
 
   // Optional services (infrastructure) - but NOT user workers
   if (lowerName.includes('bullmq') || lowerName.includes('bull')) return 'user' // BullMQ workers are user services
   if (['minio', 's3'].some((n) => lowerName.includes(n))) return 'optional'
-  if (lowerName.includes('storage') && !lowerName.includes('minio'))
-    return 'optional'
+  if (lowerName.includes('storage') && !lowerName.includes('minio')) return 'optional'
   if (['mailpit'].some((n) => lowerName.includes(n))) return 'optional'
-  if (['redis', 'cache', 'memcached'].some((n) => lowerName.includes(n)))
-    return 'optional'
+  if (['redis', 'cache', 'memcached'].some((n) => lowerName.includes(n))) return 'optional'
   if (
-    [
-      'grafana',
-      'prometheus',
-      'loki',
-      'jaeger',
-      'alertmanager',
-      'monitoring',
-    ].some((n) => lowerName.includes(n))
-  )
-    return 'optional'
-  if (['kafka', 'rabbitmq', 'nats', 'amqp'].some((n) => lowerName.includes(n)))
-    return 'optional'
-  if (
-    ['elasticsearch', 'elastic', 'kibana', 'logstash'].some((n) =>
-      lowerName.includes(n),
+    ['grafana', 'prometheus', 'loki', 'jaeger', 'alertmanager', 'monitoring'].some((n) =>
+      lowerName.includes(n)
     )
   )
+    return 'optional'
+  if (['kafka', 'rabbitmq', 'nats', 'amqp'].some((n) => lowerName.includes(n))) return 'optional'
+  if (['elasticsearch', 'elastic', 'kibana', 'logstash'].some((n) => lowerName.includes(n)))
     return 'optional'
 
   // Everything else is user services (including workers)
@@ -70,10 +49,7 @@ function getServiceCategory(name: string): 'required' | 'optional' | 'user' {
 }
 
 // Helper to get service order for default sorting
-function getServiceDefaultOrder(
-  name: string,
-  category: 'required' | 'optional' | 'user',
-): number {
+function getServiceDefaultOrder(name: string, category: 'required' | 'optional' | 'user'): number {
   const lowerName = name.toLowerCase()
 
   if (category === 'required') {
@@ -119,13 +95,11 @@ function getServiceDisplayName(name: string): string {
 
   // Storage services
   if (lowerName.includes('minio')) return 'MinIO Storage'
-  if (lowerName.includes('storage') && !lowerName.includes('minio'))
-    return 'Storage Volume'
+  if (lowerName.includes('storage') && !lowerName.includes('minio')) return 'Storage Volume'
 
   // Mail service
   if (lowerName.includes('mailpit')) return 'Mailpit'
-  if (lowerName.includes('mail') && !lowerName.includes('mailpit'))
-    return 'Mail Service'
+  if (lowerName.includes('mail') && !lowerName.includes('mailpit')) return 'Mail Service'
 
   // Cache
   if (lowerName.includes('redis')) return 'Redis Cache'
@@ -139,12 +113,9 @@ function getServiceDisplayName(name: string): string {
 
   // User services
   if (lowerName.includes('nest')) return 'NestJS API'
-  if (lowerName.includes('bullmq') || lowerName.includes('bull'))
-    return 'BullMQ Worker'
-  if (lowerName.includes('python') || lowerName.includes('py'))
-    return 'Python Service'
-  if (lowerName.includes('go') && !lowerName.includes('golang'))
-    return 'Go Service'
+  if (lowerName.includes('bullmq') || lowerName.includes('bull')) return 'BullMQ Worker'
+  if (lowerName.includes('python') || lowerName.includes('py')) return 'Python Service'
+  if (lowerName.includes('go') && !lowerName.includes('golang')) return 'Go Service'
 
   // Other infrastructure
   if (lowerName.includes('traefik')) return 'Traefik Proxy'
@@ -153,8 +124,7 @@ function getServiceDisplayName(name: string): string {
   if (lowerName.includes('kafka')) return 'Apache Kafka'
   if (lowerName.includes('rabbitmq')) return 'RabbitMQ'
   if (lowerName.includes('nats')) return 'NATS'
-  if (lowerName.includes('elasticsearch') || lowerName.includes('elastic'))
-    return 'Elasticsearch'
+  if (lowerName.includes('elasticsearch') || lowerName.includes('elastic')) return 'Elasticsearch'
   if (lowerName.includes('kibana')) return 'Kibana'
   if (lowerName.includes('logstash')) return 'Logstash'
 
@@ -169,27 +139,19 @@ function getServiceDisplayName(name: string): string {
 }
 
 function ContainersTable({ services }: ContainersTableProps) {
-  const [sortBy, setSortBy] = useState<
-    'default' | 'name' | 'status' | 'cpu' | 'memory'
-  >('default')
+  const [sortBy, setSortBy] = useState<'default' | 'name' | 'status' | 'cpu' | 'memory'>('default')
   const [filterStatus, setFilterStatus] = useState<string>('all')
   const [searchTerm, setSearchTerm] = useState('')
 
   // Organize services by category
-  const requiredServices = services.filter(
-    (s) => getServiceCategory(s.name) === 'required',
-  )
-  const optionalServices = services.filter(
-    (s) => getServiceCategory(s.name) === 'optional',
-  )
-  const userServices = services.filter(
-    (s) => getServiceCategory(s.name) === 'user',
-  )
+  const requiredServices = services.filter((s) => getServiceCategory(s.name) === 'required')
+  const optionalServices = services.filter((s) => getServiceCategory(s.name) === 'optional')
+  const userServices = services.filter((s) => getServiceCategory(s.name) === 'user')
 
   // Sort services within each category
   const sortServices = (
     serviceList: ServiceStatus[],
-    category: 'required' | 'optional' | 'user',
+    category: 'required' | 'optional' | 'user'
   ) => {
     return [...serviceList].sort((a, b) => {
       switch (sortBy) {
@@ -216,21 +178,13 @@ function ContainersTable({ services }: ContainersTableProps) {
   const filterServices = (serviceList: ServiceStatus[]) => {
     return serviceList.filter((s) => {
       if (filterStatus !== 'all' && s.status !== filterStatus) return false
-      if (
-        searchTerm &&
-        !s.name.toLowerCase().includes(searchTerm.toLowerCase())
-      )
-        return false
+      if (searchTerm && !s.name.toLowerCase().includes(searchTerm.toLowerCase())) return false
       return true
     })
   }
 
-  const filteredRequired = filterServices(
-    sortServices(requiredServices, 'required'),
-  )
-  const filteredOptional = filterServices(
-    sortServices(optionalServices, 'optional'),
-  )
+  const filteredRequired = filterServices(sortServices(requiredServices, 'required'))
+  const filteredOptional = filterServices(sortServices(optionalServices, 'optional'))
   const filteredUser = filterServices(sortServices(userServices, 'user'))
 
   const getHealthStatus = (service: ServiceStatus) => {
@@ -261,9 +215,7 @@ function ContainersTable({ services }: ContainersTableProps) {
             <div className="text-sm font-medium text-zinc-900 dark:text-white">
               {getServiceDisplayName(service.name)}
             </div>
-            <div className="mt-0.5 text-xs text-zinc-500 dark:text-zinc-400">
-              {service.name}
-            </div>
+            <div className="mt-0.5 text-xs text-zinc-500 dark:text-zinc-400">{service.name}</div>
           </div>
         </td>
         <td className="border-b border-zinc-200/50 px-6 py-4 dark:border-zinc-700/50">
@@ -295,9 +247,7 @@ function ContainersTable({ services }: ContainersTableProps) {
               </span>
             </div>
             {uptime && (
-              <div className="mt-1 ml-4 text-xs text-zinc-500 dark:text-zinc-400">
-                Up {uptime}
-              </div>
+              <div className="mt-1 ml-4 text-xs text-zinc-500 dark:text-zinc-400">Up {uptime}</div>
             )}
           </div>
         </td>
@@ -343,9 +293,7 @@ function ContainersTable({ services }: ContainersTableProps) {
   return (
     <div className="mb-16">
       <div className="mb-6 flex items-center justify-between">
-        <h2 className="text-2xl font-bold text-zinc-900 dark:text-white">
-          Container Services
-        </h2>
+        <h2 className="text-2xl font-bold text-zinc-900 dark:text-white">Container Services</h2>
 
         {/* Filters */}
         <div className="flex items-center space-x-4">
@@ -419,9 +367,7 @@ function ContainersTable({ services }: ContainersTableProps) {
                       </span>
                     </td>
                   </tr>
-                  {filteredRequired.map((service, index) =>
-                    renderServiceRow(service, index),
-                  )}
+                  {filteredRequired.map((service, index) => renderServiceRow(service, index))}
                 </>
               )}
 
@@ -438,9 +384,7 @@ function ContainersTable({ services }: ContainersTableProps) {
                       </span>
                     </td>
                   </tr>
-                  {filteredOptional.map((service, index) =>
-                    renderServiceRow(service, index),
-                  )}
+                  {filteredOptional.map((service, index) => renderServiceRow(service, index))}
                 </>
               )}
 
@@ -457,9 +401,7 @@ function ContainersTable({ services }: ContainersTableProps) {
                       </span>
                     </td>
                   </tr>
-                  {filteredUser.map((service, index) =>
-                    renderServiceRow(service, index),
-                  )}
+                  {filteredUser.map((service, index) => renderServiceRow(service, index))}
                 </>
               )}
 
@@ -469,8 +411,7 @@ function ContainersTable({ services }: ContainersTableProps) {
                     colSpan={5}
                     className="px-6 py-12 text-center text-sm text-zinc-500 dark:text-zinc-400"
                   >
-                    No containers found. Start your nself services to see them
-                    here.
+                    No containers found. Start your nself services to see them here.
                   </td>
                 </tr>
               )}

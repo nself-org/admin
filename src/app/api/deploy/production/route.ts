@@ -18,11 +18,7 @@ const VALID_SECRET_ACTION = /^(show|generate|rotate)$/
 const VALID_PORT = /^\d{1,5}$/
 const VALID_PROTOCOL = /^(tcp|udp)$/i
 
-function validateInput(
-  value: string | undefined,
-  pattern: RegExp,
-  name: string,
-): string | null {
+function validateInput(value: string | undefined, pattern: RegExp, name: string): string | null {
   if (!value) return null
   if (!pattern.test(value)) {
     throw new Error(`Invalid ${name}: contains disallowed characters`)
@@ -37,22 +33,15 @@ export async function GET(): Promise<NextResponse> {
     const nselfPath = await findNselfPath()
 
     if (!nselfPath) {
-      return NextResponse.json(
-        { success: false, error: 'nself CLI not found' },
-        { status: 500 },
-      )
+      return NextResponse.json({ success: false, error: 'nself CLI not found' }, { status: 500 })
     }
 
     try {
-      const { stdout, stderr } = await execFileAsync(
-        nselfPath,
-        ['prod', 'status'],
-        {
-          cwd: projectPath,
-          env: { ...process.env, PATH: getEnhancedPath() },
-          timeout: 30000,
-        },
-      )
+      const { stdout, stderr } = await execFileAsync(nselfPath, ['prod', 'status'], {
+        cwd: projectPath,
+        env: { ...process.env, PATH: getEnhancedPath() },
+        timeout: 30000,
+      })
 
       return NextResponse.json({
         success: true,
@@ -75,7 +64,7 @@ export async function GET(): Promise<NextResponse> {
         error: 'Failed to get production status',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -92,18 +81,12 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     const nselfPath = await findNselfPath()
 
     if (!nselfPath) {
-      return NextResponse.json(
-        { success: false, error: 'nself CLI not found' },
-        { status: 500 },
-      )
+      return NextResponse.json({ success: false, error: 'nself CLI not found' }, { status: 500 })
     }
 
     // Validate action
     if (!action || !VALID_ACTION.test(action)) {
-      return NextResponse.json(
-        { success: false, error: 'Invalid action' },
-        { status: 400 },
-      )
+      return NextResponse.json({ success: false, error: 'Invalid action' }, { status: 400 })
     }
 
     // Build args array safely
@@ -116,7 +99,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         if (!domain) {
           return NextResponse.json(
             { success: false, error: 'Domain is required for init' },
-            { status: 400 },
+            { status: 400 }
           )
         }
         args.push('prod', 'init', domain)
@@ -141,12 +124,12 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         const secretAction = validateInput(
           options.secretAction || 'show',
           VALID_SECRET_ACTION,
-          'secret action',
+          'secret action'
         )
         if (!secretAction) {
           return NextResponse.json(
             { success: false, error: 'Invalid secret action' },
-            { status: 400 },
+            { status: 400 }
           )
         }
 
@@ -156,11 +139,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           args.push('--force')
         }
         if (secretAction === 'rotate') {
-          const secretName = validateInput(
-            options.secretName,
-            VALID_SECRET_NAME,
-            'secret name',
-          )
+          const secretName = validateInput(options.secretName, VALID_SECRET_NAME, 'secret name')
           if (secretName) {
             args.push(secretName)
           }
@@ -176,13 +155,10 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         const sslAction = validateInput(
           options.sslAction || 'status',
           VALID_SSL_ACTION,
-          'SSL action',
+          'SSL action'
         )
         if (!sslAction) {
-          return NextResponse.json(
-            { success: false, error: 'Invalid SSL action' },
-            { status: 400 },
-          )
+          return NextResponse.json({ success: false, error: 'Invalid SSL action' }, { status: 400 })
         }
 
         args.push('prod', 'ssl', sslAction)
@@ -217,12 +193,12 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         const fwAction = validateInput(
           options.firewallAction || 'status',
           VALID_FIREWALL_ACTION,
-          'firewall action',
+          'firewall action'
         )
         if (!fwAction) {
           return NextResponse.json(
             { success: false, error: 'Invalid firewall action' },
-            { status: 400 },
+            { status: 400 }
           )
         }
 
@@ -232,20 +208,12 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           args.push('--dry-run')
         }
         if ((fwAction === 'allow' || fwAction === 'block') && options.port) {
-          const port = validateInput(
-            options.port?.toString(),
-            VALID_PORT,
-            'port',
-          )
+          const port = validateInput(options.port?.toString(), VALID_PORT, 'port')
           if (port && parseInt(port) > 0 && parseInt(port) <= 65535) {
             args.push(port)
           }
           if (fwAction === 'allow' && options.protocol) {
-            const protocol = validateInput(
-              options.protocol,
-              VALID_PROTOCOL,
-              'protocol',
-            )
+            const protocol = validateInput(options.protocol, VALID_PROTOCOL, 'protocol')
             if (protocol) {
               args.push(protocol)
             }
@@ -285,7 +253,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       default:
         return NextResponse.json(
           { success: false, error: `Unknown action: ${action}` },
-          { status: 400 },
+          { status: 400 }
         )
     }
 
@@ -315,7 +283,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         stdout: execError.stdout || '',
         stderr: execError.stderr || '',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

@@ -73,9 +73,7 @@ function IssueRow({ issue }: { issue: GitHubIssue }) {
             </span>
           ))}
           {issue.labels.length > 3 && (
-            <span className="text-xs text-zinc-500">
-              +{issue.labels.length - 3}
-            </span>
+            <span className="text-xs text-zinc-500">+{issue.labels.length - 3}</span>
           )}
         </div>
       </td>
@@ -117,7 +115,7 @@ function GitHubIssuesContent() {
   }>(
     `/api/plugins/github/issues?page=${page}&pageSize=${pageSize}&search=${searchQuery}&filter=${stateFilter}`,
     fetcher,
-    { refreshInterval: 60000 },
+    { refreshInterval: 60000 }
   )
 
   const handleSync = async () => {
@@ -188,9 +186,7 @@ function GitHubIssuesContent() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-semibold text-white">Issues</h1>
-          <p className="text-sm text-zinc-400">
-            {total.toLocaleString()} total issues
-          </p>
+          <p className="text-sm text-zinc-400">{total.toLocaleString()} total issues</p>
         </div>
         <button
           onClick={handleSync}
@@ -280,8 +276,7 @@ function GitHubIssuesContent() {
       {totalPages > 1 && (
         <div className="flex items-center justify-between">
           <p className="text-sm text-zinc-400">
-            Showing {(page - 1) * pageSize + 1} to{' '}
-            {Math.min(page * pageSize, total)} of {total}
+            Showing {(page - 1) * pageSize + 1} to {Math.min(page * pageSize, total)} of {total}
           </p>
           <div className="flex items-center gap-2">
             <button

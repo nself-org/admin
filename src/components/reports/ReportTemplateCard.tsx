@@ -1,13 +1,7 @@
 'use client'
 
 import { Badge } from '@/components/ui/badge'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import type { ReportTemplate } from '@/types/report'
 import {
   BarChart3,
@@ -25,11 +19,7 @@ interface ReportTemplateCardProps {
   selected?: boolean
 }
 
-export function ReportTemplateCard({
-  template,
-  onClick,
-  selected,
-}: ReportTemplateCardProps) {
+export function ReportTemplateCard({ template, onClick, selected }: ReportTemplateCardProps) {
   const getVisualizationIcon = () => {
     if (!template.visualization) return <Table className="h-5 w-5" />
 
@@ -64,9 +54,7 @@ export function ReportTemplateCard({
   return (
     <Card
       className={`cursor-pointer transition-all hover:border-emerald-500/50 hover:shadow-md ${
-        selected
-          ? 'border-emerald-500 ring-2 ring-emerald-500/20'
-          : 'border-zinc-700/50'
+        selected ? 'border-emerald-500 ring-2 ring-emerald-500/20' : 'border-zinc-700/50'
       }`}
       onClick={onClick}
     >
@@ -87,9 +75,7 @@ export function ReportTemplateCard({
       </CardHeader>
       <CardContent>
         {template.description && (
-          <CardDescription className="mb-4 line-clamp-2">
-            {template.description}
-          </CardDescription>
+          <CardDescription className="mb-4 line-clamp-2">{template.description}</CardDescription>
         )}
         <div className="flex items-center justify-between text-xs text-zinc-500">
           <div className="flex items-center gap-1">

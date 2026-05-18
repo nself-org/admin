@@ -14,10 +14,7 @@ interface RouteParams {
  *
  * Action types: created, updated, activated, deactivated, revoked, used, rate_limited
  */
-export async function GET(
-  request: NextRequest,
-  { params }: RouteParams,
-): Promise<NextResponse> {
+export async function GET(request: NextRequest, { params }: RouteParams): Promise<NextResponse> {
   try {
     const { id } = await params
     const searchParams = request.nextUrl.searchParams
@@ -31,14 +28,14 @@ export async function GET(
     if (isNaN(limit) || limit < 1 || limit > 1000) {
       return NextResponse.json(
         { success: false, error: 'Invalid limit. Must be between 1 and 1000' },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
     if (isNaN(offset) || offset < 0) {
       return NextResponse.json(
         { success: false, error: 'Invalid offset. Must be 0 or greater' },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -58,17 +55,14 @@ export async function GET(
           success: false,
           error: `Invalid action filter. Must be one of: ${validActions.join(', ')}`,
         },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
     // Verify the key exists
     const apiKey = await apiKeysApi.getApiKeyById(id)
     if (!apiKey) {
-      return NextResponse.json(
-        { success: false, error: 'API key not found' },
-        { status: 404 },
-      )
+      return NextResponse.json({ success: false, error: 'API key not found' }, { status: 404 })
     }
 
     const logs = await apiKeysApi.getApiKeyLogs(id, {
@@ -101,7 +95,7 @@ export async function GET(
         error: 'Failed to fetch API key logs',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

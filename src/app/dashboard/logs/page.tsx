@@ -58,13 +58,16 @@ function LogsContent() {
   const [autoRefresh, setAutoRefresh] = useState(false)
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null)
 
-  const buildQuery = useCallback((offset = 0) => {
-    const params = new URLSearchParams({ limit: '100', offset: String(offset) })
-    if (levelFilter !== 'all') params.set('level', levelFilter)
-    if (serviceFilter !== 'all') params.set('service', serviceFilter)
-    if (search.trim()) params.set('search', search.trim())
-    return `/api/logs?${params.toString()}`
-  }, [levelFilter, serviceFilter, search])
+  const buildQuery = useCallback(
+    (offset = 0) => {
+      const params = new URLSearchParams({ limit: '100', offset: String(offset) })
+      if (levelFilter !== 'all') params.set('level', levelFilter)
+      if (serviceFilter !== 'all') params.set('service', serviceFilter)
+      if (search.trim()) params.set('search', search.trim())
+      return `/api/logs?${params.toString()}`
+    },
+    [levelFilter, serviceFilter, search]
+  )
 
   const fetchLogs = useCallback(async () => {
     setLoading(true)
@@ -116,10 +119,7 @@ function LogsContent() {
       const res = await fetch(buildQuery(data.entries.length))
       if (res.ok) {
         const more: LogsData = await res.json()
-        setData((prev) => prev
-          ? { ...more, entries: [...prev.entries, ...more.entries] }
-          : more
-        )
+        setData((prev) => (prev ? { ...more, entries: [...prev.entries, ...more.entries] } : more))
       }
     } catch {
       // silently fail load-more
@@ -148,18 +148,16 @@ function LogsContent() {
   // State 5: offline
   if (offline) {
     return (
-      <div className="p-6 space-y-4">
-        <div className="flex items-center gap-3 p-4 rounded-lg bg-yellow-500/10 border border-yellow-500/30">
-          <WifiOff className="h-5 w-5 text-yellow-500 flex-shrink-0" />
+      <div className="space-y-4 p-6">
+        <div className="flex items-center gap-3 rounded-lg border border-yellow-500/30 bg-yellow-500/10 p-4">
+          <WifiOff className="h-5 w-5 flex-shrink-0 text-yellow-500" />
           <div>
             <p className="font-medium text-yellow-400">Cannot reach backend</p>
-            <p className="text-sm text-gray-400 mt-0.5">
-              Logs require a running nself stack.
-            </p>
+            <p className="mt-0.5 text-sm text-gray-400">Logs require a running nself stack.</p>
           </div>
         </div>
         <Button onClick={fetchLogs} disabled={loading} variant="secondary" size="sm">
-          <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
+          <RefreshCw className={`mr-2 h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
           Retry
         </Button>
       </div>
@@ -169,16 +167,16 @@ function LogsContent() {
   // State 4: error
   if (error && !data) {
     return (
-      <div className="p-6 space-y-4">
-        <div className="flex items-center gap-3 p-4 rounded-lg bg-red-500/10 border border-red-500/30">
-          <AlertTriangle className="h-5 w-5 text-red-400 flex-shrink-0" />
+      <div className="space-y-4 p-6">
+        <div className="flex items-center gap-3 rounded-lg border border-red-500/30 bg-red-500/10 p-4">
+          <AlertTriangle className="h-5 w-5 flex-shrink-0 text-red-400" />
           <div>
             <p className="font-medium text-red-400">Failed to load logs</p>
-            <p className="text-sm text-gray-400 mt-0.5">{error}</p>
+            <p className="mt-0.5 text-sm text-gray-400">{error}</p>
           </div>
         </div>
         <Button onClick={fetchLogs} disabled={loading} variant="secondary" size="sm">
-          <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
+          <RefreshCw className={`mr-2 h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
           Retry
         </Button>
       </div>
@@ -189,10 +187,16 @@ function LogsContent() {
   if (!data) {
     return (
       <div className="p-6 text-center text-gray-400">
-        <FileText className="h-8 w-8 mx-auto mb-2 opacity-50" />
+        <FileText className="mx-auto mb-2 h-8 w-8 opacity-50" />
         <p>No log data available.</p>
-        <Button onClick={fetchLogs} disabled={loading} variant="secondary" size="sm" className="mt-3">
-          <RefreshCw className="h-4 w-4 mr-2" />
+        <Button
+          onClick={fetchLogs}
+          disabled={loading}
+          variant="secondary"
+          size="sm"
+          className="mt-3"
+        >
+          <RefreshCw className="mr-2 h-4 w-4" />
           Load Logs
         </Button>
       </div>
@@ -201,32 +205,30 @@ function LogsContent() {
 
   // States 6+7: success
   return (
-    <div className="p-6 space-y-4">
+    <div className="space-y-4 p-6">
       {/* Header */}
-      <div className="flex items-center justify-between flex-wrap gap-3">
+      <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h2 className="text-xl font-semibold text-white">System Logs</h2>
-          <p className="text-sm text-gray-400 mt-1">
-            {data.total.toLocaleString()} total entries
-          </p>
+          <p className="mt-1 text-sm text-gray-400">{data.total.toLocaleString()} total entries</p>
         </div>
         <div className="flex items-center gap-2">
           <button
             onClick={() => setAutoRefresh((v) => !v)}
-            className={`px-3 py-1.5 rounded text-xs font-medium border transition-colors ${
+            className={`rounded border px-3 py-1.5 text-xs font-medium transition-colors ${
               autoRefresh
-                ? 'bg-sky-500/20 text-sky-400 border-sky-500/30'
-                : 'bg-white/5 text-gray-400 border-white/10 hover:bg-white/10'
+                ? 'border-sky-500/30 bg-sky-500/20 text-sky-400'
+                : 'border-white/10 bg-white/5 text-gray-400 hover:bg-white/10'
             }`}
           >
             {autoRefresh ? 'Auto-refresh ON' : 'Auto-refresh'}
           </button>
           <Button onClick={downloadLogs} variant="secondary" size="sm">
-            <Download className="h-4 w-4 mr-2" />
+            <Download className="mr-2 h-4 w-4" />
             Export
           </Button>
           <Button onClick={fetchLogs} disabled={loading} variant="secondary" size="sm">
-            <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
+            <RefreshCw className={`mr-2 h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
             {loading ? 'Loading…' : 'Refresh'}
           </Button>
         </div>
@@ -234,20 +236,20 @@ function LogsContent() {
 
       {/* Filters */}
       <div className="flex flex-wrap gap-3">
-        <div className="relative flex-1 min-w-[180px]">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
+        <div className="relative min-w-[180px] flex-1">
+          <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-gray-500" />
           <input
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search messages…"
-            className="w-full pl-9 pr-3 py-2 bg-white/5 border border-white/10 rounded-lg text-sm text-white placeholder-gray-500 focus:outline-none focus:border-sky-500/50"
+            className="w-full rounded-lg border border-white/10 bg-white/5 py-2 pr-3 pl-9 text-sm text-white placeholder-gray-500 focus:border-sky-500/50 focus:outline-none"
           />
         </div>
         <select
           value={levelFilter}
           onChange={(e) => setLevelFilter(e.target.value as typeof levelFilter)}
-          className="px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-sm text-gray-300 focus:outline-none focus:border-sky-500/50"
+          className="rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-gray-300 focus:border-sky-500/50 focus:outline-none"
         >
           <option value="all">All levels</option>
           <option value="error">Error</option>
@@ -259,11 +261,13 @@ function LogsContent() {
           <select
             value={serviceFilter}
             onChange={(e) => setServiceFilter(e.target.value)}
-            className="px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-sm text-gray-300 focus:outline-none focus:border-sky-500/50"
+            className="rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-gray-300 focus:border-sky-500/50 focus:outline-none"
           >
             <option value="all">All services</option>
             {data.services.map((s) => (
-              <option key={s} value={s}>{s}</option>
+              <option key={s} value={s}>
+                {s}
+              </option>
             ))}
           </select>
         )}
@@ -271,36 +275,38 @@ function LogsContent() {
 
       {/* Log entries */}
       {data.entries.length === 0 ? (
-        <div className="text-center py-12 text-gray-500">
-          <FileText className="h-8 w-8 mx-auto mb-2 opacity-50" />
+        <div className="py-12 text-center text-gray-500">
+          <FileText className="mx-auto mb-2 h-8 w-8 opacity-50" />
           <p>No log entries match your filters.</p>
         </div>
       ) : (
-        <div className="rounded-lg border border-white/10 bg-black/30 font-mono text-xs overflow-hidden">
+        <div className="overflow-hidden rounded-lg border border-white/10 bg-black/30 font-mono text-xs">
           <div className="max-h-[60vh] overflow-y-auto">
             {data.entries.map((entry) => (
               <div
                 key={entry.id}
-                className={`border-b border-white/5 last:border-0 cursor-pointer hover:bg-white/5 transition-colors ${
+                className={`cursor-pointer border-b border-white/5 transition-colors last:border-0 hover:bg-white/5 ${
                   expandedId === entry.id ? 'bg-white/5' : ''
                 }`}
                 onClick={() => setExpandedId(expandedId === entry.id ? null : entry.id)}
               >
                 <div className="flex items-start gap-2 px-3 py-1.5">
-                  <span className="text-gray-600 flex-shrink-0 w-20 truncate">
+                  <span className="w-20 flex-shrink-0 truncate text-gray-600">
                     {new Date(entry.timestamp).toTimeString().slice(0, 8)}
                   </span>
-                  <span className={`flex-shrink-0 w-10 uppercase font-bold ${LEVEL_COLORS[entry.level]}`}>
+                  <span
+                    className={`w-10 flex-shrink-0 font-bold uppercase ${LEVEL_COLORS[entry.level]}`}
+                  >
                     {entry.level.slice(0, 4)}
                   </span>
-                  <span className={`flex-shrink-0 text-gray-500 w-24 truncate`}>
+                  <span className={`w-24 flex-shrink-0 truncate text-gray-500`}>
                     {entry.service}
                   </span>
-                  <span className="text-gray-300 break-all">{entry.message}</span>
+                  <span className="break-all text-gray-300">{entry.message}</span>
                 </div>
                 {expandedId === entry.id && entry.meta && (
-                  <div className={`mx-3 mb-2 p-2 rounded ${LEVEL_BG[entry.level]} text-gray-400`}>
-                    <pre className="whitespace-pre-wrap break-all">
+                  <div className={`mx-3 mb-2 rounded p-2 ${LEVEL_BG[entry.level]} text-gray-400`}>
+                    <pre className="break-all whitespace-pre-wrap">
                       {JSON.stringify(entry.meta, null, 2)}
                     </pre>
                   </div>
@@ -314,16 +320,11 @@ function LogsContent() {
       {/* Load more */}
       {data.hasMore && (
         <div className="text-center">
-          <Button
-            onClick={loadMore}
-            disabled={loadingMore}
-            variant="secondary"
-            size="sm"
-          >
+          <Button onClick={loadMore} disabled={loadingMore} variant="secondary" size="sm">
             {loadingMore ? (
-              <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
             ) : (
-              <ChevronDown className="h-4 w-4 mr-2" />
+              <ChevronDown className="mr-2 h-4 w-4" />
             )}
             {loadingMore ? 'Loading…' : 'Load more'}
           </Button>

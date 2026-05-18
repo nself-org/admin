@@ -3,14 +3,7 @@
 import { DashboardSkeleton } from '@/components/skeletons'
 import { useOrganization } from '@/hooks/useOrganization'
 import { useOrgTeams } from '@/hooks/useOrgTeams'
-import {
-  ArrowLeft,
-  MoreHorizontal,
-  Plus,
-  Search,
-  Trash2,
-  Users,
-} from 'lucide-react'
+import { ArrowLeft, MoreHorizontal, Plus, Search, Trash2, Users } from 'lucide-react'
 import Link from 'next/link'
 import { useParams, useRouter } from 'next/navigation'
 import { useState } from 'react'
@@ -19,12 +12,7 @@ export default function OrgTeamsPage() {
   const params = useParams()
   const router = useRouter()
   const orgId = params.id as string
-  const {
-    org,
-    members,
-    isLoading: orgLoading,
-    error: orgError,
-  } = useOrganization(orgId)
+  const { org, members, isLoading: orgLoading, error: orgError } = useOrganization(orgId)
   const { teams, isLoading: teamsLoading, create, remove } = useOrgTeams(orgId)
   const [searchQuery, setSearchQuery] = useState('')
   const [showCreateModal, setShowCreateModal] = useState(false)
@@ -46,7 +34,7 @@ export default function OrgTeamsPage() {
   }
 
   const filteredTeams = teams.filter((team) =>
-    team.name.toLowerCase().includes(searchQuery.toLowerCase()),
+    team.name.toLowerCase().includes(searchQuery.toLowerCase())
   )
 
   const getTeamMemberCount = (teamId: string) => {
@@ -72,9 +60,7 @@ export default function OrgTeamsPage() {
       setNewTeamDescription('')
       router.push(`/org/${orgId}/teams/${team.id}`)
     } catch (err) {
-      setCreateError(
-        err instanceof Error ? err.message : 'Failed to create team',
-      )
+      setCreateError(err instanceof Error ? err.message : 'Failed to create team')
     }
   }
 
@@ -95,9 +81,7 @@ export default function OrgTeamsPage() {
           <ArrowLeft className="h-4 w-4" /> Back to {org.name}
         </Link>
         <h1 className="mt-4 text-2xl font-semibold text-white">Teams</h1>
-        <p className="text-sm text-zinc-400">
-          Organize members into teams ({teams.length} total)
-        </p>
+        <p className="text-sm text-zinc-400">Organize members into teams ({teams.length} total)</p>
       </div>
 
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
@@ -140,9 +124,7 @@ export default function OrgTeamsPage() {
                   </div>
                 </div>
                 {team.description && (
-                  <p className="line-clamp-2 text-sm text-zinc-400">
-                    {team.description}
-                  </p>
+                  <p className="line-clamp-2 text-sm text-zinc-400">{team.description}</p>
                 )}
               </Link>
 
@@ -212,9 +194,7 @@ export default function OrgTeamsPage() {
             <form onSubmit={handleCreateTeam} className="p-6">
               <div className="space-y-4">
                 <div>
-                  <label className="mb-2 block text-sm text-zinc-400">
-                    Team Name *
-                  </label>
+                  <label className="mb-2 block text-sm text-zinc-400">Team Name *</label>
                   <input
                     type="text"
                     value={newTeamName}
@@ -225,9 +205,7 @@ export default function OrgTeamsPage() {
                 </div>
 
                 <div>
-                  <label className="mb-2 block text-sm text-zinc-400">
-                    Description
-                  </label>
+                  <label className="mb-2 block text-sm text-zinc-400">Description</label>
                   <textarea
                     value={newTeamDescription}
                     onChange={(e) => setNewTeamDescription(e.target.value)}
@@ -237,9 +215,7 @@ export default function OrgTeamsPage() {
                   />
                 </div>
 
-                {createError && (
-                  <p className="text-sm text-red-400">{createError}</p>
-                )}
+                {createError && <p className="text-sm text-red-400">{createError}</p>}
               </div>
 
               <div className="mt-6 flex justify-end gap-3">

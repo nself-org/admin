@@ -7,14 +7,7 @@ import { PageContent } from '@/components/ui/page-content'
 import { PageHeader } from '@/components/ui/page-header'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useApiKeys, useApiKeyStats } from '@/hooks/useApiKeys'
-import {
-  Activity,
-  AlertTriangle,
-  CheckCircle2,
-  Key,
-  Plus,
-  ShieldOff,
-} from 'lucide-react'
+import { Activity, AlertTriangle, CheckCircle2, Key, Plus, ShieldOff } from 'lucide-react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 
@@ -28,10 +21,7 @@ export default function ApiKeysPage() {
       <PageHeader
         title="API Keys"
         description="Manage API keys for programmatic access to your services"
-        breadcrumbs={[
-          { label: 'Settings', href: '/settings' },
-          { label: 'API Keys' },
-        ]}
+        breadcrumbs={[{ label: 'Settings', href: '/settings' }, { label: 'API Keys' }]}
         actions={
           <Link href="/settings/api-keys/new">
             <Button>
@@ -86,9 +76,7 @@ export default function ApiKeysPage() {
                 {isLoadingStats ? (
                   <Skeleton className="h-8 w-16" />
                 ) : (
-                  <p className="text-2xl font-bold">
-                    {stats?.expiredKeys ?? 0}
-                  </p>
+                  <p className="text-2xl font-bold">{stats?.expiredKeys ?? 0}</p>
                 )}
               </div>
             </div>
@@ -104,9 +92,7 @@ export default function ApiKeysPage() {
                 {isLoadingStats ? (
                   <Skeleton className="h-8 w-16" />
                 ) : (
-                  <p className="text-2xl font-bold">
-                    {stats?.revokedKeys ?? 0}
-                  </p>
+                  <p className="text-2xl font-bold">{stats?.revokedKeys ?? 0}</p>
                 )}
               </div>
             </div>
@@ -121,9 +107,7 @@ export default function ApiKeysPage() {
                 <Activity className="h-5 w-5 text-blue-600 dark:text-blue-400" />
               </div>
               <div>
-                <p className="text-muted-foreground text-sm">
-                  Total API Requests (Last 24h)
-                </p>
+                <p className="text-muted-foreground text-sm">Total API Requests (Last 24h)</p>
                 <p className="text-2xl font-bold">
                   {stats.totalRequests24h?.toLocaleString() ?? 0}
                 </p>
@@ -143,13 +127,11 @@ export default function ApiKeysPage() {
           <ApiKeyList
             onCreateClick={() => router.push('/settings/api-keys/new')}
             onKeySelect={(id) => router.push(`/settings/api-keys/${id}`)}
-            onEditClick={(id) =>
-              router.push(`/settings/api-keys/${id}?edit=true`)
-            }
+            onEditClick={(id) => router.push(`/settings/api-keys/${id}?edit=true`)}
             onRevokeClick={(id) => {
               if (
                 confirm(
-                  'Are you sure you want to revoke this API key? This action cannot be undone.',
+                  'Are you sure you want to revoke this API key? This action cannot be undone.'
                 )
               ) {
                 // Handle revoke - would typically call the API
@@ -159,7 +141,7 @@ export default function ApiKeysPage() {
             onDeleteClick={(_id) => {
               if (
                 confirm(
-                  'Are you sure you want to delete this API key? This action cannot be undone.',
+                  'Are you sure you want to delete this API key? This action cannot be undone.'
                 )
               ) {
                 // Handle delete - would typically call the API
@@ -177,8 +159,7 @@ export default function ApiKeysPage() {
               No API Keys Yet
             </h3>
             <p className="mt-2 text-sm text-zinc-500 dark:text-zinc-400">
-              Create your first API key to enable programmatic access to your
-              services.
+              Create your first API key to enable programmatic access to your services.
             </p>
             <Link href="/settings/api-keys/new" className="mt-4 inline-block">
               <Button>

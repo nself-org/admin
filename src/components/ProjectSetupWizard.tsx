@@ -797,8 +797,7 @@ interface ProjectSetupWizardProps {
 
 export function ProjectSetupWizard({ mode = 'new' }: ProjectSetupWizardProps) {
   const router = useRouter()
-  const { projectStatus, checkProjectStatus, setProjectSetup } =
-    useProjectStore()
+  const { projectStatus, checkProjectStatus, setProjectSetup } = useProjectStore()
 
   const [currentStep, setCurrentStep] = useState<WizardStep>('initial')
   const [isExecuting, setIsExecuting] = useState(false)
@@ -933,10 +932,7 @@ export function ProjectSetupWizard({ mode = 'new' }: ProjectSetupWizardProps) {
   const currentStepIndex = steps.indexOf(currentStep)
 
   // Domain validation function
-  const validateDomain = (
-    domain: string,
-    environment: string,
-  ): string | null => {
+  const validateDomain = (domain: string, environment: string): string | null => {
     if (!domain) {
       return 'Domain is required'
     }
@@ -958,9 +954,7 @@ export function ProjectSetupWizard({ mode = 'new' }: ProjectSetupWizardProps) {
         /\.dev$/,
       ]
 
-      const isValidDev = devPatterns.some((pattern) =>
-        pattern.test(cleanDomain),
-      )
+      const isValidDev = devPatterns.some((pattern) => pattern.test(cleanDomain))
       if (!isValidDev) {
         return 'For development, use localhost, *.local, local.nself.org, or a local IP address'
       }
@@ -991,8 +985,7 @@ export function ProjectSetupWizard({ mode = 'new' }: ProjectSetupWizardProps) {
     if (!config.projectName) {
       errors.projectName = 'Project name is required'
     } else if (!/^[a-z0-9_-]+$/.test(config.projectName)) {
-      errors.projectName =
-        'Only lowercase letters, numbers, hyphens, and underscores allowed'
+      errors.projectName = 'Only lowercase letters, numbers, hyphens, and underscores allowed'
     }
 
     const domainError = validateDomain(config.domain, config.environment)
@@ -1003,13 +996,11 @@ export function ProjectSetupWizard({ mode = 'new' }: ProjectSetupWizardProps) {
     if (!config.databaseName) {
       errors.databaseName = 'Database name is required'
     } else if (!/^[a-z0-9_]+$/.test(config.databaseName)) {
-      errors.databaseName =
-        'Only lowercase letters, numbers, and underscores allowed'
+      errors.databaseName = 'Only lowercase letters, numbers, and underscores allowed'
     }
 
     if (config.environment === 'prod' && config.databasePassword.length < 12) {
-      errors.databasePassword =
-        'Production requires a strong password (12+ characters)'
+      errors.databasePassword = 'Production requires a strong password (12+ characters)'
     }
 
     setValidationErrors(errors)
@@ -1065,9 +1056,7 @@ export function ProjectSetupWizard({ mode = 'new' }: ProjectSetupWizardProps) {
 
             if (initData.success && initData.config) {
               setConfig(initData.config)
-              setDomainPreview(
-                `https://admin.${initData.config.domain || 'localhost'}`,
-              )
+              setDomainPreview(`https://admin.${initData.config.domain || 'localhost'}`)
               setCurrentStep('initial')
             }
           }
@@ -1087,9 +1076,7 @@ export function ProjectSetupWizard({ mode = 'new' }: ProjectSetupWizardProps) {
             if (resetData.config) {
               // Use config from preserved .env.local
               setConfig(resetData.config)
-              setDomainPreview(
-                `https://admin.${resetData.config.domain || 'localhost'}`,
-              )
+              setDomainPreview(`https://admin.${resetData.config.domain || 'localhost'}`)
               // Jump to review step since we're editing
               setCurrentStep('review')
             }
@@ -1101,9 +1088,7 @@ export function ProjectSetupWizard({ mode = 'new' }: ProjectSetupWizardProps) {
 
           if (initData.success && initData.config) {
             setConfig(initData.config)
-            setDomainPreview(
-              `https://admin.${initData.config.domain || 'localhost'}`,
-            )
+            setDomainPreview(`https://admin.${initData.config.domain || 'localhost'}`)
             setCurrentStep('initial')
           }
         }
@@ -1231,7 +1216,7 @@ export function ProjectSetupWizard({ mode = 'new' }: ProjectSetupWizardProps) {
           .filter((app) => app.enabled)
           .map(
             (app) =>
-              `${app.name}:${app.displayName}:${app.tablePrefix}:${app.port}:${app.subdomain}`,
+              `${app.name}:${app.displayName}:${app.tablePrefix}:${app.port}:${app.subdomain}`
           )
           .join(',')
 
@@ -1239,10 +1224,7 @@ export function ProjectSetupWizard({ mode = 'new' }: ProjectSetupWizardProps) {
         if (config.environment === 'dev') {
           envData['NGINX_FRONTEND_ROUTES'] = config.frontendApps
             .filter((app) => app.enabled && app.deployment === 'local')
-            .map(
-              (app) =>
-                `${app.subdomain}.${config.domain}:localhost:${app.port}`,
-            )
+            .map((app) => `${app.subdomain}.${config.domain}:localhost:${app.port}`)
             .join(',')
         }
       }
@@ -1314,9 +1296,7 @@ export function ProjectSetupWizard({ mode = 'new' }: ProjectSetupWizardProps) {
                   type="text"
                   value={config.projectName}
                   onChange={(e) => {
-                    const value = e.target.value
-                      .toLowerCase()
-                      .replace(/[^a-z0-9_-]/g, '')
+                    const value = e.target.value.toLowerCase().replace(/[^a-z0-9_-]/g, '')
                     setConfig({ ...config, projectName: value })
                     if (validationErrors.projectName) {
                       setValidationErrors({
@@ -1346,8 +1326,7 @@ export function ProjectSetupWizard({ mode = 'new' }: ProjectSetupWizardProps) {
                 <select
                   value={config.environment}
                   onChange={(e) => {
-                    const newEnv = e.target
-                      .value as ProjectConfig['environment']
+                    const newEnv = e.target.value as ProjectConfig['environment']
                     setConfig({ ...config, environment: newEnv })
                     const error = validateDomain(config.domain, newEnv)
                     setValidationErrors({
@@ -1370,13 +1349,12 @@ export function ProjectSetupWizard({ mode = 'new' }: ProjectSetupWizardProps) {
                     <span className="cursor-help">ⓘ</span>
                     <div className="absolute bottom-full left-1/2 z-50 mb-2 hidden w-72 -translate-x-1/2 rounded-lg bg-zinc-900 p-2 text-xs text-white shadow-lg group-hover:block">
                       <div className="absolute bottom-0 left-1/2 h-2 w-2 -translate-x-1/2 translate-y-1/2 rotate-45 bg-zinc-900"></div>
-                      <strong>Local development:</strong> Use
-                      &quot;localhost&quot; or &quot;local.nself.org&quot;
+                      <strong>Local development:</strong> Use &quot;localhost&quot; or
+                      &quot;local.nself.org&quot;
                       <br />
                       <br />
-                      <strong>Staging/Production:</strong> Your primary domain.
-                      Please note you can still define multiple domains per app,
-                      remote schema, or API endpoint later.
+                      <strong>Staging/Production:</strong> Your primary domain. Please note you can
+                      still define multiple domains per app, remote schema, or API endpoint later.
                     </div>
                   </span>
                   <span className="ml-2 text-xs text-zinc-500 dark:text-zinc-400">
@@ -1401,9 +1379,7 @@ export function ProjectSetupWizard({ mode = 'new' }: ProjectSetupWizardProps) {
                       ? 'border-red-500 shadow-[0_0_0_3px_rgba(239,68,68,0.1)] focus:border-red-500 focus:ring-2 focus:ring-red-500/20 focus:outline-none dark:border-red-500 dark:shadow-[0_0_0_3px_rgba(239,68,68,0.2)]'
                       : 'border-zinc-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none dark:border-zinc-600'
                   }`}
-                  placeholder={
-                    config.environment === 'dev' ? 'localhost' : 'example.com'
-                  }
+                  placeholder={config.environment === 'dev' ? 'localhost' : 'example.com'}
                 />
                 {validationErrors.domain && (
                   <p className="mt-1 text-xs text-red-600 dark:text-red-400">
@@ -1419,9 +1395,7 @@ export function ProjectSetupWizard({ mode = 'new' }: ProjectSetupWizardProps) {
                 <input
                   type="email"
                   value={config.adminEmail}
-                  onChange={(e) =>
-                    setConfig({ ...config, adminEmail: e.target.value })
-                  }
+                  onChange={(e) => setConfig({ ...config, adminEmail: e.target.value })}
                   className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-zinc-900 transition-all focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none dark:border-zinc-600 dark:bg-zinc-800 dark:text-white"
                   placeholder="admin@example.com"
                 />
@@ -1435,9 +1409,7 @@ export function ProjectSetupWizard({ mode = 'new' }: ProjectSetupWizardProps) {
                   type="text"
                   value={config.databaseName}
                   onChange={(e) => {
-                    const value = e.target.value
-                      .toLowerCase()
-                      .replace(/[^a-z0-9_]/g, '')
+                    const value = e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, '')
                     setConfig({ ...config, databaseName: value })
                     if (validationErrors.databaseName) {
                       setValidationErrors({
@@ -1489,11 +1461,7 @@ export function ProjectSetupWizard({ mode = 'new' }: ProjectSetupWizardProps) {
                     onClick={() => setShowPassword(!showPassword)}
                     className="absolute top-1/2 right-2 -translate-y-1/2 p-1 text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-200"
                   >
-                    {showPassword ? (
-                      <EyeOff className="h-4 w-4" />
-                    ) : (
-                      <Eye className="h-4 w-4" />
-                    )}
+                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                   </button>
                 </div>
                 {validationErrors.databasePassword && (
@@ -1510,9 +1478,7 @@ export function ProjectSetupWizard({ mode = 'new' }: ProjectSetupWizardProps) {
                 <input
                   type="checkbox"
                   checked={config.backupEnabled}
-                  onChange={(e) =>
-                    setConfig({ ...config, backupEnabled: e.target.checked })
-                  }
+                  onChange={(e) => setConfig({ ...config, backupEnabled: e.target.checked })}
                   className="text-blue-600"
                 />
                 <span className="text-zinc-700 dark:text-zinc-300">
@@ -1521,10 +1487,9 @@ export function ProjectSetupWizard({ mode = 'new' }: ProjectSetupWizardProps) {
                     <span className="cursor-help text-xs">ⓘ</span>
                     <div className="absolute bottom-full left-1/2 z-50 mb-2 hidden w-64 -translate-x-1/2 rounded-lg bg-zinc-900 p-2 text-xs text-white shadow-lg group-hover:block">
                       <div className="absolute bottom-0 left-1/2 h-2 w-2 -translate-x-1/2 translate-y-1/2 rotate-45 bg-zinc-900"></div>
-                      Schedules backups via host system cron. The nself CLI runs
-                      backup operations using temporary containers to export
-                      database and volumes. Default: Daily at 2 AM. Not a Docker
-                      service.
+                      Schedules backups via host system cron. The nself CLI runs backup operations
+                      using temporary containers to export database and volumes. Default: Daily at 2
+                      AM. Not a Docker service.
                     </div>
                   </span>
                 </span>
@@ -1534,9 +1499,7 @@ export function ProjectSetupWizard({ mode = 'new' }: ProjectSetupWizardProps) {
                   <input
                     type="text"
                     value={config.backupSchedule}
-                    onChange={(e) =>
-                      setConfig({ ...config, backupSchedule: e.target.value })
-                    }
+                    onChange={(e) => setConfig({ ...config, backupSchedule: e.target.value })}
                     className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-zinc-900 dark:border-zinc-600 dark:bg-zinc-800 dark:text-white"
                     placeholder="0 2 * * * (daily at 2 AM)"
                   />
@@ -1550,9 +1513,8 @@ export function ProjectSetupWizard({ mode = 'new' }: ProjectSetupWizardProps) {
             {config.environment === 'prod' && (
               <div className="rounded-lg bg-yellow-50 p-4 dark:bg-yellow-900/20">
                 <p className="text-sm text-yellow-700 dark:text-yellow-300">
-                  <strong>Production Mode:</strong> Make sure to use strong
-                  passwords and secrets. Consider moving sensitive values to
-                  .env.secrets file.
+                  <strong>Production Mode:</strong> Make sure to use strong passwords and secrets.
+                  Consider moving sensitive values to .env.secrets file.
                 </p>
               </div>
             )}
@@ -1606,16 +1568,13 @@ nself start`}
                   <div className="flex items-start space-x-3">
                     <Database className="mt-0.5 h-5 w-5 text-blue-500" />
                     <div>
-                      <h4 className="font-medium text-zinc-900 dark:text-white">
-                        PostgreSQL
-                      </h4>
+                      <h4 className="font-medium text-zinc-900 dark:text-white">PostgreSQL</h4>
                       <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
                         Primary database with advanced features
                       </p>
                       <div className="mt-2 text-xs text-zinc-500 dark:text-zinc-500">
-                        Version: {config.postgres.version} | Port:{' '}
-                        {config.postgres.port} | Max Connections:{' '}
-                        {config.postgres.maxConnections}
+                        Version: {config.postgres.version} | Port: {config.postgres.port} | Max
+                        Connections: {config.postgres.maxConnections}
                       </div>
                     </div>
                   </div>
@@ -1635,16 +1594,14 @@ nself start`}
                   <div className="flex items-start space-x-3">
                     <Server className="mt-0.5 h-5 w-5 text-green-500" />
                     <div>
-                      <h4 className="font-medium text-zinc-900 dark:text-white">
-                        Hasura GraphQL
-                      </h4>
+                      <h4 className="font-medium text-zinc-900 dark:text-white">Hasura GraphQL</h4>
                       <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
                         Instant GraphQL API on your database
                       </p>
                       <div className="mt-2 text-xs text-zinc-500 dark:text-zinc-500">
                         Version: {config.hasura.version} | Console:{' '}
-                        {config.hasura.consoleEnabled ? 'Enabled' : 'Disabled'}{' '}
-                        | Dev Mode: {config.hasura.devMode ? 'On' : 'Off'}
+                        {config.hasura.consoleEnabled ? 'Enabled' : 'Disabled'} | Dev Mode:{' '}
+                        {config.hasura.devMode ? 'On' : 'Off'}
                       </div>
                     </div>
                   </div>
@@ -1664,15 +1621,12 @@ nself start`}
                   <div className="flex items-start space-x-3">
                     <Globe className="mt-0.5 h-5 w-5 text-sky-500" />
                     <div>
-                      <h4 className="font-medium text-zinc-900 dark:text-white">
-                        Nginx Proxy
-                      </h4>
+                      <h4 className="font-medium text-zinc-900 dark:text-white">Nginx Proxy</h4>
                       <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
                         Reverse proxy and SSL termination
                       </p>
                       <div className="mt-2 text-xs text-zinc-500 dark:text-zinc-500">
-                        SSL: {config.nginx.sslMode} | HTTP:{' '}
-                        {config.nginx.httpPort} | HTTPS:{' '}
+                        SSL: {config.nginx.sslMode} | HTTP: {config.nginx.httpPort} | HTTPS:{' '}
                         {config.nginx.httpsPort}
                       </div>
                     </div>
@@ -1700,8 +1654,8 @@ nself start`}
                         JWT-based authentication system
                       </p>
                       <div className="mt-2 text-xs text-zinc-500 dark:text-zinc-500">
-                        JWT Expires: {config.auth.jwtExpiresIn}s | SMTP:{' '}
-                        {config.auth.smtpHost}:{config.auth.smtpPort}
+                        JWT Expires: {config.auth.jwtExpiresIn}s | SMTP: {config.auth.smtpHost}:
+                        {config.auth.smtpPort}
                       </div>
                     </div>
                   </div>
@@ -1727,8 +1681,8 @@ nself start`}
                   Optional Services
                 </h3>
                 <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
-                  Click on any service card to enable it. Once enabled, you can
-                  configure its settings.
+                  Click on any service card to enable it. Once enabled, you can configure its
+                  settings.
                 </p>
               </div>
               <button
@@ -1973,15 +1927,11 @@ nself start`}
                                 <option value="mailgun">Mailgun</option>
                                 <option value="postmark">Postmark</option>
                                 <option value="resend">Resend</option>
-                                <option value="brevo">
-                                  Brevo (SendinBlue)
-                                </option>
+                                <option value="brevo">Brevo (SendinBlue)</option>
                               </optgroup>
                               <optgroup label="Email Providers">
                                 <option value="gmail">Gmail</option>
-                                <option value="outlook">
-                                  Outlook/Office365
-                                </option>
+                                <option value="outlook">Outlook/Office365</option>
                               </optgroup>
                               <optgroup label="Other Services">
                                 <option value="sparkpost">SparkPost</option>
@@ -2003,38 +1953,37 @@ nself start`}
                                 : config.environment === 'staging'
                                   ? 'Uses SendGrid - 100 emails/day free tier'
                                   : 'Uses SendGrid or AWS SES based on region')}
-                            {config.optionalServices.mail.provider ===
-                              'mailpit' && 'SMTP: 1025 | Web UI: 8025'}
+                            {config.optionalServices.mail.provider === 'mailpit' &&
+                              'SMTP: 1025 | Web UI: 8025'}
                             {config.optionalServices.mail.provider === 'smtp' &&
                               'Custom SMTP configuration'}
-                            {config.optionalServices.mail.provider ===
-                              'sendgrid' && '100 emails/day free'}
+                            {config.optionalServices.mail.provider === 'sendgrid' &&
+                              '100 emails/day free'}
                             {config.optionalServices.mail.provider === 'ses' &&
                               '$0.10 per 1000 emails'}
-                            {config.optionalServices.mail.provider ===
-                              'mailgun' && 'First 1000 emails free'}
-                            {config.optionalServices.mail.provider ===
-                              'postmark' && 'Transactional specialist'}
-                            {config.optionalServices.mail.provider ===
-                              'gmail' && 'Personal/workspace account'}
-                            {config.optionalServices.mail.provider ===
-                              'outlook' && 'Office 365 integration'}
-                            {config.optionalServices.mail.provider ===
-                              'resend' && 'Developer-friendly API'}
-                            {config.optionalServices.mail.provider ===
-                              'brevo' && 'Marketing & transactional'}
-                            {config.optionalServices.mail.provider ===
-                              'sparkpost' && 'Enterprise-ready'}
-                            {config.optionalServices.mail.provider ===
-                              'mandrill' && 'By Mailchimp'}
-                            {config.optionalServices.mail.provider ===
-                              'elastic' && 'High volume sender'}
-                            {config.optionalServices.mail.provider ===
-                              'smtp2go' && 'Reliable delivery'}
-                            {config.optionalServices.mail.provider ===
-                              'mailersend' && 'Transactional emails'}
-                            {config.optionalServices.mail.provider ===
-                              'postfix' && 'Self-hosted server'}
+                            {config.optionalServices.mail.provider === 'mailgun' &&
+                              'First 1000 emails free'}
+                            {config.optionalServices.mail.provider === 'postmark' &&
+                              'Transactional specialist'}
+                            {config.optionalServices.mail.provider === 'gmail' &&
+                              'Personal/workspace account'}
+                            {config.optionalServices.mail.provider === 'outlook' &&
+                              'Office 365 integration'}
+                            {config.optionalServices.mail.provider === 'resend' &&
+                              'Developer-friendly API'}
+                            {config.optionalServices.mail.provider === 'brevo' &&
+                              'Marketing & transactional'}
+                            {config.optionalServices.mail.provider === 'sparkpost' &&
+                              'Enterprise-ready'}
+                            {config.optionalServices.mail.provider === 'mandrill' && 'By Mailchimp'}
+                            {config.optionalServices.mail.provider === 'elastic' &&
+                              'High volume sender'}
+                            {config.optionalServices.mail.provider === 'smtp2go' &&
+                              'Reliable delivery'}
+                            {config.optionalServices.mail.provider === 'mailersend' &&
+                              'Transactional emails'}
+                            {config.optionalServices.mail.provider === 'postfix' &&
+                              'Self-hosted server'}
                           </div>
                         </>
                       )}
@@ -2117,10 +2066,7 @@ nself start`}
                             : 'text-zinc-500 dark:text-zinc-400'
                         }`}
                       >
-                        Monitoring Bundle{' '}
-                        <span className="text-xs font-normal">
-                          (5 services)
-                        </span>
+                        Monitoring Bundle <span className="text-xs font-normal">(5 services)</span>
                       </h4>
                       <p
                         className={`mt-1 text-sm ${
@@ -2129,8 +2075,7 @@ nself start`}
                             : 'text-zinc-400 dark:text-zinc-500'
                         }`}
                       >
-                        Complete observability: Prometheus, Grafana, Loki,
-                        Tempo, Alertmanager
+                        Complete observability: Prometheus, Grafana, Loki, Tempo, Alertmanager
                       </p>
                       {config.optionalServices.monitoring && (
                         <div className="mt-2 text-xs text-zinc-500 dark:text-zinc-500">
@@ -2261,9 +2206,7 @@ nself start`}
                               </option>
                               <optgroup label="Self-Hosted">
                                 <option value="meilisearch">MeiliSearch</option>
-                                <option value="elasticsearch">
-                                  Elasticsearch
-                                </option>
+                                <option value="elasticsearch">Elasticsearch</option>
                                 <option value="opensearch">OpenSearch</option>
                                 <option value="typesense">Typesense</option>
                                 <option value="sonic">Sonic</option>
@@ -2277,28 +2220,26 @@ nself start`}
                             </select>
                           </div>
                           <div className="mt-1 text-xs text-zinc-500 dark:text-zinc-500">
-                            {config.optionalServices.search.provider ===
-                              'auto' &&
+                            {config.optionalServices.search.provider === 'auto' &&
                               (config.environment === 'dev'
                                 ? 'Uses MeiliSearch - Fast, typo-tolerant, minimal resources'
                                 : config.environment === 'staging'
                                   ? 'Uses MeiliSearch - Good for up to 100K documents'
                                   : 'Uses MeiliSearch or Elasticsearch based on scale')}
-                            {config.optionalServices.search.provider ===
-                              'meilisearch' &&
+                            {config.optionalServices.search.provider === 'meilisearch' &&
                               'Port: 7700 | Typo-tolerant | Fast'}
-                            {config.optionalServices.search.provider ===
-                              'elasticsearch' && 'Port: 9200 | Most powerful'}
-                            {config.optionalServices.search.provider ===
-                              'opensearch' && 'Port: 9200 | AWS fork of ES'}
-                            {config.optionalServices.search.provider ===
-                              'typesense' && 'Port: 8108 | Real-time search'}
-                            {config.optionalServices.search.provider ===
-                              'sonic' && 'Port: 1491 | Ultra-fast'}
-                            {config.optionalServices.search.provider ===
-                              'postgres' && 'Built-in full-text search'}
-                            {config.optionalServices.search.provider ===
-                              'algolia' && 'Cloud-based | Instant search'}
+                            {config.optionalServices.search.provider === 'elasticsearch' &&
+                              'Port: 9200 | Most powerful'}
+                            {config.optionalServices.search.provider === 'opensearch' &&
+                              'Port: 9200 | AWS fork of ES'}
+                            {config.optionalServices.search.provider === 'typesense' &&
+                              'Port: 8108 | Real-time search'}
+                            {config.optionalServices.search.provider === 'sonic' &&
+                              'Port: 1491 | Ultra-fast'}
+                            {config.optionalServices.search.provider === 'postgres' &&
+                              'Built-in full-text search'}
+                            {config.optionalServices.search.provider === 'algolia' &&
+                              'Cloud-based | Instant search'}
                           </div>
                         </>
                       )}
@@ -2390,8 +2331,7 @@ nself start`}
                             : 'text-zinc-400 dark:text-zinc-500'
                         }`}
                       >
-                        ML lifecycle platform for experiments, models, and
-                        deployments
+                        ML lifecycle platform for experiments, models, and deployments
                       </p>
                       {config.optionalServices.mlflow && (
                         <div className="mt-2 text-xs text-zinc-500 dark:text-zinc-500">
@@ -2450,8 +2390,7 @@ nself start`}
                   Custom Backend Services
                 </h3>
                 <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
-                  Add your own backend services using templates or custom
-                  configuration.
+                  Add your own backend services using templates or custom configuration.
                 </p>
               </div>
               <button
@@ -2571,9 +2510,7 @@ nself start`}
                     </div>
 
                     <div>
-                      <p className="mb-1 font-semibold text-blue-800 dark:text-blue-200">
-                        🏃 Go
-                      </p>
+                      <p className="mb-1 font-semibold text-blue-800 dark:text-blue-200">🏃 Go</p>
                       <div className="ml-2 space-y-0.5">
                         <div title="Vanilla Go">
                           • <b>Go</b> - Vanilla Go
@@ -2596,9 +2533,7 @@ nself start`}
 
                   <div className="space-y-2">
                     <div>
-                      <p className="mb-1 font-semibold text-blue-800 dark:text-blue-200">
-                        💎 Ruby
-                      </p>
+                      <p className="mb-1 font-semibold text-blue-800 dark:text-blue-200">💎 Ruby</p>
                       <div className="ml-2 space-y-0.5">
                         <div title="Vanilla Ruby scripts">
                           • <b>Ruby</b> - Vanilla scripts
@@ -2663,8 +2598,7 @@ nself start`}
 
               {!showTemplateInfo && (
                 <p className="mt-1 text-xs text-blue-600 dark:text-blue-400">
-                  Choose from 30+ backend frameworks optimized for APIs,
-                  workers, and microservices
+                  Choose from 30+ backend frameworks optimized for APIs, workers, and microservices
                 </p>
               )}
             </div>
@@ -2673,12 +2607,9 @@ nself start`}
               {config.customServices.length === 0 ? (
                 <div className="rounded-lg border-2 border-dashed border-zinc-300 py-8 text-center dark:border-zinc-600">
                   <Server className="mx-auto mb-3 h-12 w-12 text-zinc-400" />
-                  <p className="text-zinc-600 dark:text-zinc-400">
-                    No custom services added yet
-                  </p>
+                  <p className="text-zinc-600 dark:text-zinc-400">No custom services added yet</p>
                   <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-500">
-                    Click &quot;Add Service&quot; to create your first backend
-                    service
+                    Click &quot;Add Service&quot; to create your first backend service
                   </p>
                 </div>
               ) : (
@@ -2713,7 +2644,7 @@ nself start`}
                       <button
                         onClick={() => {
                           const updatedServices = config.customServices.filter(
-                            (_, i) => i !== index,
+                            (_, i) => i !== index
                           )
                           setConfig({
                             ...config,
@@ -2819,8 +2750,7 @@ nself start`}
                           value={service.port}
                           onChange={(e) => {
                             const updatedServices = [...config.customServices]
-                            updatedServices[index].port =
-                              parseInt(e.target.value) || 3000
+                            updatedServices[index].port = parseInt(e.target.value) || 3000
                             setConfig({
                               ...config,
                               customServices: updatedServices,
@@ -2838,9 +2768,8 @@ nself start`}
                             <span className="cursor-help text-xs">ⓘ</span>
                             <div className="absolute bottom-full left-1/2 z-50 mb-2 hidden w-64 -translate-x-1/2 rounded-lg bg-zinc-900 p-2 text-xs text-white shadow-lg group-hover:block">
                               <div className="absolute bottom-0 left-1/2 h-2 w-2 -translate-x-1/2 translate-y-1/2 rotate-45 bg-zinc-900"></div>
-                              Leave empty for no routing, or specify subdomain
-                              (e.g., &quot;api&quot; for api.{config.domain}) or
-                              full URL
+                              Leave empty for no routing, or specify subdomain (e.g.,
+                              &quot;api&quot; for api.{config.domain}) or full URL
                             </div>
                           </span>
                         </label>
@@ -2885,8 +2814,7 @@ nself start`}
                   Frontend Applications
                 </h3>
                 <p className="text-sm text-zinc-600 dark:text-zinc-400">
-                  Register frontend apps that will connect to your backend
-                  services
+                  Register frontend apps that will connect to your backend services
                 </p>
               </div>
               <button
@@ -2950,42 +2878,39 @@ nself start`}
                     <div className="flex items-start space-x-2">
                       <span className="text-blue-500">•</span>
                       <div>
-                        <strong>Database Table Isolation:</strong> Each app gets
-                        its own table prefix (e.g., app1_users, app2_posts)
-                        preventing data collisions in multi-tenant architectures
+                        <strong>Database Table Isolation:</strong> Each app gets its own table
+                        prefix (e.g., app1_users, app2_posts) preventing data collisions in
+                        multi-tenant architectures
                       </div>
                     </div>
                     <div className="flex items-start space-x-2">
                       <span className="text-blue-500">•</span>
                       <div>
-                        <strong>Development Routing:</strong> Automatic
-                        subdomain routing (app.localhost → localhost:3001) for
-                        local development without manual nginx config
+                        <strong>Development Routing:</strong> Automatic subdomain routing
+                        (app.localhost → localhost:3001) for local development without manual nginx
+                        config
                       </div>
                     </div>
                     <div className="flex items-start space-x-2">
                       <span className="text-blue-500">•</span>
                       <div>
-                        <strong>Backend Service Awareness:</strong> Your backend
-                        knows which frontend apps exist, enabling app-specific
-                        configurations, permissions, and API responses
+                        <strong>Backend Service Awareness:</strong> Your backend knows which
+                        frontend apps exist, enabling app-specific configurations, permissions, and
+                        API responses
                       </div>
                     </div>
                     <div className="flex items-start space-x-2">
                       <span className="text-blue-500">•</span>
                       <div>
-                        <strong>Universal Framework Support:</strong> Works with
-                        ANY frontend technology - React, Vue, Angular, Swift,
-                        Kotlin, Flutter, or even vanilla JavaScript. If it can
-                        call APIs or GraphQL, it works!
+                        <strong>Universal Framework Support:</strong> Works with ANY frontend
+                        technology - React, Vue, Angular, Swift, Kotlin, Flutter, or even vanilla
+                        JavaScript. If it can call APIs or GraphQL, it works!
                       </div>
                     </div>
                   </div>
 
                   <button
-                    onClick={() =>
-                      setShowFrameworkExamples(!showFrameworkExamples)
-                    }
+                    onClick={() => setShowFrameworkExamples(!showFrameworkExamples)}
                     className="mt-3 flex items-center space-x-1 text-xs text-blue-600 hover:underline dark:text-blue-400"
                   >
                     {showFrameworkExamples ? (
@@ -2993,10 +2918,7 @@ nself start`}
                     ) : (
                       <ChevronRight className="h-3 w-3" />
                     )}
-                    <span>
-                      {showFrameworkExamples ? 'Hide' : 'Show'} Framework
-                      Examples
-                    </span>
+                    <span>{showFrameworkExamples ? 'Hide' : 'Show'} Framework Examples</span>
                   </button>
 
                   {showFrameworkExamples && (
@@ -3054,8 +2976,7 @@ nself start`}
                     No frontend applications configured yet
                   </p>
                   <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-500">
-                    Click &quot;Add Frontend App&quot; to register your first
-                    application
+                    Click &quot;Add Frontend App&quot; to register your first application
                   </p>
                 </div>
               ) : (
@@ -3084,9 +3005,7 @@ nself start`}
                       </div>
                       <button
                         onClick={() => {
-                          const updatedApps = config.frontendApps.filter(
-                            (_, i) => i !== index,
-                          )
+                          const updatedApps = config.frontendApps.filter((_, i) => i !== index)
                           setConfig({ ...config, frontendApps: updatedApps })
                         }}
                         className="text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300"
@@ -3132,9 +3051,7 @@ nself start`}
                           className="w-full rounded border border-zinc-300 bg-white px-2 py-1 text-sm text-zinc-900 dark:border-zinc-600 dark:bg-zinc-800 dark:text-white"
                           placeholder="app_"
                         />
-                        <p className="mt-0.5 text-xs text-zinc-500">
-                          e.g., app_users, app_posts
-                        </p>
+                        <p className="mt-0.5 text-xs text-zinc-500">e.g., app_users, app_posts</p>
                       </div>
 
                       <div>
@@ -3182,8 +3099,7 @@ nself start`}
                           value={app.port}
                           onChange={(e) => {
                             const updatedApps = [...config.frontendApps]
-                            updatedApps[index].port =
-                              parseInt(e.target.value) || 3000
+                            updatedApps[index].port = parseInt(e.target.value) || 3000
                             setConfig({ ...config, frontendApps: updatedApps })
                           }}
                           className="w-full rounded border border-zinc-300 bg-white px-2 py-1 text-sm text-zinc-900 dark:border-zinc-600 dark:bg-zinc-800 dark:text-white"
@@ -3226,8 +3142,7 @@ nself start`}
                           value={app.deployment}
                           onChange={(e) => {
                             const updatedApps = [...config.frontendApps]
-                            updatedApps[index].deployment = e.target
-                              .value as any
+                            updatedApps[index].deployment = e.target.value as any
                             setConfig({ ...config, frontendApps: updatedApps })
                           }}
                           className="w-full rounded border border-zinc-300 bg-white px-2 py-1 text-sm text-zinc-900 dark:border-zinc-600 dark:bg-zinc-800 dark:text-white"
@@ -3241,19 +3156,16 @@ nself start`}
                       </div>
                     </div>
 
-                    {config.environment === 'dev' &&
-                      app.deployment === 'local' && (
-                        <div className="mt-3 rounded bg-blue-50 p-2 text-xs dark:bg-blue-900/20">
-                          <p className="text-blue-700 dark:text-blue-300">
-                            <b>Dev Routing:</b> {app.subdomain}.{config.domain}{' '}
-                            → localhost:{app.port}
-                          </p>
-                          <p className="mt-1 text-blue-600 dark:text-blue-400">
-                            Nginx will proxy requests from the subdomain to your
-                            local dev server
-                          </p>
-                        </div>
-                      )}
+                    {config.environment === 'dev' && app.deployment === 'local' && (
+                      <div className="mt-3 rounded bg-blue-50 p-2 text-xs dark:bg-blue-900/20">
+                        <p className="text-blue-700 dark:text-blue-300">
+                          <b>Dev Routing:</b> {app.subdomain}.{config.domain} → localhost:{app.port}
+                        </p>
+                        <p className="mt-1 text-blue-600 dark:text-blue-400">
+                          Nginx will proxy requests from the subdomain to your local dev server
+                        </p>
+                      </div>
+                    )}
                   </div>
                 ))
               )}
@@ -3268,8 +3180,8 @@ nself start`}
               Review Configuration & Build Process
             </h3>
             <p className="text-sm text-zinc-600 dark:text-zinc-400">
-              Review your configuration and understand what will be built when
-              you click &quot;Build Project&quot;.
+              Review your configuration and understand what will be built when you click &quot;Build
+              Project&quot;.
             </p>
 
             {/* Build Process Overview */}
@@ -3280,9 +3192,7 @@ nself start`}
               </h4>
               <div className="space-y-2 text-sm">
                 <div className="flex items-start">
-                  <span className="mr-2 font-mono text-blue-700 dark:text-blue-300">
-                    1.
-                  </span>
+                  <span className="mr-2 font-mono text-blue-700 dark:text-blue-300">1.</span>
                   <div>
                     <span className="font-medium text-blue-900 dark:text-blue-100">
                       Write Configuration
@@ -3293,23 +3203,18 @@ nself start`}
                   </div>
                 </div>
                 <div className="flex items-start">
-                  <span className="mr-2 font-mono text-blue-700 dark:text-blue-300">
-                    2.
-                  </span>
+                  <span className="mr-2 font-mono text-blue-700 dark:text-blue-300">2.</span>
                   <div>
                     <span className="font-medium text-blue-900 dark:text-blue-100">
                       Run nself build
                     </span>
                     <p className="mt-0.5 text-xs text-blue-600 dark:text-blue-400">
-                      Executes the CLI to generate docker-compose.yml and
-                      service configs
+                      Executes the CLI to generate docker-compose.yml and service configs
                     </p>
                   </div>
                 </div>
                 <div className="flex items-start">
-                  <span className="mr-2 font-mono text-blue-700 dark:text-blue-300">
-                    3.
-                  </span>
+                  <span className="mr-2 font-mono text-blue-700 dark:text-blue-300">3.</span>
                   <div>
                     <span className="font-medium text-blue-900 dark:text-blue-100">
                       Redirect to Start
@@ -3334,25 +3239,17 @@ nself start`}
                 1. Project Configuration
               </h4>
               <div className="grid grid-cols-2 gap-2 text-sm">
-                <div className="text-zinc-600 dark:text-zinc-400">
-                  Project Name:
-                </div>
+                <div className="text-zinc-600 dark:text-zinc-400">Project Name:</div>
                 <div className="font-medium text-zinc-900 dark:text-white">
                   {config.projectName}
                 </div>
-                <div className="text-zinc-600 dark:text-zinc-400">
-                  Environment:
-                </div>
+                <div className="text-zinc-600 dark:text-zinc-400">Environment:</div>
                 <div className="font-medium text-zinc-900 dark:text-white">
                   {config.environment}
                 </div>
                 <div className="text-zinc-600 dark:text-zinc-400">Domain:</div>
-                <div className="font-medium text-zinc-900 dark:text-white">
-                  {config.domain}
-                </div>
-                <div className="text-zinc-600 dark:text-zinc-400">
-                  Database:
-                </div>
+                <div className="font-medium text-zinc-900 dark:text-white">{config.domain}</div>
+                <div className="text-zinc-600 dark:text-zinc-400">Database:</div>
                 <div className="font-medium text-zinc-900 dark:text-white">
                   {config.databaseName}
                 </div>
@@ -3367,27 +3264,21 @@ nself start`}
               <div className="space-y-2">
                 <div className="flex items-center text-sm">
                   <CheckCircle className="mr-2 h-4 w-4 text-green-500" />
-                  <span className="text-zinc-900 dark:text-white">
-                    PostgreSQL Database
-                  </span>
+                  <span className="text-zinc-900 dark:text-white">PostgreSQL Database</span>
                   <span className="ml-auto text-xs text-zinc-500">
                     Port {config.postgres?.port || 5432}
                   </span>
                 </div>
                 <div className="flex items-center text-sm">
                   <CheckCircle className="mr-2 h-4 w-4 text-green-500" />
-                  <span className="text-zinc-900 dark:text-white">
-                    Hasura GraphQL Engine
-                  </span>
+                  <span className="text-zinc-900 dark:text-white">Hasura GraphQL Engine</span>
                   <span className="ml-auto text-xs text-zinc-500">
                     Port {config.hasura?.port || 8080}
                   </span>
                 </div>
                 <div className="flex items-center text-sm">
                   <CheckCircle className="mr-2 h-4 w-4 text-green-500" />
-                  <span className="text-zinc-900 dark:text-white">
-                    Nginx Reverse Proxy
-                  </span>
+                  <span className="text-zinc-900 dark:text-white">Nginx Reverse Proxy</span>
                   <span className="ml-auto text-xs text-zinc-500">
                     Port {config.nginx?.httpPort || 80}
                     {config.nginx?.sslMode && config.nginx.sslMode !== 'none'
@@ -3400,12 +3291,8 @@ nself start`}
                 </div>
                 <div className="flex items-center text-sm">
                   <CheckCircle className="mr-2 h-4 w-4 text-green-500" />
-                  <span className="text-zinc-900 dark:text-white">
-                    Authentication Service
-                  </span>
-                  <span className="ml-auto text-xs text-zinc-500">
-                    JWT-based Auth
-                  </span>
+                  <span className="text-zinc-900 dark:text-white">Authentication Service</span>
+                  <span className="ml-auto text-xs text-zinc-500">JWT-based Auth</span>
                 </div>
                 {config.backupEnabled && (
                   <div className="flex items-center text-sm">
@@ -3434,22 +3321,17 @@ nself start`}
                   {config.optionalServices.redis && (
                     <div className="flex items-center text-sm">
                       <CheckCircle className="mr-2 h-4 w-4 text-green-500" />
-                      <span className="text-zinc-900 dark:text-white">
-                        Redis Cache
-                      </span>
+                      <span className="text-zinc-900 dark:text-white">Redis Cache</span>
                       <span className="ml-auto text-xs text-zinc-500">
                         Port {config.redisConfig?.port || 6379}
                       </span>
                     </div>
                   )}
                   {config.optionalServices.search.enabled &&
-                    config.optionalServices.search.provider ===
-                      'elasticsearch' && (
+                    config.optionalServices.search.provider === 'elasticsearch' && (
                       <div className="flex items-center text-sm">
                         <CheckCircle className="mr-2 h-4 w-4 text-green-500" />
-                        <span className="text-zinc-900 dark:text-white">
-                          ElasticSearch
-                        </span>
+                        <span className="text-zinc-900 dark:text-white">ElasticSearch</span>
                         <span className="ml-auto text-xs text-zinc-500">
                           Port {config.searchConfig?.port || 9200}
                         </span>
@@ -3458,9 +3340,7 @@ nself start`}
                   {config.optionalServices.mail.enabled && (
                     <div className="flex items-center text-sm">
                       <CheckCircle className="mr-2 h-4 w-4 text-green-500" />
-                      <span className="text-zinc-900 dark:text-white">
-                        Email Service
-                      </span>
+                      <span className="text-zinc-900 dark:text-white">Email Service</span>
                       <span className="ml-auto text-xs text-zinc-500">
                         {config.mailConfig?.provider || 'SMTP'}
                       </span>
@@ -3469,9 +3349,7 @@ nself start`}
                   {config.optionalServices.adminUI && (
                     <div className="flex items-center text-sm">
                       <CheckCircle className="mr-2 h-4 w-4 text-green-500" />
-                      <span className="text-zinc-900 dark:text-white">
-                        nAdmin Dashboard
-                      </span>
+                      <span className="text-zinc-900 dark:text-white">nAdmin Dashboard</span>
                       <span className="ml-auto text-xs text-zinc-500">
                         Port {config.nadminConfig?.port || 3021}
                       </span>
@@ -3489,14 +3367,9 @@ nself start`}
                 </h4>
                 <div className="space-y-2">
                   {config.customServices.map((service) => (
-                    <div
-                      key={service.name}
-                      className="flex items-center text-sm"
-                    >
+                    <div key={service.name} className="flex items-center text-sm">
                       <CheckCircle className="mr-2 h-4 w-4 text-green-500" />
-                      <span className="text-zinc-900 dark:text-white">
-                        {service.name}
-                      </span>
+                      <span className="text-zinc-900 dark:text-white">{service.name}</span>
                       <span className="ml-auto text-xs text-zinc-500">
                         {service.framework} | Port {service.port}
                       </span>
@@ -3516,25 +3389,18 @@ nself start`}
                   {config.frontendApps
                     .filter((app) => app.enabled)
                     .map((app) => (
-                      <div
-                        key={app.name}
-                        className="flex items-center justify-between text-sm"
-                      >
+                      <div key={app.name} className="flex items-center justify-between text-sm">
                         <div className="flex items-center">
                           <CheckCircle className="mr-2 h-4 w-4 text-green-500" />
-                          <span className="text-zinc-900 dark:text-white">
-                            {app.displayName}
-                          </span>
+                          <span className="text-zinc-900 dark:text-white">{app.displayName}</span>
                         </div>
                         <div className="text-xs text-zinc-600 dark:text-zinc-400">
-                          {app.framework} | Table: {app.tablePrefix}* | Port:{' '}
-                          {app.port}
-                          {config.environment === 'dev' &&
-                            app.deployment === 'local' && (
-                              <span className="ml-2">
-                                | {app.subdomain}.{config.domain}
-                              </span>
-                            )}
+                          {app.framework} | Table: {app.tablePrefix}* | Port: {app.port}
+                          {config.environment === 'dev' && app.deployment === 'local' && (
+                            <span className="ml-2">
+                              | {app.subdomain}.{config.domain}
+                            </span>
+                          )}
                         </div>
                       </div>
                     ))}
@@ -3546,9 +3412,7 @@ nself start`}
             <div className="rounded-lg border border-blue-200 bg-gradient-to-r from-blue-50 to-sky-50 p-4 dark:border-blue-800 dark:from-blue-900/20 dark:to-sky-900/20">
               <div className="flex items-center justify-between">
                 <div>
-                  <h4 className="font-medium text-zinc-900 dark:text-white">
-                    Ready to Build
-                  </h4>
+                  <h4 className="font-medium text-zinc-900 dark:text-white">Ready to Build</h4>
                   <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
                     {5 +
                       (config.optionalServices.redis ? 1 : 0) +
@@ -3628,9 +3492,7 @@ nself start`}
       <div className="mx-auto flex min-h-[400px] max-w-4xl items-center justify-center">
         <div className="text-center">
           <Loader2 className="mx-auto mb-4 h-8 w-8 animate-spin text-blue-500" />
-          <p className="text-zinc-600 dark:text-zinc-400">
-            Loading wizard state...
-          </p>
+          <p className="text-zinc-600 dark:text-zinc-400">Loading wizard state...</p>
         </div>
       </div>
     )
@@ -3678,9 +3540,7 @@ nself start`}
                       {isComplete ? (
                         <CheckCircle className="h-6 w-6 text-white" />
                       ) : (
-                        <Icon
-                          className={`h-6 w-6 ${isActive ? 'text-white' : 'text-zinc-500'}`}
-                        />
+                        <Icon className={`h-6 w-6 ${isActive ? 'text-white' : 'text-zinc-500'}`} />
                       )}
                     </button>
                     {index < steps.length - 1 && (
@@ -3737,11 +3597,7 @@ nself start`}
               )}
             </Button>
           ) : (
-            <Button
-              onClick={handleNext}
-              variant="primary"
-              className="flex items-center"
-            >
+            <Button onClick={handleNext} variant="primary" className="flex items-center">
               Next
               <ChevronRight className="ml-1 h-4 w-4" />
             </Button>
@@ -3754,9 +3610,7 @@ nself start`}
         <ServiceDetailModal
           isOpen={!!selectedService}
           onClose={() => setSelectedService(null)}
-          serviceName={
-            selectedService.charAt(0).toUpperCase() + selectedService.slice(1)
-          }
+          serviceName={selectedService.charAt(0).toUpperCase() + selectedService.slice(1)}
           config={
             // Handle optional services config
             selectedService === 'redis'
@@ -3771,9 +3625,7 @@ nself start`}
                       ? config.mlflowConfig
                       : selectedService === 'nadmin'
                         ? config.nadminConfig
-                        : (config[
-                            selectedService as keyof typeof config
-                          ] as any)
+                        : (config[selectedService as keyof typeof config] as any)
           }
           onSave={(newConfig) => {
             // Handle optional services config save
@@ -3797,9 +3649,7 @@ nself start`}
             }
             setSelectedService(null)
           }}
-          fields={
-            SERVICE_FIELDS[selectedService as keyof typeof SERVICE_FIELDS] || []
-          }
+          fields={SERVICE_FIELDS[selectedService as keyof typeof SERVICE_FIELDS] || []}
         />
       )}
     </>

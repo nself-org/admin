@@ -28,14 +28,15 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 
     // Build GitHub search query for PRs visible to this token
     const stateFilter =
-      filter === 'open' ? 'state:open' :
-      filter === 'merged' ? 'is:merged' :
-      filter === 'closed' ? 'state:closed is:unmerged' :
-      'state:open state:closed' // all
+      filter === 'open'
+        ? 'state:open'
+        : filter === 'merged'
+          ? 'is:merged'
+          : filter === 'closed'
+            ? 'state:closed is:unmerged'
+            : 'state:open state:closed' // all
 
-    const ghQ = encodeURIComponent(
-      `is:pr ${stateFilter} ${search ? search : ''}`.trim(),
-    )
+    const ghQ = encodeURIComponent(`is:pr ${stateFilter} ${search ? search : ''}`.trim())
     const sortParam = sort === 'updated' ? 'updated' : 'created'
 
     const resp = await fetch(
@@ -47,7 +48,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
           'X-GitHub-Api-Version': '2022-11-28',
         },
         signal: AbortSignal.timeout(15_000),
-      },
+      }
     )
 
     if (!resp.ok) {
@@ -57,16 +58,15 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
           error: `GitHub API returned ${resp.status}`,
           details: text.slice(0, 500),
         },
-        { status: 502 },
+        { status: 502 }
       )
     }
 
-    const data: { total_count: number; items: Array<Record<string, unknown>> } =
-      await resp.json()
+    const data: { total_count: number; items: Array<Record<string, unknown>> } = await resp.json()
 
     const prs: GitHubPullRequest[] = (data.items ?? []).map((item) => {
       const prData = item.pull_request as Record<string, string | null> | undefined
-      const merged = !!(prData?.merged_at)
+      const merged = !!prData?.merged_at
       return {
         id: item.id as number,
         number: item.number as number,
@@ -74,13 +74,13 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         body: (item.body as string | null) ?? undefined,
         state: merged ? 'merged' : (item.state as 'open' | 'closed'),
         htmlUrl: item.html_url as string,
-        userId: (item.user as Record<string, unknown>)?.id as number ?? 0,
-        userLogin: (item.user as Record<string, unknown>)?.login as string ?? '',
+        userId: ((item.user as Record<string, unknown>)?.id as number) ?? 0,
+        userLogin: ((item.user as Record<string, unknown>)?.login as string) ?? '',
         head: '',
         base: '',
         labels: ((item.labels as Array<Record<string, string>>) ?? []).map((l) => l.name),
         reviewers: [],
-        draft: !!(item.draft),
+        draft: !!item.draft,
         mergeable: undefined,
         merged,
         mergedAt: prData?.merged_at ?? undefined,
@@ -102,7 +102,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to fetch pull requests',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

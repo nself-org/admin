@@ -91,8 +91,7 @@ export function ServiceConfigSection({
             <AlertTriangle className="h-4 w-4" />
             <AlertTitle>Restart Required</AlertTitle>
             <AlertDescription>
-              Changes to this configuration require a service restart to take
-              effect.
+              Changes to this configuration require a service restart to take effect.
               <Button variant="link" className="ml-2 h-auto p-0">
                 <RotateCw className="mr-1 h-3 w-3" />
                 Restart {serviceName}

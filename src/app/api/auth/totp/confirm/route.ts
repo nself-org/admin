@@ -20,21 +20,13 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     const code = body?.code
 
     if (!code || typeof code !== 'string') {
-      return NextResponse.json(
-        { success: false, error: 'code is required' },
-        { status: 400 },
-      )
+      return NextResponse.json({ success: false, error: 'code is required' }, { status: 400 })
     }
 
     const result = await confirmTotpSetup(code.trim())
 
     const sourceIp = extractSourceIp(request.headers)
-    await addAuditLog(
-      'totp_setup',
-      { success: result.success },
-      result.success,
-      'admin',
-    )
+    await addAuditLog('totp_setup', { success: result.success }, result.success, 'admin')
     appendAuditFile({
       timestamp: new Date().toISOString(),
       user: 'admin',
@@ -44,10 +36,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     })
 
     if (!result.success) {
-      return NextResponse.json(
-        { success: false, error: 'Invalid TOTP code' },
-        { status: 400 },
-      )
+      return NextResponse.json({ success: false, error: 'Invalid TOTP code' }, { status: 400 })
     }
 
     return NextResponse.json({
@@ -61,7 +50,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to confirm TOTP setup',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

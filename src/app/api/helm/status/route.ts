@@ -20,21 +20,18 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     if (!release) {
       return NextResponse.json(
         { success: false, error: 'Release name is required' },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
     const args: string[] = ['helm', 'status', release]
     if (namespace) args.push(`--namespace=${namespace}`)
 
-    const { stdout } = await execAsync(
-      `${nselfPath} ${args.join(' ')} --json`,
-      {
-        cwd: projectPath,
-        env: { ...process.env, PATH: getEnhancedPath() },
-        timeout: 60000,
-      },
-    )
+    const { stdout } = await execAsync(`${nselfPath} ${args.join(' ')} --json`, {
+      cwd: projectPath,
+      env: { ...process.env, PATH: getEnhancedPath() },
+      timeout: 60000,
+    })
 
     const result = JSON.parse(stdout)
 
@@ -58,7 +55,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to get helm release status',
         details: err.message,
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

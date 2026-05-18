@@ -38,13 +38,7 @@ function isNClawEnabled(): boolean {
 
 type PluginStatus = 'checking' | 'running' | 'stopped'
 
-type NClawSection =
-  | 'overview'
-  | 'accounts'
-  | 'devices'
-  | 'security'
-  | 'secrets'
-  | 'logs'
+type NClawSection = 'overview' | 'accounts' | 'devices' | 'security' | 'secrets' | 'logs'
 
 type LogLevel = 'DEBUG' | 'INFO' | 'WARN' | 'ERROR'
 
@@ -196,9 +190,7 @@ function OverviewSection({ pluginDown }: { pluginDown: boolean }) {
     if (pluginDown) return
     fetch(`${CLAW_API}/claw/sessions?page=1&page_size=1`)
       .then((r) =>
-        r.ok
-          ? (r.json() as Promise<{ total?: number; sessions?: unknown[] }>)
-          : Promise.reject(),
+        r.ok ? (r.json() as Promise<{ total?: number; sessions?: unknown[] }>) : Promise.reject()
       )
       .then((d) => setActiveUsers(d.total ?? d.sessions?.length ?? 0))
       .catch(() => setActiveUsers(null))
@@ -208,10 +200,7 @@ function OverviewSection({ pluginDown }: { pluginDown: boolean }) {
     return (
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
         {[1, 2, 3].map((n) => (
-          <div
-            key={n}
-            className="h-24 animate-pulse rounded-xl bg-zinc-800/50"
-          />
+          <div key={n} className="h-24 animate-pulse rounded-xl bg-zinc-800/50" />
         ))}
       </div>
     )
@@ -220,20 +209,14 @@ function OverviewSection({ pluginDown }: { pluginDown: boolean }) {
   const stats = [
     {
       label: 'Service status',
-      value:
-        svc?.status === 'running'
-          ? 'Running'
-          : pluginDown
-            ? 'Offline'
-            : 'Unknown',
+      value: svc?.status === 'running' ? 'Running' : pluginDown ? 'Offline' : 'Unknown',
       sub: svc?.version ? `v${svc.version}` : undefined,
       icon: <Zap className="h-5 w-5" />,
       ok: svc?.status === 'running',
     },
     {
       label: 'Uptime',
-      value:
-        svc?.uptime_seconds != null ? formatUptime(svc.uptime_seconds) : '—',
+      value: svc?.uptime_seconds != null ? formatUptime(svc.uptime_seconds) : '—',
       sub: svc?.uptime_seconds != null ? 'since last restart' : 'unavailable',
       icon: <Clock className="h-5 w-5" />,
       ok: svc?.uptime_seconds != null,
@@ -250,18 +233,11 @@ function OverviewSection({ pluginDown }: { pluginDown: boolean }) {
   return (
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
       {stats.map((s) => (
-        <div
-          key={s.label}
-          className="rounded-xl border border-zinc-700/50 bg-zinc-800/30 p-5"
-        >
+        <div key={s.label} className="rounded-xl border border-zinc-700/50 bg-zinc-800/30 p-5">
           <div className="flex items-start justify-between">
             <div>
-              <p className="text-xs font-medium text-zinc-500 uppercase">
-                {s.label}
-              </p>
-              <p
-                className={`mt-1 text-2xl font-semibold ${s.ok ? 'text-white' : 'text-zinc-500'}`}
-              >
+              <p className="text-xs font-medium text-zinc-500 uppercase">{s.label}</p>
+              <p className={`mt-1 text-2xl font-semibold ${s.ok ? 'text-white' : 'text-zinc-500'}`}>
                 {s.value}
               </p>
               {s.sub && <p className="mt-0.5 text-xs text-zinc-500">{s.sub}</p>}
@@ -380,10 +356,7 @@ function ConnectedAccountsSection({ pluginDown }: { pluginDown: boolean }) {
     return (
       <div className="space-y-3">
         {[1, 2].map((n) => (
-          <div
-            key={n}
-            className="h-16 animate-pulse rounded-xl bg-zinc-800/50"
-          />
+          <div key={n} className="h-16 animate-pulse rounded-xl bg-zinc-800/50" />
         ))}
       </div>
     )
@@ -421,18 +394,13 @@ function ConnectedAccountsSection({ pluginDown }: { pluginDown: boolean }) {
       ) : (
         <div className="divide-y divide-zinc-700/50 rounded-xl border border-zinc-700/50 bg-zinc-800/50">
           {accounts.map((account) => (
-            <div
-              key={account.id}
-              className="flex items-center gap-4 px-4 py-3.5"
-            >
+            <div key={account.id} className="flex items-center gap-4 px-4 py-3.5">
               <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-sky-500/20 bg-sky-500/10">
                 <Mail className="h-4 w-4 text-sky-400" />
               </div>
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-2">
-                  <p className="truncate text-sm font-medium text-zinc-200">
-                    {account.email}
-                  </p>
+                  <p className="truncate text-sm font-medium text-zinc-200">{account.email}</p>
                   {account.is_healthy ? (
                     <span className="shrink-0 rounded-full bg-green-900/30 px-2 py-0.5 text-xs text-green-400">
                       healthy
@@ -445,9 +413,7 @@ function ConnectedAccountsSection({ pluginDown }: { pluginDown: boolean }) {
                 </div>
                 <p className="text-xs text-zinc-500">
                   {account.scopes.join(', ')}
-                  {account.last_synced_at
-                    ? ` · synced ${timeAgo(account.last_synced_at)}`
-                    : ''}
+                  {account.last_synced_at ? ` · synced ${timeAgo(account.last_synced_at)}` : ''}
                 </p>
               </div>
               <div className="flex shrink-0 items-center gap-1">
@@ -553,9 +519,7 @@ function CompanionDevicesSection({ pluginDown }: { pluginDown: boolean }) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name: renameValue.trim() }),
       })
-      setDevices((prev) =>
-        prev.map((d) => (d.id === id ? { ...d, name: renameValue.trim() } : d)),
-      )
+      setDevices((prev) => prev.map((d) => (d.id === id ? { ...d, name: renameValue.trim() } : d)))
       setRenaming(null)
       setRenameValue('')
     } catch {
@@ -567,10 +531,7 @@ function CompanionDevicesSection({ pluginDown }: { pluginDown: boolean }) {
     return (
       <div className="space-y-3">
         {[1, 2].map((n) => (
-          <div
-            key={n}
-            className="h-14 animate-pulse rounded-xl bg-zinc-800/50"
-          />
+          <div key={n} className="h-14 animate-pulse rounded-xl bg-zinc-800/50" />
         ))}
       </div>
     )
@@ -582,10 +543,9 @@ function CompanionDevicesSection({ pluginDown }: { pluginDown: boolean }) {
         <div className="flex items-start gap-2">
           <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-amber-400" />
           <p className="text-sm text-amber-300/80">
-            Companion device pairing endpoints are planned for Phase 224.
-            Devices listed here are returned by the existing{' '}
-            <code className="font-mono text-xs">/claw/devices</code> endpoint if
-            available.
+            Companion device pairing endpoints are planned for Phase 224. Devices listed here are
+            returned by the existing <code className="font-mono text-xs">/claw/devices</code>{' '}
+            endpoint if available.
           </p>
         </div>
       </div>
@@ -644,12 +604,9 @@ function CompanionDevicesSection({ pluginDown }: { pluginDown: boolean }) {
                     {platformIcon(device.platform)}
                   </div>
                   <div className="min-w-0 flex-1">
-                    <p className="text-sm font-medium text-zinc-200">
-                      {device.name}
-                    </p>
+                    <p className="text-sm font-medium text-zinc-200">{device.name}</p>
                     <p className="text-xs text-zinc-500">
-                      {device.platform} · last seen{' '}
-                      {timeAgo(device.last_seen_at)}
+                      {device.platform} · last seen {timeAgo(device.last_seen_at)}
                     </p>
                   </div>
                   <div className="flex shrink-0 items-center gap-1">
@@ -695,9 +652,7 @@ function SecuritySection({ pluginDown }: { pluginDown: boolean }) {
   const [savingTimeout, setSavingTimeout] = useState(false)
   const [timeoutSaved, setTimeoutSaved] = useState(false)
   const [rotatingKey, setRotatingKey] = useState<string | null>(null)
-  const [rotateResult, setRotateResult] = useState<
-    Record<string, { ok: boolean; msg: string }>
-  >({})
+  const [rotateResult, setRotateResult] = useState<Record<string, { ok: boolean; msg: string }>>({})
 
   const handleSaveTimeout = async () => {
     setSavingTimeout(true)
@@ -760,9 +715,7 @@ function SecuritySection({ pluginDown }: { pluginDown: boolean }) {
           <div>
             <div className="flex items-center gap-2">
               <KeyRound className="h-4 w-4 text-sky-400" />
-              <h3 className="text-sm font-semibold text-white">
-                Passkey enrollment
-              </h3>
+              <h3 className="text-sm font-semibold text-white">Passkey enrollment</h3>
             </div>
             <p className="mt-1 text-sm text-zinc-400">
               Enroll a passkey for password-less admin authentication to ɳClaw.
@@ -773,16 +726,12 @@ function SecuritySection({ pluginDown }: { pluginDown: boolean }) {
             disabled={pluginDown}
             onClick={async () => {
               try {
-                const res = await fetch(
-                  `${CLAW_API}/claw/auth/passkey/enroll`,
-                  {
-                    method: 'POST',
-                  },
-                )
+                const res = await fetch(`${CLAW_API}/claw/auth/passkey/enroll`, {
+                  method: 'POST',
+                })
                 if (res.ok) {
                   const data = (await res.json()) as { url?: string }
-                  if (data.url)
-                    window.open(data.url, '_blank', 'noopener,noreferrer')
+                  if (data.url) window.open(data.url, '_blank', 'noopener,noreferrer')
                 }
               } catch {
                 // ignore
@@ -826,9 +775,7 @@ function SecuritySection({ pluginDown }: { pluginDown: boolean }) {
             disabled={savingTimeout || pluginDown}
             className="flex items-center gap-2 rounded-lg bg-sky-500 px-4 py-2 text-sm font-medium text-white hover:bg-sky-400 disabled:opacity-50"
           >
-            {savingTimeout ? (
-              <Loader2 className="h-4 w-4 animate-spin" />
-            ) : null}
+            {savingTimeout ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
             Save
           </button>
           {timeoutSaved && (
@@ -850,8 +797,7 @@ function SecuritySection({ pluginDown }: { pluginDown: boolean }) {
           <h3 className="text-sm font-semibold text-white">Secret rotation</h3>
         </div>
         <p className="mb-4 text-sm text-zinc-400">
-          Rotate signing and encryption secrets. Values are never shown — only
-          their status.
+          Rotate signing and encryption secrets. Values are never shown — only their status.
         </p>
         <div className="space-y-3">
           {secrets.map((s) => (
@@ -894,8 +840,7 @@ function SecuritySection({ pluginDown }: { pluginDown: boolean }) {
           ))}
         </div>
         <p className="mt-3 text-xs text-zinc-600">
-          Rotating a critical secret invalidates all active sessions and
-          requires a service restart.
+          Rotating a critical secret invalidates all active sessions and requires a service restart.
         </p>
       </div>
     </div>
@@ -954,16 +899,14 @@ function PluginSecretsSection({ pluginDown }: { pluginDown: boolean }) {
     }
     fetch(`${CLAW_API}/claw/env/status`)
       .then((r) =>
-        r.ok
-          ? (r.json() as Promise<{ vars: Record<string, boolean> }>)
-          : Promise.reject(),
+        r.ok ? (r.json() as Promise<{ vars: Record<string, boolean> }>) : Promise.reject()
       )
       .then((data) => {
         setSecrets((prev) =>
           prev.map((s) => ({
             ...s,
             present: data.vars[s.key] ?? false,
-          })),
+          }))
         )
       })
       .catch(() => {
@@ -979,10 +922,7 @@ function PluginSecretsSection({ pluginDown }: { pluginDown: boolean }) {
     return (
       <div className="space-y-2">
         {[1, 2, 3, 4].map((n) => (
-          <div
-            key={n}
-            className="h-12 animate-pulse rounded-lg bg-zinc-800/50"
-          />
+          <div key={n} className="h-12 animate-pulse rounded-lg bg-zinc-800/50" />
         ))}
       </div>
     )
@@ -1000,8 +940,8 @@ function PluginSecretsSection({ pluginDown }: { pluginDown: boolean }) {
                 {missingRequired.length > 1 ? 's' : ''} missing
               </p>
               <p className="mt-0.5 text-xs text-yellow-400/80">
-                Set them in your <code className="font-mono">.env</code> file
-                and run <code className="font-mono">nself build</code> to apply.
+                Set them in your <code className="font-mono">.env</code> file and run{' '}
+                <code className="font-mono">nself build</code> to apply.
               </p>
             </div>
           </div>
@@ -1056,10 +996,9 @@ function PluginSecretsSection({ pluginDown }: { pluginDown: boolean }) {
         <div className="flex items-start gap-2">
           <EyeOff className="mt-0.5 h-4 w-4 shrink-0 text-zinc-500" />
           <p className="text-xs text-zinc-500">
-            Secret values are never displayed here — only presence status. Edit
-            them in your <code className="font-mono">.env</code> file and run{' '}
-            <code className="font-mono">nself build</code> to regenerate the
-            Docker configuration.
+            Secret values are never displayed here — only presence status. Edit them in your{' '}
+            <code className="font-mono">.env</code> file and run{' '}
+            <code className="font-mono">nself build</code> to regenerate the Docker configuration.
           </p>
         </div>
       </div>
@@ -1114,8 +1053,7 @@ function LogsSection({ pluginDown }: { pluginDown: boolean }) {
     }
   }, [logs, autoScroll])
 
-  const filteredLogs =
-    levelFilter === 'ALL' ? logs : logs.filter((l) => l.level === levelFilter)
+  const filteredLogs = levelFilter === 'ALL' ? logs : logs.filter((l) => l.level === levelFilter)
 
   return (
     <div className="space-y-4">
@@ -1128,9 +1066,7 @@ function LogsSection({ pluginDown }: { pluginDown: boolean }) {
               type="button"
               onClick={() => setLevelFilter(lvl)}
               className={`rounded-md px-3 py-1 text-xs font-medium transition-colors ${
-                levelFilter === lvl
-                  ? 'bg-zinc-700 text-white'
-                  : 'text-zinc-500 hover:text-zinc-300'
+                levelFilter === lvl ? 'bg-zinc-700 text-white' : 'text-zinc-500 hover:text-zinc-300'
               }`}
             >
               {lvl}
@@ -1179,9 +1115,7 @@ function LogsSection({ pluginDown }: { pluginDown: boolean }) {
         <div className="h-64 animate-pulse rounded-xl bg-zinc-800/50" />
       ) : pluginDown ? (
         <div className="flex items-center justify-center rounded-xl border border-zinc-700/50 bg-zinc-800/30 py-16">
-          <p className="text-sm text-zinc-500">
-            Plugin offline — no logs available
-          </p>
+          <p className="text-sm text-zinc-500">Plugin offline — no logs available</p>
         </div>
       ) : (
         <div
@@ -1245,22 +1179,14 @@ export default function NClawPage() {
       <div className="max-w-2xl space-y-6">
         <div>
           <h1 className="text-2xl font-semibold text-white">ɳClaw</h1>
-          <p className="mt-0.5 text-sm text-zinc-400">
-            AI assistant plugin management
-          </p>
+          <p className="mt-0.5 text-sm text-zinc-400">AI assistant plugin management</p>
         </div>
         <div className="rounded-xl border border-zinc-700/50 bg-zinc-800/30 p-8 text-center">
           <Shield className="mx-auto mb-3 h-10 w-10 text-zinc-600" />
-          <p className="text-sm font-medium text-zinc-300">
-            ɳClaw is not enabled
-          </p>
+          <p className="text-sm font-medium text-zinc-300">ɳClaw is not enabled</p>
           <p className="mt-1 text-sm text-zinc-500">
-            Set{' '}
-            <code className="font-mono text-xs">
-              NEXT_PUBLIC_NCLAW_ENABLED=true
-            </code>{' '}
-            to activate this section, then run{' '}
-            <code className="font-mono text-xs">nself build</code>.
+            Set <code className="font-mono text-xs">NEXT_PUBLIC_NCLAW_ENABLED=true</code> to
+            activate this section, then run <code className="font-mono text-xs">nself build</code>.
           </p>
         </div>
       </div>
@@ -1269,31 +1195,30 @@ export default function NClawPage() {
 
   const pluginDown = pluginStatus === 'stopped'
 
-  const sections: { id: NClawSection; label: string; icon: React.ReactNode }[] =
-    [
-      { id: 'overview', label: 'Overview', icon: <Zap className="h-4 w-4" /> },
-      {
-        id: 'accounts',
-        label: 'Connected Accounts',
-        icon: <Mail className="h-4 w-4" />,
-      },
-      {
-        id: 'devices',
-        label: 'Companion Devices',
-        icon: <Laptop2 className="h-4 w-4" />,
-      },
-      {
-        id: 'security',
-        label: 'Security',
-        icon: <Shield className="h-4 w-4" />,
-      },
-      {
-        id: 'secrets',
-        label: 'Plugin Secrets',
-        icon: <KeyRound className="h-4 w-4" />,
-      },
-      { id: 'logs', label: 'Logs', icon: <Filter className="h-4 w-4" /> },
-    ]
+  const sections: { id: NClawSection; label: string; icon: React.ReactNode }[] = [
+    { id: 'overview', label: 'Overview', icon: <Zap className="h-4 w-4" /> },
+    {
+      id: 'accounts',
+      label: 'Connected Accounts',
+      icon: <Mail className="h-4 w-4" />,
+    },
+    {
+      id: 'devices',
+      label: 'Companion Devices',
+      icon: <Laptop2 className="h-4 w-4" />,
+    },
+    {
+      id: 'security',
+      label: 'Security',
+      icon: <Shield className="h-4 w-4" />,
+    },
+    {
+      id: 'secrets',
+      label: 'Plugin Secrets',
+      icon: <KeyRound className="h-4 w-4" />,
+    },
+    { id: 'logs', label: 'Logs', icon: <Filter className="h-4 w-4" /> },
+  ]
 
   return (
     <div className="space-y-6">
@@ -1301,9 +1226,7 @@ export default function NClawPage() {
       <div className="flex items-start justify-between">
         <div>
           <h1 className="text-2xl font-semibold text-white">ɳClaw</h1>
-          <p className="mt-0.5 text-sm text-zinc-400">
-            AI assistant plugin management
-          </p>
+          <p className="mt-0.5 text-sm text-zinc-400">AI assistant plugin management</p>
         </div>
         <div className="flex items-center gap-3">
           <StatusBadge status={pluginStatus} />
@@ -1329,9 +1252,7 @@ export default function NClawPage() {
           <div className="flex items-start gap-3">
             <AlertCircle className="mt-0.5 h-5 w-5 shrink-0 text-yellow-400" />
             <div>
-              <p className="font-medium text-yellow-300">
-                nself-claw is not running
-              </p>
+              <p className="font-medium text-yellow-300">nself-claw is not running</p>
               <p className="mt-1 text-sm text-yellow-400/80">
                 Install and start the claw plugin to use this section.
               </p>
@@ -1364,21 +1285,11 @@ export default function NClawPage() {
 
       {/* Section content */}
       <div>
-        {activeSection === 'overview' && (
-          <OverviewSection pluginDown={pluginDown} />
-        )}
-        {activeSection === 'accounts' && (
-          <ConnectedAccountsSection pluginDown={pluginDown} />
-        )}
-        {activeSection === 'devices' && (
-          <CompanionDevicesSection pluginDown={pluginDown} />
-        )}
-        {activeSection === 'security' && (
-          <SecuritySection pluginDown={pluginDown} />
-        )}
-        {activeSection === 'secrets' && (
-          <PluginSecretsSection pluginDown={pluginDown} />
-        )}
+        {activeSection === 'overview' && <OverviewSection pluginDown={pluginDown} />}
+        {activeSection === 'accounts' && <ConnectedAccountsSection pluginDown={pluginDown} />}
+        {activeSection === 'devices' && <CompanionDevicesSection pluginDown={pluginDown} />}
+        {activeSection === 'security' && <SecuritySection pluginDown={pluginDown} />}
+        {activeSection === 'secrets' && <PluginSecretsSection pluginDown={pluginDown} />}
         {activeSection === 'logs' && <LogsSection pluginDown={pluginDown} />}
       </div>
     </div>

@@ -1,13 +1,7 @@
 'use client'
 
 import { AnimatePresence, motion } from 'framer-motion'
-import {
-  AlertCircle,
-  AlertTriangle,
-  CheckCircle,
-  Loader2,
-  X,
-} from 'lucide-react'
+import { AlertCircle, AlertTriangle, CheckCircle, Loader2, X } from 'lucide-react'
 import { useState } from 'react'
 
 export interface UninstallDialogProps {
@@ -83,9 +77,7 @@ export function UninstallDialog({
               <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-red-500/20">
                 <AlertTriangle className="h-5 w-5 text-red-400" />
               </div>
-              <h2 className="font-semibold text-white">
-                Remove {plugin.displayName}?
-              </h2>
+              <h2 className="font-semibold text-white">Remove {plugin.displayName}?</h2>
             </div>
             <button
               onClick={onClose}
@@ -101,23 +93,16 @@ export function UninstallDialog({
           <div className="space-y-3 p-5">
             <p className="text-sm text-zinc-400">
               This will uninstall{' '}
-              <span className="font-medium text-white">
-                {plugin.displayName}
-              </span>{' '}
-              from your nself stack. This action cannot be undone without
-              reinstalling.
+              <span className="font-medium text-white">{plugin.displayName}</span> from your nself
+              stack. This action cannot be undone without reinstalling.
             </p>
 
             {dependents.length > 0 && (
               <div className="flex items-start gap-3 rounded-lg border border-amber-500/30 bg-amber-900/20 p-3">
                 <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-amber-400" />
                 <p className="text-sm text-amber-300">
-                  Warning:{' '}
-                  <span className="font-medium">{dependents.length}</span> other{' '}
-                  {dependents.length === 1
-                    ? 'plugin depends'
-                    : 'plugins depend'}{' '}
-                  on this plugin.
+                  Warning: <span className="font-medium">{dependents.length}</span> other{' '}
+                  {dependents.length === 1 ? 'plugin depends' : 'plugins depend'} on this plugin.
                 </p>
               </div>
             )}

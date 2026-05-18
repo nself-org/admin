@@ -56,11 +56,7 @@ type PageState =
   | 'empty'
   | 'populated'
 
-function deriveState(
-  isLoading: boolean,
-  error: unknown,
-  hasData: boolean,
-): PageState {
+function deriveState(isLoading: boolean, error: unknown, hasData: boolean): PageState {
   if (isLoading) return 'loading'
   if (error instanceof NotifyApiError) {
     if (error.status === 401 || error.status === 403) return 'permission-denied'
@@ -87,15 +83,11 @@ function CampaignRow({ campaign }: { campaign: Campaign }) {
 
   return (
     <tr className="transition-colors hover:bg-zinc-50 dark:hover:bg-zinc-800/40">
-      <td className="px-4 py-3 font-medium text-zinc-900 dark:text-zinc-100">
-        {campaign.title}
-      </td>
+      <td className="px-4 py-3 font-medium text-zinc-900 dark:text-zinc-100">{campaign.title}</td>
       <td className="px-4 py-3">
         <div className="flex items-center gap-1.5">
           {statusIcon}
-          <span className="text-zinc-600 capitalize dark:text-zinc-400">
-            {campaign.status}
-          </span>
+          <span className="text-zinc-600 capitalize dark:text-zinc-400">{campaign.status}</span>
         </div>
       </td>
       <td className="px-4 py-3 text-zinc-500 dark:text-zinc-400">
@@ -116,18 +108,10 @@ function CampaignRow({ campaign }: { campaign: Campaign }) {
   )
 }
 
-function TopicRow({
-  topic,
-  onDelete,
-}: {
-  topic: Topic
-  onDelete: (id: string) => void
-}) {
+function TopicRow({ topic, onDelete }: { topic: Topic; onDelete: (id: string) => void }) {
   return (
     <tr className="transition-colors hover:bg-zinc-50 dark:hover:bg-zinc-800/40">
-      <td className="px-4 py-3 font-medium text-zinc-900 dark:text-zinc-100">
-        {topic.name}
-      </td>
+      <td className="px-4 py-3 font-medium text-zinc-900 dark:text-zinc-100">{topic.name}</td>
       <td className="px-4 py-3 text-zinc-500 dark:text-zinc-400">
         {topic.subscriberCount.toLocaleString()} subscribers
       </td>
@@ -163,11 +147,7 @@ function StateBanner({
 }) {
   if (state === 'loading') {
     return (
-      <div
-        className="flex items-center justify-center py-24"
-        role="status"
-        aria-label="Loading"
-      >
+      <div className="flex items-center justify-center py-24" role="status" aria-label="Loading">
         <Loader2 className="h-8 w-8 animate-spin text-zinc-400" />
       </div>
     )
@@ -200,19 +180,12 @@ function StateBanner({
         <div className="flex items-center gap-3">
           <AlertCircle className="h-5 w-5 text-yellow-600 dark:text-yellow-400" />
           <div>
-            <h3 className="font-medium text-yellow-900 dark:text-yellow-100">
-              Rate limited
-            </h3>
+            <h3 className="font-medium text-yellow-900 dark:text-yellow-100">Rate limited</h3>
             <p className="text-sm text-yellow-700 dark:text-yellow-300">
               Too many requests. Wait a moment and try again.
             </p>
           </div>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={onRetry}
-            className="ml-auto"
-          >
+          <Button variant="outline" size="sm" onClick={onRetry} className="ml-auto">
             Retry
           </Button>
         </div>
@@ -233,12 +206,7 @@ function StateBanner({
               {error instanceof Error ? error.message : 'Unknown error'}
             </p>
           </div>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={onRetry}
-            className="ml-auto"
-          >
+          <Button variant="outline" size="sm" onClick={onRetry} className="ml-auto">
             Retry
           </Button>
         </div>
@@ -262,7 +230,7 @@ function PushNotificationsDashboardContent() {
   const [dlrDays, setDlrDays] = useState<7 | 30>(7)
   const [isLoading, setIsLoading] = useState(true)
   const [isOnline, setIsOnline] = useState(
-    typeof navigator !== 'undefined' ? navigator.onLine : true,
+    typeof navigator !== 'undefined' ? navigator.onLine : true
   )
   const [error, setError] = useState<unknown>(null)
   const [newTopicName, setNewTopicName] = useState('')
@@ -309,9 +277,7 @@ function PushNotificationsDashboardContent() {
   }, [load])
 
   const hasData = campaignList.length > 0 || topicList.length > 0
-  const pageState = !isOnline
-    ? 'offline'
-    : deriveState(isLoading, error, hasData)
+  const pageState = !isOnline ? 'offline' : deriveState(isLoading, error, hasData)
 
   async function handleDeleteTopic(id: string) {
     try {
@@ -341,10 +307,7 @@ function PushNotificationsDashboardContent() {
       <PageHeader
         title="Push Notifications"
         description="Manage campaigns, topics, and delivery analytics"
-        breadcrumbs={[
-          { label: 'Home', href: '/' },
-          { label: 'Push Notifications' },
-        ]}
+        breadcrumbs={[{ label: 'Home', href: '/' }, { label: 'Push Notifications' }]}
         actions={
           <div className="flex items-center gap-2">
             {!isOnline && (
@@ -435,10 +398,7 @@ function PushNotificationsDashboardContent() {
               </TabsTrigger>
               <TabsTrigger value="dlr">DLR Analytics</TabsTrigger>
               <TabsTrigger value="devices">
-                <Link
-                  href="/notifications/devices"
-                  className="flex items-center"
-                >
+                <Link href="/notifications/devices" className="flex items-center">
                   Devices
                 </Link>
               </TabsTrigger>
@@ -454,8 +414,7 @@ function PushNotificationsDashboardContent() {
                     description="Create your first push notification campaign to reach your users."
                     action={{
                       label: 'New campaign',
-                      onClick: () =>
-                        window.location.assign('/notifications/send'),
+                      onClick: () => window.location.assign('/notifications/send'),
                     }}
                     className="border-0"
                   />
@@ -527,11 +486,7 @@ function PushNotificationsDashboardContent() {
                       </thead>
                       <tbody className="divide-y divide-zinc-100 dark:divide-zinc-800">
                         {topicList.map((t) => (
-                          <TopicRow
-                            key={t.id}
-                            topic={t}
-                            onDelete={handleDeleteTopic}
-                          />
+                          <TopicRow key={t.id} topic={t} onDelete={handleDeleteTopic} />
                         ))}
                       </tbody>
                     </table>
@@ -583,10 +538,7 @@ function PushNotificationsDashboardContent() {
             <TabsContent value="devices">
               <Card className="p-6 text-center">
                 <p className="text-zinc-500 dark:text-zinc-400">
-                  <Link
-                    href="/notifications/devices"
-                    className="text-sky-500 hover:text-sky-400"
-                  >
+                  <Link href="/notifications/devices" className="text-sky-500 hover:text-sky-400">
                     View full device token health page
                   </Link>
                 </p>

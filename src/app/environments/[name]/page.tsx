@@ -61,12 +61,7 @@ interface ServerStatusPanelProps {
   deploying: boolean
 }
 
-function ServerStatusPanel({
-  server,
-  envName,
-  onDeploy,
-  deploying,
-}: ServerStatusPanelProps) {
+function ServerStatusPanel({ server, envName, onDeploy, deploying }: ServerStatusPanelProps) {
   const canDeploy = server.capability === 'manage'
 
   return (
@@ -80,9 +75,7 @@ function ServerStatusPanel({
       <div className="mb-4 flex items-start justify-between gap-2">
         <div className="min-w-0">
           <div className="flex items-center gap-2">
-            <span className="font-semibold text-zinc-900 dark:text-white">
-              {server.name}
-            </span>
+            <span className="font-semibold text-zinc-900 dark:text-white">{server.name}</span>
             {server.primary && (
               <span className="rounded bg-sky-100 px-1.5 py-0.5 text-xs text-sky-700 dark:bg-sky-900/30 dark:text-sky-400">
                 primary
@@ -174,7 +167,7 @@ function ServerSwitcher({ servers, selected, onSelect }: ServerSwitcherProps) {
       </button>
 
       {open && (
-        <div className="absolute right-0 top-full z-20 mt-1 w-48 rounded-xl border border-zinc-200 bg-white shadow-lg dark:border-zinc-700 dark:bg-zinc-800">
+        <div className="absolute top-full right-0 z-20 mt-1 w-48 rounded-xl border border-zinc-200 bg-white shadow-lg dark:border-zinc-700 dark:bg-zinc-800">
           {servers.map((s) => (
             <button
               key={s.name}
@@ -243,9 +236,7 @@ export default function EnvironmentDetailPage() {
     setOffline(false)
 
     try {
-      const res = await fetch(
-        `/api/control-plane?action=probe&env=${encodeURIComponent(envName)}`,
-      )
+      const res = await fetch(`/api/control-plane?action=probe&env=${encodeURIComponent(envName)}`)
       if (res.status === 401 || res.status === 403) {
         window.location.href = '/login'
         return
@@ -268,9 +259,7 @@ export default function EnvironmentDetailPage() {
         const inv = raw as { environments: ControlPlaneEnvironment[] }
         envData = inv.environments.find((e) => e.name === envName) ?? null
       } else if (Array.isArray(raw)) {
-        envData = (raw as ControlPlaneEnvironment[]).find(
-          (e) => e.name === envName,
-        ) ?? null
+        envData = (raw as ControlPlaneEnvironment[]).find((e) => e.name === envName) ?? null
       }
 
       if (!envData) {
@@ -282,7 +271,7 @@ export default function EnvironmentDetailPage() {
           if (ld && typeof ld === 'object' && 'environments' in ld) {
             envData =
               (ld as { environments: ControlPlaneEnvironment[] }).environments.find(
-                (e) => e.name === envName,
+                (e) => e.name === envName
               ) ?? null
           }
         }
@@ -304,9 +293,7 @@ export default function EnvironmentDetailPage() {
   const fetchDeployStatus = useCallback(async () => {
     setCheckingStatus(true)
     try {
-      const res = await fetch(
-        `/api/deploy?environment=${encodeURIComponent(envName)}`,
-      )
+      const res = await fetch(`/api/deploy?environment=${encodeURIComponent(envName)}`)
       const data = await res.json()
       setDeployStatus(data.status ?? null)
     } catch {
@@ -365,8 +352,8 @@ export default function EnvironmentDetailPage() {
               nself is not responding
             </h2>
             <p className="mt-2 text-sm text-zinc-500 dark:text-zinc-400">
-              Make sure <code className="font-mono">nself</code> is installed and
-              your project is configured.
+              Make sure <code className="font-mono">nself</code> is installed and your project is
+              configured.
             </p>
             <button
               onClick={() => fetchEnvironment()}
@@ -441,8 +428,7 @@ export default function EnvironmentDetailPage() {
               Environment &quot;{envName}&quot; not found
             </h2>
             <p className="mt-2 text-sm text-zinc-500 dark:text-zinc-400">
-              This environment is not in your inventory. Add a server to create
-              it.
+              This environment is not in your inventory. Add a server to create it.
             </p>
             <Link
               href="/environments"
@@ -457,14 +443,12 @@ export default function EnvironmentDetailPage() {
     )
   }
 
-  const visibleServers = environment.servers.filter(
-    (s) => s.capability !== 'hidden',
-  )
+  const visibleServers = environment.servers.filter((s) => s.capability !== 'hidden')
   const hasPartialAccess = environment.servers.some(
-    (s) => s.capability === 'read-only' || s.capability === 'hidden',
+    (s) => s.capability === 'read-only' || s.capability === 'hidden'
   )
   const limitedServers = environment.servers.filter(
-    (s) => s.capability === 'read-only' || s.capability === 'hidden',
+    (s) => s.capability === 'read-only' || s.capability === 'hidden'
   )
 
   // ── Success ────────────────────────────────────────────────────────────────
@@ -483,16 +467,14 @@ export default function EnvironmentDetailPage() {
                 <Server className="h-7 w-7 text-white" />
               </div>
               <div>
-                <h1 className="text-3xl font-bold capitalize text-zinc-900 dark:text-white">
+                <h1 className="text-3xl font-bold text-zinc-900 capitalize dark:text-white">
                   {envName}
                 </h1>
                 <p className="text-sm text-zinc-500 dark:text-zinc-400">
                   {environment.kind} · {environment.servers.length} server
                   {environment.servers.length !== 1 ? 's' : ''}
                   {deployStatus ? ` · ${deployStatus}` : ''}
-                  {checkingStatus && (
-                    <RefreshCw className="ml-1 inline h-3 w-3 animate-spin" />
-                  )}
+                  {checkingStatus && <RefreshCw className="ml-1 inline h-3 w-3 animate-spin" />}
                 </p>
               </div>
             </div>
@@ -518,10 +500,7 @@ export default function EnvironmentDetailPage() {
                 </p>
                 <ul className="mt-1 space-y-0.5">
                   {limitedServers.map((s) => (
-                    <li
-                      key={s.name}
-                      className="text-xs text-amber-700 dark:text-amber-400"
-                    >
+                    <li key={s.name} className="text-xs text-amber-700 dark:text-amber-400">
                       · <strong>{s.name}</strong> ({s.capability})
                       {s.reason && s.reason[0] ? `: ${s.reason[0]}` : ''}
                     </li>
@@ -547,11 +526,9 @@ export default function EnvironmentDetailPage() {
               ) : (
                 <XCircle className="mt-0.5 h-5 w-5 shrink-0 text-red-500" />
               )}
-              <div className="flex-1 min-w-0">
+              <div className="min-w-0 flex-1">
                 <p className="text-sm font-medium">
-                  {deployResult.success
-                    ? 'Deploy triggered successfully'
-                    : 'Deploy failed'}
+                  {deployResult.success ? 'Deploy triggered successfully' : 'Deploy failed'}
                 </p>
                 {deployResult.output && (
                   <pre className="mt-2 overflow-x-auto rounded bg-black/10 p-2 text-xs dark:bg-black/30">
@@ -593,11 +570,8 @@ export default function EnvironmentDetailPage() {
                 All servers are hidden — no access configured
               </p>
               <p className="mt-1 text-xs text-zinc-400">
-                Run{' '}
-                <code className="font-mono">
-                  nself env target add --host ... --role ...
-                </code>{' '}
-                to add a server
+                Run <code className="font-mono">nself env target add --host ... --role ...</code> to
+                add a server
               </p>
             </div>
           )}
@@ -605,31 +579,21 @@ export default function EnvironmentDetailPage() {
 
         {/* CLI reference */}
         <div className="mt-8 rounded-xl border border-zinc-200 bg-white p-5 shadow-sm dark:border-zinc-700 dark:bg-zinc-800">
-          <h3 className="mb-3 text-sm font-semibold text-zinc-900 dark:text-white">
-            CLI Commands
-          </h3>
+          <h3 className="mb-3 text-sm font-semibold text-zinc-900 dark:text-white">CLI Commands</h3>
           <div className="space-y-1 font-mono text-xs text-zinc-500 dark:text-zinc-400">
             <p>
-              <span className="text-sky-500">nself env target probe</span> —
-              probe server capabilities
+              <span className="text-sky-500">nself env target probe</span> — probe server
+              capabilities
             </p>
             <p>
-              <span className="text-sky-500">
-                nself deploy {envName} --server &lt;name&gt;
-              </span>{' '}
-              — deploy to specific server
+              <span className="text-sky-500">nself deploy {envName} --server &lt;name&gt;</span> —
+              deploy to specific server
             </p>
             <p>
-              <span className="text-sky-500">
-                nself deploy health {envName}
-              </span>{' '}
-              — check health
+              <span className="text-sky-500">nself deploy health {envName}</span> — check health
             </p>
             <p>
-              <span className="text-sky-500">
-                nself deploy logs {envName}
-              </span>{' '}
-              — view logs
+              <span className="text-sky-500">nself deploy logs {envName}</span> — view logs
             </p>
           </div>
         </div>

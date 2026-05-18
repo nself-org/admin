@@ -24,9 +24,7 @@ let _inFlight: Promise<StatusPayload> | null = null
 
 // Strip ANSI escape codes from terminal output
 function stripAnsi(str: string): string {
-  return str
-    .replace(/\x1b\[[0-9;]*m/g, '')
-    .replace(/\x1b\[[0-9;]*[A-Za-z]/g, '')
+  return str.replace(/\x1b\[[0-9;]*m/g, '').replace(/\x1b\[[0-9;]*[A-Za-z]/g, '')
 }
 
 async function computeStatus(): Promise<StatusPayload> {
@@ -38,13 +36,7 @@ async function computeStatus(): Promise<StatusPayload> {
   let projectNameFromEnv: string | null = null
 
   // Check in nself's priority order - but combine content to get all config
-  const envFiles = [
-    '.env',
-    '.env.local',
-    '.env.dev',
-    '.env.staging',
-    '.env.prod',
-  ]
+  const envFiles = ['.env', '.env.local', '.env.dev', '.env.staging', '.env.prod']
   for (const envFile of envFiles) {
     const envPath = path.join(projectPath, envFile)
     try {
@@ -94,12 +86,7 @@ async function computeStatus(): Promise<StatusPayload> {
     const cleanOutput = stripAnsi(stdout)
     const lines = cleanOutput.split('\n').filter((line) => line.trim())
     runningServices = lines
-      .filter(
-        (line) =>
-          line.includes('running') ||
-          line.includes('healthy') ||
-          line.includes('up'),
-      )
+      .filter((line) => line.includes('running') || line.includes('healthy') || line.includes('up'))
       .map((line) => {
         const cleanLine = line.trim()
         const parts = cleanLine.split(/\s+/)
@@ -124,10 +111,7 @@ async function computeStatus(): Promise<StatusPayload> {
     // Try docker-compose.yml as fallback if still default
     if (isBuilt && projectPrefix === 'nself') {
       try {
-        const dockerComposeContent = await fs.readFile(
-          dockerComposePath,
-          'utf8',
-        )
+        const dockerComposeContent = await fs.readFile(dockerComposePath, 'utf8')
         const projectMatch = dockerComposeContent.match(/# Project: ([^\s\n]+)/)
         if (projectMatch) {
           projectPrefix = projectMatch[1].trim()
@@ -138,12 +122,9 @@ async function computeStatus(): Promise<StatusPayload> {
     }
 
     // Get all containers with timeout to prevent hanging
-    const { stdout } = await execAsync(
-      'docker ps --format "{{.Names}}\t{{.Status}}\t{{.Ports}}"',
-      {
-        timeout: 5000,
-      },
-    )
+    const { stdout } = await execAsync('docker ps --format "{{.Names}}\t{{.Status}}\t{{.Ports}}"', {
+      timeout: 5000,
+    })
     const lines = stdout.split('\n').filter((line) => line.trim())
 
     // Filter for containers from this project (flexible matching)
@@ -186,9 +167,7 @@ async function computeStatus(): Promise<StatusPayload> {
 
     // If we have Docker containers running and didn't get services from nself status, mark as running
     if (dockerContainers.length > 0 && !servicesRunning) {
-      servicesRunning = dockerContainers.some((c) =>
-        c.status.toLowerCase().includes('up'),
-      )
+      servicesRunning = dockerContainers.some((c) => c.status.toLowerCase().includes('up'))
     }
   } catch {
     // Docker command failed or no containers
@@ -208,9 +187,7 @@ async function computeStatus(): Promise<StatusPayload> {
 
     // Use already extracted projectName or try to find it in combined content
     projectName = projectNameFromEnv
-    baseDomain = baseDomainMatch
-      ? baseDomainMatch[1].trim().replace(/["']/g, '')
-      : null
+    baseDomain = baseDomainMatch ? baseDomainMatch[1].trim().replace(/["']/g, '') : null
 
     // Check if this is a minimal setup (only basic env vars, no service configuration)
     // A minimal setup has PROJECT_NAME and BASE_DOMAIN but lacks service-specific configuration
@@ -309,7 +286,7 @@ export async function GET(): Promise<NextResponse> {
         projectState: 'unknown',
         needsSetup: true,
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

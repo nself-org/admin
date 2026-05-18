@@ -4,13 +4,7 @@ import { TableSkeleton } from '@/components/skeletons'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -190,68 +184,59 @@ function DatabaseDataContent() {
     }
   }
 
-  const handleFileSelect = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      const file = e.target.files?.[0]
-      if (!file) return
+  const handleFileSelect = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
 
-      setImportFile(file)
-      const format = file.name.endsWith('.json') ? 'json' : 'csv'
+    setImportFile(file)
+    const format = file.name.endsWith('.json') ? 'json' : 'csv'
 
-      // Read first bytes to build a preview without mock data
-      const reader = new FileReader()
-      reader.onload = (evt) => {
-        const text = (evt.target?.result as string) || ''
-        const lines = text.split('\n').filter(Boolean)
+    // Read first bytes to build a preview without mock data
+    const reader = new FileReader()
+    reader.onload = (evt) => {
+      const text = (evt.target?.result as string) || ''
+      const lines = text.split('\n').filter(Boolean)
 
-        if (format === 'csv') {
-          const columns = lines[0]?.split(',').map((c) => c.trim()) ?? []
-          const sampleRows = lines.slice(1, 4).map((line) => {
-            const vals = line.split(',')
-            return Object.fromEntries(
-              columns.map((col, i) => [col, (vals[i] ?? '').trim()]),
-            )
-          })
+      if (format === 'csv') {
+        const columns = lines[0]?.split(',').map((c) => c.trim()) ?? []
+        const sampleRows = lines.slice(1, 4).map((line) => {
+          const vals = line.split(',')
+          return Object.fromEntries(columns.map((col, i) => [col, (vals[i] ?? '').trim()]))
+        })
+        setImportPreview({
+          fileName: file.name,
+          format,
+          rowCount: Math.max(0, lines.length - 1),
+          columns,
+          sampleRows,
+        })
+      } else {
+        try {
+          const parsed = JSON.parse(text)
+          const arr: Record<string, string>[] = Array.isArray(parsed) ? parsed : [parsed]
+          const columns = arr.length > 0 ? Object.keys(arr[0]) : []
           setImportPreview({
             fileName: file.name,
             format,
-            rowCount: Math.max(0, lines.length - 1),
+            rowCount: arr.length,
             columns,
-            sampleRows,
+            sampleRows: arr
+              .slice(0, 3)
+              .map((r) => Object.fromEntries(Object.entries(r).map(([k, v]) => [k, String(v)]))),
           })
-        } else {
-          try {
-            const parsed = JSON.parse(text)
-            const arr: Record<string, string>[] = Array.isArray(parsed)
-              ? parsed
-              : [parsed]
-            const columns = arr.length > 0 ? Object.keys(arr[0]) : []
-            setImportPreview({
-              fileName: file.name,
-              format,
-              rowCount: arr.length,
-              columns,
-              sampleRows: arr.slice(0, 3).map((r) =>
-                Object.fromEntries(
-                  Object.entries(r).map(([k, v]) => [k, String(v)]),
-                ),
-              ),
-            })
-          } catch {
-            setImportPreview({
-              fileName: file.name,
-              format,
-              rowCount: 0,
-              columns: [],
-              sampleRows: [],
-            })
-          }
+        } catch {
+          setImportPreview({
+            fileName: file.name,
+            format,
+            rowCount: 0,
+            columns: [],
+            sampleRows: [],
+          })
         }
       }
-      reader.readAsText(file.slice(0, 16384))
-    },
-    [],
-  )
+    }
+    reader.readAsText(file.slice(0, 16384))
+  }, [])
 
   const handleImport = async () => {
     if (!importFile || !selectedImportTable) return
@@ -316,9 +301,7 @@ function DatabaseDataContent() {
       const data = await response.json()
 
       if (!response.ok || !data.success) {
-        setAnonymizeOutput(
-          data.details || data.error || `Error ${response.status}`,
-        )
+        setAnonymizeOutput(data.details || data.error || `Error ${response.status}`)
         return
       }
 
@@ -335,13 +318,11 @@ function DatabaseDataContent() {
             type: f.type ?? 'custom',
             sampleValue: f.sampleValue ?? '',
             selected: true,
-          })),
+          }))
         )
       }
     } catch (error) {
-      setAnonymizeOutput(
-        error instanceof Error ? error.message : 'Scan failed',
-      )
+      setAnonymizeOutput(error instanceof Error ? error.message : 'Scan failed')
     } finally {
       setIsScanning(false)
     }
@@ -374,22 +355,17 @@ function DatabaseDataContent() {
 
       if (!response.ok || !data.success) {
         setAnonymizeOutput(
-          (prev) =>
-            prev +
-            `\nError: ${data.details || data.error || `HTTP ${response.status}`}`,
+          (prev) => prev + `\nError: ${data.details || data.error || `HTTP ${response.status}`}`
         )
         return
       }
 
       setAnonymizeProgress(100)
-      setAnonymizeOutput(
-        (prev) => prev + (data.data?.output || '\nAnonymization completed.'),
-      )
+      setAnonymizeOutput((prev) => prev + (data.data?.output || '\nAnonymization completed.'))
     } catch (error) {
       setAnonymizeOutput(
         (prev) =>
-          prev +
-          `\nError: ${error instanceof Error ? error.message : 'Anonymization failed'}`,
+          prev + `\nError: ${error instanceof Error ? error.message : 'Anonymization failed'}`
       )
     } finally {
       setIsAnonymizing(false)
@@ -399,9 +375,7 @@ function DatabaseDataContent() {
 
   const togglePIIField = (index: number) => {
     setPiiFields((prev) =>
-      prev.map((field, i) =>
-        i === index ? { ...field, selected: !field.selected } : field,
-      ),
+      prev.map((field, i) => (i === index ? { ...field, selected: !field.selected } : field))
     )
   }
 
@@ -421,9 +395,7 @@ function DatabaseDataContent() {
   return (
     <div className="space-y-6 p-6">
       <div>
-        <h1 className="text-2xl font-bold text-zinc-900 dark:text-white">
-          Data Operations
-        </h1>
+        <h1 className="text-2xl font-bold text-zinc-900 dark:text-white">Data Operations</h1>
         <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
           Export, import, and anonymize database data
         </p>
@@ -435,17 +407,9 @@ function DatabaseDataContent() {
           <AlertTitle>nself CLI Integration</AlertTitle>
           <AlertDescription>
             This page executes{' '}
-            <code className="rounded bg-zinc-100 px-1 dark:bg-zinc-800">
-              nself db export
-            </code>
-            ,{' '}
-            <code className="rounded bg-zinc-100 px-1 dark:bg-zinc-800">
-              nself db import
-            </code>
-            , and{' '}
-            <code className="rounded bg-zinc-100 px-1 dark:bg-zinc-800">
-              nself db anonymize
-            </code>{' '}
+            <code className="rounded bg-zinc-100 px-1 dark:bg-zinc-800">nself db export</code>,{' '}
+            <code className="rounded bg-zinc-100 px-1 dark:bg-zinc-800">nself db import</code>, and{' '}
+            <code className="rounded bg-zinc-100 px-1 dark:bg-zinc-800">nself db anonymize</code>{' '}
             for data operations.
           </AlertDescription>
         </Alert>
@@ -475,23 +439,16 @@ function DatabaseDataContent() {
                     <Download className="h-5 w-5 text-emerald-600" />
                     Export Data
                   </CardTitle>
-                  <CardDescription>
-                    Export table data to CSV or JSON format
-                  </CardDescription>
+                  <CardDescription>Export table data to CSV or JSON format</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   {/* Table Selection */}
                   <div className="space-y-2">
                     <Label>Select Table</Label>
-                    <Select
-                      value={selectedExportTable}
-                      onValueChange={setSelectedExportTable}
-                    >
+                    <Select value={selectedExportTable} onValueChange={setSelectedExportTable}>
                       <SelectTrigger disabled={tablesLoading}>
                         <SelectValue
-                          placeholder={
-                            tablesLoading ? 'Loading tables...' : 'Choose a table...'
-                          }
+                          placeholder={tablesLoading ? 'Loading tables...' : 'Choose a table...'}
                         />
                       </SelectTrigger>
                       <SelectContent>
@@ -579,10 +536,8 @@ function DatabaseDataContent() {
                     </div>
                     <div className="mt-2">
                       $ nself db export
-                      {selectedExportTable
-                        ? ` --table=${selectedExportTable}`
-                        : ''}{' '}
-                      --format={exportFormat}
+                      {selectedExportTable ? ` --table=${selectedExportTable}` : ''} --format=
+                      {exportFormat}
                       {exportLimit && ` --limit=${exportLimit}`}
                     </div>
                   </div>
@@ -623,9 +578,7 @@ function DatabaseDataContent() {
                     <Upload className="h-5 w-5 text-blue-600" />
                     Import Data
                   </CardTitle>
-                  <CardDescription>
-                    Import data from CSV or JSON files
-                  </CardDescription>
+                  <CardDescription>Import data from CSV or JSON files</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   {/* File Upload */}
@@ -663,9 +616,7 @@ function DatabaseDataContent() {
                           ) : (
                             <FileJson className="h-5 w-5 text-blue-500" />
                           )}
-                          <span className="font-medium">
-                            {importPreview.fileName}
-                          </span>
+                          <span className="font-medium">{importPreview.fileName}</span>
                         </div>
                         <Button
                           variant="outline"
@@ -686,10 +637,7 @@ function DatabaseDataContent() {
                   {/* Target Table */}
                   <div className="space-y-2">
                     <Label>Target Table</Label>
-                    <Select
-                      value={selectedImportTable}
-                      onValueChange={setSelectedImportTable}
-                    >
+                    <Select value={selectedImportTable} onValueChange={setSelectedImportTable}>
                       <SelectTrigger disabled={tablesLoading}>
                         <SelectValue
                           placeholder={
@@ -710,9 +658,7 @@ function DatabaseDataContent() {
                   {/* Import Button */}
                   <Button
                     onClick={handleImport}
-                    disabled={
-                      !importFile || !selectedImportTable || isImporting
-                    }
+                    disabled={!importFile || !selectedImportTable || isImporting}
                     className="w-full"
                     size="lg"
                   >
@@ -738,9 +684,7 @@ function DatabaseDataContent() {
                     <div className="mt-2">
                       $ nself db import
                       {importFile ? ` --file="${importFile.name}"` : ''}
-                      {selectedImportTable
-                        ? ` --table=${selectedImportTable}`
-                        : ''}
+                      {selectedImportTable ? ` --table=${selectedImportTable}` : ''}
                     </div>
                   </div>
                 </CardContent>
@@ -778,16 +722,12 @@ function DatabaseDataContent() {
                     <Search className="h-5 w-5" />
                     Import Preview
                   </SheetTitle>
-                  <SheetDescription>
-                    Preview of data to be imported
-                  </SheetDescription>
+                  <SheetDescription>Preview of data to be imported</SheetDescription>
                 </SheetHeader>
                 {importPreview && (
                   <div className="mt-6 space-y-4">
                     <div className="flex items-center gap-4 text-sm">
-                      <Badge variant="outline">
-                        {importPreview.format.toUpperCase()}
-                      </Badge>
+                      <Badge variant="outline">{importPreview.format.toUpperCase()}</Badge>
                       <span>{importPreview.rowCount} rows</span>
                       <span>{importPreview.columns.length} columns</span>
                     </div>
@@ -804,10 +744,7 @@ function DatabaseDataContent() {
                           {importPreview.sampleRows.map((row, i) => (
                             <TableRow key={i}>
                               {importPreview.columns.map((col) => (
-                                <TableCell
-                                  key={col}
-                                  className="font-mono text-xs"
-                                >
+                                <TableCell key={col} className="font-mono text-xs">
                                   {row[col]}
                                 </TableCell>
                               ))}
@@ -817,8 +754,8 @@ function DatabaseDataContent() {
                       </Table>
                     </ScrollArea>
                     <p className="text-xs text-zinc-500">
-                      Showing first {importPreview.sampleRows.length} of{' '}
-                      {importPreview.rowCount} rows
+                      Showing first {importPreview.sampleRows.length} of {importPreview.rowCount}{' '}
+                      rows
                     </p>
                   </div>
                 )}
@@ -832,13 +769,10 @@ function DatabaseDataContent() {
               {/* Warning Alert */}
               <Alert className="border-amber-500/50 bg-amber-500/10">
                 <AlertTriangle className="h-4 w-4 text-amber-500" />
-                <AlertTitle className="text-amber-500">
-                  Caution: Destructive Operation
-                </AlertTitle>
+                <AlertTitle className="text-amber-500">Caution: Destructive Operation</AlertTitle>
                 <AlertDescription>
-                  Anonymization permanently modifies data. This should only be
-                  used on non-production databases or before sharing data for
-                  development/testing purposes.
+                  Anonymization permanently modifies data. This should only be used on
+                  non-production databases or before sharing data for development/testing purposes.
                 </AlertDescription>
               </Alert>
 
@@ -892,23 +826,17 @@ function DatabaseDataContent() {
                                 <TableCell>
                                   <Checkbox
                                     checked={field.selected}
-                                    onCheckedChange={() =>
-                                      togglePIIField(index)
-                                    }
+                                    onCheckedChange={() => togglePIIField(index)}
                                   />
                                 </TableCell>
                                 <TableCell>
                                   <div className="font-mono text-xs">
-                                    <span className="text-zinc-500">
-                                      {field.table}.
-                                    </span>
+                                    <span className="text-zinc-500">{field.table}.</span>
                                     {field.column}
                                   </div>
                                 </TableCell>
                                 <TableCell>
-                                  <Badge
-                                    className={getPIITypeBadge(field.type)}
-                                  >
+                                  <Badge className={getPIITypeBadge(field.type)}>
                                     {field.type}
                                   </Badge>
                                 </TableCell>
@@ -928,9 +856,7 @@ function DatabaseDataContent() {
                         variant="outline"
                         size="sm"
                         onClick={() =>
-                          setPiiFields((prev) =>
-                            prev.map((f) => ({ ...f, selected: true })),
-                          )
+                          setPiiFields((prev) => prev.map((f) => ({ ...f, selected: true })))
                         }
                       >
                         <Eye className="mr-2 h-4 w-4" />
@@ -940,9 +866,7 @@ function DatabaseDataContent() {
                         variant="outline"
                         size="sm"
                         onClick={() =>
-                          setPiiFields((prev) =>
-                            prev.map((f) => ({ ...f, selected: false })),
-                          )
+                          setPiiFields((prev) => prev.map((f) => ({ ...f, selected: false })))
                         }
                       >
                         <EyeOff className="mr-2 h-4 w-4" />
@@ -964,10 +888,7 @@ function DatabaseDataContent() {
                     {/* Anonymize Button */}
                     <Button
                       onClick={handleAnonymize}
-                      disabled={
-                        piiFields.filter((f) => f.selected).length === 0 ||
-                        isAnonymizing
-                      }
+                      disabled={piiFields.filter((f) => f.selected).length === 0 || isAnonymizing}
                       className="w-full bg-sky-500 hover:bg-sky-600"
                       size="lg"
                     >
@@ -979,8 +900,7 @@ function DatabaseDataContent() {
                       ) : (
                         <>
                           <Shield className="mr-2 h-4 w-4" />
-                          Anonymize Selected Fields (
-                          {piiFields.filter((f) => f.selected).length})
+                          Anonymize Selected Fields ({piiFields.filter((f) => f.selected).length})
                         </>
                       )}
                     </Button>
@@ -1034,59 +954,35 @@ function DatabaseDataContent() {
                     <CheckCircle className="h-5 w-5 text-emerald-600" />
                     Anonymization Methods
                   </CardTitle>
-                  <CardDescription>
-                    How different PII types are anonymized
-                  </CardDescription>
+                  <CardDescription>How different PII types are anonymized</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-6">
                     <div className="rounded-lg border p-3 dark:border-zinc-700">
-                      <Badge className="mb-2 bg-blue-500/10 text-blue-500">
-                        email
-                      </Badge>
+                      <Badge className="mb-2 bg-blue-500/10 text-blue-500">email</Badge>
                       <p className="text-xs text-zinc-500">
                         user@domain.com to user_abc123@example.com
                       </p>
                     </div>
                     <div className="rounded-lg border p-3 dark:border-zinc-700">
-                      <Badge className="mb-2 bg-sky-500/10 text-sky-500">
-                        name
-                      </Badge>
-                      <p className="text-xs text-zinc-500">
-                        Real names to fake names using Faker
-                      </p>
+                      <Badge className="mb-2 bg-sky-500/10 text-sky-500">name</Badge>
+                      <p className="text-xs text-zinc-500">Real names to fake names using Faker</p>
                     </div>
                     <div className="rounded-lg border p-3 dark:border-zinc-700">
-                      <Badge className="mb-2 bg-green-500/10 text-green-500">
-                        phone
-                      </Badge>
-                      <p className="text-xs text-zinc-500">
-                        Replace with (555) 000-XXXX format
-                      </p>
+                      <Badge className="mb-2 bg-green-500/10 text-green-500">phone</Badge>
+                      <p className="text-xs text-zinc-500">Replace with (555) 000-XXXX format</p>
                     </div>
                     <div className="rounded-lg border p-3 dark:border-zinc-700">
-                      <Badge className="mb-2 bg-orange-500/10 text-orange-500">
-                        address
-                      </Badge>
-                      <p className="text-xs text-zinc-500">
-                        Replace with generic addresses
-                      </p>
+                      <Badge className="mb-2 bg-orange-500/10 text-orange-500">address</Badge>
+                      <p className="text-xs text-zinc-500">Replace with generic addresses</p>
                     </div>
                     <div className="rounded-lg border p-3 dark:border-zinc-700">
-                      <Badge className="mb-2 bg-red-500/10 text-red-500">
-                        ssn
-                      </Badge>
-                      <p className="text-xs text-zinc-500">
-                        Replace with XXX-XX-XXXX format
-                      </p>
+                      <Badge className="mb-2 bg-red-500/10 text-red-500">ssn</Badge>
+                      <p className="text-xs text-zinc-500">Replace with XXX-XX-XXXX format</p>
                     </div>
                     <div className="rounded-lg border p-3 dark:border-zinc-700">
-                      <Badge className="mb-2 bg-cyan-500/10 text-cyan-500">
-                        ip
-                      </Badge>
-                      <p className="text-xs text-zinc-500">
-                        Replace with 10.0.0.X or 192.168.X.X
-                      </p>
+                      <Badge className="mb-2 bg-cyan-500/10 text-cyan-500">ip</Badge>
+                      <p className="text-xs text-zinc-500">Replace with 10.0.0.X or 192.168.X.X</p>
                     </div>
                   </div>
                 </CardContent>

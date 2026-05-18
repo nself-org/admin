@@ -1,14 +1,6 @@
 'use client'
 
-import {
-  AlertCircle,
-  CheckCircle,
-  Clock,
-  Edit2,
-  GripVertical,
-  Trash2,
-  XCircle,
-} from 'lucide-react'
+import { AlertCircle, CheckCircle, Clock, Edit2, GripVertical, Trash2, XCircle } from 'lucide-react'
 import { useState } from 'react'
 import type { ActionType, MuxRule } from './RuleBuilder'
 
@@ -32,8 +24,7 @@ const ACTION_LABELS: Record<ActionType, string> = {
 function conditionSummary(conditions: MuxRule['conditions']): string {
   const parts: string[] = []
   if (conditions.from) parts.push(`from: ${conditions.from}`)
-  if (conditions.subject_contains)
-    parts.push(`subject: ${conditions.subject_contains}`)
+  if (conditions.subject_contains) parts.push(`subject: ${conditions.subject_contains}`)
   if (conditions.body_contains) parts.push(`body: ${conditions.body_contains}`)
   if (parts.length === 0) return 'any message'
   return parts.join(' + ')
@@ -64,10 +55,7 @@ export function RuleList({
     return (
       <div className="space-y-3">
         {[1, 2, 3].map((n) => (
-          <div
-            key={n}
-            className="h-16 animate-pulse rounded-xl bg-zinc-800/50"
-          />
+          <div key={n} className="h-16 animate-pulse rounded-xl bg-zinc-800/50" />
         ))}
       </div>
     )
@@ -142,16 +130,12 @@ export function RuleList({
 
                 {/* Priority */}
                 <td className="px-4 py-3">
-                  <span className="font-mono text-sm text-zinc-300">
-                    {rule.priority}
-                  </span>
+                  <span className="font-mono text-sm text-zinc-300">{rule.priority}</span>
                 </td>
 
                 {/* Name */}
                 <td className="px-4 py-3">
-                  <span className="text-sm font-medium text-white">
-                    {rule.name || '(unnamed)'}
-                  </span>
+                  <span className="text-sm font-medium text-white">{rule.name || '(unnamed)'}</span>
                 </td>
 
                 {/* Conditions summary */}

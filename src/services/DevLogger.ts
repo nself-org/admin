@@ -83,10 +83,8 @@ class DevLogger {
           level,
           'console',
           args
-            .map((a) =>
-              typeof a === 'object' ? JSON.stringify(a, null, 2) : String(a),
-            )
-            .join(' '),
+            .map((a) => (typeof a === 'object' ? JSON.stringify(a, null, 2) : String(a)))
+            .join(' ')
         )
       }
     })
@@ -97,11 +95,7 @@ class DevLogger {
     window.fetch = async (...args: Parameters<typeof fetch>) => {
       const [input, init] = args
       const url =
-        typeof input === 'string'
-          ? input
-          : input instanceof Request
-            ? input.url
-            : input.toString()
+        typeof input === 'string' ? input : input instanceof Request ? input.url : input.toString()
       const method = init?.method || 'GET'
       const startTime = performance.now()
 
@@ -149,10 +143,7 @@ class DevLogger {
       this.log('info', 'click', `Clicked ${interactive.tagName}`, {
         tagName: interactive.tagName,
         id: interactive.id,
-        className:
-          typeof interactive.className === 'string'
-            ? interactive.className
-            : '',
+        className: typeof interactive.className === 'string' ? interactive.className : '',
         text: interactive.textContent?.substring(0, 50),
         href: (interactive as HTMLAnchorElement).href,
         coordinates: { x: e.clientX, y: e.clientY },
@@ -190,15 +181,10 @@ class DevLogger {
       }
 
       window.addEventListener('popstate', () => {
-        this.log(
-          'info',
-          'navigation',
-          `Back/Forward: ${window.location.pathname}`,
-          {
-            type: 'popstate',
-            url: window.location.pathname,
-          },
-        )
+        this.log('info', 'navigation', `Back/Forward: ${window.location.pathname}`, {
+          type: 'popstate',
+          url: window.location.pathname,
+        })
       })
     }
   }
@@ -211,16 +197,11 @@ class DevLogger {
           for (const entry of list.getEntries()) {
             if (entry.duration > 50) {
               // Tasks longer than 50ms
-              this.log(
-                'warn',
-                'performance',
-                `Long task: ${Math.round(entry.duration)}ms`,
-                {
-                  duration: Math.round(entry.duration),
-                  startTime: Math.round(entry.startTime),
-                  name: entry.name,
-                },
-              )
+              this.log('warn', 'performance', `Long task: ${Math.round(entry.duration)}ms`, {
+                duration: Math.round(entry.duration),
+                startTime: Math.round(entry.startTime),
+                name: entry.name,
+              })
             }
           }
         })
@@ -236,7 +217,7 @@ class DevLogger {
             const nav = entry as PerformanceNavigationTiming
             this.log('info', 'performance', 'Page load metrics', {
               domContentLoaded: Math.round(
-                nav.domContentLoadedEventEnd - nav.domContentLoadedEventStart,
+                nav.domContentLoadedEventEnd - nav.domContentLoadedEventStart
               ),
               loadComplete: Math.round(nav.loadEventEnd - nav.loadEventStart),
               domInteractive: Math.round(nav.domInteractive),
@@ -278,9 +259,7 @@ class DevLogger {
     while (current && current !== document.body) {
       const tag = current.tagName.toLowerCase()
       const id = current.id ? `#${current.id}` : ''
-      const className = current.className
-        ? `.${current.className.split(' ')[0]}`
-        : ''
+      const className = current.className ? `.${current.className.split(' ')[0]}` : ''
       path.unshift(`${tag}${id}${className}`)
       current = current.parentElement
     }
@@ -297,8 +276,7 @@ class DevLogger {
       category,
       message,
       data,
-      pathname:
-        typeof window !== 'undefined' ? window.location.pathname : undefined,
+      pathname: typeof window !== 'undefined' ? window.location.pathname : undefined,
     }
 
     // Add to logs
@@ -381,15 +359,10 @@ class DevLogger {
     try {
       performance.measure(name, `${name}-start`, `${name}-end`)
       const measure = performance.getEntriesByName(name)[0]
-      this.log(
-        'info',
-        'performance',
-        `Timer ${name}: ${Math.round(measure.duration)}ms`,
-        {
-          name,
-          duration: Math.round(measure.duration),
-        },
-      )
+      this.log('info', 'performance', `Timer ${name}: ${Math.round(measure.duration)}ms`, {
+        name,
+        duration: Math.round(measure.duration),
+      })
     } catch {
       // Intentionally empty - timing mark might not exist
     }
@@ -415,13 +388,10 @@ class DevLogger {
     })
 
     // Calculate average API duration
-    const apiLogs = this.logs.filter(
-      (l) => l.type === 'api' && l.data?.duration,
-    )
+    const apiLogs = this.logs.filter((l) => l.type === 'api' && l.data?.duration)
     if (apiLogs.length > 0) {
       stats.avgApiDuration =
-        apiLogs.reduce((sum, log) => sum + (log.data?.duration || 0), 0) /
-        apiLogs.length
+        apiLogs.reduce((sum, log) => sum + (log.data?.duration || 0), 0) / apiLogs.length
     }
 
     return stats
@@ -430,8 +400,7 @@ class DevLogger {
   // Export logs
   exportLogs() {
     const dataStr = JSON.stringify(this.logs, null, 2)
-    const dataUri =
-      'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr)
+    const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr)
     const exportFileDefaultName = `devlogs-${new Date().toISOString()}.json`
 
     const linkElement = document.createElement('a')

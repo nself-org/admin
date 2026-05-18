@@ -65,7 +65,6 @@ interface SystemInfo {
 const EMPTY_SESSIONS: TerminalSession[] = []
 const EMPTY_OUTPUTS: TerminalOutput[] = []
 
-
 function formatSize(bytes: number): string {
   const sizes = ['B', 'KB', 'MB', 'GB', 'TB']
   if (bytes === 0) return '0 B'
@@ -121,10 +120,7 @@ function SessionTab({
         <button
           onClick={(e) => {
             e.stopPropagation()
-            onAction(
-              session.status === 'running' ? 'stop' : 'start',
-              session.id,
-            )
+            onAction(session.status === 'running' ? 'stop' : 'start', session.id)
           }}
           className="rounded p-1 hover:bg-zinc-200 dark:hover:bg-zinc-600"
         >
@@ -148,16 +144,8 @@ function SessionTab({
   )
 }
 
-function TerminalOutput({
-  outputs,
-  sessionId,
-}: {
-  outputs: TerminalOutput[]
-  sessionId: string
-}) {
-  const sessionOutputs = outputs.filter(
-    (output) => output.sessionId === sessionId,
-  )
+function TerminalOutput({ outputs, sessionId }: { outputs: TerminalOutput[]; sessionId: string }) {
+  const sessionOutputs = outputs.filter((output) => output.sessionId === sessionId)
   const terminalRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -249,14 +237,9 @@ function CommandInput({
   }
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="border-t border-zinc-700 bg-zinc-900 p-3"
-    >
+    <form onSubmit={handleSubmit} className="border-t border-zinc-700 bg-zinc-900 p-3">
       <div className="flex items-center gap-2">
-        <span className="font-mono text-sm text-green-400">
-          nself@server:{workingDir}$
-        </span>
+        <span className="font-mono text-sm text-green-400">nself@server:{workingDir}$</span>
         <input
           type="text"
           value={command}
@@ -280,9 +263,7 @@ function CommandInput({
 function SessionInfo({ session }: { session: TerminalSession }) {
   return (
     <div className="rounded-lg border border-zinc-200 bg-white p-4 dark:border-zinc-700 dark:bg-zinc-800">
-      <h3 className="mb-3 font-semibold text-zinc-900 dark:text-white">
-        Session Info
-      </h3>
+      <h3 className="mb-3 font-semibold text-zinc-900 dark:text-white">Session Info</h3>
       <div className="space-y-2 text-sm">
         <div className="flex justify-between">
           <span className="text-zinc-500 dark:text-zinc-400">Status:</span>
@@ -319,9 +300,7 @@ function SessionInfo({ session }: { session: TerminalSession }) {
           <span className="text-xs">{formatDate(session.created)}</span>
         </div>
         <div className="flex justify-between">
-          <span className="text-zinc-500 dark:text-zinc-400">
-            Last Activity:
-          </span>
+          <span className="text-zinc-500 dark:text-zinc-400">Last Activity:</span>
           <span className="text-xs">{formatDate(session.lastActivity)}</span>
         </div>
       </div>
@@ -333,9 +312,7 @@ function SystemStats({ systemInfo }: { systemInfo: SystemInfo | null }) {
   if (!systemInfo) return null
   return (
     <div className="rounded-lg border border-zinc-200 bg-white p-4 dark:border-zinc-700 dark:bg-zinc-800">
-      <h3 className="mb-3 font-semibold text-zinc-900 dark:text-white">
-        System Information
-      </h3>
+      <h3 className="mb-3 font-semibold text-zinc-900 dark:text-white">System Information</h3>
       <div className="space-y-3">
         <div>
           <div className="mb-1 flex justify-between text-sm">
@@ -352,12 +329,9 @@ function SystemStats({ systemInfo }: { systemInfo: SystemInfo | null }) {
 
         <div>
           <div className="mb-1 flex justify-between text-sm">
-            <span className="text-zinc-500 dark:text-zinc-400">
-              Memory Usage
-            </span>
+            <span className="text-zinc-500 dark:text-zinc-400">Memory Usage</span>
             <span className="font-medium">
-              {formatSize(systemInfo.memory.used)} /{' '}
-              {formatSize(systemInfo.memory.total)}
+              {formatSize(systemInfo.memory.used)} / {formatSize(systemInfo.memory.total)}
             </span>
           </div>
           <div className="h-2 w-full rounded-full bg-zinc-200 dark:bg-zinc-700">
@@ -408,7 +382,13 @@ function TerminalContent() {
   const [isRunning, setIsRunning] = useState(false)
   const [showSidebar, setShowSidebar] = useState(true)
 
-  const { data: sysData } = useSWR<{ metrics: { loadAverage: number[]; uptime: number; memory: { total: number; free: number; used: number } } }>('/api/system/resources', fetcher, { refreshInterval: 30000 })
+  const { data: sysData } = useSWR<{
+    metrics: {
+      loadAverage: number[]
+      uptime: number
+      memory: { total: number; free: number; used: number }
+    }
+  }>('/api/system/resources', fetcher, { refreshInterval: 30000 })
 
   const systemInfo: SystemInfo | null = sysData?.metrics
     ? {
@@ -431,8 +411,8 @@ function TerminalContent() {
         prev.map((session) =>
           session.id === sessionId
             ? { ...session, status: action === 'start' ? 'running' : 'stopped' }
-            : session,
-        ),
+            : session
+        )
       )
     }
   }
@@ -499,11 +479,11 @@ function TerminalContent() {
           prev.map((session) =>
             session.id === activeSessionId
               ? { ...session, lastActivity: new Date().toISOString(), command }
-              : session,
-          ),
+              : session
+          )
         )
       },
-      1000 + Math.random() * 2000,
+      1000 + Math.random() * 2000
     ) // Random delay between 1-3 seconds
   }
 
@@ -531,9 +511,7 @@ ls, pwd, whoami, date, ps, docker, help, clear
 Use 'man <command>' for more information.`
     } else if (cmd === 'clear') {
       // Clear terminal
-      setOutputs((prev) =>
-        prev.filter((output) => output.sessionId !== activeSessionId),
-      )
+      setOutputs((prev) => prev.filter((output) => output.sessionId !== activeSessionId))
       return ''
     } else {
       return `Command '${command}' executed successfully.`
@@ -547,12 +525,9 @@ Use 'man <command>' for more information.`
         <div className="mb-6">
           <div className="mb-4 flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold text-zinc-900 dark:text-white">
-                Web Terminal
-              </h1>
+              <h1 className="text-3xl font-bold text-zinc-900 dark:text-white">Web Terminal</h1>
               <p className="mt-1 text-zinc-600 dark:text-zinc-400">
-                Browser-based terminal with command execution and session
-                management
+                Browser-based terminal with command execution and session management
               </p>
             </div>
             <div className="flex items-center gap-2">
@@ -569,11 +544,7 @@ Use 'man <command>' for more information.`
                 variant="outline"
                 className="flex items-center gap-2"
               >
-                {showSidebar ? (
-                  <EyeOff className="h-4 w-4" />
-                ) : (
-                  <Eye className="h-4 w-4" />
-                )}
+                {showSidebar ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                 {showSidebar ? 'Hide' : 'Show'} Sidebar
               </Button>
               <Button variant="outline" className="flex items-center gap-2">
@@ -627,10 +598,7 @@ Use 'man <command>' for more information.`
               {/* Terminal Content */}
               {activeSession ? (
                 <>
-                  <TerminalOutput
-                    outputs={outputs}
-                    sessionId={activeSessionId ?? ''}
-                  />
+                  <TerminalOutput outputs={outputs} sessionId={activeSessionId ?? ''} />
                   <CommandInput
                     onExecute={handleExecuteCommand}
                     isRunning={isRunning}
@@ -657,9 +625,7 @@ Use 'man <command>' for more information.`
 
               {/* Quick Commands */}
               <div className="rounded-lg border border-zinc-200 bg-white p-4 dark:border-zinc-700 dark:bg-zinc-800">
-                <h3 className="mb-3 font-semibold text-zinc-900 dark:text-white">
-                  Quick Commands
-                </h3>
+                <h3 className="mb-3 font-semibold text-zinc-900 dark:text-white">Quick Commands</h3>
                 <div className="space-y-2">
                   {[
                     { label: 'List Files', command: 'ls -la' },
@@ -676,9 +642,7 @@ Use 'man <command>' for more information.`
                       className="w-full rounded bg-zinc-50 px-3 py-2 text-left text-sm hover:bg-zinc-100 disabled:opacity-50 dark:bg-zinc-700 dark:hover:bg-zinc-600"
                     >
                       <div className="font-medium">{item.label}</div>
-                      <div className="font-mono text-xs text-zinc-500">
-                        {item.command}
-                      </div>
+                      <div className="font-mono text-xs text-zinc-500">{item.command}</div>
                     </button>
                   ))}
                 </div>
@@ -701,9 +665,7 @@ Use 'man <command>' for more information.`
                       onClick={() => setActiveSessionId(session.id)}
                     >
                       <div className="font-medium">{session.name}</div>
-                      <div className="text-zinc-500">
-                        {session.command || 'No command'}
-                      </div>
+                      <div className="text-zinc-500">{session.command || 'No command'}</div>
                     </div>
                   ))}
                 </div>

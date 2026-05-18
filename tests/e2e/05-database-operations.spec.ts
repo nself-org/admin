@@ -57,16 +57,11 @@ test.describe('Database Operations Flow', () => {
       await migrateButton.click()
 
       // Should show migration progress
-      await expect(
-        page.locator('[data-testid="migration-status"]'),
-      ).toBeVisible({ timeout: 30000 })
+      await expect(page.locator('[data-testid="migration-status"]')).toBeVisible({ timeout: 30000 })
     }
   })
 
-  test.skip('should handle query errors gracefully', async ({
-    databasePage,
-    page,
-  }) => {
+  test.skip('should handle query errors gracefully', async ({ databasePage, page }) => {
     // Skipped: requires a live Hasura/Postgres backend to execute queries
     // and receive error responses. CI runs the admin UI without a backend.
     await databasePage.gotoConsole()
@@ -78,10 +73,7 @@ test.describe('Database Operations Flow', () => {
     await expect(page.locator('[role="alert"]')).toBeVisible()
   })
 
-  test('should support syntax highlighting in editor', async ({
-    databasePage,
-    page,
-  }) => {
+  test('should support syntax highlighting in editor', async ({ databasePage, page }) => {
     await databasePage.gotoConsole()
 
     // Check if editor has syntax highlighting class
@@ -92,10 +84,7 @@ test.describe('Database Operations Flow', () => {
     }
   })
 
-  test.skip('should show query execution time', async ({
-    databasePage,
-    page,
-  }) => {
+  test.skip('should show query execution time', async ({ databasePage, page }) => {
     // Skipped: executeQuery() calls queryEditor.fill() on [data-testid="query-editor"]
     // which is a Monaco Editor instance — Monaco does not render that data-testid,
     // so the locator never resolves and the test hangs for 30 s in CI.
@@ -131,10 +120,7 @@ test.describe('Database Operations Flow', () => {
     }
   })
 
-  test.skip('should be responsive on mobile', async ({
-    databasePage,
-    page,
-  }) => {
+  test.skip('should be responsive on mobile', async ({ databasePage, page }) => {
     // Skipped: databasePage.queryEditor ([data-testid="query-editor"]) is a Monaco
     // Editor instance that does not render with that data-testid attribute, so the
     // toBeVisible() assertion hangs until it times out.
@@ -145,10 +131,7 @@ test.describe('Database Operations Flow', () => {
     await expect(databasePage.queryEditor).toBeVisible()
   })
 
-  test.skip('should support keyboard shortcuts', async ({
-    databasePage,
-    page,
-  }) => {
+  test.skip('should support keyboard shortcuts', async ({ databasePage, page }) => {
     // Skipped: queryEditor.click() targets [data-testid="query-editor"] which is a
     // Monaco Editor instance — Monaco does not render that data-testid, so the
     // locator never resolves and the test hangs for 30 s in CI.

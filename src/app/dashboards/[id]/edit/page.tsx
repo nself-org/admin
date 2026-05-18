@@ -67,7 +67,7 @@ export default function EditDashboardPage() {
         // Handle error silently
       }
     },
-    [dashboard, dashboardId, updateWidget, refresh],
+    [dashboard, dashboardId, updateWidget, refresh]
   )
 
   const handleWidgetRemove = useCallback(
@@ -83,7 +83,7 @@ export default function EditDashboardPage() {
         }
       }
     },
-    [dashboard, dashboardId, removeWidget, refresh],
+    [dashboard, dashboardId, removeWidget, refresh]
   )
 
   const handleWidgetEdit = useCallback((widget: Widget) => {
@@ -95,10 +95,7 @@ export default function EditDashboardPage() {
       if (!dashboard) return
 
       // Find the next available position
-      const maxY = Math.max(
-        0,
-        ...dashboard.widgets.map((w) => w.position.y + w.position.h),
-      )
+      const maxY = Math.max(0, ...dashboard.widgets.map((w) => w.position.y + w.position.h))
 
       const newWidget: Omit<Widget, 'id'> = {
         type: template.type,
@@ -124,7 +121,7 @@ export default function EditDashboardPage() {
         // Handle error silently
       }
     },
-    [dashboard, dashboardId, addWidget, refresh],
+    [dashboard, dashboardId, addWidget, refresh]
   )
 
   const handleSaveSettings = async () => {
@@ -158,10 +155,7 @@ export default function EditDashboardPage() {
       <>
         <PageHeader
           title="Loading..."
-          breadcrumbs={[
-            { label: 'Dashboards', href: '/dashboards' },
-            { label: 'Loading...' },
-          ]}
+          breadcrumbs={[{ label: 'Dashboards', href: '/dashboards' }, { label: 'Loading...' }]}
         />
         <PageContent>
           <div className="flex items-center justify-center py-20">
@@ -177,10 +171,7 @@ export default function EditDashboardPage() {
       <>
         <PageHeader
           title="Dashboard Not Found"
-          breadcrumbs={[
-            { label: 'Dashboards', href: '/dashboards' },
-            { label: 'Not Found' },
-          ]}
+          breadcrumbs={[{ label: 'Dashboards', href: '/dashboards' }, { label: 'Not Found' }]}
         />
         <PageContent>
           <Card className="flex flex-col items-center justify-center p-12 text-center">
@@ -189,8 +180,7 @@ export default function EditDashboardPage() {
               Dashboard not found
             </h3>
             <p className="mb-4 text-sm text-zinc-500 dark:text-zinc-400">
-              The dashboard you are looking for does not exist or has been
-              deleted.
+              The dashboard you are looking for does not exist or has been deleted.
             </p>
             <Link href="/dashboards">
               <Button variant="outline">
@@ -219,19 +209,11 @@ export default function EditDashboardPage() {
             ]}
             actions={
               <div className="flex items-center gap-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setShowSettings(true)}
-                >
+                <Button variant="outline" size="sm" onClick={() => setShowSettings(true)}>
                   <Settings className="mr-2 h-4 w-4" />
                   Settings
                 </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setShowLibrary(!showLibrary)}
-                >
+                <Button variant="outline" size="sm" onClick={() => setShowLibrary(!showLibrary)}>
                   {showLibrary ? (
                     <PanelRightClose className="mr-2 h-4 w-4" />
                   ) : (
@@ -246,11 +228,7 @@ export default function EditDashboardPage() {
                   </Button>
                 </Link>
                 {hasChanges && (
-                  <Button
-                    size="sm"
-                    onClick={handleSaveSettings}
-                    disabled={isSaving}
-                  >
+                  <Button size="sm" onClick={handleSaveSettings} disabled={isSaving}>
                     <Save className="mr-2 h-4 w-4" />
                     {isSaving ? 'Saving...' : 'Save'}
                   </Button>
@@ -261,11 +239,7 @@ export default function EditDashboardPage() {
           <PageContent>
             {/* Edit Toolbar */}
             <div className="mb-4 flex items-center gap-2 rounded-lg border border-zinc-200 bg-zinc-50 p-2 dark:border-zinc-700 dark:bg-zinc-900">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setShowLibrary(true)}
-              >
+              <Button variant="outline" size="sm" onClick={() => setShowLibrary(true)}>
                 <Plus className="mr-2 h-4 w-4" />
                 Add Widget
               </Button>
@@ -290,10 +264,7 @@ export default function EditDashboardPage() {
       {/* Widget Library Sidebar */}
       {showLibrary && (
         <div className="w-80 border-l border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-950">
-          <WidgetLibrary
-            onSelect={handleAddWidget}
-            onClose={() => setShowLibrary(false)}
-          />
+          <WidgetLibrary onSelect={handleAddWidget} onClose={() => setShowLibrary(false)} />
         </div>
       )}
 
@@ -340,10 +311,7 @@ export default function EditDashboardPage() {
                 />
               </div>
               <div className="flex justify-end gap-2 pt-4">
-                <Button
-                  variant="outline"
-                  onClick={() => setShowSettings(false)}
-                >
+                <Button variant="outline" onClick={() => setShowSettings(false)}>
                   Cancel
                 </Button>
                 <Button onClick={handleSaveSettings} disabled={isSaving}>
@@ -360,9 +328,7 @@ export default function EditDashboardPage() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
           <Card className="w-full max-w-md p-6">
             <div className="mb-4 flex items-center justify-between">
-              <h2 className="text-lg font-semibold text-zinc-900 dark:text-white">
-                Edit Widget
-              </h2>
+              <h2 className="text-lg font-semibold text-zinc-900 dark:text-white">Edit Widget</h2>
               <button
                 onClick={() => setEditingWidget(null)}
                 className="rounded p-1 hover:bg-zinc-100 dark:hover:bg-zinc-800"
@@ -408,10 +374,7 @@ export default function EditDashboardPage() {
                 />
               </div>
               <div className="flex justify-end gap-2 pt-4">
-                <Button
-                  variant="outline"
-                  onClick={() => setEditingWidget(null)}
-                >
+                <Button variant="outline" onClick={() => setEditingWidget(null)}>
                   Cancel
                 </Button>
                 <Button onClick={handleSaveWidgetConfig}>Save Widget</Button>

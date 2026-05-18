@@ -108,8 +108,7 @@ function MetricCard({
     yellow: 'text-yellow-500',
   }
 
-  const TrendIcon =
-    trend === 'up' ? TrendingUp : trend === 'down' ? TrendingDown : Activity
+  const TrendIcon = trend === 'up' ? TrendingUp : trend === 'down' ? TrendingDown : Activity
 
   return (
     <div className="rounded-lg border border-zinc-200 bg-white p-6 dark:border-zinc-700 dark:bg-zinc-800">
@@ -117,15 +116,11 @@ function MetricCard({
         <div className="flex-1">
           <div className="mb-2 flex items-center gap-2">
             <Icon className={`h-5 w-5 ${colorClasses[color]}`} />
-            <h3 className="text-sm font-medium text-zinc-600 dark:text-zinc-400">
-              {title}
-            </h3>
+            <h3 className="text-sm font-medium text-zinc-600 dark:text-zinc-400">{title}</h3>
           </div>
 
           <div className="mb-2 flex items-baseline gap-2">
-            <span className="text-2xl font-bold text-zinc-900 dark:text-white">
-              {value}
-            </span>
+            <span className="text-2xl font-bold text-zinc-900 dark:text-white">{value}</span>
             {unit && <span className="text-sm text-zinc-500">{unit}</span>}
           </div>
 
@@ -149,11 +144,7 @@ function MetricCard({
   )
 }
 
-function ResponseTimeChart({
-  data,
-}: {
-  data: { p50: number; p95: number; p99: number }
-}) {
+function ResponseTimeChart({ data }: { data: { p50: number; p95: number; p99: number } }) {
   return (
     <div className="rounded-lg border border-zinc-200 bg-white p-6 dark:border-zinc-700 dark:bg-zinc-800">
       <div className="mb-4 flex items-center justify-between">
@@ -217,14 +208,10 @@ function ResponseTimeChart({
   )
 }
 
-function EndpointPerformanceTable({
-  endpoints,
-}: {
-  endpoints: EndpointPerformance[]
-}) {
-  const [sortBy, setSortBy] = useState<
-    'path' | 'avgResponseTime' | 'requestCount' | 'errorRate'
-  >('avgResponseTime')
+function EndpointPerformanceTable({ endpoints }: { endpoints: EndpointPerformance[] }) {
+  const [sortBy, setSortBy] = useState<'path' | 'avgResponseTime' | 'requestCount' | 'errorRate'>(
+    'avgResponseTime'
+  )
   const [sortDesc, setSortDesc] = useState(true)
 
   const sortedEndpoints = [...endpoints].sort((a, b) => {
@@ -299,10 +286,7 @@ function EndpointPerformanceTable({
           </thead>
           <tbody className="divide-y divide-zinc-200 dark:divide-zinc-700">
             {sortedEndpoints.map((endpoint, index) => (
-              <tr
-                key={index}
-                className="hover:bg-zinc-50 dark:hover:bg-zinc-800/50"
-              >
+              <tr key={index} className="hover:bg-zinc-50 dark:hover:bg-zinc-800/50">
                 <td className="px-4 py-3 font-mono text-sm text-zinc-900 dark:text-white">
                   {endpoint.path}
                 </td>
@@ -361,23 +345,16 @@ function SlowQueriesPanel({ queries }: { queries: SlowQuery[] }) {
 
       <div className="space-y-3">
         {queries.map((query, index) => (
-          <div
-            key={index}
-            className="rounded-lg border border-zinc-200 p-4 dark:border-zinc-700"
-          >
+          <div key={index} className="rounded-lg border border-zinc-200 p-4 dark:border-zinc-700">
             <div className="mb-2 flex items-start justify-between">
               <div className="flex-1">
                 <div className="mb-1 font-mono text-sm text-zinc-900 dark:text-white">
                   {query.query}
                 </div>
-                <div className="text-xs text-zinc-500">
-                  Executed {query.count} times
-                </div>
+                <div className="text-xs text-zinc-500">Executed {query.count} times</div>
               </div>
               <div className="ml-4 text-right">
-                <div className="text-sm font-medium text-red-600">
-                  {query.avgTime}ms
-                </div>
+                <div className="text-sm font-medium text-red-600">{query.avgTime}ms</div>
                 <div className="text-xs text-zinc-500">avg time</div>
               </div>
             </div>
@@ -388,15 +365,10 @@ function SlowQueriesPanel({ queries }: { queries: SlowQuery[] }) {
   )
 }
 
-function OptimizationSuggestions({
-  suggestions,
-}: {
-  suggestions: OptimizationSuggestion[]
-}) {
+function OptimizationSuggestions({ suggestions }: { suggestions: OptimizationSuggestion[] }) {
   const severityColors = {
     high: 'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400',
-    medium:
-      'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400',
+    medium: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400',
     low: 'bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400',
   }
 
@@ -420,9 +392,7 @@ function OptimizationSuggestions({
                   >
                     {suggestion.severity.toUpperCase()}
                   </span>
-                  <span className="text-xs text-zinc-500">
-                    {suggestion.category}
-                  </span>
+                  <span className="text-xs text-zinc-500">{suggestion.category}</span>
                 </div>
                 <h4 className="mb-1 font-medium text-zinc-900 dark:text-white">
                   {suggestion.title}
@@ -431,12 +401,8 @@ function OptimizationSuggestions({
                   {suggestion.description}
                 </p>
                 <div className="mb-2 text-sm">
-                  <strong className="text-zinc-700 dark:text-zinc-300">
-                    Impact:
-                  </strong>{' '}
-                  <span className="text-zinc-600 dark:text-zinc-400">
-                    {suggestion.impact}
-                  </span>
+                  <strong className="text-zinc-700 dark:text-zinc-300">Impact:</strong>{' '}
+                  <span className="text-zinc-600 dark:text-zinc-400">{suggestion.impact}</span>
                 </div>
               </div>
             </div>
@@ -457,7 +423,7 @@ function SystemPerformanceContent() {
   const { data, error, isLoading, mutate } = useSWR<PerformanceMetrics | null>(
     '/api/system/performance',
     fetcher,
-    { refreshInterval: autoRefresh ? 30000 : 0 },
+    { refreshInterval: autoRefresh ? 30000 : 0 }
   )
 
   const metrics = data ?? null
@@ -607,12 +573,8 @@ function SystemPerformanceContent() {
               <div className="space-y-4">
                 <div>
                   <div className="mb-2 flex items-center justify-between">
-                    <span className="text-sm text-zinc-600 dark:text-zinc-400">
-                      Hit Rate
-                    </span>
-                    <span className="text-sm font-medium">
-                      {metrics.cache.hitRate}%
-                    </span>
+                    <span className="text-sm text-zinc-600 dark:text-zinc-400">Hit Rate</span>
+                    <span className="text-sm font-medium">{metrics.cache.hitRate}%</span>
                   </div>
                   <div className="h-2 overflow-hidden rounded-full bg-zinc-200 dark:bg-zinc-700">
                     <div
@@ -624,12 +586,8 @@ function SystemPerformanceContent() {
 
                 <div>
                   <div className="mb-2 flex items-center justify-between">
-                    <span className="text-sm text-zinc-600 dark:text-zinc-400">
-                      Miss Rate
-                    </span>
-                    <span className="text-sm font-medium">
-                      {metrics.cache.missRate}%
-                    </span>
+                    <span className="text-sm text-zinc-600 dark:text-zinc-400">Miss Rate</span>
+                    <span className="text-sm font-medium">{metrics.cache.missRate}%</span>
                   </div>
                   <div className="h-2 overflow-hidden rounded-full bg-zinc-200 dark:bg-zinc-700">
                     <div
@@ -648,9 +606,7 @@ function SystemPerformanceContent() {
                   </div>
                   <div>
                     <p className="text-xs text-zinc-500">Eviction Rate</p>
-                    <p className="text-lg font-semibold">
-                      {metrics.cache.evictionRate}%
-                    </p>
+                    <p className="text-lg font-semibold">{metrics.cache.evictionRate}%</p>
                   </div>
                 </div>
               </div>

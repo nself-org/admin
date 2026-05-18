@@ -6,9 +6,7 @@ import { useCallback, useEffect, useState } from 'react'
 
 export default function InitEdit() {
   const router = useRouter()
-  const [status, setStatus] = useState<
-    'resetting' | 'loading' | 'success' | 'error'
-  >('resetting')
+  const [status, setStatus] = useState<'resetting' | 'loading' | 'success' | 'error'>('resetting')
   const [message, setMessage] = useState('Resetting project for editing...')
   const [errorMessage, setErrorMessage] = useState('')
 
@@ -60,9 +58,7 @@ export default function InitEdit() {
     } catch (error) {
       console.error('Error preparing for edit:', error)
       setStatus('error')
-      setErrorMessage(
-        error instanceof Error ? error.message : 'Unknown error occurred',
-      )
+      setErrorMessage(error instanceof Error ? error.message : 'Unknown error occurred')
       setMessage('Edit preparation failed')
 
       setTimeout(() => {
@@ -113,9 +109,7 @@ export default function InitEdit() {
           </h2>
 
           {errorMessage && (
-            <p className="mt-2 text-sm text-red-600 dark:text-red-400">
-              {errorMessage}
-            </p>
+            <p className="mt-2 text-sm text-red-600 dark:text-red-400">{errorMessage}</p>
           )}
         </div>
       </div>

@@ -38,11 +38,7 @@ function MetricCard({
   const mouseX = useMotionValue(0)
   const mouseY = useMotionValue(0)
 
-  function onMouseMove({
-    currentTarget,
-    clientX,
-    clientY,
-  }: React.MouseEvent<HTMLDivElement>) {
+  function onMouseMove({ currentTarget, clientX, clientY }: React.MouseEvent<HTMLDivElement>) {
     const { left, top } = currentTarget.getBoundingClientRect()
     mouseX.set(clientX - left)
     mouseY.set(clientY - top)
@@ -63,22 +59,16 @@ function MetricCard({
       <div className="absolute inset-0 rounded-2xl ring-1 ring-zinc-900/10 transition-colors duration-300 ring-inset group-hover:ring-zinc-500/50 dark:ring-white/20 dark:group-hover:ring-zinc-400/60" />
       <div className="relative">
         <div className="flex items-center justify-between">
-          <h3 className="text-sm font-semibold text-zinc-900 dark:text-white">
-            {title}
-          </h3>
+          <h3 className="text-sm font-semibold text-zinc-900 dark:text-white">{title}</h3>
           <div className="flex h-8 w-8 items-center justify-center rounded-full bg-zinc-500/20 transition-colors duration-300 group-hover:bg-zinc-500/40 dark:bg-zinc-400/20 dark:group-hover:bg-zinc-400/40">
             <Icon className="h-4 w-4 text-zinc-600 group-hover:text-zinc-500 dark:text-zinc-400 dark:group-hover:text-zinc-300" />
           </div>
         </div>
         <div className="mt-4">
-          <div className="text-2xl font-bold text-zinc-900 dark:text-white">
-            {value}
-          </div>
+          <div className="text-2xl font-bold text-zinc-900 dark:text-white">{value}</div>
         </div>
         {description && (
-          <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
-            {description}
-          </p>
+          <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">{description}</p>
         )}
       </div>
     </div>
@@ -163,19 +153,12 @@ function GitHubDashboardContent() {
           </Link>
         </div>
         <div>
-          <h1 className="text-2xl font-semibold text-white">
-            GitHub Dashboard
-          </h1>
-          <p className="text-sm text-zinc-400">
-            Repository metrics and activity
-          </p>
+          <h1 className="text-2xl font-semibold text-white">GitHub Dashboard</h1>
+          <p className="text-sm text-zinc-400">Repository metrics and activity</p>
         </div>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
           {[1, 2, 3, 4].map((i) => (
-            <div
-              key={i}
-              className="h-32 animate-pulse rounded-lg bg-zinc-800/50"
-            />
+            <div key={i} className="h-32 animate-pulse rounded-lg bg-zinc-800/50" />
           ))}
         </div>
       </div>
@@ -222,12 +205,8 @@ function GitHubDashboardContent() {
 
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-semibold text-white">
-            GitHub Dashboard
-          </h1>
-          <p className="text-sm text-zinc-400">
-            Repository metrics and activity
-          </p>
+          <h1 className="text-2xl font-semibold text-white">GitHub Dashboard</h1>
+          <p className="text-sm text-zinc-400">Repository metrics and activity</p>
         </div>
         <button
           onClick={handleSync}
@@ -272,9 +251,7 @@ function GitHubDashboardContent() {
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
           <div className="rounded-xl border border-zinc-700/50 bg-zinc-800/50 p-5">
             <div className="flex items-center justify-between">
-              <h3 className="text-sm font-medium text-zinc-400">
-                Successful Runs
-              </h3>
+              <h3 className="text-sm font-medium text-zinc-400">Successful Runs</h3>
               <CheckCircle className="h-5 w-5 text-emerald-400" />
             </div>
             <p className="mt-2 text-3xl font-bold text-white">
@@ -292,9 +269,7 @@ function GitHubDashboardContent() {
           </div>
           <div className="rounded-xl border border-zinc-700/50 bg-zinc-800/50 p-5">
             <div className="flex items-center justify-between">
-              <h3 className="text-sm font-medium text-zinc-400">
-                Pending Runs
-              </h3>
+              <h3 className="text-sm font-medium text-zinc-400">Pending Runs</h3>
               <Clock className="h-5 w-5 text-yellow-400" />
             </div>
             <p className="mt-2 text-3xl font-bold text-white">
@@ -311,9 +286,7 @@ function GitHubDashboardContent() {
             <Github className="h-5 w-5 text-zinc-400" />
             <span className="text-sm text-zinc-400">Last synced:</span>
             <span className="text-sm text-white">
-              {stats?.lastSync
-                ? new Date(stats.lastSync).toLocaleString()
-                : 'Never'}
+              {stats?.lastSync ? new Date(stats.lastSync).toLocaleString() : 'Never'}
             </span>
           </div>
         </div>

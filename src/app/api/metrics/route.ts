@@ -98,11 +98,9 @@ async function getSystemMetrics(): Promise<Metric[]> {
   try {
     const memInfo = await fs.readFile('/proc/meminfo', 'utf-8')
     const lines = memInfo.split('\n')
-    const memTotal = parseInt(
-      lines.find((l) => l.startsWith('MemTotal'))?.split(/\s+/)[1] || '0',
-    )
+    const memTotal = parseInt(lines.find((l) => l.startsWith('MemTotal'))?.split(/\s+/)[1] || '0')
     const memAvailable = parseInt(
-      lines.find((l) => l.startsWith('MemAvailable'))?.split(/\s+/)[1] || '0',
+      lines.find((l) => l.startsWith('MemAvailable'))?.split(/\s+/)[1] || '0'
     )
 
     metrics.push({
@@ -245,7 +243,7 @@ export async function GET(): Promise<NextResponse> {
         headers: {
           'Content-Type': 'text/plain; charset=utf-8',
         },
-      },
+      }
     )
   }
 }

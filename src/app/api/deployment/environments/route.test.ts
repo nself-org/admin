@@ -33,7 +33,10 @@ const mockExecFile = jest.fn()
 jest.mock('child_process', () => ({
   execFile: (...args: unknown[]) => {
     // util.promisify wraps with (error, stdout, stderr) callback
-    const cb = args[args.length - 1] as (err: null, result: { stdout: string; stderr: string }) => void
+    const cb = args[args.length - 1] as (
+      err: null,
+      result: { stdout: string; stderr: string }
+    ) => void
     // Forward to our mockExecFile for assertions, then resolve
     mockExecFile(...args)
     cb(null, { stdout: '', stderr: '' })
@@ -181,7 +184,7 @@ describe('POST /api/deployment/environments — valid payloads', () => {
       'nself',
       ['env', 'list'],
       expect.objectContaining({ cwd: '/tmp/test-project' }),
-      expect.any(Function),
+      expect.any(Function)
     )
   })
 
@@ -192,7 +195,7 @@ describe('POST /api/deployment/environments — valid payloads', () => {
       'nself',
       ['env', 'create', '--', 'staging'],
       expect.any(Object),
-      expect.any(Function),
+      expect.any(Function)
     )
   })
 
@@ -203,7 +206,7 @@ describe('POST /api/deployment/environments — valid payloads', () => {
       'nself',
       ['env', 'delete', '--', 'staging', '--force'],
       expect.any(Object),
-      expect.any(Function),
+      expect.any(Function)
     )
   })
 
@@ -218,7 +221,7 @@ describe('POST /api/deployment/environments — valid payloads', () => {
       'nself',
       ['env', 'diff', '--', 'staging', 'prod'],
       expect.any(Object),
-      expect.any(Function),
+      expect.any(Function)
     )
   })
 
@@ -234,7 +237,7 @@ describe('POST /api/deployment/environments — valid payloads', () => {
       'nself',
       ['env', 'create', '--template', 'minimal', '--', 'myenv'],
       expect.any(Object),
-      expect.any(Function),
+      expect.any(Function)
     )
   })
 

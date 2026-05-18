@@ -21,10 +21,7 @@ function getPluginConfigPath(pluginName: string): string {
   return path.join(home, '.nself', 'plugins', pluginName, 'config.json')
 }
 
-export async function GET(
-  request: NextRequest,
-  context: RouteContext,
-): Promise<NextResponse> {
+export async function GET(request: NextRequest, context: RouteContext): Promise<NextResponse> {
   const startTime = Date.now()
   const { name } = await context.params
 
@@ -33,7 +30,7 @@ export async function GET(
     if (!/^[a-zA-Z0-9_-]+$/.test(name)) {
       return NextResponse.json(
         { success: false, error: 'Invalid plugin name format' },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -43,12 +40,7 @@ export async function GET(
       const configData = await fs.readFile(configPath, 'utf-8')
       const config: PluginConfig = JSON.parse(configData)
 
-      logger.api(
-        'GET',
-        `/api/plugins/${name}/config`,
-        200,
-        Date.now() - startTime,
-      )
+      logger.api('GET', `/api/plugins/${name}/config`, 200, Date.now() - startTime)
 
       return NextResponse.json({
         success: true,
@@ -83,15 +75,12 @@ export async function GET(
         error: 'Failed to read plugin configuration',
         details: err.message || 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
 
-export async function PUT(
-  request: NextRequest,
-  context: RouteContext,
-): Promise<NextResponse> {
+export async function PUT(request: NextRequest, context: RouteContext): Promise<NextResponse> {
   const authError = await requireAuth(request)
   if (authError) return authError
 
@@ -103,7 +92,7 @@ export async function PUT(
     if (!/^[a-zA-Z0-9_-]+$/.test(name)) {
       return NextResponse.json(
         { success: false, error: 'Invalid plugin name format' },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -140,30 +129,17 @@ export async function PUT(
           ? { ...existingConfig.settings, ...settings }
           : existingConfig.settings,
       envVars:
-        envVars !== undefined
-          ? { ...existingConfig.envVars, ...envVars }
-          : existingConfig.envVars,
-      webhookUrl:
-        webhookUrl !== undefined ? webhookUrl : existingConfig.webhookUrl,
-      syncInterval:
-        syncInterval !== undefined ? syncInterval : existingConfig.syncInterval,
+        envVars !== undefined ? { ...existingConfig.envVars, ...envVars } : existingConfig.envVars,
+      webhookUrl: webhookUrl !== undefined ? webhookUrl : existingConfig.webhookUrl,
+      syncInterval: syncInterval !== undefined ? syncInterval : existingConfig.syncInterval,
       enabled: enabled !== undefined ? enabled : existingConfig.enabled,
     }
 
     // Write updated config
-    await fs.writeFile(
-      configPath,
-      JSON.stringify(updatedConfig, null, 2),
-      'utf-8',
-    )
+    await fs.writeFile(configPath, JSON.stringify(updatedConfig, null, 2), 'utf-8')
 
     logger.info('Updated plugin config', { name })
-    logger.api(
-      'PUT',
-      `/api/plugins/${name}/config`,
-      200,
-      Date.now() - startTime,
-    )
+    logger.api('PUT', `/api/plugins/${name}/config`, 200, Date.now() - startTime)
 
     return NextResponse.json({
       success: true,
@@ -180,7 +156,7 @@ export async function PUT(
         error: 'Failed to update plugin configuration',
         details: err.message || 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

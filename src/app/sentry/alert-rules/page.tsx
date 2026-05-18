@@ -71,9 +71,7 @@ export default function SentryAlertRulesPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="nself-gradient-text text-xl font-semibold">
-            ɳSentry — Alert Routes
-          </h1>
+          <h1 className="nself-gradient-text text-xl font-semibold">ɳSentry — Alert Routes</h1>
           {data !== null && (
             <p className="text-nself-text-muted mt-0.5 text-xs">
               {data.total} route{data.total !== 1 ? 's' : ''} configured
@@ -118,13 +116,11 @@ export default function SentryAlertRulesPage() {
       {/* Routes list */}
       {data !== null && (
         <div className="glass-card p-4">
-          <p className="text-nself-text mb-3 text-sm font-semibold">
-            Routes ({data.total})
-          </p>
+          <p className="text-nself-text mb-3 text-sm font-semibold">Routes ({data.total})</p>
           {data.total === 0 ? (
             <p className="text-nself-text-muted text-xs">
-              No alert routes configured. Click &ldquo;Add Route&rdquo; to route
-              alerts to Slack, email, PagerDuty, or other destinations.
+              No alert routes configured. Click &ldquo;Add Route&rdquo; to route alerts to Slack,
+              email, PagerDuty, or other destinations.
             </p>
           ) : (
             <div className="space-y-2">
@@ -138,9 +134,7 @@ export default function SentryAlertRulesPage() {
                   </div>
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-2">
-                      <p className="text-nself-text truncate text-sm font-medium">
-                        {route.name}
-                      </p>
+                      <p className="text-nself-text truncate text-sm font-medium">{route.name}</p>
                       {!route.enabled && (
                         <span className="shrink-0 rounded bg-yellow-500/15 px-1.5 py-0.5 text-xs text-yellow-400">
                           disabled

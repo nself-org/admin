@@ -21,11 +21,7 @@ function validateReleaseName(input: string): boolean {
 }
 
 function validateChart(input: string): boolean {
-  return (
-    SAFE_CHART_PATTERN.test(input) &&
-    !input.includes('..') &&
-    !input.includes('//')
-  )
+  return SAFE_CHART_PATTERN.test(input) && !input.includes('..') && !input.includes('//')
 }
 
 function validateNamespace(input: string): boolean {
@@ -33,11 +29,7 @@ function validateNamespace(input: string): boolean {
 }
 
 function validateValuesPath(input: string): boolean {
-  return (
-    SAFE_VALUES_PATH_PATTERN.test(input) &&
-    !input.includes('..') &&
-    !input.startsWith('/')
-  )
+  return SAFE_VALUES_PATH_PATTERN.test(input) && !input.includes('..') && !input.startsWith('/')
 }
 
 function validateSetKey(input: string): boolean {
@@ -46,11 +38,7 @@ function validateSetKey(input: string): boolean {
 
 function validateSetValue(input: string): boolean {
   // Set values can be more permissive but still need to avoid shell metacharacters
-  return (
-    typeof input === 'string' &&
-    input.length <= 1024 &&
-    !/[;&|`$(){}[\]<>\\]/.test(input)
-  )
+  return typeof input === 'string' && input.length <= 1024 && !/[;&|`$(){}[\]<>\\]/.test(input)
 }
 
 function validateTimeout(input: string): boolean {
@@ -72,51 +60,36 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     if (!name) {
       return NextResponse.json(
         { success: false, error: 'Release name is required' },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
     if (!chart) {
-      return NextResponse.json(
-        { success: false, error: 'Chart is required' },
-        { status: 400 },
-      )
+      return NextResponse.json({ success: false, error: 'Chart is required' }, { status: 400 })
     }
 
     // Validate all inputs
     if (!validateReleaseName(name)) {
-      return NextResponse.json(
-        { success: false, error: 'Invalid release name' },
-        { status: 400 },
-      )
+      return NextResponse.json({ success: false, error: 'Invalid release name' }, { status: 400 })
     }
 
     if (!validateChart(chart)) {
-      return NextResponse.json(
-        { success: false, error: 'Invalid chart name' },
-        { status: 400 },
-      )
+      return NextResponse.json({ success: false, error: 'Invalid chart name' }, { status: 400 })
     }
 
     if (namespace && !validateNamespace(namespace)) {
-      return NextResponse.json(
-        { success: false, error: 'Invalid namespace' },
-        { status: 400 },
-      )
+      return NextResponse.json({ success: false, error: 'Invalid namespace' }, { status: 400 })
     }
 
     if (values && !validateValuesPath(values)) {
       return NextResponse.json(
         { success: false, error: 'Invalid values file path' },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
     if (timeout && !validateTimeout(timeout)) {
-      return NextResponse.json(
-        { success: false, error: 'Invalid timeout value' },
-        { status: 400 },
-      )
+      return NextResponse.json({ success: false, error: 'Invalid timeout value' }, { status: 400 })
     }
 
     // Validate set values if provided
@@ -125,13 +98,13 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         if (!validateSetKey(key)) {
           return NextResponse.json(
             { success: false, error: `Invalid set key: ${key}` },
-            { status: 400 },
+            { status: 400 }
           )
         }
         if (typeof value === 'string' && !validateSetValue(value)) {
           return NextResponse.json(
             { success: false, error: `Invalid set value for key: ${key}` },
-            { status: 400 },
+            { status: 400 }
           )
         }
       }
@@ -176,7 +149,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to install helm release',
         details: err.message,
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

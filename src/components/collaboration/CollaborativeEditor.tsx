@@ -6,10 +6,7 @@
 
 import { useCollaborativeEditor } from '@/hooks/useCollaboration'
 import { useCallback, useEffect, useRef, useState } from 'react'
-import {
-  CollaborativeCursor,
-  CollaborativeSelection,
-} from './CollaborativeCursor'
+import { CollaborativeCursor, CollaborativeSelection } from './CollaborativeCursor'
 import { TypingIndicator } from './TypingIndicator'
 
 interface CollaborativeEditorProps {
@@ -34,15 +31,8 @@ export function CollaborativeEditor({
   const textareaRef = useRef<HTMLTextAreaElement>(null)
   const typingTimeoutRef = useRef<NodeJS.Timeout | undefined>(undefined)
 
-  const {
-    cursors,
-    selections,
-    typingUsers,
-    updateCursor,
-    updateSelection,
-    setTyping,
-    applyEdit,
-  } = useCollaborativeEditor(documentId, `document-${documentId}`)
+  const { cursors, selections, typingUsers, updateCursor, updateSelection, setTyping, applyEdit } =
+    useCollaborativeEditor(documentId, `document-${documentId}`)
 
   // Update content when it changes
   useEffect(() => {
@@ -79,7 +69,7 @@ export function CollaborativeEditor({
         setTyping(false)
       }, 1000)
     },
-    [content, onChange, applyEdit, setTyping],
+    [content, onChange, applyEdit, setTyping]
   )
 
   // Handle cursor movement
@@ -128,10 +118,7 @@ export function CollaborativeEditor({
             <CollaborativeCursor key={cursor.userId} cursor={cursor} />
           ))}
           {selections.map((selection) => (
-            <CollaborativeSelection
-              key={selection.userId}
-              selection={selection}
-            />
+            <CollaborativeSelection key={selection.userId} selection={selection} />
           ))}
         </div>
 
@@ -165,8 +152,7 @@ export function CollaborativeEditor({
         <div className="flex items-center gap-4">
           {cursors.length > 0 && (
             <div>
-              {cursors.length} other user{cursors.length === 1 ? '' : 's'}{' '}
-              editing
+              {cursors.length} other user{cursors.length === 1 ? '' : 's'} editing
             </div>
           )}
         </div>
@@ -181,29 +167,21 @@ export function CollaborativeEditor({
  */
 function findDiff(
   oldText: string,
-  newText: string,
+  newText: string
 ):
   | { type: 'insert'; start: number; text: string }
   | { type: 'delete'; start: number; length: number }
   | null {
   // Find first difference
   let start = 0
-  while (
-    start < oldText.length &&
-    start < newText.length &&
-    oldText[start] === newText[start]
-  ) {
+  while (start < oldText.length && start < newText.length && oldText[start] === newText[start]) {
     start++
   }
 
   // Find last difference
   let oldEnd = oldText.length
   let newEnd = newText.length
-  while (
-    oldEnd > start &&
-    newEnd > start &&
-    oldText[oldEnd - 1] === newText[newEnd - 1]
-  ) {
+  while (oldEnd > start && newEnd > start && oldText[oldEnd - 1] === newText[newEnd - 1]) {
     oldEnd--
     newEnd--
   }

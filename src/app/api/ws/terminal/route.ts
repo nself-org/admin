@@ -83,7 +83,7 @@ export async function POST(request: NextRequest): Promise<NextResponse | Respons
         error: `Command '${subCmd}' is not allowed. Only nself sub-commands are permitted.`,
         allowed: Array.from(ALLOWED_SUBCOMMANDS).sort(),
       },
-      { status: 403 },
+      { status: 403 }
     )
   }
 
@@ -102,13 +102,13 @@ export async function POST(request: NextRequest): Promise<NextResponse | Respons
     if (!validateSafeArg(trimmed)) {
       return NextResponse.json(
         { error: `Argument contains unsafe characters: ${trimmed}` },
-        { status: 400 },
+        { status: 400 }
       )
     }
     if (trimmed.length > 256) {
       return NextResponse.json(
         { error: `Argument too long: ${trimmed.slice(0, 32)}…` },
-        { status: 400 },
+        { status: 400 }
       )
     }
     validatedArgs.push(trimmed)
@@ -119,10 +119,7 @@ export async function POST(request: NextRequest): Promise<NextResponse | Respons
   try {
     nselfBin = await findNselfPath()
   } catch {
-    return NextResponse.json(
-      { error: 'nself binary not found on PATH' },
-      { status: 503 },
-    )
+    return NextResponse.json({ error: 'nself binary not found on PATH' }, { status: 503 })
   }
 
   const projectPath = getProjectPath()
@@ -153,9 +150,7 @@ export async function POST(request: NextRequest): Promise<NextResponse | Respons
 
       // Emit the command being run
       controller.enqueue(
-        enc.encode(
-          `event: start\ndata: ${JSON.stringify(`$ nself ${fullArgs.join(' ')}`)}\n\n`,
-        ),
+        enc.encode(`event: start\ndata: ${JSON.stringify(`$ nself ${fullArgs.join(' ')}`)}\n\n`)
       )
 
       child.stdout.on('data', (chunk: Buffer) => {
@@ -167,17 +162,13 @@ export async function POST(request: NextRequest): Promise<NextResponse | Respons
       })
 
       child.on('close', (code) => {
-        controller.enqueue(
-          enc.encode(`event: exit\ndata: ${JSON.stringify({ code })}\n\n`),
-        )
+        controller.enqueue(enc.encode(`event: exit\ndata: ${JSON.stringify({ code })}\n\n`))
         controller.close()
       })
 
       child.on('error', (err) => {
         emit('error', err.message)
-        controller.enqueue(
-          enc.encode(`event: exit\ndata: ${JSON.stringify({ code: 1 })}\n\n`),
-        )
+        controller.enqueue(enc.encode(`event: exit\ndata: ${JSON.stringify({ code: 1 })}\n\n`))
         controller.close()
       })
     },

@@ -12,33 +12,24 @@ import { useCallback } from 'react'
 export default function TenantBrandingPage() {
   const params = useParams()
   const tenantId = params.id as string
-  const {
-    branding,
-    isLoading,
-    error,
-    updateLogo,
-    updateColors,
-    preview,
-    reset,
-  } = useTenantBranding(tenantId)
+  const { branding, isLoading, error, updateLogo, updateColors, preview, reset } =
+    useTenantBranding(tenantId)
 
   // Wrap functions to match expected interface (void return)
   const handleUpdateLogo = useCallback(
     async (file: File): Promise<void> => {
       await updateLogo(file)
     },
-    [updateLogo],
+    [updateLogo]
   )
 
   const handleUpdateColors = useCallback(
     async (
-      colors: Partial<
-        Pick<TenantBranding, 'primaryColor' | 'secondaryColor' | 'accentColor'>
-      >,
+      colors: Partial<Pick<TenantBranding, 'primaryColor' | 'secondaryColor' | 'accentColor'>>
     ): Promise<void> => {
       await updateColors(colors)
     },
-    [updateColors],
+    [updateColors]
   )
 
   const handleReset = useCallback(async (): Promise<void> => {
@@ -73,9 +64,7 @@ export default function TenantBrandingPage() {
           <ArrowLeft className="h-4 w-4" /> Back to Tenant
         </Link>
         <h1 className="mt-4 text-2xl font-semibold text-white">Branding</h1>
-        <p className="text-sm text-zinc-400">
-          Customize your tenant's look and feel
-        </p>
+        <p className="text-sm text-zinc-400">Customize your tenant's look and feel</p>
       </div>
 
       <TenantBrandingEditor

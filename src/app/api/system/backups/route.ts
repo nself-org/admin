@@ -1,5 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server'
 import { requireAuth } from '@/lib/require-auth'
+import { NextRequest, NextResponse } from 'next/server'
 
 export async function GET(request: NextRequest): Promise<NextResponse> {
   try {
@@ -26,7 +26,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to fetch backups',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -48,7 +48,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to create backup',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

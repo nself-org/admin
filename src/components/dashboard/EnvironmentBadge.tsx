@@ -100,9 +100,7 @@ export function EnvironmentBadge({
     >
       {showIcon && <Icon className={icon} />}
       <div className={`flex items-center ${gap}`}>
-        <div
-          className={`${dot} ${config.dotColor} animate-pulse rounded-full`}
-        />
+        <div className={`${dot} ${config.dotColor} animate-pulse rounded-full`} />
         <span className={text}>{config.label}</span>
       </div>
     </div>
@@ -156,13 +154,9 @@ export function EnvironmentBadgeWithDetails({
   }
 
   return (
-    <div
-      className={`rounded-lg border p-4 ${config.bgColor} ${config.borderColor}`}
-    >
+    <div className={`rounded-lg border p-4 ${config.bgColor} ${config.borderColor}`}>
       <div className="mb-3 flex items-center justify-between">
-        <h3 className="text-sm font-semibold text-zinc-900 dark:text-white">
-          Environment
-        </h3>
+        <h3 className="text-sm font-semibold text-zinc-900 dark:text-white">Environment</h3>
         <EnvironmentBadge environment={environment} size="sm" />
       </div>
 
@@ -171,17 +165,13 @@ export function EnvironmentBadgeWithDetails({
           {version && (
             <div className="flex items-center justify-between">
               <span>Version:</span>
-              <span className="font-medium text-zinc-900 dark:text-white">
-                {version}
-              </span>
+              <span className="font-medium text-zinc-900 dark:text-white">{version}</span>
             </div>
           )}
           {uptime && (
             <div className="flex items-center justify-between">
               <span>Uptime:</span>
-              <span className="font-medium text-zinc-900 dark:text-white">
-                {uptime}
-              </span>
+              <span className="font-medium text-zinc-900 dark:text-white">{uptime}</span>
             </div>
           )}
         </div>

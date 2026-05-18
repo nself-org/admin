@@ -2,15 +2,7 @@
 
 import { HeroPattern } from '@/components/HeroPattern'
 import { FormSkeleton } from '@/components/skeletons'
-import {
-  CheckCircle,
-  ChevronLeft,
-  ChevronRight,
-  Key,
-  Rocket,
-  Server,
-  Settings,
-} from 'lucide-react'
+import { CheckCircle, ChevronLeft, ChevronRight, Key, Rocket, Server, Settings } from 'lucide-react'
 import { Suspense, useState } from 'react'
 
 interface SetupStep {
@@ -134,9 +126,7 @@ function DeploymentSetupContent() {
                       {isCompleted ? (
                         <CheckCircle className="h-6 w-6 text-white" />
                       ) : (
-                        <Icon
-                          className={`h-6 w-6 ${isCurrent ? 'text-white' : 'text-zinc-400'}`}
-                        />
+                        <Icon className={`h-6 w-6 ${isCurrent ? 'text-white' : 'text-zinc-400'}`} />
                       )}
                     </div>
                     <p
@@ -168,33 +158,31 @@ function DeploymentSetupContent() {
               </p>
 
               <div className="grid gap-4 md:grid-cols-3">
-                {(['development', 'staging', 'production'] as const).map(
-                  (env) => (
-                    <button
-                      key={env}
-                      onClick={() => setSelectedEnvironment(env)}
-                      className={`rounded-lg border-2 p-6 text-left transition-all ${
-                        selectedEnvironment === env
-                          ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20'
-                          : 'border-zinc-200 hover:border-zinc-300 dark:border-zinc-700 dark:hover:border-zinc-600'
-                      }`}
-                    >
-                      <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-lg bg-gradient-to-br from-blue-500 to-sky-500">
-                        <Server className="h-6 w-6 text-white" />
-                      </div>
-                      <h3 className="mb-1 font-semibold text-zinc-900 capitalize dark:text-white">
-                        {env}
-                      </h3>
-                      <p className="text-sm text-zinc-600 dark:text-zinc-400">
-                        {env === 'development'
-                          ? 'Local development environment'
-                          : env === 'staging'
-                            ? 'Testing and QA environment'
-                            : 'Production deployment'}
-                      </p>
-                    </button>
-                  ),
-                )}
+                {(['development', 'staging', 'production'] as const).map((env) => (
+                  <button
+                    key={env}
+                    onClick={() => setSelectedEnvironment(env)}
+                    className={`rounded-lg border-2 p-6 text-left transition-all ${
+                      selectedEnvironment === env
+                        ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20'
+                        : 'border-zinc-200 hover:border-zinc-300 dark:border-zinc-700 dark:hover:border-zinc-600'
+                    }`}
+                  >
+                    <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-lg bg-gradient-to-br from-blue-500 to-sky-500">
+                      <Server className="h-6 w-6 text-white" />
+                    </div>
+                    <h3 className="mb-1 font-semibold text-zinc-900 capitalize dark:text-white">
+                      {env}
+                    </h3>
+                    <p className="text-sm text-zinc-600 dark:text-zinc-400">
+                      {env === 'development'
+                        ? 'Local development environment'
+                        : env === 'staging'
+                          ? 'Testing and QA environment'
+                          : 'Production deployment'}
+                    </p>
+                  </button>
+                ))}
               </div>
             </div>
           )}
@@ -323,21 +311,16 @@ function DeploymentSetupContent() {
 
               <div className="mb-6 rounded-lg border border-blue-200 bg-blue-50 p-4 dark:border-blue-800 dark:bg-blue-900/20">
                 <p className="text-sm text-blue-700 dark:text-blue-300">
-                  Secrets will be automatically generated on the server where
-                  they will be used. This ensures they never leave the
-                  production environment.
+                  Secrets will be automatically generated on the server where they will be used.
+                  This ensures they never leave the production environment.
                 </p>
               </div>
 
               <div className="space-y-4">
                 <div className="flex items-center justify-between rounded-lg border border-zinc-200 p-4 dark:border-zinc-700">
                   <div>
-                    <h4 className="font-medium text-zinc-900 dark:text-white">
-                      JWT Secret
-                    </h4>
-                    <p className="text-sm text-zinc-500">
-                      256-bit secret for JWT signing
-                    </p>
+                    <h4 className="font-medium text-zinc-900 dark:text-white">JWT Secret</h4>
+                    <p className="text-sm text-zinc-500">256-bit secret for JWT signing</p>
                   </div>
                   <CheckCircle className="h-5 w-5 text-green-500" />
                 </div>
@@ -347,33 +330,23 @@ function DeploymentSetupContent() {
                     <h4 className="font-medium text-zinc-900 dark:text-white">
                       Hasura Admin Secret
                     </h4>
-                    <p className="text-sm text-zinc-500">
-                      Secure admin access to Hasura
-                    </p>
+                    <p className="text-sm text-zinc-500">Secure admin access to Hasura</p>
                   </div>
                   <CheckCircle className="h-5 w-5 text-green-500" />
                 </div>
 
                 <div className="flex items-center justify-between rounded-lg border border-zinc-200 p-4 dark:border-zinc-700">
                   <div>
-                    <h4 className="font-medium text-zinc-900 dark:text-white">
-                      Database Password
-                    </h4>
-                    <p className="text-sm text-zinc-500">
-                      PostgreSQL admin password
-                    </p>
+                    <h4 className="font-medium text-zinc-900 dark:text-white">Database Password</h4>
+                    <p className="text-sm text-zinc-500">PostgreSQL admin password</p>
                   </div>
                   <CheckCircle className="h-5 w-5 text-green-500" />
                 </div>
 
                 <div className="flex items-center justify-between rounded-lg border border-zinc-200 p-4 dark:border-zinc-700">
                   <div>
-                    <h4 className="font-medium text-zinc-900 dark:text-white">
-                      MinIO Access Keys
-                    </h4>
-                    <p className="text-sm text-zinc-500">
-                      Storage service credentials
-                    </p>
+                    <h4 className="font-medium text-zinc-900 dark:text-white">MinIO Access Keys</h4>
+                    <p className="text-sm text-zinc-500">Storage service credentials</p>
                   </div>
                   <CheckCircle className="h-5 w-5 text-green-500" />
                 </div>
@@ -405,9 +378,7 @@ function DeploymentSetupContent() {
                       <span className="text-sm font-medium text-zinc-600 dark:text-zinc-400">
                         Domain
                       </span>
-                      <span className="font-mono text-zinc-900 dark:text-white">
-                        {domain}
-                      </span>
+                      <span className="font-mono text-zinc-900 dark:text-white">{domain}</span>
                     </div>
                     <div className="flex items-center justify-between">
                       <span className="text-sm font-medium text-zinc-600 dark:text-zinc-400">
@@ -423,9 +394,7 @@ function DeploymentSetupContent() {
                           <span className="text-sm font-medium text-zinc-600 dark:text-zinc-400">
                             SSH Host
                           </span>
-                          <span className="font-mono text-zinc-900 dark:text-white">
-                            {sshHost}
-                          </span>
+                          <span className="font-mono text-zinc-900 dark:text-white">{sshHost}</span>
                         </div>
                         <div className="flex items-center justify-between">
                           <span className="text-sm font-medium text-zinc-600 dark:text-zinc-400">
@@ -466,8 +435,8 @@ function DeploymentSetupContent() {
                     Deployment Complete!
                   </h3>
                   <p className="mb-6 text-zinc-600 dark:text-zinc-400">
-                    Your {selectedEnvironment} environment has been successfully
-                    configured and deployed.
+                    Your {selectedEnvironment} environment has been successfully configured and
+                    deployed.
                   </p>
                   <a
                     href="/deployment/environments"

@@ -165,9 +165,7 @@ function JobForm({
     >
       {/* Name */}
       <div>
-        <label className="mb-1 block text-sm font-medium text-zinc-300">
-          Name
-        </label>
+        <label className="mb-1 block text-sm font-medium text-zinc-300">Name</label>
         <input
           type="text"
           required
@@ -196,8 +194,7 @@ function JobForm({
             <select
               value=""
               onChange={(e) => {
-                if (e.target.value)
-                  setForm({ ...form, schedule: e.target.value })
+                if (e.target.value) setForm({ ...form, schedule: e.target.value })
               }}
               className="rounded-lg border border-zinc-700 bg-zinc-900 px-2 py-2 text-xs text-zinc-400 focus:border-sky-500 focus:outline-none"
             >
@@ -212,9 +209,7 @@ function JobForm({
         </div>
 
         <div>
-          <label className="mb-1 block text-sm font-medium text-zinc-300">
-            Timezone
-          </label>
+          <label className="mb-1 block text-sm font-medium text-zinc-300">Timezone</label>
           <input
             type="text"
             value={form.timezone}
@@ -222,23 +217,17 @@ function JobForm({
             placeholder="UTC"
             className="w-full rounded-lg border border-zinc-700 bg-zinc-900 px-3 py-2 text-sm text-white placeholder-zinc-500 focus:border-sky-500 focus:outline-none"
           />
-          <p className="mt-1 text-xs text-zinc-500">
-            IANA name, e.g. America/New_York
-          </p>
+          <p className="mt-1 text-xs text-zinc-500">IANA name, e.g. America/New_York</p>
         </div>
       </div>
 
       {/* Delivery */}
       <div className="grid gap-4 sm:grid-cols-2">
         <div>
-          <label className="mb-1 block text-sm font-medium text-zinc-300">
-            Delivery
-          </label>
+          <label className="mb-1 block text-sm font-medium text-zinc-300">Delivery</label>
           <select
             value={form.delivery}
-            onChange={(e) =>
-              setForm({ ...form, delivery: e.target.value as JobDelivery })
-            }
+            onChange={(e) => setForm({ ...form, delivery: e.target.value as JobDelivery })}
             className="w-full rounded-lg border border-zinc-700 bg-zinc-900 px-3 py-2 text-sm text-white focus:border-sky-500 focus:outline-none"
           >
             {DELIVERY_TYPES.map((d) => (
@@ -251,16 +240,12 @@ function JobForm({
 
         {needsUrl && (
           <div>
-            <label className="mb-1 block text-sm font-medium text-zinc-300">
-              URL
-            </label>
+            <label className="mb-1 block text-sm font-medium text-zinc-300">URL</label>
             <input
               type="url"
               required={needsUrl}
               value={form.webhook_url}
-              onChange={(e) =>
-                setForm({ ...form, webhook_url: e.target.value })
-              }
+              onChange={(e) => setForm({ ...form, webhook_url: e.target.value })}
               placeholder="https://example.com/hook"
               className="w-full rounded-lg border border-zinc-700 bg-zinc-900 px-3 py-2 text-sm text-white placeholder-zinc-500 focus:border-sky-500 focus:outline-none"
             />
@@ -270,18 +255,14 @@ function JobForm({
 
       {/* Payload */}
       <div>
-        <label className="mb-1 block text-sm font-medium text-zinc-300">
-          Payload (JSON)
-        </label>
+        <label className="mb-1 block text-sm font-medium text-zinc-300">Payload (JSON)</label>
         <textarea
           value={form.payload}
           onChange={(e) => setForm({ ...form, payload: e.target.value })}
           rows={3}
           className="w-full rounded-lg border border-zinc-700 bg-zinc-900 px-3 py-2 font-mono text-sm text-white placeholder-zinc-500 focus:border-sky-500 focus:outline-none"
         />
-        {payloadError && (
-          <p className="mt-1 text-xs text-red-400">{payloadError}</p>
-        )}
+        {payloadError && <p className="mt-1 text-xs text-red-400">{payloadError}</p>}
       </div>
 
       <div className="flex items-center gap-6">
@@ -438,17 +419,13 @@ export default function CronJobsPage() {
       <div className="space-y-6">
         <div>
           <h1 className="text-2xl font-semibold text-white">Cron Jobs</h1>
-          <p className="mt-1 text-sm text-zinc-400">
-            Manage scheduled cron jobs
-          </p>
+          <p className="mt-1 text-sm text-zinc-400">Manage scheduled cron jobs</p>
         </div>
         <div className="rounded-xl border border-yellow-500/30 bg-yellow-900/20 p-6">
           <div className="flex items-start gap-3">
             <AlertCircle className="mt-0.5 h-5 w-5 shrink-0 text-yellow-400" />
             <div>
-              <p className="font-medium text-yellow-300">
-                nself-cron is not running
-              </p>
+              <p className="font-medium text-yellow-300">nself-cron is not running</p>
               <p className="mt-1 text-sm text-yellow-400/80">
                 Install and start the cron plugin to manage jobs.
               </p>
@@ -508,10 +485,7 @@ export default function CronJobsPage() {
       {loading && (
         <div className="space-y-3">
           {[1, 2, 3].map((n) => (
-            <div
-              key={n}
-              className="h-14 animate-pulse rounded-xl bg-zinc-800/50"
-            />
+            <div key={n} className="h-14 animate-pulse rounded-xl bg-zinc-800/50" />
           ))}
         </div>
       )}
@@ -568,18 +542,14 @@ export default function CronJobsPage() {
                 >
                   <td className="px-4 py-3">
                     <div className="font-medium text-white">{job.name}</div>
-                    <div className="text-xs text-zinc-500 capitalize">
-                      {job.delivery}
-                    </div>
+                    <div className="text-xs text-zinc-500 capitalize">{job.delivery}</div>
                   </td>
                   <td className="px-4 py-3">
                     <code className="rounded bg-zinc-900/70 px-1.5 py-0.5 text-xs text-zinc-300">
                       {job.schedule}
                     </code>
                     {job.timezone !== 'UTC' && (
-                      <div className="mt-0.5 text-xs text-zinc-500">
-                        {job.timezone}
-                      </div>
+                      <div className="mt-0.5 text-xs text-zinc-500">{job.timezone}</div>
                     )}
                   </td>
                   <td className="px-4 py-3 text-sm text-zinc-400">
@@ -591,9 +561,7 @@ export default function CronJobsPage() {
                       {formatFuture(job.next_run_at)}
                     </span>
                   </td>
-                  <td className="px-4 py-3 text-sm text-zinc-400">
-                    {job.run_count}
-                  </td>
+                  <td className="px-4 py-3 text-sm text-zinc-400">{job.run_count}</td>
                   <td className="px-4 py-3">
                     {job.enabled ? (
                       <span className="flex items-center gap-1.5 text-xs text-emerald-400">
@@ -729,13 +697,9 @@ export default function CronJobsPage() {
                         )}
                       </td>
                       <td className="px-4 py-3 text-sm text-zinc-400">
-                        {entry.duration_ms != null
-                          ? `${entry.duration_ms}ms`
-                          : '—'}
+                        {entry.duration_ms != null ? `${entry.duration_ms}ms` : '—'}
                       </td>
-                      <td className="px-4 py-3 text-sm text-zinc-400">
-                        {entry.attempt}
-                      </td>
+                      <td className="px-4 py-3 text-sm text-zinc-400">{entry.attempt}</td>
                       <td className="px-4 py-3 text-xs text-zinc-500">
                         {new Date(entry.started_at).toLocaleString()}
                       </td>

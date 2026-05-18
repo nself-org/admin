@@ -34,15 +34,11 @@ export function ErrorDisplay({
   const retryable = apiError?.retryable ?? false
 
   // Determine severity based on error type
-  const isWarning =
-    apiError?.code && apiError.code >= 6000 && apiError.code < 7000
+  const isWarning = apiError?.code && apiError.code >= 6000 && apiError.code < 7000
   const isInfo = apiError?.code && apiError.code === 9000 // Project not initialized
 
   return (
-    <Alert
-      variant={isWarning ? 'default' : 'destructive'}
-      className={className}
-    >
+    <Alert variant={isWarning ? 'default' : 'destructive'} className={className}>
       <div className="flex items-start gap-2">
         {isInfo ? (
           <Info className="h-4 w-4" />
@@ -58,9 +54,7 @@ export function ErrorDisplay({
             {action && <p className="text-sm opacity-90">{action}</p>}
             {showDetails && apiError?.details && (
               <details className="mt-2">
-                <summary className="cursor-pointer text-sm font-medium">
-                  Technical Details
-                </summary>
+                <summary className="cursor-pointer text-sm font-medium">Technical Details</summary>
                 <pre className="mt-2 overflow-auto rounded bg-black/10 p-2 text-xs dark:bg-white/10">
                   {JSON.stringify(apiError.details, null, 2)}
                 </pre>

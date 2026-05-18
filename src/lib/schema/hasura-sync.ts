@@ -35,7 +35,7 @@ export interface HasuraSyncResult {
  */
 export async function syncCanvasToHasura(
   state: CanvasState,
-  config: HasuraSyncConfig,
+  config: HasuraSyncConfig
 ): Promise<HasuraSyncResult> {
   const { trackInHasura: track } = await import('../schema-builder')
   const sourceName = config.sourceName ?? 'default'
@@ -91,9 +91,7 @@ export async function syncCanvasToHasura(
         relErrors.push(`Relationship ${relName}: ${body}`)
       }
     } catch (err) {
-      relErrors.push(
-        `Relationship ${relName}: ${err instanceof Error ? err.message : 'unknown'}`,
-      )
+      relErrors.push(`Relationship ${relName}: ${err instanceof Error ? err.message : 'unknown'}`)
     }
   }
 

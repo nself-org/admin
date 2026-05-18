@@ -3,17 +3,8 @@
 import { AlertTriangle, CheckCircle, Loader2, XCircle } from 'lucide-react'
 import { useCallback, useEffect, useRef, useState } from 'react'
 
-import {
-  initiatePairing,
-  pollPairingStatus,
-  storeTokenInKeychain,
-} from './pairing'
-import type {
-  AuthToken,
-  PairingError,
-  PairingSession,
-  PairingStatus,
-} from './types'
+import { initiatePairing, pollPairingStatus, storeTokenInKeychain } from './pairing'
+import type { AuthToken, PairingError, PairingSession, PairingStatus } from './types'
 
 // ---------------------------------------------------------------------------
 // Error message map
@@ -57,16 +48,13 @@ function IdlePanel({ onConnect }: { onConnect: () => void }) {
     <div className="glass-card-glow flex flex-col items-center gap-6 px-10 py-12 text-center">
       {/* Brand mark */}
       <div className="nself-gradient flex h-16 w-16 items-center justify-center rounded-2xl shadow-lg">
-        <span className="text-3xl font-black tracking-tighter text-white select-none">
-          ɳ
-        </span>
+        <span className="text-3xl font-black tracking-tighter text-white select-none">ɳ</span>
       </div>
 
       <div className="flex flex-col gap-2">
         <h1 className="text-nself-text text-2xl font-bold">Connect to nSelf</h1>
         <p className="text-nself-text-muted max-w-sm text-sm leading-relaxed">
-          Pair this admin panel with your nself.org account to manage your
-          project.
+          Pair this admin panel with your nself.org account to manage your project.
         </p>
       </div>
 
@@ -87,9 +75,7 @@ function InitiatingPanel({ onCancel }: { onCancel: () => void }) {
       <Loader2 className="text-nself-primary h-12 w-12 animate-spin" />
 
       <div className="flex flex-col gap-2">
-        <h2 className="text-nself-text text-lg font-semibold">
-          Opening browser...
-        </h2>
+        <h2 className="text-nself-text text-lg font-semibold">Opening browser...</h2>
         <p className="text-nself-text-muted text-sm">
           A browser window will open for you to sign in to nself.org.
         </p>
@@ -130,9 +116,7 @@ function PollingPanel({
         <p className="text-nself-text-muted text-sm">
           Complete the sign-in in the browser window that opened.
         </p>
-        <p className="text-nself-text-muted font-mono text-xs">
-          {elapsedSeconds}s elapsed
-        </p>
+        <p className="text-nself-text-muted font-mono text-xs">{elapsedSeconds}s elapsed</p>
       </div>
 
       <button
@@ -146,13 +130,7 @@ function PollingPanel({
   )
 }
 
-function PairedPanel({
-  token,
-  onContinue,
-}: {
-  token: AuthToken
-  onContinue: () => void
-}) {
+function PairedPanel({ token, onContinue }: { token: AuthToken; onContinue: () => void }) {
   return (
     <div className="glass-card flex flex-col items-center gap-6 px-10 py-12 text-center">
       <CheckCircle className="h-14 w-14 text-green-400" />
@@ -160,8 +138,7 @@ function PairedPanel({
       <div className="flex flex-col gap-2">
         <h2 className="text-nself-text text-2xl font-bold">Connected!</h2>
         <p className="text-nself-text-muted text-sm">
-          Signed in as{' '}
-          <span className="text-nself-text font-medium">{token.email}</span>
+          Signed in as <span className="text-nself-text font-medium">{token.email}</span>
         </p>
       </div>
 
@@ -176,24 +153,14 @@ function PairedPanel({
   )
 }
 
-function ErrorPanel({
-  message,
-  onRetry,
-}: {
-  message: string
-  onRetry: () => void
-}) {
+function ErrorPanel({ message, onRetry }: { message: string; onRetry: () => void }) {
   return (
     <div className="glass-card flex flex-col items-center gap-6 px-10 py-12 text-center">
       <AlertTriangle className="h-14 w-14 text-red-400" />
 
       <div className="flex flex-col gap-2">
-        <h2 className="text-nself-text text-lg font-semibold">
-          Connection failed
-        </h2>
-        <p className="text-nself-text-muted max-w-sm text-sm leading-relaxed">
-          {message}
-        </p>
+        <h2 className="text-nself-text text-lg font-semibold">Connection failed</h2>
+        <p className="text-nself-text-muted max-w-sm text-sm leading-relaxed">{message}</p>
       </div>
 
       <button
@@ -293,9 +260,7 @@ export function PairingScreen({ onPaired }: PairingScreenProps) {
     if (cancelledRef.current) return
 
     if (!result.token) {
-      setErrorMessage(
-        'Pairing completed but no token was returned. Please try again.',
-      )
+      setErrorMessage('Pairing completed but no token was returned. Please try again.')
       setStatus('error')
       return
     }
@@ -348,17 +313,12 @@ export function PairingScreen({ onPaired }: PairingScreenProps) {
       {status === 'paired' && pairedToken && (
         <PairedPanel token={pairedToken} onContinue={handleContinue} />
       )}
-      {status === 'error' && (
-        <ErrorPanel message={errorMessage} onRetry={handleRetry} />
-      )}
+      {status === 'error' && <ErrorPanel message={errorMessage} onRetry={handleRetry} />}
 
       {/* Dismiss icon — always visible in error/idle for accessibility */}
       {status === 'error' && (
         <div className="mt-4 flex justify-center">
-          <XCircle
-            className="text-nself-text-muted h-4 w-4 opacity-40"
-            aria-hidden="true"
-          />
+          <XCircle className="text-nself-text-muted h-4 w-4 opacity-40" aria-hidden="true" />
         </div>
       )}
     </div>

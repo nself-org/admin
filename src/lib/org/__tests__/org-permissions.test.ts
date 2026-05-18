@@ -67,13 +67,13 @@ describe('DEFAULT_ROLE_PERMISSIONS', () => {
 
   it('viewer has fewer permissions than member', () => {
     expect(DEFAULT_ROLE_PERMISSIONS['viewer'].length).toBeLessThan(
-      DEFAULT_ROLE_PERMISSIONS['member'].length,
+      DEFAULT_ROLE_PERMISSIONS['member'].length
     )
   })
 
   it('member has fewer permissions than admin', () => {
     expect(DEFAULT_ROLE_PERMISSIONS['member'].length).toBeLessThan(
-      DEFAULT_ROLE_PERMISSIONS['admin'].length,
+      DEFAULT_ROLE_PERMISSIONS['admin'].length
     )
   })
 })
@@ -122,15 +122,11 @@ describe('hasPermission', () => {
 
 describe('hasAnyPermission', () => {
   it('returns true when role has at least one of the permissions', () => {
-    expect(
-      hasAnyPermission('viewer', ['view:dashboard', 'manage:billing']),
-    ).toBe(true)
+    expect(hasAnyPermission('viewer', ['view:dashboard', 'manage:billing'])).toBe(true)
   })
 
   it('returns false when role has none of the permissions', () => {
-    expect(hasAnyPermission('viewer', ['manage:billing', 'delete:org'])).toBe(
-      false,
-    )
+    expect(hasAnyPermission('viewer', ['manage:billing', 'delete:org'])).toBe(false)
   })
 
   it('returns false for empty permissions array', () => {
@@ -138,15 +134,11 @@ describe('hasAnyPermission', () => {
   })
 
   it('returns true when role has all of the listed permissions', () => {
-    expect(
-      hasAnyPermission('admin', ['view:dashboard', 'manage:members']),
-    ).toBe(true)
+    expect(hasAnyPermission('admin', ['view:dashboard', 'manage:members'])).toBe(true)
   })
 
   it('viewer has any of view:dashboard, manage:billing', () => {
-    expect(
-      hasAnyPermission('viewer', ['view:dashboard', 'manage:billing']),
-    ).toBe(true)
+    expect(hasAnyPermission('viewer', ['view:dashboard', 'manage:billing'])).toBe(true)
   })
 })
 
@@ -166,15 +158,11 @@ describe('hasAllPermissions', () => {
   })
 
   it('returns false when role is missing one permission', () => {
-    expect(
-      hasAllPermissions('member', ['view:dashboard', 'manage:billing']),
-    ).toBe(false)
+    expect(hasAllPermissions('member', ['view:dashboard', 'manage:billing'])).toBe(false)
   })
 
   it('admin has all of view:dashboard and manage:members', () => {
-    expect(
-      hasAllPermissions('admin', ['view:dashboard', 'manage:members']),
-    ).toBe(true)
+    expect(hasAllPermissions('admin', ['view:dashboard', 'manage:members'])).toBe(true)
   })
 })
 
@@ -192,9 +180,7 @@ describe('getRolePermissions', () => {
   })
 
   it('owner has more permissions than viewer', () => {
-    expect(getRolePermissions('owner').length).toBeGreaterThan(
-      getRolePermissions('viewer').length,
-    )
+    expect(getRolePermissions('owner').length).toBeGreaterThan(getRolePermissions('viewer').length)
   })
 
   it('viewer permissions include view:dashboard', () => {

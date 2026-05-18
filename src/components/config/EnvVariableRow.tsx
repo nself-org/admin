@@ -39,9 +39,7 @@ export function EnvVariableRow({
       <tr className="bg-blue-50 dark:bg-blue-950/20">
         <td className="px-3 py-1.5 font-mono text-xs">
           {variable.key}
-          {variable.isSecret && (
-            <Icons.Lock className="ml-1 inline h-3 w-3 text-zinc-400" />
-          )}
+          {variable.isSecret && <Icons.Lock className="ml-1 inline h-3 w-3 text-zinc-400" />}
         </td>
         <td className="px-3 py-1.5" colSpan={2}>
           <div className="flex items-center gap-1">
@@ -92,9 +90,7 @@ export function EnvVariableRow({
     >
       <td className="px-3 py-1.5 font-mono text-xs text-zinc-700 dark:text-zinc-300">
         {variable.key}
-        {variable.isSecret && (
-          <Icons.Lock className="ml-1 inline h-3 w-3 text-zinc-400" />
-        )}
+        {variable.isSecret && <Icons.Lock className="ml-1 inline h-3 w-3 text-zinc-400" />}
       </td>
       <td className="px-3 py-1.5 font-mono text-xs">
         <div className="flex items-center gap-2">
@@ -151,9 +147,7 @@ export function EnvVariableRow({
                   ? 'bg-red-100 dark:bg-red-900/30'
                   : 'hover:bg-zinc-200 dark:hover:bg-zinc-700'
               }`}
-              title={
-                isConfirmingDelete ? 'Click again to confirm delete' : 'Delete'
-              }
+              title={isConfirmingDelete ? 'Click again to confirm delete' : 'Delete'}
             >
               <Icons.Trash2
                 className={`h-3 w-3 ${isConfirmingDelete ? 'text-red-600' : 'text-red-500'}`}

@@ -37,10 +37,7 @@ import useSWR from 'swr'
 const fetcher = (url: string) => fetch(url).then((res) => res.json())
 
 // Plugin icon mapping
-const pluginIcons: Record<
-  string,
-  React.ComponentType<{ className?: string }>
-> = {
+const pluginIcons: Record<string, React.ComponentType<{ className?: string }>> = {
   stripe: CreditCard,
   shopify: ShoppingCart,
   github: Github,
@@ -99,9 +96,7 @@ function permissionBadgeClass(perm: string): string {
 
 function PermissionList({ permissions }: { permissions: string[] }) {
   if (permissions.length === 0) {
-    return (
-      <p className="text-sm text-zinc-500">No special permissions declared.</p>
-    )
+    return <p className="text-sm text-zinc-500">No special permissions declared.</p>
   }
   return (
     <div className="space-y-2">
@@ -117,8 +112,7 @@ function PermissionList({ permissions }: { permissions: string[] }) {
         ))}
       </div>
       <p className="text-xs text-zinc-600">
-        v1.0.9: informational only. v1.1.0 will require explicit confirmation
-        before install.
+        v1.0.9: informational only. v1.1.0 will require explicit confirmation before install.
       </p>
     </div>
   )
@@ -135,14 +129,10 @@ function WebhookEventRow({ event }: { event: WebhookEvent }) {
   return (
     <tr className="border-b border-zinc-700/50 hover:bg-zinc-800/50">
       <td className="px-4 py-3">
-        <span className="font-mono text-sm text-zinc-300">
-          {event.eventType}
-        </span>
+        <span className="font-mono text-sm text-zinc-300">{event.eventType}</span>
       </td>
       <td className="px-4 py-3">
-        <span
-          className={`rounded-full px-2 py-0.5 text-xs ${statusColors[event.status]}`}
-        >
+        <span className={`rounded-full px-2 py-0.5 text-xs ${statusColors[event.status]}`}>
           {event.status}
         </span>
       </td>
@@ -162,19 +152,13 @@ function TableInfoRow({ table }: { table: PluginTableInfo }) {
       <td className="px-4 py-3">
         <div className="flex items-center gap-2">
           <Database className="h-4 w-4 text-zinc-500" />
-          <span className="font-mono text-sm text-zinc-300">
-            {table.tableName}
-          </span>
+          <span className="font-mono text-sm text-zinc-300">{table.tableName}</span>
         </div>
       </td>
-      <td className="px-4 py-3 text-sm text-zinc-400">
-        {table.rowCount.toLocaleString()} rows
-      </td>
+      <td className="px-4 py-3 text-sm text-zinc-400">{table.rowCount.toLocaleString()} rows</td>
       <td className="px-4 py-3 text-sm text-zinc-400">{table.size || 'N/A'}</td>
       <td className="px-4 py-3 text-sm text-zinc-500">
-        {table.lastUpdated
-          ? new Date(table.lastUpdated).toLocaleString()
-          : 'Never'}
+        {table.lastUpdated ? new Date(table.lastUpdated).toLocaleString() : 'Never'}
       </td>
     </tr>
   )
@@ -225,9 +209,7 @@ function PluginDetailContent() {
 
   const handleRemove = async () => {
     if (
-      !confirm(
-        'Are you sure you want to remove this plugin? This will delete all synced data.',
-      )
+      !confirm('Are you sure you want to remove this plugin? This will delete all synced data.')
     ) {
       return
     }
@@ -303,9 +285,7 @@ function PluginDetailContent() {
             <Icon className="h-7 w-7 text-zinc-300" />
           </div>
           <div>
-            <h1 className="text-2xl font-semibold text-white capitalize">
-              {plugin.name}
-            </h1>
+            <h1 className="text-2xl font-semibold text-white capitalize">{plugin.name}</h1>
             <p className="text-sm text-zinc-400">{plugin.description}</p>
           </div>
         </div>
@@ -335,15 +315,12 @@ function PluginDetailContent() {
           <div className="flex items-start gap-3">
             <AlertCircle className="mt-0.5 h-5 w-5 shrink-0 text-yellow-400" />
             <div>
-              <p className="text-sm font-medium text-yellow-300">
-                AV E2EE not enabled in v1.0.9
-              </p>
+              <p className="text-sm font-medium text-yellow-300">AV E2EE not enabled in v1.0.9</p>
               <p className="mt-1 text-sm text-yellow-400/80">
-                Voice and video call streams are TLS-encrypted in transit but
-                pass through LiveKit Server in cleartext at v1.0.9 — not
-                end-to-end encrypted. nChat <strong>chat messages</strong> are
-                separately E2EE via post-quantum Kyber. SFrame-based AV E2EE is
-                planned for v1.1.0.{' '}
+                Voice and video call streams are TLS-encrypted in transit but pass through LiveKit
+                Server in cleartext at v1.0.9 — not end-to-end encrypted. nChat{' '}
+                <strong>chat messages</strong> are separately E2EE via post-quantum Kyber.
+                SFrame-based AV E2EE is planned for v1.1.0.{' '}
                 <a
                   href="https://docs.nself.org/docs/chat/encryption-scope"
                   target="_blank"
@@ -379,27 +356,17 @@ function PluginDetailContent() {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-6">
             <div className="flex items-center gap-2">
-              {syncStatus.status === 'idle' && (
-                <CheckCircle className="h-5 w-5 text-emerald-400" />
-              )}
+              {syncStatus.status === 'idle' && <CheckCircle className="h-5 w-5 text-emerald-400" />}
               {syncStatus.status === 'syncing' && (
                 <RefreshCw className="h-5 w-5 animate-spin text-blue-400" />
               )}
-              {syncStatus.status === 'error' && (
-                <XCircle className="h-5 w-5 text-red-400" />
-              )}
-              {syncStatus.status === 'scheduled' && (
-                <Clock className="h-5 w-5 text-yellow-400" />
-              )}
-              <span className="text-sm font-medium text-white capitalize">
-                {syncStatus.status}
-              </span>
+              {syncStatus.status === 'error' && <XCircle className="h-5 w-5 text-red-400" />}
+              {syncStatus.status === 'scheduled' && <Clock className="h-5 w-5 text-yellow-400" />}
+              <span className="text-sm font-medium text-white capitalize">{syncStatus.status}</span>
             </div>
             <div className="text-sm text-zinc-400">
               <span className="text-zinc-500">Last sync:</span>{' '}
-              {syncStatus.lastSync
-                ? new Date(syncStatus.lastSync).toLocaleString()
-                : 'Never'}
+              {syncStatus.lastSync ? new Date(syncStatus.lastSync).toLocaleString() : 'Never'}
             </div>
             <div className="text-sm text-zinc-400">
               <span className="text-zinc-500">Records:</span>{' '}
@@ -461,15 +428,11 @@ function PluginDetailContent() {
               </div>
               <div className="flex justify-between">
                 <dt className="text-sm text-zinc-500">Category</dt>
-                <dd className="text-sm text-zinc-300 capitalize">
-                  {plugin.category}
-                </dd>
+                <dd className="text-sm text-zinc-300 capitalize">{plugin.category}</dd>
               </div>
               <div className="flex justify-between">
                 <dt className="text-sm text-zinc-500">Min nself Version</dt>
-                <dd className="text-sm text-zinc-300">
-                  {plugin.minNselfVersion}
-                </dd>
+                <dd className="text-sm text-zinc-300">{plugin.minNselfVersion}</dd>
               </div>
               {plugin.installedAt && (
                 <div className="flex justify-between">
@@ -493,14 +456,10 @@ function PluginDetailContent() {
 
           {/* Required Environment Variables */}
           <div className="rounded-xl border border-zinc-700/50 bg-zinc-800/50 p-5">
-            <h3 className="mb-4 font-medium text-white">
-              Environment Variables
-            </h3>
+            <h3 className="mb-4 font-medium text-white">Environment Variables</h3>
             <div className="space-y-3">
               <div>
-                <h4 className="mb-2 text-xs font-medium text-zinc-500 uppercase">
-                  Required
-                </h4>
+                <h4 className="mb-2 text-xs font-medium text-zinc-500 uppercase">Required</h4>
                 <div className="space-y-1">
                   {plugin.envVars.required.map((envVar) => (
                     <div
@@ -515,9 +474,7 @@ function PluginDetailContent() {
               </div>
               {plugin.envVars.optional.length > 0 && (
                 <div>
-                  <h4 className="mb-2 text-xs font-medium text-zinc-500 uppercase">
-                    Optional
-                  </h4>
+                  <h4 className="mb-2 text-xs font-medium text-zinc-500 uppercase">Optional</h4>
                   <div className="space-y-1">
                     {plugin.envVars.optional.map((envVar) => (
                       <div
@@ -551,9 +508,7 @@ function PluginDetailContent() {
 
           <div className="space-y-4">
             <div>
-              <label className="mb-1 block text-sm font-medium text-zinc-300">
-                Webhook URL
-              </label>
+              <label className="mb-1 block text-sm font-medium text-zinc-300">Webhook URL</label>
               <input
                 type="text"
                 value={config.webhookUrl || ''}

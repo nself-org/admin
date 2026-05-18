@@ -9,10 +9,7 @@ interface TypingIndicatorProps {
   className?: string
 }
 
-export function TypingIndicator({
-  typingUsers,
-  className = '',
-}: TypingIndicatorProps) {
+export function TypingIndicator({ typingUsers, className = '' }: TypingIndicatorProps) {
   if (typingUsers.length === 0) return null
 
   const getUsersText = () => {
@@ -26,9 +23,7 @@ export function TypingIndicator({
   }
 
   return (
-    <div
-      className={`flex items-center gap-2 text-sm text-gray-500 ${className}`}
-    >
+    <div className={`flex items-center gap-2 text-sm text-gray-500 ${className}`}>
       <div className="flex gap-1">
         <span className="h-2 w-2 animate-bounce rounded-full bg-gray-400 [animation-delay:-0.3s]" />
         <span className="h-2 w-2 animate-bounce rounded-full bg-gray-400 [animation-delay:-0.15s]" />

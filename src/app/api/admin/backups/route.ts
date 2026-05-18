@@ -64,15 +64,13 @@ export async function GET(): Promise<NextResponse> {
       }
     }
 
-    backups.sort(
-      (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
-    )
+    backups.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
 
     return NextResponse.json({ backups })
   } catch (err) {
     return NextResponse.json(
       { error: err instanceof Error ? err.message : 'Failed to list backups' },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

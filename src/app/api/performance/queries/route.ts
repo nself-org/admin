@@ -9,11 +9,7 @@ export async function GET(_request: NextRequest): Promise<NextResponse> {
   try {
     const result = await executeNselfCommand('perf', ['slow-queries', '--json'])
 
-    logger.cli(
-      'nself perf slow-queries --json',
-      result.success,
-      Date.now() - startTime,
-    )
+    logger.cli('nself perf slow-queries --json', result.success, Date.now() - startTime)
 
     if (!result.success) {
       return NextResponse.json(
@@ -22,7 +18,7 @@ export async function GET(_request: NextRequest): Promise<NextResponse> {
           error: 'Failed to get slow queries',
           details: result.error || result.stderr,
         },
-        { status: 500 },
+        { status: 500 }
       )
     }
 
@@ -51,7 +47,7 @@ export async function GET(_request: NextRequest): Promise<NextResponse> {
         error: 'Failed to get slow queries',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

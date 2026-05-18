@@ -52,12 +52,9 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     return NextResponse.json(
       {
         success: false,
-        error:
-          error instanceof Error
-            ? error.message
-            : 'Failed to export activities',
+        error: error instanceof Error ? error.message : 'Failed to export activities',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

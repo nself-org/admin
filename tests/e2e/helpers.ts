@@ -38,7 +38,7 @@ export async function mockProjectStatus(page: Page) {
           running: false,
         },
       }),
-    }),
+    })
   )
 }
 
@@ -130,7 +130,7 @@ export async function isInViewport(page: Page, selector: string) {
 export async function testKeyboardNavigation(
   page: Page,
   startSelector: string,
-  endSelector: string,
+  endSelector: string
 ) {
   await page.locator(startSelector).focus()
   let currentElement = await page.locator(':focus')
@@ -144,7 +144,7 @@ export async function testKeyboardNavigation(
     currentElement = await page.locator(':focus')
     const matches = await currentElement.evaluate(
       (el, selector) => el.matches(selector),
-      endSelector,
+      endSelector
     )
 
     if (matches) {
@@ -158,10 +158,7 @@ export async function testKeyboardNavigation(
 /**
  * Test responsive design at different viewports
  */
-export async function testResponsive(
-  page: Page,
-  callback: () => Promise<void>,
-) {
+export async function testResponsive(page: Page, callback: () => Promise<void>) {
   const viewports = [
     { name: 'Mobile', width: 375, height: 667 },
     { name: 'Tablet', width: 768, height: 1024 },
@@ -180,32 +177,25 @@ export async function testResponsive(
 /**
  * Wait for API response
  */
-export async function waitForApiResponse(
-  page: Page,
-  urlPattern: string | RegExp,
-) {
+export async function waitForApiResponse(page: Page, urlPattern: string | RegExp) {
   return page.waitForResponse(
     (response) =>
       (typeof urlPattern === 'string'
         ? response.url().includes(urlPattern)
-        : urlPattern.test(response.url())) && response.status() === 200,
+        : urlPattern.test(response.url())) && response.status() === 200
   )
 }
 
 /**
  * Mock API endpoint
  */
-export async function mockApiEndpoint(
-  page: Page,
-  url: string,
-  response: unknown,
-) {
+export async function mockApiEndpoint(page: Page, url: string, response: unknown) {
   await page.route(url, (route) =>
     route.fulfill({
       status: 200,
       contentType: 'application/json',
       body: JSON.stringify(response),
-    }),
+    })
   )
 }
 

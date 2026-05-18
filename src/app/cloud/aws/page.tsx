@@ -103,9 +103,7 @@ function AWSContent() {
   const ec2Columns: ColumnDef<EC2Instance>[] = [
     {
       accessorKey: 'name',
-      header: ({ column }) => (
-        <SortableHeader column={column}>Name</SortableHeader>
-      ),
+      header: ({ column }) => <SortableHeader column={column}>Name</SortableHeader>,
     },
     {
       accessorKey: 'type',
@@ -141,9 +139,7 @@ function AWSContent() {
       accessorKey: 'publicIP',
       header: 'Public IP',
       cell: ({ row }) => (
-        <span className="font-mono text-sm">
-          {row.getValue('publicIP') || '-'}
-        </span>
+        <span className="font-mono text-sm">{row.getValue('publicIP') || '-'}</span>
       ),
     },
     {
@@ -159,9 +155,7 @@ function AWSContent() {
   const rdsColumns: ColumnDef<RDSDatabase>[] = [
     {
       accessorKey: 'name',
-      header: ({ column }) => (
-        <SortableHeader column={column}>Name</SortableHeader>
-      ),
+      header: ({ column }) => <SortableHeader column={column}>Name</SortableHeader>,
     },
     {
       accessorKey: 'engine',
@@ -210,9 +204,7 @@ function AWSContent() {
   const s3Columns: ColumnDef<S3Bucket>[] = [
     {
       accessorKey: 'name',
-      header: ({ column }) => (
-        <SortableHeader column={column}>Bucket Name</SortableHeader>
-      ),
+      header: ({ column }) => <SortableHeader column={column}>Bucket Name</SortableHeader>,
     },
     {
       accessorKey: 'region',
@@ -260,9 +252,7 @@ function AWSContent() {
       {/* Connection Status */}
       <Card className="p-6">
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-lg font-semibold text-zinc-900 dark:text-white">
-            AWS Connection
-          </h2>
+          <h2 className="text-lg font-semibold text-zinc-900 dark:text-white">AWS Connection</h2>
           <div
             className={`flex items-center gap-2 rounded-full px-3 py-1 text-sm font-medium ${
               connected
@@ -325,10 +315,7 @@ function AWSContent() {
             </div>
 
             <div className="flex gap-2">
-              <Button
-                onClick={handleConnect}
-                disabled={!accessKey || !secretKey || loading}
-              >
+              <Button onClick={handleConnect} disabled={!accessKey || !secretKey || loading}>
                 {loading ? 'Connecting...' : 'Connect to AWS'}
               </Button>
               <Button variant="outline">Test Connection</Button>
@@ -337,17 +324,11 @@ function AWSContent() {
         ) : (
           <div className="space-y-3">
             <div className="flex items-center justify-between">
-              <span className="text-sm text-zinc-600 dark:text-zinc-400">
-                Region
-              </span>
-              <span className="font-mono text-sm text-zinc-900 dark:text-white">
-                {region}
-              </span>
+              <span className="text-sm text-zinc-600 dark:text-zinc-400">Region</span>
+              <span className="font-mono text-sm text-zinc-900 dark:text-white">{region}</span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-sm text-zinc-600 dark:text-zinc-400">
-                Access Key
-              </span>
+              <span className="text-sm text-zinc-600 dark:text-zinc-400">Access Key</span>
               <span className="font-mono text-sm text-zinc-900 dark:text-white">
                 {accessKey.substring(0, 8)}...
               </span>
@@ -369,9 +350,7 @@ function AWSContent() {
                   <Server className="h-5 w-5 text-blue-600 dark:text-blue-400" />
                 </div>
                 <div>
-                  <p className="text-sm text-zinc-600 dark:text-zinc-400">
-                    EC2 Instances
-                  </p>
+                  <p className="text-sm text-zinc-600 dark:text-zinc-400">EC2 Instances</p>
                   <p className="text-xl font-bold text-zinc-900 dark:text-white">
                     {ec2Instances.length}
                   </p>
@@ -385,9 +364,7 @@ function AWSContent() {
                   <Database className="h-5 w-5 text-sky-500 dark:text-sky-400" />
                 </div>
                 <div>
-                  <p className="text-sm text-zinc-600 dark:text-zinc-400">
-                    RDS Databases
-                  </p>
+                  <p className="text-sm text-zinc-600 dark:text-zinc-400">RDS Databases</p>
                   <p className="text-xl font-bold text-zinc-900 dark:text-white">
                     {rdsInstances.length}
                   </p>
@@ -401,9 +378,7 @@ function AWSContent() {
                   <HardDrive className="h-5 w-5 text-green-600 dark:text-green-400" />
                 </div>
                 <div>
-                  <p className="text-sm text-zinc-600 dark:text-zinc-400">
-                    S3 Buckets
-                  </p>
+                  <p className="text-sm text-zinc-600 dark:text-zinc-400">S3 Buckets</p>
                   <p className="text-xl font-bold text-zinc-900 dark:text-white">
                     {s3Buckets.length}
                   </p>
@@ -417,9 +392,7 @@ function AWSContent() {
                   <DollarSign className="h-5 w-5 text-amber-600 dark:text-amber-400" />
                 </div>
                 <div>
-                  <p className="text-sm text-zinc-600 dark:text-zinc-400">
-                    Monthly Cost
-                  </p>
+                  <p className="text-sm text-zinc-600 dark:text-zinc-400">Monthly Cost</p>
                   <p className="text-xl font-bold text-zinc-900 dark:text-white">
                     ${totalCost.toFixed(2)}
                   </p>
@@ -434,9 +407,7 @@ function AWSContent() {
               <div className="flex items-center gap-3">
                 <Cloud className="h-8 w-8 text-blue-600 dark:text-blue-400" />
                 <div>
-                  <h3 className="font-semibold text-blue-900 dark:text-blue-100">
-                    Deploy to AWS
-                  </h3>
+                  <h3 className="font-semibold text-blue-900 dark:text-blue-100">Deploy to AWS</h3>
                   <p className="text-sm text-blue-700 dark:text-blue-200">
                     Deploy your nself project to AWS EC2 and RDS
                   </p>

@@ -14,14 +14,11 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     const projectPath = getProjectPath()
     const nselfPath = await findNselfPath()
 
-    const { stdout } = await execAsync(
-      `${nselfPath} deploy blue-green status --json`,
-      {
-        cwd: projectPath,
-        env: { ...process.env, PATH: getEnhancedPath() },
-        timeout: 60000,
-      },
-    )
+    const { stdout } = await execAsync(`${nselfPath} deploy blue-green status --json`, {
+      cwd: projectPath,
+      env: { ...process.env, PATH: getEnhancedPath() },
+      timeout: 60000,
+    })
 
     const result = JSON.parse(stdout)
 
@@ -43,7 +40,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to get blue-green status',
         details: err.message,
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -58,15 +55,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     const nselfPath = await findNselfPath()
     const body = await request.json()
 
-    const {
-      action,
-      image,
-      tag,
-      slot,
-      prePromoteTests,
-      autoPromote,
-      promoteDelay,
-    } = body
+    const { action, image, tag, slot, prePromoteTests, autoPromote, promoteDelay } = body
 
     if (!action) {
       return NextResponse.json(
@@ -74,7 +63,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           success: false,
           error: 'Action is required (deploy, switch, rollback, abort)',
         },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -89,14 +78,11 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       if (promoteDelay) args.push(`--promote-delay=${promoteDelay}`)
     }
 
-    const { stdout } = await execAsync(
-      `${nselfPath} ${args.join(' ')} --json`,
-      {
-        cwd: projectPath,
-        env: { ...process.env, PATH: getEnhancedPath() },
-        timeout: 300000,
-      },
-    )
+    const { stdout } = await execAsync(`${nselfPath} ${args.join(' ')} --json`, {
+      cwd: projectPath,
+      env: { ...process.env, PATH: getEnhancedPath() },
+      timeout: 300000,
+    })
 
     const result = JSON.parse(stdout)
 
@@ -118,7 +104,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to execute blue-green action',
         details: err.message,
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

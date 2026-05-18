@@ -36,7 +36,7 @@ export function StatusBadge({ status, label }: StatusBadgeProps) {
     <span
       className={cn(
         'inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-xs font-medium ring-1 ring-inset',
-        pillColor[status],
+        pillColor[status]
       )}
     >
       <span className={cn('h-1.5 w-1.5 rounded-full', dotColor[status])} />

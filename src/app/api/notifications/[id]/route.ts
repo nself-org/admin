@@ -11,10 +11,7 @@ interface RouteParams {
 /**
  * GET /api/notifications/[id] - Get a single notification
  */
-export async function GET(
-  request: NextRequest,
-  { params }: RouteParams,
-): Promise<NextResponse> {
+export async function GET(request: NextRequest, { params }: RouteParams): Promise<NextResponse> {
   const startTime = Date.now()
 
   try {
@@ -34,17 +31,14 @@ export async function GET(
     if (!id) {
       return NextResponse.json(
         { success: false, error: 'Notification ID is required' },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
     const notification = await notificationsApi.getNotification(id, userId)
 
     if (!notification) {
-      return NextResponse.json(
-        { success: false, error: 'Notification not found' },
-        { status: 404 },
-      )
+      return NextResponse.json({ success: false, error: 'Notification not found' }, { status: 404 })
     }
 
     logger.api('GET', `/api/notifications/${id}`, 200, Date.now() - startTime)
@@ -64,7 +58,7 @@ export async function GET(
         error: 'Failed to get notification',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -75,10 +69,7 @@ export async function GET(
  *   - read: boolean (optional)
  *   - data: object (optional, merged with existing data)
  */
-export async function PATCH(
-  request: NextRequest,
-  { params }: RouteParams,
-): Promise<NextResponse> {
+export async function PATCH(request: NextRequest, { params }: RouteParams): Promise<NextResponse> {
   const authError = await requireAuth(request)
   if (authError) return authError
 
@@ -101,7 +92,7 @@ export async function PATCH(
     if (!id) {
       return NextResponse.json(
         { success: false, error: 'Notification ID is required' },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -114,7 +105,7 @@ export async function PATCH(
           success: false,
           error: 'No update fields provided. Allowed fields: read, data',
         },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -124,10 +115,7 @@ export async function PATCH(
     })
 
     if (!notification) {
-      return NextResponse.json(
-        { success: false, error: 'Notification not found' },
-        { status: 404 },
-      )
+      return NextResponse.json({ success: false, error: 'Notification not found' }, { status: 404 })
     }
 
     logger.api('PATCH', `/api/notifications/${id}`, 200, Date.now() - startTime)
@@ -148,7 +136,7 @@ export async function PATCH(
         error: 'Failed to update notification',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -156,10 +144,7 @@ export async function PATCH(
 /**
  * DELETE /api/notifications/[id] - Delete a notification
  */
-export async function DELETE(
-  request: NextRequest,
-  { params }: RouteParams,
-): Promise<NextResponse> {
+export async function DELETE(request: NextRequest, { params }: RouteParams): Promise<NextResponse> {
   const authError = await requireAuth(request)
   if (authError) return authError
 
@@ -182,25 +167,17 @@ export async function DELETE(
     if (!id) {
       return NextResponse.json(
         { success: false, error: 'Notification ID is required' },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
     const deleted = await notificationsApi.deleteNotification(id, userId)
 
     if (!deleted) {
-      return NextResponse.json(
-        { success: false, error: 'Notification not found' },
-        { status: 404 },
-      )
+      return NextResponse.json({ success: false, error: 'Notification not found' }, { status: 404 })
     }
 
-    logger.api(
-      'DELETE',
-      `/api/notifications/${id}`,
-      200,
-      Date.now() - startTime,
-    )
+    logger.api('DELETE', `/api/notifications/${id}`, 200, Date.now() - startTime)
     logger.info('Deleted notification', { id })
 
     return NextResponse.json({
@@ -221,7 +198,7 @@ export async function DELETE(
         error: 'Failed to delete notification',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

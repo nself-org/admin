@@ -18,15 +18,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     const nselfPath = await findNselfPath()
     const body = await request.json()
 
-    const {
-      source,
-      target,
-      paths,
-      excludePaths,
-      delete: deleteRemoved,
-      dryRun,
-      force,
-    } = body
+    const { source, target, paths, excludePaths, delete: deleteRemoved, dryRun, force } = body
 
     const args: string[] = ['sync', 'files']
     if (source) args.push(`--source=${source}`)
@@ -38,14 +30,11 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     if (dryRun) args.push('--dry-run')
     if (force) args.push('--force')
 
-    const { stdout } = await execAsync(
-      `${nselfPath} ${args.join(' ')} --json`,
-      {
-        cwd: projectPath,
-        env: { ...process.env, PATH: getEnhancedPath() },
-        timeout: 600000,
-      },
-    )
+    const { stdout } = await execAsync(`${nselfPath} ${args.join(' ')} --json`, {
+      cwd: projectPath,
+      env: { ...process.env, PATH: getEnhancedPath() },
+      timeout: 600000,
+    })
 
     const result = JSON.parse(stdout)
 
@@ -63,7 +52,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     logger.error('Failed to sync files', { error: err.message })
     return NextResponse.json(
       { success: false, error: 'Failed to sync files', details: err.message },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

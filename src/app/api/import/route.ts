@@ -34,7 +34,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     if (typeof source !== 'string' || !source) {
       return NextResponse.json(
         { success: false, error: 'Missing required field: source' },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -44,14 +44,14 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           success: false,
           error: 'Invalid source: must be "chatgpt" or "claude"',
         },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
     if (!(file instanceof File)) {
       return NextResponse.json(
         { success: false, error: 'Missing required field: file' },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -72,7 +72,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           FORCE_COLOR: '0',
         },
         timeout: 120000,
-      },
+      }
     )
 
     return NextResponse.json({
@@ -88,13 +88,9 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     return NextResponse.json(
       {
         success: false,
-        error:
-          execErr.stdout ||
-          execErr.stderr ||
-          execErr.message ||
-          'Import failed',
+        error: execErr.stdout || execErr.stderr || execErr.message || 'Import failed',
       },
-      { status: 500 },
+      { status: 500 }
     )
   } finally {
     if (tmpPath !== null) {

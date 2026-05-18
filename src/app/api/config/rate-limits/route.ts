@@ -31,10 +31,7 @@ function parseEnvFile(content: string): Record<string, string> {
 }
 
 /** Write/update specific env keys in-place, preserving unrelated lines. */
-async function writeEnvKeys(
-  filePath: string,
-  updates: Record<string, string>,
-): Promise<void> {
+async function writeEnvKeys(filePath: string, updates: Record<string, string>): Promise<void> {
   let content = ''
   try {
     content = await fs.readFile(filePath, 'utf-8')
@@ -114,7 +111,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     console.error('[rate-limits/route] GET error:', error)
     return NextResponse.json(
       { success: false, error: 'Failed to read rate limit configuration' },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -178,7 +175,8 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     if (apiWindow !== undefined) updates['API_RATE_LIMIT_WINDOW'] = apiWindow
     if (globalEnabled !== undefined) updates['RATE_LIMIT_ENABLED'] = globalEnabled
     if (globalMaxRequests !== undefined) updates['RATE_LIMIT_MAX_REQUESTS'] = globalMaxRequests
-    if (globalWindowSeconds !== undefined) updates['RATE_LIMIT_WINDOW_SECONDS'] = globalWindowSeconds
+    if (globalWindowSeconds !== undefined)
+      updates['RATE_LIMIT_WINDOW_SECONDS'] = globalWindowSeconds
     if (globalBurst !== undefined) updates['RATE_LIMIT_BURST'] = globalBurst
 
     await writeEnvKeys(envFile, updates)
@@ -198,7 +196,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     console.error('[rate-limits/route] POST error:', error)
     return NextResponse.json(
       { success: false, error: 'Failed to save rate limit configuration' },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

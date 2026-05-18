@@ -6,15 +6,7 @@ import { Card } from '@/components/ui/card'
 import { PageContent } from '@/components/ui/page-content'
 import { PageHeader } from '@/components/ui/page-header'
 import { useDashboard } from '@/hooks/useDashboards'
-import {
-  ArrowLeft,
-  Clock,
-  Edit,
-  LayoutDashboard,
-  RefreshCw,
-  Settings,
-  Share2,
-} from 'lucide-react'
+import { ArrowLeft, Clock, Edit, LayoutDashboard, RefreshCw, Settings, Share2 } from 'lucide-react'
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
 import { useState } from 'react'
@@ -47,10 +39,7 @@ export default function ViewDashboardPage() {
       <>
         <PageHeader
           title="Loading..."
-          breadcrumbs={[
-            { label: 'Dashboards', href: '/dashboards' },
-            { label: 'Loading...' },
-          ]}
+          breadcrumbs={[{ label: 'Dashboards', href: '/dashboards' }, { label: 'Loading...' }]}
         />
         <PageContent>
           <div className="flex items-center justify-center py-20">
@@ -66,10 +55,7 @@ export default function ViewDashboardPage() {
       <>
         <PageHeader
           title="Dashboard Not Found"
-          breadcrumbs={[
-            { label: 'Dashboards', href: '/dashboards' },
-            { label: 'Not Found' },
-          ]}
+          breadcrumbs={[{ label: 'Dashboards', href: '/dashboards' }, { label: 'Not Found' }]}
         />
         <PageContent>
           <Card className="flex flex-col items-center justify-center p-12 text-center">
@@ -78,8 +64,7 @@ export default function ViewDashboardPage() {
               Dashboard not found
             </h3>
             <p className="mb-4 text-sm text-zinc-500 dark:text-zinc-400">
-              The dashboard you are looking for does not exist or has been
-              deleted.
+              The dashboard you are looking for does not exist or has been deleted.
             </p>
             <Link href="/dashboards">
               <Button variant="outline">
@@ -98,21 +83,11 @@ export default function ViewDashboardPage() {
       <PageHeader
         title={dashboard.name}
         description={dashboard.description}
-        breadcrumbs={[
-          { label: 'Dashboards', href: '/dashboards' },
-          { label: dashboard.name },
-        ]}
+        breadcrumbs={[{ label: 'Dashboards', href: '/dashboards' }, { label: dashboard.name }]}
         actions={
           <div className="flex items-center gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={handleRefresh}
-              disabled={isRefreshing}
-            >
-              <RefreshCw
-                className={`mr-2 h-4 w-4 ${isRefreshing ? 'animate-spin' : ''}`}
-              />
+            <Button variant="outline" size="sm" onClick={handleRefresh} disabled={isRefreshing}>
+              <RefreshCw className={`mr-2 h-4 w-4 ${isRefreshing ? 'animate-spin' : ''}`} />
               Refresh
             </Button>
             <Button variant="outline" size="sm" onClick={handleShare}>
@@ -141,9 +116,7 @@ export default function ViewDashboardPage() {
           </div>
           <div className="flex items-center gap-1">
             <Clock className="h-4 w-4" />
-            <span>
-              Updated {new Date(dashboard.updatedAt).toLocaleDateString()}
-            </span>
+            <span>Updated {new Date(dashboard.updatedAt).toLocaleDateString()}</span>
           </div>
           {dashboard.refreshInterval && (
             <div className="flex items-center gap-1">

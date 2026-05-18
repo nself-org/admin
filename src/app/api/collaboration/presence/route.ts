@@ -4,11 +4,7 @@
  */
 
 import type { UserPresenceItem } from '@/lib/database'
-import {
-  getOnlineUsers,
-  removeUserPresence,
-  updateUserPresence,
-} from '@/lib/database'
+import { getOnlineUsers, removeUserPresence, updateUserPresence } from '@/lib/database'
 import { requireAuth } from '@/lib/require-auth'
 import { emitUserPresence } from '@/lib/websocket/emitters'
 import { NextRequest, NextResponse } from 'next/server'
@@ -31,7 +27,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to get online users',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -45,8 +41,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
   try {
     const body = await request.json()
-    const { userId, userName, status, currentPage, currentDocument, metadata } =
-      body
+    const { userId, userName, status, currentPage, currentDocument, metadata } = body
 
     if (!userId || !userName || !status) {
       return NextResponse.json(
@@ -54,7 +49,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           success: false,
           error: 'userId, userName, and status are required',
         },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -92,7 +87,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to update presence',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -114,7 +109,7 @@ export async function DELETE(request: NextRequest): Promise<NextResponse> {
           success: false,
           error: 'userId is required',
         },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -139,7 +134,7 @@ export async function DELETE(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to remove presence',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

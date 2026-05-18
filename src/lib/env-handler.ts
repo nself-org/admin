@@ -17,10 +17,7 @@ function quoteEnvValue(value: string): string {
   // 2. Contains special shell characters
   // 3. Contains asterisks (for cron expressions)
   // 4. Already quoted (preserve existing quotes)
-  const needsQuoting =
-    /[\s*#$&|;<>()\\`]/.test(value) ||
-    value.includes('"') ||
-    value.includes("'")
+  const needsQuoting = /[\s*#$&|;<>()\\`]/.test(value) || value.includes('"') || value.includes("'")
 
   // If already properly quoted with double quotes, return as-is
   if (value.startsWith('"') && value.endsWith('"')) {
@@ -185,15 +182,8 @@ export async function writeEnvFile(config: EnvConfig): Promise<void> {
   lines.push('')
 
   // Core Settings (always at top, no comments needed)
-  const coreSettings = [
-    'ENV',
-    'PROJECT_NAME',
-    'BASE_DOMAIN',
-    'PROJECT_DESCRIPTION',
-  ]
-  const coreValues = coreSettings.filter(
-    (key) => config[key] !== undefined && config[key] !== '',
-  )
+  const coreSettings = ['ENV', 'PROJECT_NAME', 'BASE_DOMAIN', 'PROJECT_DESCRIPTION']
+  const coreValues = coreSettings.filter((key) => config[key] !== undefined && config[key] !== '')
   if (coreValues.length > 0) {
     for (const key of coreValues) {
       lines.push(`${key}=${quoteEnvValue(config[key])}`)
@@ -230,7 +220,7 @@ export async function writeEnvFile(config: EnvConfig): Promise<void> {
 
   // Custom Services - Dynamic based on actual services (CS_N format only)
   const serviceKeys = Object.keys(config).filter(
-    (key) => key.startsWith('CS_') || key === 'SERVICES_ENABLED',
+    (key) => key.startsWith('CS_') || key === 'SERVICES_ENABLED'
   )
 
   if (serviceKeys.length > 0) {
@@ -250,9 +240,7 @@ export async function writeEnvFile(config: EnvConfig): Promise<void> {
   }
 
   // Frontend Apps - Dynamic based on actual apps
-  const frontendKeys = Object.keys(config).filter((key) =>
-    key.startsWith('FRONTEND_APP'),
-  )
+  const frontendKeys = Object.keys(config).filter((key) => key.startsWith('FRONTEND_APP'))
   if (frontendKeys.length > 0) {
     lines.push('# Frontend Applications')
     // Sort by app number then by field
@@ -364,10 +352,7 @@ export async function writeEnvFile(config: EnvConfig): Promise<void> {
       }
     }
     lines.push('')
-  } else if (
-    config.BACKUP_ENABLED === 'false' ||
-    config.DB_BACKUP_ENABLED === 'false'
-  ) {
+  } else if (config.BACKUP_ENABLED === 'false' || config.DB_BACKUP_ENABLED === 'false') {
     lines.push('# Backup')
     lines.push('BACKUP_ENABLED=false')
     lines.push('')
@@ -397,9 +382,7 @@ export async function writeEnvFile(config: EnvConfig): Promise<void> {
     'GRAFANA_ADMIN_PASSWORD', // Service credentials
   ])
 
-  const remainingKeys = Object.keys(config).filter(
-    (key) => !handledKeys.has(key),
-  )
+  const remainingKeys = Object.keys(config).filter((key) => !handledKeys.has(key))
   if (remainingKeys.length > 0) {
     lines.push('# Additional Settings')
     for (const key of remainingKeys.sort()) {
@@ -431,11 +414,7 @@ export async function updateEnvFile(updates: EnvConfig): Promise<void> {
   })
 
   // If database credentials were updated, rebuild HASURA_METADATA_DATABASE_URL
-  if (
-    updates.POSTGRES_DB ||
-    updates.POSTGRES_USER ||
-    updates.POSTGRES_PASSWORD
-  ) {
+  if (updates.POSTGRES_DB || updates.POSTGRES_USER || updates.POSTGRES_PASSWORD) {
     const dbHost = merged.POSTGRES_HOST || 'postgres'
     const dbPort = merged.POSTGRES_PORT || '5432'
     const dbUser = merged.POSTGRES_USER || 'postgres'
@@ -517,8 +496,7 @@ export function wizardConfigToEnv(config: any): EnvConfig {
   // No fallback: HASURA_GRAPHQL_ADMIN_SECRET must be set explicitly.
   // The startup guard in hasura-client.ts blocks known dev-stub values in production.
   env.HASURA_GRAPHQL_ADMIN_SECRET = config.hasuraAdminSecret || ''
-  env.HASURA_JWT_KEY =
-    config.jwtSecret || 'development-secret-key-minimum-32-characters-long'
+  env.HASURA_JWT_KEY = config.jwtSecret || 'development-secret-key-minimum-32-characters-long'
   env.HASURA_JWT_TYPE = 'HS256' // Default per spec
 
   // Also extract hasuraConfig from Step 2 if present
@@ -564,21 +542,15 @@ export function wizardConfigToEnv(config: any): EnvConfig {
       config.optionalServices.storage !== undefined
     ) {
       env.STORAGE_ENABLED =
-        config.optionalServices.minio || config.optionalServices.storage
-          ? 'true'
-          : 'false'
+        config.optionalServices.minio || config.optionalServices.storage ? 'true' : 'false'
     }
     // These default to false (in order: nself-admin, redis, minio, mlflow, mail, search, monitoring)
     env.NSELF_ADMIN_ENABLED =
-      config.optionalServices.nadmin || config.optionalServices.admin
-        ? 'true'
-        : 'false'
+      config.optionalServices.nadmin || config.optionalServices.admin ? 'true' : 'false'
     env.REDIS_ENABLED = config.optionalServices.redis ? 'true' : 'false'
     env.MLFLOW_ENABLED = config.optionalServices.mlflow ? 'true' : 'false'
     env.MAILPIT_ENABLED =
-      config.optionalServices.mail?.enabled || config.optionalServices.mailpit
-        ? 'true'
-        : 'false'
+      config.optionalServices.mail?.enabled || config.optionalServices.mailpit ? 'true' : 'false'
     env.SEARCH_ENABLED = config.optionalServices.search ? 'true' : 'false'
     // Monitoring bundle - includes all monitoring services
     if (config.optionalServices.monitoring) {
@@ -604,12 +576,10 @@ export function wizardConfigToEnv(config: any): EnvConfig {
     env.MINIO_ROOT_PASSWORD = config.minioRootPassword || 'minioadmin-password'
   }
   if (env.SEARCH_ENABLED === 'true') {
-    env.MEILI_MASTER_KEY =
-      config.meiliMasterKey || 'meilisearch-master-key-32-chars'
+    env.MEILI_MASTER_KEY = config.meiliMasterKey || 'meilisearch-master-key-32-chars'
   }
   if (env.MONITORING_ENABLED === 'true') {
-    env.GRAFANA_ADMIN_PASSWORD =
-      config.grafanaAdminPassword || 'grafana-admin-password'
+    env.GRAFANA_ADMIN_PASSWORD = config.grafanaAdminPassword || 'grafana-admin-password'
   }
 
   // Custom services - Use nself CLI format (CS_N=name:framework:port:route)
@@ -627,7 +597,7 @@ export function wizardConfigToEnv(config: any): EnvConfig {
       const serviceFramework = String(service.framework || 'custom')
       if (shellMetaRe.test(serviceName) || shellMetaRe.test(serviceFramework)) {
         console.warn(
-          `Custom service at index ${index} has invalid characters in name or framework — skipping`,
+          `Custom service at index ${index} has invalid characters in name or framework — skipping`
         )
         return
       }
@@ -666,8 +636,7 @@ export function wizardConfigToEnv(config: any): EnvConfig {
         env[`FRONTEND_APP_${num}_REMOTE_SCHEMA_URL`] = app.remoteSchemaUrl
         // Auto-generate schema name from table prefix if not provided
         if (!app.remoteSchemaName && app.tablePrefix) {
-          env[`FRONTEND_APP_${num}_REMOTE_SCHEMA_NAME`] =
-            `${app.tablePrefix}_schema`
+          env[`FRONTEND_APP_${num}_REMOTE_SCHEMA_NAME`] = `${app.tablePrefix}_schema`
         } else if (app.remoteSchemaName) {
           env[`FRONTEND_APP_${num}_REMOTE_SCHEMA_NAME`] = app.remoteSchemaName
         }
@@ -708,19 +677,15 @@ export function envToWizardConfig(env: EnvConfig): any {
         if (env.HASURA_GRAPHQL_JWT_SECRET) {
           try {
             const parsed = JSON.parse(env.HASURA_GRAPHQL_JWT_SECRET)
-            return (
-              parsed.key || 'development-secret-key-minimum-32-characters-long'
-            )
+            return parsed.key || 'development-secret-key-minimum-32-characters-long'
           } catch {
             return env.HASURA_GRAPHQL_JWT_SECRET
           }
         }
         return 'development-secret-key-minimum-32-characters-long'
       })(),
-    backupEnabled:
-      env.BACKUP_ENABLED === 'true' || env.DB_BACKUP_ENABLED === 'true', // Support both for backwards compat
-    backupSchedule:
-      env.BACKUP_SCHEDULE || env.DB_BACKUP_SCHEDULE || '0 2 * * *',
+    backupEnabled: env.BACKUP_ENABLED === 'true' || env.DB_BACKUP_ENABLED === 'true', // Support both for backwards compat
+    backupSchedule: env.BACKUP_SCHEDULE || env.DB_BACKUP_SCHEDULE || '0 2 * * *',
 
     // Extract service configurations from Step 2
     postgresqlConfig: {
@@ -737,7 +702,7 @@ export function envToWizardConfig(env: EnvConfig): any {
         }
         return acc
       },
-      {} as Record<string, string>,
+      {} as Record<string, string>
     ),
 
     // Extract Auth configuration
@@ -748,7 +713,7 @@ export function envToWizardConfig(env: EnvConfig): any {
         }
         return acc
       },
-      {} as Record<string, string>,
+      {} as Record<string, string>
     ),
 
     // Extract Nginx configuration
@@ -759,7 +724,7 @@ export function envToWizardConfig(env: EnvConfig): any {
         }
         return acc
       },
-      {} as Record<string, string>,
+      {} as Record<string, string>
     ),
 
     // Pass through all raw env variables so the page can read them
@@ -799,20 +764,16 @@ export function envToWizardConfig(env: EnvConfig): any {
 
     // Optional services - per spec v1.0 (in order: nself-admin, redis, minio, mlflow, mail, search, monitoring)
     // Add as top-level fields for easier access in UI
-    nadminEnabled:
-      env.NSELF_ADMIN_ENABLED === 'true' || env.NADMIN_ENABLED === 'true',
+    nadminEnabled: env.NSELF_ADMIN_ENABLED === 'true' || env.NADMIN_ENABLED === 'true',
     redisEnabled: env.REDIS_ENABLED === 'true',
-    minioEnabled:
-      env.STORAGE_ENABLED === 'true' || env.MINIO_ENABLED === 'true',
+    minioEnabled: env.STORAGE_ENABLED === 'true' || env.MINIO_ENABLED === 'true',
     mlflowEnabled: env.MLFLOW_ENABLED === 'true',
     mailpitEnabled: env.MAILPIT_ENABLED === 'true',
     searchEnabled: env.SEARCH_ENABLED === 'true',
     monitoringEnabled: env.MONITORING_ENABLED === 'true',
     optionalServices: {
-      admin:
-        env.NSELF_ADMIN_ENABLED === 'true' || env.NADMIN_ENABLED === 'true', // Support both
-      nadmin:
-        env.NSELF_ADMIN_ENABLED === 'true' || env.NADMIN_ENABLED === 'true', // Alternative name
+      admin: env.NSELF_ADMIN_ENABLED === 'true' || env.NADMIN_ENABLED === 'true', // Support both
+      nadmin: env.NSELF_ADMIN_ENABLED === 'true' || env.NADMIN_ENABLED === 'true', // Alternative name
       redis: env.REDIS_ENABLED === 'true',
       minio: env.STORAGE_ENABLED === 'true' || env.MINIO_ENABLED === 'true', // Support both for backwards compat
       storage: env.STORAGE_ENABLED === 'true', // Use storage as primary name
@@ -866,19 +827,12 @@ export function envToWizardConfig(env: EnvConfig): any {
         tablePrefix: tablePrefix || '',
         localPort:
           env[`FRONTEND_APP_${i}_PORT`] || env[`FRONTEND_APP_${i}_LOCAL_PORT`]
-            ? parseInt(
-                env[`FRONTEND_APP_${i}_PORT`] ||
-                  env[`FRONTEND_APP_${i}_LOCAL_PORT`],
-              )
+            ? parseInt(env[`FRONTEND_APP_${i}_PORT`] || env[`FRONTEND_APP_${i}_LOCAL_PORT`])
             : undefined,
         productionUrl:
-          env[`FRONTEND_APP_${i}_ROUTE`] ||
-          env[`FRONTEND_APP_${i}_PRODUCTION_URL`] ||
-          undefined,
-        remoteSchemaName:
-          env[`FRONTEND_APP_${i}_REMOTE_SCHEMA_NAME`] || undefined,
-        remoteSchemaUrl:
-          env[`FRONTEND_APP_${i}_REMOTE_SCHEMA_URL`] || undefined,
+          env[`FRONTEND_APP_${i}_ROUTE`] || env[`FRONTEND_APP_${i}_PRODUCTION_URL`] || undefined,
+        remoteSchemaName: env[`FRONTEND_APP_${i}_REMOTE_SCHEMA_NAME`] || undefined,
+        remoteSchemaUrl: env[`FRONTEND_APP_${i}_REMOTE_SCHEMA_URL`] || undefined,
       })
     }
   }

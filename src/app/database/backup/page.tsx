@@ -137,10 +137,8 @@ export default function BackupRestorePage() {
       <div className="flex items-start gap-3 rounded-xl border border-zinc-700/40 bg-zinc-800/30 px-5 py-4">
         <Archive className="mt-0.5 h-5 w-5 shrink-0 text-zinc-500" />
         <p className="text-sm text-zinc-400">
-          Backups include all{' '}
-          <span className="font-mono text-zinc-300">np_*</span> plugin tables
-          and core database. The latest backup is recommended for restore
-          operations.
+          Backups include all <span className="font-mono text-zinc-300">np_*</span> plugin tables
+          and core database. The latest backup is recommended for restore operations.
         </p>
       </div>
 
@@ -161,19 +159,14 @@ export default function BackupRestorePage() {
         {loading ? (
           <div className="space-y-2 p-4">
             {[1, 2, 3].map((n) => (
-              <div
-                key={n}
-                className="h-12 animate-pulse rounded-lg bg-zinc-700/40"
-              />
+              <div key={n} className="h-12 animate-pulse rounded-lg bg-zinc-700/40" />
             ))}
           </div>
         ) : backups.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-10 text-center">
             <Archive className="mb-2 h-7 w-7 text-zinc-700" />
             <p className="text-sm text-zinc-500">No backups found</p>
-            <p className="mt-0.5 text-xs text-zinc-600">
-              Create a backup below to get started
-            </p>
+            <p className="mt-0.5 text-xs text-zinc-600">Create a backup below to get started</p>
           </div>
         ) : (
           <div className="overflow-x-auto">
@@ -192,24 +185,17 @@ export default function BackupRestorePage() {
               </thead>
               <tbody className="divide-y divide-zinc-700/50">
                 {backups.map((b) => (
-                  <tr
-                    key={b.filename}
-                    className="transition-colors hover:bg-zinc-700/20"
-                  >
+                  <tr key={b.filename} className="transition-colors hover:bg-zinc-700/20">
                     <td className="px-5 py-3">
                       <div className="flex items-center gap-2">
                         <HardDrive className="h-4 w-4 shrink-0 text-zinc-500" />
-                        <span className="font-mono text-xs text-zinc-300">
-                          {b.filename}
-                        </span>
+                        <span className="font-mono text-xs text-zinc-300">{b.filename}</span>
                       </div>
                     </td>
                     <td className="px-5 py-3 text-sm text-zinc-400">
                       {new Date(b.created_at).toLocaleString()}
                     </td>
-                    <td className="px-5 py-3 text-sm text-zinc-400">
-                      {fmtBytes(b.size_bytes)}
-                    </td>
+                    <td className="px-5 py-3 text-sm text-zinc-400">{fmtBytes(b.size_bytes)}</td>
                     <td className="px-5 py-3 text-right">
                       <a
                         href={`/api/admin/backups/${encodeURIComponent(b.filename)}/download`}
@@ -233,9 +219,8 @@ export default function BackupRestorePage() {
         <div className="space-y-4 rounded-xl border border-zinc-700/50 bg-zinc-800/50 p-5">
           <h2 className="text-base font-semibold text-white">Create Backup</h2>
           <p className="text-sm text-zinc-400">
-            Runs{' '}
-            <span className="font-mono text-zinc-300">nself backup create</span>{' '}
-            and saves a compressed archive of all databases.
+            Runs <span className="font-mono text-zinc-300">nself backup create</span> and saves a
+            compressed archive of all databases.
           </p>
 
           <button
@@ -249,9 +234,7 @@ export default function BackupRestorePage() {
             ) : (
               <Archive className="h-4 w-4" />
             )}
-            {backupState === 'running'
-              ? 'Creating backup…'
-              : 'Create Backup Now'}
+            {backupState === 'running' ? 'Creating backup…' : 'Create Backup Now'}
           </button>
 
           {backupState !== 'idle' && (
@@ -290,15 +273,12 @@ export default function BackupRestorePage() {
         <div className="space-y-4 rounded-xl border border-zinc-700/50 bg-zinc-800/50 p-5">
           <h2 className="text-base font-semibold text-white">Restore</h2>
           <p className="text-sm text-zinc-400">
-            Select a backup and confirm to restore. This will overwrite all
-            current data.
+            Select a backup and confirm to restore. This will overwrite all current data.
           </p>
 
           {/* Backup selector */}
           <div className="space-y-1.5">
-            <label className="text-sm font-medium text-zinc-300">
-              Select backup
-            </label>
+            <label className="text-sm font-medium text-zinc-300">Select backup</label>
             <select
               id="restore-backup-select"
               aria-label="Select backup to restore"
@@ -322,8 +302,7 @@ export default function BackupRestorePage() {
           {/* Confirmation input */}
           <div className="space-y-1.5">
             <label className="text-sm font-medium text-zinc-300">
-              Type <span className="font-mono text-red-400">RESTORE</span> to
-              confirm
+              Type <span className="font-mono text-red-400">RESTORE</span> to confirm
             </label>
             <input
               type="text"
@@ -342,10 +321,7 @@ export default function BackupRestorePage() {
             type="button"
             onClick={() => void handleRestore()}
             disabled={
-              confirmText !== 'RESTORE' ||
-              !selectedRestore ||
-              restoring ||
-              backups.length === 0
+              confirmText !== 'RESTORE' || !selectedRestore || restoring || backups.length === 0
             }
             className="flex items-center gap-2 rounded-lg bg-red-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-red-500 disabled:cursor-not-allowed disabled:opacity-50"
           >
@@ -360,9 +336,7 @@ export default function BackupRestorePage() {
           {restoreSuccess && (
             <div className="flex items-center gap-2 rounded-lg border border-green-500/30 bg-green-900/20 px-4 py-3">
               <CheckCircle2 className="h-4 w-4 text-green-400" />
-              <p className="text-sm text-green-300">
-                Restore completed successfully.
-              </p>
+              <p className="text-sm text-green-300">Restore completed successfully.</p>
             </div>
           )}
 

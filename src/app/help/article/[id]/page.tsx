@@ -90,10 +90,7 @@ function HelpArticleContent({ id }: { id: string }) {
 
   // Get related articles
   const relatedArticles = helpArticlesArray
-    .filter(
-      (a: HelpArticle) =>
-        a.category === article.category && a.id !== article.id,
-    )
+    .filter((a: HelpArticle) => a.category === article.category && a.id !== article.id)
     .slice(0, 3)
 
   return (
@@ -188,11 +185,7 @@ function HelpArticleContent({ id }: { id: string }) {
   )
 }
 
-export default async function HelpArticlePage({
-  params,
-}: {
-  params: Promise<{ id: string }>
-}) {
+export default async function HelpArticlePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
   return (
     <Suspense fallback={<ListSkeleton />}>

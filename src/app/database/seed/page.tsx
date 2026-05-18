@@ -4,13 +4,7 @@ import { FormSkeleton } from '@/components/skeletons'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Switch } from '@/components/ui/switch'
 import type { Seed } from '@/types/database'
@@ -254,9 +248,7 @@ function DatabaseSeedContent() {
                     <FileCode className="h-4 w-4" />
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-zinc-900 dark:text-white">
-                      {seed.name}
-                    </p>
+                    <p className="text-sm font-medium text-zinc-900 dark:text-white">{seed.name}</p>
                     <p className="text-xs text-zinc-500">
                       {seed.recordCount} records
                       {seed.appliedAt &&
@@ -282,9 +274,7 @@ function DatabaseSeedContent() {
   return (
     <div className="space-y-6 p-6">
       <div>
-        <h1 className="text-2xl font-bold text-zinc-900 dark:text-white">
-          Database Seeding
-        </h1>
+        <h1 className="text-2xl font-bold text-zinc-900 dark:text-white">Database Seeding</h1>
         <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
           Seed your database with initial data using{' '}
           <code className="rounded bg-zinc-100 px-1 py-0.5 text-xs dark:bg-zinc-800">
@@ -299,11 +289,9 @@ function DatabaseSeedContent() {
           <AlertTitle>nself CLI Integration</AlertTitle>
           <AlertDescription>
             This page executes{' '}
-            <code className="rounded bg-zinc-100 px-1 dark:bg-zinc-800">
-              nself db seed
-            </code>{' '}
-            to populate your database. Seed files are managed in your
-            project&apos;s seed directory, organized by environment.
+            <code className="rounded bg-zinc-100 px-1 dark:bg-zinc-800">nself db seed</code> to
+            populate your database. Seed files are managed in your project&apos;s seed directory,
+            organized by environment.
           </AlertDescription>
         </Alert>
 
@@ -313,9 +301,7 @@ function DatabaseSeedContent() {
             <CardContent className="pt-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-zinc-500">
-                    Total Seeds
-                  </p>
+                  <p className="text-sm font-medium text-zinc-500">Total Seeds</p>
                   <p className="mt-1 text-2xl font-bold">{seeds.length}</p>
                 </div>
                 <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-blue-500/10">
@@ -329,9 +315,7 @@ function DatabaseSeedContent() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm font-medium text-zinc-500">Applied</p>
-                  <p className="mt-1 text-2xl font-bold text-emerald-500">
-                    {appliedCount}
-                  </p>
+                  <p className="mt-1 text-2xl font-bold text-emerald-500">{appliedCount}</p>
                 </div>
                 <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-emerald-500/10">
                   <CheckCircle className="h-6 w-6 text-emerald-500" />
@@ -344,9 +328,7 @@ function DatabaseSeedContent() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm font-medium text-zinc-500">Available</p>
-                  <p className="mt-1 text-2xl font-bold text-blue-500">
-                    {availableCount}
-                  </p>
+                  <p className="mt-1 text-2xl font-bold text-blue-500">{availableCount}</p>
                 </div>
                 <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-blue-500/10">
                   <Clock className="h-6 w-6 text-blue-500" />
@@ -358,9 +340,7 @@ function DatabaseSeedContent() {
             <CardContent className="pt-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-zinc-500">
-                    Total Records
-                  </p>
+                  <p className="text-sm font-medium text-zinc-500">Total Records</p>
                   <p className="mt-1 text-2xl font-bold">
                     {seeds.reduce((acc, s) => acc + (s.recordCount || 0), 0)}
                   </p>
@@ -381,9 +361,7 @@ function DatabaseSeedContent() {
                 <Sprout className="h-5 w-5 text-green-600" />
                 <CardTitle>Seed Controls</CardTitle>
               </div>
-              <CardDescription>
-                Run seeds to populate your database with data
-              </CardDescription>
+              <CardDescription>Run seeds to populate your database with data</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
               {/* Force Mode Toggle */}
@@ -399,12 +377,7 @@ function DatabaseSeedContent() {
 
               {/* Action Buttons */}
               <div className="grid grid-cols-2 gap-3">
-                <Button
-                  onClick={() => runSeed()}
-                  disabled={isSeeding}
-                  className="w-full"
-                  size="lg"
-                >
+                <Button onClick={() => runSeed()} disabled={isSeeding} className="w-full" size="lg">
                   {isSeeding ? (
                     <>
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -445,9 +418,7 @@ function DatabaseSeedContent() {
                 disabled={isLoadingSeeds}
                 className="w-full"
               >
-                <RefreshCw
-                  className={`mr-2 h-4 w-4 ${isLoadingSeeds ? 'animate-spin' : ''}`}
-                />
+                <RefreshCw className={`mr-2 h-4 w-4 ${isLoadingSeeds ? 'animate-spin' : ''}`} />
                 Refresh Seed List
               </Button>
 
@@ -457,9 +428,7 @@ function DatabaseSeedContent() {
                   <Terminal className="h-4 w-4" />
                   <span>Command:</span>
                 </div>
-                <div className="mt-2">
-                  $ nself db seed{forceMode ? ' --force' : ''}
-                </div>
+                <div className="mt-2">$ nself db seed{forceMode ? ' --force' : ''}</div>
               </div>
             </CardContent>
           </Card>
@@ -501,9 +470,7 @@ function DatabaseSeedContent() {
           <Card>
             <CardHeader>
               <CardTitle>Recent Operations</CardTitle>
-              <CardDescription>
-                History of seed operations from this session
-              </CardDescription>
+              <CardDescription>History of seed operations from this session</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-3">
@@ -531,9 +498,7 @@ function DatabaseSeedContent() {
                               ? 'All Seeds'
                               : `${result.type} Seeds`}
                         </div>
-                        <div className="text-sm text-zinc-500">
-                          {result.timestamp}
-                        </div>
+                        <div className="text-sm text-zinc-500">{result.timestamp}</div>
                       </div>
                     </div>
                     <Badge variant={result.success ? 'default' : 'destructive'}>

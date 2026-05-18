@@ -6,11 +6,7 @@ interface PageTemplateProps {
   children?: React.ReactNode
 }
 
-export function PageTemplate({
-  title = 'Page',
-  description,
-  children,
-}: PageTemplateProps) {
+export function PageTemplate({ title = 'Page', description, children }: PageTemplateProps) {
   return (
     <>
       <HeroPattern />
@@ -19,9 +15,7 @@ export function PageTemplate({
           <h1 className="bg-gradient-to-r from-blue-600 to-blue-400 bg-clip-text text-4xl font-bold text-transparent dark:from-blue-400 dark:to-white">
             {title}
           </h1>
-          <p className="mt-3 text-lg text-zinc-600 dark:text-zinc-400">
-            {description}
-          </p>
+          <p className="mt-3 text-lg text-zinc-600 dark:text-zinc-400">{description}</p>
         </div>
 
         {children || (
@@ -46,8 +40,7 @@ export function PageTemplate({
                 Coming Soon
               </h2>
               <p className="mx-auto max-w-md text-zinc-600 dark:text-zinc-400">
-                This feature is currently under development. Check back soon for
-                updates.
+                This feature is currently under development. Check back soon for updates.
               </p>
             </div>
           </div>

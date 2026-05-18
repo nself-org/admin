@@ -5,8 +5,6 @@ import { execFile } from 'child_process'
 import { NextRequest, NextResponse } from 'next/server'
 import { promisify } from 'util'
 
-const execFileAsync = promisify(execFile)
-
 // Strict validation patterns for safe inputs — matches /api/nself/route.ts pattern
 const SAFE_ARG_PATTERN = /^[a-zA-Z0-9][a-zA-Z0-9_\-.:=/]*$/
 
@@ -26,11 +24,15 @@ function validateSafeArg(input: string): boolean {
 /**
  * Runs an nself control-plane command via execFile — zero logic reimplementation in TS.
  * All inventory/resolver/probe/capability logic lives entirely in the CLI binary.
+ *
+ * Note: promisify(execFile) is called at call-time (not module-load) so that
+ * Jest can mock 'child_process' and 'util' correctly in tests.
  */
 async function runNselfCommand(
   args: string[],
-  timeoutMs = 30000,
+  timeoutMs = 30000
 ): Promise<{ stdout: string; stderr: string }> {
+  const execFileAsync = promisify(execFile)
   const projectPath = getProjectPath()
   return execFileAsync('nself', args, {
     cwd: projectPath,
@@ -64,14 +66,14 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     if (!allowedActions.includes(action)) {
       return NextResponse.json(
         { success: false, error: `Unknown action: ${action}` },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
     if (env && !validateSafeArg(env)) {
       return NextResponse.json(
         { success: false, error: 'Invalid environment name' },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -96,7 +98,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
           stdout: stdout.trim(),
           stderr: stderr.trim(),
         },
-        { status: 502 },
+        { status: 502 }
       )
     }
 
@@ -117,7 +119,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         stdout: execError.stdout ?? '',
         stderr: execError.stderr ?? '',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -148,7 +150,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     if (!action || !allowedActions.includes(action)) {
       return NextResponse.json(
         { success: false, error: `Action must be one of: ${allowedActions.join(', ')}` },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -158,7 +160,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       if (!name || !host || !role) {
         return NextResponse.json(
           { success: false, error: 'name, host, and role are required for add' },
-          { status: 400 },
+          { status: 400 }
         )
       }
 
@@ -167,7 +169,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         if (typeof value !== 'string' || !validateSafeArg(value)) {
           return NextResponse.json(
             { success: false, error: `Invalid value for field: ${field}` },
-            { status: 400 },
+            { status: 400 }
           )
         }
       }
@@ -175,18 +177,12 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       // sshKeyPath is a file path — validate but allow forward slashes and dots
       if (sshKeyPath !== undefined) {
         if (typeof sshKeyPath !== 'string' || sshKeyPath.includes('..')) {
-          return NextResponse.json(
-            { success: false, error: 'Invalid sshKeyPath' },
-            { status: 400 },
-          )
+          return NextResponse.json({ success: false, error: 'Invalid sshKeyPath' }, { status: 400 })
         }
       }
 
       if (sshUser !== undefined && (typeof sshUser !== 'string' || !validateSafeArg(sshUser))) {
-        return NextResponse.json(
-          { success: false, error: 'Invalid sshUser' },
-          { status: 400 },
-        )
+        return NextResponse.json({ success: false, error: 'Invalid sshUser' }, { status: 400 })
       }
 
       const execArgs = ['env', 'target', 'add', name, '--host', host, '--role', role]
@@ -211,7 +207,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       if (!name || typeof name !== 'string' || !validateSafeArg(name)) {
         return NextResponse.json(
           { success: false, error: 'name is required and must be valid for remove' },
-          { status: 400 },
+          { status: 400 }
         )
       }
 
@@ -240,7 +236,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         stdout: execError.stdout ?? '',
         stderr: execError.stderr ?? '',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

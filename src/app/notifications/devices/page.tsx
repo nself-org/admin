@@ -39,7 +39,7 @@ export default function DevicesPage() {
   const [health, setHealth] = useState<TokenHealthSummary | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [isOnline, setIsOnline] = useState(
-    typeof navigator !== 'undefined' ? navigator.onLine : true,
+    typeof navigator !== 'undefined' ? navigator.onLine : true
   )
   const [error, setError] = useState<unknown>(null)
   const [platformFilter, setPlatformFilter] = useState<PlatformFilter>('all')
@@ -57,8 +57,7 @@ export default function DevicesPage() {
         tokens.health(),
         tokens.list({
           platform: platformFilter !== 'all' ? platformFilter : undefined,
-          valid:
-            validityFilter === 'all' ? undefined : validityFilter === 'valid',
+          valid: validityFilter === 'all' ? undefined : validityFilter === 'valid',
           page,
         }),
       ])
@@ -124,10 +123,7 @@ export default function DevicesPage() {
       )
     }
 
-    if (
-      error instanceof NotifyApiError &&
-      (error.status === 401 || error.status === 403)
-    ) {
+    if (error instanceof NotifyApiError && (error.status === 401 || error.status === 403)) {
       return (
         <EmptyState
           icon={ShieldOff}
@@ -145,12 +141,7 @@ export default function DevicesPage() {
             <p className="text-sm text-yellow-800 dark:text-yellow-200">
               Rate limited. Try again in a moment.
             </p>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={load}
-              className="ml-auto"
-            >
+            <Button variant="outline" size="sm" onClick={load} className="ml-auto">
               Retry
             </Button>
           </div>
@@ -164,16 +155,9 @@ export default function DevicesPage() {
           <div className="flex items-center gap-3">
             <AlertCircle className="h-5 w-5 text-red-600 dark:text-red-400" />
             <p className="text-sm text-red-800 dark:text-red-200">
-              {error instanceof Error
-                ? error.message
-                : 'Failed to load device tokens'}
+              {error instanceof Error ? error.message : 'Failed to load device tokens'}
             </p>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={load}
-              className="ml-auto"
-            >
+            <Button variant="outline" size="sm" onClick={load} className="ml-auto">
               Retry
             </Button>
           </div>
@@ -248,9 +232,7 @@ export default function DevicesPage() {
         <Card className="mb-4 p-4">
           <div className="flex flex-wrap gap-4">
             <div>
-              <p className="mb-1 text-xs font-medium text-zinc-500 dark:text-zinc-400">
-                Platform
-              </p>
+              <p className="mb-1 text-xs font-medium text-zinc-500 dark:text-zinc-400">Platform</p>
               <div className="flex gap-2">
                 {(['all', 'fcm', 'apns'] as PlatformFilter[]).map((f) => (
                   <button
@@ -272,9 +254,7 @@ export default function DevicesPage() {
             </div>
 
             <div>
-              <p className="mb-1 text-xs font-medium text-zinc-500 dark:text-zinc-400">
-                Validity
-              </p>
+              <p className="mb-1 text-xs font-medium text-zinc-500 dark:text-zinc-400">Validity</p>
               <div className="flex gap-2">
                 {(['all', 'valid', 'invalid'] as ValidityFilter[]).map((f) => (
                   <button
@@ -305,8 +285,8 @@ export default function DevicesPage() {
           {!isLoading && !error && tokenList.length > 0 && totalPages > 1 && (
             <div className="mt-4 flex items-center justify-between text-sm text-zinc-500">
               <span>
-                {(page - 1) * PAGE_SIZE + 1}–{Math.min(page * PAGE_SIZE, total)}{' '}
-                of {total.toLocaleString()} tokens
+                {(page - 1) * PAGE_SIZE + 1}–{Math.min(page * PAGE_SIZE, total)} of{' '}
+                {total.toLocaleString()} tokens
               </span>
               <div className="flex gap-2">
                 <Button

@@ -29,7 +29,7 @@ export class ApiError extends Error {
     code: ErrorCode,
     message?: string,
     details?: Record<string, unknown>,
-    statusCode?: number,
+    statusCode?: number
   ) {
     const errorMessage = getErrorMessageForCode(code)
     super(message || errorMessage.userMessage)
@@ -63,16 +63,10 @@ export class ApiError extends Error {
       ) {
         return 401
       }
-      if (
-        code === ErrorCode.FORBIDDEN ||
-        code === ErrorCode.CSRF_TOKEN_INVALID
-      ) {
+      if (code === ErrorCode.FORBIDDEN || code === ErrorCode.CSRF_TOKEN_INVALID) {
         return 403
       }
-      if (
-        code === ErrorCode.TOO_MANY_LOGIN_ATTEMPTS ||
-        code === ErrorCode.RATE_LIMITED
-      ) {
+      if (code === ErrorCode.TOO_MANY_LOGIN_ATTEMPTS || code === ErrorCode.RATE_LIMITED) {
         return 429
       }
       return 400
@@ -145,10 +139,7 @@ export class ApiError extends Error {
   /**
    * Create ApiError from unknown error
    */
-  static fromError(
-    error: unknown,
-    defaultCode = ErrorCode.UNKNOWN_ERROR,
-  ): ApiError {
+  static fromError(error: unknown, defaultCode = ErrorCode.UNKNOWN_ERROR): ApiError {
     if (error instanceof ApiError) {
       return error
     }
@@ -184,10 +175,7 @@ export class ApiError extends Error {
   /**
    * Create validation error
    */
-  static validation(
-    message?: string,
-    details?: Record<string, unknown>,
-  ): ApiError {
+  static validation(message?: string, details?: Record<string, unknown>): ApiError {
     return new ApiError(ErrorCode.VALIDATION_ERROR, message, details)
   }
 

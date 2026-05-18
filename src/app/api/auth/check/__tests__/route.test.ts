@@ -90,9 +90,7 @@ describe('GET /api/auth/check', () => {
         Cookie: 'nself-session=valid-token',
       },
     })
-    ;(validateSessionToken as jest.Mock).mockRejectedValue(
-      new Error('Database error'),
-    )
+    ;(validateSessionToken as jest.Mock).mockRejectedValue(new Error('Database error'))
 
     const response = await GET(request)
     const data = await response.json()

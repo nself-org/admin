@@ -65,7 +65,7 @@ function setupRunning(
     layers: [],
     total_tokens: 1024,
     heal_available: false,
-  },
+  }
 ) {
   // health
   mockFetch.mockResolvedValueOnce({
@@ -211,7 +211,7 @@ describe('ClawDashboardPage', () => {
         layers: [],
         total_tokens: 512,
         heal_available: true,
-      },
+      }
     )
     render(<ClawDashboardPage />)
     await waitFor(() => {
@@ -224,9 +224,7 @@ describe('ClawDashboardPage', () => {
   it('renders all 6 quick access links', async () => {
     render(<ClawDashboardPage />)
     await waitFor(() => {
-      expect(
-        screen.getByRole('link', { name: 'Conversations' }),
-      ).toBeInTheDocument()
+      expect(screen.getByRole('link', { name: 'Conversations' })).toBeInTheDocument()
       expect(screen.getByRole('link', { name: 'Topics' })).toBeInTheDocument()
       expect(screen.getByRole('link', { name: 'Entities' })).toBeInTheDocument()
       expect(screen.getByRole('link', { name: 'Memory' })).toBeInTheDocument()
@@ -241,9 +239,7 @@ describe('ClawDashboardPage', () => {
     const user = userEvent.setup()
     render(<ClawDashboardPage />)
     await waitFor(() => {
-      expect(
-        screen.getByRole('button', { name: /Refresh/i }),
-      ).toBeInTheDocument()
+      expect(screen.getByRole('button', { name: /Refresh/i })).toBeInTheDocument()
     })
     const before = mockFetch.mock.calls.length
     await user.click(screen.getByRole('button', { name: /Refresh/i }))

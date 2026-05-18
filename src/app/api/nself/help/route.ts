@@ -65,9 +65,6 @@ export async function GET(): Promise<NextResponse> {
     return NextResponse.json(result)
   } catch (error) {
     const msg = error instanceof Error ? error.message : 'Unknown error'
-    return NextResponse.json(
-      { error: 'Failed to retrieve help', details: msg },
-      { status: 500 },
-    )
+    return NextResponse.json({ error: 'Failed to retrieve help', details: msg }, { status: 500 })
   }
 }

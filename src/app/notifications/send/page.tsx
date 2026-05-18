@@ -11,19 +11,8 @@ import { Card } from '@/components/ui/card'
 import { EmptyState } from '@/components/ui/empty-state'
 import { PageContent } from '@/components/ui/page-content'
 import { PageHeader } from '@/components/ui/page-header'
-import {
-  campaigns,
-  NotifyApiError,
-  type Campaign,
-} from '@/lib/api/notifications'
-import {
-  AlertCircle,
-  Bell,
-  CheckCircle,
-  Loader2,
-  ShieldOff,
-  WifiOff,
-} from 'lucide-react'
+import { campaigns, NotifyApiError, type Campaign } from '@/lib/api/notifications'
+import { AlertCircle, Bell, CheckCircle, Loader2, ShieldOff, WifiOff } from 'lucide-react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { Suspense, useCallback, useEffect, useState } from 'react'
 
@@ -39,7 +28,7 @@ function SendPageContent() {
   const [campaign, setCampaign] = useState<Campaign | null>(null)
   const [isLoading, setIsLoading] = useState(!!campaignId)
   const [isOnline, setIsOnline] = useState(
-    typeof navigator !== 'undefined' ? navigator.onLine : true,
+    typeof navigator !== 'undefined' ? navigator.onLine : true
   )
   const [error, setError] = useState<unknown>(null)
   const [sent, setSent] = useState(false)
@@ -96,10 +85,7 @@ function SendPageContent() {
     )
   }
 
-  if (
-    error instanceof NotifyApiError &&
-    (error.status === 401 || error.status === 403)
-  ) {
+  if (error instanceof NotifyApiError && (error.status === 401 || error.status === 403)) {
     return (
       <EmptyState
         icon={ShieldOff}
@@ -160,12 +146,9 @@ function SendPageContent() {
           <div className="flex items-start gap-2">
             <Bell className="mt-0.5 h-4 w-4 text-sky-500" />
             <p className="text-sm text-zinc-600 dark:text-zinc-400">
-              Campaigns are sent via FCM (Android) and APNs (iOS) through the
-              notify plugin. Make sure your credentials are configured in{' '}
-              <code className="rounded bg-zinc-200 px-1 dark:bg-zinc-800">
-                .env
-              </code>
-              .
+              Campaigns are sent via FCM (Android) and APNs (iOS) through the notify plugin. Make
+              sure your credentials are configured in{' '}
+              <code className="rounded bg-zinc-200 px-1 dark:bg-zinc-800">.env</code>.
             </p>
           </div>
         </div>
@@ -197,10 +180,7 @@ export default function SendPage() {
       <PageContent>
         <Suspense
           fallback={
-            <div
-              className="flex items-center justify-center py-24"
-              role="status"
-            >
+            <div className="flex items-center justify-center py-24" role="status">
               <Loader2 className="h-8 w-8 animate-spin text-zinc-400" />
             </div>
           }

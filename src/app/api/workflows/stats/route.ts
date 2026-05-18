@@ -17,12 +17,9 @@ export async function GET(): Promise<NextResponse> {
     return NextResponse.json(
       {
         success: false,
-        error:
-          error instanceof Error
-            ? error.message
-            : 'Failed to get workflow stats',
+        error: error instanceof Error ? error.message : 'Failed to get workflow stats',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

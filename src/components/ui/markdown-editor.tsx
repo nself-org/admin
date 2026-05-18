@@ -59,21 +59,14 @@ export function MarkdownEditor({
     const end = textarea.selectionEnd
     const selectedText = value.substring(start, end) || placeholder
     const newText =
-      value.substring(0, start) +
-      syntax +
-      selectedText +
-      syntax +
-      value.substring(end)
+      value.substring(0, start) + syntax + selectedText + syntax + value.substring(end)
 
     onChange?.(newText)
 
     // Restore cursor position
     setTimeout(() => {
       textarea.focus()
-      textarea.setSelectionRange(
-        start + syntax.length,
-        start + syntax.length + selectedText.length,
-      )
+      textarea.setSelectionRange(start + syntax.length, start + syntax.length + selectedText.length)
     }, 0)
   }
 
@@ -84,17 +77,12 @@ export function MarkdownEditor({
     {
       label: 'Link',
       action: () => {
-        const textarea = document.querySelector(
-          'textarea',
-        ) as HTMLTextAreaElement
+        const textarea = document.querySelector('textarea') as HTMLTextAreaElement
         if (!textarea) return
         const start = textarea.selectionStart
         const end = textarea.selectionEnd
         const selectedText = value.substring(start, end) || 'link text'
-        const newText =
-          value.substring(0, start) +
-          `[${selectedText}](url)` +
-          value.substring(end)
+        const newText = value.substring(0, start) + `[${selectedText}](url)` + value.substring(end)
         onChange?.(newText)
       },
     },
@@ -153,16 +141,14 @@ export function MarkdownEditor({
         <TabsContent value="preview" className="mt-0">
           <div
             className={cn(
-              'prose-zinc prose max-w-none rounded-md border border-zinc-200 bg-white p-4 dark:border-zinc-800 dark:bg-zinc-950 dark:prose-invert',
+              'prose-zinc prose max-w-none rounded-md border border-zinc-200 bg-white p-4 dark:border-zinc-800 dark:bg-zinc-950 dark:prose-invert'
             )}
             style={{ height, overflowY: 'auto' }}
           >
             {value ? (
               <MarkdownPreview content={value} />
             ) : (
-              <p className="text-zinc-500 dark:text-zinc-400">
-                Nothing to preview
-              </p>
+              <p className="text-zinc-500 dark:text-zinc-400">Nothing to preview</p>
             )}
           </div>
         </TabsContent>

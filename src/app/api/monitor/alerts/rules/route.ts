@@ -14,14 +14,11 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     const projectPath = getProjectPath()
     const nselfPath = await findNselfPath()
 
-    const { stdout } = await execAsync(
-      `${nselfPath} monitor alerts rules list --json`,
-      {
-        cwd: projectPath,
-        env: { ...process.env, PATH: getEnhancedPath() },
-        timeout: 60000,
-      },
-    )
+    const { stdout } = await execAsync(`${nselfPath} monitor alerts rules list --json`, {
+      cwd: projectPath,
+      env: { ...process.env, PATH: getEnhancedPath() },
+      timeout: 60000,
+    })
 
     const result = JSON.parse(stdout)
 
@@ -40,7 +37,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to get alert rules',
         details: err.message,
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -58,17 +55,11 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     const { name, expression, duration, severity, labels, annotations } = body
 
     if (!name) {
-      return NextResponse.json(
-        { success: false, error: 'Rule name is required' },
-        { status: 400 },
-      )
+      return NextResponse.json({ success: false, error: 'Rule name is required' }, { status: 400 })
     }
 
     if (!expression) {
-      return NextResponse.json(
-        { success: false, error: 'Expression is required' },
-        { status: 400 },
-      )
+      return NextResponse.json({ success: false, error: 'Expression is required' }, { status: 400 })
     }
 
     const args: string[] = ['monitor', 'alerts', 'rules', 'create', name]
@@ -86,14 +77,11 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       })
     }
 
-    const { stdout } = await execAsync(
-      `${nselfPath} ${args.join(' ')} --json`,
-      {
-        cwd: projectPath,
-        env: { ...process.env, PATH: getEnhancedPath() },
-        timeout: 60000,
-      },
-    )
+    const { stdout } = await execAsync(`${nselfPath} ${args.join(' ')} --json`, {
+      cwd: projectPath,
+      env: { ...process.env, PATH: getEnhancedPath() },
+      timeout: 60000,
+    })
 
     const result = JSON.parse(stdout)
 
@@ -116,7 +104,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to create alert rule',
         details: err.message,
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

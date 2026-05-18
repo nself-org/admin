@@ -12,17 +12,11 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
     // Validate required fields
     if (!body.templateId) {
-      return NextResponse.json(
-        { success: false, error: 'templateId is required' },
-        { status: 400 },
-      )
+      return NextResponse.json({ success: false, error: 'templateId is required' }, { status: 400 })
     }
 
     if (!body.format) {
-      return NextResponse.json(
-        { success: false, error: 'format is required' },
-        { status: 400 },
-      )
+      return NextResponse.json({ success: false, error: 'format is required' }, { status: 400 })
     }
 
     // Validate format
@@ -33,7 +27,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           success: false,
           error: `Invalid format. Must be one of: ${validFormats.join(', ')}`,
         },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -52,16 +46,15 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         success: true,
         data: execution,
       },
-      { status: 201 },
+      { status: 201 }
     )
   } catch (error) {
     return NextResponse.json(
       {
         success: false,
-        error:
-          error instanceof Error ? error.message : 'Failed to generate report',
+        error: error instanceof Error ? error.message : 'Failed to generate report',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

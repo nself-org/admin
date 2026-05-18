@@ -10,23 +10,14 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     // Read the current env file
     const currentEnv = await readEnvFile()
     if (!currentEnv) {
-      return NextResponse.json(
-        { error: 'No environment configuration found' },
-        { status: 400 },
-      )
+      return NextResponse.json({ error: 'No environment configuration found' }, { status: 400 })
     }
 
     // Organize the env file in the proper order
     const organized: Record<string, string> = {}
 
     // 1. Core Project Settings (most important at top)
-    const coreKeys = [
-      'PROJECT_NAME',
-      'PROJECT_DESCRIPTION',
-      'ENV',
-      'BASE_DOMAIN',
-      'ADMIN_EMAIL',
-    ]
+    const coreKeys = ['PROJECT_NAME', 'PROJECT_DESCRIPTION', 'ENV', 'BASE_DOMAIN', 'ADMIN_EMAIL']
     for (const key of coreKeys) {
       if (currentEnv[key]) {
         organized[key] = currentEnv[key]
@@ -50,9 +41,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
     // 3. Hasura Configuration
     const hasuraKeys = Object.keys(currentEnv)
-      .filter(
-        (k) => k.startsWith('HASURA_') && !k.includes('METADATA_DATABASE_URL'),
-      )
+      .filter((k) => k.startsWith('HASURA_') && !k.includes('METADATA_DATABASE_URL'))
       .sort()
     for (const key of hasuraKeys) {
       organized[key] = currentEnv[key]
@@ -101,21 +90,16 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
     // 7. Service Credentials (only if services are enabled)
     if (currentEnv.STORAGE_ENABLED === 'true') {
-      if (currentEnv.MINIO_ROOT_USER)
-        organized.MINIO_ROOT_USER = currentEnv.MINIO_ROOT_USER
+      if (currentEnv.MINIO_ROOT_USER) organized.MINIO_ROOT_USER = currentEnv.MINIO_ROOT_USER
       if (currentEnv.MINIO_ROOT_PASSWORD)
         organized.MINIO_ROOT_PASSWORD = currentEnv.MINIO_ROOT_PASSWORD
     }
 
     if (currentEnv.SEARCH_ENABLED === 'true') {
-      if (currentEnv.MEILI_MASTER_KEY)
-        organized.MEILI_MASTER_KEY = currentEnv.MEILI_MASTER_KEY
+      if (currentEnv.MEILI_MASTER_KEY) organized.MEILI_MASTER_KEY = currentEnv.MEILI_MASTER_KEY
     }
 
-    if (
-      currentEnv.MONITORING_ENABLED === 'true' ||
-      currentEnv.GRAFANA_ENABLED === 'true'
-    ) {
+    if (currentEnv.MONITORING_ENABLED === 'true' || currentEnv.GRAFANA_ENABLED === 'true') {
       if (currentEnv.GRAFANA_ADMIN_PASSWORD)
         organized.GRAFANA_ADMIN_PASSWORD = currentEnv.GRAFANA_ADMIN_PASSWORD
     }
@@ -204,8 +188,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       message: 'Configuration finalized and organized',
       stats: {
         totalKeys: Object.keys(organized).length,
-        removedEmpty:
-          Object.keys(currentEnv).length - Object.keys(organized).length,
+        removedEmpty: Object.keys(currentEnv).length - Object.keys(organized).length,
       },
     })
   } catch (error) {
@@ -215,7 +198,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to finalize configuration',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

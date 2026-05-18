@@ -43,7 +43,7 @@ export interface RequireAuthOpts {
 
 export async function requireAuth(
   request: NextRequest,
-  opts: RequireAuthOpts = {},
+  opts: RequireAuthOpts = {}
 ): Promise<NextResponse | null> {
   const { postSetupOnly = true, csrf = true } = opts
 
@@ -57,10 +57,7 @@ export async function requireAuth(
   if (postSetupOnly) {
     const setupComplete = await hasAdminPassword()
     if (!setupComplete) {
-      return NextResponse.json(
-        { success: false, error: 'Setup not complete' },
-        { status: 403 },
-      )
+      return NextResponse.json({ success: false, error: 'Setup not complete' }, { status: 403 })
     }
   }
 
@@ -69,14 +66,10 @@ export async function requireAuth(
   if (isMutating || postSetupOnly) {
     const cookieStore = await cookies()
     const sessionToken =
-      cookieStore.get('nself-session')?.value ||
-      request.cookies.get('nself-session')?.value
+      cookieStore.get('nself-session')?.value || request.cookies.get('nself-session')?.value
 
     if (!sessionToken) {
-      return NextResponse.json(
-        { success: false, error: 'Not authenticated' },
-        { status: 401 },
-      )
+      return NextResponse.json({ success: false, error: 'Not authenticated' }, { status: 401 })
     }
 
     // CSRF check on mutating methods.
@@ -85,7 +78,7 @@ export async function requireAuth(
       if (!csrfValid) {
         return NextResponse.json(
           { success: false, error: 'CSRF token validation failed' },
-          { status: 403 },
+          { status: 403 }
         )
       }
     }
@@ -99,9 +92,7 @@ export async function requireAuth(
  * gate. Use on wizard and pre-setup routes that need CSRF + session but run
  * before the admin password exists.
  */
-export async function requireAuthPreSetup(
-  request: NextRequest,
-): Promise<NextResponse | null> {
+export async function requireAuthPreSetup(request: NextRequest): Promise<NextResponse | null> {
   return requireAuth(request, { postSetupOnly: false })
 }
 
@@ -117,9 +108,7 @@ export async function requireAuthPreSetup(
  *
  * Returns a NextResponse error if the request should be blocked, null if ok.
  */
-export async function requireWizardNotComplete(
-  request: NextRequest,
-): Promise<NextResponse | null> {
+export async function requireWizardNotComplete(request: NextRequest): Promise<NextResponse | null> {
   // Allow read requests regardless of setup state.
   if (['GET', 'HEAD'].includes(request.method)) {
     return null
@@ -133,7 +122,7 @@ export async function requireWizardNotComplete(
         success: false,
         error: 'Setup already complete. Wizard writes are disabled.',
       },
-      { status: 401 },
+      { status: 403 }
     )
   }
 

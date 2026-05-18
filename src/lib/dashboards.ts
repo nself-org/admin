@@ -61,7 +61,7 @@ export const getDashboardById = getDashboard
 export async function createDashboard(
   data: Omit<Dashboard, 'id' | 'createdAt' | 'updatedAt' | 'widgets'> & {
     widgets?: Widget[]
-  },
+  }
 ): Promise<Dashboard> {
   const collection = await ensureDashboardsCollection()
 
@@ -95,7 +95,7 @@ export async function createDashboard(
 // Update an existing dashboard
 export async function updateDashboard(
   id: string,
-  data: Partial<Omit<Dashboard, 'id' | 'createdAt' | 'createdBy'>>,
+  data: Partial<Omit<Dashboard, 'id' | 'createdAt' | 'createdBy'>>
 ): Promise<Dashboard | null> {
   const collection = await ensureDashboardsCollection()
   const dashboard = collection.findOne({ id })
@@ -117,8 +117,7 @@ export async function updateDashboard(
   if (data.widgets !== undefined) dashboard.widgets = data.widgets
   if (data.filters !== undefined) dashboard.filters = data.filters
   if (data.variables !== undefined) dashboard.variables = data.variables
-  if (data.refreshInterval !== undefined)
-    dashboard.refreshInterval = data.refreshInterval
+  if (data.refreshInterval !== undefined) dashboard.refreshInterval = data.refreshInterval
 
   dashboard.updatedAt = new Date().toISOString()
 
@@ -146,7 +145,7 @@ export async function deleteDashboard(id: string): Promise<boolean> {
 // Add a widget to a dashboard
 export async function addWidget(
   dashboardId: string,
-  widget: Omit<Widget, 'id'>,
+  widget: Omit<Widget, 'id'>
 ): Promise<Widget | null> {
   const collection = await ensureDashboardsCollection()
   const dashboard = collection.findOne({ id: dashboardId })
@@ -173,7 +172,7 @@ export async function addWidget(
 export async function updateWidget(
   dashboardId: string,
   widgetId: string,
-  data: Partial<Omit<Widget, 'id'>>,
+  data: Partial<Omit<Widget, 'id'>>
 ): Promise<Widget | null> {
   const collection = await ensureDashboardsCollection()
   const dashboard = collection.findOne({ id: dashboardId })
@@ -204,10 +203,7 @@ export async function updateWidget(
 }
 
 // Delete a widget from a dashboard
-export async function deleteWidget(
-  dashboardId: string,
-  widgetId: string,
-): Promise<boolean> {
+export async function deleteWidget(dashboardId: string, widgetId: string): Promise<boolean> {
   const collection = await ensureDashboardsCollection()
   const dashboard = collection.findOne({ id: dashboardId })
 
@@ -238,7 +234,7 @@ export async function cloneDashboard(
   id: string,
   newName?: string,
   newTenantId?: string,
-  createdBy?: string,
+  createdBy?: string
 ): Promise<Dashboard | null> {
   const collection = await ensureDashboardsCollection()
   const original = collection.findOne({ id })
@@ -278,9 +274,7 @@ export function getWidgetCategories(): string[] {
 }
 
 // Get widget templates filtered by category
-export function getWidgetTemplatesByCategory(
-  category: string,
-): WidgetTemplate[] {
+export function getWidgetTemplatesByCategory(category: string): WidgetTemplate[] {
   const templates = getWidgetTemplates()
   return templates.filter((t) => t.category === category)
 }
@@ -458,9 +452,7 @@ export function getWidgetTemplates(): WidgetTemplate[] {
 }
 
 // Get dashboard statistics
-export async function getDashboardStats(
-  tenantId?: string,
-): Promise<DashboardStats> {
+export async function getDashboardStats(tenantId?: string): Promise<DashboardStats> {
   const dashboards = await getDashboards(tenantId)
 
   const byType: Record<WidgetType, number> = {

@@ -18,7 +18,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           error: 'Search indexing failed',
           details: result.error || result.stderr || 'Unknown error',
         },
-        { status: 500 },
+        { status: 500 }
       )
     }
 
@@ -33,7 +33,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         error: 'Search indexing failed',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

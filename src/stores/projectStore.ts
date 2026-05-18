@@ -137,7 +137,7 @@ interface ProjectState {
       databaseStats: DatabaseStats | null
       databaseTables: DatabaseTable[]
       lastDockerUpdate?: number
-    }>,
+    }>
   ) => void
 
   // Background polling
@@ -213,8 +213,7 @@ export const useProjectStore = create<ProjectState>()(
           // Use servicesRunning and dockerContainers from the API response
           const isRunning =
             statusData.servicesRunning ||
-            (statusData.dockerContainers &&
-              statusData.dockerContainers.length > 0)
+            (statusData.dockerContainers && statusData.dockerContainers.length > 0)
           const containerCount = statusData.dockerContainers
             ? statusData.dockerContainers.length
             : 0
@@ -249,8 +248,7 @@ export const useProjectStore = create<ProjectState>()(
             hasDockerCompose: statusData.summary?.built || false,
             containersRunning: reliableContainerCount,
             totalContainers: reliableContainerCount,
-            servicesRunning:
-              statusData.servicesRunning || reliableContainerCount > 0,
+            servicesRunning: statusData.servicesRunning || reliableContainerCount > 0,
             lastChecked: new Date(),
             isChecking: false,
           })
@@ -320,12 +318,9 @@ export const useProjectStore = create<ProjectState>()(
 
         try {
           const controller = new AbortController()
-          const response = await fetch(
-            '/api/docker/containers?detailed=true&stats=true',
-            {
-              signal: controller.signal,
-            },
-          ).catch((error) => {
+          const response = await fetch('/api/docker/containers?detailed=true&stats=true', {
+            signal: controller.signal,
+          }).catch((error) => {
             if (error.name === 'AbortError') return null
             throw error
           })
@@ -386,14 +381,10 @@ export const useProjectStore = create<ProjectState>()(
           const [statsRes, tablesRes] = await Promise.all([
             fetch('/api/database?action=stats', {
               signal: controller.signal,
-            }).catch((e) =>
-              e.name === 'AbortError' ? null : Promise.reject(e),
-            ),
+            }).catch((e) => (e.name === 'AbortError' ? null : Promise.reject(e))),
             fetch('/api/database?action=tables', {
               signal: controller.signal,
-            }).catch((e) =>
-              e.name === 'AbortError' ? null : Promise.reject(e),
-            ),
+            }).catch((e) => (e.name === 'AbortError' ? null : Promise.reject(e))),
           ])
 
           if (statsRes && statsRes.ok) {
@@ -461,12 +452,7 @@ export const useProjectStore = create<ProjectState>()(
 
       startBackgroundRefresh: (intervalMs) => {
         const state = get()
-        const {
-          refreshInterval,
-          stopBackgroundRefresh,
-          fetchAllData,
-          pollingRate,
-        } = state
+        const { refreshInterval, stopBackgroundRefresh, fetchAllData, pollingRate } = state
 
         // Clear existing interval
         if (refreshInterval) {
@@ -508,6 +494,6 @@ export const useProjectStore = create<ProjectState>()(
         projectStatus: state.projectStatus,
         pollingRate: state.pollingRate,
       }),
-    },
-  ),
+    }
+  )
 )

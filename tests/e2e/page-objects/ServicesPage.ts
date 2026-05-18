@@ -31,9 +31,7 @@ export class ServicesPage {
 
   async startService(serviceName?: string) {
     if (serviceName) {
-      await this.page.click(
-        `[data-service="${serviceName}"] button:has-text("Start")`,
-      )
+      await this.page.click(`[data-service="${serviceName}"] button:has-text("Start")`)
     } else {
       await this.startButton.first().click()
     }
@@ -41,9 +39,7 @@ export class ServicesPage {
 
   async stopService(serviceName?: string) {
     if (serviceName) {
-      await this.page.click(
-        `[data-service="${serviceName}"] button:has-text("Stop")`,
-      )
+      await this.page.click(`[data-service="${serviceName}"] button:has-text("Stop")`)
     } else {
       await this.stopButton.first().click()
     }
@@ -51,9 +47,7 @@ export class ServicesPage {
 
   async restartService(serviceName?: string) {
     if (serviceName) {
-      await this.page.click(
-        `[data-service="${serviceName}"] button:has-text("Restart")`,
-      )
+      await this.page.click(`[data-service="${serviceName}"] button:has-text("Restart")`)
     } else {
       await this.restartButton.first().click()
     }
@@ -61,9 +55,7 @@ export class ServicesPage {
 
   async viewLogs(serviceName?: string) {
     if (serviceName) {
-      await this.page.click(
-        `[data-service="${serviceName}"] button:has-text("Logs")`,
-      )
+      await this.page.click(`[data-service="${serviceName}"] button:has-text("Logs")`)
     } else {
       await this.logsButton.first().click()
     }

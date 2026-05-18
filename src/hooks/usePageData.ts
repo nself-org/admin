@@ -25,14 +25,12 @@ export function usePageData(options: PageDataOptions) {
     const promises: Promise<any>[] = []
 
     if (options.containers) {
-      const opts =
-        typeof options.containers === 'object' ? options.containers : {}
+      const opts = typeof options.containers === 'object' ? options.containers : {}
       promises.push(dataFetchService.fetchContainers(opts))
     }
 
     if (options.containerStats) {
-      const opts =
-        typeof options.containerStats === 'object' ? options.containerStats : {}
+      const opts = typeof options.containerStats === 'object' ? options.containerStats : {}
       promises.push(dataFetchService.fetchContainerStats(opts))
     }
 
@@ -42,20 +40,17 @@ export function usePageData(options: PageDataOptions) {
     }
 
     if (options.systemMetrics) {
-      const opts =
-        typeof options.systemMetrics === 'object' ? options.systemMetrics : {}
+      const opts = typeof options.systemMetrics === 'object' ? options.systemMetrics : {}
       promises.push(dataFetchService.fetchSystemMetrics(opts))
     }
 
     if (options.dockerMetrics) {
-      const opts =
-        typeof options.dockerMetrics === 'object' ? options.dockerMetrics : {}
+      const opts = typeof options.dockerMetrics === 'object' ? options.dockerMetrics : {}
       promises.push(dataFetchService.fetchDockerMetrics(opts))
     }
 
     if (options.projectStatus) {
-      const opts =
-        typeof options.projectStatus === 'object' ? options.projectStatus : {}
+      const opts = typeof options.projectStatus === 'object' ? options.projectStatus : {}
       promises.push(dataFetchService.fetchProjectStatus(opts))
     }
 

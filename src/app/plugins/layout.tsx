@@ -79,11 +79,7 @@ function UpdateBanner() {
   )
 }
 
-export default function PluginsLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
+export default function PluginsLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="space-y-4">
       <UpdateBanner />

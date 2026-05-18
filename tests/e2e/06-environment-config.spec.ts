@@ -59,9 +59,7 @@ test.describe('Environment Configuration Flow', () => {
         await configPage.editVariable(variableKey, newValue)
 
         // Should show success message
-        await expect(page.locator('[role="alert"]')).toContainText(
-          /saved|updated/i,
-        )
+        await expect(page.locator('[role="alert"]')).toContainText(/saved|updated/i)
       }
     }
   })
@@ -110,10 +108,7 @@ test.describe('Environment Configuration Flow', () => {
     }
   })
 
-  test.skip('should show environment-specific variables', async ({
-    configPage,
-    page,
-  }) => {
+  test.skip('should show environment-specific variables', async ({ configPage, page }) => {
     // Skipped: requires a running nself backend with a configured project.
     // switchEnvironment() targets a [role="tab"] that only renders once the
     // /config/env page is fully loaded with a live backend.
@@ -157,9 +152,7 @@ test.describe('Environment Configuration Flow', () => {
     await configPage.gotoEnv()
 
     // Look for secret/password variables
-    const secretVariables = page.locator(
-      '[data-testid="variable-row"][data-secret="true"]',
-    )
+    const secretVariables = page.locator('[data-testid="variable-row"][data-secret="true"]')
 
     if ((await secretVariables.count()) > 0) {
       const firstSecret = secretVariables.first()
@@ -182,10 +175,7 @@ test.describe('Environment Configuration Flow', () => {
     await expect(configPage.envTabs).toBeVisible()
   })
 
-  test.skip('should have accessible tab navigation', async ({
-    configPage,
-    page,
-  }) => {
+  test.skip('should have accessible tab navigation', async ({ configPage, page }) => {
     // Skipped: requires a running nself backend with a configured project.
     // The [role="tablist"] element is only present on /config/env when the
     // backend is available; toHaveAttribute times out in CI.

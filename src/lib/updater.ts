@@ -7,10 +7,7 @@ const execFileAsync = promisify(execFile)
 // Validate version string to prevent injection
 function isValidVersion(version: string): boolean {
   // Allow 'latest' or semver-like patterns (e.g., 0.0.7, 1.2.3-beta.1)
-  return (
-    version === 'latest' ||
-    /^[0-9]+\.[0-9]+\.[0-9]+(-[a-z0-9.]+)?$/i.test(version)
-  )
+  return version === 'latest' || /^[0-9]+\.[0-9]+\.[0-9]+(-[a-z0-9.]+)?$/i.test(version)
 }
 
 // Validate container/hostname string
@@ -68,16 +65,13 @@ class AutoUpdater {
     try {
       // Check Docker Hub for latest version
       const response = await fetch(
-        'https://hub.docker.com/v2/repositories/nself/admin/tags?page_size=10',
+        'https://hub.docker.com/v2/repositories/nself/admin/tags?page_size=10'
       )
       const data = await response.json()
 
       // Find the latest non-latest tag
       const versions = data.results
-        ?.filter(
-          (tag: any) =>
-            tag.name !== 'latest' && /^\d+\.\d+\.\d+/.test(tag.name),
-        )
+        ?.filter((tag: any) => tag.name !== 'latest' && /^\d+\.\d+\.\d+/.test(tag.name))
         ?.sort((a: any, b: any) => {
           return this.compareVersions(b.name, a.name)
         })
@@ -103,9 +97,7 @@ class AutoUpdater {
     const current = await this.getCurrentVersion()
 
     try {
-      const response = await fetch(
-        'https://api.github.com/repos/nself-org/admin/releases/latest',
-      )
+      const response = await fetch('https://api.github.com/repos/nself-org/admin/releases/latest')
       const data = await response.json()
 
       const latest = data.tag_name?.replace(/^v/, '') || current
@@ -259,7 +251,7 @@ class AutoUpdater {
       () => {
         this.checkForUpdates()
       },
-      intervalHours * 60 * 60 * 1000,
+      intervalHours * 60 * 60 * 1000
     )
   }
 
@@ -276,9 +268,7 @@ class AutoUpdater {
     if (versionInfo.updateAvailable) {
       // Emit update available event
       if (typeof window !== 'undefined') {
-        window.dispatchEvent(
-          new CustomEvent('update-available', { detail: versionInfo }),
-        )
+        window.dispatchEvent(new CustomEvent('update-available', { detail: versionInfo }))
       }
 
       // Log to console

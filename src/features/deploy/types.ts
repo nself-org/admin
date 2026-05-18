@@ -50,11 +50,6 @@ export interface DeployResult {
 
 /** Structured error thrown by runDeploy() on failure. */
 export interface DeployError extends Error {
-  code:
-    | 'CLI_NOT_FOUND'
-    | 'DEPLOY_FAILED'
-    | 'DRY_RUN_ONLY'
-    | 'INVALID_TARGET'
-    | 'UNAUTHORIZED'
+  code: 'CLI_NOT_FOUND' | 'DEPLOY_FAILED' | 'DRY_RUN_ONLY' | 'INVALID_TARGET' | 'UNAUTHORIZED'
   details?: string
 }

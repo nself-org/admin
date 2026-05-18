@@ -174,10 +174,7 @@ const releases: Release[] = [
       'Service status monitoring',
       'Docker container management',
     ],
-    fixes: [
-      'Fixed port conflicts with proper detection',
-      'Improved Docker compose handling',
-    ],
+    fixes: ['Fixed port conflicts with proper detection', 'Improved Docker compose handling'],
   },
   {
     version: 'v0.1.0',
@@ -197,9 +194,7 @@ function ChangelogContent() {
   const [selectedType, setSelectedType] = React.useState<string>('all')
 
   const filteredReleases =
-    selectedType === 'all'
-      ? releases
-      : releases.filter((r) => r.type === selectedType)
+    selectedType === 'all' ? releases : releases.filter((r) => r.type === selectedType)
 
   const getTypeColor = (type: string) => {
     switch (type) {
@@ -250,9 +245,7 @@ function ChangelogContent() {
                   <div>
                     <div className="mb-2 flex items-center gap-3">
                       <h2 className="text-2xl font-bold">{release.version}</h2>
-                      <Badge className={getTypeColor(release.type)}>
-                        {release.type}
-                      </Badge>
+                      <Badge className={getTypeColor(release.type)}>{release.type}</Badge>
                       {index === 0 && (
                         <Badge className="bg-amber-100 text-amber-700 dark:bg-amber-900/20 dark:text-amber-400">
                           Latest

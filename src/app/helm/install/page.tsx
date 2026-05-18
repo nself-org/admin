@@ -34,16 +34,11 @@ function HelmInstallContent() {
   const [installing, setInstalling] = useState(false)
   const [installSteps, setInstallSteps] = useState<InstallStep[]>([])
 
-  const { data: repoData } = useSWR<{ repos: HelmRepo[] }>(
-    '/api/helm/repos',
-    fetcher,
-
-  )
+  const { data: repoData } = useSWR<{ repos: HelmRepo[] }>('/api/helm/repos', fetcher)
 
   const { data: chartData } = useSWR<{ charts: HelmChart[] }>(
     selectedRepo ? `/api/helm/repos/${selectedRepo}/charts` : null,
-    fetcher,
-
+    fetcher
   )
 
   const repos = repoData?.repos ?? []
@@ -52,7 +47,7 @@ function HelmInstallContent() {
   const filteredCharts = charts.filter(
     (c) =>
       c.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      c.description.toLowerCase().includes(searchQuery.toLowerCase()),
+      c.description.toLowerCase().includes(searchQuery.toLowerCase())
   )
 
   const handleInstall = async () => {
@@ -70,13 +65,9 @@ function HelmInstallContent() {
     setInstallSteps(steps)
 
     for (let i = 0; i < steps.length; i++) {
-      setInstallSteps((prev) =>
-        prev.map((s, idx) => (idx === i ? { ...s, status: 'running' } : s)),
-      )
+      setInstallSteps((prev) => prev.map((s, idx) => (idx === i ? { ...s, status: 'running' } : s)))
 
-      await new Promise((resolve) =>
-        setTimeout(resolve, 1000 + Math.random() * 1000),
-      )
+      await new Promise((resolve) => setTimeout(resolve, 1000 + Math.random() * 1000))
 
       setInstallSteps((prev) =>
         prev.map((s, idx) =>
@@ -86,16 +77,15 @@ function HelmInstallContent() {
                 status: 'success',
                 message: dryRun ? 'Dry run - no changes' : 'Completed',
               }
-            : s,
-        ),
+            : s
+        )
       )
     }
 
     setInstalling(false)
   }
 
-  const isComplete =
-    installSteps.length > 0 && installSteps.every((s) => s.status === 'success')
+  const isComplete = installSteps.length > 0 && installSteps.every((s) => s.status === 'success')
 
   return (
     <div className="space-y-6">
@@ -109,9 +99,7 @@ function HelmInstallContent() {
         </Link>
         <div>
           <h1 className="text-2xl font-semibold text-white">Install Release</h1>
-          <p className="text-sm text-zinc-400">
-            Install a Helm chart from a repository
-          </p>
+          <p className="text-sm text-zinc-400">Install a Helm chart from a repository</p>
         </div>
       </div>
 
@@ -142,10 +130,7 @@ function HelmInstallContent() {
             {!repos.length && (
               <p className="text-sm text-zinc-500">
                 No repositories configured.{' '}
-                <Link
-                  href="/helm/repos"
-                  className="text-sky-400 hover:text-sky-300"
-                >
+                <Link href="/helm/repos" className="text-sky-400 hover:text-sky-300">
                   Add one first
                 </Link>
               </p>
@@ -185,18 +170,12 @@ function HelmInstallContent() {
                   >
                     <div className="flex items-start justify-between">
                       <div>
-                        <div className="font-medium text-white">
-                          {chart.name}
-                        </div>
-                        <div className="text-sm text-zinc-500">
-                          v{chart.version}
-                        </div>
+                        <div className="font-medium text-white">{chart.name}</div>
+                        <div className="text-sm text-zinc-500">v{chart.version}</div>
                       </div>
                       <Package className="h-4 w-4 text-sky-400" />
                     </div>
-                    <p className="mt-2 text-sm text-zinc-400">
-                      {chart.description}
-                    </p>
+                    <p className="mt-2 text-sm text-zinc-400">{chart.description}</p>
                   </button>
                 ))}
               </div>
@@ -214,9 +193,7 @@ function HelmInstallContent() {
             <div className="rounded-lg border border-zinc-700/50 bg-zinc-800/50 p-4">
               <div className="mb-4 flex items-center gap-2">
                 <Terminal className="h-5 w-5 text-sky-400" />
-                <h2 className="font-semibold text-white">
-                  Installation Progress
-                </h2>
+                <h2 className="font-semibold text-white">Installation Progress</h2>
               </div>
 
               <div className="space-y-2">
@@ -235,24 +212,16 @@ function HelmInstallContent() {
                       {step.status === 'success' && (
                         <CheckCircle className="h-5 w-5 text-emerald-400" />
                       )}
-                      {step.status === 'error' && (
-                        <AlertCircle className="h-5 w-5 text-red-400" />
-                      )}
+                      {step.status === 'error' && <AlertCircle className="h-5 w-5 text-red-400" />}
                       <span
                         className={`text-sm ${
-                          step.status === 'pending'
-                            ? 'text-zinc-500'
-                            : 'text-white'
+                          step.status === 'pending' ? 'text-zinc-500' : 'text-white'
                         }`}
                       >
                         {step.name}
                       </span>
                     </div>
-                    {step.message && (
-                      <span className="text-sm text-zinc-500">
-                        {step.message}
-                      </span>
-                    )}
+                    {step.message && <span className="text-sm text-zinc-500">{step.message}</span>}
                   </div>
                 ))}
               </div>
@@ -267,19 +236,11 @@ function HelmInstallContent() {
                 >
                   <div className="flex items-start gap-3">
                     <CheckCircle
-                      className={`h-5 w-5 ${
-                        dryRun ? 'text-sky-400' : 'text-emerald-400'
-                      }`}
+                      className={`h-5 w-5 ${dryRun ? 'text-sky-400' : 'text-emerald-400'}`}
                     />
                     <div>
-                      <h3
-                        className={`font-medium ${
-                          dryRun ? 'text-sky-400' : 'text-emerald-400'
-                        }`}
-                      >
-                        {dryRun
-                          ? 'Dry Run Complete'
-                          : 'Installation Successful!'}
+                      <h3 className={`font-medium ${dryRun ? 'text-sky-400' : 'text-emerald-400'}`}>
+                        {dryRun ? 'Dry Run Complete' : 'Installation Successful!'}
                       </h3>
                       <p className="mt-1 text-sm text-zinc-400">
                         {dryRun
@@ -297,15 +258,11 @@ function HelmInstallContent() {
         {/* Installation Options */}
         <div className="space-y-4">
           <div className="rounded-lg border border-zinc-700/50 bg-zinc-800/50 p-4">
-            <h2 className="mb-4 font-semibold text-white">
-              Installation Options
-            </h2>
+            <h2 className="mb-4 font-semibold text-white">Installation Options</h2>
 
             <div className="space-y-4">
               <div>
-                <label className="mb-1 block text-sm text-zinc-400">
-                  Release Name
-                </label>
+                <label className="mb-1 block text-sm text-zinc-400">Release Name</label>
                 <input
                   type="text"
                   value={releaseName}
@@ -316,9 +273,7 @@ function HelmInstallContent() {
               </div>
 
               <div>
-                <label className="mb-1 block text-sm text-zinc-400">
-                  Namespace
-                </label>
+                <label className="mb-1 block text-sm text-zinc-400">Namespace</label>
                 <input
                   type="text"
                   value={namespace}
@@ -331,9 +286,7 @@ function HelmInstallContent() {
               <div className="flex items-center justify-between">
                 <div>
                   <label className="text-sm text-white">Dry Run</label>
-                  <p className="text-xs text-zinc-500">
-                    Preview without installing
-                  </p>
+                  <p className="text-xs text-zinc-500">Preview without installing</p>
                 </div>
                 <button
                   onClick={() => setDryRun(!dryRun)}
@@ -399,14 +352,10 @@ function HelmInstallContent() {
 
           {/* CLI Command */}
           <div className="rounded-lg border border-zinc-700/50 bg-zinc-800/50 p-4">
-            <h3 className="mb-2 text-sm font-medium text-zinc-400">
-              CLI Command
-            </h3>
+            <h3 className="mb-2 text-sm font-medium text-zinc-400">CLI Command</h3>
             <code className="block rounded bg-zinc-900 p-3 text-sm text-sky-400">
               helm install {releaseName || 'RELEASE_NAME'}{' '}
-              {selectedRepo
-                ? `${selectedRepo}/${selectedChart?.name || 'CHART'}`
-                : 'REPO/CHART'}{' '}
+              {selectedRepo ? `${selectedRepo}/${selectedChart?.name || 'CHART'}` : 'REPO/CHART'}{' '}
               --namespace {namespace}
               {dryRun ? ' --dry-run' : ''}
             </code>

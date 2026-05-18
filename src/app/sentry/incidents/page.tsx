@@ -1,15 +1,9 @@
 'use client'
 
-import { StatusBadge } from '@/components/sentry/StatusBadge'
 import type { SentryStatus } from '@/components/sentry/StatusBadge'
+import { StatusBadge } from '@/components/sentry/StatusBadge'
 import clsx from 'clsx'
-import {
-  ChevronDown,
-  ChevronRight,
-  Loader2,
-  RefreshCw,
-  XCircle,
-} from 'lucide-react'
+import { ChevronDown, ChevronRight, Loader2, RefreshCw, XCircle } from 'lucide-react'
 import { useCallback, useEffect, useState } from 'react'
 
 interface TimelineEvent {
@@ -92,8 +86,7 @@ export default function SentryIncidentsPage() {
   }
 
   const incidents = data?.incidents ?? []
-  const filtered =
-    filter === 'all' ? incidents : incidents.filter((i) => i.status === filter)
+  const filtered = filter === 'all' ? incidents : incidents.filter((i) => i.status === filter)
 
   if (loading && data === null) {
     return (
@@ -110,9 +103,7 @@ export default function SentryIncidentsPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="nself-gradient-text text-xl font-semibold">
-            ɳSentry — Incidents
-          </h1>
+          <h1 className="nself-gradient-text text-xl font-semibold">ɳSentry — Incidents</h1>
           {data !== null && (
             <p className="text-nself-text-muted mt-0.5 text-xs">
               {filtered.length} incident
@@ -145,7 +136,7 @@ export default function SentryIncidentsPage() {
               'rounded-lg px-3 py-1.5 text-xs font-medium transition',
               filter === opt.value
                 ? 'bg-nself-primary/15 text-nself-primary'
-                : 'text-nself-text-muted hover:text-nself-text',
+                : 'text-nself-text-muted hover:text-nself-text'
             )}
           >
             {opt.label}
@@ -153,9 +144,8 @@ export default function SentryIncidentsPage() {
               <span className="text-nself-text-muted ml-1.5">
                 (
                 {
-                  incidents.filter((i) =>
-                    opt.value === 'all' ? true : i.status === opt.value,
-                  ).length
+                  incidents.filter((i) => (opt.value === 'all' ? true : i.status === opt.value))
+                    .length
                 }
                 )
               </span>
@@ -177,40 +167,33 @@ export default function SentryIncidentsPage() {
         <div className="glass-card p-4">
           {filtered.length === 0 ? (
             <p className="text-nself-text-muted text-xs">
-              {filter === 'all'
-                ? 'No incidents recorded.'
-                : `No ${filter} incidents.`}
+              {filter === 'all' ? 'No incidents recorded.' : `No ${filter} incidents.`}
             </p>
           ) : (
             <ul className="space-y-2">
               {filtered.map((incident) => {
                 const isExpanded = expanded.has(incident.id)
                 return (
-                  <li
-                    key={incident.id}
-                    className="border-nself-border rounded-lg border"
-                  >
+                  <li key={incident.id} className="border-nself-border rounded-lg border">
                     {/* Summary row */}
                     <button
                       className="flex w-full items-start gap-3 px-4 py-3 text-left"
                       onClick={() => toggleExpand(incident.id)}
                     >
-                      <span className="mt-0.5 shrink-0 text-nself-text-muted">
+                      <span className="text-nself-text-muted mt-0.5 shrink-0">
                         {isExpanded ? (
                           <ChevronDown className="h-4 w-4" />
                         ) : (
                           <ChevronRight className="h-4 w-4" />
                         )}
                       </span>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-nself-text text-sm font-medium">
-                          {incident.title}
-                        </p>
+                      <div className="min-w-0 flex-1">
+                        <p className="text-nself-text text-sm font-medium">{incident.title}</p>
                         <div className="mt-1 flex flex-wrap items-center gap-2">
                           <span
                             className={clsx(
                               'rounded-full border px-2 py-0.5 text-xs font-medium',
-                              SEVERITY_CLASS[incident.severity],
+                              SEVERITY_CLASS[incident.severity]
                             )}
                           >
                             {incident.severity}
@@ -223,16 +206,13 @@ export default function SentryIncidentsPage() {
                           )}
                         </div>
                       </div>
-                      <div className="text-right shrink-0">
+                      <div className="shrink-0 text-right">
                         <p className="text-nself-text-muted text-xs">
                           {new Date(incident.createdAt).toLocaleDateString()}
                         </p>
                         {incident.resolvedAt !== null && (
-                          <p className="text-green-400 text-xs">
-                            resolved{' '}
-                            {new Date(
-                              incident.resolvedAt,
-                            ).toLocaleDateString()}
+                          <p className="text-xs text-green-400">
+                            resolved {new Date(incident.resolvedAt).toLocaleDateString()}
                           </p>
                         )}
                       </div>
@@ -240,14 +220,10 @@ export default function SentryIncidentsPage() {
 
                     {/* Timeline (expanded) */}
                     {isExpanded && (
-                      <div className="border-nself-border border-t px-4 pb-4 pt-3">
-                        <p className="text-nself-text-muted mb-2 text-xs font-medium">
-                          Timeline
-                        </p>
+                      <div className="border-nself-border border-t px-4 pt-3 pb-4">
+                        <p className="text-nself-text-muted mb-2 text-xs font-medium">Timeline</p>
                         {incident.timeline.length === 0 ? (
-                          <p className="text-nself-text-muted text-xs">
-                            No timeline events.
-                          </p>
+                          <p className="text-nself-text-muted text-xs">No timeline events.</p>
                         ) : (
                           <ol className="space-y-2">
                             {incident.timeline.map((event, idx) => (
@@ -259,13 +235,11 @@ export default function SentryIncidentsPage() {
                                       ? 'bg-green-400'
                                       : event.type === 'opened'
                                         ? 'bg-red-400'
-                                        : 'bg-amber-400',
+                                        : 'bg-amber-400'
                                   )}
                                 />
                                 <div className="flex-1">
-                                  <p className="text-nself-text text-xs">
-                                    {event.message}
-                                  </p>
+                                  <p className="text-nself-text text-xs">{event.message}</p>
                                   {event.author !== undefined && (
                                     <p className="text-nself-text-muted text-xs">
                                       by {event.author}

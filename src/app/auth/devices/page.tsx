@@ -3,13 +3,7 @@
 import { PageShell } from '@/components/PageShell'
 import { TableSkeleton } from '@/components/skeletons'
 import { Button } from '@/components/ui/button'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { ScrollArea } from '@/components/ui/scroll-area'
@@ -142,9 +136,7 @@ function DevicesContent() {
 
     setRegistering(true)
     setError(null)
-    setLastCommand(
-      `nself auth devices register --name=${newDeviceName} --type=${newDeviceType}`,
-    )
+    setLastCommand(`nself auth devices register --name=${newDeviceName} --type=${newDeviceType}`)
 
     try {
       const res = await fetch('/api/auth/devices/register', {
@@ -203,7 +195,7 @@ function DevicesContent() {
         setActionLoading(null)
       }
     },
-    [fetchDevices],
+    [fetchDevices]
   )
 
   // ---------------------------------------------------------------------------
@@ -238,7 +230,7 @@ function DevicesContent() {
         setActionLoading(null)
       }
     },
-    [fetchDevices],
+    [fetchDevices]
   )
 
   // ---------------------------------------------------------------------------
@@ -258,9 +250,7 @@ function DevicesContent() {
               <Plus className="h-5 w-5" />
               Register New Device
             </CardTitle>
-            <CardDescription>
-              Register a new device for authentication access.
-            </CardDescription>
+            <CardDescription>Register a new device for authentication access.</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="flex flex-col gap-4 sm:flex-row sm:items-end">
@@ -293,10 +283,7 @@ function DevicesContent() {
                   </SelectContent>
                 </Select>
               </div>
-              <Button
-                onClick={handleRegister}
-                disabled={registering || !newDeviceName.trim()}
-              >
+              <Button onClick={handleRegister} disabled={registering || !newDeviceName.trim()}>
                 {registering ? (
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 ) : (
@@ -317,16 +304,9 @@ function DevicesContent() {
                   <Monitor className="h-5 w-5" />
                   Registered Devices
                 </CardTitle>
-                <CardDescription>
-                  Manage trusted and registered devices.
-                </CardDescription>
+                <CardDescription>Manage trusted and registered devices.</CardDescription>
               </div>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={fetchDevices}
-                disabled={loading}
-              >
+              <Button variant="outline" size="sm" onClick={fetchDevices} disabled={loading}>
                 {loading ? (
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 ) : (
@@ -364,9 +344,7 @@ function DevicesContent() {
                           {device.name}
                         </div>
                       </TableCell>
-                      <TableCell className="capitalize">
-                        {device.type}
-                      </TableCell>
+                      <TableCell className="capitalize">{device.type}</TableCell>
                       <TableCell>{device.lastSeen || 'Never'}</TableCell>
                       <TableCell>
                         {device.trusted ? (

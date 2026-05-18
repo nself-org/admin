@@ -32,7 +32,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         details: result.stderr || result.error || 'Unknown error',
         output: result.stdout?.trim(),
       },
-      { status: 500 },
+      { status: 500 }
     )
   } catch (error) {
     return NextResponse.json(
@@ -41,7 +41,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to initialize Vault',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

@@ -129,8 +129,7 @@ function ChannelForm({
   const [form, setForm] = useState<ChannelFormData>(initial)
   const [configError, setConfigError] = useState('')
 
-  const typeMeta =
-    CHANNEL_TYPES.find((t) => t.value === form.channel_type) ?? CHANNEL_TYPES[5]
+  const typeMeta = CHANNEL_TYPES.find((t) => t.value === form.channel_type) ?? CHANNEL_TYPES[5]
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -152,9 +151,7 @@ function ChannelForm({
       <div className="grid gap-4 sm:grid-cols-2">
         {/* Name */}
         <div>
-          <label className="mb-1 block text-sm font-medium text-zinc-300">
-            Name
-          </label>
+          <label className="mb-1 block text-sm font-medium text-zinc-300">Name</label>
           <input
             type="text"
             required
@@ -167,14 +164,10 @@ function ChannelForm({
 
         {/* Type */}
         <div>
-          <label className="mb-1 block text-sm font-medium text-zinc-300">
-            Type
-          </label>
+          <label className="mb-1 block text-sm font-medium text-zinc-300">Type</label>
           <select
             value={form.channel_type}
-            onChange={(e) =>
-              setForm({ ...form, channel_type: e.target.value as ChannelType })
-            }
+            onChange={(e) => setForm({ ...form, channel_type: e.target.value as ChannelType })}
             className="w-full rounded-lg border border-zinc-700 bg-zinc-900 px-3 py-2 text-sm text-white focus:border-sky-500 focus:outline-none"
           >
             {CHANNEL_TYPES.map((t) => (
@@ -188,9 +181,7 @@ function ChannelForm({
 
       {/* Config JSON */}
       <div>
-        <label className="mb-1 block text-sm font-medium text-zinc-300">
-          Config (JSON)
-        </label>
+        <label className="mb-1 block text-sm font-medium text-zinc-300">Config (JSON)</label>
         <p className="mb-1.5 text-xs text-zinc-500">
           Example: <code className="font-mono">{typeMeta.configHint}</code>
         </p>
@@ -201,9 +192,7 @@ function ChannelForm({
           rows={4}
           className="w-full rounded-lg border border-zinc-700 bg-zinc-900 px-3 py-2 font-mono text-sm text-white placeholder-zinc-500 focus:border-sky-500 focus:outline-none"
         />
-        {configError && (
-          <p className="mt-1 text-xs text-red-400">{configError}</p>
-        )}
+        {configError && <p className="mt-1 text-xs text-red-400">{configError}</p>}
       </div>
 
       <div className="grid gap-4 sm:grid-cols-3">
@@ -230,9 +219,7 @@ function ChannelForm({
             type="number"
             min={1}
             value={form.rate_limit_per_minute}
-            onChange={(e) =>
-              setForm({ ...form, rate_limit_per_minute: e.target.value })
-            }
+            onChange={(e) => setForm({ ...form, rate_limit_per_minute: e.target.value })}
             placeholder="Unlimited"
             className="w-full rounded-lg border border-zinc-700 bg-zinc-900 px-3 py-2 text-sm text-white placeholder-zinc-500 focus:border-sky-500 focus:outline-none"
           />
@@ -248,9 +235,7 @@ function ChannelForm({
               type="number"
               min={1}
               value={form.auto_delete_minutes}
-              onChange={(e) =>
-                setForm({ ...form, auto_delete_minutes: e.target.value })
-              }
+              onChange={(e) => setForm({ ...form, auto_delete_minutes: e.target.value })}
               placeholder="Never"
               className="w-full rounded-lg border border-zinc-700 bg-zinc-900 px-3 py-2 text-sm text-white placeholder-zinc-500 focus:border-sky-500 focus:outline-none"
             />
@@ -288,9 +273,7 @@ export default function NotifyChannelsPage() {
   const [loading, setLoading] = useState(true)
   const [pluginDown, setPluginDown] = useState(false)
   const [showForm, setShowForm] = useState(false)
-  const [editingChannel, setEditingChannel] = useState<NotifyChannel | null>(
-    null,
-  )
+  const [editingChannel, setEditingChannel] = useState<NotifyChannel | null>(null)
   const [saving, setSaving] = useState(false)
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null)
   const [testingChannel, setTestingChannel] = useState<string | null>(null)
@@ -332,9 +315,7 @@ export default function NotifyChannelsPage() {
         channel_type: form.channel_type,
         config: JSON.parse(form.config),
         active: form.active,
-        auto_delete_minutes: form.auto_delete_minutes
-          ? parseInt(form.auto_delete_minutes)
-          : null,
+        auto_delete_minutes: form.auto_delete_minutes ? parseInt(form.auto_delete_minutes) : null,
         rate_limit_per_minute: form.rate_limit_per_minute
           ? parseInt(form.rate_limit_per_minute)
           : null,
@@ -398,17 +379,13 @@ export default function NotifyChannelsPage() {
       <div className="space-y-6">
         <div>
           <h1 className="text-2xl font-semibold text-white">Notify Channels</h1>
-          <p className="mt-1 text-sm text-zinc-400">
-            Manage nself-notify delivery channels
-          </p>
+          <p className="mt-1 text-sm text-zinc-400">Manage nself-notify delivery channels</p>
         </div>
         <div className="rounded-xl border border-yellow-500/30 bg-yellow-900/20 p-6">
           <div className="flex items-start gap-3">
             <AlertCircle className="mt-0.5 h-5 w-5 shrink-0 text-yellow-400" />
             <div>
-              <p className="font-medium text-yellow-300">
-                nself-notify is not running
-              </p>
+              <p className="font-medium text-yellow-300">nself-notify is not running</p>
               <p className="mt-1 text-sm text-yellow-400/80">
                 Install and start the notify plugin to manage channels.
               </p>
@@ -449,9 +426,7 @@ export default function NotifyChannelsPage() {
       {/* Form */}
       {showForm && (
         <ChannelForm
-          initial={
-            editingChannel ? channelToForm(editingChannel) : defaultForm()
-          }
+          initial={editingChannel ? channelToForm(editingChannel) : defaultForm()}
           onSave={handleSave}
           onCancel={() => {
             setShowForm(false)
@@ -465,10 +440,7 @@ export default function NotifyChannelsPage() {
       {loading && (
         <div className="space-y-3">
           {[1, 2, 3].map((n) => (
-            <div
-              key={n}
-              className="h-14 animate-pulse rounded-xl bg-zinc-800/50"
-            />
+            <div key={n} className="h-14 animate-pulse rounded-xl bg-zinc-800/50" />
           ))}
         </div>
       )}
@@ -517,18 +489,14 @@ export default function NotifyChannelsPage() {
                   key={ch.id}
                   className="border-b border-zinc-700/50 last:border-0 hover:bg-zinc-800/50"
                 >
-                  <td className="px-4 py-3 font-medium text-white">
-                    {ch.name}
-                  </td>
+                  <td className="px-4 py-3 font-medium text-white">{ch.name}</td>
                   <td className="px-4 py-3">
                     <span className="rounded-full bg-zinc-700/50 px-2 py-0.5 text-xs text-zinc-300 capitalize">
                       {ch.channel_type}
                     </span>
                   </td>
                   <td className="px-4 py-3 text-sm text-zinc-400">
-                    {ch.rate_limit_per_minute
-                      ? `${ch.rate_limit_per_minute}/min`
-                      : '—'}
+                    {ch.rate_limit_per_minute ? `${ch.rate_limit_per_minute}/min` : '—'}
                   </td>
                   <td className="px-4 py-3">
                     {ch.active ? (
@@ -615,9 +583,7 @@ export default function NotifyChannelsPage() {
       {/* Delivery log */}
       {!loading && log.length > 0 && (
         <div>
-          <h2 className="mb-3 text-lg font-medium text-white">
-            Recent Deliveries
-          </h2>
+          <h2 className="mb-3 text-lg font-medium text-white">Recent Deliveries</h2>
           <div className="overflow-hidden rounded-xl border border-zinc-700/50 bg-zinc-800/50">
             <table className="w-full">
               <thead className="border-b border-zinc-700/50 bg-zinc-900/50">
@@ -642,9 +608,7 @@ export default function NotifyChannelsPage() {
                     key={entry.id}
                     className="border-b border-zinc-700/50 last:border-0 hover:bg-zinc-800/50"
                   >
-                    <td className="px-4 py-3 text-sm text-zinc-300">
-                      {entry.channel_name}
-                    </td>
+                    <td className="px-4 py-3 text-sm text-zinc-300">{entry.channel_name}</td>
                     <td className="max-w-xs truncate px-4 py-3 text-sm text-zinc-300">
                       {entry.rendered_title}
                     </td>

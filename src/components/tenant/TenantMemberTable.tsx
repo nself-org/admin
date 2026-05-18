@@ -42,10 +42,7 @@ export function TenantMemberTable({
     return (
       <div className="space-y-2">
         {[1, 2, 3].map((i) => (
-          <div
-            key={i}
-            className="h-16 animate-pulse rounded-lg bg-zinc-800/50"
-          />
+          <div key={i} className="h-16 animate-pulse rounded-lg bg-zinc-800/50" />
         ))}
       </div>
     )
@@ -98,17 +95,13 @@ export function TenantMemberTable({
               </td>
               <td className="px-4 py-3">
                 <span className="text-xs text-zinc-500">
-                  {member.joinedAt
-                    ? new Date(member.joinedAt).toLocaleDateString()
-                    : 'Pending'}
+                  {member.joinedAt ? new Date(member.joinedAt).toLocaleDateString() : 'Pending'}
                 </span>
               </td>
               <td className="px-4 py-3">
                 <div className="relative flex justify-end">
                   <button
-                    onClick={() =>
-                      setOpenMenu(openMenu === member.id ? null : member.id)
-                    }
+                    onClick={() => setOpenMenu(openMenu === member.id ? null : member.id)}
                     className="rounded p-1 hover:bg-zinc-700"
                     disabled={member.role === 'owner'}
                   >
@@ -129,18 +122,13 @@ export function TenantMemberTable({
                       )}
                       <button
                         onClick={() => {
-                          onUpdateRole(
-                            member.userId,
-                            member.role === 'admin' ? 'member' : 'admin',
-                          )
+                          onUpdateRole(member.userId, member.role === 'admin' ? 'member' : 'admin')
                           setOpenMenu(null)
                         }}
                         className="flex w-full items-center gap-2 px-4 py-2 text-sm text-zinc-300 hover:bg-zinc-700"
                       >
                         <Shield className="h-4 w-4" />{' '}
-                        {member.role === 'admin'
-                          ? 'Remove Admin'
-                          : 'Make Admin'}
+                        {member.role === 'admin' ? 'Remove Admin' : 'Make Admin'}
                       </button>
                       <button
                         onClick={() => {

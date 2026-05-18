@@ -122,9 +122,7 @@ export default function GeminiPoolPage() {
       if (!res.ok) throw new Error(`HTTP ${res.status}`)
       const data = await res.json()
       if (data.oauth_url) window.open(data.oauth_url, '_blank')
-      const es = new EventSource(
-        `${AI_API}/ai/pool/events?session=${data.session_id}`,
-      )
+      const es = new EventSource(`${AI_API}/ai/pool/events?session=${data.session_id}`)
       eventSourceRef.current = es
       es.onmessage = (ev) => {
         const msg = JSON.parse(ev.data)
@@ -216,17 +214,13 @@ export default function GeminiPoolPage() {
   if (pageState === 'empty') {
     return (
       <div className="mx-auto max-w-3xl p-6">
-        <h1 className="mb-6 text-2xl font-semibold text-zinc-100">
-          Gemini Pool
-        </h1>
+        <h1 className="mb-6 text-2xl font-semibold text-zinc-100">Gemini Pool</h1>
         <div className="rounded-xl border border-sky-500/20 bg-sky-500/5 p-8 text-center">
           <Key className="mx-auto mb-4 h-12 w-12 text-sky-400/50" />
-          <h2 className="mb-2 text-lg font-medium text-zinc-200">
-            No Google Accounts Connected
-          </h2>
+          <h2 className="mb-2 text-lg font-medium text-zinc-200">No Google Accounts Connected</h2>
           <p className="mb-6 text-sm text-zinc-400">
-            Connect your first Google account for 20 free requests per day. No
-            credit card, no paid tier.
+            Connect your first Google account for 20 free requests per day. No credit card, no paid
+            tier.
           </p>
           <button
             onClick={() => {
@@ -249,15 +243,10 @@ export default function GeminiPoolPage() {
   if (pageState === 'loading') {
     return (
       <div className="mx-auto max-w-3xl p-6">
-        <h1 className="mb-6 text-2xl font-semibold text-zinc-100">
-          Gemini Pool
-        </h1>
+        <h1 className="mb-6 text-2xl font-semibold text-zinc-100">Gemini Pool</h1>
         <div className="space-y-4">
           {[1, 2, 3].map((n) => (
-            <div
-              key={n}
-              className="h-16 animate-pulse rounded-xl bg-zinc-800/50"
-            />
+            <div key={n} className="h-16 animate-pulse rounded-xl bg-zinc-800/50" />
           ))}
         </div>
       </div>
@@ -269,9 +258,7 @@ export default function GeminiPoolPage() {
   if (pageState === 'error') {
     return (
       <div className="mx-auto max-w-3xl p-6">
-        <h1 className="mb-6 text-2xl font-semibold text-zinc-100">
-          Gemini Pool
-        </h1>
+        <h1 className="mb-6 text-2xl font-semibold text-zinc-100">Gemini Pool</h1>
         <div className="rounded-xl border border-red-500/30 bg-red-500/5 p-6 text-center">
           <AlertCircle className="mx-auto mb-3 h-8 w-8 text-red-400" />
           <p className="mb-4 text-sm text-red-300">{error}</p>
@@ -301,9 +288,7 @@ export default function GeminiPoolPage() {
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
         <div className="w-full max-w-lg rounded-xl border border-zinc-700 bg-zinc-900 p-6">
           <div className="mb-4 flex items-center justify-between">
-            <h3 className="text-lg font-medium text-zinc-100">
-              Connecting Google Account
-            </h3>
+            <h3 className="text-lg font-medium text-zinc-100">Connecting Google Account</h3>
             {(provisionDone || provisionError) && (
               <button
                 onClick={() => {
@@ -368,9 +353,7 @@ export default function GeminiPoolPage() {
 
   // ── Ready State ───────────────────────────────────────────────────────────
 
-  const usedPct = capacity
-    ? Math.round((capacity.used_rpd / capacity.total_rpd) * 100)
-    : 0
+  const usedPct = capacity ? Math.round((capacity.used_rpd / capacity.total_rpd) * 100) : 0
 
   return (
     <div className="mx-auto max-w-3xl space-y-6 p-6">
@@ -411,8 +394,7 @@ export default function GeminiPoolPage() {
             </span>
             <span className="flex items-center gap-1">
               <Clock className="h-3 w-3" />
-              Resets in{' '}
-              {capacity ? formatResetCountdown(capacity.reset_at) : '-'}
+              Resets in {capacity ? formatResetCountdown(capacity.reset_at) : '-'}
             </span>
           </div>
           <div className="h-3 overflow-hidden rounded-full bg-zinc-800">
@@ -425,9 +407,7 @@ export default function GeminiPoolPage() {
 
         <div className="grid grid-cols-4 gap-2 text-center text-xs">
           <div>
-            <p className="text-lg font-semibold text-zinc-200">
-              {capacity?.accounts_active ?? 0}
-            </p>
+            <p className="text-lg font-semibold text-zinc-200">{capacity?.accounts_active ?? 0}</p>
             <p className="text-zinc-500">Active</p>
           </div>
           <div>
@@ -443,9 +423,7 @@ export default function GeminiPoolPage() {
             <p className="text-zinc-500">Exhausted</p>
           </div>
           <div>
-            <p className="text-lg font-semibold text-red-400">
-              {capacity?.accounts_revoked ?? 0}
-            </p>
+            <p className="text-lg font-semibold text-red-400">{capacity?.accounts_revoked ?? 0}</p>
             <p className="text-zinc-500">Revoked</p>
           </div>
         </div>
@@ -454,9 +432,7 @@ export default function GeminiPoolPage() {
       {/* ── Connected Accounts ────────────────────────────────────────────── */}
       <section className="rounded-xl border border-zinc-700/50 bg-zinc-800/50 p-5">
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-lg font-medium text-zinc-200">
-            Connected Accounts
-          </h2>
+          <h2 className="text-lg font-medium text-zinc-200">Connected Accounts</h2>
           <button
             onClick={() => {
               setShowAddModal(true)
@@ -470,16 +446,11 @@ export default function GeminiPoolPage() {
 
         <div className="space-y-2">
           {accounts.map((a) => (
-            <div
-              key={a.id}
-              className="rounded-lg border border-zinc-700/50 bg-zinc-900/50 p-3"
-            >
+            <div key={a.id} className="rounded-lg border border-zinc-700/50 bg-zinc-900/50 p-3">
               <div className="flex items-center gap-3">
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-2">
-                    <span className="truncate text-sm font-medium text-zinc-200">
-                      {a.email}
-                    </span>
+                    <span className="truncate text-sm font-medium text-zinc-200">{a.email}</span>
                     <span
                       className={`text-xs capitalize ${STATUS_COLORS[a.status] ?? 'text-zinc-500'}`}
                     >
@@ -495,11 +466,7 @@ export default function GeminiPoolPage() {
                     <span>
                       {a.usage_today}/{a.daily_limit} RPD
                     </span>
-                    {a.last_used && (
-                      <span>
-                        Last: {new Date(a.last_used).toLocaleTimeString()}
-                      </span>
-                    )}
+                    {a.last_used && <span>Last: {new Date(a.last_used).toLocaleTimeString()}</span>}
                   </div>
                 </div>
                 <div className="flex items-center gap-1">
@@ -550,10 +517,7 @@ export default function GeminiPoolPage() {
       <section className="rounded-xl border border-zinc-700/50 bg-zinc-800/50 p-5">
         <div className="flex items-center justify-between">
           <h2 className="text-lg font-medium text-zinc-200">Audit Log</h2>
-          <button
-            onClick={fetchAudit}
-            className="text-xs text-sky-400 hover:text-sky-300"
-          >
+          <button onClick={fetchAudit} className="text-xs text-sky-400 hover:text-sky-300">
             View Full Log
           </button>
         </div>
@@ -570,13 +534,8 @@ export default function GeminiPoolPage() {
               </thead>
               <tbody>
                 {audit.map((e, i) => (
-                  <tr
-                    key={i}
-                    className="border-t border-zinc-800/50 text-zinc-400"
-                  >
-                    <td className="py-1.5 pr-3">
-                      {new Date(e.timestamp).toLocaleString()}
-                    </td>
+                  <tr key={i} className="border-t border-zinc-800/50 text-zinc-400">
+                    <td className="py-1.5 pr-3">{new Date(e.timestamp).toLocaleString()}</td>
                     <td className="py-1.5 pr-3">{e.action}</td>
                     <td className="py-1.5 pr-3">{e.account_email}</td>
                     <td className="py-1.5">{e.detail}</td>

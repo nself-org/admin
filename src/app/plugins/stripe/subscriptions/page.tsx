@@ -64,11 +64,7 @@ const statusConfig = {
   },
 }
 
-function SubscriptionRow({
-  subscription,
-}: {
-  subscription: StripeSubscription
-}) {
+function SubscriptionRow({ subscription }: { subscription: StripeSubscription }) {
   const status = statusConfig[subscription.status]
   const StatusIcon = status.icon
 
@@ -95,8 +91,7 @@ function SubscriptionRow({
         </span>
       </td>
       <td className="px-4 py-3 text-sm text-zinc-300">
-        {formatCurrency(subscription.amount, subscription.currency)}/
-        {subscription.interval}
+        {formatCurrency(subscription.amount, subscription.currency)}/{subscription.interval}
       </td>
       <td className="px-4 py-3 text-sm text-zinc-400">
         {new Date(subscription.currentPeriodStart).toLocaleDateString()} -{' '}
@@ -135,7 +130,7 @@ function StripeSubscriptionsContent() {
   }>(
     `/api/plugins/stripe/subscriptions?page=${page}&pageSize=${pageSize}&search=${searchQuery}&status=${statusFilter}`,
     fetcher,
-    { refreshInterval: 60000 },
+    { refreshInterval: 60000 }
   )
 
   const handleSync = async () => {
@@ -206,9 +201,7 @@ function StripeSubscriptionsContent() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-semibold text-white">Subscriptions</h1>
-          <p className="text-sm text-zinc-400">
-            {total.toLocaleString()} total subscriptions
-          </p>
+          <p className="text-sm text-zinc-400">{total.toLocaleString()} total subscriptions</p>
         </div>
         <button
           onClick={handleSync}
@@ -287,10 +280,7 @@ function StripeSubscriptionsContent() {
             <tbody>
               {subscriptions.length > 0 ? (
                 subscriptions.map((subscription) => (
-                  <SubscriptionRow
-                    key={subscription.id}
-                    subscription={subscription}
-                  />
+                  <SubscriptionRow key={subscription.id} subscription={subscription} />
                 ))
               ) : (
                 <tr>
@@ -309,8 +299,7 @@ function StripeSubscriptionsContent() {
       {totalPages > 1 && (
         <div className="flex items-center justify-between">
           <p className="text-sm text-zinc-400">
-            Showing {(page - 1) * pageSize + 1} to{' '}
-            {Math.min(page * pageSize, total)} of {total}
+            Showing {(page - 1) * pageSize + 1} to {Math.min(page * pageSize, total)} of {total}
           </p>
           <div className="flex items-center gap-2">
             <button

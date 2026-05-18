@@ -5,21 +5,13 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server'
-import {
-  getOrganization,
-  getOrgMember,
-  getTenant,
-  getTenantMember,
-} from '../database'
+import { getOrganization, getOrgMember, getTenant, getTenantMember } from '../database'
 import { getCurrentTenantId } from './tenant-context'
 
 /**
  * Verify that the current user has access to the specified tenant
  */
-export async function verifyTenantAccess(
-  tenantId: string,
-  userId: string,
-): Promise<boolean> {
+export async function verifyTenantAccess(tenantId: string, userId: string): Promise<boolean> {
   const members = await getTenantMember(userId, tenantId)
   return !!members
 }
@@ -27,10 +19,7 @@ export async function verifyTenantAccess(
 /**
  * Verify that the current user has access to the specified organization
  */
-export async function verifyOrgAccess(
-  orgId: string,
-  userId: string,
-): Promise<boolean> {
+export async function verifyOrgAccess(orgId: string, userId: string): Promise<boolean> {
   const member = await getOrgMember(userId, orgId)
   return !!member
 }
@@ -41,7 +30,7 @@ export async function verifyOrgAccess(
  */
 export async function enforceTenantContext(
   request: NextRequest,
-  tenantId?: string,
+  tenantId?: string
 ): Promise<NextResponse | null> {
   const currentTenantId = await getCurrentTenantId()
 
@@ -53,7 +42,7 @@ export async function enforceTenantContext(
         error: 'Tenant access denied',
         details: 'You do not have access to this tenant',
       },
-      { status: 403 },
+      { status: 403 }
     )
   }
 
@@ -65,7 +54,7 @@ export async function enforceTenantContext(
         error: 'Tenant context required',
         details: 'No tenant context found. Please select a tenant first.',
       },
-      { status: 403 },
+      { status: 403 }
     )
   }
 
@@ -78,7 +67,7 @@ export async function enforceTenantContext(
         error: 'Tenant not found',
         details: 'The selected tenant no longer exists',
       },
-      { status: 404 },
+      { status: 404 }
     )
   }
 
@@ -92,7 +81,7 @@ export async function enforceTenantContext(
  */
 export async function enforceOrgContext(
   request: NextRequest,
-  orgId: string,
+  orgId: string
 ): Promise<NextResponse | null> {
   const currentTenantId = await getCurrentTenantId()
 
@@ -103,7 +92,7 @@ export async function enforceOrgContext(
         error: 'Tenant context required',
         details: 'No tenant context found',
       },
-      { status: 403 },
+      { status: 403 }
     )
   }
 
@@ -114,10 +103,9 @@ export async function enforceOrgContext(
       {
         success: false,
         error: 'Organization not found',
-        details:
-          'Organization not found or does not belong to the current tenant',
+        details: 'Organization not found or does not belong to the current tenant',
       },
-      { status: 404 },
+      { status: 404 }
     )
   }
 
@@ -128,7 +116,7 @@ export async function enforceOrgContext(
  * Get the current tenant ID from the request, with validation
  */
 export async function requireTenantId(
-  _request: NextRequest,
+  _request: NextRequest
 ): Promise<{ tenantId: string; error?: NextResponse }> {
   const tenantId = await getCurrentTenantId()
 
@@ -141,7 +129,7 @@ export async function requireTenantId(
           error: 'Tenant context required',
           details: 'No tenant context found',
         },
-        { status: 403 },
+        { status: 403 }
       ),
     }
   }

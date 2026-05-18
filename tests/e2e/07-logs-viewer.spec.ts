@@ -80,9 +80,7 @@ test.describe('Logs Viewer Flow', () => {
       await logsPage.toggleRealTimeStream()
 
       // Should show streaming indicator
-      await expect(
-        page.locator('[data-testid="streaming-indicator"]'),
-      ).toBeVisible()
+      await expect(page.locator('[data-testid="streaming-indicator"]')).toBeVisible()
 
       // Wait a bit to see if new logs appear
       await page.waitForTimeout(2000)
@@ -143,7 +141,7 @@ test.describe('Logs Viewer Flow', () => {
 
       const logsContainer = await page.locator('[data-testid="logs-container"]')
       const scrollTop = await logsContainer.evaluate(
-        (el) => el.scrollTop + el.clientHeight >= el.scrollHeight - 10,
+        (el) => el.scrollTop + el.clientHeight >= el.scrollHeight - 10
       )
 
       expect(scrollTop).toBe(true)

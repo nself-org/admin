@@ -1,13 +1,6 @@
 'use client'
 
-import {
-  CheckCircle2,
-  Clock,
-  Loader2,
-  PlusCircle,
-  RefreshCw,
-  XCircle,
-} from 'lucide-react'
+import { CheckCircle2, Clock, Loader2, PlusCircle, RefreshCw, XCircle } from 'lucide-react'
 import { useCallback, useEffect, useState } from 'react'
 
 type RunStatus = 'pending' | 'running' | 'passed' | 'failed' | 'timed_out' | 'error'
@@ -41,8 +34,7 @@ interface SyntheticFlowsResponse {
 
 function statusIcon(status: RunStatus | null) {
   if (status === null) return <span className="text-nself-text-muted text-xs">—</span>
-  if (status === 'passed')
-    return <CheckCircle2 className="h-4 w-4 text-green-400" />
+  if (status === 'passed') return <CheckCircle2 className="h-4 w-4 text-green-400" />
   if (status === 'failed' || status === 'error' || status === 'timed_out')
     return <XCircle className="h-4 w-4 text-red-400" />
   return <Clock className="h-4 w-4 text-yellow-400" />
@@ -95,9 +87,7 @@ export default function SentrySyntheticPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="nself-gradient-text text-xl font-semibold">
-            ɳSentry — Synthetic Checks
-          </h1>
+          <h1 className="nself-gradient-text text-xl font-semibold">ɳSentry — Synthetic Checks</h1>
           {data !== null && (
             <p className="text-nself-text-muted mt-0.5 text-xs">
               {passed}/{total} checks passing
@@ -142,30 +132,23 @@ export default function SentrySyntheticPage() {
       {/* Flows list */}
       {data !== null && (
         <div className="glass-card p-4">
-          <p className="text-nself-text mb-3 text-sm font-semibold">
-            Flows ({total})
-          </p>
+          <p className="text-nself-text mb-3 text-sm font-semibold">Flows ({total})</p>
           {total === 0 ? (
             <p className="text-nself-text-muted text-xs">
-              No synthetic flows configured. Click &ldquo;New Flow&rdquo; to add
-              a Playwright browser script or API contract check.
+              No synthetic flows configured. Click &ldquo;New Flow&rdquo; to add a Playwright
+              browser script or API contract check.
             </p>
           ) : (
             <div className="space-y-2">
               {data.flows.map((flow) => (
-                <div
-                  key={flow.id}
-                  className="border-nself-border rounded-lg border px-4 py-3"
-                >
+                <div key={flow.id} className="border-nself-border rounded-lg border px-4 py-3">
                   <div className="flex items-start gap-3">
                     <div className="mt-0.5 shrink-0">
                       {statusIcon(flow.last_run?.status ?? null)}
                     </div>
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-2">
-                        <p className="text-nself-text truncate text-sm font-medium">
-                          {flow.name}
-                        </p>
+                        <p className="text-nself-text truncate text-sm font-medium">{flow.name}</p>
                         <span className="border-nself-border shrink-0 rounded border px-1.5 py-0.5 font-mono text-xs">
                           {flow.flow_type}
                         </span>
@@ -200,13 +183,10 @@ export default function SentrySyntheticPage() {
                   <div className="mt-2 flex items-center gap-3">
                     {flow.schedule_cron !== null ? (
                       <span className="text-nself-text-muted text-xs">
-                        schedule:{' '}
-                        <span className="font-mono">{flow.schedule_cron}</span>
+                        schedule: <span className="font-mono">{flow.schedule_cron}</span>
                       </span>
                     ) : (
-                      <span className="text-nself-text-muted text-xs">
-                        on-demand only
-                      </span>
+                      <span className="text-nself-text-muted text-xs">on-demand only</span>
                     )}
                     <span className="text-nself-text-muted text-xs">
                       timeout {flow.timeout_seconds}s

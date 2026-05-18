@@ -33,10 +33,11 @@ interface AlertsData {
 }
 
 function levelIcon(level: Alert['level']) {
-  if (level === 'critical') return <XCircle className="h-4 w-4 text-red-400 flex-shrink-0" />
-  if (level === 'warning') return <AlertTriangle className="h-4 w-4 text-yellow-400 flex-shrink-0" />
-  if (level === 'resolved') return <CheckCircle className="h-4 w-4 text-green-400 flex-shrink-0" />
-  return <Info className="h-4 w-4 text-blue-400 flex-shrink-0" />
+  if (level === 'critical') return <XCircle className="h-4 w-4 flex-shrink-0 text-red-400" />
+  if (level === 'warning')
+    return <AlertTriangle className="h-4 w-4 flex-shrink-0 text-yellow-400" />
+  if (level === 'resolved') return <CheckCircle className="h-4 w-4 flex-shrink-0 text-green-400" />
+  return <Info className="h-4 w-4 flex-shrink-0 text-blue-400" />
 }
 
 function levelBg(level: Alert['level']) {
@@ -151,18 +152,16 @@ function AlertsContent() {
   // State 5: offline
   if (offline) {
     return (
-      <div className="p-6 space-y-4">
-        <div className="flex items-center gap-3 p-4 rounded-lg bg-yellow-500/10 border border-yellow-500/30">
-          <WifiOff className="h-5 w-5 text-yellow-500 flex-shrink-0" />
+      <div className="space-y-4 p-6">
+        <div className="flex items-center gap-3 rounded-lg border border-yellow-500/30 bg-yellow-500/10 p-4">
+          <WifiOff className="h-5 w-5 flex-shrink-0 text-yellow-500" />
           <div>
             <p className="font-medium text-yellow-400">Cannot reach backend</p>
-            <p className="text-sm text-gray-400 mt-0.5">
-              Alerts require a running nself stack.
-            </p>
+            <p className="mt-0.5 text-sm text-gray-400">Alerts require a running nself stack.</p>
           </div>
         </div>
         <Button onClick={fetchAlerts} disabled={loading} variant="secondary" size="sm">
-          <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
+          <RefreshCw className={`mr-2 h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
           Retry
         </Button>
       </div>
@@ -172,16 +171,16 @@ function AlertsContent() {
   // State 4: error
   if (error && !data) {
     return (
-      <div className="p-6 space-y-4">
-        <div className="flex items-center gap-3 p-4 rounded-lg bg-red-500/10 border border-red-500/30">
-          <AlertTriangle className="h-5 w-5 text-red-400 flex-shrink-0" />
+      <div className="space-y-4 p-6">
+        <div className="flex items-center gap-3 rounded-lg border border-red-500/30 bg-red-500/10 p-4">
+          <AlertTriangle className="h-5 w-5 flex-shrink-0 text-red-400" />
           <div>
             <p className="font-medium text-red-400">Failed to load alerts</p>
-            <p className="text-sm text-gray-400 mt-0.5">{error}</p>
+            <p className="mt-0.5 text-sm text-gray-400">{error}</p>
           </div>
         </div>
         <Button onClick={fetchAlerts} disabled={loading} variant="secondary" size="sm">
-          <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
+          <RefreshCw className={`mr-2 h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
           Retry
         </Button>
       </div>
@@ -192,10 +191,16 @@ function AlertsContent() {
   if (!data) {
     return (
       <div className="p-6 text-center text-gray-400">
-        <Bell className="h-8 w-8 mx-auto mb-2 opacity-50" />
+        <Bell className="mx-auto mb-2 h-8 w-8 opacity-50" />
         <p>No alert data available.</p>
-        <Button onClick={fetchAlerts} disabled={loading} variant="secondary" size="sm" className="mt-3">
-          <RefreshCw className="h-4 w-4 mr-2" />
+        <Button
+          onClick={fetchAlerts}
+          disabled={loading}
+          variant="secondary"
+          size="sm"
+          className="mt-3"
+        >
+          <RefreshCw className="mr-2 h-4 w-4" />
           Load Alerts
         </Button>
       </div>
@@ -206,33 +211,38 @@ function AlertsContent() {
 
   // States 6+7: success / empty
   return (
-    <div className="p-6 space-y-6">
+    <div className="space-y-6 p-6">
       {/* Header */}
-      <div className="flex items-center justify-between flex-wrap gap-3">
+      <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h2 className="text-xl font-semibold text-white">Alerts</h2>
-          <p className="text-sm text-gray-400 mt-1">
+          <p className="mt-1 text-sm text-gray-400">
             {data.unacknowledgedCount > 0
               ? `${data.unacknowledgedCount} unacknowledged alert${data.unacknowledgedCount !== 1 ? 's' : ''}`
               : 'All alerts acknowledged'}
           </p>
         </div>
-        <Button onClick={fetchAlerts} disabled={loading || !!actionId} variant="secondary" size="sm">
-          <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
+        <Button
+          onClick={fetchAlerts}
+          disabled={loading || !!actionId}
+          variant="secondary"
+          size="sm"
+        >
+          <RefreshCw className={`mr-2 h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
           {loading ? 'Refreshing…' : 'Refresh'}
         </Button>
       </div>
 
       {/* Filter tabs */}
-      <div className="flex gap-2 flex-wrap">
+      <div className="flex flex-wrap gap-2">
         {(['all', 'critical', 'warning', 'info', 'resolved'] as const).map((f) => (
           <button
             key={f}
             onClick={() => setFilter(f)}
-            className={`px-3 py-1 rounded-full text-xs font-medium capitalize transition-colors ${
+            className={`rounded-full px-3 py-1 text-xs font-medium capitalize transition-colors ${
               filter === f
-                ? 'bg-sky-500/20 text-sky-400 border border-sky-500/30'
-                : 'bg-white/5 text-gray-400 border border-white/10 hover:bg-white/10'
+                ? 'border border-sky-500/30 bg-sky-500/20 text-sky-400'
+                : 'border border-white/10 bg-white/5 text-gray-400 hover:bg-white/10'
             }`}
           >
             {f}
@@ -247,8 +257,8 @@ function AlertsContent() {
 
       {/* Alerts list */}
       {filtered.length === 0 ? (
-        <div className="text-center py-12 text-gray-500">
-          <BellOff className="h-8 w-8 mx-auto mb-2 opacity-50" />
+        <div className="py-12 text-center text-gray-500">
+          <BellOff className="mx-auto mb-2 h-8 w-8 opacity-50" />
           <p>No {filter !== 'all' ? filter : ''} alerts.</p>
         </div>
       ) : (
@@ -260,31 +270,33 @@ function AlertsContent() {
             >
               <div className="flex items-start gap-3">
                 {levelIcon(alert.level)}
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 flex-wrap">
+                <div className="min-w-0 flex-1">
+                  <div className="flex flex-wrap items-center gap-2">
                     <p className="text-sm font-medium text-white">{alert.title}</p>
-                    <span className={`text-xs px-2 py-0.5 rounded-full font-medium capitalize ${levelBadge(alert.level)}`}>
+                    <span
+                      className={`rounded-full px-2 py-0.5 text-xs font-medium capitalize ${levelBadge(alert.level)}`}
+                    >
                       {alert.level}
                     </span>
                     {alert.acknowledged && (
-                      <span className="text-xs px-2 py-0.5 rounded-full bg-gray-500/20 text-gray-400">
+                      <span className="rounded-full bg-gray-500/20 px-2 py-0.5 text-xs text-gray-400">
                         acknowledged
                       </span>
                     )}
                   </div>
-                  <p className="text-sm text-gray-400 mt-1">{alert.message}</p>
-                  <div className="flex items-center gap-3 mt-2 text-xs text-gray-500">
+                  <p className="mt-1 text-sm text-gray-400">{alert.message}</p>
+                  <div className="mt-2 flex items-center gap-3 text-xs text-gray-500">
                     <span>Source: {alert.source}</span>
                     <span>{new Date(alert.timestamp).toLocaleString()}</span>
                   </div>
                 </div>
-                <div className="flex items-center gap-2 flex-shrink-0">
+                <div className="flex flex-shrink-0 items-center gap-2">
                   {!alert.acknowledged && alert.level !== 'resolved' && (
                     <button
                       onClick={() => acknowledge(alert.id)}
                       disabled={actionId === alert.id}
                       title="Acknowledge"
-                      className="p-1.5 rounded bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white transition-colors disabled:opacity-40"
+                      className="rounded bg-white/5 p-1.5 text-gray-400 transition-colors hover:bg-white/10 hover:text-white disabled:opacity-40"
                     >
                       {actionId === alert.id ? (
                         <Loader2 className="h-3.5 w-3.5 animate-spin" />
@@ -297,7 +309,7 @@ function AlertsContent() {
                     onClick={() => dismiss(alert.id)}
                     disabled={!!actionId}
                     title="Dismiss"
-                    className="p-1.5 rounded bg-white/5 hover:bg-red-500/20 text-gray-400 hover:text-red-400 transition-colors disabled:opacity-40"
+                    className="rounded bg-white/5 p-1.5 text-gray-400 transition-colors hover:bg-red-500/20 hover:text-red-400 disabled:opacity-40"
                   >
                     {actionId === alert.id ? (
                       <Loader2 className="h-3.5 w-3.5 animate-spin" />

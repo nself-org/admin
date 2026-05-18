@@ -14,14 +14,7 @@ export type WidgetType =
   | 'text'
   | 'embed'
 
-export type ChartType =
-  | 'line'
-  | 'bar'
-  | 'pie'
-  | 'donut'
-  | 'area'
-  | 'scatter'
-  | 'heatmap'
+export type ChartType = 'line' | 'bar' | 'pie' | 'donut' | 'area' | 'scatter' | 'heatmap'
 
 export type DataSourceType = 'api' | 'database' | 'static' | 'formula'
 

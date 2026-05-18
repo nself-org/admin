@@ -12,10 +12,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     const { key, value, remove = false, environment } = await req.json()
 
     if (!key) {
-      return NextResponse.json(
-        { error: 'Environment variable key is required' },
-        { status: 400 },
-      )
+      return NextResponse.json({ error: 'Environment variable key is required' }, { status: 400 })
     }
 
     // Get project path using centralized resolution
@@ -86,10 +83,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     })
   } catch (error) {
     console.error('Error updating environment variable:', error)
-    return NextResponse.json(
-      { error: 'Failed to update environment variable' },
-      { status: 500 },
-    )
+    return NextResponse.json({ error: 'Failed to update environment variable' }, { status: 500 })
   }
 }
 
@@ -102,10 +96,7 @@ export async function PUT(req: NextRequest): Promise<NextResponse> {
     const { variables, environment } = await req.json()
 
     if (!variables || !Array.isArray(variables)) {
-      return NextResponse.json(
-        { error: 'Variables array is required' },
-        { status: 400 },
-      )
+      return NextResponse.json({ error: 'Variables array is required' }, { status: 400 })
     }
 
     // Get project path using centralized resolution
@@ -161,9 +152,6 @@ export async function PUT(req: NextRequest): Promise<NextResponse> {
     })
   } catch (error) {
     console.error('Error updating environment variables:', error)
-    return NextResponse.json(
-      { error: 'Failed to update environment variables' },
-      { status: 500 },
-    )
+    return NextResponse.json({ error: 'Failed to update environment variables' }, { status: 500 })
   }
 }

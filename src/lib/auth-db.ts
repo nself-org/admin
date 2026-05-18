@@ -24,23 +24,19 @@ const MIN_PASSWORD_LENGTH_DEV = 8 // SECURITY: Increased from 3 to 8
 // Password validation for production
 export function validatePassword(
   password: string,
-  isDev: boolean = false,
+  isDev: boolean = false
 ): { valid: boolean; errors: string[] } {
   const errors: string[] = []
 
   if (isDev) {
     // Relaxed validation for development
     if (password.length < MIN_PASSWORD_LENGTH_DEV) {
-      errors.push(
-        `Password must be at least ${MIN_PASSWORD_LENGTH_DEV} characters`,
-      )
+      errors.push(`Password must be at least ${MIN_PASSWORD_LENGTH_DEV} characters`)
     }
   } else {
     // Strict validation for production
     if (password.length < MIN_PASSWORD_LENGTH_PROD) {
-      errors.push(
-        `Password must be at least ${MIN_PASSWORD_LENGTH_PROD} characters`,
-      )
+      errors.push(`Password must be at least ${MIN_PASSWORD_LENGTH_PROD} characters`)
     }
 
     if (!/[A-Z]/.test(password)) {
@@ -72,10 +68,7 @@ export async function hashPassword(password: string): Promise<string> {
 }
 
 // Verify password
-export async function verifyPassword(
-  password: string,
-  hash: string,
-): Promise<boolean> {
+export async function verifyPassword(password: string, hash: string): Promise<boolean> {
   return bcrypt.compare(password, hash)
 }
 
@@ -87,7 +80,7 @@ export async function checkPasswordExists(): Promise<boolean> {
 // Set up admin password (first time setup)
 export async function setupAdminPassword(
   password: string,
-  isDev: boolean = false,
+  isDev: boolean = false
 ): Promise<{ success: boolean; error?: string }> {
   try {
     // Check if password already exists
@@ -134,15 +127,10 @@ export async function verifyAdminLogin(password: string): Promise<boolean> {
 export async function createLoginSession(
   ip?: string,
   userAgent?: string,
-  rememberMe: boolean = false,
+  rememberMe: boolean = false
 ): Promise<string> {
   const token = await createSession('admin', ip, userAgent, rememberMe)
-  await addAuditLog(
-    'login_success',
-    { ip, userAgent, rememberMe },
-    true,
-    'admin',
-  )
+  await addAuditLog('login_success', { ip, userAgent, rememberMe }, true, 'admin')
   return token
 }
 
@@ -174,9 +162,7 @@ export async function getUserSessions(userId: string): Promise<SessionItem[]> {
 }
 
 // Refresh session (extend expiration)
-export async function refreshSession(
-  token: string,
-): Promise<SessionItem | null> {
+export async function refreshSession(token: string): Promise<SessionItem | null> {
   return dbRefreshSession(token)
 }
 
@@ -189,7 +175,7 @@ export async function revokeUserSession(token: string): Promise<void> {
 // Revoke all sessions except current
 export async function revokeAllOtherSessions(
   userId: string,
-  currentToken: string,
+  currentToken: string
 ): Promise<number> {
   return revokeAllSessionsExcept(userId, currentToken)
 }
@@ -198,16 +184,12 @@ export async function revokeAllOtherSessions(
  * Rotate session token on privilege escalation (e.g., setup completion).
  * Returns new SessionItem with fresh token + CSRF, or null if session not found.
  */
-export async function rotateAdminSession(
-  oldToken: string,
-): Promise<SessionItem | null> {
+export async function rotateAdminSession(oldToken: string): Promise<SessionItem | null> {
   return rotateSession(oldToken)
 }
 
 // Get session info (including CSRF token)
-export async function getSessionInfo(
-  token: string,
-): Promise<SessionItem | null> {
+export async function getSessionInfo(token: string): Promise<SessionItem | null> {
   return getSession(token)
 }
 

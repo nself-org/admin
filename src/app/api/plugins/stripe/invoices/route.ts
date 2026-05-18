@@ -18,8 +18,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       return NextResponse.json({
         success: true,
         pluginInstalled: false,
-        message:
-          'Stripe plugin not installed. Run: nself plugin install stripe',
+        message: 'Stripe plugin not installed. Run: nself plugin install stripe',
         invoices: [],
         total: 0,
       })
@@ -42,11 +41,10 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         `_or: [
           { customer_email: { _ilike: "%${search}%" } },
           { id: { _ilike: "%${search}%" } }
-        ]`,
+        ]`
       )
     }
-    const whereClause =
-      conditions.length > 0 ? `where: { ${conditions.join(', ')} }` : ''
+    const whereClause = conditions.length > 0 ? `where: { ${conditions.join(', ')} }` : ''
 
     const result = await hasuraQuery<{
       invoices: Array<{
@@ -98,31 +96,24 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       })
     }
 
-    const invoices: StripeInvoice[] = (result.data?.invoices || []).map(
-      (inv) => ({
-        id: inv.id,
-        customerId: inv.customer_id,
-        customerEmail: inv.customer_email,
-        subscriptionId: inv.subscription_id || undefined,
-        status: inv.status as StripeInvoice['status'],
-        amount: inv.amount,
-        currency: inv.currency,
-        dueDate: inv.due_date || undefined,
-        paidAt: inv.paid_at || undefined,
-        created: inv.created_at,
-        hostedInvoiceUrl: inv.hosted_invoice_url || undefined,
-        invoicePdf: inv.invoice_pdf || undefined,
-      }),
-    )
+    const invoices: StripeInvoice[] = (result.data?.invoices || []).map((inv) => ({
+      id: inv.id,
+      customerId: inv.customer_id,
+      customerEmail: inv.customer_email,
+      subscriptionId: inv.subscription_id || undefined,
+      status: inv.status as StripeInvoice['status'],
+      amount: inv.amount,
+      currency: inv.currency,
+      dueDate: inv.due_date || undefined,
+      paidAt: inv.paid_at || undefined,
+      created: inv.created_at,
+      hostedInvoiceUrl: inv.hosted_invoice_url || undefined,
+      invoicePdf: inv.invoice_pdf || undefined,
+    }))
 
     const total = result.data?.total?.aggregate?.count || 0
 
-    logger.api(
-      'GET',
-      '/api/plugins/stripe/invoices',
-      200,
-      Date.now() - startTime,
-    )
+    logger.api('GET', '/api/plugins/stripe/invoices', 200, Date.now() - startTime)
 
     return NextResponse.json({
       success: true,
@@ -143,7 +134,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to fetch invoices',
         details: err.message || 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

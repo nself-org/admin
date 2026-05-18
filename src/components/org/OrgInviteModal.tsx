@@ -11,12 +11,7 @@ interface OrgInviteModalProps {
   isLoading?: boolean
 }
 
-export function OrgInviteModal({
-  isOpen,
-  onClose,
-  onInvite,
-  isLoading,
-}: OrgInviteModalProps) {
+export function OrgInviteModal({ isOpen, onClose, onInvite, isLoading }: OrgInviteModalProps) {
   const [email, setEmail] = useState('')
   const [role, setRole] = useState<OrgRole>('member')
   const [message, setMessage] = useState('')
@@ -62,9 +57,7 @@ export function OrgInviteModal({
         <form onSubmit={handleSubmit} className="p-6">
           <div className="space-y-4">
             <div>
-              <label className="mb-2 block text-sm text-zinc-400">
-                Email Address *
-              </label>
+              <label className="mb-2 block text-sm text-zinc-400">Email Address *</label>
               <div className="relative">
                 <Mail className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-zinc-500" />
                 <input

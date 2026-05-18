@@ -397,9 +397,7 @@ Check for updates programmatically:
 
 ```javascript
 // Check for updates
-const response = await fetch(
-  'https://api.github.com/repos/nself-org/admin/releases/latest',
-)
+const response = await fetch('https://api.github.com/repos/nself-org/admin/releases/latest')
 const latest = await response.json()
 const currentVersion = '0.0.8'
 

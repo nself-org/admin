@@ -23,7 +23,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     if (!alertId && !alertName && !matchers) {
       return NextResponse.json(
         { success: false, error: 'Alert identifier or matchers required' },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -39,23 +39,15 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     if (comment) args.push(`--comment=${comment}`)
     if (createdBy) args.push(`--created-by=${createdBy}`)
 
-    const { stdout } = await execAsync(
-      `${nselfPath} ${args.join(' ')} --json`,
-      {
-        cwd: projectPath,
-        env: { ...process.env, PATH: getEnhancedPath() },
-        timeout: 60000,
-      },
-    )
+    const { stdout } = await execAsync(`${nselfPath} ${args.join(' ')} --json`, {
+      cwd: projectPath,
+      env: { ...process.env, PATH: getEnhancedPath() },
+      timeout: 60000,
+    })
 
     const result = JSON.parse(stdout)
 
-    logger.api(
-      'POST',
-      '/api/monitor/alerts/silence',
-      200,
-      Date.now() - startTime,
-    )
+    logger.api('POST', '/api/monitor/alerts/silence', 200, Date.now() - startTime)
     return NextResponse.json({
       success: true,
       message: result.message ?? 'Alert silenced',
@@ -71,7 +63,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to silence alert',
         details: err.message,
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

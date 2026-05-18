@@ -42,23 +42,17 @@ export function LayerTabs({
         const next = layers[(idx + 1) % layers.length]
         onChange(next)
         // Focus next tab button
-        const buttons =
-          tabListRef.current?.querySelectorAll<HTMLButtonElement>(
-            '[role="tab"]',
-          )
+        const buttons = tabListRef.current?.querySelectorAll<HTMLButtonElement>('[role="tab"]')
         if (buttons) buttons[(idx + 1) % layers.length].focus()
       } else if (e.key === 'ArrowLeft') {
         e.preventDefault()
         const prev = layers[(idx - 1 + layers.length) % layers.length]
         onChange(prev)
-        const buttons =
-          tabListRef.current?.querySelectorAll<HTMLButtonElement>(
-            '[role="tab"]',
-          )
+        const buttons = tabListRef.current?.querySelectorAll<HTMLButtonElement>('[role="tab"]')
         if (buttons) buttons[(idx - 1 + layers.length) % layers.length].focus()
       }
     },
-    [onChange],
+    [onChange]
   )
 
   return (

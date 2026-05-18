@@ -16,11 +16,7 @@ const execFileAsync = promisify(execFile)
  * Runs a command and pipes `stdinData` to its stdin.
  * Used for `secret-tool store` which reads the password from stdin.
  */
-function spawnWithStdin(
-  cmd: string,
-  args: string[],
-  stdinData: string,
-): Promise<void> {
+function spawnWithStdin(cmd: string, args: string[], stdinData: string): Promise<void> {
   return new Promise((resolve, reject) => {
     const proc = spawn(cmd, args)
     let stderr = ''
@@ -32,9 +28,7 @@ function spawnWithStdin(
     proc.on('error', (err) => reject(err))
     proc.on('close', (code) => {
       if (code !== 0) {
-        reject(
-          new Error(`${cmd} exited with code ${code ?? 'null'}: ${stderr}`),
-        )
+        reject(new Error(`${cmd} exited with code ${code ?? 'null'}: ${stderr}`))
       } else {
         resolve()
       }
@@ -98,12 +92,10 @@ async function storeInKeychain(token: AuthToken): Promise<void> {
         'account',
         KEYCHAIN_ACCOUNT,
       ],
-      encoded,
+      encoded
     )
   } else {
-    throw new Error(
-      `Keychain storage not supported on this platform: ${process.platform}`,
-    )
+    throw new Error(`Keychain storage not supported on this platform: ${process.platform}`)
   }
 }
 
@@ -116,7 +108,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     if (!body?.refreshToken) {
       return NextResponse.json(
         { success: false, error: 'Request body must include refreshToken' },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -134,7 +126,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           error: 'Network error contacting nself.org',
           details: err instanceof Error ? err.message : String(err),
         },
-        { status: 502 },
+        { status: 502 }
       )
     }
 
@@ -146,7 +138,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           error: `nself.org refresh returned ${refreshResponse.status}`,
           details: text,
         },
-        { status: refreshResponse.status },
+        { status: refreshResponse.status }
       )
     }
 
@@ -163,7 +155,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         error: 'Token refresh failed',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

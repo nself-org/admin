@@ -25,14 +25,11 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     const projectPath = getProjectPath()
     const nselfPath = await findNselfPath()
 
-    const { stdout, stderr } = await execAsync(
-      `${nselfPath} plugin list --json`,
-      {
-        cwd: projectPath,
-        env: { ...process.env, PATH: getEnhancedPath() },
-        timeout: 30000,
-      },
-    )
+    const { stdout, stderr } = await execAsync(`${nselfPath} plugin list --json`, {
+      cwd: projectPath,
+      env: { ...process.env, PATH: getEnhancedPath() },
+      timeout: 30000,
+    })
 
     if (stderr && !stdout) {
       logger.warn('Plugin list returned stderr', { stderr })
@@ -64,7 +61,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to list plugins',
         details: err.message || 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -82,7 +79,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     if (!name || typeof name !== 'string') {
       return NextResponse.json(
         { success: false, error: 'Plugin name is required' },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -90,7 +87,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     if (!/^[a-zA-Z0-9_-]+$/.test(name)) {
       return NextResponse.json(
         { success: false, error: 'Invalid plugin name format' },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -99,10 +96,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       version !== undefined &&
       (typeof version !== 'string' || !/^[a-zA-Z0-9._-]+$/.test(version))
     ) {
-      return NextResponse.json(
-        { success: false, error: 'Invalid version format' },
-        { status: 400 },
-      )
+      return NextResponse.json({ success: false, error: 'Invalid version format' }, { status: 400 })
     }
 
     const projectPath = getProjectPath()
@@ -139,7 +133,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         details: err.message || 'Unknown error',
         output: err.stdout || err.stderr,
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

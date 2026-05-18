@@ -10,10 +10,7 @@ interface RouteParams {
  * POST /api/workflows/[id]/execute
  * Execute a workflow
  */
-export async function POST(
-  request: NextRequest,
-  { params }: RouteParams,
-): Promise<NextResponse> {
+export async function POST(request: NextRequest, { params }: RouteParams): Promise<NextResponse> {
   const authError = await requireAuth(request)
   if (authError) return authError
 
@@ -33,16 +30,15 @@ export async function POST(
         success: true,
         execution,
       },
-      { status: 201 },
+      { status: 201 }
     )
   } catch (error) {
     return NextResponse.json(
       {
         success: false,
-        error:
-          error instanceof Error ? error.message : 'Failed to execute workflow',
+        error: error instanceof Error ? error.message : 'Failed to execute workflow',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

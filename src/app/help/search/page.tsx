@@ -37,7 +37,7 @@ function HelpSearchContent() {
     setIsLoading(true)
     try {
       const response = await fetch(
-        `/api/help/search?q=${encodeURIComponent(query)}&category=${selectedCategory === 'all' ? '' : selectedCategory}`,
+        `/api/help/search?q=${encodeURIComponent(query)}&category=${selectedCategory === 'all' ? '' : selectedCategory}`
       )
       const data = await response.json()
       if (data.success) {
@@ -133,9 +133,7 @@ function HelpSearchContent() {
           {/* Suggestions */}
           {suggestions.length > 0 && (
             <Card className="p-4">
-              <p className="mb-2 text-sm text-zinc-600 dark:text-zinc-400">
-                Did you mean:
-              </p>
+              <p className="mb-2 text-sm text-zinc-600 dark:text-zinc-400">Did you mean:</p>
               <div className="flex flex-wrap gap-2">
                 {suggestions.map((suggestion, i) => (
                   <button
@@ -170,8 +168,7 @@ function HelpSearchContent() {
           {!isLoading && results.length > 0 && (
             <div>
               <h2 className="mb-4 text-lg font-semibold">
-                {results.length} result{results.length !== 1 ? 's' : ''} for "
-                {searchQuery}"
+                {results.length} result{results.length !== 1 ? 's' : ''} for "{searchQuery}"
               </h2>
               <div className="space-y-4">
                 {results.map((article) => (

@@ -99,9 +99,7 @@ function ScaleContent() {
   }
 
   const totalReplicas = services.reduce((acc, s) => acc + s.current.replicas, 0)
-  const autoScalingEnabled = services.filter(
-    (s) => s.autoScaling?.enabled,
-  ).length
+  const autoScalingEnabled = services.filter((s) => s.autoScaling?.enabled).length
   const hasRecommendations = services.filter((s) => s.recommended).length
 
   if (uiState === 'loading') {
@@ -220,12 +218,8 @@ function ScaleContent() {
                 <Server className="h-5 w-5 text-sky-500 dark:text-sky-400" />
               </div>
               <div>
-                <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                  Services
-                </p>
-                <p className="text-xl font-bold text-zinc-900 dark:text-white">
-                  {services.length}
-                </p>
+                <p className="text-sm text-zinc-500 dark:text-zinc-400">Services</p>
+                <p className="text-xl font-bold text-zinc-900 dark:text-white">{services.length}</p>
               </div>
             </div>
           </div>
@@ -235,12 +229,8 @@ function ScaleContent() {
                 <Layers className="h-5 w-5 text-blue-600 dark:text-blue-400" />
               </div>
               <div>
-                <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                  Total Replicas
-                </p>
-                <p className="text-xl font-bold text-zinc-900 dark:text-white">
-                  {totalReplicas}
-                </p>
+                <p className="text-sm text-zinc-500 dark:text-zinc-400">Total Replicas</p>
+                <p className="text-xl font-bold text-zinc-900 dark:text-white">{totalReplicas}</p>
               </div>
             </div>
           </div>
@@ -250,9 +240,7 @@ function ScaleContent() {
                 <TrendingUp className="h-5 w-5 text-green-600 dark:text-green-400" />
               </div>
               <div>
-                <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                  Autoscaling Enabled
-                </p>
+                <p className="text-sm text-zinc-500 dark:text-zinc-400">Autoscaling Enabled</p>
                 <p className="text-xl font-bold text-zinc-900 dark:text-white">
                   {autoScalingEnabled}/{services.length}
                 </p>
@@ -265,9 +253,7 @@ function ScaleContent() {
                 <AlertTriangle className="h-5 w-5 text-yellow-600 dark:text-yellow-400" />
               </div>
               <div>
-                <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                  Recommendations
-                </p>
+                <p className="text-sm text-zinc-500 dark:text-zinc-400">Recommendations</p>
                 <p className="text-xl font-bold text-zinc-900 dark:text-white">
                   {hasRecommendations}
                 </p>
@@ -300,9 +286,7 @@ function ScaleContent() {
                     <div className="rounded-lg bg-zinc-50 p-3 dark:bg-zinc-900">
                       <div className="mb-1 flex items-center gap-2">
                         <Layers className="h-4 w-4 text-zinc-500" />
-                        <span className="text-sm text-zinc-500 dark:text-zinc-400">
-                          Replicas
-                        </span>
+                        <span className="text-sm text-zinc-500 dark:text-zinc-400">Replicas</span>
                       </div>
                       <p className="text-xl font-bold text-zinc-900 dark:text-white">
                         {service.current.replicas}
@@ -311,9 +295,7 @@ function ScaleContent() {
                     <div className="rounded-lg bg-zinc-50 p-3 dark:bg-zinc-900">
                       <div className="mb-1 flex items-center gap-2">
                         <Cpu className="h-4 w-4 text-zinc-500" />
-                        <span className="text-sm text-zinc-500 dark:text-zinc-400">
-                          CPU
-                        </span>
+                        <span className="text-sm text-zinc-500 dark:text-zinc-400">CPU</span>
                       </div>
                       <p className="text-xl font-bold text-zinc-900 dark:text-white">
                         {service.current.cpu}
@@ -322,9 +304,7 @@ function ScaleContent() {
                     <div className="rounded-lg bg-zinc-50 p-3 dark:bg-zinc-900">
                       <div className="mb-1 flex items-center gap-2">
                         <MemoryStick className="h-4 w-4 text-zinc-500" />
-                        <span className="text-sm text-zinc-500 dark:text-zinc-400">
-                          Memory
-                        </span>
+                        <span className="text-sm text-zinc-500 dark:text-zinc-400">Memory</span>
                       </div>
                       <p className="text-xl font-bold text-zinc-900 dark:text-white">
                         {service.current.memory}
@@ -333,9 +313,7 @@ function ScaleContent() {
                     <div className="rounded-lg bg-zinc-50 p-3 dark:bg-zinc-900">
                       <div className="mb-1 flex items-center gap-2">
                         <Activity className="h-4 w-4 text-zinc-500" />
-                        <span className="text-sm text-zinc-500 dark:text-zinc-400">
-                          Target CPU
-                        </span>
+                        <span className="text-sm text-zinc-500 dark:text-zinc-400">Target CPU</span>
                       </div>
                       <p className="text-xl font-bold text-zinc-900 dark:text-white">
                         {service.autoScaling?.targetCPU || '-'}%
@@ -353,8 +331,7 @@ function ScaleContent() {
                       </div>
                       <p className="mt-2 text-sm text-yellow-600 dark:text-yellow-400">
                         Suggested: {service.recommended.replicas} replicas,{' '}
-                        {service.recommended.cpu} CPU,{' '}
-                        {service.recommended.memory} Memory
+                        {service.recommended.cpu} CPU, {service.recommended.memory} Memory
                       </p>
                     </div>
                   )}
@@ -365,14 +342,9 @@ function ScaleContent() {
                   <div className="flex items-center gap-2">
                     <button
                       onClick={() =>
-                        scaleService(
-                          service.service,
-                          Math.max(0, service.current.replicas - 1),
-                        )
+                        scaleService(service.service, Math.max(0, service.current.replicas - 1))
                       }
-                      disabled={
-                        actionLoading !== null || service.current.replicas <= 0
-                      }
+                      disabled={actionLoading !== null || service.current.replicas <= 0}
                       className="rounded-lg border border-zinc-300 p-2 text-zinc-700 transition-colors hover:bg-zinc-50 disabled:opacity-50 dark:border-zinc-600 dark:text-zinc-300 dark:hover:bg-zinc-800"
                     >
                       <Minus className="h-4 w-4" />
@@ -381,12 +353,7 @@ function ScaleContent() {
                       {service.current.replicas}
                     </span>
                     <button
-                      onClick={() =>
-                        scaleService(
-                          service.service,
-                          service.current.replicas + 1,
-                        )
-                      }
+                      onClick={() => scaleService(service.service, service.current.replicas + 1)}
                       disabled={actionLoading !== null}
                       className="rounded-lg border border-zinc-300 p-2 text-zinc-700 transition-colors hover:bg-zinc-50 disabled:opacity-50 dark:border-zinc-600 dark:text-zinc-300 dark:hover:bg-zinc-800"
                     >
@@ -397,10 +364,7 @@ function ScaleContent() {
                   {/* Autoscaling Toggle */}
                   <button
                     onClick={() =>
-                      toggleAutoScaling(
-                        service.service,
-                        !service.autoScaling?.enabled,
-                      )
+                      toggleAutoScaling(service.service, !service.autoScaling?.enabled)
                     }
                     disabled={actionLoading !== null}
                     className={`rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
@@ -424,22 +388,17 @@ function ScaleContent() {
           </h3>
           <div className="space-y-2 font-mono text-sm">
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-sky-500">nself scale</span> - Show scaling
-              status
+              <span className="text-sky-500">nself scale</span> - Show scaling status
             </p>
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-sky-500">
-                nself scale hasura --replicas=3
-              </span>{' '}
-              - Scale service
+              <span className="text-sky-500">nself scale hasura --replicas=3</span> - Scale service
             </p>
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-sky-500">nself scale auto --enable</span> -
-              Enable autoscaling
+              <span className="text-sky-500">nself scale auto --enable</span> - Enable autoscaling
             </p>
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-sky-500">nself scale recommend</span> - Get
-              scaling recommendations
+              <span className="text-sky-500">nself scale recommend</span> - Get scaling
+              recommendations
             </p>
           </div>
         </div>

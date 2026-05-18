@@ -59,11 +59,7 @@ function ProductCard({ product }: { product: ShopifyProduct }) {
       {/* Product Image */}
       <div className="flex aspect-square items-center justify-center bg-zinc-900/50">
         {product.images.length > 0 ? (
-          <img
-            src={product.images[0]}
-            alt={product.title}
-            className="h-full w-full object-cover"
-          />
+          <img src={product.images[0]} alt={product.title} className="h-full w-full object-cover" />
         ) : (
           <ImageIcon className="h-16 w-16 text-zinc-700" />
         )}
@@ -106,9 +102,7 @@ function ProductCard({ product }: { product: ShopifyProduct }) {
               </span>
             ))}
             {product.tags.length > 3 && (
-              <span className="text-xs text-zinc-500">
-                +{product.tags.length - 3}
-              </span>
+              <span className="text-xs text-zinc-500">+{product.tags.length - 3}</span>
             )}
           </div>
         )}
@@ -117,26 +111,17 @@ function ProductCard({ product }: { product: ShopifyProduct }) {
         <div className="mb-3 flex items-center justify-between">
           <div>
             <span className="text-lg font-bold text-white">
-              {formatCurrency(
-                product.priceRange.min,
-                product.priceRange.currency,
-              )}
+              {formatCurrency(product.priceRange.min, product.priceRange.currency)}
             </span>
             {product.priceRange.max !== product.priceRange.min && (
               <span className="text-sm text-zinc-500">
                 {' '}
-                -{' '}
-                {formatCurrency(
-                  product.priceRange.max,
-                  product.priceRange.currency,
-                )}
+                - {formatCurrency(product.priceRange.max, product.priceRange.currency)}
               </span>
             )}
           </div>
           <div className="text-right">
-            <p className="text-sm text-zinc-400">
-              {product.totalInventory} in stock
-            </p>
+            <p className="text-sm text-zinc-400">{product.totalInventory} in stock</p>
             <p className="text-xs text-zinc-500">
               {product.variantCount} variant
               {product.variantCount !== 1 ? 's' : ''}
@@ -175,7 +160,7 @@ function ShopifyProductsContent() {
   }>(
     `/api/plugins/shopify/products?page=${page}&pageSize=${pageSize}&search=${searchQuery}&status=${statusFilter}`,
     fetcher,
-    { refreshInterval: 60000 },
+    { refreshInterval: 60000 }
   )
 
   const handleSync = async () => {
@@ -205,10 +190,7 @@ function ShopifyProductsContent() {
         </div>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
-            <div
-              key={i}
-              className="h-80 animate-pulse rounded-lg bg-zinc-800/50"
-            />
+            <div key={i} className="h-80 animate-pulse rounded-lg bg-zinc-800/50" />
           ))}
         </div>
       </div>
@@ -253,9 +235,7 @@ function ShopifyProductsContent() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-semibold text-white">Products</h1>
-          <p className="text-sm text-zinc-400">
-            {total.toLocaleString()} total products
-          </p>
+          <p className="text-sm text-zinc-400">{total.toLocaleString()} total products</p>
         </div>
         <button
           onClick={handleSync}
@@ -318,8 +298,7 @@ function ShopifyProductsContent() {
       {totalPages > 1 && (
         <div className="flex items-center justify-between">
           <p className="text-sm text-zinc-400">
-            Showing {(page - 1) * pageSize + 1} to{' '}
-            {Math.min(page * pageSize, total)} of {total}
+            Showing {(page - 1) * pageSize + 1} to {Math.min(page * pageSize, total)} of {total}
           </p>
           <div className="flex items-center gap-2">
             <button

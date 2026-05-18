@@ -63,8 +63,7 @@ export function ProgressBar({
     danger: 'bg-red-600 dark:bg-red-400',
   }
 
-  const displayLabel =
-    label || (showPercentage ? `${Math.round(percentage)}%` : '')
+  const displayLabel = label || (showPercentage ? `${Math.round(percentage)}%` : '')
 
   return (
     <div className={cn('space-y-2', className)} {...props}>
@@ -83,14 +82,14 @@ export function ProgressBar({
       <div
         className={cn(
           'w-full overflow-hidden rounded-full bg-zinc-200 dark:bg-zinc-800',
-          sizeClasses[size],
+          sizeClasses[size]
         )}
       >
         <div
           className={cn(
             'h-full rounded-full transition-all duration-300',
             variantClasses[variant],
-            animated && 'animate-pulse',
+            animated && 'animate-pulse'
           )}
           style={{ width: `${percentage}%` }}
           role="progressbar"

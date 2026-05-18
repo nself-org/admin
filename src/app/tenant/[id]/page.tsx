@@ -21,8 +21,7 @@ import { useState } from 'react'
 export default function TenantDetailPage() {
   const params = useParams()
   const tenantId = params.id as string
-  const { tenant, stats, isLoading, error, suspend, activate } =
-    useTenant(tenantId)
+  const { tenant, stats, isLoading, error, suspend, activate } = useTenant(tenantId)
   const [showActions, setShowActions] = useState(false)
 
   if (isLoading) return <DashboardSkeleton />

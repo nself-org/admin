@@ -57,9 +57,7 @@ const CORE_COMMANDS = [
  * Each line looks like:
  *   "  cmdname     Short description text"
  */
-function parseTopLevelCommands(
-  helpOutput: string,
-): Array<{ name: string; description: string }> {
+function parseTopLevelCommands(helpOutput: string): Array<{ name: string; description: string }> {
   const commands: Array<{ name: string; description: string }> = []
   let inCommandsSection = false
 
@@ -132,7 +130,7 @@ function parseFlags(helpOutput: string): FlagDef[] {
     // e.g.: "      --force        Force the operation"
     const match =
       /^ {1,6}(?:-(\w),\s+)?--([a-z][a-z0-9-]*)(?:\s+(string|bool|int|stringSlice|stringArray|duration|count))?\s{2,}(.+)$/.exec(
-        line,
+        line
       )
     if (!match) continue
 
@@ -145,17 +143,14 @@ function parseFlags(helpOutput: string): FlagDef[] {
     let type: FlagDef['type'] = 'bool'
     if (rawType === 'string' || rawType === 'duration') type = 'string'
     else if (rawType === 'int' || rawType === 'count') type = 'int'
-    else if (rawType === 'stringSlice' || rawType === 'stringArray')
-      type = 'stringSlice'
+    else if (rawType === 'stringSlice' || rawType === 'stringArray') type = 'stringSlice'
 
     // Extract default value
     const defaultMatch = /\(default\s+"?([^")\s]+)"?\)/.exec(rest)
     const defaultValue = defaultMatch ? defaultMatch[1] : undefined
 
     // Strip default annotation from description
-    const description = rest
-      .replace(/\s*\(default\s+"?[^")]*"?\)\s*$/, '')
-      .trim()
+    const description = rest.replace(/\s*\(default\s+"?[^")]*"?\)\s*$/, '').trim()
 
     const required = /\(required\)/.test(rest)
 
@@ -185,11 +180,7 @@ async function buildRegistry(): Promise<CommandDef[]> {
   // Fetch top-level help
   let topLevelOutput = ''
   try {
-    const { stdout, stderr } = await execFileAsync(
-      nselfBin,
-      ['--help'],
-      execOpts,
-    )
+    const { stdout, stderr } = await execFileAsync(nselfBin, ['--help'], execOpts)
     topLevelOutput = stdout || stderr
   } catch (err) {
     // Cobra writes help to stderr when exit code != 0; capture it
@@ -218,11 +209,10 @@ async function buildRegistry(): Promise<CommandDef[]> {
     let subcommands: CommandDef[] = []
 
     try {
-      const { stdout, stderr } = await execFileAsync(
-        nselfBin,
-        [name, '--help'],
-        { env, timeout: 10_000 },
-      ).catch((e: { stdout?: string; stderr?: string }) => ({
+      const { stdout, stderr } = await execFileAsync(nselfBin, [name, '--help'], {
+        env,
+        timeout: 10_000,
+      }).catch((e: { stdout?: string; stderr?: string }) => ({
         stdout: e.stdout || '',
         stderr: e.stderr || '',
       }))
@@ -288,7 +278,7 @@ export async function GET(): Promise<NextResponse> {
         error: 'Failed to build command registry',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

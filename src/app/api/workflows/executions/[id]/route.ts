@@ -9,20 +9,14 @@ interface RouteParams {
  * GET /api/workflows/executions/[id]
  * Get a single workflow execution by ID
  */
-export async function GET(
-  _request: NextRequest,
-  { params }: RouteParams,
-): Promise<NextResponse> {
+export async function GET(_request: NextRequest, { params }: RouteParams): Promise<NextResponse> {
   try {
     const { id } = await params
 
     const execution = await workflowsApi.getWorkflowExecution(id)
 
     if (!execution) {
-      return NextResponse.json(
-        { success: false, error: 'Execution not found' },
-        { status: 404 },
-      )
+      return NextResponse.json({ success: false, error: 'Execution not found' }, { status: 404 })
     }
 
     return NextResponse.json({
@@ -33,10 +27,9 @@ export async function GET(
     return NextResponse.json(
       {
         success: false,
-        error:
-          error instanceof Error ? error.message : 'Failed to get execution',
+        error: error instanceof Error ? error.message : 'Failed to get execution',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

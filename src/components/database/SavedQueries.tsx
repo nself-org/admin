@@ -14,15 +14,7 @@ import {
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { ScrollArea } from '@/components/ui/scroll-area'
-import {
-  Download,
-  Edit2,
-  FolderOpen,
-  Search,
-  Star,
-  Trash2,
-  Upload,
-} from 'lucide-react'
+import { Download, Edit2, FolderOpen, Search, Star, Trash2, Upload } from 'lucide-react'
 import { useState } from 'react'
 import { toast } from 'sonner'
 
@@ -65,7 +57,7 @@ export function SavedQueries({
   const filteredQueries = queries.filter(
     (q) =>
       q.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      q.query.toLowerCase().includes(searchTerm.toLowerCase()),
+      q.query.toLowerCase().includes(searchTerm.toLowerCase())
   )
 
   const starredQueries = filteredQueries.filter((q) => q.starred)
@@ -135,12 +127,7 @@ export function SavedQueries({
                   <Upload className="mr-2 h-4 w-4" />
                   Import
                 </Button>
-                <input
-                  type="file"
-                  accept=".json"
-                  className="hidden"
-                  onChange={handleImport}
-                />
+                <input type="file" accept=".json" className="hidden" onChange={handleImport} />
               </label>
             </div>
           </div>
@@ -199,9 +186,7 @@ export function SavedQueries({
 
               {filteredQueries.length === 0 && (
                 <div className="py-8 text-center text-zinc-500">
-                  {searchTerm
-                    ? 'No matching queries found'
-                    : 'No saved queries'}
+                  {searchTerm ? 'No matching queries found' : 'No saved queries'}
                 </div>
               )}
             </div>
@@ -218,11 +203,7 @@ export function SavedQueries({
           <div className="space-y-4 py-4">
             <div className="space-y-2">
               <Label htmlFor="name">Query Name</Label>
-              <Input
-                id="name"
-                value={editName}
-                onChange={(e) => setEditName(e.target.value)}
-              />
+              <Input id="name" value={editName} onChange={(e) => setEditName(e.target.value)} />
             </div>
             <div className="space-y-2">
               <Label htmlFor="folder">Folder (optional)</Label>
@@ -286,9 +267,7 @@ function QueryCard({
               onToggleStar(query.id)
             }}
           >
-            <Star
-              className={`h-4 w-4 ${query.starred ? 'fill-yellow-500 text-yellow-500' : ''}`}
-            />
+            <Star className={`h-4 w-4 ${query.starred ? 'fill-yellow-500 text-yellow-500' : ''}`} />
           </Button>
           <Button
             variant="ghost"

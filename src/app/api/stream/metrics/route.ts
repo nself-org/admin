@@ -18,8 +18,8 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       // Send initial connection message
       controller.enqueue(
         encoder.encode(
-          `event: connected\ndata: ${JSON.stringify({ type: 'connected', timestamp: new Date().toISOString() })}\n\n`,
-        ),
+          `event: connected\ndata: ${JSON.stringify({ type: 'connected', timestamp: new Date().toISOString() })}\n\n`
+        )
       )
 
       // Heartbeat to keep connection alive
@@ -27,8 +27,8 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         try {
           controller.enqueue(
             encoder.encode(
-              `event: heartbeat\ndata: ${JSON.stringify({ type: 'heartbeat', timestamp: new Date().toISOString() })}\n\n`,
-            ),
+              `event: heartbeat\ndata: ${JSON.stringify({ type: 'heartbeat', timestamp: new Date().toISOString() })}\n\n`
+            )
           )
         } catch {
           // Connection closed
@@ -40,12 +40,11 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       const dataInterval = setInterval(async () => {
         try {
           // Fetch latest metrics
-          const [dockerRes, systemRes, containersRes] =
-            await Promise.allSettled([
-              fetch('http://localhost:3001/api/docker/stats'),
-              fetch('http://localhost:3001/api/system/metrics'),
-              fetch('http://localhost:3001/api/docker/containers'),
-            ])
+          const [dockerRes, systemRes, containersRes] = await Promise.allSettled([
+            fetch('http://localhost:3001/api/docker/stats'),
+            fetch('http://localhost:3001/api/system/metrics'),
+            fetch('http://localhost:3001/api/docker/containers'),
+          ])
 
           const updates: any = {}
 
@@ -77,8 +76,8 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
           if (Object.keys(updates).length > 0) {
             controller.enqueue(
               encoder.encode(
-                `event: update\ndata: ${JSON.stringify({ type: 'update', data: updates, timestamp: new Date().toISOString() })}\n\n`,
-              ),
+                `event: update\ndata: ${JSON.stringify({ type: 'update', data: updates, timestamp: new Date().toISOString() })}\n\n`
+              )
             )
           }
         } catch {

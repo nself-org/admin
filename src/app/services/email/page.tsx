@@ -3,13 +3,7 @@
 import { PageShell } from '@/components/PageShell'
 import { ServiceDetailSkeleton } from '@/components/skeletons'
 import { Button } from '@/components/ui/button'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { ScrollArea } from '@/components/ui/scroll-area'
@@ -46,8 +40,7 @@ function parseTemplatesFromOutput(output: string): EmailTemplate[] {
   try {
     const parsed = JSON.parse(output)
     if (Array.isArray(parsed)) return parsed
-    if (parsed.templates && Array.isArray(parsed.templates))
-      return parsed.templates
+    if (parsed.templates && Array.isArray(parsed.templates)) return parsed.templates
   } catch {
     // Not JSON, return empty
   }
@@ -121,9 +114,7 @@ function EmailContent() {
       const data = await res.json()
 
       if (!data.success) {
-        setError(
-          data.details || data.error || 'Failed to get email configuration',
-        )
+        setError(data.details || data.error || 'Failed to get email configuration')
         setOutput(data.details || data.error || '')
         return
       }
@@ -148,7 +139,7 @@ function EmailContent() {
     const templateArg = sendTemplate ? ` --template=${sendTemplate}` : ''
     const fromArg = sendFrom ? ` --from=${sendFrom}` : ''
     setLastCommand(
-      `nself service email send --to=${sendTo} --subject="${sendSubject}"${fromArg}${templateArg}`,
+      `nself service email send --to=${sendTo} --subject="${sendSubject}"${fromArg}${templateArg}`
     )
 
     try {
@@ -238,12 +229,8 @@ function EmailContent() {
                   <Mail className="h-5 w-5 text-blue-600 dark:text-blue-400" />
                 </div>
                 <div>
-                  <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                    Provider
-                  </p>
-                  <p className="text-lg font-semibold text-zinc-900 dark:text-white">
-                    Mailpit
-                  </p>
+                  <p className="text-sm text-zinc-500 dark:text-zinc-400">Provider</p>
+                  <p className="text-lg font-semibold text-zinc-900 dark:text-white">Mailpit</p>
                 </div>
               </div>
             </CardContent>
@@ -255,9 +242,7 @@ function EmailContent() {
                   <FileText className="h-5 w-5 text-green-600 dark:text-green-400" />
                 </div>
                 <div>
-                  <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                    Templates
-                  </p>
+                  <p className="text-sm text-zinc-500 dark:text-zinc-400">Templates</p>
                   <p className="text-lg font-semibold text-zinc-900 dark:text-white">
                     {templates.length}
                   </p>
@@ -272,18 +257,12 @@ function EmailContent() {
                   <TestTube className="h-5 w-5 text-amber-600 dark:text-amber-400" />
                 </div>
                 <div>
-                  <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                    Delivery
-                  </p>
+                  <p className="text-sm text-zinc-500 dark:text-zinc-400">Delivery</p>
                   <p className="text-lg font-semibold text-zinc-900 dark:text-white">
                     {testResult === 'pass' ? (
-                      <span className="text-green-600 dark:text-green-400">
-                        Healthy
-                      </span>
+                      <span className="text-green-600 dark:text-green-400">Healthy</span>
                     ) : testResult === 'fail' ? (
-                      <span className="text-red-600 dark:text-red-400">
-                        Failed
-                      </span>
+                      <span className="text-red-600 dark:text-red-400">Failed</span>
                     ) : (
                       'Untested'
                     )}
@@ -296,12 +275,7 @@ function EmailContent() {
 
         {/* Quick Actions */}
         <div className="flex flex-wrap gap-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={fetchTemplates}
-            disabled={loading}
-          >
+          <Button variant="outline" size="sm" onClick={fetchTemplates} disabled={loading}>
             {loading ? (
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
             ) : (
@@ -309,21 +283,11 @@ function EmailContent() {
             )}
             Load Templates
           </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={fetchConfig}
-            disabled={loading}
-          >
+          <Button variant="outline" size="sm" onClick={fetchConfig} disabled={loading}>
             <Settings className="mr-2 h-4 w-4" />
             View Config
           </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handleTest}
-            disabled={testLoading}
-          >
+          <Button variant="outline" size="sm" onClick={handleTest} disabled={testLoading}>
             {testLoading ? (
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
             ) : (
@@ -426,12 +390,7 @@ function EmailContent() {
                   Available email templates for sending formatted emails.
                 </CardDescription>
               </div>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={fetchTemplates}
-                disabled={loading}
-              >
+              <Button variant="outline" size="sm" onClick={fetchTemplates} disabled={loading}>
                 {loading ? (
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 ) : (
@@ -453,9 +412,7 @@ function EmailContent() {
                 {templates.map((template) => (
                   <Card key={template.name}>
                     <CardHeader className="pb-3">
-                      <CardTitle className="text-sm font-medium">
-                        {template.name}
-                      </CardTitle>
+                      <CardTitle className="text-sm font-medium">{template.name}</CardTitle>
                       {template.description && (
                         <CardDescription className="text-xs">
                           {template.description}
@@ -500,8 +457,7 @@ function EmailContent() {
               Test Email Delivery
             </CardTitle>
             <CardDescription>
-              Send a test email to verify the email service is working
-              correctly.
+              Send a test email to verify the email service is working correctly.
             </CardDescription>
           </CardHeader>
           <CardContent>

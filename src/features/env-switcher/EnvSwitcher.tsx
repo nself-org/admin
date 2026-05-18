@@ -1,12 +1,6 @@
 'use client'
 
-import {
-  AlertCircle,
-  CheckCircle2,
-  ChevronDown,
-  Loader2,
-  Server,
-} from 'lucide-react'
+import { AlertCircle, CheckCircle2, ChevronDown, Loader2, Server } from 'lucide-react'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import type { EnvSwitcherState, EnvSwitchResult, EnvTarget } from './types'
 
@@ -26,15 +20,13 @@ const ENV_BADGE: Record<EnvTarget, EnvBadgeConfig> = {
     label: 'Local',
     badgeClass: 'bg-blue-500/15 text-blue-400 border-blue-500/30',
     dotClass: 'bg-blue-400',
-    buttonClass:
-      'border-blue-500/40 hover:border-blue-400 hover:bg-blue-500/10',
+    buttonClass: 'border-blue-500/40 hover:border-blue-400 hover:bg-blue-500/10',
   },
   staging: {
     label: 'Staging',
     badgeClass: 'bg-amber-500/15 text-amber-400 border-amber-500/30',
     dotClass: 'bg-amber-400',
-    buttonClass:
-      'border-amber-500/40 hover:border-amber-400 hover:bg-amber-500/10',
+    buttonClass: 'border-amber-500/40 hover:border-amber-400 hover:bg-amber-500/10',
   },
   prod: {
     label: 'Production',
@@ -84,18 +76,13 @@ function ProdConfirmModal({ onConfirm, onCancel }: ProdConfirmModalProps) {
             <Server className="h-5 w-5 text-red-400" />
           </div>
           <div>
-            <h2
-              id="prod-confirm-title"
-              className="text-nself-text text-base font-semibold"
-            >
+            <h2 id="prod-confirm-title" className="text-nself-text text-base font-semibold">
               Switch to Production?
             </h2>
             <p className="text-nself-text-muted mt-1 text-sm">
               All subsequent commands will run against the{' '}
-              <span className="font-semibold text-red-400">
-                production environment
-              </span>
-              . This affects live infrastructure.
+              <span className="font-semibold text-red-400">production environment</span>. This
+              affects live infrastructure.
             </p>
           </div>
         </div>
@@ -103,11 +90,8 @@ function ProdConfirmModal({ onConfirm, onCancel }: ProdConfirmModalProps) {
         {/* Warning banner */}
         <div className="mb-4 rounded-lg border border-red-500/30 bg-red-500/10 px-4 py-3">
           <p className="text-xs font-medium text-red-300">
-            Type{' '}
-            <span className="rounded bg-red-500/20 px-1 font-mono">
-              confirm
-            </span>{' '}
-            to proceed. This cannot be undone automatically.
+            Type <span className="rounded bg-red-500/20 px-1 font-mono">confirm</span> to proceed.
+            This cannot be undone automatically.
           </p>
         </div>
 
@@ -208,10 +192,7 @@ export function EnvSwitcher({ onSwitch }: EnvSwitcherProps) {
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(e.target as Node)
-      ) {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
         setDropdownOpen(false)
       }
     }
@@ -285,8 +266,7 @@ export function EnvSwitcher({ onSwitch }: EnvSwitcherProps) {
         setLastResult(result)
         onSwitch?.(result)
       } else {
-        const errMsg =
-          data.details ?? data.error ?? `Failed to switch to ${target}`
+        const errMsg = data.details ?? data.error ?? `Failed to switch to ${target}`
         setState((prev) => ({
           ...prev,
           switching: false,
@@ -300,8 +280,7 @@ export function EnvSwitcher({ onSwitch }: EnvSwitcherProps) {
         })
       }
     } catch (err) {
-      const errMsg =
-        err instanceof Error ? err.message : `Failed to switch to ${target}`
+      const errMsg = err instanceof Error ? err.message : `Failed to switch to ${target}`
       setState((prev) => ({ ...prev, switching: false, error: errMsg }))
     }
   }
@@ -316,10 +295,7 @@ export function EnvSwitcher({ onSwitch }: EnvSwitcherProps) {
     <>
       {/* Production confirmation modal */}
       {pendingTarget === 'prod' && (
-        <ProdConfirmModal
-          onConfirm={handleModalConfirm}
-          onCancel={handleModalCancel}
-        />
+        <ProdConfirmModal onConfirm={handleModalConfirm} onCancel={handleModalCancel} />
       )}
 
       <div className="glass-card p-4">
@@ -328,9 +304,7 @@ export function EnvSwitcher({ onSwitch }: EnvSwitcherProps) {
           <span className="text-nself-text-muted text-xs font-semibold tracking-widest uppercase">
             Active Environment
           </span>
-          {state.switching && (
-            <Loader2 className="text-nself-primary h-4 w-4 animate-spin" />
-          )}
+          {state.switching && <Loader2 className="text-nself-primary h-4 w-4 animate-spin" />}
         </div>
 
         {/* Current env badge + switcher */}
@@ -385,9 +359,7 @@ export function EnvSwitcher({ onSwitch }: EnvSwitcherProps) {
                           : 'text-nself-text hover:bg-nself-primary/10 cursor-pointer'
                       }`}
                     >
-                      <span
-                        className={`h-2 w-2 flex-shrink-0 rounded-full ${cfg.dotClass}`}
-                      />
+                      <span className={`h-2 w-2 flex-shrink-0 rounded-full ${cfg.dotClass}`} />
                       <span>{cfg.label}</span>
                       {isActive && (
                         <CheckCircle2 className="text-nself-primary ml-auto h-3.5 w-3.5" />

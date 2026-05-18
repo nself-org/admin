@@ -46,10 +46,7 @@ const fetcher = async <T,>(url: string): Promise<T> => {
 }
 
 // Badge variant mapping for status values
-const statusVariants: Record<
-  string,
-  'default' | 'secondary' | 'destructive' | 'outline'
-> = {
+const statusVariants: Record<string, 'default' | 'secondary' | 'destructive' | 'outline'> = {
   active: 'default',
   running: 'default',
   success: 'default',
@@ -75,17 +72,11 @@ export function TableWidget({ widget, className }: TableWidgetProps) {
     data: tableData,
     error,
     isLoading,
-  } = useSWR<TableData>(
-    hasValidDataSource ? dataSource.endpoint : null,
-    fetcher,
-    {
-      refreshInterval: dataSource?.refreshInterval
-        ? dataSource.refreshInterval * 1000
-        : 0,
-      revalidateOnFocus: false,
-      dedupingInterval: 5000,
-    },
-  )
+  } = useSWR<TableData>(hasValidDataSource ? dataSource.endpoint : null, fetcher, {
+    refreshInterval: dataSource?.refreshInterval ? dataSource.refreshInterval * 1000 : 0,
+    revalidateOnFocus: false,
+    dedupingInterval: 5000,
+  })
 
   // Sort rows
   const sortedRows = useMemo(() => {
@@ -118,10 +109,7 @@ export function TableWidget({ widget, className }: TableWidgetProps) {
   }
 
   // Format cell value based on column type
-  const formatCellValue = (
-    value: unknown,
-    type: string | undefined,
-  ): React.ReactNode => {
+  const formatCellValue = (value: unknown, type: string | undefined): React.ReactNode => {
     if (value === null || value === undefined) {
       return <span className="text-zinc-400">-</span>
     }
@@ -129,16 +117,10 @@ export function TableWidget({ widget, className }: TableWidgetProps) {
     switch (type) {
       case 'badge': {
         const strValue = String(value)
-        return (
-          <Badge variant={statusVariants[strValue] || 'secondary'}>
-            {strValue}
-          </Badge>
-        )
+        return <Badge variant={statusVariants[strValue] || 'secondary'}>{strValue}</Badge>
       }
       case 'number':
-        return typeof value === 'number'
-          ? value.toLocaleString()
-          : String(value)
+        return typeof value === 'number' ? value.toLocaleString() : String(value)
       case 'date':
         try {
           return new Date(String(value)).toLocaleDateString()
@@ -168,17 +150,13 @@ export function TableWidget({ widget, className }: TableWidgetProps) {
 
   if (error) {
     return (
-      <div
-        className={cn('flex h-full items-center justify-center p-4', className)}
-      >
+      <div className={cn('flex h-full items-center justify-center p-4', className)}>
         <div className="text-center">
           <p className="text-sm text-red-500">
             {error instanceof Error ? error.message : 'Failed to load data'}
           </p>
           {!hasValidDataSource && (
-            <p className="mt-1 text-xs text-zinc-400">
-              Invalid data source configuration
-            </p>
+            <p className="mt-1 text-xs text-zinc-400">Invalid data source configuration</p>
           )}
         </div>
       </div>
@@ -187,9 +165,7 @@ export function TableWidget({ widget, className }: TableWidgetProps) {
 
   if (!tableData || !tableData.rows || tableData.rows.length === 0) {
     return (
-      <div
-        className={cn('flex h-full items-center justify-center p-4', className)}
-      >
+      <div className={cn('flex h-full items-center justify-center p-4', className)}>
         <div className="text-center">
           <p className="text-sm text-zinc-500">No data available</p>
         </div>
@@ -207,7 +183,7 @@ export function TableWidget({ widget, className }: TableWidgetProps) {
                 key={column.key}
                 className={cn(
                   column.sortable &&
-                    'cursor-pointer select-none hover:bg-zinc-50 dark:hover:bg-zinc-900',
+                    'cursor-pointer select-none hover:bg-zinc-50 dark:hover:bg-zinc-900'
                 )}
                 onClick={() => column.sortable && handleSort(column.key)}
               >
@@ -219,7 +195,7 @@ export function TableWidget({ widget, className }: TableWidgetProps) {
                         'h-3.5 w-3.5',
                         sortColumn === column.key
                           ? 'text-zinc-900 dark:text-zinc-100'
-                          : 'text-zinc-400',
+                          : 'text-zinc-400'
                       )}
                     />
                   )}

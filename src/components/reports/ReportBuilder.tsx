@@ -76,13 +76,8 @@ const operatorLabels: Record<FilterOperator, string> = {
   between: 'between',
 }
 
-export function ReportBuilder({
-  templateId,
-  onGenerated,
-  onCancel,
-}: ReportBuilderProps) {
-  const { template, isLoading: isLoadingTemplate } =
-    useReportTemplate(templateId)
+export function ReportBuilder({ templateId, onGenerated, onCancel }: ReportBuilderProps) {
+  const { template, isLoading: isLoadingTemplate } = useReportTemplate(templateId)
   const { generate, isGenerating, error } = useGenerateReport()
 
   // Form state
@@ -155,11 +150,9 @@ export function ReportBuilder({
   const handleFilterChange = (
     index: number,
     field: keyof ReportFilter,
-    value: string | FilterOperator,
+    value: string | FilterOperator
   ) => {
-    setFilters((prev) =>
-      prev.map((f, i) => (i === index ? { ...f, [field]: value } : f)),
-    )
+    setFilters((prev) => prev.map((f, i) => (i === index ? { ...f, [field]: value } : f)))
   }
 
   const handleAddSort = () => {
@@ -180,14 +173,8 @@ export function ReportBuilder({
     setSorts((prev) => prev.filter((_, i) => i !== index))
   }
 
-  const handleSortChange = (
-    index: number,
-    field: keyof ReportSort,
-    value: string,
-  ) => {
-    setSorts((prev) =>
-      prev.map((s, i) => (i === index ? { ...s, [field]: value } : s)),
-    )
+  const handleSortChange = (index: number, field: keyof ReportSort, value: string) => {
+    setSorts((prev) => prev.map((s, i) => (i === index ? { ...s, [field]: value } : s)))
   }
 
   const handleGenerate = async () => {
@@ -202,9 +189,7 @@ export function ReportBuilder({
         columns: Array.from(selectedColumns),
       },
       email: emailReport,
-      recipients: emailReport
-        ? recipients.split(',').map((e) => e.trim())
-        : undefined,
+      recipients: emailReport ? recipients.split(',').map((e) => e.trim()) : undefined,
     }
 
     const result = await generate(input)
@@ -234,8 +219,7 @@ export function ReportBuilder({
         <AlertCircle className="h-4 w-4" />
         <AlertTitle>Template not found</AlertTitle>
         <AlertDescription>
-          The report template could not be found. Please select a different
-          template.
+          The report template could not be found. Please select a different template.
         </AlertDescription>
       </Alert>
     )
@@ -266,18 +250,9 @@ export function ReportBuilder({
       <Card className="border-zinc-700/50 bg-zinc-800/50">
         <CardHeader className="pb-3">
           <div className="flex items-center justify-between">
-            <CardTitle className="text-base text-white">
-              Select Columns
-            </CardTitle>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={handleSelectAllColumns}
-              className="text-xs"
-            >
-              {selectedColumns.size === template.columns.length
-                ? 'Deselect All'
-                : 'Select All'}
+            <CardTitle className="text-base text-white">Select Columns</CardTitle>
+            <Button variant="ghost" size="sm" onClick={handleSelectAllColumns} className="text-xs">
+              {selectedColumns.size === template.columns.length ? 'Deselect All' : 'Select All'}
             </Button>
           </div>
         </CardHeader>
@@ -293,18 +268,14 @@ export function ReportBuilder({
                   onCheckedChange={() => handleColumnToggle(column.id)}
                 />
                 <div className="flex-1 overflow-hidden">
-                  <span className="block truncate text-sm text-white">
-                    {column.name}
-                  </span>
+                  <span className="block truncate text-sm text-white">{column.name}</span>
                   <span className="text-xs text-zinc-500">{column.type}</span>
                 </div>
               </label>
             ))}
           </div>
           {selectedColumns.size === 0 && (
-            <p className="mt-3 text-sm text-amber-500">
-              Please select at least one column
-            </p>
+            <p className="mt-3 text-sm text-amber-500">Please select at least one column</p>
           )}
         </CardContent>
       </Card>
@@ -333,9 +304,7 @@ export function ReportBuilder({
                   <div className="w-40">
                     <Select
                       value={filter.field}
-                      onValueChange={(value) =>
-                        handleFilterChange(index, 'field', value)
-                      }
+                      onValueChange={(value) => handleFilterChange(index, 'field', value)}
                     >
                       <SelectTrigger>
                         <SelectValue />
@@ -355,11 +324,7 @@ export function ReportBuilder({
                     <Select
                       value={filter.operator}
                       onValueChange={(value) =>
-                        handleFilterChange(
-                          index,
-                          'operator',
-                          value as FilterOperator,
-                        )
+                        handleFilterChange(index, 'operator', value as FilterOperator)
                       }
                     >
                       <SelectTrigger>
@@ -377,9 +342,7 @@ export function ReportBuilder({
                   <div className="flex-1">
                     <Input
                       value={String(filter.value)}
-                      onChange={(e) =>
-                        handleFilterChange(index, 'value', e.target.value)
-                      }
+                      onChange={(e) => handleFilterChange(index, 'value', e.target.value)}
                       placeholder={`Enter value for ${getColumnByField(filter.field)?.name || filter.field}`}
                       className="border-zinc-700 bg-zinc-900"
                     />
@@ -427,9 +390,7 @@ export function ReportBuilder({
                   <div className="w-48">
                     <Select
                       value={sort.field}
-                      onValueChange={(value) =>
-                        handleSortChange(index, 'field', value)
-                      }
+                      onValueChange={(value) => handleSortChange(index, 'field', value)}
                     >
                       <SelectTrigger>
                         <SelectValue />
@@ -454,9 +415,7 @@ export function ReportBuilder({
                     <ArrowUp className="h-3 w-3" /> Ascending
                   </Button>
                   <Button
-                    variant={
-                      sort.direction === 'desc' ? 'secondary' : 'outline'
-                    }
+                    variant={sort.direction === 'desc' ? 'secondary' : 'outline'}
                     size="sm"
                     onClick={() => handleSortChange(index, 'direction', 'desc')}
                     className="gap-1"
@@ -500,16 +459,10 @@ export function ReportBuilder({
                     : 'border-zinc-700 hover:border-zinc-600'
                 }`}
               >
-                <div
-                  className={
-                    format === fmt ? 'text-emerald-400' : 'text-zinc-400'
-                  }
-                >
+                <div className={format === fmt ? 'text-emerald-400' : 'text-zinc-400'}>
                   {formatIcons[fmt]}
                 </div>
-                <span
-                  className={`text-xs ${format === fmt ? 'text-white' : 'text-zinc-400'}`}
-                >
+                <span className={`text-xs ${format === fmt ? 'text-white' : 'text-zinc-400'}`}>
                   {fmt.toUpperCase()}
                 </span>
               </button>
@@ -521,9 +474,7 @@ export function ReportBuilder({
       {/* Email Options */}
       <Card className="border-zinc-700/50 bg-zinc-800/50">
         <CardHeader className="pb-3">
-          <CardTitle className="text-base text-white">
-            Email Delivery (Optional)
-          </CardTitle>
+          <CardTitle className="text-base text-white">Email Delivery (Optional)</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <label className="flex cursor-pointer items-center gap-2">
@@ -531,9 +482,7 @@ export function ReportBuilder({
               checked={emailReport}
               onCheckedChange={(checked) => setEmailReport(checked === true)}
             />
-            <span className="text-sm text-white">
-              Send report via email when ready
-            </span>
+            <span className="text-sm text-white">Send report via email when ready</span>
           </label>
           {emailReport && (
             <div className="space-y-2">

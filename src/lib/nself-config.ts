@@ -56,11 +56,9 @@ function isNselfConfig(value: unknown): value is NselfConfig {
     if (!isProjectEntry(entry)) return false
   }
 
-  if (obj.activeProject !== undefined && typeof obj.activeProject !== 'string')
-    return false
+  if (obj.activeProject !== undefined && typeof obj.activeProject !== 'string') return false
 
-  if (obj.activeEnv !== undefined && typeof obj.activeEnv !== 'string')
-    return false
+  if (obj.activeEnv !== undefined && typeof obj.activeEnv !== 'string') return false
 
   return true
 }
@@ -75,8 +73,7 @@ function isProjectEntry(value: unknown): value is ProjectEntry {
 
   if (typeof obj.name !== 'string' || typeof obj.path !== 'string') return false
 
-  if (obj.hasuraUrl !== undefined && typeof obj.hasuraUrl !== 'string')
-    return false
+  if (obj.hasuraUrl !== undefined && typeof obj.hasuraUrl !== 'string') return false
 
   if (obj.authUrl !== undefined && typeof obj.authUrl !== 'string') return false
 

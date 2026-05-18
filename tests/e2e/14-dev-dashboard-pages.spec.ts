@@ -36,7 +36,10 @@ test.describe('/dev/graphql', () => {
   test('success state: shows GraphQL editor UI', async ({ page }) => {
     await page.goto('/dev/graphql')
     await page.waitForLoadState('networkidle')
-    const hasEditor = await page.getByText(/GraphQL Explorer|query|Run/i).first().isVisible()
+    const hasEditor = await page
+      .getByText(/GraphQL Explorer|query|Run/i)
+      .first()
+      .isVisible()
     expect(hasEditor).toBe(true)
   })
 
@@ -53,7 +56,13 @@ test.describe('/dev/graphql', () => {
     await page.context().clearCookies()
     await page.goto('/dev/graphql')
     await page.waitForLoadState('networkidle')
-    expect(page.url().includes('/login') || await page.getByText(/login|sign in/i).first().isVisible()).toBe(true)
+    expect(
+      page.url().includes('/login') ||
+        (await page
+          .getByText(/login|sign in/i)
+          .first()
+          .isVisible())
+    ).toBe(true)
   })
 })
 
@@ -79,7 +88,10 @@ test.describe('/dev/terminal', () => {
   test('shows allowed command warning or run button', async ({ page }) => {
     await page.goto('/dev/terminal')
     await page.waitForLoadState('networkidle')
-    const hasBtn = await page.getByRole('button', { name: /run|execute/i }).first().isVisible()
+    const hasBtn = await page
+      .getByRole('button', { name: /run|execute/i })
+      .first()
+      .isVisible()
     const hasInput = await page.getByPlaceholder(/nself/i).first().isVisible()
     expect(hasBtn || hasInput).toBe(true)
   })
@@ -88,7 +100,13 @@ test.describe('/dev/terminal', () => {
     await page.context().clearCookies()
     await page.goto('/dev/terminal')
     await page.waitForLoadState('networkidle')
-    expect(page.url().includes('/login') || await page.getByText(/login|sign in/i).first().isVisible()).toBe(true)
+    expect(
+      page.url().includes('/login') ||
+        (await page
+          .getByText(/login|sign in/i)
+          .first()
+          .isVisible())
+    ).toBe(true)
   })
 })
 
@@ -114,7 +132,10 @@ test.describe('/dev/api', () => {
     })
     await page.goto('/dev/api')
     await page.waitForLoadState('networkidle')
-    const hasService = await page.getByText(/Hasura|Auth|API Explorer/i).first().isVisible()
+    const hasService = await page
+      .getByText(/Hasura|Auth|API Explorer/i)
+      .first()
+      .isVisible()
     expect(hasService).toBe(true)
   })
 
@@ -142,7 +163,13 @@ test.describe('/dev/api', () => {
     await page.context().clearCookies()
     await page.goto('/dev/api')
     await page.waitForLoadState('networkidle')
-    expect(page.url().includes('/login') || await page.getByText(/login|sign in/i).first().isVisible()).toBe(true)
+    expect(
+      page.url().includes('/login') ||
+        (await page
+          .getByText(/login|sign in/i)
+          .first()
+          .isVisible())
+    ).toBe(true)
   })
 })
 
@@ -161,12 +188,19 @@ test.describe('/dev/scaffold', () => {
   test('success state: shows table select and template controls', async ({ page }) => {
     await mockApiEndpoint(page, '**/api/graphql/hasura**', {
       tables: [
-        { name: 'np_users', schema: 'public', columns: [{ name: 'id', type: 'uuid', nullable: false }] },
+        {
+          name: 'np_users',
+          schema: 'public',
+          columns: [{ name: 'id', type: 'uuid', nullable: false }],
+        },
       ],
     })
     await page.goto('/dev/scaffold')
     await page.waitForLoadState('networkidle')
-    const hasUI = await page.getByText(/scaffold|template|table|generate/i).first().isVisible()
+    const hasUI = await page
+      .getByText(/scaffold|template|table|generate/i)
+      .first()
+      .isVisible()
     expect(hasUI).toBe(true)
   })
 
@@ -198,7 +232,10 @@ test.describe('/dev/seed', () => {
     })
     await page.goto('/dev/seed')
     await page.waitForLoadState('networkidle')
-    const hasStatus = await page.getByText(/seeded|run seed|np_users/i).first().isVisible()
+    const hasStatus = await page
+      .getByText(/seeded|run seed|np_users/i)
+      .first()
+      .isVisible()
     expect(hasStatus).toBe(true)
   })
 
@@ -226,7 +263,13 @@ test.describe('/dev/seed', () => {
     await page.context().clearCookies()
     await page.goto('/dev/seed')
     await page.waitForLoadState('networkidle')
-    expect(page.url().includes('/login') || await page.getByText(/login|sign in/i).first().isVisible()).toBe(true)
+    expect(
+      page.url().includes('/login') ||
+        (await page
+          .getByText(/login|sign in/i)
+          .first()
+          .isVisible())
+    ).toBe(true)
   })
 })
 
@@ -257,7 +300,10 @@ test.describe('/dev/types', () => {
     })
     await page.goto('/dev/types')
     await page.waitForLoadState('networkidle')
-    const hasTable = await page.getByText(/np_users|TypeScript|types/i).first().isVisible()
+    const hasTable = await page
+      .getByText(/np_users|TypeScript|types/i)
+      .first()
+      .isVisible()
     expect(hasTable).toBe(true)
   })
 
@@ -288,7 +334,10 @@ test.describe('/dev/webhooks', () => {
     })
     await page.goto('/dev/webhooks')
     await page.waitForLoadState('networkidle')
-    const hasForm = await page.getByText(/webhook|test|delivery/i).first().isVisible()
+    const hasForm = await page
+      .getByText(/webhook|test|delivery/i)
+      .first()
+      .isVisible()
     expect(hasForm).toBe(true)
   })
 
@@ -315,7 +364,10 @@ test.describe('/dev/testing', () => {
   test('success state: shows built-in test suites', async ({ page }) => {
     await page.goto('/dev/testing')
     await page.waitForLoadState('networkidle')
-    const hasSuites = await page.getByText(/stack smoke test|URL Reachability|health check|testing utilities/i).first().isVisible()
+    const hasSuites = await page
+      .getByText(/stack smoke test|URL Reachability|health check|testing utilities/i)
+      .first()
+      .isVisible()
     expect(hasSuites).toBe(true)
   })
 
@@ -332,7 +384,13 @@ test.describe('/dev/testing', () => {
     await page.context().clearCookies()
     await page.goto('/dev/testing')
     await page.waitForLoadState('networkidle')
-    expect(page.url().includes('/login') || await page.getByText(/login|sign in/i).first().isVisible()).toBe(true)
+    expect(
+      page.url().includes('/login') ||
+        (await page
+          .getByText(/login|sign in/i)
+          .first()
+          .isVisible())
+    ).toBe(true)
   })
 })
 
@@ -368,7 +426,10 @@ test.describe('/dashboard/alerts', () => {
     })
     await page.goto('/dashboard/alerts')
     await page.waitForLoadState('networkidle')
-    const hasAlert = await page.getByText(/High memory usage|alerts/i).first().isVisible()
+    const hasAlert = await page
+      .getByText(/High memory usage|alerts/i)
+      .first()
+      .isVisible()
     expect(hasAlert).toBe(true)
   })
 
@@ -380,8 +441,14 @@ test.describe('/dashboard/alerts', () => {
     })
     await page.goto('/dashboard/alerts')
     await page.waitForLoadState('networkidle')
-    const hasEmpty = await page.getByText(/no.*alert|all.*acknowledged/i).first().isVisible()
-    const hasFilter = await page.getByText(/filter|all/i).first().isVisible()
+    const hasEmpty = await page
+      .getByText(/no.*alert|all.*acknowledged/i)
+      .first()
+      .isVisible()
+    const hasFilter = await page
+      .getByText(/filter|all/i)
+      .first()
+      .isVisible()
     expect(hasEmpty || hasFilter).toBe(true)
   })
 
@@ -394,11 +461,18 @@ test.describe('/dashboard/alerts', () => {
 
   test('error state: shows error on 500', async ({ page }) => {
     await page.route('**/api/notifications', (route) =>
-      route.fulfill({ status: 500, contentType: 'application/json', body: JSON.stringify({ error: 'Internal error' }) }),
+      route.fulfill({
+        status: 500,
+        contentType: 'application/json',
+        body: JSON.stringify({ error: 'Internal error' }),
+      })
     )
     await page.goto('/dashboard/alerts')
     await page.waitForLoadState('networkidle')
-    const hasError = await page.getByText(/failed|error|retry/i).first().isVisible()
+    const hasError = await page
+      .getByText(/failed|error|retry/i)
+      .first()
+      .isVisible()
     expect(hasError).toBe(true)
   })
 
@@ -420,7 +494,13 @@ test.describe('/dashboard/alerts', () => {
     await page.context().clearCookies()
     await page.goto('/dashboard/alerts')
     await page.waitForLoadState('networkidle')
-    expect(page.url().includes('/login') || await page.getByText(/login|sign in/i).first().isVisible()).toBe(true)
+    expect(
+      page.url().includes('/login') ||
+        (await page
+          .getByText(/login|sign in/i)
+          .first()
+          .isVisible())
+    ).toBe(true)
   })
 })
 
@@ -447,21 +527,25 @@ test.describe('/dashboard/health', () => {
     })
     await page.goto('/dashboard/health')
     await page.waitForLoadState('networkidle')
-    const hasService = await page.getByText(/postgres|hasura|all systems healthy/i).first().isVisible()
+    const hasService = await page
+      .getByText(/postgres|hasura|all systems healthy/i)
+      .first()
+      .isVisible()
     expect(hasService).toBe(true)
   })
 
   test('degraded overall shows warning banner', async ({ page }) => {
     await mockApiEndpoint(page, '**/api/health**', {
       overall: 'degraded',
-      services: [
-        { name: 'redis', status: 'degraded', message: 'High latency', latencyMs: 350 },
-      ],
+      services: [{ name: 'redis', status: 'degraded', message: 'High latency', latencyMs: 350 }],
       checkedAt: new Date().toISOString(),
     })
     await page.goto('/dashboard/health')
     await page.waitForLoadState('networkidle')
-    const hasDegraded = await page.getByText(/degraded|experiencing issues/i).first().isVisible()
+    const hasDegraded = await page
+      .getByText(/degraded|experiencing issues/i)
+      .first()
+      .isVisible()
     expect(hasDegraded).toBe(true)
   })
 
@@ -476,7 +560,13 @@ test.describe('/dashboard/health', () => {
     await page.context().clearCookies()
     await page.goto('/dashboard/health')
     await page.waitForLoadState('networkidle')
-    expect(page.url().includes('/login') || await page.getByText(/login|sign in/i).first().isVisible()).toBe(true)
+    expect(
+      page.url().includes('/login') ||
+        (await page
+          .getByText(/login|sign in/i)
+          .first()
+          .isVisible())
+    ).toBe(true)
   })
 })
 
@@ -509,7 +599,10 @@ test.describe('/dashboard/logs', () => {
     })
     await page.goto('/dashboard/logs')
     await page.waitForLoadState('networkidle')
-    const hasLog = await page.getByText(/Server started|hasura|logs/i).first().isVisible()
+    const hasLog = await page
+      .getByText(/Server started|hasura|logs/i)
+      .first()
+      .isVisible()
     expect(hasLog).toBe(true)
   })
 
@@ -522,7 +615,10 @@ test.describe('/dashboard/logs', () => {
     })
     await page.goto('/dashboard/logs')
     await page.waitForLoadState('networkidle')
-    const hasEmpty = await page.getByText(/no log entries|filter/i).first().isVisible()
+    const hasEmpty = await page
+      .getByText(/no log entries|filter/i)
+      .first()
+      .isVisible()
     const hasSearch = await page.getByPlaceholder(/search messages/i).isVisible()
     expect(hasEmpty || hasSearch).toBe(true)
   })
@@ -536,7 +632,15 @@ test.describe('/dashboard/logs', () => {
 
   test('export button visible in success state', async ({ page }) => {
     await mockApiEndpoint(page, '**/api/logs**', {
-      entries: [{ id: 'l1', timestamp: new Date().toISOString(), level: 'info', service: 'hasura', message: 'ok' }],
+      entries: [
+        {
+          id: 'l1',
+          timestamp: new Date().toISOString(),
+          level: 'info',
+          service: 'hasura',
+          message: 'ok',
+        },
+      ],
       total: 1,
       hasMore: false,
       services: ['hasura'],
@@ -553,7 +657,13 @@ test.describe('/dashboard/logs', () => {
     await page.context().clearCookies()
     await page.goto('/dashboard/logs')
     await page.waitForLoadState('networkidle')
-    expect(page.url().includes('/login') || await page.getByText(/login|sign in/i).first().isVisible()).toBe(true)
+    expect(
+      page.url().includes('/login') ||
+        (await page
+          .getByText(/login|sign in/i)
+          .first()
+          .isVisible())
+    ).toBe(true)
   })
 })
 
@@ -583,7 +693,10 @@ test.describe('/dashboard/metrics', () => {
     })
     await page.goto('/dashboard/metrics')
     await page.waitForLoadState('networkidle')
-    const hasKpi = await page.getByText(/requests|latency|CPU|uptime|performance metrics/i).first().isVisible()
+    const hasKpi = await page
+      .getByText(/requests|latency|CPU|uptime|performance metrics/i)
+      .first()
+      .isVisible()
     expect(hasKpi).toBe(true)
   })
 
@@ -598,7 +711,13 @@ test.describe('/dashboard/metrics', () => {
     await page.context().clearCookies()
     await page.goto('/dashboard/metrics')
     await page.waitForLoadState('networkidle')
-    expect(page.url().includes('/login') || await page.getByText(/login|sign in/i).first().isVisible()).toBe(true)
+    expect(
+      page.url().includes('/login') ||
+        (await page
+          .getByText(/login|sign in/i)
+          .first()
+          .isVisible())
+    ).toBe(true)
   })
 })
 
@@ -618,15 +737,30 @@ test.describe('/dashboard/status', () => {
     await mockApiEndpoint(page, '**/api/monitor', {
       overall: 'operational',
       components: [
-        { id: 'pg', name: 'PostgreSQL', category: 'core', status: 'operational', responseTimeMs: 2 },
-        { id: 'hasura', name: 'Hasura GraphQL', category: 'core', status: 'operational', responseTimeMs: 8 },
+        {
+          id: 'pg',
+          name: 'PostgreSQL',
+          category: 'core',
+          status: 'operational',
+          responseTimeMs: 2,
+        },
+        {
+          id: 'hasura',
+          name: 'Hasura GraphQL',
+          category: 'core',
+          status: 'operational',
+          responseTimeMs: 8,
+        },
       ],
       uptime: { day: 100, week: 99.99, month: 99.97 },
       checkedAt: new Date().toISOString(),
     })
     await page.goto('/dashboard/status')
     await page.waitForLoadState('networkidle')
-    const hasBanner = await page.getByText(/all systems operational|PostgreSQL|operational/i).first().isVisible()
+    const hasBanner = await page
+      .getByText(/all systems operational|PostgreSQL|operational/i)
+      .first()
+      .isVisible()
     expect(hasBanner).toBe(true)
   })
 
@@ -634,14 +768,23 @@ test.describe('/dashboard/status', () => {
     await mockApiEndpoint(page, '**/api/monitor', {
       overall: 'degraded',
       components: [
-        { id: 'redis', name: 'Redis', category: 'optional', status: 'degraded', message: 'High latency' },
+        {
+          id: 'redis',
+          name: 'Redis',
+          category: 'optional',
+          status: 'degraded',
+          message: 'High latency',
+        },
       ],
       uptime: { day: 98.5, week: 99.1, month: 99.5 },
       checkedAt: new Date().toISOString(),
     })
     await page.goto('/dashboard/status')
     await page.waitForLoadState('networkidle')
-    const hasDeg = await page.getByText(/degraded|partial system/i).first().isVisible()
+    const hasDeg = await page
+      .getByText(/degraded|partial system/i)
+      .first()
+      .isVisible()
     expect(hasDeg).toBe(true)
   })
 
@@ -654,7 +797,10 @@ test.describe('/dashboard/status', () => {
     })
     await page.goto('/dashboard/status')
     await page.waitForLoadState('networkidle')
-    const hasUptime = await page.getByText(/uptime|100\.00/i).first().isVisible()
+    const hasUptime = await page
+      .getByText(/uptime|100\.00/i)
+      .first()
+      .isVisible()
     expect(hasUptime).toBe(true)
   })
 
@@ -667,11 +813,18 @@ test.describe('/dashboard/status', () => {
 
   test('error state: shows error on 500', async ({ page }) => {
     await page.route('**/api/monitor', (route) =>
-      route.fulfill({ status: 500, contentType: 'application/json', body: JSON.stringify({ error: 'Monitor unavailable' }) }),
+      route.fulfill({
+        status: 500,
+        contentType: 'application/json',
+        body: JSON.stringify({ error: 'Monitor unavailable' }),
+      })
     )
     await page.goto('/dashboard/status')
     await page.waitForLoadState('networkidle')
-    const hasError = await page.getByText(/failed|error|retry/i).first().isVisible()
+    const hasError = await page
+      .getByText(/failed|error|retry/i)
+      .first()
+      .isVisible()
     expect(hasError).toBe(true)
   })
 
@@ -679,6 +832,12 @@ test.describe('/dashboard/status', () => {
     await page.context().clearCookies()
     await page.goto('/dashboard/status')
     await page.waitForLoadState('networkidle')
-    expect(page.url().includes('/login') || await page.getByText(/login|sign in/i).first().isVisible()).toBe(true)
+    expect(
+      page.url().includes('/login') ||
+        (await page
+          .getByText(/login|sign in/i)
+          .first()
+          .isVisible())
+    ).toBe(true)
   })
 })

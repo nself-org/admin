@@ -33,9 +33,7 @@ const fetcher = async <T,>(url: string): Promise<T> => {
 }
 
 // Map our chart types to the Chart component types
-function mapChartType(
-  type: ChartType | undefined,
-): 'line' | 'bar' | 'area' | 'pie' | 'donut' {
+function mapChartType(type: ChartType | undefined): 'line' | 'bar' | 'area' | 'pie' | 'donut' {
   switch (type) {
     case 'line':
       return 'line'
@@ -69,23 +67,15 @@ export function ChartWidget({ widget, className }: ChartWidgetProps) {
     data: chartData,
     error,
     isLoading,
-  } = useSWR<ChartData>(
-    hasValidDataSource ? dataSource.endpoint : null,
-    fetcher,
-    {
-      refreshInterval: dataSource?.refreshInterval
-        ? dataSource.refreshInterval * 1000
-        : 0,
-      revalidateOnFocus: false,
-      dedupingInterval: 5000,
-    },
-  )
+  } = useSWR<ChartData>(hasValidDataSource ? dataSource.endpoint : null, fetcher, {
+    refreshInterval: dataSource?.refreshInterval ? dataSource.refreshInterval * 1000 : 0,
+    revalidateOnFocus: false,
+    dedupingInterval: 5000,
+  })
 
   if (isLoading) {
     return (
-      <div
-        className={cn('flex h-full items-center justify-center p-4', className)}
-      >
+      <div className={cn('flex h-full items-center justify-center p-4', className)}>
         <div className="h-full w-full animate-pulse rounded bg-zinc-100 dark:bg-zinc-800" />
       </div>
     )
@@ -93,17 +83,13 @@ export function ChartWidget({ widget, className }: ChartWidgetProps) {
 
   if (error) {
     return (
-      <div
-        className={cn('flex h-full items-center justify-center p-4', className)}
-      >
+      <div className={cn('flex h-full items-center justify-center p-4', className)}>
         <div className="text-center">
           <p className="text-sm text-red-500">
             {error instanceof Error ? error.message : 'Failed to load data'}
           </p>
           {!hasValidDataSource && (
-            <p className="mt-1 text-xs text-zinc-400">
-              Invalid data source configuration
-            </p>
+            <p className="mt-1 text-xs text-zinc-400">Invalid data source configuration</p>
           )}
         </div>
       </div>
@@ -112,9 +98,7 @@ export function ChartWidget({ widget, className }: ChartWidgetProps) {
 
   if (!chartData || !chartData.data || chartData.data.length === 0) {
     return (
-      <div
-        className={cn('flex h-full items-center justify-center p-4', className)}
-      >
+      <div className={cn('flex h-full items-center justify-center p-4', className)}>
         <div className="text-center">
           <p className="text-sm text-zinc-500">No data available</p>
         </div>
@@ -164,17 +148,9 @@ function ScatterPlaceholder({
   return (
     <div className="flex h-full flex-col">
       <div className="relative flex-1">
-        <svg
-          viewBox="0 0 100 100"
-          className="h-full w-full"
-          preserveAspectRatio="xMidYMid meet"
-        >
+        <svg viewBox="0 0 100 100" className="h-full w-full" preserveAspectRatio="xMidYMid meet">
           {/* Grid lines */}
-          <g
-            stroke="currentColor"
-            strokeWidth="0.2"
-            className="text-zinc-200 dark:text-zinc-700"
-          >
+          <g stroke="currentColor" strokeWidth="0.2" className="text-zinc-200 dark:text-zinc-700">
             {[20, 40, 60, 80].map((pos) => (
               <g key={pos}>
                 <line x1={pos} y1="0" x2={pos} y2="100" />
@@ -217,8 +193,7 @@ function ScatterPlaceholder({
         </svg>
       </div>
       <div className="mt-2 text-center text-xs text-zinc-400">
-        {type === 'scatter' ? 'Scatter Plot' : 'Heat Map'} - {data.length}{' '}
-        points
+        {type === 'scatter' ? 'Scatter Plot' : 'Heat Map'} - {data.length} points
       </div>
     </div>
   )

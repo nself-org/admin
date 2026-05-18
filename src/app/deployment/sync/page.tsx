@@ -67,11 +67,7 @@ function DeploymentSyncContent() {
   const [syncComplete, setSyncComplete] = useState(false)
 
   const handleToggleOption = (id: string) => {
-    setOptions(
-      options.map((opt) =>
-        opt.id === id ? { ...opt, enabled: !opt.enabled } : opt,
-      ),
-    )
+    setOptions(options.map((opt) => (opt.id === id ? { ...opt, enabled: !opt.enabled } : opt)))
   }
 
   const handlePreview = () => {
@@ -101,8 +97,7 @@ function DeploymentSyncContent() {
             Sync Environments
           </h1>
           <p className="mt-3 text-lg text-zinc-600 dark:text-zinc-400">
-            Synchronize code, database, files, and configuration between
-            environments
+            Synchronize code, database, files, and configuration between environments
           </p>
         </div>
 
@@ -161,8 +156,8 @@ function DeploymentSyncContent() {
                         Production Environment Selected
                       </p>
                       <p className="mt-1 text-sm text-yellow-700 dark:text-yellow-400">
-                        Syncing to/from production requires extra caution.
-                        Changes will affect live users.
+                        Syncing to/from production requires extra caution. Changes will affect live
+                        users.
                       </p>
                     </div>
                   </div>
@@ -238,9 +233,7 @@ function DeploymentSyncContent() {
                           <span className="font-medium text-zinc-900 dark:text-white">
                             {option.name}
                           </span>
-                          <span className="text-sm text-zinc-500">
-                            {option.changes} changes
-                          </span>
+                          <span className="text-sm text-zinc-500">{option.changes} changes</span>
                         </div>
 
                         <div className="space-y-2 rounded-lg bg-zinc-50 p-3 font-mono text-sm dark:bg-zinc-900">
@@ -315,8 +308,7 @@ function DeploymentSyncContent() {
               Sync Complete!
             </h2>
             <p className="mb-6 text-zinc-600 dark:text-zinc-400">
-              Successfully synchronized {totalChanges} changes from {sourceEnv}{' '}
-              to {targetEnv}
+              Successfully synchronized {totalChanges} changes from {sourceEnv} to {targetEnv}
             </p>
             <div className="flex justify-center gap-3">
               <button

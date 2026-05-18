@@ -14,14 +14,11 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     const projectPath = getProjectPath()
     const nselfPath = await findNselfPath()
 
-    const { stdout } = await execAsync(
-      `${nselfPath} scale auto status --json`,
-      {
-        cwd: projectPath,
-        env: { ...process.env, PATH: getEnhancedPath() },
-        timeout: 60000,
-      },
-    )
+    const { stdout } = await execAsync(`${nselfPath} scale auto status --json`, {
+      cwd: projectPath,
+      env: { ...process.env, PATH: getEnhancedPath() },
+      timeout: 60000,
+    })
 
     const result = JSON.parse(stdout)
 
@@ -41,7 +38,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to get autoscaling config',
         details: err.message,
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -70,7 +67,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     if (!service) {
       return NextResponse.json(
         { success: false, error: 'Service name is required' },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -80,19 +77,14 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     if (maxReplicas) args.push(`--max=${maxReplicas}`)
     if (targetCPU) args.push(`--target-cpu=${targetCPU}`)
     if (targetMemory) args.push(`--target-memory=${targetMemory}`)
-    if (scaleUpPolicy)
-      args.push(`--scale-up-policy=${JSON.stringify(scaleUpPolicy)}`)
-    if (scaleDownPolicy)
-      args.push(`--scale-down-policy=${JSON.stringify(scaleDownPolicy)}`)
+    if (scaleUpPolicy) args.push(`--scale-up-policy=${JSON.stringify(scaleUpPolicy)}`)
+    if (scaleDownPolicy) args.push(`--scale-down-policy=${JSON.stringify(scaleDownPolicy)}`)
 
-    const { stdout } = await execAsync(
-      `${nselfPath} ${args.join(' ')} --json`,
-      {
-        cwd: projectPath,
-        env: { ...process.env, PATH: getEnhancedPath() },
-        timeout: 120000,
-      },
-    )
+    const { stdout } = await execAsync(`${nselfPath} ${args.join(' ')} --json`, {
+      cwd: projectPath,
+      env: { ...process.env, PATH: getEnhancedPath() },
+      timeout: 120000,
+    })
 
     const result = JSON.parse(stdout)
 
@@ -118,7 +110,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to configure autoscaling',
         details: err.message,
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

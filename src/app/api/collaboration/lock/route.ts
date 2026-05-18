@@ -41,7 +41,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           success: false,
           error: 'documentId and action are required',
         },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -64,7 +64,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
             locked: true,
             timestamp: new Date().toISOString(),
           },
-          `document-${documentId}`,
+          `document-${documentId}`
         )
       }
     } else if (action === 'unlock') {
@@ -80,7 +80,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
             locked: false,
             timestamp: new Date().toISOString(),
           },
-          `document-${documentId}`,
+          `document-${documentId}`
         )
       }
     } else {
@@ -89,7 +89,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           success: false,
           error: 'Invalid action. Must be "lock" or "unlock"',
         },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -102,7 +102,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
               ? 'Document is already locked by another user'
               : 'Failed to unlock document',
         },
-        { status: 409 },
+        { status: 409 }
       )
     }
 
@@ -118,7 +118,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to lock/unlock document',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

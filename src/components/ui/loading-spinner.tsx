@@ -27,11 +27,7 @@ const sizeClasses = {
   xl: 'h-12 w-12',
 }
 
-export function LoadingSpinner({
-  size = 'md',
-  className,
-  text,
-}: LoadingSpinnerProps) {
+export function LoadingSpinner({ size = 'md', className, text }: LoadingSpinnerProps) {
   return (
     <div
       className="flex flex-col items-center justify-center gap-2"
@@ -40,11 +36,7 @@ export function LoadingSpinner({
       aria-busy="true"
     >
       <Loader2
-        className={cn(
-          'text-muted-foreground animate-spin',
-          sizeClasses[size],
-          className,
-        )}
+        className={cn('text-muted-foreground animate-spin', sizeClasses[size], className)}
         aria-hidden="true"
       />
       <span className="sr-only">Loading{text ? `: ${text}` : '...'}</span>
@@ -78,10 +70,7 @@ export function FullPageLoader({ text }: { text?: string }) {
 export function InlineLoader({ className }: { className?: string }) {
   return (
     <>
-      <Loader2
-        className={cn('h-4 w-4 animate-spin', className)}
-        aria-hidden="true"
-      />
+      <Loader2 className={cn('h-4 w-4 animate-spin', className)} aria-hidden="true" />
       <span className="sr-only">Loading...</span>
     </>
   )

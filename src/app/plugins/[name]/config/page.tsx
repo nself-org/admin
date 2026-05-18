@@ -17,15 +17,7 @@ import useSWR from 'swr'
 const fetcher = (url: string) => fetch(url).then((r) => r.json())
 
 // Env var keys that contain secrets — mask value in form inputs
-const SECRET_PATTERNS = [
-  'key',
-  'secret',
-  'token',
-  'password',
-  'passwd',
-  'api_key',
-  'apikey',
-]
+const SECRET_PATTERNS = ['key', 'secret', 'token', 'password', 'passwd', 'api_key', 'apikey']
 
 function isSecretKey(key: string): boolean {
   const lower = key.toLowerCase()
@@ -104,10 +96,7 @@ function ConfigField({
   return (
     <div className="rounded-lg border border-zinc-700/50 bg-zinc-800/50 p-4">
       <div className="mb-2 flex items-center justify-between">
-        <label
-          htmlFor={`field-${entry.key}`}
-          className="font-mono text-sm font-medium text-white"
-        >
+        <label htmlFor={`field-${entry.key}`} className="font-mono text-sm font-medium text-white">
           {entry.key}
           {entry.required && (
             <span className="ml-1 text-red-400" aria-label="required">
@@ -122,9 +111,7 @@ function ConfigField({
         )}
       </div>
 
-      {entry.description && (
-        <p className="mb-2 text-xs text-zinc-500">{entry.description}</p>
-      )}
+      {entry.description && <p className="mb-2 text-xs text-zinc-500">{entry.description}</p>}
 
       {isSecret ? (
         <SecretInput
@@ -159,13 +146,10 @@ export default function PluginConfigPage() {
 
   const { data: configData, isLoading: configLoading } = useSWR<ConfigResponse>(
     `/api/plugins/${pluginName}/config`,
-    fetcher,
+    fetcher
   )
 
-  const { data: pluginData } = useSWR<PluginResponse>(
-    `/api/plugins/${pluginName}`,
-    fetcher,
-  )
+  const { data: pluginData } = useSWR<PluginResponse>(`/api/plugins/${pluginName}`, fetcher)
 
   // Merge manifest env vars with saved values
   useEffect(() => {
@@ -199,9 +183,7 @@ export default function PluginConfigPage() {
     const key = prompt('Environment variable name (e.g. PLUGIN_AI_API_KEY):')
     if (!key) return
     if (!/^[A-Za-z_][A-Za-z0-9_]*$/.test(key)) {
-      alert(
-        'Invalid variable name. Use only letters, numbers, and underscores.',
-      )
+      alert('Invalid variable name. Use only letters, numbers, and underscores.')
       return
     }
     setFields((prev) => [...prev, { key, value: '', required: false }])
@@ -256,13 +238,9 @@ export default function PluginConfigPage() {
             Back
           </Link>
           <div>
-            <h1 className="text-xl font-semibold text-white capitalize">
-              Configure {pluginName}
-            </h1>
+            <h1 className="text-xl font-semibold text-white capitalize">Configure {pluginName}</h1>
             {pluginData?.plugin?.version && (
-              <p className="text-sm text-zinc-500">
-                v{pluginData.plugin.version}
-              </p>
+              <p className="text-sm text-zinc-500">v{pluginData.plugin.version}</p>
             )}
           </div>
         </div>
@@ -300,9 +278,7 @@ export default function PluginConfigPage() {
         ) : fields.length === 0 ? (
           <div className="rounded-xl border border-zinc-700/50 bg-zinc-800/30 p-8 text-center">
             <p className="text-zinc-400">No configuration variables found.</p>
-            <p className="mt-1 text-sm text-zinc-500">
-              Add variables using the button below.
-            </p>
+            <p className="mt-1 text-sm text-zinc-500">Add variables using the button below.</p>
           </div>
         ) : (
           <div className="space-y-3">
@@ -344,8 +320,7 @@ export default function PluginConfigPage() {
         </div>
 
         <p className="mt-4 text-center text-xs text-zinc-600">
-          Changes take effect after{' '}
-          <code className="font-mono">nself build && nself restart</code>
+          Changes take effect after <code className="font-mono">nself build && nself restart</code>
         </p>
       </div>
     </div>

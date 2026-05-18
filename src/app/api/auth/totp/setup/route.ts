@@ -10,11 +10,7 @@
  */
 
 import { requireAuth } from '@/lib/require-auth'
-import {
-  getRemainingRecoveryCodeCount,
-  initTotpSetup,
-  isTotpEnabled,
-} from '@/lib/totp'
+import { getRemainingRecoveryCodeCount, initTotpSetup, isTotpEnabled } from '@/lib/totp'
 import { NextRequest, NextResponse } from 'next/server'
 
 export async function GET(request: NextRequest): Promise<NextResponse> {
@@ -22,9 +18,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
   if (authError) return authError
 
   const enabled = await isTotpEnabled()
-  const remainingRecoveryCodes = enabled
-    ? await getRemainingRecoveryCodeCount()
-    : null
+  const remainingRecoveryCodes = enabled ? await getRemainingRecoveryCodeCount() : null
 
   return NextResponse.json({
     success: true,
@@ -50,7 +44,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to initialise TOTP setup',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

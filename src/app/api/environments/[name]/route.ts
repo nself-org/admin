@@ -32,21 +32,14 @@ function validateEnvKey(input: string): boolean {
 
 function validateEnvValue(input: string): boolean {
   // Environment values can be permissive but must avoid shell metacharacters
-  return (
-    typeof input === 'string' &&
-    input.length <= 4096 &&
-    !/[;&|`$(){}[\]<>\\]/.test(input)
-  )
+  return typeof input === 'string' && input.length <= 4096 && !/[;&|`$(){}[\]<>\\]/.test(input)
 }
 
 interface RouteParams {
   params: Promise<{ name: string }>
 }
 
-export async function GET(
-  request: NextRequest,
-  { params }: RouteParams,
-): Promise<NextResponse> {
+export async function GET(request: NextRequest, { params }: RouteParams): Promise<NextResponse> {
   const startTime = Date.now()
   try {
     const { name } = await params
@@ -55,22 +48,18 @@ export async function GET(
     if (!validateSafeName(name)) {
       return NextResponse.json(
         { success: false, error: 'Invalid environment name' },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
     const projectPath = getProjectPath()
     const nselfPath = await findNselfPath()
 
-    const { stdout } = await execFileAsync(
-      nselfPath,
-      ['deploy', 'environments', name, '--json'],
-      {
-        cwd: projectPath,
-        env: { ...process.env, PATH: getEnhancedPath() },
-        timeout: 60000,
-      },
-    )
+    const { stdout } = await execFileAsync(nselfPath, ['deploy', 'environments', name, '--json'], {
+      cwd: projectPath,
+      env: { ...process.env, PATH: getEnhancedPath() },
+      timeout: 60000,
+    })
 
     const result = JSON.parse(stdout)
 
@@ -93,15 +82,12 @@ export async function GET(
         error: 'Failed to get environment config',
         details: err.message,
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
 
-export async function PUT(
-  request: NextRequest,
-  { params }: RouteParams,
-): Promise<NextResponse> {
+export async function PUT(request: NextRequest, { params }: RouteParams): Promise<NextResponse> {
   const authError = await requireAuth(request)
   if (authError) return authError
 
@@ -113,7 +99,7 @@ export async function PUT(
     if (!validateSafeName(name)) {
       return NextResponse.json(
         { success: false, error: 'Invalid environment name' },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -123,10 +109,7 @@ export async function PUT(
 
     // Validate domain if provided
     if (body.domain && !validateDomain(body.domain)) {
-      return NextResponse.json(
-        { success: false, error: 'Invalid domain' },
-        { status: 400 },
-      )
+      return NextResponse.json({ success: false, error: 'Invalid domain' }, { status: 400 })
     }
 
     // Validate replicas if provided
@@ -135,7 +118,7 @@ export async function PUT(
       if (!validateReplicas(replicasStr)) {
         return NextResponse.json(
           { success: false, error: 'Invalid replicas value' },
-          { status: 400 },
+          { status: 400 }
         )
       }
     }
@@ -149,7 +132,7 @@ export async function PUT(
               success: false,
               error: `Invalid environment variable key: ${key}`,
             },
-            { status: 400 },
+            { status: 400 }
           )
         }
         if (typeof value === 'string' && !validateEnvValue(value)) {
@@ -158,7 +141,7 @@ export async function PUT(
               success: false,
               error: `Invalid environment variable value for: ${key}`,
             },
-            { status: 400 },
+            { status: 400 }
           )
         }
       }
@@ -171,15 +154,12 @@ export async function PUT(
     if (body.resources) {
       // Validate resources is a simple object with safe values
       const resourcesJson = JSON.stringify(body.resources)
-      if (
-        resourcesJson.length <= 1024 &&
-        !/[;&|`$(){}[\]<>\\]/.test(resourcesJson)
-      ) {
+      if (resourcesJson.length <= 1024 && !/[;&|`$(){}[\]<>\\]/.test(resourcesJson)) {
         args.push(`--resources=${resourcesJson}`)
       } else {
         return NextResponse.json(
           { success: false, error: 'Invalid resources configuration' },
-          { status: 400 },
+          { status: 400 }
         )
       }
     }
@@ -213,7 +193,7 @@ export async function PUT(
         error: 'Failed to update environment config',
         details: err.message,
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

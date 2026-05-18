@@ -9,7 +9,7 @@ import { NextRequest, NextResponse } from 'next/server'
  */
 export async function POST(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> },
+  { params }: { params: Promise<{ id: string }> }
 ): Promise<NextResponse> {
   const authError = await requireAuth(request)
   if (authError) return authError
@@ -21,6 +21,6 @@ export async function POST(
       error: 'Secret rotation is not yet supported by the nself CLI',
       id,
     },
-    { status: 501 },
+    { status: 501 }
   )
 }

@@ -70,7 +70,7 @@ export function SidebarProvider({
       }
       onOpenChange?.(value)
     },
-    [controlledOpen, onOpenChange],
+    [controlledOpen, onOpenChange]
   )
 
   React.useEffect(() => {
@@ -89,126 +89,104 @@ export function SidebarProvider({
   )
 }
 
-const Sidebar = React.forwardRef<
-  HTMLDivElement,
-  React.ComponentPropsWithoutRef<'div'>
->(({ className, children, ...props }, ref) => {
-  const { open, isMobile } = useSidebar()
+const Sidebar = React.forwardRef<HTMLDivElement, React.ComponentPropsWithoutRef<'div'>>(
+  ({ className, children, ...props }, ref) => {
+    const { open, isMobile } = useSidebar()
 
-  if (isMobile) {
+    if (isMobile) {
+      return (
+        <Sheet open={open} onOpenChange={() => {}}>
+          <SheetContent side="left" className="p-0">
+            <div ref={ref} className={cn('flex h-full flex-col', className)} {...props}>
+              {children}
+            </div>
+          </SheetContent>
+        </Sheet>
+      )
+    }
+
     return (
-      <Sheet open={open} onOpenChange={() => {}}>
-        <SheetContent side="left" className="p-0">
-          <div
-            ref={ref}
-            className={cn('flex h-full flex-col', className)}
-            {...props}
-          >
-            {children}
-          </div>
-        </SheetContent>
-      </Sheet>
+      <aside
+        ref={ref}
+        data-state={open ? 'open' : 'closed'}
+        className={cn(
+          'bg-background flex h-screen flex-col border-r transition-all duration-300',
+          open ? 'w-64' : 'w-16',
+          className
+        )}
+        {...props}
+      >
+        {children}
+      </aside>
     )
   }
-
-  return (
-    <aside
-      ref={ref}
-      data-state={open ? 'open' : 'closed'}
-      className={cn(
-        'bg-background flex h-screen flex-col border-r transition-all duration-300',
-        open ? 'w-64' : 'w-16',
-        className,
-      )}
-      {...props}
-    >
-      {children}
-    </aside>
-  )
-})
+)
 Sidebar.displayName = 'Sidebar'
 
-const SidebarHeader = React.forwardRef<
-  HTMLDivElement,
-  React.ComponentPropsWithoutRef<'div'>
->(({ className, ...props }, ref) => (
-  <div ref={ref} className={cn('border-b px-4 py-3', className)} {...props} />
-))
+const SidebarHeader = React.forwardRef<HTMLDivElement, React.ComponentPropsWithoutRef<'div'>>(
+  ({ className, ...props }, ref) => (
+    <div ref={ref} className={cn('border-b px-4 py-3', className)} {...props} />
+  )
+)
 SidebarHeader.displayName = 'SidebarHeader'
 
-const SidebarContent = React.forwardRef<
-  HTMLDivElement,
-  React.ComponentPropsWithoutRef<'div'>
->(({ className, ...props }, ref) => (
-  <div
-    ref={ref}
-    className={cn('flex-1 overflow-auto py-2', className)}
-    {...props}
-  />
-))
+const SidebarContent = React.forwardRef<HTMLDivElement, React.ComponentPropsWithoutRef<'div'>>(
+  ({ className, ...props }, ref) => (
+    <div ref={ref} className={cn('flex-1 overflow-auto py-2', className)} {...props} />
+  )
+)
 SidebarContent.displayName = 'SidebarContent'
 
-const SidebarFooter = React.forwardRef<
-  HTMLDivElement,
-  React.ComponentPropsWithoutRef<'div'>
->(({ className, ...props }, ref) => (
-  <div ref={ref} className={cn('border-t px-4 py-3', className)} {...props} />
-))
+const SidebarFooter = React.forwardRef<HTMLDivElement, React.ComponentPropsWithoutRef<'div'>>(
+  ({ className, ...props }, ref) => (
+    <div ref={ref} className={cn('border-t px-4 py-3', className)} {...props} />
+  )
+)
 SidebarFooter.displayName = 'SidebarFooter'
 
-const SidebarGroup = React.forwardRef<
-  HTMLDivElement,
-  React.ComponentPropsWithoutRef<'div'>
->(({ className, ...props }, ref) => (
-  <div ref={ref} className={cn('px-2 py-2', className)} {...props} />
-))
+const SidebarGroup = React.forwardRef<HTMLDivElement, React.ComponentPropsWithoutRef<'div'>>(
+  ({ className, ...props }, ref) => (
+    <div ref={ref} className={cn('px-2 py-2', className)} {...props} />
+  )
+)
 SidebarGroup.displayName = 'SidebarGroup'
 
-const SidebarGroupLabel = React.forwardRef<
-  HTMLDivElement,
-  React.ComponentPropsWithoutRef<'div'>
->(({ className, ...props }, ref) => (
-  <div
-    ref={ref}
-    className={cn(
-      'text-muted-foreground mb-1 px-2 text-xs font-semibold tracking-wider uppercase',
-      className,
-    )}
-    {...props}
-  />
-))
+const SidebarGroupLabel = React.forwardRef<HTMLDivElement, React.ComponentPropsWithoutRef<'div'>>(
+  ({ className, ...props }, ref) => (
+    <div
+      ref={ref}
+      className={cn(
+        'text-muted-foreground mb-1 px-2 text-xs font-semibold tracking-wider uppercase',
+        className
+      )}
+      {...props}
+    />
+  )
+)
 SidebarGroupLabel.displayName = 'SidebarGroupLabel'
 
-const SidebarGroupContent = React.forwardRef<
-  HTMLDivElement,
-  React.ComponentPropsWithoutRef<'div'>
->(({ className, ...props }, ref) => (
-  <div ref={ref} className={cn('space-y-1', className)} {...props} />
-))
+const SidebarGroupContent = React.forwardRef<HTMLDivElement, React.ComponentPropsWithoutRef<'div'>>(
+  ({ className, ...props }, ref) => (
+    <div ref={ref} className={cn('space-y-1', className)} {...props} />
+  )
+)
 SidebarGroupContent.displayName = 'SidebarGroupContent'
 
-const SidebarMenu = React.forwardRef<
-  HTMLUListElement,
-  React.ComponentPropsWithoutRef<'ul'>
->(({ className, ...props }, ref) => (
-  <ul ref={ref} className={cn('space-y-1', className)} {...props} />
-))
+const SidebarMenu = React.forwardRef<HTMLUListElement, React.ComponentPropsWithoutRef<'ul'>>(
+  ({ className, ...props }, ref) => (
+    <ul ref={ref} className={cn('space-y-1', className)} {...props} />
+  )
+)
 SidebarMenu.displayName = 'SidebarMenu'
 
-const SidebarMenuItem = React.forwardRef<
-  HTMLLIElement,
-  React.ComponentPropsWithoutRef<'li'>
->(({ className, ...props }, ref) => (
-  <li ref={ref} className={className} {...props} />
-))
+const SidebarMenuItem = React.forwardRef<HTMLLIElement, React.ComponentPropsWithoutRef<'li'>>(
+  ({ className, ...props }, ref) => <li ref={ref} className={className} {...props} />
+)
 SidebarMenuItem.displayName = 'SidebarMenuItem'
 
 const SidebarMenuButton = React.forwardRef<
   HTMLAnchorElement | HTMLButtonElement,
-  (
-    | React.ComponentPropsWithoutRef<'a'>
-    | React.ComponentPropsWithoutRef<'button'>
-  ) & {
+  (React.ComponentPropsWithoutRef<'a'> | React.ComponentPropsWithoutRef<'button'>) & {
     href?: string
     active?: boolean
     icon?: React.ReactNode
@@ -221,7 +199,7 @@ const SidebarMenuButton = React.forwardRef<
     active
       ? 'bg-accent text-accent-foreground'
       : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground',
-    className,
+    className
   )
 
   if (href) {
@@ -251,27 +229,26 @@ const SidebarMenuButton = React.forwardRef<
 })
 SidebarMenuButton.displayName = 'SidebarMenuButton'
 
-const SidebarToggle = React.forwardRef<
-  HTMLButtonElement,
-  React.ComponentPropsWithoutRef<'button'>
->(({ className, children, ...props }, ref) => {
-  const { open, setOpen } = useSidebar()
+const SidebarToggle = React.forwardRef<HTMLButtonElement, React.ComponentPropsWithoutRef<'button'>>(
+  ({ className, children, ...props }, ref) => {
+    const { open, setOpen } = useSidebar()
 
-  return (
-    <button
-      ref={ref}
-      onClick={() => setOpen(!open)}
-      className={cn(
-        'text-muted-foreground hover:bg-accent hover:text-accent-foreground inline-flex items-center justify-center rounded-md p-2 transition-colors',
-        className,
-      )}
-      aria-label={open ? 'Collapse sidebar' : 'Expand sidebar'}
-      {...props}
-    >
-      {children}
-    </button>
-  )
-})
+    return (
+      <button
+        ref={ref}
+        onClick={() => setOpen(!open)}
+        className={cn(
+          'text-muted-foreground hover:bg-accent hover:text-accent-foreground inline-flex items-center justify-center rounded-md p-2 transition-colors',
+          className
+        )}
+        aria-label={open ? 'Collapse sidebar' : 'Expand sidebar'}
+        {...props}
+      >
+        {children}
+      </button>
+    )
+  }
+)
 SidebarToggle.displayName = 'SidebarToggle'
 
 export {

@@ -42,11 +42,7 @@ function sleep(ms: number): Promise<void> {
 /**
  * Check if error should be retried
  */
-function shouldRetry(
-  error: unknown,
-  attempt: number,
-  maxRetries: number,
-): boolean {
+function shouldRetry(error: unknown, attempt: number, maxRetries: number): boolean {
   // No more retries left
   if (attempt >= maxRetries) {
     return false
@@ -75,7 +71,7 @@ function shouldRetry(
 async function fetchWithTimeout(
   url: string,
   config: RequestConfig,
-  timeout: number,
+  timeout: number
 ): Promise<Response> {
   const controller = new AbortController()
   const timeoutId = setTimeout(() => controller.abort(), timeout)
@@ -157,12 +153,7 @@ async function createErrorFromResponse(response: Response): Promise<ApiError> {
     }
 
     if (errorObj.code) {
-      return new ApiError(
-        errorObj.code,
-        errorObj.message,
-        errorObj.details,
-        response.status,
-      )
+      return new ApiError(errorObj.code, errorObj.message, errorObj.details, response.status)
     }
   }
 
@@ -179,19 +170,12 @@ async function createErrorFromResponse(response: Response): Promise<ApiError> {
 /**
  * Make an authenticated API request with CSRF token and retry logic
  */
-export async function apiRequest(
-  url: string,
-  config: RequestConfig = {},
-): Promise<Response> {
+export async function apiRequest(url: string, config: RequestConfig = {}): Promise<Response> {
   const csrfToken = getCSRFToken()
   const headers = new Headers(config.headers)
 
   // Add CSRF token if available and it's a state-changing request
-  if (
-    csrfToken &&
-    config.method &&
-    ['POST', 'PUT', 'DELETE', 'PATCH'].includes(config.method)
-  ) {
+  if (csrfToken && config.method && ['POST', 'PUT', 'DELETE', 'PATCH'].includes(config.method)) {
     headers.set('x-csrf-token', csrfToken)
   }
 
@@ -201,8 +185,7 @@ export async function apiRequest(
   }
 
   const timeout = config.timeout ?? DEFAULT_TIMEOUT
-  const maxRetries =
-    config.retry !== false ? (config.maxRetries ?? DEFAULT_MAX_RETRIES) : 0
+  const maxRetries = config.retry !== false ? (config.maxRetries ?? DEFAULT_MAX_RETRIES) : 0
 
   let lastError: unknown
 
@@ -216,7 +199,7 @@ export async function apiRequest(
           headers,
           credentials: 'same-origin', // Include cookies
         },
-        timeout,
+        timeout
       )
 
       // Handle non-2xx responses
@@ -250,7 +233,7 @@ export async function apiRequest(
 export async function apiPost(
   url: string,
   body?: unknown,
-  config?: RequestConfig,
+  config?: RequestConfig
 ): Promise<Response> {
   return apiRequest(url, {
     ...config,
@@ -262,20 +245,14 @@ export async function apiPost(
 /**
  * Make a GET request with retry logic
  */
-export async function apiGet(
-  url: string,
-  config?: RequestConfig,
-): Promise<Response> {
+export async function apiGet(url: string, config?: RequestConfig): Promise<Response> {
   return apiRequest(url, { ...config, method: 'GET' })
 }
 
 /**
  * Make a DELETE request with CSRF protection and retry logic
  */
-export async function apiDelete(
-  url: string,
-  config?: RequestConfig,
-): Promise<Response> {
+export async function apiDelete(url: string, config?: RequestConfig): Promise<Response> {
   return apiRequest(url, { ...config, method: 'DELETE' })
 }
 
@@ -285,7 +262,7 @@ export async function apiDelete(
 export async function apiPut(
   url: string,
   body?: unknown,
-  config?: RequestConfig,
+  config?: RequestConfig
 ): Promise<Response> {
   return apiRequest(url, {
     ...config,
@@ -300,7 +277,7 @@ export async function apiPut(
 export async function apiPatch(
   url: string,
   body?: unknown,
-  config?: RequestConfig,
+  config?: RequestConfig
 ): Promise<Response> {
   return apiRequest(url, {
     ...config,

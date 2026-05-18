@@ -79,33 +79,19 @@ export function HealthCheck({
   const Icon = config.icon
 
   return (
-    <Card
-      className={cn(
-        'border-l-4',
-        config.borderColor,
-        config.bgColor,
-        className,
-      )}
-      {...props}
-    >
+    <Card className={cn('border-l-4', config.borderColor, config.bgColor, className)} {...props}>
       <div className="flex items-start justify-between p-4">
         <div className="flex items-start gap-3">
           <Icon
             className={cn(
               'h-5 w-5 flex-shrink-0',
               config.color,
-              status === 'checking' && 'animate-spin',
+              status === 'checking' && 'animate-spin'
             )}
           />
           <div className="space-y-1">
-            <h4 className="font-semibold text-zinc-900 dark:text-zinc-50">
-              {service}
-            </h4>
-            {message && (
-              <p className="text-sm text-zinc-600 dark:text-zinc-400">
-                {message}
-              </p>
-            )}
+            <h4 className="font-semibold text-zinc-900 dark:text-zinc-50">{service}</h4>
+            {message && <p className="text-sm text-zinc-600 dark:text-zinc-400">{message}</p>}
             {showDetails && (lastChecked || responseTime) && (
               <div className="flex gap-4 text-xs text-zinc-500 dark:text-zinc-500">
                 {lastChecked && <span>Last checked: {lastChecked}</span>}
@@ -114,12 +100,7 @@ export function HealthCheck({
             )}
           </div>
         </div>
-        <span
-          className={cn(
-            'rounded-full px-2.5 py-0.5 text-xs font-semibold',
-            config.color,
-          )}
-        >
+        <span className={cn('rounded-full px-2.5 py-0.5 text-xs font-semibold', config.color)}>
           {config.label}
         </span>
       </div>

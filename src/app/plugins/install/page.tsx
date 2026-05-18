@@ -7,15 +7,7 @@
  * Shows install progress via polling /api/plugins/[name] status.
  */
 
-import {
-  ArrowLeft,
-  CheckCircle,
-  Loader2,
-  Lock,
-  Package,
-  Search,
-  Zap,
-} from 'lucide-react'
+import { ArrowLeft, CheckCircle, Loader2, Lock, Package, Search, Zap } from 'lucide-react'
 import Link from 'next/link'
 import { useState } from 'react'
 import useSWR from 'swr'
@@ -101,14 +93,10 @@ function PluginCard({
       </div>
 
       {plugin.category && (
-        <p className="mb-2 text-xs tracking-wider text-zinc-600 uppercase">
-          {plugin.category}
-        </p>
+        <p className="mb-2 text-xs tracking-wider text-zinc-600 uppercase">{plugin.category}</p>
       )}
 
-      <p className="mb-3 line-clamp-2 flex-1 text-sm text-zinc-400">
-        {plugin.description}
-      </p>
+      <p className="mb-3 line-clamp-2 flex-1 text-sm text-zinc-400">{plugin.description}</p>
 
       {/* S71-T03: Permission badges shown before install confirmation */}
       {plugin.permissions && plugin.permissions.length > 0 && (
@@ -173,27 +161,19 @@ function PluginCard({
 
 export default function PluginInstallPage() {
   const [search, setSearch] = useState('')
-  const [installStates, setInstallStates] = useState<
-    Record<string, InstallState>
-  >({})
+  const [installStates, setInstallStates] = useState<Record<string, InstallState>>({})
 
   // Fetch available plugins from admin marketplace endpoint
-  const { data, isLoading } = useSWR<RegistryResponse>(
-    '/api/plugins/marketplace',
-    fetcher,
-    { refreshInterval: 60000 },
-  )
+  const { data, isLoading } = useSWR<RegistryResponse>('/api/plugins/marketplace', fetcher, {
+    refreshInterval: 60000,
+  })
 
   // Fallback: use the installed list from /api/plugins to mark installed
-  const { data: installedData } = useSWR<{ plugins?: AvailablePlugin[] }>(
-    '/api/plugins',
-    fetcher,
-    { refreshInterval: 30000 },
-  )
+  const { data: installedData } = useSWR<{ plugins?: AvailablePlugin[] }>('/api/plugins', fetcher, {
+    refreshInterval: 30000,
+  })
 
-  const installedNames = new Set(
-    (installedData?.plugins ?? []).map((p) => p.name),
-  )
+  const installedNames = new Set((installedData?.plugins ?? []).map((p) => p.name))
 
   // Combine marketplace data with installed status
   const plugins = (data?.plugins ?? []).map((p) => ({
@@ -207,7 +187,7 @@ export default function PluginInstallPage() {
       !search ||
       p.name.toLowerCase().includes(search.toLowerCase()) ||
       p.description?.toLowerCase().includes(search.toLowerCase()) ||
-      p.category?.toLowerCase().includes(search.toLowerCase()),
+      p.category?.toLowerCase().includes(search.toLowerCase())
   )
 
   const handleInstall = async (pluginName: string) => {
@@ -306,9 +286,7 @@ export default function PluginInstallPage() {
           <div className="rounded-xl border border-zinc-700/50 bg-zinc-800/30 p-8 text-center">
             <Package className="mx-auto mb-2 h-8 w-8 text-zinc-700" />
             <p className="text-zinc-400">
-              {search
-                ? `No plugins found matching "${search}"`
-                : 'No plugins available'}
+              {search ? `No plugins found matching "${search}"` : 'No plugins available'}
             </p>
           </div>
         )}
@@ -316,9 +294,7 @@ export default function PluginInstallPage() {
         {/* Plugin grid — grouped by category */}
         {!isLoading &&
           Array.from(categories).map((category) => {
-            const categoryPlugins = filtered.filter(
-              (p) => (p.category || 'general') === category,
-            )
+            const categoryPlugins = filtered.filter((p) => (p.category || 'general') === category)
             if (categoryPlugins.length === 0) return null
 
             return (

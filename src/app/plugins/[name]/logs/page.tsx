@@ -73,9 +73,7 @@ export default function PluginLogsPage() {
     setError(null)
 
     try {
-      const response = await fetch(
-        `/api/plugins/${pluginName}/logs?lines=${lineCount}`,
-      )
+      const response = await fetch(`/api/plugins/${pluginName}/logs?lines=${lineCount}`)
       const data = await response.json()
 
       if (data.success) {
@@ -84,7 +82,7 @@ export default function PluginLogsPage() {
           (data.lines as string[]).map((text: string) => ({
             id: lineIdRef.current++,
             text,
-          })),
+          }))
         )
         setLastRefresh(new Date())
       } else {
@@ -105,9 +103,7 @@ export default function PluginLogsPage() {
       sseRef.current = null
     }
 
-    const sse = new EventSource(
-      `/api/plugins/${pluginName}/logs?follow=true&lines=${lineCount}`,
-    )
+    const sse = new EventSource(`/api/plugins/${pluginName}/logs?follow=true&lines=${lineCount}`)
 
     sse.onmessage = (event) => {
       try {
@@ -214,9 +210,7 @@ export default function PluginLogsPage() {
             </Link>
             <div className="flex items-center gap-2">
               <Terminal className="h-5 w-5 text-zinc-500" />
-              <h1 className="text-lg font-semibold text-white capitalize">
-                {pluginName} logs
-              </h1>
+              <h1 className="text-lg font-semibold text-white capitalize">{pluginName} logs</h1>
             </div>
           </div>
 
@@ -245,9 +239,7 @@ export default function PluginLogsPage() {
                 className="flex items-center gap-1 rounded-lg border border-zinc-700 px-3 py-1.5 text-xs text-zinc-400 hover:text-white disabled:opacity-50"
                 aria-label="Refresh logs"
               >
-                <RefreshCw
-                  className={`h-3.5 w-3.5 ${loading ? 'animate-spin' : ''}`}
-                />
+                <RefreshCw className={`h-3.5 w-3.5 ${loading ? 'animate-spin' : ''}`} />
                 Refresh
               </button>
             )}
@@ -289,9 +281,7 @@ export default function PluginLogsPage() {
               Live
             </span>
           ) : (
-            lastRefresh && (
-              <span>Last updated: {lastRefresh.toLocaleTimeString()}</span>
-            )
+            lastRefresh && <span>Last updated: {lastRefresh.toLocaleTimeString()}</span>
           )}
           <span>{lines.length} lines</span>
         </div>
@@ -318,18 +308,13 @@ export default function PluginLogsPage() {
             <div className="text-center">
               <Terminal className="mx-auto mb-2 h-8 w-8 text-zinc-700" />
               <p className="text-zinc-500">No logs available yet</p>
-              <p className="mt-1 text-sm text-zinc-600">
-                Start the plugin to see output here
-              </p>
+              <p className="mt-1 text-sm text-zinc-600">Start the plugin to see output here</p>
             </div>
           </div>
         ) : (
           <pre className="p-4 font-mono text-xs leading-relaxed">
             {lines.map((line) => (
-              <div
-                key={line.id}
-                className={`py-0.5 ${getLineColor(line.text)}`}
-              >
+              <div key={line.id} className={`py-0.5 ${getLineColor(line.text)}`}>
                 {line.text}
               </div>
             ))}

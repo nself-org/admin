@@ -11,16 +11,9 @@ const passwordValidator = z.string().refine(
     // In production, enforce strong password requirements
     if (process.env.NODE_ENV === 'production') {
       if (password.length < 12) return false
-      if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])/.test(password))
-        return false
+      if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])/.test(password)) return false
 
-      const weakPasswords = [
-        'admin123',
-        'changeme',
-        'changeme123',
-        'password',
-        'default',
-      ]
+      const weakPasswords = ['admin123', 'changeme', 'changeme123', 'password', 'default']
       if (weakPasswords.includes(password.toLowerCase())) return false
     }
     return password.length >= 8 // Minimum for development
@@ -30,7 +23,7 @@ const passwordValidator = z.string().refine(
       process.env.NODE_ENV === 'production'
         ? 'Password must be at least 12 characters with uppercase, lowercase, number, and special character'
         : 'Password must be at least 8 characters',
-  },
+  }
 )
 
 const envSchema = z.object({
@@ -77,9 +70,7 @@ export function validateEnv(): EnvConfig {
         console.warn('\n⚠️  WARNING: Weak admin password detected!')
         if (process.env.NODE_ENV === 'production') {
           console.error('❌ CRITICAL: Cannot use weak passwords in production!')
-          console.error(
-            '   Please set a strong ADMIN_PASSWORD in your environment',
-          )
+          console.error('   Please set a strong ADMIN_PASSWORD in your environment')
           console.error('   Password requirements:')
           console.error('   - At least 12 characters')
           console.error('   - Include uppercase and lowercase letters')
@@ -87,9 +78,7 @@ export function validateEnv(): EnvConfig {
           console.error('   - Avoid common passwords\n')
           process.exit(1)
         }
-        console.warn(
-          '   Change the ADMIN_PASSWORD before deploying to production\n',
-        )
+        console.warn('   Change the ADMIN_PASSWORD before deploying to production\n')
       }
     }
 

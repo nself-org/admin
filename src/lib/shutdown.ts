@@ -46,7 +46,7 @@ async function gracefulShutdown(_signal: string): Promise<void> {
         } catch (error) {
           console.error(`Shutdown handler ${index + 1} failed:`, error)
         }
-      }),
+      })
     )
 
     // Close database connections

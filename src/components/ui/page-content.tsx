@@ -24,14 +24,6 @@ export interface PageContentProps {
   className?: string
 }
 
-export function PageContent({
-  children,
-  noPadding = false,
-  className,
-}: PageContentProps) {
-  return (
-    <div className={cn('w-full', !noPadding && 'space-y-6', className)}>
-      {children}
-    </div>
-  )
+export function PageContent({ children, noPadding = false, className }: PageContentProps) {
+  return <div className={cn('w-full', !noPadding && 'space-y-6', className)}>{children}</div>
 }

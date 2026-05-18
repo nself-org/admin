@@ -95,14 +95,17 @@ function SQLConsoleContent() {
     // Load databases from API
     fetch('/api/database/query', { cache: 'no-store' })
       .then(async (res) => {
-        if (res.status === 401) { window.location.href = '/login'; return }
+        if (res.status === 401) {
+          window.location.href = '/login'
+          return
+        }
         if (!res.ok) return
         const data = await res.json()
         const dbs = data.data?.databases ?? data.data ?? []
         if (Array.isArray(dbs) && dbs.length > 0) {
           setDatabases(dbs)
           setSelectedDatabase(dbs[0])
-          setTabs((prev) => prev.map((t, i) => i === 0 ? { ...t, database: dbs[0] } : t))
+          setTabs((prev) => prev.map((t, i) => (i === 0 ? { ...t, database: dbs[0] } : t)))
         }
         setIsConnected(true)
       })
@@ -112,12 +115,16 @@ function SQLConsoleContent() {
     try {
       const h = localStorage.getItem('sql-console-history')
       if (h) setQueryHistory(JSON.parse(h).slice(0, 50))
-    } catch { /* ignore */ }
+    } catch {
+      /* ignore */
+    }
 
     try {
       const s = localStorage.getItem('sql-console-saved')
       if (s) setSavedQueries(JSON.parse(s))
-    } catch { /* ignore */ }
+    } catch {
+      /* ignore */
+    }
   }, [])
 
   // Persist history and saved queries
@@ -138,7 +145,7 @@ function SQLConsoleContent() {
     if (!tab || !tab.query.trim()) return
 
     setTabs((prev) =>
-      prev.map((t) => (t.id === tabId ? { ...t, isExecuting: true, result: undefined } : t)),
+      prev.map((t) => (t.id === tabId ? { ...t, isExecuting: true, result: undefined } : t))
     )
 
     const startTime = Date.now()
@@ -168,7 +175,7 @@ function SQLConsoleContent() {
           error: errorMessage,
         }
         setTabs((prev) =>
-          prev.map((t) => t.id === tabId ? { ...t, isExecuting: false, result: errResult } : t)
+          prev.map((t) => (t.id === tabId ? { ...t, isExecuting: false, result: errResult } : t))
         )
         const historyEntry: QueryHistory = {
           id: Date.now().toString(),
@@ -191,7 +198,7 @@ function SQLConsoleContent() {
       }
 
       setTabs((prev) =>
-        prev.map((t) => t.id === tabId ? { ...t, isExecuting: false, result: queryResult } : t)
+        prev.map((t) => (t.id === tabId ? { ...t, isExecuting: false, result: queryResult } : t))
       )
 
       const historyEntry: QueryHistory = {
@@ -215,7 +222,7 @@ function SQLConsoleContent() {
         error: errorMessage,
       }
       setTabs((prev) =>
-        prev.map((t) => t.id === tabId ? { ...t, isExecuting: false, result: errResult } : t)
+        prev.map((t) => (t.id === tabId ? { ...t, isExecuting: false, result: errResult } : t))
       )
       const historyEntry: QueryHistory = {
         id: Date.now().toString(),
@@ -312,9 +319,7 @@ function SQLConsoleContent() {
       mimeType = 'text/csv;charset=utf-8;'
       filename = 'query-results.csv'
     } else {
-      const objects = rows.map((row) =>
-        Object.fromEntries(columns.map((col, i) => [col, row[i]])),
-      )
+      const objects = rows.map((row) => Object.fromEntries(columns.map((col, i) => [col, row[i]])))
       content = JSON.stringify(objects, null, 2)
       mimeType = 'application/json'
       filename = 'query-results.json'
@@ -334,12 +339,10 @@ function SQLConsoleContent() {
   return (
     <div className="space-y-6 p-6">
       <div>
-        <h1 className="text-2xl font-bold text-zinc-900 dark:text-white">
-          SQL Runner
-        </h1>
+        <h1 className="text-2xl font-bold text-zinc-900 dark:text-white">SQL Runner</h1>
         <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
-          Execute SQL queries with multi-tab editor, query history, and results
-          export. Destructive statements require confirmation.
+          Execute SQL queries with multi-tab editor, query history, and results export. Destructive
+          statements require confirmation.
         </p>
       </div>
       <div className="space-y-6">
@@ -356,10 +359,7 @@ function SQLConsoleContent() {
                   </Badge>
                 </div>
 
-                <Select
-                  value={selectedDatabase}
-                  onValueChange={setSelectedDatabase}
-                >
+                <Select value={selectedDatabase} onValueChange={setSelectedDatabase}>
                   <SelectTrigger className="w-48">
                     <SelectValue />
                   </SelectTrigger>
@@ -374,17 +374,11 @@ function SQLConsoleContent() {
               </div>
 
               <div className="flex items-center gap-2">
-                <Button
-                  variant="outline"
-                  onClick={() => setShowHistory(!showHistory)}
-                >
+                <Button variant="outline" onClick={() => setShowHistory(!showHistory)}>
                   <History className="mr-2 h-4 w-4" />
                   History
                 </Button>
-                <Button
-                  variant="outline"
-                  onClick={() => setShowSaved(!showSaved)}
-                >
+                <Button variant="outline" onClick={() => setShowSaved(!showSaved)}>
                   <FolderOpen className="mr-2 h-4 w-4" />
                   Saved
                 </Button>
@@ -410,14 +404,12 @@ function SQLConsoleContent() {
                         'flex cursor-pointer items-center gap-2 border-r px-3 py-1.5 text-sm last:border-r-0',
                         activeTab === tab.id
                           ? 'bg-blue-50 text-blue-700 dark:bg-blue-950 dark:text-blue-300'
-                          : 'hover:bg-gray-50 dark:hover:bg-gray-800',
+                          : 'hover:bg-gray-50 dark:hover:bg-gray-800'
                       )}
                       onClick={() => setActiveTab(tab.id)}
                     >
                       <span>{tab.name}</span>
-                      {tab.isExecuting && (
-                        <Loader2 className="h-3 w-3 animate-spin" />
-                      )}
+                      {tab.isExecuting && <Loader2 className="h-3 w-3 animate-spin" />}
                       {tabs.length > 1 && (
                         <X
                           className="h-3 w-3 hover:text-red-500"
@@ -446,9 +438,7 @@ function SQLConsoleContent() {
                 </Button>
                 <Button
                   onClick={() => executeQuery(activeTab)}
-                  disabled={
-                    !activeTabData?.query.trim() || activeTabData?.isExecuting
-                  }
+                  disabled={!activeTabData?.query.trim() || activeTabData?.isExecuting}
                 >
                   {activeTabData?.isExecuting ? (
                     <>
@@ -509,17 +499,11 @@ function SQLConsoleContent() {
                 </div>
 
                 <div className="flex items-center gap-2">
-                  <Button
-                    variant="outline"
-                    onClick={() => exportResults('csv')}
-                  >
+                  <Button variant="outline" onClick={() => exportResults('csv')}>
                     <Download className="mr-2 h-4 w-4" />
                     Export CSV
                   </Button>
-                  <Button
-                    variant="outline"
-                    onClick={() => exportResults('json')}
-                  >
+                  <Button variant="outline" onClick={() => exportResults('json')}>
                     <Download className="mr-2 h-4 w-4" />
                     Export JSON
                   </Button>
@@ -545,10 +529,7 @@ function SQLConsoleContent() {
                     </thead>
                     <tbody>
                       {activeTabData.result.rows.map((row, rowIndex) => (
-                        <tr
-                          key={rowIndex}
-                          className="hover:bg-gray-50 dark:hover:bg-gray-800"
-                        >
+                        <tr key={rowIndex} className="hover:bg-gray-50 dark:hover:bg-gray-800">
                           {row.map((cell, cellIndex) => (
                             <td
                               key={cellIndex}
@@ -594,21 +575,15 @@ function SQLConsoleContent() {
                           )}
                           <Badge variant="outline">{item.database}</Badge>
                         </div>
-                        <div className="text-muted-foreground text-xs">
-                          {item.timestamp}
-                        </div>
+                        <div className="text-muted-foreground text-xs">{item.timestamp}</div>
                       </div>
                       <div className="mt-1 truncate rounded bg-gray-100 p-2 font-mono text-sm dark:bg-gray-800">
                         {item.query}
                       </div>
                       <div className="text-muted-foreground mt-1 flex items-center gap-4 text-xs">
                         <span>{item.executionTime}ms</span>
-                        {item.rowCount !== undefined && (
-                          <span>{item.rowCount} rows</span>
-                        )}
-                        {item.error && (
-                          <span className="text-red-500">{item.error}</span>
-                        )}
+                        {item.rowCount !== undefined && <span>{item.rowCount} rows</span>}
+                        {item.error && <span className="text-red-500">{item.error}</span>}
                       </div>
                     </div>
                   ))}
@@ -672,33 +647,25 @@ function SQLConsoleContent() {
               <Button variant="outline" className="h-auto justify-start p-4">
                 <div className="text-left">
                   <div className="font-medium">Schema Browser</div>
-                  <div className="text-muted-foreground text-xs">
-                    Browse tables
-                  </div>
+                  <div className="text-muted-foreground text-xs">Browse tables</div>
                 </div>
               </Button>
               <Button variant="outline" className="h-auto justify-start p-4">
                 <div className="text-left">
                   <div className="font-medium">Query Templates</div>
-                  <div className="text-muted-foreground text-xs">
-                    Common queries
-                  </div>
+                  <div className="text-muted-foreground text-xs">Common queries</div>
                 </div>
               </Button>
               <Button variant="outline" className="h-auto justify-start p-4">
                 <div className="text-left">
                   <div className="font-medium">Format Query</div>
-                  <div className="text-muted-foreground text-xs">
-                    Auto-format SQL
-                  </div>
+                  <div className="text-muted-foreground text-xs">Auto-format SQL</div>
                 </div>
               </Button>
               <Button variant="outline" className="h-auto justify-start p-4">
                 <div className="text-left">
                   <div className="font-medium">Explain Plan</div>
-                  <div className="text-muted-foreground text-xs">
-                    Query optimization
-                  </div>
+                  <div className="text-muted-foreground text-xs">Query optimization</div>
                 </div>
               </Button>
             </div>

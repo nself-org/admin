@@ -8,8 +8,7 @@ const variantStyles = {
 const colorStyles = {
   blue: {
     small: 'text-blue-600 dark:text-blue-400',
-    medium:
-      'ring-blue-300 dark:ring-blue-400/30 bg-blue-400/10 text-blue-600 dark:text-blue-400',
+    medium: 'ring-blue-300 dark:ring-blue-400/30 bg-blue-400/10 text-blue-600 dark:text-blue-400',
   },
   sky: {
     small: 'text-sky-500',
@@ -54,7 +53,7 @@ export function Tag({
       className={clsx(
         'font-mono text-[0.625rem]/6 font-semibold',
         variantStyles[variant],
-        colorStyles[color][variant],
+        colorStyles[color][variant]
       )}
     >
       {children}

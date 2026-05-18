@@ -27,12 +27,7 @@ interface RoleItem {
 
 const PERMISSION_CATEGORIES: Record<string, string[]> = {
   users: ['users:read', 'users:write', 'users:delete'],
-  content: [
-    'content:read',
-    'content:write',
-    'content:delete',
-    'content:publish',
-  ],
+  content: ['content:read', 'content:write', 'content:delete', 'content:publish'],
   settings: ['settings:read', 'settings:write'],
   billing: ['billing:read', 'billing:write', 'billing:manage'],
   admin: ['admin:full', 'admin:audit', 'admin:security'],
@@ -117,9 +112,7 @@ function RolesContent() {
   const [deletingRole, setDeletingRole] = useState(false)
 
   // Expanded permission categories
-  const [expandedCategories, setExpandedCategories] = useState<
-    Record<string, boolean>
-  >({})
+  const [expandedCategories, setExpandedCategories] = useState<Record<string, boolean>>({})
 
   const cliCommand = useCallback(() => {
     if (showCreateForm && newRoleName) {
@@ -254,12 +247,9 @@ function RolesContent() {
     setError(null)
     setSuccess(null)
     try {
-      const response = await fetch(
-        `/api/auth/roles/${encodeURIComponent(roleId)}`,
-        {
-          method: 'DELETE',
-        },
-      )
+      const response = await fetch(`/api/auth/roles/${encodeURIComponent(roleId)}`, {
+        method: 'DELETE',
+      })
       const json = await response.json()
       if (json.success) {
         setOutput(json.data.output || '')
@@ -279,7 +269,7 @@ function RolesContent() {
 
   const togglePermission = (perm: string) => {
     setSelectedPermissions((prev) =>
-      prev.includes(perm) ? prev.filter((p) => p !== perm) : [...prev, perm],
+      prev.includes(perm) ? prev.filter((p) => p !== perm) : [...prev, perm]
     )
   }
 
@@ -313,11 +303,7 @@ function RolesContent() {
               </p>
             </div>
             <div className="flex gap-3">
-              <Button
-                onClick={fetchRoles}
-                variant="secondary"
-                disabled={loading}
-              >
+              <Button onClick={fetchRoles} variant="secondary" disabled={loading}>
                 {loading ? (
                   <RefreshCw className="mr-2 h-4 w-4 animate-spin" />
                 ) : (
@@ -325,10 +311,7 @@ function RolesContent() {
                 )}
                 Refresh
               </Button>
-              <Button
-                onClick={() => setShowCreateForm(!showCreateForm)}
-                variant="primary"
-              >
+              <Button onClick={() => setShowCreateForm(!showCreateForm)} variant="primary">
                 <Plus className="mr-2 h-4 w-4" />
                 New Role
               </Button>
@@ -378,94 +361,78 @@ function RolesContent() {
                       Permissions
                     </label>
                     <div className="space-y-2">
-                      {Object.entries(PERMISSION_CATEGORIES).map(
-                        ([category, perms]) => {
-                          const isExpanded =
-                            expandedCategories[category] !== false
-                          const selectedCount = perms.filter((p) =>
-                            selectedPermissions.includes(p),
-                          ).length
-                          const allSelected = selectedCount === perms.length
+                      {Object.entries(PERMISSION_CATEGORIES).map(([category, perms]) => {
+                        const isExpanded = expandedCategories[category] !== false
+                        const selectedCount = perms.filter((p) =>
+                          selectedPermissions.includes(p)
+                        ).length
+                        const allSelected = selectedCount === perms.length
 
-                          return (
-                            <div
-                              key={category}
-                              className="rounded-lg border border-zinc-200 dark:border-zinc-700"
-                            >
-                              <div className="flex items-center justify-between px-3 py-2">
+                        return (
+                          <div
+                            key={category}
+                            className="rounded-lg border border-zinc-200 dark:border-zinc-700"
+                          >
+                            <div className="flex items-center justify-between px-3 py-2">
+                              <button
+                                onClick={() => toggleCategory(category)}
+                                className="flex items-center gap-2 text-sm font-medium text-zinc-900 dark:text-white"
+                              >
+                                {isExpanded ? (
+                                  <ChevronDown className="h-3.5 w-3.5 text-zinc-400" />
+                                ) : (
+                                  <ChevronRight className="h-3.5 w-3.5 text-zinc-400" />
+                                )}
+                                {category.charAt(0).toUpperCase() + category.slice(1)}
+                              </button>
+                              <div className="flex items-center gap-2">
+                                <span className="text-xs text-zinc-500 dark:text-zinc-400">
+                                  {selectedCount}/{perms.length}
+                                </span>
                                 <button
-                                  onClick={() => toggleCategory(category)}
-                                  className="flex items-center gap-2 text-sm font-medium text-zinc-900 dark:text-white"
+                                  onClick={() => toggleCategoryPermissions(category)}
+                                  className={`rounded px-2 py-0.5 text-xs font-medium transition ${
+                                    allSelected
+                                      ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400'
+                                      : 'bg-zinc-100 text-zinc-600 hover:bg-zinc-200 dark:bg-zinc-700 dark:text-zinc-400 dark:hover:bg-zinc-600'
+                                  }`}
                                 >
-                                  {isExpanded ? (
-                                    <ChevronDown className="h-3.5 w-3.5 text-zinc-400" />
-                                  ) : (
-                                    <ChevronRight className="h-3.5 w-3.5 text-zinc-400" />
-                                  )}
-                                  {category.charAt(0).toUpperCase() +
-                                    category.slice(1)}
+                                  {allSelected ? 'Deselect All' : 'Select All'}
                                 </button>
-                                <div className="flex items-center gap-2">
-                                  <span className="text-xs text-zinc-500 dark:text-zinc-400">
-                                    {selectedCount}/{perms.length}
-                                  </span>
-                                  <button
-                                    onClick={() =>
-                                      toggleCategoryPermissions(category)
-                                    }
-                                    className={`rounded px-2 py-0.5 text-xs font-medium transition ${
-                                      allSelected
-                                        ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400'
-                                        : 'bg-zinc-100 text-zinc-600 hover:bg-zinc-200 dark:bg-zinc-700 dark:text-zinc-400 dark:hover:bg-zinc-600'
-                                    }`}
-                                  >
-                                    {allSelected
-                                      ? 'Deselect All'
-                                      : 'Select All'}
-                                  </button>
+                              </div>
+                            </div>
+
+                            {isExpanded && (
+                              <div className="border-t border-zinc-100 px-3 py-2 dark:border-zinc-700">
+                                <div className="grid gap-1.5 sm:grid-cols-2">
+                                  {perms.map((perm) => (
+                                    <label
+                                      key={perm}
+                                      className="flex cursor-pointer items-center gap-2 rounded px-2 py-1 text-sm transition hover:bg-zinc-50 dark:hover:bg-zinc-700/50"
+                                    >
+                                      <input
+                                        type="checkbox"
+                                        checked={selectedPermissions.includes(perm)}
+                                        onChange={() => togglePermission(perm)}
+                                        className="h-3.5 w-3.5 rounded border-zinc-300 text-blue-600 focus:ring-blue-500 dark:border-zinc-600"
+                                      />
+                                      <span className="text-zinc-700 dark:text-zinc-300">
+                                        {PERMISSION_LABELS[perm] || perm}
+                                      </span>
+                                    </label>
+                                  ))}
                                 </div>
                               </div>
-
-                              {isExpanded && (
-                                <div className="border-t border-zinc-100 px-3 py-2 dark:border-zinc-700">
-                                  <div className="grid gap-1.5 sm:grid-cols-2">
-                                    {perms.map((perm) => (
-                                      <label
-                                        key={perm}
-                                        className="flex cursor-pointer items-center gap-2 rounded px-2 py-1 text-sm transition hover:bg-zinc-50 dark:hover:bg-zinc-700/50"
-                                      >
-                                        <input
-                                          type="checkbox"
-                                          checked={selectedPermissions.includes(
-                                            perm,
-                                          )}
-                                          onChange={() =>
-                                            togglePermission(perm)
-                                          }
-                                          className="h-3.5 w-3.5 rounded border-zinc-300 text-blue-600 focus:ring-blue-500 dark:border-zinc-600"
-                                        />
-                                        <span className="text-zinc-700 dark:text-zinc-300">
-                                          {PERMISSION_LABELS[perm] || perm}
-                                        </span>
-                                      </label>
-                                    ))}
-                                  </div>
-                                </div>
-                              )}
-                            </div>
-                          )
-                        },
-                      )}
+                            )}
+                          </div>
+                        )
+                      })}
                     </div>
                   </div>
                 </div>
 
                 <div className="flex gap-3">
-                  <Button
-                    onClick={handleCreateRole}
-                    variant="primary"
-                    disabled={creatingRole}
-                  >
+                  <Button onClick={handleCreateRole} variant="primary" disabled={creatingRole}>
                     {creatingRole ? (
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                     ) : (
@@ -491,9 +458,7 @@ function RolesContent() {
               <div className="border-b border-zinc-200 px-6 py-4 dark:border-zinc-700">
                 <div className="flex items-center gap-3">
                   <Shield className="h-5 w-5 text-blue-600 dark:text-blue-400" />
-                  <h3 className="text-base font-semibold text-zinc-900 dark:text-white">
-                    Roles
-                  </h3>
+                  <h3 className="text-base font-semibold text-zinc-900 dark:text-white">Roles</h3>
                   <span className="rounded-full bg-zinc-100 px-2 py-0.5 text-xs font-medium text-zinc-600 dark:bg-zinc-700 dark:text-zinc-400">
                     {roles.length}
                   </span>
@@ -503,9 +468,7 @@ function RolesContent() {
               {loading && roles.length === 0 ? (
                 <div className="flex items-center justify-center py-12">
                   <Loader2 className="mr-3 h-5 w-5 animate-spin text-blue-500" />
-                  <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                    Loading roles...
-                  </p>
+                  <p className="text-sm text-zinc-500 dark:text-zinc-400">Loading roles...</p>
                 </div>
               ) : roles.length === 0 ? (
                 <div className="py-12 text-center">
@@ -609,10 +572,7 @@ function RolesContent() {
                   </h3>
                 </div>
                 {!showAssignForm && (
-                  <Button
-                    onClick={() => setShowAssignForm(true)}
-                    variant="secondary"
-                  >
+                  <Button onClick={() => setShowAssignForm(true)} variant="secondary">
                     <UserPlus className="mr-2 h-4 w-4" />
                     Assign
                   </Button>
@@ -648,11 +608,7 @@ function RolesContent() {
                     </div>
                   </div>
                   <div className="flex gap-3">
-                    <Button
-                      onClick={handleAssignRole}
-                      variant="primary"
-                      disabled={assigningRole}
-                    >
+                    <Button onClick={handleAssignRole} variant="primary" disabled={assigningRole}>
                       {assigningRole ? (
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                       ) : (
@@ -683,9 +639,7 @@ function RolesContent() {
                 CLI Command
               </h3>
               <div className="rounded-lg bg-zinc-900 p-4">
-                <code className="font-mono text-xs break-all text-green-400">
-                  $ {cliCommand()}
-                </code>
+                <code className="font-mono text-xs break-all text-green-400">$ {cliCommand()}</code>
               </div>
             </div>
 
@@ -694,9 +648,7 @@ function RolesContent() {
               <div className="rounded-xl border border-red-200 bg-red-50 p-4 dark:border-red-800 dark:bg-red-900/20">
                 <div className="flex items-start gap-2">
                   <XCircle className="mt-0.5 h-4 w-4 flex-shrink-0 text-red-500" />
-                  <p className="text-sm text-red-700 dark:text-red-300">
-                    {error}
-                  </p>
+                  <p className="text-sm text-red-700 dark:text-red-300">{error}</p>
                 </div>
               </div>
             )}
@@ -704,9 +656,7 @@ function RolesContent() {
               <div className="rounded-xl border border-green-200 bg-green-50 p-4 dark:border-green-800 dark:bg-green-900/20">
                 <div className="flex items-start gap-2">
                   <CheckCircle className="mt-0.5 h-4 w-4 flex-shrink-0 text-green-500" />
-                  <p className="text-sm text-green-700 dark:text-green-300">
-                    {success}
-                  </p>
+                  <p className="text-sm text-green-700 dark:text-green-300">{success}</p>
                 </div>
               </div>
             )}

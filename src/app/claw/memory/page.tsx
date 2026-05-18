@@ -1,15 +1,6 @@
 'use client'
 
-import {
-  AlertCircle,
-  Brain,
-  Loader2,
-  Pin,
-  PinOff,
-  RefreshCw,
-  Search,
-  Trash2,
-} from 'lucide-react'
+import { AlertCircle, Brain, Loader2, Pin, PinOff, RefreshCw, Search, Trash2 } from 'lucide-react'
 import { useCallback, useEffect, useRef, useState } from 'react'
 
 const CLAW_API = 'http://127.0.0.1:3710'
@@ -62,9 +53,7 @@ function SourceBadge({ source }: { source: string }) {
   return (
     <span
       className={`rounded-full px-2 py-0.5 text-xs font-medium ${
-        isExplicit
-          ? 'bg-sky-900/40 text-sky-300'
-          : 'bg-zinc-700/60 text-zinc-400'
+        isExplicit ? 'bg-sky-900/40 text-sky-300' : 'bg-zinc-700/60 text-zinc-400'
       }`}
     >
       {source}
@@ -74,8 +63,7 @@ function SourceBadge({ source }: { source: string }) {
 
 function ConfidenceBar({ value }: { value: number }) {
   const pct = Math.round(Math.max(0, Math.min(1, value)) * 100)
-  const color =
-    pct >= 75 ? 'bg-emerald-500' : pct >= 40 ? 'bg-yellow-500' : 'bg-red-500'
+  const color = pct >= 75 ? 'bg-emerald-500' : pct >= 40 ? 'bg-yellow-500' : 'bg-red-500'
   return (
     <div className="flex items-center gap-2">
       <div className="h-1.5 w-20 overflow-hidden rounded-full bg-zinc-700">
@@ -115,9 +103,7 @@ export default function ClawMemoryPage() {
         setClawDown(true)
         return
       }
-      const data = (await res.json()) as
-        | { memories: ClawMemory[] }
-        | ClawMemory[]
+      const data = (await res.json()) as { memories: ClawMemory[] } | ClawMemory[]
       const list = Array.isArray(data) ? data : (data.memories ?? [])
       setMemories(list)
       setClawDown(false)
@@ -190,14 +176,8 @@ export default function ClawMemoryPage() {
   }
 
   const handleClearAll = async () => {
-    if (
-      !window.confirm(
-        'Delete ALL memories for user "admin"? This cannot be undone.',
-      )
-    )
-      return
-    if (!window.confirm('Are you absolutely sure? All memories will be lost.'))
-      return
+    if (!window.confirm('Delete ALL memories for user "admin"? This cannot be undone.')) return
+    if (!window.confirm('Are you absolutely sure? All memories will be lost.')) return
     try {
       await fetch(`${CLAW_API}/claw/memories?user_id=admin`, {
         method: 'DELETE',
@@ -230,9 +210,7 @@ export default function ClawMemoryPage() {
           <div className="flex items-start gap-3">
             <AlertCircle className="mt-0.5 h-5 w-5 shrink-0 text-yellow-400" />
             <div>
-              <p className="font-medium text-yellow-300">
-                nself-claw is not running
-              </p>
+              <p className="font-medium text-yellow-300">nself-claw is not running</p>
               <p className="mt-1 text-sm text-yellow-400/80">
                 Start the claw plugin to view memory entries.
               </p>
@@ -303,16 +281,11 @@ export default function ClawMemoryPage() {
             },
             {
               label: 'Oldest entry',
-              value: stats.oldest_entry
-                ? new Date(stats.oldest_entry).toLocaleDateString()
-                : '—',
+              value: stats.oldest_entry ? new Date(stats.oldest_entry).toLocaleDateString() : '—',
               color: 'text-zinc-400',
             },
           ].map(({ label, value, color }) => (
-            <div
-              key={label}
-              className="rounded-xl border border-zinc-700/50 bg-zinc-800/50 p-4"
-            >
+            <div key={label} className="rounded-xl border border-zinc-700/50 bg-zinc-800/50 p-4">
               <p className="text-xs text-zinc-500">{label}</p>
               <p className={`mt-1 text-xl font-semibold ${color}`}>{value}</p>
             </div>
@@ -339,10 +312,7 @@ export default function ClawMemoryPage() {
       {loading && (
         <div className="space-y-3">
           {[1, 2, 3, 4].map((n) => (
-            <div
-              key={n}
-              className="h-24 animate-pulse rounded-xl bg-zinc-800/50"
-            />
+            <div key={n} className="h-24 animate-pulse rounded-xl bg-zinc-800/50" />
           ))}
         </div>
       )}
@@ -352,9 +322,7 @@ export default function ClawMemoryPage() {
         <div className="flex flex-col items-center justify-center rounded-xl border border-zinc-700/50 bg-zinc-800/30 py-16">
           <Brain className="mb-3 h-10 w-10 text-zinc-600" />
           <p className="text-sm text-zinc-500">
-            {query
-              ? 'No memories match your search.'
-              : 'No memories stored yet.'}
+            {query ? 'No memories match your search.' : 'No memories stored yet.'}
           </p>
           {query && (
             <button
@@ -383,9 +351,7 @@ export default function ClawMemoryPage() {
                 <div className="flex items-start justify-between gap-3">
                   {/* Content */}
                   <div className="min-w-0 flex-1 space-y-2">
-                    <p className="text-sm leading-relaxed text-zinc-200">
-                      {memory.content}
-                    </p>
+                    <p className="text-sm leading-relaxed text-zinc-200">{memory.content}</p>
                     <div className="flex flex-wrap items-center gap-3">
                       <SourceBadge source={memory.source} />
                       <ConfidenceBar value={memory.confidence} />
@@ -403,9 +369,7 @@ export default function ClawMemoryPage() {
                     <div className="flex flex-wrap items-center gap-3 text-xs text-zinc-600">
                       <span className="font-mono">{memory.entity_id}</span>
                       <span>·</span>
-                      <span>
-                        {new Date(memory.created_at).toLocaleString()}
-                      </span>
+                      <span>{new Date(memory.created_at).toLocaleString()}</span>
                     </div>
                   </div>
 
@@ -421,11 +385,7 @@ export default function ClawMemoryPage() {
                           : 'text-zinc-600 hover:bg-zinc-700/50 hover:text-zinc-400'
                       }`}
                     >
-                      {isPinned ? (
-                        <Pin className="h-4 w-4" />
-                      ) : (
-                        <PinOff className="h-4 w-4" />
-                      )}
+                      {isPinned ? <Pin className="h-4 w-4" /> : <PinOff className="h-4 w-4" />}
                     </button>
                     <button
                       type="button"

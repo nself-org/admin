@@ -69,9 +69,7 @@ function parseDockerCompose(content: string): Record<string, ServiceDetail> {
         currentServiceData.image = propLine.replace('image:', '').trim()
         currentSection = null
       } else if (propLine.startsWith('container_name:')) {
-        currentServiceData.container_name = propLine
-          .replace('container_name:', '')
-          .trim()
+        currentServiceData.container_name = propLine.replace('container_name:', '').trim()
         currentSection = null
       } else if (propLine.startsWith('restart:')) {
         currentServiceData.restart = propLine.replace('restart:', '').trim()
@@ -95,28 +93,18 @@ function parseDockerCompose(content: string): Record<string, ServiceDetail> {
     }
 
     // Parse list items (6 or 8 spaces indentation)
-    if (
-      currentSection &&
-      currentServiceData &&
-      (line.match(/^ {6}- /) || line.match(/^ {8}/))
-    ) {
+    if (currentSection && currentServiceData && (line.match(/^ {6}- /) || line.match(/^ {8}/))) {
       const item = line.replace(/^ {6}- |^ {8}/, '').trim()
 
       if (currentSection === 'ports' && currentServiceData.ports) {
         currentServiceData.ports.push(item.replace(/"/g, ''))
-      } else if (
-        currentSection === 'depends_on' &&
-        currentServiceData.depends_on
-      ) {
+      } else if (currentSection === 'depends_on' && currentServiceData.depends_on) {
         // Handle both simple list and object format
         const serviceName = item.split(':')[0].trim()
         if (!currentServiceData.depends_on.includes(serviceName)) {
           currentServiceData.depends_on.push(serviceName)
         }
-      } else if (
-        currentSection === 'environment' &&
-        currentServiceData.environment
-      ) {
+      } else if (currentSection === 'environment' && currentServiceData.environment) {
         const [key, ...valueParts] = item.split(':')
         if (key) {
           const value = valueParts.join(':').trim()
@@ -155,10 +143,7 @@ export async function GET(_request: NextRequest): Promise<NextResponse> {
     }
 
     // Parse custom docker-compose.custom.yml if exists
-    const customComposePath = path.join(
-      projectPath,
-      'docker-compose.custom.yml',
-    )
+    const customComposePath = path.join(projectPath, 'docker-compose.custom.yml')
     if (fs.existsSync(customComposePath)) {
       try {
         const yamlContent = fs.readFileSync(customComposePath, 'utf8')
@@ -176,13 +161,7 @@ export async function GET(_request: NextRequest): Promise<NextResponse> {
     }
 
     // Also read custom service details from .env file
-    const envFiles = [
-      '.env.dev',
-      '.env.staging',
-      '.env.prod',
-      '.env.local',
-      '.env',
-    ]
+    const envFiles = ['.env.dev', '.env.staging', '.env.prod', '.env.local', '.env']
     let customServiceInfo: Record<string, any> = {}
 
     for (const envFile of envFiles) {
@@ -235,7 +214,7 @@ export async function GET(_request: NextRequest): Promise<NextResponse> {
         error: 'Failed to get service details',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

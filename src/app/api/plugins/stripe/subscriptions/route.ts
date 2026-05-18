@@ -18,8 +18,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       return NextResponse.json({
         success: true,
         pluginInstalled: false,
-        message:
-          'Stripe plugin not installed. Run: nself plugin install stripe',
+        message: 'Stripe plugin not installed. Run: nself plugin install stripe',
         subscriptions: [],
         total: 0,
       })
@@ -42,11 +41,10 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         `_or: [
           { customer_email: { _ilike: "%${search}%" } },
           { product_name: { _ilike: "%${search}%" } }
-        ]`,
+        ]`
       )
     }
-    const whereClause =
-      conditions.length > 0 ? `where: { ${conditions.join(', ')} }` : ''
+    const whereClause = conditions.length > 0 ? `where: { ${conditions.join(', ')} }` : ''
 
     const result = await hasuraQuery<{
       subscriptions: Array<{
@@ -104,9 +102,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       })
     }
 
-    const subscriptions: StripeSubscription[] = (
-      result.data?.subscriptions || []
-    ).map((s) => ({
+    const subscriptions: StripeSubscription[] = (result.data?.subscriptions || []).map((s) => ({
       id: s.id,
       customerId: s.customer_id,
       customerEmail: s.customer_email,
@@ -125,12 +121,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 
     const total = result.data?.total?.aggregate?.count || 0
 
-    logger.api(
-      'GET',
-      '/api/plugins/stripe/subscriptions',
-      200,
-      Date.now() - startTime,
-    )
+    logger.api('GET', '/api/plugins/stripe/subscriptions', 200, Date.now() - startTime)
 
     return NextResponse.json({
       success: true,
@@ -153,7 +144,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to fetch subscriptions',
         details: err.message || 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

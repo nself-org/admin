@@ -127,18 +127,18 @@ function SeedContent() {
   // State 5: offline
   if (offline) {
     return (
-      <div className="p-6 space-y-4">
-        <div className="flex items-center gap-3 p-4 rounded-lg bg-yellow-500/10 border border-yellow-500/30">
-          <WifiOff className="h-5 w-5 text-yellow-500 flex-shrink-0" />
+      <div className="space-y-4 p-6">
+        <div className="flex items-center gap-3 rounded-lg border border-yellow-500/30 bg-yellow-500/10 p-4">
+          <WifiOff className="h-5 w-5 flex-shrink-0 text-yellow-500" />
           <div>
             <p className="font-medium text-yellow-400">Cannot reach database</p>
-            <p className="text-sm text-gray-400 mt-0.5">
+            <p className="mt-0.5 text-sm text-gray-400">
               Seed operations require a running nself stack with Postgres.
             </p>
           </div>
         </div>
         <Button onClick={fetchStatus} disabled={loading} variant="secondary" size="sm">
-          <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
+          <RefreshCw className={`mr-2 h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
           Retry
         </Button>
       </div>
@@ -148,16 +148,16 @@ function SeedContent() {
   // State 4: error
   if (error && !status) {
     return (
-      <div className="p-6 space-y-4">
-        <div className="flex items-center gap-3 p-4 rounded-lg bg-red-500/10 border border-red-500/30">
-          <AlertTriangle className="h-5 w-5 text-red-400 flex-shrink-0" />
+      <div className="space-y-4 p-6">
+        <div className="flex items-center gap-3 rounded-lg border border-red-500/30 bg-red-500/10 p-4">
+          <AlertTriangle className="h-5 w-5 flex-shrink-0 text-red-400" />
           <div>
             <p className="font-medium text-red-400">Failed to load seed status</p>
-            <p className="text-sm text-gray-400 mt-0.5">{error}</p>
+            <p className="mt-0.5 text-sm text-gray-400">{error}</p>
           </div>
         </div>
         <Button onClick={fetchStatus} disabled={loading} variant="secondary" size="sm">
-          <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
+          <RefreshCw className={`mr-2 h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
           Retry
         </Button>
       </div>
@@ -168,10 +168,16 @@ function SeedContent() {
   if (!status) {
     return (
       <div className="p-6 text-center text-gray-400">
-        <Database className="h-8 w-8 mx-auto mb-2 opacity-50" />
+        <Database className="mx-auto mb-2 h-8 w-8 opacity-50" />
         <p>No seed information available.</p>
-        <Button onClick={fetchStatus} disabled={loading} variant="secondary" size="sm" className="mt-3">
-          <RefreshCw className="h-4 w-4 mr-2" />
+        <Button
+          onClick={fetchStatus}
+          disabled={loading}
+          variant="secondary"
+          size="sm"
+          className="mt-3"
+        >
+          <RefreshCw className="mr-2 h-4 w-4" />
           Load Status
         </Button>
       </div>
@@ -180,23 +186,25 @@ function SeedContent() {
 
   // States 6+7: success
   return (
-    <div className="p-6 space-y-6">
+    <div className="space-y-6 p-6">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-xl font-semibold text-white">Seed Data</h2>
-          <p className="text-sm text-gray-400 mt-1">Manage development seed data for your database</p>
+          <p className="mt-1 text-sm text-gray-400">
+            Manage development seed data for your database
+          </p>
         </div>
         <Button onClick={fetchStatus} disabled={loading || !!action} variant="secondary" size="sm">
           {/* State 2: refresh spinner */}
-          <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
+          <RefreshCw className={`mr-2 h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
           {loading ? 'Loading…' : 'Refresh'}
         </Button>
       </div>
 
       {/* Seed status */}
       <div className="rounded-lg border border-white/10 bg-white/[0.02] p-4">
-        <div className="flex items-center gap-3 mb-4">
+        <div className="mb-4 flex items-center gap-3">
           <div
             className={`h-3 w-3 rounded-full ${status.seeded ? 'bg-green-400' : 'bg-gray-500'}`}
           />
@@ -204,7 +212,7 @@ function SeedContent() {
             {status.seeded ? 'Database seeded' : 'Not seeded'}
           </span>
           {status.lastSeededAt && (
-            <span className="text-xs text-gray-500 ml-auto">
+            <span className="ml-auto text-xs text-gray-500">
               Last seeded: {new Date(status.lastSeededAt).toLocaleString()}
             </span>
           )}
@@ -214,9 +222,9 @@ function SeedContent() {
             {status.tables.map((t) => (
               <div
                 key={t.name}
-                className="flex items-center justify-between px-3 py-2 rounded-lg bg-white/5 border border-white/10"
+                className="flex items-center justify-between rounded-lg border border-white/10 bg-white/5 px-3 py-2"
               >
-                <span className="text-xs font-mono text-gray-300">{t.name}</span>
+                <span className="font-mono text-xs text-gray-300">{t.name}</span>
                 <span className="text-xs text-gray-500">{t.rowCount.toLocaleString()} rows</span>
               </div>
             ))}
@@ -226,15 +234,11 @@ function SeedContent() {
 
       {/* Actions */}
       <div className="flex flex-wrap gap-3">
-        <Button
-          onClick={() => runSeedAction('seed')}
-          disabled={!!action}
-          size="sm"
-        >
+        <Button onClick={() => runSeedAction('seed')} disabled={!!action} size="sm">
           {action === 'seed' ? (
-            <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
           ) : (
-            <Zap className="h-4 w-4 mr-2" />
+            <Zap className="mr-2 h-4 w-4" />
           )}
           {action === 'seed' ? 'Seeding…' : 'Run Seed'}
         </Button>
@@ -245,9 +249,9 @@ function SeedContent() {
           size="sm"
         >
           {action === 'reset' ? (
-            <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
           ) : (
-            <Trash2 className="h-4 w-4 mr-2" />
+            <Trash2 className="mr-2 h-4 w-4" />
           )}
           {action === 'reset'
             ? 'Resetting…'
@@ -266,7 +270,7 @@ function SeedContent() {
       {/* Operation result */}
       {result && (
         <div
-          className={`rounded-lg border p-4 space-y-3 ${
+          className={`space-y-3 rounded-lg border p-4 ${
             result.success
               ? 'border-green-500/30 bg-green-500/10'
               : 'border-red-500/30 bg-red-500/10'
@@ -274,16 +278,16 @@ function SeedContent() {
         >
           <div className="flex items-center gap-2">
             {result.success ? (
-              <CheckCircle className="h-5 w-5 text-green-400 flex-shrink-0" />
+              <CheckCircle className="h-5 w-5 flex-shrink-0 text-green-400" />
             ) : (
-              <AlertTriangle className="h-5 w-5 text-red-400 flex-shrink-0" />
+              <AlertTriangle className="h-5 w-5 flex-shrink-0 text-red-400" />
             )}
             <p className={`font-medium ${result.success ? 'text-green-400' : 'text-red-400'}`}>
               {result.message}
             </p>
           </div>
           {result.success && (
-            <div className="text-xs text-gray-400 space-y-1">
+            <div className="space-y-1 text-xs text-gray-400">
               <p>Tables affected: {result.tablesAffected.join(', ') || 'none'}</p>
               <p>Rows inserted: {result.rowsInserted.toLocaleString()}</p>
             </div>
@@ -291,7 +295,7 @@ function SeedContent() {
           {result.errors && result.errors.length > 0 && (
             <ul className="space-y-1">
               {result.errors.map((e, i) => (
-                <li key={i} className="text-xs text-red-300 font-mono">
+                <li key={i} className="font-mono text-xs text-red-300">
                   {e}
                 </li>
               ))}
@@ -301,8 +305,8 @@ function SeedContent() {
       )}
 
       {error && (
-        <div className="flex items-center gap-2 p-3 rounded-lg bg-red-500/10 border border-red-500/30">
-          <AlertTriangle className="h-4 w-4 text-red-400 flex-shrink-0" />
+        <div className="flex items-center gap-2 rounded-lg border border-red-500/30 bg-red-500/10 p-3">
+          <AlertTriangle className="h-4 w-4 flex-shrink-0 text-red-400" />
           <p className="text-sm text-red-400">{error}</p>
         </div>
       )}

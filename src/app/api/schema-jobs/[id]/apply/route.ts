@@ -22,7 +22,7 @@ function getJobsCollection() {
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> },
+  { params }: { params: Promise<{ id: string }> }
 ): Promise<NextResponse> {
   const authError = await requireAuth(request)
   if (authError) return authError
@@ -34,10 +34,7 @@ export async function POST(
     const job = col.findOne({ id })
 
     if (!job) {
-      return NextResponse.json(
-        { success: false, error: 'Job not found' },
-        { status: 404 },
-      )
+      return NextResponse.json({ success: false, error: 'Job not found' }, { status: 404 })
     }
 
     if (job.status !== 'pending') {
@@ -46,7 +43,7 @@ export async function POST(
           success: false,
           error: `Job is not pending (current status: ${job.status})`,
         },
-        { status: 409 },
+        { status: 409 }
       )
     }
 
@@ -58,7 +55,7 @@ export async function POST(
       const result = await execFilePromise(
         'nself',
         ['db', 'query', '--sql', job.forwardDDL as string],
-        { timeout: 30000 },
+        { timeout: 30000 }
       )
       output = result.stdout
     } catch (err) {
@@ -74,10 +71,7 @@ export async function POST(
         j.status = 'failed'
         j.error = applyError
       })
-      return NextResponse.json(
-        { success: false, error: applyError, output },
-        { status: 500 },
-      )
+      return NextResponse.json({ success: false, error: applyError, output }, { status: 500 })
     }
 
     col.findAndUpdate({ id }, (j: Record<string, unknown>) => {
@@ -94,7 +88,7 @@ export async function POST(
         error: 'Failed to apply migration',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

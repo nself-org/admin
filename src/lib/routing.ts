@@ -8,11 +8,7 @@ let lastNavigationPath = ''
 // Minimum time between navigation attempts to the same path (ms)
 const NAVIGATION_COOLDOWN = 1000
 
-export function safeNavigate(
-  router: AppRouterInstance,
-  path: string,
-  force: boolean = false,
-) {
+export function safeNavigate(router: AppRouterInstance, path: string, force: boolean = false) {
   const now = Date.now()
 
   // Prevent duplicate navigation attempts
@@ -21,20 +17,12 @@ export function safeNavigate(
   }
 
   // Prevent rapid navigation to the same path
-  if (
-    lastNavigationPath === path &&
-    now - lastNavigationTime < NAVIGATION_COOLDOWN &&
-    !force
-  ) {
+  if (lastNavigationPath === path && now - lastNavigationTime < NAVIGATION_COOLDOWN && !force) {
     return false
   }
 
   // Check if we're already on the target path
-  if (
-    typeof window !== 'undefined' &&
-    window.location.pathname === path &&
-    !force
-  ) {
+  if (typeof window !== 'undefined' && window.location.pathname === path && !force) {
     return false
   }
 
@@ -97,17 +85,11 @@ export function isInitPage(pathname: string): boolean {
 
 // Check if we're on a fullscreen page that shouldn't redirect
 export function isFullscreenPage(pathname: string): boolean {
-  return (
-    ['/login', '/start', '/build'].includes(pathname) ||
-    pathname.startsWith('/init')
-  )
+  return ['/login', '/start', '/build'].includes(pathname) || pathname.startsWith('/init')
 }
 
 // Check if a redirect is needed from current path to target
-export function shouldRedirect(
-  currentPath: string,
-  targetPath: string,
-): boolean {
+export function shouldRedirect(currentPath: string, targetPath: string): boolean {
   // Never redirect if we're already on the target path
   if (currentPath === targetPath) {
     return false

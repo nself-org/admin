@@ -18,30 +18,17 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     const nselfPath = await findNselfPath()
     const body = await request.json()
 
-    const {
-      name,
-      chart,
-      namespace,
-      values,
-      set,
-      dryRun,
-      wait,
-      timeout,
-      install,
-    } = body
+    const { name, chart, namespace, values, set, dryRun, wait, timeout, install } = body
 
     if (!name) {
       return NextResponse.json(
         { success: false, error: 'Release name is required' },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
     if (!chart) {
-      return NextResponse.json(
-        { success: false, error: 'Chart is required' },
-        { status: 400 },
-      )
+      return NextResponse.json({ success: false, error: 'Chart is required' }, { status: 400 })
     }
 
     const args: string[] = ['helm', 'upgrade', name, chart]
@@ -57,14 +44,11 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     if (timeout) args.push(`--timeout=${timeout}`)
     if (install) args.push('--install')
 
-    const { stdout } = await execAsync(
-      `${nselfPath} ${args.join(' ')} --json`,
-      {
-        cwd: projectPath,
-        env: { ...process.env, PATH: getEnhancedPath() },
-        timeout: 600000,
-      },
-    )
+    const { stdout } = await execAsync(`${nselfPath} ${args.join(' ')} --json`, {
+      cwd: projectPath,
+      env: { ...process.env, PATH: getEnhancedPath() },
+      timeout: 600000,
+    })
 
     const result = JSON.parse(stdout)
 
@@ -86,7 +70,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to upgrade helm release',
         details: err.message,
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

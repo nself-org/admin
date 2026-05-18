@@ -27,7 +27,7 @@ test.describe('Authentication Flow', () => {
     // The rate limiter uses in-memory state shared by the Next.js dev server.
     test.skip(
       !!process.env.CI,
-      'Skipped in CI: triggers shared rate limit state that blocks subsequent tests',
+      'Skipped in CI: triggers shared rate limit state that blocks subsequent tests'
     )
 
     await loginPage.goto()
@@ -39,9 +39,7 @@ test.describe('Authentication Flow', () => {
     }
 
     // Should show rate limit error
-    await expect(page.locator('[role="alert"]')).toContainText(
-      /rate limit|too many|wait/i,
-    )
+    await expect(page.locator('[role="alert"]')).toContainText(/rate limit|too many|wait/i)
   })
 
   test('should logout successfully', async ({ loginPage, dashboardPage }) => {
@@ -51,7 +49,7 @@ test.describe('Authentication Flow', () => {
     // pages — none of which are reachable in CI without a real backend.
     test.skip(
       !!process.env.CI,
-      'Skipped in CI: logout button unreachable on /build (fullscreen, no Header)',
+      'Skipped in CI: logout button unreachable on /build (fullscreen, no Header)'
     )
 
     // Login first
@@ -107,9 +105,7 @@ test.describe('Authentication Flow', () => {
     await loginPage.goto()
 
     // Check for password visibility toggle button
-    const toggleButton = loginPage.page.locator(
-      'button[aria-label*="password"]',
-    )
+    const toggleButton = loginPage.page.locator('button[aria-label*="password"]')
     if (await toggleButton.isVisible()) {
       await toggleButton.click()
       // Password input should change type

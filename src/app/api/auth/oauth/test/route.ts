@@ -18,7 +18,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     if (!provider || typeof provider !== 'string') {
       return NextResponse.json(
         { success: false, error: 'Provider name is required' },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -35,7 +35,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           error: `OAuth test failed for provider: ${provider}`,
           details: result.error || result.stderr || 'Unknown error',
         },
-        { status: 500 },
+        { status: 500 }
       )
     }
 
@@ -50,7 +50,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to test OAuth provider',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

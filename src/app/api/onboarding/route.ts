@@ -47,7 +47,7 @@ export async function POST(request: NextRequest) {
         error: 'Failed to save onboarding state',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

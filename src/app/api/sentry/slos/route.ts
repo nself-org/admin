@@ -6,8 +6,7 @@ import { NextResponse } from 'next/server'
  * Returns honest empty when the plugin is not running.
  */
 
-const SLO_TRACKER_URL =
-  process.env.SLO_TRACKER_URL ?? 'http://127.0.0.1:3835'
+const SLO_TRACKER_URL = process.env.SLO_TRACKER_URL ?? 'http://127.0.0.1:3835'
 
 export async function GET() {
   try {
@@ -19,21 +18,16 @@ export async function GET() {
     if (!res.ok) {
       return NextResponse.json(
         { error: `nself-slo-tracker upstream error: ${res.status}` },
-        { status: res.status },
+        { status: res.status }
       )
     }
 
     const data: unknown = await res.json()
     return NextResponse.json(data)
   } catch (err) {
-    const msg =
-      err instanceof Error ? err.message : 'Failed to reach nself-slo-tracker'
+    const msg = err instanceof Error ? err.message : 'Failed to reach nself-slo-tracker'
 
-    if (
-      msg.includes('ECONNREFUSED') ||
-      msg.includes('fetch failed') ||
-      msg.includes('timeout')
-    ) {
+    if (msg.includes('ECONNREFUSED') || msg.includes('fetch failed') || msg.includes('timeout')) {
       return NextResponse.json({ slos: [], generatedAt: new Date().toISOString() })
     }
 

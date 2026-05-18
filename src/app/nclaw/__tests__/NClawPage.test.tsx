@@ -72,9 +72,7 @@ describe('NClawPage', () => {
   it('renders the ɳClaw page header', () => {
     render(<NClawPage />)
     expect(screen.getByText('ɳClaw')).toBeInTheDocument()
-    expect(
-      screen.getByText('AI assistant plugin management'),
-    ).toBeInTheDocument()
+    expect(screen.getByText('AI assistant plugin management')).toBeInTheDocument()
   })
 
   it('shows a Refresh button', () => {
@@ -120,24 +118,12 @@ describe('NClawPage', () => {
   it('renders all 6 section nav buttons', async () => {
     render(<NClawPage />)
     await waitFor(() => {
-      expect(
-        screen.getByRole('button', { name: /^Overview$/i }),
-      ).toBeInTheDocument()
-      expect(
-        screen.getByRole('button', { name: /Connected Accounts/i }),
-      ).toBeInTheDocument()
-      expect(
-        screen.getByRole('button', { name: /Companion Devices/i }),
-      ).toBeInTheDocument()
-      expect(
-        screen.getByRole('button', { name: /^Security$/i }),
-      ).toBeInTheDocument()
-      expect(
-        screen.getByRole('button', { name: /Plugin Secrets/i }),
-      ).toBeInTheDocument()
-      expect(
-        screen.getByRole('button', { name: /^Logs$/i }),
-      ).toBeInTheDocument()
+      expect(screen.getByRole('button', { name: /^Overview$/i })).toBeInTheDocument()
+      expect(screen.getByRole('button', { name: /Connected Accounts/i })).toBeInTheDocument()
+      expect(screen.getByRole('button', { name: /Companion Devices/i })).toBeInTheDocument()
+      expect(screen.getByRole('button', { name: /^Security$/i })).toBeInTheDocument()
+      expect(screen.getByRole('button', { name: /Plugin Secrets/i })).toBeInTheDocument()
+      expect(screen.getByRole('button', { name: /^Logs$/i })).toBeInTheDocument()
     })
   })
 
@@ -157,18 +143,12 @@ describe('NClawPage', () => {
     render(<NClawPage />)
 
     await waitFor(() => {
-      expect(
-        screen.getByRole('button', { name: /Connected Accounts/i }),
-      ).toBeInTheDocument()
+      expect(screen.getByRole('button', { name: /Connected Accounts/i })).toBeInTheDocument()
     })
-    await user.click(
-      screen.getByRole('button', { name: /Connected Accounts/i }),
-    )
+    await user.click(screen.getByRole('button', { name: /Connected Accounts/i }))
 
     await waitFor(() => {
-      expect(
-        screen.getByRole('button', { name: /Add account/i }),
-      ).toBeInTheDocument()
+      expect(screen.getByRole('button', { name: /Add account/i })).toBeInTheDocument()
     })
   })
 
@@ -182,13 +162,9 @@ describe('NClawPage', () => {
     render(<NClawPage />)
 
     await waitFor(() => {
-      expect(
-        screen.getByRole('button', { name: /Connected Accounts/i }),
-      ).toBeInTheDocument()
+      expect(screen.getByRole('button', { name: /Connected Accounts/i })).toBeInTheDocument()
     })
-    await user.click(
-      screen.getByRole('button', { name: /Connected Accounts/i }),
-    )
+    await user.click(screen.getByRole('button', { name: /Connected Accounts/i }))
 
     await waitFor(() => {
       expect(screen.getByText('No accounts connected')).toBeInTheDocument()
@@ -202,9 +178,7 @@ describe('NClawPage', () => {
     render(<NClawPage />)
 
     await waitFor(() => {
-      expect(
-        screen.getByRole('button', { name: /Companion Devices/i }),
-      ).toBeInTheDocument()
+      expect(screen.getByRole('button', { name: /Companion Devices/i })).toBeInTheDocument()
     })
     await user.click(screen.getByRole('button', { name: /Companion Devices/i }))
 
@@ -223,9 +197,7 @@ describe('NClawPage', () => {
     render(<NClawPage />)
 
     await waitFor(() => {
-      expect(
-        screen.getByRole('button', { name: /Companion Devices/i }),
-      ).toBeInTheDocument()
+      expect(screen.getByRole('button', { name: /Companion Devices/i })).toBeInTheDocument()
     })
     await user.click(screen.getByRole('button', { name: /Companion Devices/i }))
 
@@ -241,16 +213,12 @@ describe('NClawPage', () => {
     render(<NClawPage />)
 
     await waitFor(() => {
-      expect(
-        screen.getByRole('button', { name: /^Security$/i }),
-      ).toBeInTheDocument()
+      expect(screen.getByRole('button', { name: /^Security$/i })).toBeInTheDocument()
     })
     await user.click(screen.getByRole('button', { name: /^Security$/i }))
 
     await waitFor(() => {
-      expect(
-        screen.getByRole('button', { name: /Enroll passkey/i }),
-      ).toBeInTheDocument()
+      expect(screen.getByRole('button', { name: /Enroll passkey/i })).toBeInTheDocument()
     })
   })
 
@@ -259,9 +227,7 @@ describe('NClawPage', () => {
     render(<NClawPage />)
 
     await waitFor(() => {
-      expect(
-        screen.getByRole('button', { name: /^Security$/i }),
-      ).toBeInTheDocument()
+      expect(screen.getByRole('button', { name: /^Security$/i })).toBeInTheDocument()
     })
     await user.click(screen.getByRole('button', { name: /^Security$/i }))
 
@@ -275,9 +241,7 @@ describe('NClawPage', () => {
     render(<NClawPage />)
 
     await waitFor(() => {
-      expect(
-        screen.getByRole('button', { name: /^Security$/i }),
-      ).toBeInTheDocument()
+      expect(screen.getByRole('button', { name: /^Security$/i })).toBeInTheDocument()
     })
     await user.click(screen.getByRole('button', { name: /^Security$/i }))
 
@@ -297,9 +261,7 @@ describe('NClawPage', () => {
     render(<NClawPage />)
 
     await waitFor(() => {
-      expect(
-        screen.getByRole('button', { name: /Plugin Secrets/i }),
-      ).toBeInTheDocument()
+      expect(screen.getByRole('button', { name: /Plugin Secrets/i })).toBeInTheDocument()
     })
     await user.click(screen.getByRole('button', { name: /Plugin Secrets/i }))
 
@@ -318,16 +280,12 @@ describe('NClawPage', () => {
     render(<NClawPage />)
 
     await waitFor(() => {
-      expect(
-        screen.getByRole('button', { name: /Plugin Secrets/i }),
-      ).toBeInTheDocument()
+      expect(screen.getByRole('button', { name: /Plugin Secrets/i })).toBeInTheDocument()
     })
     await user.click(screen.getByRole('button', { name: /Plugin Secrets/i }))
 
     await waitFor(() => {
-      expect(
-        screen.getByText(/Secret values are never displayed here/i),
-      ).toBeInTheDocument()
+      expect(screen.getByText(/Secret values are never displayed here/i)).toBeInTheDocument()
     })
   })
 
@@ -336,9 +294,7 @@ describe('NClawPage', () => {
     render(<NClawPage />)
 
     await waitFor(() => {
-      expect(
-        screen.getByRole('button', { name: /Plugin Secrets/i }),
-      ).toBeInTheDocument()
+      expect(screen.getByRole('button', { name: /Plugin Secrets/i })).toBeInTheDocument()
     })
     await user.click(screen.getByRole('button', { name: /Plugin Secrets/i }))
 
@@ -355,9 +311,7 @@ describe('NClawPage', () => {
     render(<NClawPage />)
 
     await waitFor(() => {
-      expect(
-        screen.getByRole('button', { name: /^Logs$/i }),
-      ).toBeInTheDocument()
+      expect(screen.getByRole('button', { name: /^Logs$/i })).toBeInTheDocument()
     })
     await user.click(screen.getByRole('button', { name: /^Logs$/i }))
 
@@ -375,9 +329,7 @@ describe('NClawPage', () => {
     render(<NClawPage />)
 
     await waitFor(() => {
-      expect(
-        screen.getByRole('button', { name: /^Logs$/i }),
-      ).toBeInTheDocument()
+      expect(screen.getByRole('button', { name: /^Logs$/i })).toBeInTheDocument()
     })
     await user.click(screen.getByRole('button', { name: /^Logs$/i }))
 
@@ -391,16 +343,12 @@ describe('NClawPage', () => {
     render(<NClawPage />)
 
     await waitFor(() => {
-      expect(
-        screen.getByRole('button', { name: /^Logs$/i }),
-      ).toBeInTheDocument()
+      expect(screen.getByRole('button', { name: /^Logs$/i })).toBeInTheDocument()
     })
     await user.click(screen.getByRole('button', { name: /^Logs$/i }))
 
     await waitFor(() => {
-      expect(
-        screen.getByRole('checkbox', { name: /Auto-scroll/i }),
-      ).toBeInTheDocument()
+      expect(screen.getByRole('checkbox', { name: /Auto-scroll/i })).toBeInTheDocument()
     })
   })
 
@@ -412,9 +360,7 @@ describe('NClawPage', () => {
 
     // Wait for initial render to settle — look for the Refresh button itself
     await waitFor(() => {
-      expect(
-        screen.getByRole('button', { name: /Refresh/i }),
-      ).toBeInTheDocument()
+      expect(screen.getByRole('button', { name: /Refresh/i })).toBeInTheDocument()
     })
 
     const callsBefore = mockFetch.mock.calls.length

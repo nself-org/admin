@@ -1,14 +1,6 @@
 'use client'
 
-import {
-  Eye,
-  EyeOff,
-  KeyRound,
-  Send,
-  ToggleLeft,
-  ToggleRight,
-  Trash2,
-} from 'lucide-react'
+import { Eye, EyeOff, KeyRound, Send, ToggleLeft, ToggleRight, Trash2 } from 'lucide-react'
 import { useState } from 'react'
 import { HealthBadge } from './HealthBadge'
 import { WebhookEndpoint } from './types'
@@ -18,9 +10,7 @@ interface EndpointListProps {
   isLoading?: boolean
   onToggle: (id: string) => Promise<void>
   onRotateSecret: (id: string) => Promise<void>
-  onTest: (
-    id: string,
-  ) => Promise<{ success: boolean; response?: string; error?: string }>
+  onTest: (id: string) => Promise<{ success: boolean; response?: string; error?: string }>
   onDelete: (id: string) => Promise<void>
 }
 
@@ -39,9 +29,9 @@ export function EndpointList({
   const [pendingToggle, setPendingToggle] = useState<string | null>(null)
   const [pendingRotate, setPendingRotate] = useState<string | null>(null)
   const [pendingTest, setPendingTest] = useState<string | null>(null)
-  const [testResult, setTestResult] = useState<
-    Record<string, { success: boolean; msg: string }>
-  >({})
+  const [testResult, setTestResult] = useState<Record<string, { success: boolean; msg: string }>>(
+    {}
+  )
   const [showSecret, setShowSecret] = useState<Record<string, boolean>>({})
 
   const handleToggle = async (id: string) => {
@@ -71,9 +61,7 @@ export function EndpointList({
         ...r,
         [id]: {
           success: result.success,
-          msg: result.success
-            ? (result.response ?? 'OK')
-            : (result.error ?? 'Failed'),
+          msg: result.success ? (result.response ?? 'OK') : (result.error ?? 'Failed'),
         },
       }))
     } finally {
@@ -85,10 +73,7 @@ export function EndpointList({
     return (
       <div className="animate-pulse space-y-3">
         {[...Array(4)].map((_, i) => (
-          <div
-            key={i}
-            className="h-20 rounded-xl bg-zinc-100 dark:bg-zinc-800"
-          />
+          <div key={i} className="h-20 rounded-xl bg-zinc-100 dark:bg-zinc-800" />
         ))}
       </div>
     )
@@ -116,10 +101,7 @@ export function EndpointList({
                 <span className="truncate font-semibold text-zinc-900 dark:text-white">
                   {ep.name}
                 </span>
-                <HealthBadge
-                  score={ep.healthScore}
-                  circuitState={ep.circuitState}
-                />
+                <HealthBadge score={ep.healthScore} circuitState={ep.circuitState} />
                 {!ep.enabled && (
                   <span className="rounded-full bg-zinc-100 px-2 py-0.5 text-xs text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400">
                     Disabled
@@ -144,14 +126,10 @@ export function EndpointList({
               <div className="mt-2 flex items-center gap-2">
                 <span className="text-xs text-zinc-400">Secret:</span>
                 <span className="font-mono text-xs text-zinc-600 dark:text-zinc-400">
-                  {showSecret[ep.id]
-                    ? ep.signingSecretMasked
-                    : '••••••••••••••••'}
+                  {showSecret[ep.id] ? ep.signingSecretMasked : '••••••••••••••••'}
                 </span>
                 <button
-                  onClick={() =>
-                    setShowSecret((s) => ({ ...s, [ep.id]: !s[ep.id] }))
-                  }
+                  onClick={() => setShowSecret((s) => ({ ...s, [ep.id]: !s[ep.id] }))}
                   className="text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200"
                   title="Toggle secret visibility"
                 >
@@ -185,9 +163,7 @@ export function EndpointList({
                 className="rounded-lg p-1.5 text-zinc-400 hover:bg-zinc-100 hover:text-zinc-600 dark:hover:bg-zinc-800 dark:hover:text-zinc-200"
                 title="Rotate signing secret (old secret valid for 60s)"
               >
-                <KeyRound
-                  className={`h-5 w-5 ${pendingRotate === ep.id ? 'animate-pulse' : ''}`}
-                />
+                <KeyRound className={`h-5 w-5 ${pendingRotate === ep.id ? 'animate-pulse' : ''}`} />
               </button>
 
               <button
@@ -196,9 +172,7 @@ export function EndpointList({
                 className="rounded-lg p-1.5 text-zinc-400 hover:bg-zinc-100 hover:text-zinc-600 dark:hover:bg-zinc-800 dark:hover:text-zinc-200"
                 title="Send test event"
               >
-                <Send
-                  className={`h-5 w-5 ${pendingTest === ep.id ? 'animate-pulse' : ''}`}
-                />
+                <Send className={`h-5 w-5 ${pendingTest === ep.id ? 'animate-pulse' : ''}`} />
               </button>
 
               <button

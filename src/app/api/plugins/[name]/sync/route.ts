@@ -18,10 +18,7 @@ interface RouteContext {
   params: Promise<{ name: string }>
 }
 
-export async function POST(
-  request: NextRequest,
-  context: RouteContext,
-): Promise<NextResponse> {
+export async function POST(request: NextRequest, context: RouteContext): Promise<NextResponse> {
   const authError = await requireAuth(request)
   if (authError) return authError
 
@@ -33,7 +30,7 @@ export async function POST(
     if (!/^[a-zA-Z0-9_-]+$/.test(name)) {
       return NextResponse.json(
         { success: false, error: 'Invalid plugin name format' },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -42,14 +39,11 @@ export async function POST(
 
     logger.info('Triggering plugin sync', { name })
 
-    const { stdout, stderr } = await execAsync(
-      `${nselfPath} plugin ${name} sync`,
-      {
-        cwd: projectPath,
-        env: { ...process.env, PATH: getEnhancedPath() },
-        timeout: 300000, // 5 minute timeout for sync operations
-      },
-    )
+    const { stdout, stderr } = await execAsync(`${nselfPath} plugin ${name} sync`, {
+      cwd: projectPath,
+      env: { ...process.env, PATH: getEnhancedPath() },
+      timeout: 300000, // 5 minute timeout for sync operations
+    })
 
     // Try to parse sync status from output
     let syncStatus: PluginSyncStatus | null = null
@@ -83,7 +77,7 @@ export async function POST(
         details: err.message || 'Unknown error',
         output: err.stdout || err.stderr,
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

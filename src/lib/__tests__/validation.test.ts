@@ -15,7 +15,7 @@ import {
 describe('sanitizeHtml', () => {
   it('escapes HTML special characters', () => {
     expect(sanitizeHtml('<script>alert("xss")</script>')).toBe(
-      '&lt;script&gt;alert(&quot;xss&quot;)&lt;&#x2F;script&gt;',
+      '&lt;script&gt;alert(&quot;xss&quot;)&lt;&#x2F;script&gt;'
     )
   })
 
@@ -33,7 +33,7 @@ describe('sanitizeHtml', () => {
 
   it('handles multiple special characters', () => {
     expect(sanitizeHtml('<div class="test">\'quoted\'</div>')).toBe(
-      '&lt;div class=&quot;test&quot;&gt;&#x27;quoted&#x27;&lt;&#x2F;div&gt;',
+      '&lt;div class=&quot;test&quot;&gt;&#x27;quoted&#x27;&lt;&#x2F;div&gt;'
     )
   })
 })
@@ -44,9 +44,7 @@ describe('sanitizePath', () => {
   })
 
   it('removes directory traversal attempts', () => {
-    expect(sanitizePath('/project/../../../etc/passwd')).toBe(
-      '/project/etc/passwd',
-    )
+    expect(sanitizePath('/project/../../../etc/passwd')).toBe('/project/etc/passwd')
   })
 
   it('normalizes double slashes', () => {
@@ -90,9 +88,7 @@ describe('sanitizeCommand', () => {
   })
 
   it('preserves safe characters', () => {
-    expect(sanitizeCommand('nself build --env=production')).toBe(
-      'nself build --env=production',
-    )
+    expect(sanitizeCommand('nself build --env=production')).toBe('nself build --env=production')
   })
 })
 

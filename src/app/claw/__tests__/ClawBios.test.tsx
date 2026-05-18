@@ -92,9 +92,7 @@ describe('BiosPage', () => {
   it('renders the BIOS header', () => {
     render(<BiosPage />)
     expect(screen.getByText('BIOS')).toBeInTheDocument()
-    expect(
-      screen.getByText(/Behavioral Identity Operating System/i),
-    ).toBeInTheDocument()
+    expect(screen.getByText(/Behavioral Identity Operating System/i)).toBeInTheDocument()
   })
 
   // ── State 2: Checking ──────────────────────────────────────────────────────
@@ -169,9 +167,7 @@ describe('BiosPage', () => {
     setupRunning()
     render(<BiosPage />)
     await waitFor(() => {
-      expect(
-        screen.getByRole('button', { name: /Save snapshot/i }),
-      ).toBeInTheDocument()
+      expect(screen.getByRole('button', { name: /Save snapshot/i })).toBeInTheDocument()
     })
   })
 
@@ -182,9 +178,7 @@ describe('BiosPage', () => {
     render(<BiosPage />)
     await waitFor(() => {
       expect(screen.getByText('Drift detected')).toBeInTheDocument()
-      expect(
-        screen.getByRole('button', { name: /Heal drift/i }),
-      ).toBeInTheDocument()
+      expect(screen.getByRole('button', { name: /Heal drift/i })).toBeInTheDocument()
     })
   })
 
@@ -214,18 +208,14 @@ describe('BiosPage', () => {
 
     render(<BiosPage />)
     await waitFor(() => {
-      expect(
-        screen.getByRole('button', { name: /Save snapshot/i }),
-      ).toBeInTheDocument()
+      expect(screen.getByRole('button', { name: /Save snapshot/i })).toBeInTheDocument()
     })
 
     await user.click(screen.getByRole('button', { name: /Save snapshot/i }))
 
     await waitFor(() => {
       const calls = mockFetch.mock.calls.map((c) => c[0] as string)
-      expect(calls.some((url) => url.includes('/claw/bios/snapshot'))).toBe(
-        true,
-      )
+      expect(calls.some((url) => url.includes('/claw/bios/snapshot'))).toBe(true)
     })
   })
 
@@ -243,9 +233,7 @@ describe('BiosPage', () => {
 
     render(<BiosPage />)
     await waitFor(() => {
-      expect(
-        screen.getByRole('button', { name: /Save snapshot/i }),
-      ).toBeInTheDocument()
+      expect(screen.getByRole('button', { name: /Save snapshot/i })).toBeInTheDocument()
     })
     await user.click(screen.getByRole('button', { name: /Save snapshot/i }))
 
@@ -260,9 +248,7 @@ describe('BiosPage', () => {
     const user = userEvent.setup()
     render(<BiosPage />)
     await waitFor(() => {
-      expect(
-        screen.getByRole('button', { name: /Refresh/i }),
-      ).toBeInTheDocument()
+      expect(screen.getByRole('button', { name: /Refresh/i })).toBeInTheDocument()
     })
     const before = mockFetch.mock.calls.length
     await user.click(screen.getByRole('button', { name: /Refresh/i }))

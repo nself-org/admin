@@ -26,7 +26,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
             success: false,
             error: `Invalid endpoint category: ${endpoint}. Valid categories: ${validEndpoints.join(', ')}`,
           },
-          { status: 400 },
+          { status: 400 }
         )
       }
       args.push(`--endpoint=${endpoint}`)
@@ -41,7 +41,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           error: 'Failed to reset rate limits',
           details: result.error || result.stderr || 'Unknown error',
         },
-        { status: 500 },
+        { status: 500 }
       )
     }
 
@@ -56,7 +56,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to reset rate limits',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

@@ -13,9 +13,7 @@ export function TimelineSkeleton({ items = 6 }: TimelineSkeletonProps) {
           {/* Timeline indicator */}
           <div className="flex flex-col items-center">
             <Skeleton className="h-10 w-10 rounded-full" />
-            {i < items - 1 && (
-              <div className="my-2 w-0.5 flex-1 bg-zinc-200 dark:bg-zinc-800" />
-            )}
+            {i < items - 1 && <div className="my-2 w-0.5 flex-1 bg-zinc-200 dark:bg-zinc-800" />}
           </div>
           {/* Timeline content */}
           <Card className="flex-1">

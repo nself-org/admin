@@ -15,9 +15,7 @@ export function getCurrentTenantId(): string | null {
   }
 
   const cookies = document.cookie.split(';')
-  const tenantCookie = cookies.find((cookie) =>
-    cookie.trim().startsWith(`${TENANT_COOKIE_NAME}=`),
-  )
+  const tenantCookie = cookies.find((cookie) => cookie.trim().startsWith(`${TENANT_COOKIE_NAME}=`))
 
   if (!tenantCookie) {
     return null

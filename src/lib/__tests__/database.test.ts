@@ -101,12 +101,7 @@ describe('Database Module', () => {
     })
 
     it('should create session with remember me', async () => {
-      const token = await createSession(
-        'admin',
-        '127.0.0.1',
-        'Mozilla/5.0',
-        true,
-      )
+      const token = await createSession('admin', '127.0.0.1', 'Mozilla/5.0', true)
       const session = await getSession(token)
       expect(session?.rememberMe).toBe(true)
     })
@@ -284,9 +279,7 @@ describe('Database Module', () => {
 
   describe('Edge Cases', () => {
     it('should handle concurrent session creation', async () => {
-      const promises = Array.from({ length: 10 }, (_, i) =>
-        createSession(`user${i}`),
-      )
+      const promises = Array.from({ length: 10 }, (_, i) => createSession(`user${i}`))
       const tokens = await Promise.all(promises)
       expect(new Set(tokens).size).toBe(10) // All tokens should be unique
 

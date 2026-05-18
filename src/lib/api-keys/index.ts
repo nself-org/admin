@@ -101,8 +101,7 @@ function generateSecureApiKey(prefix: string): string {
   const randomBytes = crypto.randomBytes(30)
 
   // Convert to base62 (alphanumeric only)
-  const base62Chars =
-    'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+  const base62Chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
   let secret = ''
 
   for (let i = 0; i < randomBytes.length; i++) {
@@ -193,7 +192,7 @@ async function addApiKeyLog(
   keyId: string,
   action: ApiKeyLog['action'],
   details?: Record<string, unknown>,
-  ipAddress?: string,
+  ipAddress?: string
 ): Promise<void> {
   await initApiKeyCollections()
 
@@ -233,11 +232,7 @@ export async function getApiKeys(tenantId?: string): Promise<ApiKey[]> {
   let updated = false
 
   for (const key of keys) {
-    if (
-      key.status === 'active' &&
-      key.expiresAt &&
-      new Date(key.expiresAt) < now
-    ) {
+    if (key.status === 'active' && key.expiresAt && new Date(key.expiresAt) < now) {
       key.status = 'expired'
       key.updatedAt = now.toISOString()
       apiKeysCollection?.update(key)
@@ -265,7 +260,7 @@ export async function getApiKeyById(id: string): Promise<ApiKey | null> {
  */
 export async function createApiKey(
   input: CreateApiKeyInput,
-  createdBy: string = 'admin',
+  createdBy: string = 'admin'
 ): Promise<CreateApiKeyResult> {
   await initApiKeyCollections()
 
@@ -328,7 +323,7 @@ export async function updateApiKey(
       | 'permissions'
       | 'expiresAt'
     >
-  >,
+  >
 ): Promise<ApiKey | null> {
   await initApiKeyCollections()
 
@@ -448,7 +443,7 @@ export async function rotateApiKey(id: string): Promise<CreateApiKeyResult> {
  * This is the REAL validation that checks the hash
  */
 export async function validateApiKey(
-  key: string,
+  key: string
 ): Promise<{ valid: boolean; key?: ApiKey; error?: string }> {
   await initApiKeyCollections()
 
@@ -514,7 +509,7 @@ export async function validateApiKey(
  * Check if request is within rate limits
  */
 export async function checkRateLimit(
-  keyId: string,
+  keyId: string
 ): Promise<{ allowed: boolean; resetAt?: string; current?: number }> {
   await initApiKeyCollections()
 
@@ -544,9 +539,7 @@ export async function checkRateLimit(
   if (now > resetAt) {
     // Reset window
     rateLimitRecord.requests = [now.getTime()]
-    rateLimitRecord.resetAt = new Date(
-      now.getTime() + window * 1000,
-    ).toISOString()
+    rateLimitRecord.resetAt = new Date(now.getTime() + window * 1000).toISOString()
     apiKeyRateLimitCollection?.update(rateLimitRecord)
     getDatabase()?.saveDatabase()
     return { allowed: true, resetAt: rateLimitRecord.resetAt, current: 1 }
@@ -554,9 +547,7 @@ export async function checkRateLimit(
 
   // Filter requests within current window
   const windowStart = now.getTime() - window * 1000
-  const recentRequests = rateLimitRecord.requests.filter(
-    (timestamp) => timestamp > windowStart,
-  )
+  const recentRequests = rateLimitRecord.requests.filter((timestamp) => timestamp > windowStart)
 
   if (recentRequests.length >= limit) {
     await addApiKeyLog(keyId, 'rate_limited', {
@@ -599,7 +590,7 @@ export async function recordApiKeyUsage(
   ipAddress: string,
   userAgent?: string,
   requestSize?: number,
-  responseSize?: number,
+  responseSize?: number
 ): Promise<void> {
   await initApiKeyCollections()
 
@@ -633,7 +624,7 @@ export async function getApiKeyUsage(
     offset?: number
     startDate?: string
     endDate?: string
-  },
+  }
 ): Promise<ApiKeyUsage[]> {
   await initApiKeyCollections()
 
@@ -663,15 +654,11 @@ export async function getApiKeyUsage(
 /**
  * Get usage statistics for an API key
  */
-export async function getApiKeyUsageStats(
-  keyId: string,
-): Promise<ApiKeyUsageStats> {
+export async function getApiKeyUsageStats(keyId: string): Promise<ApiKeyUsageStats> {
   await initApiKeyCollections()
 
   const usage = apiKeyUsageCollection?.find({ keyId }) || []
-  const successful = usage.filter(
-    (u) => u.statusCode >= 200 && u.statusCode < 400,
-  )
+  const successful = usage.filter((u) => u.statusCode >= 200 && u.statusCode < 400)
   const failed = usage.filter((u) => u.statusCode >= 400)
 
   const endpointCounts: Record<string, number> = {}
@@ -689,9 +676,7 @@ export async function getApiKeyUsageStats(
     .map(([endpoint, count]) => ({
       endpoint,
       count,
-      avgTime:
-        endpointTimes[endpoint].reduce((a, b) => a + b, 0) /
-        endpointTimes[endpoint].length,
+      avgTime: endpointTimes[endpoint].reduce((a, b) => a + b, 0) / endpointTimes[endpoint].length,
     }))
     .sort((a, b) => b.count - a.count)
     .slice(0, 10)
@@ -715,9 +700,7 @@ export async function getApiKeyUsageStats(
   }
 
   const avgResponseTime =
-    usage.length > 0
-      ? usage.reduce((a, b) => a + b.responseTime, 0) / usage.length
-      : 0
+    usage.length > 0 ? usage.reduce((a, b) => a + b.responseTime, 0) / usage.length : 0
 
   return {
     keyId,
@@ -736,9 +719,7 @@ export async function getApiKeyUsageStats(
 /**
  * Get current rate limit status for an API key
  */
-export async function getApiKeyRateLimit(
-  keyId: string,
-): Promise<ApiKeyRateLimit | null> {
+export async function getApiKeyRateLimit(keyId: string): Promise<ApiKeyRateLimit | null> {
   await initApiKeyCollections()
 
   const key = apiKeysCollection?.findOne({ id: keyId })
@@ -760,9 +741,7 @@ export async function getApiKeyRateLimit(
   // Filter requests within current window
   const now = new Date()
   const windowStart = now.getTime() - key.rateLimit.window * 1000
-  const recentRequests = rateLimitRecord.requests.filter(
-    (timestamp) => timestamp > windowStart,
-  )
+  const recentRequests = rateLimitRecord.requests.filter((timestamp) => timestamp > windowStart)
 
   return {
     keyId,
@@ -783,7 +762,7 @@ export async function getApiKeyLogs(
     limit?: number
     offset?: number
     action?: ApiKeyLog['action']
-  },
+  }
 ): Promise<ApiKeyLog[]> {
   await initApiKeyCollections()
 
@@ -860,9 +839,7 @@ export async function getApiKeyStats(): Promise<ApiKeyStats> {
     }
   }
 
-  const topKeys = topKeysWithRequests
-    .sort((a, b) => b.requests - a.requests)
-    .slice(0, 5)
+  const topKeys = topKeysWithRequests.sort((a, b) => b.requests - a.requests).slice(0, 5)
 
   return {
     totalKeys: keys.length,

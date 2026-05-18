@@ -5,13 +5,7 @@ import { ListSkeleton } from '@/components/skeletons'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import {
-  Activity,
-  CheckCircle,
-  Loader2,
-  RefreshCw,
-  XCircle,
-} from 'lucide-react'
+import { Activity, CheckCircle, Loader2, RefreshCw, XCircle } from 'lucide-react'
 import { Suspense, useCallback, useEffect, useState } from 'react'
 
 interface ServiceHealth {
@@ -44,7 +38,10 @@ function parseMetrics(stdout: string): MonitorData | null {
           memory: parts[3],
         }
       })
-    return { services, overall: services.every((s) => s.status === 'running') ? 'healthy' : 'degraded' }
+    return {
+      services,
+      overall: services.every((s) => s.status === 'running') ? 'healthy' : 'degraded',
+    }
   }
 }
 
@@ -106,8 +103,17 @@ function MonitorContent() {
     <PageShell title="Monitor" description="Real-time health and metrics for your nSelf stack.">
       <div className="space-y-6">
         <div className="flex items-center gap-3">
-          <Button variant="outline" size="sm" onClick={() => void fetchMetrics()} disabled={loading}>
-            {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <RefreshCw className="h-4 w-4" />}
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => void fetchMetrics()}
+            disabled={loading}
+          >
+            {loading ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <RefreshCw className="h-4 w-4" />
+            )}
             Refresh
           </Button>
           {data && (
@@ -125,7 +131,7 @@ function MonitorContent() {
         {error && (
           <Card className="border-destructive">
             <CardContent className="pt-6">
-              <div className="flex items-start gap-2 text-destructive">
+              <div className="text-destructive flex items-start gap-2">
                 <XCircle className="h-5 w-5 shrink-0" />
                 <div>
                   <p className="font-medium">Failed to load metrics</p>
@@ -151,15 +157,15 @@ function MonitorContent() {
                     <div>
                       <p className="font-mono text-sm font-medium">{svc.name}</p>
                       {svc.uptime && (
-                        <p className="text-xs text-muted-foreground">Uptime: {svc.uptime}</p>
+                        <p className="text-muted-foreground text-xs">Uptime: {svc.uptime}</p>
                       )}
                     </div>
                     <div className="flex items-center gap-4">
                       {svc.cpu && (
-                        <span className="text-xs text-muted-foreground">CPU: {svc.cpu}</span>
+                        <span className="text-muted-foreground text-xs">CPU: {svc.cpu}</span>
                       )}
                       {svc.memory && (
-                        <span className="text-xs text-muted-foreground">Mem: {svc.memory}</span>
+                        <span className="text-muted-foreground text-xs">Mem: {svc.memory}</span>
                       )}
                       <Badge
                         variant={
@@ -185,7 +191,7 @@ function MonitorContent() {
 
         {!loading && !error && (!data || data.services.length === 0) && (
           <Card>
-            <CardContent className="pt-6 text-center text-muted-foreground">
+            <CardContent className="text-muted-foreground pt-6 text-center">
               No monitoring data available.
             </CardContent>
           </Card>
@@ -194,10 +200,12 @@ function MonitorContent() {
         {output && (
           <Card>
             <CardHeader>
-              <CardTitle className="text-sm font-mono text-muted-foreground">{lastCommand}</CardTitle>
+              <CardTitle className="text-muted-foreground font-mono text-sm">
+                {lastCommand}
+              </CardTitle>
             </CardHeader>
             <CardContent>
-              <pre className="overflow-x-auto rounded bg-muted p-4 text-xs">{output}</pre>
+              <pre className="bg-muted overflow-x-auto rounded p-4 text-xs">{output}</pre>
             </CardContent>
           </Card>
         )}

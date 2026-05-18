@@ -118,9 +118,7 @@ function MemoryChart({ stats }: { stats: RedisStats }) {
     <div className="mb-6 grid grid-cols-1 gap-4 md:grid-cols-3">
       <div className="rounded-lg border border-zinc-200 bg-white p-4 dark:border-zinc-700 dark:bg-zinc-800">
         <div className="mb-2 flex items-center justify-between">
-          <h3 className="text-sm font-medium text-zinc-600 dark:text-zinc-400">
-            Memory Usage
-          </h3>
+          <h3 className="text-sm font-medium text-zinc-600 dark:text-zinc-400">Memory Usage</h3>
           <HardDrive className="h-4 w-4 text-zinc-400" />
         </div>
         <div className="mb-2 text-2xl font-bold">{stats.memory.used}</div>
@@ -130,31 +128,23 @@ function MemoryChart({ stats }: { stats: RedisStats }) {
             style={{ width: `${Math.min(memoryPercent, 100)}%` }}
           />
         </div>
-        <div className="text-xs text-zinc-500">
-          {memoryPercent.toFixed(1)}% used
-        </div>
+        <div className="text-xs text-zinc-500">{memoryPercent.toFixed(1)}% used</div>
       </div>
 
       <div className="rounded-lg border border-zinc-200 bg-white p-4 dark:border-zinc-700 dark:bg-zinc-800">
         <div className="mb-2 flex items-center justify-between">
-          <h3 className="text-sm font-medium text-zinc-600 dark:text-zinc-400">
-            Hit Rate
-          </h3>
+          <h3 className="text-sm font-medium text-zinc-600 dark:text-zinc-400">Hit Rate</h3>
           <TrendingUp className="h-4 w-4 text-green-500" />
         </div>
         <div className="mb-2 text-2xl font-bold">{stats.performance.hitRate.toFixed(1)}%</div>
         <div className="flex items-center gap-2 text-xs text-zinc-500">
-          <span className="text-red-600">
-            miss rate: {stats.performance.missRate.toFixed(1)}%
-          </span>
+          <span className="text-red-600">miss rate: {stats.performance.missRate.toFixed(1)}%</span>
         </div>
       </div>
 
       <div className="rounded-lg border border-zinc-200 bg-white p-4 dark:border-zinc-700 dark:bg-zinc-800">
         <div className="mb-2 flex items-center justify-between">
-          <h3 className="text-sm font-medium text-zinc-600 dark:text-zinc-400">
-            Connections
-          </h3>
+          <h3 className="text-sm font-medium text-zinc-600 dark:text-zinc-400">Connections</h3>
           <Users className="h-4 w-4 text-blue-500" />
         </div>
         <div className="mb-2 text-2xl font-bold">{stats.performance.connectedClients}</div>
@@ -178,9 +168,7 @@ function KeyBrowser({
 
   const filteredKeys = keys
     .filter((key) => {
-      const matchesSearch = key.name
-        .toLowerCase()
-        .includes(searchTerm.toLowerCase())
+      const matchesSearch = key.name.toLowerCase().includes(searchTerm.toLowerCase())
       const matchesType = typeFilter === 'all' || key.type === typeFilter
       return matchesSearch && matchesType
     })
@@ -267,9 +255,7 @@ function KeyBrowser({
       </div>
 
       <div className="p-4">
-        <div className="mb-3 text-sm text-zinc-500">
-          {filteredKeys.length} keys found
-        </div>
+        <div className="mb-3 text-sm text-zinc-500">{filteredKeys.length} keys found</div>
 
         {viewMode === 'list' ? (
           <div className="space-y-2">
@@ -322,12 +308,9 @@ function KeyBrowser({
                       {key.type}
                     </span>
                   </div>
-                  <div className="mb-1 truncate text-sm font-medium">
-                    {key.name}
-                  </div>
+                  <div className="mb-1 truncate text-sm font-medium">{key.name}</div>
                   <div className="text-xs text-zinc-500">
-                    {(key.size / 1024).toFixed(1)} KB •{' '}
-                    {key.ttl > 0 ? `${key.ttl}s TTL` : 'No TTL'}
+                    {(key.size / 1024).toFixed(1)} KB • {key.ttl > 0 ? `${key.ttl}s TTL` : 'No TTL'}
                   </div>
                 </div>
               )
@@ -339,13 +322,7 @@ function KeyBrowser({
   )
 }
 
-function KeyDetails({
-  redisKey,
-  onClose,
-}: {
-  redisKey: RedisKey
-  onClose: () => void
-}) {
+function KeyDetails({ redisKey, onClose }: { redisKey: RedisKey; onClose: () => void }) {
   const [value, setValue] = useState('')
   const [editing, setEditing] = useState(false)
   const [ttl, setTtl] = useState(redisKey.ttl)
@@ -367,11 +344,7 @@ function KeyDetails({
           </div>
 
           <div className="flex items-center gap-2">
-            <Button
-              variant="outline"
-              onClick={() => setEditing(!editing)}
-              className="text-xs"
-            >
+            <Button variant="outline" onClick={() => setEditing(!editing)} className="text-xs">
               <Edit className="mr-1 h-3 w-3" />
               {editing ? 'Cancel' : 'Edit'}
             </Button>
@@ -396,23 +369,15 @@ function KeyDetails({
       <div className="space-y-4 p-4">
         <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
           <div>
-            <label className="text-sm font-medium text-zinc-600 dark:text-zinc-400">
-              Size
-            </label>
-            <div className="text-lg font-semibold">
-              {(redisKey.size / 1024).toFixed(1)} KB
-            </div>
+            <label className="text-sm font-medium text-zinc-600 dark:text-zinc-400">Size</label>
+            <div className="text-lg font-semibold">{(redisKey.size / 1024).toFixed(1)} KB</div>
           </div>
           <div>
-            <label className="text-sm font-medium text-zinc-600 dark:text-zinc-400">
-              Encoding
-            </label>
+            <label className="text-sm font-medium text-zinc-600 dark:text-zinc-400">Encoding</label>
             <div className="text-lg font-semibold">{redisKey.encoding}</div>
           </div>
           <div>
-            <label className="text-sm font-medium text-zinc-600 dark:text-zinc-400">
-              TTL
-            </label>
+            <label className="text-sm font-medium text-zinc-600 dark:text-zinc-400">TTL</label>
             <div className="flex items-center gap-2">
               {editing ? (
                 <input
@@ -422,9 +387,7 @@ function KeyDetails({
                   className="w-20 rounded border border-zinc-200 px-2 py-1 text-sm dark:border-zinc-700"
                 />
               ) : (
-                <div className="text-lg font-semibold">
-                  {ttl > 0 ? `${ttl}s` : 'No TTL'}
-                </div>
+                <div className="text-lg font-semibold">{ttl > 0 ? `${ttl}s` : 'No TTL'}</div>
               )}
               {editing && (
                 <Button variant="outline" className="text-xs">
@@ -451,11 +414,7 @@ function KeyDetails({
                   <Save className="mr-1 h-3 w-3" />
                   Save Changes
                 </Button>
-                <Button
-                  variant="outline"
-                  onClick={() => setEditing(false)}
-                  className="text-xs"
-                >
+                <Button variant="outline" onClick={() => setEditing(false)} className="text-xs">
                   Cancel
                 </Button>
               </div>
@@ -492,9 +451,7 @@ function SlowQueryLog({ queries }: { queries: SlowQuery[] }) {
 
       <div className="p-4">
         {queries.length === 0 ? (
-          <div className="py-8 text-center text-zinc-500">
-            No slow queries detected
-          </div>
+          <div className="py-8 text-center text-zinc-500">No slow queries detected</div>
         ) : (
           <div className="space-y-3">
             {queries.map((query) => (
@@ -505,25 +462,19 @@ function SlowQueryLog({ queries }: { queries: SlowQuery[] }) {
                 <div className="mb-2 flex items-start justify-between">
                   <div className="flex items-center gap-2">
                     <AlertCircle className="h-4 w-4 text-orange-500" />
-                    <span className="text-sm font-medium">
-                      Query #{query.id}
-                    </span>
+                    <span className="text-sm font-medium">Query #{query.id}</span>
                     <span className="rounded bg-orange-100 px-2 py-1 text-xs text-orange-700 dark:bg-orange-900/20 dark:text-orange-400">
                       {query.duration}ms
                     </span>
                   </div>
-                  <span className="text-xs text-zinc-500">
-                    {query.timestamp}
-                  </span>
+                  <span className="text-xs text-zinc-500">{query.timestamp}</span>
                 </div>
 
                 <div className="mb-2 rounded bg-zinc-50 p-2 font-mono text-sm dark:bg-zinc-900">
                   {query.command} {query.args.join(' ')}
                 </div>
 
-                <div className="text-xs text-zinc-500">
-                  Client: {query.client}
-                </div>
+                <div className="text-xs text-zinc-500">Client: {query.client}</div>
               </div>
             ))}
           </div>
@@ -577,9 +528,7 @@ function PubSubMonitor({ channels }: { channels: PubSubChannel[] }) {
                   <span className="text-sm font-medium">{channel.name}</span>
                   <div className="flex items-center gap-1">
                     <Users className="h-3 w-3 text-zinc-400" />
-                    <span className="text-xs text-zinc-500">
-                      {channel.subscribers}
-                    </span>
+                    <span className="text-xs text-zinc-500">{channel.subscribers}</span>
                   </div>
                 </div>
                 <div className="text-xs text-zinc-500">
@@ -651,9 +600,7 @@ function ConfigurationEditor() {
           <h3 className="text-lg font-semibold">Configuration Editor</h3>
           <div className="flex items-center gap-2">
             {modified && (
-              <span className="text-xs text-orange-600 dark:text-orange-400">
-                Unsaved changes
-              </span>
+              <span className="text-xs text-orange-600 dark:text-orange-400">Unsaved changes</span>
             )}
             <Button variant="outline" className="text-xs">
               <RefreshCw className="mr-1 h-3 w-3" />
@@ -670,13 +617,8 @@ function ConfigurationEditor() {
       <div className="p-4">
         <div className="space-y-4">
           {Object.entries(config).map(([key, value]) => (
-            <div
-              key={key}
-              className="grid grid-cols-1 items-center gap-4 md:grid-cols-3"
-            >
-              <label className="text-sm font-medium text-zinc-600 dark:text-zinc-400">
-                {key}
-              </label>
+            <div key={key} className="grid grid-cols-1 items-center gap-4 md:grid-cols-3">
+              <label className="text-sm font-medium text-zinc-600 dark:text-zinc-400">{key}</label>
               <input
                 type="text"
                 value={value}
@@ -691,12 +633,10 @@ function ConfigurationEditor() {
           <div className="flex items-start gap-2">
             <AlertCircle className="mt-0.5 h-4 w-4 text-yellow-600 dark:text-yellow-400" />
             <div className="text-sm">
-              <p className="font-medium text-yellow-800 dark:text-yellow-200">
-                Warning
-              </p>
+              <p className="font-medium text-yellow-800 dark:text-yellow-200">Warning</p>
               <p className="mt-1 text-yellow-700 dark:text-yellow-300">
-                Configuration changes require a Redis restart to take effect.
-                Some settings may impact performance.
+                Configuration changes require a Redis restart to take effect. Some settings may
+                impact performance.
               </p>
             </div>
           </div>
@@ -738,9 +678,7 @@ function RedisContent() {
             <div className="flex items-center gap-3">
               <AlertCircle className="h-5 w-5 text-red-400" />
               <p className="text-red-400">
-                {redisError instanceof Error
-                  ? redisError.message
-                  : 'Failed to load Redis stats'}
+                {redisError instanceof Error ? redisError.message : 'Failed to load Redis stats'}
               </p>
             </div>
           </div>
@@ -784,9 +722,7 @@ function RedisContent() {
             <div className="rounded-lg border border-zinc-200 bg-white p-4 dark:border-zinc-700 dark:bg-zinc-800">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-zinc-600 dark:text-zinc-400">
-                    Evicted Keys
-                  </p>
+                  <p className="text-sm text-zinc-600 dark:text-zinc-400">Evicted Keys</p>
                   <p className="text-2xl font-bold text-red-600">
                     {stats?.memory.evictedKeys ?? '—'}
                   </p>
@@ -798,12 +734,8 @@ function RedisContent() {
             <div className="rounded-lg border border-zinc-200 bg-white p-4 dark:border-zinc-700 dark:bg-zinc-800">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-zinc-600 dark:text-zinc-400">
-                    Ops/sec
-                  </p>
-                  <p className="text-2xl font-bold">
-                    {stats?.performance.opsPerSecond ?? '—'}
-                  </p>
+                  <p className="text-sm text-zinc-600 dark:text-zinc-400">Ops/sec</p>
+                  <p className="text-2xl font-bold">{stats?.performance.opsPerSecond ?? '—'}</p>
                 </div>
                 <Activity className="h-6 w-6 text-green-500" />
               </div>
@@ -812,9 +744,7 @@ function RedisContent() {
             <div className="rounded-lg border border-zinc-200 bg-white p-4 dark:border-zinc-700 dark:bg-zinc-800">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-zinc-600 dark:text-zinc-400">
-                    Total Commands
-                  </p>
+                  <p className="text-sm text-zinc-600 dark:text-zinc-400">Total Commands</p>
                   <p className="text-2xl font-bold">
                     {stats?.performance.totalCommands?.toLocaleString() ?? '—'}
                   </p>
@@ -826,12 +756,8 @@ function RedisContent() {
             <div className="rounded-lg border border-zinc-200 bg-white p-4 dark:border-zinc-700 dark:bg-zinc-800">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-zinc-600 dark:text-zinc-400">
-                    Status
-                  </p>
-                  <p className="text-lg font-bold capitalize">
-                    {stats?.status ?? '—'}
-                  </p>
+                  <p className="text-sm text-zinc-600 dark:text-zinc-400">Status</p>
+                  <p className="text-lg font-bold capitalize">{stats?.status ?? '—'}</p>
                 </div>
                 <Info className="h-6 w-6 text-zinc-500" />
               </div>
@@ -863,9 +789,7 @@ function RedisContent() {
             <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
               <div className="rounded-lg border border-zinc-200 bg-white dark:border-zinc-700 dark:bg-zinc-800">
                 <div className="border-b border-zinc-200 p-4 dark:border-zinc-700">
-                  <h3 className="text-lg font-semibold">
-                    Database Distribution
-                  </h3>
+                  <h3 className="text-lg font-semibold">Database Distribution</h3>
                 </div>
                 <div className="p-4">
                   {!stats?.databases || Object.keys(stats.databases).length === 0 ? (
@@ -877,14 +801,11 @@ function RedisContent() {
                       {(() => {
                         const totalKeys = Object.values(stats.databases).reduce(
                           (sum, db) => sum + db.keys,
-                          0,
+                          0
                         )
                         const safeDenom = totalKeys || 1
                         return Object.entries(stats.databases).map(([db, dbInfo]) => (
-                          <div
-                            key={db}
-                            className="flex items-center justify-between"
-                          >
+                          <div key={db} className="flex items-center justify-between">
                             <span className="text-sm">Database {db}</span>
                             <div className="flex items-center gap-2">
                               <div className="h-2 w-32 rounded-full bg-zinc-200 dark:bg-zinc-700">
@@ -909,9 +830,7 @@ function RedisContent() {
 
               <div className="rounded-lg border border-zinc-200 bg-white dark:border-zinc-700 dark:bg-zinc-800">
                 <div className="border-b border-zinc-200 p-4 dark:border-zinc-700">
-                  <h3 className="text-lg font-semibold">
-                    Key Type Distribution
-                  </h3>
+                  <h3 className="text-lg font-semibold">Key Type Distribution</h3>
                 </div>
                 <div className="p-4">
                   <div className="space-y-3">
@@ -920,17 +839,11 @@ function RedisContent() {
                       const percentage = keys.length > 0 ? (count / keys.length) * 100 : 0
 
                       return (
-                        <div
-                          key={type}
-                          className="flex items-center justify-between"
-                        >
+                        <div key={type} className="flex items-center justify-between">
                           <div className="flex items-center gap-2">
-                            {React.createElement(
-                              typeIcons[type as keyof typeof typeIcons],
-                              {
-                                className: `w-4 h-4 ${colorClass}`,
-                              },
-                            )}
+                            {React.createElement(typeIcons[type as keyof typeof typeIcons], {
+                              className: `w-4 h-4 ${colorClass}`,
+                            })}
                             <span className="text-sm capitalize">{type}</span>
                           </div>
                           <div className="flex items-center gap-2">
@@ -940,9 +853,7 @@ function RedisContent() {
                                 style={{ width: `${percentage}%` }}
                               />
                             </div>
-                            <span className="w-8 text-right text-sm font-medium">
-                              {count}
-                            </span>
+                            <span className="w-8 text-right text-sm font-medium">{count}</span>
                           </div>
                         </div>
                       )
@@ -957,10 +868,7 @@ function RedisContent() {
         {activeTab === 'keys' && (
           <div className="space-y-6">
             {selectedKey ? (
-              <KeyDetails
-                redisKey={selectedKey}
-                onClose={() => setSelectedKey(null)}
-              />
+              <KeyDetails redisKey={selectedKey} onClose={() => setSelectedKey(null)} />
             ) : (
               <KeyBrowser keys={keys} onKeySelect={setSelectedKey} />
             )}

@@ -29,10 +29,7 @@ function LicensesSkeleton() {
   return (
     <div aria-busy="true" aria-label="Loading licenses">
       {[1, 2, 3].map((i) => (
-        <div
-          key={i}
-          className="mb-3 h-14 animate-pulse rounded-xl bg-zinc-100 dark:bg-zinc-800"
-        />
+        <div key={i} className="mb-3 h-14 animate-pulse rounded-xl bg-zinc-100 dark:bg-zinc-800" />
       ))}
     </div>
   )
@@ -149,9 +146,7 @@ function LicensesContent() {
   const SortHeader = ({ col, label }: { col: SortKey; label: string }) => (
     <th
       scope="col"
-      aria-sort={
-        sortKey === col ? (sortAsc ? 'ascending' : 'descending') : 'none'
-      }
+      aria-sort={sortKey === col ? (sortAsc ? 'ascending' : 'descending') : 'none'}
       className="cursor-pointer px-4 py-3 text-left text-xs font-semibold tracking-wider text-zinc-500 uppercase hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-300"
       onClick={() => toggleSort(col)}
     >
@@ -179,10 +174,7 @@ function LicensesContent() {
           <div className="flex items-start justify-between">
             <div className="flex items-center gap-3">
               <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-100 dark:bg-blue-900/30">
-                <Key
-                  className="h-5 w-5 text-blue-600 dark:text-blue-400"
-                  aria-hidden="true"
-                />
+                <Key className="h-5 w-5 text-blue-600 dark:text-blue-400" aria-hidden="true" />
               </div>
               <div>
                 <h1
@@ -240,7 +232,7 @@ function LicensesContent() {
               type="button"
               onClick={fetchLicenses}
               disabled={loading}
-              className="flex-shrink-0 rounded border border-sky-400/50 px-3 py-1 text-xs hover:bg-sky-100 dark:hover:bg-sky-900/30 transition-colors disabled:opacity-50"
+              className="flex-shrink-0 rounded border border-sky-400/50 px-3 py-1 text-xs transition-colors hover:bg-sky-100 disabled:opacity-50 dark:hover:bg-sky-900/30"
             >
               Retry
             </button>
@@ -254,10 +246,7 @@ function LicensesContent() {
             aria-live="assertive"
             className="mb-6 flex items-start gap-3 rounded-xl border border-red-200 bg-red-50 p-4 dark:border-red-800 dark:bg-red-900/20"
           >
-            <AlertCircle
-              className="h-5 w-5 flex-shrink-0 text-red-500"
-              aria-hidden="true"
-            />
+            <AlertCircle className="h-5 w-5 flex-shrink-0 text-red-500" aria-hidden="true" />
             <p className="text-sm text-red-700 dark:text-red-400">{error}</p>
           </div>
         )}
@@ -268,13 +257,8 @@ function LicensesContent() {
         {/* Empty state */}
         {!loading && !error && !rateLimited && licenses.length === 0 && (
           <div className="rounded-xl border border-dashed border-zinc-300 bg-zinc-50 p-12 text-center dark:border-zinc-700 dark:bg-zinc-800/50">
-            <Key
-              className="mx-auto mb-3 h-10 w-10 text-zinc-400"
-              aria-hidden="true"
-            />
-            <h2 className="text-lg font-semibold text-zinc-900 dark:text-white">
-              No licenses
-            </h2>
+            <Key className="mx-auto mb-3 h-10 w-10 text-zinc-400" aria-hidden="true" />
+            <h2 className="text-lg font-semibold text-zinc-900 dark:text-white">No licenses</h2>
             <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
               Purchase a license at{' '}
               <a

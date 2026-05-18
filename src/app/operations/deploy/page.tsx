@@ -6,7 +6,13 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Label } from '@/components/ui/label'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 import {
   AlertTriangle,
   CheckCircle,
@@ -117,7 +123,11 @@ function DeployContent() {
       <div className="space-y-6">
         <div className="flex items-center gap-3">
           <Button variant="outline" size="sm" onClick={() => void fetchStatus()} disabled={loading}>
-            {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <RefreshCw className="h-4 w-4" />}
+            {loading ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <RefreshCw className="h-4 w-4" />
+            )}
             Refresh
           </Button>
           {actionSuccess && (
@@ -135,7 +145,7 @@ function DeployContent() {
         {error && (
           <Card className="border-destructive">
             <CardContent className="pt-6">
-              <div className="flex items-start gap-2 text-destructive">
+              <div className="text-destructive flex items-start gap-2">
                 <XCircle className="h-5 w-5 shrink-0" />
                 <div>
                   <p className="font-medium">Failed to load deploy status</p>
@@ -156,19 +166,19 @@ function DeployContent() {
             </CardHeader>
             <CardContent className="grid grid-cols-2 gap-4 sm:grid-cols-4">
               <div>
-                <p className="text-xs text-muted-foreground">Environment</p>
+                <p className="text-muted-foreground text-xs">Environment</p>
                 <p className="font-medium">{status.environment || '—'}</p>
               </div>
               <div>
-                <p className="text-xs text-muted-foreground">Version</p>
+                <p className="text-muted-foreground text-xs">Version</p>
                 <p className="font-medium">{status.version || '—'}</p>
               </div>
               <div>
-                <p className="text-xs text-muted-foreground">Last Deployed</p>
+                <p className="text-muted-foreground text-xs">Last Deployed</p>
                 <p className="font-medium">{status.lastDeployed || '—'}</p>
               </div>
               <div>
-                <p className="text-xs text-muted-foreground">Status</p>
+                <p className="text-muted-foreground text-xs">Status</p>
                 <Badge variant={status.status === 'running' ? 'default' : 'secondary'}>
                   {status.status || 'unknown'}
                 </Badge>
@@ -179,7 +189,7 @@ function DeployContent() {
 
         {!loading && !error && !status && (
           <Card>
-            <CardContent className="pt-6 text-center text-muted-foreground">
+            <CardContent className="text-muted-foreground pt-6 text-center">
               No deployment status available. Run a deploy to get started.
             </CardContent>
           </Card>
@@ -237,7 +247,11 @@ function DeployContent() {
                         This will run <code>nself deploy {targetEnv}</code> and push changes live.
                       </p>
                       <div className="mt-3 flex gap-2">
-                        <Button size="sm" onClick={() => void runDeploy()} className="bg-amber-600 hover:bg-amber-700">
+                        <Button
+                          size="sm"
+                          onClick={() => void runDeploy()}
+                          className="bg-amber-600 hover:bg-amber-700"
+                        >
                           Confirm
                         </Button>
                         <Button size="sm" variant="outline" onClick={() => setConfirmDeploy(false)}>
@@ -250,19 +264,19 @@ function DeployContent() {
               </Card>
             )}
 
-            {actionError && (
-              <p className="text-sm text-destructive">{actionError}</p>
-            )}
+            {actionError && <p className="text-destructive text-sm">{actionError}</p>}
           </CardContent>
         </Card>
 
         {output && (
           <Card>
             <CardHeader>
-              <CardTitle className="text-sm font-mono text-muted-foreground">{lastCommand}</CardTitle>
+              <CardTitle className="text-muted-foreground font-mono text-sm">
+                {lastCommand}
+              </CardTitle>
             </CardHeader>
             <CardContent>
-              <pre className="overflow-x-auto rounded bg-muted p-4 text-xs">{output}</pre>
+              <pre className="bg-muted overflow-x-auto rounded p-4 text-xs">{output}</pre>
             </CardContent>
           </Card>
         )}

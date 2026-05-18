@@ -29,7 +29,7 @@ const EMPTY_STORE: ProjectsStore = {
 function makeProjectPickerError(
   message: string,
   code: ProjectPickerError['code'],
-  details?: string,
+  details?: string
 ): ProjectPickerError {
   const err = new Error(message) as ProjectPickerError
   err.code = code
@@ -72,7 +72,7 @@ export async function loadProjects(): Promise<ProjectsStore> {
       throw makeProjectPickerError(
         'projects.json has an unexpected structure',
         'IO_ERROR',
-        storePath,
+        storePath
       )
     }
     return parsed
@@ -89,7 +89,7 @@ export async function loadProjects(): Promise<ProjectsStore> {
     throw makeProjectPickerError(
       `Failed to load projects store: ${(err as Error).message}`,
       'IO_ERROR',
-      storePath,
+      storePath
     )
   }
 }
@@ -121,7 +121,7 @@ export async function saveProjects(store: ProjectsStore): Promise<void> {
     throw makeProjectPickerError(
       `Failed to save projects store: ${(err as Error).message}`,
       'IO_ERROR',
-      storePath,
+      storePath
     )
   }
 }
@@ -137,10 +137,7 @@ export async function saveProjects(store: ProjectsStore): Promise<void> {
  * Returns the newly created ProjectEntry.
  * Throws ProjectPickerError with code INVALID_PATH | DUPLICATE | MAX_PROJECTS.
  */
-export async function addProject(
-  name: string,
-  projectPath: string,
-): Promise<ProjectEntry> {
+export async function addProject(name: string, projectPath: string): Promise<ProjectEntry> {
   // Validate the path exists and is a directory
   try {
     const stat = await fs.stat(projectPath)
@@ -148,7 +145,7 @@ export async function addProject(
       throw makeProjectPickerError(
         `Path is not a directory: ${projectPath}`,
         'INVALID_PATH',
-        projectPath,
+        projectPath
       )
     }
   } catch (err) {
@@ -157,7 +154,7 @@ export async function addProject(
       throw makeProjectPickerError(
         `Path does not exist: ${projectPath}`,
         'INVALID_PATH',
-        projectPath,
+        projectPath
       )
     }
     if ((err as ProjectPickerError).code !== undefined) {
@@ -166,29 +163,24 @@ export async function addProject(
     throw makeProjectPickerError(
       `Cannot access path: ${(err as Error).message}`,
       'INVALID_PATH',
-      projectPath,
+      projectPath
     )
   }
 
   const store = await loadProjects()
 
   if (store.projects.length >= MAX_PROJECTS) {
-    throw makeProjectPickerError(
-      `Cannot add more than ${MAX_PROJECTS} projects`,
-      'MAX_PROJECTS',
-    )
+    throw makeProjectPickerError(`Cannot add more than ${MAX_PROJECTS} projects`, 'MAX_PROJECTS')
   }
 
   // Check for duplicate path (resolve both to handle trailing-slash differences)
   const resolvedNew = path.resolve(projectPath)
-  const duplicate = store.projects.find(
-    (p) => path.resolve(p.path) === resolvedNew,
-  )
+  const duplicate = store.projects.find((p) => path.resolve(p.path) === resolvedNew)
   if (duplicate !== undefined) {
     throw makeProjectPickerError(
       `A project at path "${projectPath}" is already registered as "${duplicate.name}"`,
       'DUPLICATE',
-      projectPath,
+      projectPath
     )
   }
 

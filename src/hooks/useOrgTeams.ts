@@ -23,11 +23,9 @@ export function useOrgTeams(orgId: string) {
     data,
     error: fetchError,
     mutate,
-  } = useSWR<{ teams: Team[] }>(
-    orgId ? `/api/org/${orgId}/teams` : null,
-    fetcher,
-    { refreshInterval: 30000 },
-  )
+  } = useSWR<{ teams: Team[] }>(orgId ? `/api/org/${orgId}/teams` : null, fetcher, {
+    refreshInterval: 30000,
+  })
 
   const create = useCallback(
     async (input: CreateTeamInput) => {
@@ -38,15 +36,14 @@ export function useOrgTeams(orgId: string) {
         mutate()
         return team
       } catch (err) {
-        const message =
-          err instanceof Error ? err.message : 'Failed to create team'
+        const message = err instanceof Error ? err.message : 'Failed to create team'
         setError(message)
         throw err
       } finally {
         setIsLoading(false)
       }
     },
-    [orgId, mutate],
+    [orgId, mutate]
   )
 
   const update = useCallback(
@@ -58,15 +55,14 @@ export function useOrgTeams(orgId: string) {
         mutate()
         return team
       } catch (err) {
-        const message =
-          err instanceof Error ? err.message : 'Failed to update team'
+        const message = err instanceof Error ? err.message : 'Failed to update team'
         setError(message)
         throw err
       } finally {
         setIsLoading(false)
       }
     },
-    [orgId, mutate],
+    [orgId, mutate]
   )
 
   const remove = useCallback(
@@ -77,15 +73,14 @@ export function useOrgTeams(orgId: string) {
         await orgApi.teams.delete(orgId, teamId)
         mutate()
       } catch (err) {
-        const message =
-          err instanceof Error ? err.message : 'Failed to delete team'
+        const message = err instanceof Error ? err.message : 'Failed to delete team'
         setError(message)
         throw err
       } finally {
         setIsLoading(false)
       }
     },
-    [orgId, mutate],
+    [orgId, mutate]
   )
 
   const addMember = useCallback(
@@ -98,15 +93,14 @@ export function useOrgTeams(orgId: string) {
         await orgApi.teams.update(orgId, teamId, { members })
         mutate()
       } catch (err) {
-        const message =
-          err instanceof Error ? err.message : 'Failed to add member to team'
+        const message = err instanceof Error ? err.message : 'Failed to add member to team'
         setError(message)
         throw err
       } finally {
         setIsLoading(false)
       }
     },
-    [orgId, mutate],
+    [orgId, mutate]
   )
 
   const removeMember = useCallback(
@@ -119,17 +113,14 @@ export function useOrgTeams(orgId: string) {
         await orgApi.teams.update(orgId, teamId, { members })
         mutate()
       } catch (err) {
-        const message =
-          err instanceof Error
-            ? err.message
-            : 'Failed to remove member from team'
+        const message = err instanceof Error ? err.message : 'Failed to remove member from team'
         setError(message)
         throw err
       } finally {
         setIsLoading(false)
       }
     },
-    [orgId, mutate],
+    [orgId, mutate]
   )
 
   return {
@@ -151,10 +142,7 @@ export function useOrgTeam(orgId: string, teamId: string) {
     error,
     isLoading,
     mutate,
-  } = useSWR<Team>(
-    orgId && teamId ? `/api/org/${orgId}/teams/${teamId}` : null,
-    fetcher,
-  )
+  } = useSWR<Team>(orgId && teamId ? `/api/org/${orgId}/teams/${teamId}` : null, fetcher)
 
   return {
     team,

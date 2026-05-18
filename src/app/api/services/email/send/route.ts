@@ -25,14 +25,14 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     if (!to) {
       return NextResponse.json(
         { success: false, error: 'Recipient email address is required' },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
     if (!subject) {
       return NextResponse.json(
         { success: false, error: 'Email subject is required' },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -40,7 +40,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(to)) {
       return NextResponse.json(
         { success: false, error: 'Invalid email address format' },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -64,7 +64,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           error: 'Failed to send email',
           details: result.error || result.stderr || 'Unknown error',
         },
-        { status: 500 },
+        { status: 500 }
       )
     }
 
@@ -79,7 +79,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to send email',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

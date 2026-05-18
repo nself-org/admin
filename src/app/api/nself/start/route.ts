@@ -30,7 +30,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
             'Check project configuration in .env.local',
           ],
         },
-        { status: 500 },
+        { status: 500 }
       )
     }
 
@@ -44,10 +44,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
     lines.forEach((line) => {
       // Look for service status lines
-      if (
-        line.includes('✓') &&
-        (line.includes('started') || line.includes('running'))
-      ) {
+      if (line.includes('✓') && (line.includes('started') || line.includes('running'))) {
         const serviceName = line.match(/✓\s+(\w+)/)?.[1]
         if (serviceName) {
           services.push({
@@ -59,10 +56,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       }
 
       // Look for URL lines
-      if (
-        line.includes('http') &&
-        (line.includes('://') || line.includes('local.nself.org'))
-      ) {
+      if (line.includes('http') && (line.includes('://') || line.includes('local.nself.org'))) {
         const urlMatch = line.match(/(https?:\/\/[^\s]+)/)
         if (urlMatch) {
           urls.push(urlMatch[1])
@@ -76,9 +70,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
       if (statusResult.success && statusResult.stdout) {
         // Parse status output for more detailed service info
-        const statusLines = statusResult.stdout
-          .split('\n')
-          .filter((line) => line.trim())
+        const statusLines = statusResult.stdout.split('\n').filter((line) => line.trim())
         statusLines.forEach((line: string) => {
           if (line.includes('running') || line.includes('healthy')) {
             const parts = line.split(/\s+/)
@@ -87,9 +79,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
               const status = line.includes('healthy') ? 'healthy' : 'running'
 
               // Update existing service or add new one
-              const existingService = services.find(
-                (s: any) => s.name === serviceName,
-              )
+              const existingService = services.find((s: any) => s.name === serviceName)
               if (existingService) {
                 existingService.status = status
               } else {
@@ -104,10 +94,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         })
       }
     } catch (statusError) {
-      const statusErr =
-        statusError instanceof Error
-          ? statusError
-          : new Error(String(statusError))
+      const statusErr = statusError instanceof Error ? statusError : new Error(String(statusError))
       console.warn('Could not get detailed status:', statusErr.message)
     }
 
@@ -127,19 +114,15 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     // Parse error output for user-friendly messages
     const errorMessage = error instanceof Error ? error.message : 'Start failed'
     const isTimeout = errorMessage.includes('timeout')
-    const isPortConflict =
-      errorMessage.includes('port') && errorMessage.includes('already')
+    const isPortConflict = errorMessage.includes('port') && errorMessage.includes('already')
     const isMissingDependency =
-      errorMessage.includes('command not found') ||
-      errorMessage.includes('nself')
+      errorMessage.includes('command not found') || errorMessage.includes('nself')
 
     let userMessage = 'Failed to start services due to unknown error'
     if (isTimeout) {
-      userMessage =
-        'Start timed out - services may be taking longer than expected to initialize'
+      userMessage = 'Start timed out - services may be taking longer than expected to initialize'
     } else if (isPortConflict) {
-      userMessage =
-        'Port conflict detected - some required ports may already be in use'
+      userMessage = 'Port conflict detected - some required ports may already be in use'
     } else if (isMissingDependency) {
       userMessage = 'nself CLI not found - please ensure nself is installed'
     } else {
@@ -159,7 +142,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           'Check project configuration in .env.local',
         ],
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

@@ -11,10 +11,9 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 
     if (tableName) {
       // Get detailed table info
-      const [_columnsResult, _indexesResult, _foreignKeysResult, _sizeResult] =
-        await Promise.all([
-          // Columns
-          executeDbQuery(`
+      const [_columnsResult, _indexesResult, _foreignKeysResult, _sizeResult] = await Promise.all([
+        // Columns
+        executeDbQuery(`
           SELECT
             column_name as name,
             data_type as type,
@@ -24,16 +23,16 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
           WHERE table_schema = 'public' AND table_name = '${tableName}'
           ORDER BY ordinal_position
         `),
-          // Indexes
-          executeDbQuery(`
+        // Indexes
+        executeDbQuery(`
           SELECT
             indexname as name,
             indexdef as definition
           FROM pg_indexes
           WHERE schemaname = 'public' AND tablename = '${tableName}'
         `),
-          // Foreign keys
-          executeDbQuery(`
+        // Foreign keys
+        executeDbQuery(`
           SELECT
             tc.constraint_name as name,
             kcu.column_name as column,
@@ -48,12 +47,12 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
             AND tc.table_name = '${tableName}'
             AND tc.constraint_type = 'FOREIGN KEY'
         `),
-          // Size
-          executeDbQuery(`
+        // Size
+        executeDbQuery(`
           SELECT pg_size_pretty(pg_total_relation_size('public.${tableName}')) as total_size,
                  pg_size_pretty(pg_relation_size('public.${tableName}')) as size
         `),
-        ])
+      ])
 
       const tableInfo: TableInfo = {
         name: tableName,
@@ -91,7 +90,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
           error: 'Failed to fetch schema',
           code: ErrorCode.QUERY_ERROR,
         },
-        { status: 500 },
+        { status: 500 }
       )
     }
 
@@ -113,7 +112,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         details: error instanceof Error ? error.message : 'Unknown error',
         code: ErrorCode.QUERY_ERROR,
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -145,7 +144,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
             error: 'Failed to generate types',
             code: ErrorCode.QUERY_ERROR,
           },
-          { status: 500 },
+          { status: 500 }
         )
       }
 
@@ -186,7 +185,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           error: 'Failed to export schema',
           code: ErrorCode.QUERY_ERROR,
         },
-        { status: 500 },
+        { status: 500 }
       )
     }
 
@@ -205,7 +204,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         details: error instanceof Error ? error.message : 'Unknown error',
         code: ErrorCode.QUERY_ERROR,
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

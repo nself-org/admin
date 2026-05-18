@@ -10,9 +10,7 @@ import Link from 'next/link'
 import { Suspense } from 'react'
 
 function ServicesHelpContent() {
-  const servicesArticles = helpArticlesArray.filter(
-    (a: HelpArticle) => a.category === 'services',
-  )
+  const servicesArticles = helpArticlesArray.filter((a: HelpArticle) => a.category === 'services')
 
   return (
     <>
@@ -28,14 +26,11 @@ function ServicesHelpContent() {
                 <Server className="h-6 w-6 text-blue-600 dark:text-blue-400" />
               </div>
               <div className="flex-1">
-                <h2 className="mb-2 text-xl font-semibold">
-                  About nself Services
-                </h2>
+                <h2 className="mb-2 text-xl font-semibold">About nself Services</h2>
                 <p className="text-zinc-600 dark:text-zinc-400">
-                  nself includes PostgreSQL, Hasura GraphQL, Auth service,
-                  Functions, MinIO storage, Redis cache, Mailpit email testing,
-                  and Nginx proxy. Each service is pre-configured and ready to
-                  use.
+                  nself includes PostgreSQL, Hasura GraphQL, Auth service, Functions, MinIO storage,
+                  Redis cache, Mailpit email testing, and Nginx proxy. Each service is
+                  pre-configured and ready to use.
                 </p>
               </div>
             </div>

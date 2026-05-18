@@ -205,13 +205,10 @@ function SecretsManagementContent() {
             <div className="flex items-start gap-3">
               <AlertTriangle className="h-5 w-5 text-red-600 dark:text-red-400" />
               <div>
-                <p className="font-medium text-red-800 dark:text-red-300">
-                  Production Secrets
-                </p>
+                <p className="font-medium text-red-800 dark:text-red-300">Production Secrets</p>
                 <p className="mt-1 text-sm text-red-700 dark:text-red-400">
-                  These secrets are critical for production security. Rotating
-                  them will require redeployment and may cause temporary
-                  downtime.
+                  These secrets are critical for production security. Rotating them will require
+                  redeployment and may cause temporary downtime.
                 </p>
               </div>
             </div>
@@ -292,10 +289,7 @@ function SecretsManagementContent() {
           <div className="rounded-xl border border-zinc-200 bg-white shadow-sm dark:border-zinc-700 dark:bg-zinc-800">
             <div className="divide-y divide-zinc-200 dark:divide-zinc-700">
               {filteredSecrets.map((secret) => (
-                <div
-                  key={secret.id}
-                  className="p-6 hover:bg-zinc-50 dark:hover:bg-zinc-700/50"
-                >
+                <div key={secret.id} className="p-6 hover:bg-zinc-50 dark:hover:bg-zinc-700/50">
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
                       <div className="mb-2 flex items-center gap-3">
@@ -328,14 +322,10 @@ function SecretsManagementContent() {
                         </button>
                       </div>
                       <div className="flex items-center gap-4 text-xs text-zinc-500">
-                        <span>
-                          Created:{' '}
-                          {new Date(secret.createdAt).toLocaleDateString()}
-                        </span>
+                        <span>Created: {new Date(secret.createdAt).toLocaleDateString()}</span>
                         {secret.lastRotated && (
                           <span>
-                            Last rotated:{' '}
-                            {new Date(secret.lastRotated).toLocaleDateString()}
+                            Last rotated: {new Date(secret.lastRotated).toLocaleDateString()}
                           </span>
                         )}
                       </div>

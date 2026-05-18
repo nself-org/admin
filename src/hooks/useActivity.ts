@@ -55,9 +55,7 @@ function buildQueryString(options?: ActivityFeedOptions): string {
       params.set('actorType', filter.actorType)
     }
     if (filter.action) {
-      const actions = Array.isArray(filter.action)
-        ? filter.action.join(',')
-        : filter.action
+      const actions = Array.isArray(filter.action) ? filter.action.join(',') : filter.action
       params.set('action', actions)
     }
     if (filter.resourceType) {
@@ -110,7 +108,7 @@ export function useActivityFeed(options?: ActivityFeedOptions) {
     {
       refreshInterval: 30000, // Refresh every 30 seconds
       revalidateOnFocus: true,
-    },
+    }
   )
 
   return {
@@ -138,7 +136,7 @@ export function useActivityStats(tenantId?: string) {
     () => fetcher<ActivityStats>(url),
     {
       refreshInterval: 60000, // Refresh every minute
-    },
+    }
   )
 
   return {
@@ -165,7 +163,7 @@ export function useResourceActivity(
   id: string,
   options?: Omit<ActivityFeedOptions, 'filter'> & {
     includeChanges?: boolean
-  },
+  }
 ) {
   const feedOptions: ActivityFeedOptions = {
     ...options,
@@ -183,7 +181,7 @@ export function useResourceActivity(
     () => fetcher<ActivityFeedResponse>(url),
     {
       refreshInterval: 30000,
-    },
+    }
   )
 
   return {
@@ -205,7 +203,7 @@ export function useActorActivity(
   actorId: string,
   options?: Omit<ActivityFeedOptions, 'filter'> & {
     includeChanges?: boolean
-  },
+  }
 ) {
   const feedOptions: ActivityFeedOptions = {
     ...options,
@@ -222,7 +220,7 @@ export function useActorActivity(
     () => fetcher<ActivityFeedResponse>(url),
     {
       refreshInterval: 30000,
-    },
+    }
   )
 
   return {
@@ -240,10 +238,7 @@ export function useActorActivity(
 /**
  * Search activity hook
  */
-export function useSearchActivity(
-  query: string,
-  options?: Omit<ActivityFeedOptions, 'filter'>,
-) {
+export function useSearchActivity(query: string, options?: Omit<ActivityFeedOptions, 'filter'>) {
   const feedOptions: ActivityFeedOptions = {
     ...options,
     filter: {
@@ -263,7 +258,7 @@ export function useSearchActivity(
     {
       refreshInterval: 0, // Don't auto-refresh search results
       revalidateOnFocus: false,
-    },
+    }
   )
 
   return {

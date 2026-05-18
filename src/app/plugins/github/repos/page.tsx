@@ -42,8 +42,7 @@ const languageColors: Record<string, string> = {
 }
 
 function RepoCard({ repo }: { repo: GitHubRepo }) {
-  const langColor =
-    languageColors[repo.language || 'default'] || languageColors.default
+  const langColor = languageColors[repo.language || 'default'] || languageColors.default
 
   return (
     <div className="group rounded-xl border border-zinc-700/50 bg-zinc-800/50 p-5 transition-all hover:border-zinc-500/50 hover:bg-zinc-800">
@@ -71,18 +70,13 @@ function RepoCard({ repo }: { repo: GitHubRepo }) {
       </div>
 
       {repo.description && (
-        <p className="mb-3 line-clamp-2 text-sm text-zinc-400">
-          {repo.description}
-        </p>
+        <p className="mb-3 line-clamp-2 text-sm text-zinc-400">{repo.description}</p>
       )}
 
       <div className="flex items-center gap-4 text-sm">
         {repo.language && (
           <div className="flex items-center gap-1">
-            <Circle
-              className="h-3 w-3"
-              style={{ fill: langColor, color: langColor }}
-            />
+            <Circle className="h-3 w-3" style={{ fill: langColor, color: langColor }} />
             <span className="text-zinc-400">{repo.language}</span>
           </div>
         )}
@@ -106,9 +100,7 @@ function RepoCard({ repo }: { repo: GitHubRepo }) {
         <span className="text-xs text-zinc-500">
           Updated {new Date(repo.updatedAt).toLocaleDateString()}
         </span>
-        <span className="text-xs text-zinc-500">
-          Default: {repo.defaultBranch}
-        </span>
+        <span className="text-xs text-zinc-500">Default: {repo.defaultBranch}</span>
       </div>
     </div>
   )
@@ -122,11 +114,9 @@ function GitHubReposContent() {
   const { data, error, isLoading, mutate } = useSWR<{
     repos: GitHubRepo[]
     total: number
-  }>(
-    `/api/plugins/github/repos?page=${page}&pageSize=${pageSize}&search=${searchQuery}`,
-    fetcher,
-    { refreshInterval: 60000 },
-  )
+  }>(`/api/plugins/github/repos?page=${page}&pageSize=${pageSize}&search=${searchQuery}`, fetcher, {
+    refreshInterval: 60000,
+  })
 
   const handleSync = async () => {
     await fetch('/api/plugins/github/sync', { method: 'POST' })
@@ -155,10 +145,7 @@ function GitHubReposContent() {
         </div>
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
           {[1, 2, 3, 4, 5, 6].map((i) => (
-            <div
-              key={i}
-              className="h-40 animate-pulse rounded-lg bg-zinc-800/50"
-            />
+            <div key={i} className="h-40 animate-pulse rounded-lg bg-zinc-800/50" />
           ))}
         </div>
       </div>
@@ -203,9 +190,7 @@ function GitHubReposContent() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-semibold text-white">Repositories</h1>
-          <p className="text-sm text-zinc-400">
-            {total.toLocaleString()} total repositories
-          </p>
+          <p className="text-sm text-zinc-400">{total.toLocaleString()} total repositories</p>
         </div>
         <button
           onClick={handleSync}
@@ -249,8 +234,7 @@ function GitHubReposContent() {
       {totalPages > 1 && (
         <div className="flex items-center justify-between">
           <p className="text-sm text-zinc-400">
-            Showing {(page - 1) * pageSize + 1} to{' '}
-            {Math.min(page * pageSize, total)} of {total}
+            Showing {(page - 1) * pageSize + 1} to {Math.min(page * pageSize, total)} of {total}
           </p>
           <div className="flex items-center gap-2">
             <button

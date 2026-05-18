@@ -244,9 +244,7 @@ function DoctorContent() {
 
       {/* State: partial / success — overall status */}
       {doctorResult && (
-        <div
-          className={`rounded-xl border-2 p-6 ${getOverallStatusColor(doctorResult.overall)}`}
-        >
+        <div className={`rounded-xl border-2 p-6 ${getOverallStatusColor(doctorResult.overall)}`}>
           <div className="flex items-center justify-between">
             <div>
               <h2 className="text-lg font-semibold">

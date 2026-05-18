@@ -47,14 +47,10 @@ export function FormSection({
         {(title || description) && (
           <div className="space-y-2">
             {title && (
-              <h3 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">
-                {title}
-              </h3>
+              <h3 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">{title}</h3>
             )}
             {description && (
-              <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                {description}
-              </p>
+              <p className="text-sm text-zinc-500 dark:text-zinc-400">{description}</p>
             )}
           </div>
         )}

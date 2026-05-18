@@ -13,7 +13,7 @@ export async function GET(): Promise<NextResponse> {
           error: 'Failed to list tenants',
           details: result.error || result.stderr || 'Unknown error',
         },
-        { status: 500 },
+        { status: 500 }
       )
     }
 
@@ -36,7 +36,7 @@ export async function GET(): Promise<NextResponse> {
         error: 'Failed to list tenants',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -56,7 +56,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           error: 'Invalid tenant name',
           details: 'A tenant name is required',
         },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -76,7 +76,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           error: 'Failed to create tenant',
           details: result.error || result.stderr || 'Unknown error',
         },
-        { status: 500 },
+        { status: 500 }
       )
     }
 
@@ -98,7 +98,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to create tenant',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

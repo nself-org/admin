@@ -3,15 +3,7 @@
 import { DashboardSkeleton } from '@/components/skeletons'
 import { useOrganization } from '@/hooks/useOrganization'
 import type { OrgRole, OrgSettings } from '@/types/tenant'
-import {
-  AlertTriangle,
-  ArrowLeft,
-  Building,
-  Save,
-  Shield,
-  Trash2,
-  Users,
-} from 'lucide-react'
+import { AlertTriangle, ArrowLeft, Building, Save, Shield, Trash2, Users } from 'lucide-react'
 import Link from 'next/link'
 import { useParams, useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
@@ -70,9 +62,7 @@ export default function OrgSettingsPage() {
       setHasChanges(false)
       setTimeout(() => setSaveSuccess(false), 3000)
     } catch (err) {
-      setSaveError(
-        err instanceof Error ? err.message : 'Failed to save settings',
-      )
+      setSaveError(err instanceof Error ? err.message : 'Failed to save settings')
     } finally {
       setIsSaving(false)
     }
@@ -85,9 +75,7 @@ export default function OrgSettingsPage() {
       await remove()
       router.push('/org')
     } catch (err) {
-      setSaveError(
-        err instanceof Error ? err.message : 'Failed to delete organization',
-      )
+      setSaveError(err instanceof Error ? err.message : 'Failed to delete organization')
     }
   }
 
@@ -101,9 +89,7 @@ export default function OrgSettingsPage() {
           <ArrowLeft className="h-4 w-4" /> Back to {org.name}
         </Link>
         <h1 className="mt-4 text-2xl font-semibold text-white">Settings</h1>
-        <p className="text-sm text-zinc-400">
-          Manage organization settings and preferences
-        </p>
+        <p className="text-sm text-zinc-400">Manage organization settings and preferences</p>
       </div>
 
       {saveError && (
@@ -128,9 +114,7 @@ export default function OrgSettingsPage() {
         </div>
         <div className="space-y-6 p-6">
           <div>
-            <label className="mb-2 block text-sm text-zinc-400">
-              Organization Name
-            </label>
+            <label className="mb-2 block text-sm text-zinc-400">Organization Name</label>
             <input
               type="text"
               value={name}
@@ -143,9 +127,7 @@ export default function OrgSettingsPage() {
           </div>
 
           <div>
-            <label className="mb-2 block text-sm text-zinc-400">
-              Description
-            </label>
+            <label className="mb-2 block text-sm text-zinc-400">Description</label>
             <textarea
               value={description}
               onChange={(e) => {
@@ -166,9 +148,7 @@ export default function OrgSettingsPage() {
               disabled
               className="w-full rounded-lg border border-zinc-700 bg-zinc-900/50 px-4 py-2 text-zinc-500"
             />
-            <p className="mt-1 text-xs text-zinc-500">
-              The slug cannot be changed after creation
-            </p>
+            <p className="mt-1 text-xs text-zinc-500">The slug cannot be changed after creation</p>
           </div>
         </div>
       </div>
@@ -184,29 +164,20 @@ export default function OrgSettingsPage() {
         <div className="space-y-6 p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-white">
-                Allow Team Creation
-              </p>
+              <p className="text-sm font-medium text-white">Allow Team Creation</p>
               <p className="text-xs text-zinc-500">
                 Let members create new teams within this organization
               </p>
             </div>
             <button
-              onClick={() =>
-                handleSettingChange(
-                  'allowTeamCreation',
-                  !settings.allowTeamCreation,
-                )
-              }
+              onClick={() => handleSettingChange('allowTeamCreation', !settings.allowTeamCreation)}
               className={`relative h-6 w-11 rounded-full transition-colors ${
                 settings.allowTeamCreation ? 'bg-emerald-500' : 'bg-zinc-600'
               }`}
             >
               <span
                 className={`absolute top-0.5 h-5 w-5 rounded-full bg-white transition-transform ${
-                  settings.allowTeamCreation
-                    ? 'translate-x-5'
-                    : 'translate-x-0.5'
+                  settings.allowTeamCreation ? 'translate-x-5' : 'translate-x-0.5'
                 }`}
               />
             </button>
@@ -220,12 +191,7 @@ export default function OrgSettingsPage() {
               </p>
             </div>
             <button
-              onClick={() =>
-                handleSettingChange(
-                  'requireApproval',
-                  !settings.requireApproval,
-                )
-              }
+              onClick={() => handleSettingChange('requireApproval', !settings.requireApproval)}
               className={`relative h-6 w-11 rounded-full transition-colors ${
                 settings.requireApproval ? 'bg-emerald-500' : 'bg-zinc-600'
               }`}
@@ -250,14 +216,10 @@ export default function OrgSettingsPage() {
         </div>
         <div className="space-y-6 p-6">
           <div>
-            <label className="mb-2 block text-sm text-zinc-400">
-              Default Role for New Members
-            </label>
+            <label className="mb-2 block text-sm text-zinc-400">Default Role for New Members</label>
             <select
               value={settings.defaultRole}
-              onChange={(e) =>
-                handleSettingChange('defaultRole', e.target.value as OrgRole)
-              }
+              onChange={(e) => handleSettingChange('defaultRole', e.target.value as OrgRole)}
               className="w-full rounded-lg border border-zinc-700 bg-zinc-900 px-4 py-2 text-white focus:border-emerald-500 focus:outline-none"
             >
               <option value="viewer">Viewer - Read-only access</option>
@@ -296,12 +258,9 @@ export default function OrgSettingsPage() {
         <div className="p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-white">
-                Delete Organization
-              </p>
+              <p className="text-sm font-medium text-white">Delete Organization</p>
               <p className="text-xs text-zinc-400">
-                Permanently delete this organization and all its data. This
-                action cannot be undone.
+                Permanently delete this organization and all its data. This action cannot be undone.
               </p>
             </div>
             <button
@@ -320,9 +279,7 @@ export default function OrgSettingsPage() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
           <div className="w-full max-w-md rounded-xl border border-zinc-700 bg-zinc-900 shadow-xl">
             <div className="border-b border-zinc-700 px-6 py-4">
-              <h2 className="text-lg font-semibold text-white">
-                Delete Organization
-              </h2>
+              <h2 className="text-lg font-semibold text-white">Delete Organization</h2>
             </div>
 
             <div className="p-6">
@@ -332,16 +289,15 @@ export default function OrgSettingsPage() {
                   <div>
                     <p className="text-sm font-medium text-red-400">Warning</p>
                     <p className="mt-1 text-xs text-red-300">
-                      This action is permanent and cannot be undone. All teams,
-                      members, and data will be deleted.
+                      This action is permanent and cannot be undone. All teams, members, and data
+                      will be deleted.
                     </p>
                   </div>
                 </div>
               </div>
 
               <p className="mb-4 text-sm text-zinc-400">
-                To confirm, type{' '}
-                <strong className="text-white">{org.name}</strong> below:
+                To confirm, type <strong className="text-white">{org.name}</strong> below:
               </p>
 
               <input

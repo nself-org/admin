@@ -119,7 +119,7 @@ export default function ConversationsPage() {
     try {
       const res = await fetch(
         `${CLAW_API}/admin/conversations/${encodeURIComponent(sessionId)}/messages`,
-        { cache: 'no-store' },
+        { cache: 'no-store' }
       )
       if (!res.ok) {
         setTranscript([])
@@ -172,10 +172,9 @@ export default function ConversationsPage() {
     }
     setConversations((prev) => prev.filter((c) => c.session_id !== sessionId))
     try {
-      await fetch(
-        `${CLAW_API}/admin/conversations/${encodeURIComponent(sessionId)}`,
-        { method: 'DELETE' },
-      )
+      await fetch(`${CLAW_API}/admin/conversations/${encodeURIComponent(sessionId)}`, {
+        method: 'DELETE',
+      })
     } catch {
       // optimistic removal done
     } finally {
@@ -189,7 +188,7 @@ export default function ConversationsPage() {
     ? conversations.filter(
         (c) =>
           c.session_id.toLowerCase().includes(search.toLowerCase()) ||
-          c.last_message.toLowerCase().includes(search.toLowerCase()),
+          c.last_message.toLowerCase().includes(search.toLowerCase())
       )
     : conversations
 
@@ -199,12 +198,9 @@ export default function ConversationsPage() {
     return (
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
         <div className="mx-4 w-full max-w-md rounded-xl border border-zinc-700 bg-zinc-900 p-6 shadow-2xl">
-          <h2 className="text-base font-semibold text-white">
-            Delete this conversation?
-          </h2>
+          <h2 className="text-base font-semibold text-white">Delete this conversation?</h2>
           <p className="mt-2 text-sm text-zinc-400">
-            This will delete the conversation and all its messages. This cannot
-            be undone.
+            This will delete the conversation and all its messages. This cannot be undone.
           </p>
           <div className="mt-6 flex justify-end gap-3">
             <button
@@ -263,9 +259,7 @@ export default function ConversationsPage() {
           <div className="flex items-start gap-3">
             <AlertCircle className="mt-0.5 h-5 w-5 shrink-0 text-yellow-400" />
             <div>
-              <p className="font-medium text-yellow-300">
-                nself-claw is not running
-              </p>
+              <p className="font-medium text-yellow-300">nself-claw is not running</p>
               <p className="mt-1 text-sm text-yellow-400/80">
                 Install and start the ɳClaw plugin to browse conversations.
               </p>
@@ -281,8 +275,7 @@ export default function ConversationsPage() {
       <div className="flex items-center gap-2 rounded-lg border border-zinc-700/40 bg-zinc-800/30 px-4 py-3">
         <AlertCircle className="h-4 w-4 shrink-0 text-zinc-500" />
         <p className="text-xs text-zinc-500">
-          Admin access required. Requests to nself-claw must include an admin
-          JWT.
+          Admin access required. Requests to nself-claw must include an admin JWT.
         </p>
       </div>
 
@@ -303,10 +296,7 @@ export default function ConversationsPage() {
           {convoLoading ? (
             <div className="space-y-2 p-4">
               {[1, 2, 3].map((n) => (
-                <div
-                  key={n}
-                  className="h-16 animate-pulse rounded-lg bg-zinc-700/40"
-                />
+                <div key={n} className="h-16 animate-pulse rounded-lg bg-zinc-700/40" />
               ))}
             </div>
           ) : filtered.length === 0 ? (
@@ -322,23 +312,18 @@ export default function ConversationsPage() {
                 <div
                   key={c.session_id}
                   className={`cursor-pointer px-5 py-3.5 transition-colors hover:bg-zinc-700/30 ${
-                    selectedId === c.session_id
-                      ? 'border-l-2 border-sky-500 bg-zinc-700/40'
-                      : ''
+                    selectedId === c.session_id ? 'border-l-2 border-sky-500 bg-zinc-700/40' : ''
                   }`}
                   onClick={() => handleSelect(c.session_id)}
                   role="button"
                   tabIndex={0}
                   onKeyDown={(e) => {
-                    if (e.key === 'Enter' || e.key === ' ')
-                      handleSelect(c.session_id)
+                    if (e.key === 'Enter' || e.key === ' ') handleSelect(c.session_id)
                   }}
                 >
                   <div className="flex items-start justify-between gap-2">
                     <div className="min-w-0 flex-1">
-                      <p className="truncate text-sm font-medium text-zinc-200">
-                        {c.user_id}
-                      </p>
+                      <p className="truncate text-sm font-medium text-zinc-200">{c.user_id}</p>
                       <p className="mt-0.5 font-mono text-xs text-zinc-600">
                         {c.session_id.slice(0, 12)}…
                       </p>
@@ -388,26 +373,19 @@ export default function ConversationsPage() {
               {selectedId ? 'Transcript' : 'Select a conversation'}
             </h2>
             {selectedId && (
-              <p className="mt-0.5 font-mono text-xs text-zinc-600">
-                {selectedId.slice(0, 20)}…
-              </p>
+              <p className="mt-0.5 font-mono text-xs text-zinc-600">{selectedId.slice(0, 20)}…</p>
             )}
           </div>
 
           {!selectedId ? (
             <div className="flex flex-col items-center justify-center py-16 text-center">
               <MessageSquare className="mb-2 h-8 w-8 text-zinc-700" />
-              <p className="text-sm text-zinc-500">
-                Click a conversation to view transcript
-              </p>
+              <p className="text-sm text-zinc-500">Click a conversation to view transcript</p>
             </div>
           ) : transcriptLoading ? (
             <div className="space-y-3 p-4">
               {[1, 2, 3].map((n) => (
-                <div
-                  key={n}
-                  className="h-14 animate-pulse rounded-lg bg-zinc-700/40"
-                />
+                <div key={n} className="h-14 animate-pulse rounded-lg bg-zinc-700/40" />
               ))}
             </div>
           ) : transcript.length === 0 ? (
@@ -432,11 +410,7 @@ export default function ConversationsPage() {
                       </div>
                       <pre className="overflow-x-auto font-mono text-xs whitespace-pre-wrap text-zinc-400">
                         {msg.tool_calls
-                          ? JSON.stringify(
-                              msg.tool_calls[0]?.args ?? {},
-                              null,
-                              2,
-                            )
+                          ? JSON.stringify(msg.tool_calls[0]?.args ?? {}, null, 2)
                           : msg.content.slice(0, 200)}
                       </pre>
                     </div>
@@ -445,20 +419,13 @@ export default function ConversationsPage() {
 
                 const isUser = msg.role === 'user'
                 return (
-                  <div
-                    key={i}
-                    className={`flex ${isUser ? 'justify-end' : 'justify-start'}`}
-                  >
+                  <div key={i} className={`flex ${isUser ? 'justify-end' : 'justify-start'}`}>
                     <div
                       className={`max-w-[85%] rounded-xl px-3 py-2 text-sm ${
-                        isUser
-                          ? 'bg-zinc-600 text-zinc-100'
-                          : 'bg-zinc-700 text-zinc-200'
+                        isUser ? 'bg-zinc-600 text-zinc-100' : 'bg-zinc-700 text-zinc-200'
                       }`}
                     >
-                      <p className="break-words whitespace-pre-wrap">
-                        {msg.content}
-                      </p>
+                      <p className="break-words whitespace-pre-wrap">{msg.content}</p>
                       <p className="mt-1 text-right text-xs opacity-50">
                         {new Date(msg.timestamp).toLocaleTimeString([], {
                           hour: '2-digit',

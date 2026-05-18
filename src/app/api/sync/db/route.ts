@@ -18,22 +18,12 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     const nselfPath = await findNselfPath()
     const body = await request.json()
 
-    const {
-      source,
-      target,
-      tables,
-      excludeTables,
-      dataOnly,
-      schemaOnly,
-      dryRun,
-      force,
-    } = body
+    const { source, target, tables, excludeTables, dataOnly, schemaOnly, dryRun, force } = body
 
     const args: string[] = ['sync', 'db']
     if (source) args.push(`--source=${source}`)
     if (target) args.push(`--target=${target}`)
-    if (tables && Array.isArray(tables))
-      args.push(`--tables=${tables.join(',')}`)
+    if (tables && Array.isArray(tables)) args.push(`--tables=${tables.join(',')}`)
     if (excludeTables && Array.isArray(excludeTables))
       args.push(`--exclude-tables=${excludeTables.join(',')}`)
     if (dataOnly) args.push('--data-only')
@@ -41,14 +31,11 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     if (dryRun) args.push('--dry-run')
     if (force) args.push('--force')
 
-    const { stdout } = await execAsync(
-      `${nselfPath} ${args.join(' ')} --json`,
-      {
-        cwd: projectPath,
-        env: { ...process.env, PATH: getEnhancedPath() },
-        timeout: 600000,
-      },
-    )
+    const { stdout } = await execAsync(`${nselfPath} ${args.join(' ')} --json`, {
+      cwd: projectPath,
+      env: { ...process.env, PATH: getEnhancedPath() },
+      timeout: 600000,
+    })
 
     const result = JSON.parse(stdout)
 
@@ -69,7 +56,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to sync database',
         details: err.message,
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

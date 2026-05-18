@@ -122,13 +122,10 @@ export default function InitStep4() {
       onSave: saveConfig,
       enabled: dataLoaded,
       delay: 1000,
-    },
+    }
   )
   // Framework tooltips with descriptions and performance scores
-  const frameworkTooltips: Record<
-    string,
-    { description: string; performance: number }
-  > = {
+  const frameworkTooltips: Record<string, { description: string; performance: number }> = {
     // Custom
     custom: {
       description:
@@ -600,9 +597,7 @@ export default function InitStep4() {
 
   const addService = () => {
     const nextPort =
-      localServices.length > 0
-        ? Math.max(...localServices.map((s) => s.port)) + 1
-        : 4001 // Start at 4001 since Auth uses 4000
+      localServices.length > 0 ? Math.max(...localServices.map((s) => s.port)) + 1 : 4001 // Start at 4001 since Auth uses 4000
 
     const newService: CustomService = {
       name: `service_${localServices.length + 1}`,
@@ -624,11 +619,7 @@ export default function InitStep4() {
     setLocalServices(localServices.filter((_, i) => i !== index))
   }
 
-  const updateService = (
-    index: number,
-    field: keyof CustomService,
-    value: any,
-  ) => {
+  const updateService = (index: number, field: keyof CustomService, value: any) => {
     const updated = [...localServices]
     if (field === 'name' && typeof value === 'string') {
       value = value.toLowerCase().replace(/[^a-z0-9_-]/g, '')
@@ -668,10 +659,7 @@ export default function InitStep4() {
           <div className="space-y-4">
             {/* Loading skeleton for service cards */}
             {[...Array(2)].map((_, i) => (
-              <div
-                key={i}
-                className="rounded-lg border-2 border-zinc-200 p-6 dark:border-zinc-700"
-              >
+              <div key={i} className="rounded-lg border-2 border-zinc-200 p-6 dark:border-zinc-700">
                 <div className="flex items-start justify-between">
                   <div className="flex-1 space-y-3">
                     <div className="flex gap-4">
@@ -705,9 +693,7 @@ export default function InitStep4() {
               Custom Services Configuration
             </span>
             {autoSaving && (
-              <span className="text-xs text-blue-600 dark:text-blue-400">
-                (Auto-saving...)
-              </span>
+              <span className="text-xs text-blue-600 dark:text-blue-400">(Auto-saving...)</span>
             )}
           </div>
           {showInfoBox ? (
@@ -721,9 +707,9 @@ export default function InitStep4() {
           <div className="mt-2 rounded-lg border border-blue-200 bg-blue-50 p-4 dark:border-blue-800 dark:bg-blue-900/20">
             <div className="space-y-3 text-xs text-blue-700 dark:text-blue-400">
               <p>
-                Add custom backend services with your preferred languages and
-                frameworks. Each service runs in its own container with
-                automatic health checks, logging, and orchestration.
+                Add custom backend services with your preferred languages and frameworks. Each
+                service runs in its own container with automatic health checks, logging, and
+                orchestration.
               </p>
 
               <div>
@@ -732,16 +718,16 @@ export default function InitStep4() {
                 </p>
                 <ul className="ml-4 space-y-0.5">
                   <li>
-                    • <strong>No route:</strong> Internal-only service (workers,
-                    queues, background jobs)
+                    • <strong>No route:</strong> Internal-only service (workers, queues, background
+                    jobs)
                   </li>
                   <li>
-                    • <strong>Single word (e.g., &quot;api&quot;):</strong>{' '}
-                    Creates subdomain: api.{baseDomain}
+                    • <strong>Single word (e.g., &quot;api&quot;):</strong> Creates subdomain: api.
+                    {baseDomain}
                   </li>
                   <li>
-                    • <strong>Full domain:</strong> Used as-is for external
-                    webhooks or custom domains
+                    • <strong>Full domain:</strong> Used as-is for external webhooks or custom
+                    domains
                   </li>
                 </ul>
               </div>
@@ -762,84 +748,76 @@ export default function InitStep4() {
               {showFrameworkInfo && (
                 <div className="rounded-lg bg-blue-100/50 p-3 dark:bg-blue-900/30">
                   <p className="mb-2 font-medium text-blue-900 dark:text-blue-200">
-                    Each framework provides a production-ready backend
-                    API/microservice template with best practices:
+                    Each framework provides a production-ready backend API/microservice template
+                    with best practices:
                   </p>
-                  {Object.entries(frameworksForDropdown).map(
-                    ([category, frameworks]) => (
-                      <div key={category} className="mb-3">
-                        <h4 className="mb-1 font-semibold text-blue-900 dark:text-blue-200">
-                          {category}
-                        </h4>
-                        <div className="grid grid-cols-2 gap-1">
-                          {frameworks.map((fw, _idx) => {
-                            const tooltip = frameworkTooltips[fw.value]
-                            const tooltipId = `${category}-${fw.value}`
-                            return (
-                              <div
-                                key={fw.value}
-                                className="flex items-center gap-1 text-xs text-blue-700 dark:text-blue-300"
+                  {Object.entries(frameworksForDropdown).map(([category, frameworks]) => (
+                    <div key={category} className="mb-3">
+                      <h4 className="mb-1 font-semibold text-blue-900 dark:text-blue-200">
+                        {category}
+                      </h4>
+                      <div className="grid grid-cols-2 gap-1">
+                        {frameworks.map((fw, _idx) => {
+                          const tooltip = frameworkTooltips[fw.value]
+                          const tooltipId = `${category}-${fw.value}`
+                          return (
+                            <div
+                              key={fw.value}
+                              className="flex items-center gap-1 text-xs text-blue-700 dark:text-blue-300"
+                            >
+                              <span>• {fw.label}</span>
+                              {/* Info icon with tooltip */}
+                              <span
+                                className="relative inline-block cursor-help"
+                                onMouseEnter={() => setActiveTooltip(tooltipId)}
+                                onMouseLeave={() => setActiveTooltip(null)}
                               >
-                                <span>• {fw.label}</span>
-                                {/* Info icon with tooltip */}
-                                <span
-                                  className="relative inline-block cursor-help"
-                                  onMouseEnter={() =>
-                                    setActiveTooltip(tooltipId)
-                                  }
-                                  onMouseLeave={() => setActiveTooltip(null)}
-                                >
-                                  <span className="text-blue-500 hover:text-blue-600 dark:text-blue-400 dark:hover:text-blue-300">
-                                    ⓘ
-                                  </span>
-                                  {/* Tooltip on hover - only show if this is the active tooltip */}
-                                  {activeTooltip === tooltipId && (
-                                    <div className="animate-fadeIn pointer-events-none absolute bottom-full left-1/2 z-[100] mb-2 w-64 -translate-x-1/2 rounded-lg bg-zinc-900 p-2 text-xs text-white shadow-xl">
-                                      <div className="mb-2">
-                                        {tooltip?.description || fw.description}
-                                      </div>
-                                      {tooltip?.performance > 0 && (
-                                        <div className="border-t border-zinc-700 pt-2">
-                                          <span className="font-semibold">
-                                            Performance Score:{' '}
-                                          </span>
-                                          <span
-                                            className={`font-bold ${
-                                              tooltip.performance >= 9
-                                                ? 'text-green-400'
-                                                : tooltip.performance >= 7
-                                                  ? 'text-yellow-400'
-                                                  : tooltip.performance >= 5
-                                                    ? 'text-orange-400'
-                                                    : 'text-red-400'
-                                            }`}
-                                          >
-                                            {Number.isInteger(
-                                              tooltip.performance,
-                                            )
-                                              ? tooltip.performance
-                                              : tooltip.performance.toFixed(1)}
-                                            /10
-                                          </span>
-                                        </div>
-                                      )}
-                                      {tooltip?.performance === 0 && (
-                                        <div className="border-t border-zinc-700 pt-2 text-zinc-400">
-                                          Performance varies by implementation
-                                        </div>
-                                      )}
-                                      {/* Arrow pointing down */}
-                                      <div className="absolute -bottom-1 left-1/2 h-2 w-2 -translate-x-1/2 rotate-45 transform bg-zinc-900"></div>
-                                    </div>
-                                  )}
+                                <span className="text-blue-500 hover:text-blue-600 dark:text-blue-400 dark:hover:text-blue-300">
+                                  ⓘ
                                 </span>
-                              </div>
-                            )
-                          })}
-                        </div>
+                                {/* Tooltip on hover - only show if this is the active tooltip */}
+                                {activeTooltip === tooltipId && (
+                                  <div className="animate-fadeIn pointer-events-none absolute bottom-full left-1/2 z-[100] mb-2 w-64 -translate-x-1/2 rounded-lg bg-zinc-900 p-2 text-xs text-white shadow-xl">
+                                    <div className="mb-2">
+                                      {tooltip?.description || fw.description}
+                                    </div>
+                                    {tooltip?.performance > 0 && (
+                                      <div className="border-t border-zinc-700 pt-2">
+                                        <span className="font-semibold">Performance Score: </span>
+                                        <span
+                                          className={`font-bold ${
+                                            tooltip.performance >= 9
+                                              ? 'text-green-400'
+                                              : tooltip.performance >= 7
+                                                ? 'text-yellow-400'
+                                                : tooltip.performance >= 5
+                                                  ? 'text-orange-400'
+                                                  : 'text-red-400'
+                                          }`}
+                                        >
+                                          {Number.isInteger(tooltip.performance)
+                                            ? tooltip.performance
+                                            : tooltip.performance.toFixed(1)}
+                                          /10
+                                        </span>
+                                      </div>
+                                    )}
+                                    {tooltip?.performance === 0 && (
+                                      <div className="border-t border-zinc-700 pt-2 text-zinc-400">
+                                        Performance varies by implementation
+                                      </div>
+                                    )}
+                                    {/* Arrow pointing down */}
+                                    <div className="absolute -bottom-1 left-1/2 h-2 w-2 -translate-x-1/2 rotate-45 transform bg-zinc-900"></div>
+                                  </div>
+                                )}
+                              </span>
+                            </div>
+                          )
+                        })}
                       </div>
-                    ),
-                  )}
+                    </div>
+                  ))}
                 </div>
               )}
             </div>
@@ -862,9 +840,7 @@ export default function InitStep4() {
                   <input
                     type="text"
                     value={service.name}
-                    onChange={(e) =>
-                      updateService(index, 'name', e.target.value)
-                    }
+                    onChange={(e) => updateService(index, 'name', e.target.value)}
                     onBlur={() => setEditingTitle(null)}
                     onKeyDown={(e) => {
                       if (e.key === 'Enter') {
@@ -902,9 +878,7 @@ export default function InitStep4() {
                 </label>
                 <select
                   value={service.framework}
-                  onChange={(e) =>
-                    updateService(index, 'framework', e.target.value)
-                  }
+                  onChange={(e) => updateService(index, 'framework', e.target.value)}
                   className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-zinc-900 focus:ring-2 focus:ring-blue-500 focus:outline-none dark:border-zinc-600 dark:bg-zinc-900 dark:text-white dark:focus:ring-blue-400"
                   title={
                     service.framework
@@ -913,24 +887,22 @@ export default function InitStep4() {
                   }
                 >
                   <option value="">Select a framework</option>
-                  {Object.entries(frameworksForDropdown).map(
-                    ([category, frameworks]) => (
-                      <optgroup key={category} label={category}>
-                        {frameworks.map((fw) => {
-                          const tooltip = frameworkTooltips[fw.value]
-                          return (
-                            <option
-                              key={fw.value}
-                              value={fw.value}
-                              title={`${tooltip?.description || fw.description}${tooltip?.performance > 0 ? `\n\nPerformance Score: ${tooltip.performance}/10` : ''}`}
-                            >
-                              {fw.label}
-                            </option>
-                          )
-                        })}
-                      </optgroup>
-                    ),
-                  )}
+                  {Object.entries(frameworksForDropdown).map(([category, frameworks]) => (
+                    <optgroup key={category} label={category}>
+                      {frameworks.map((fw) => {
+                        const tooltip = frameworkTooltips[fw.value]
+                        return (
+                          <option
+                            key={fw.value}
+                            value={fw.value}
+                            title={`${tooltip?.description || fw.description}${tooltip?.performance > 0 ? `\n\nPerformance Score: ${tooltip.performance}/10` : ''}`}
+                          >
+                            {fw.label}
+                          </option>
+                        )
+                      })}
+                    </optgroup>
+                  ))}
                 </select>
               </div>
               {/* Port */}
@@ -941,13 +913,7 @@ export default function InitStep4() {
                 <input
                   type="number"
                   value={service.port}
-                  onChange={(e) =>
-                    updateService(
-                      index,
-                      'port',
-                      parseInt(e.target.value) || 3000,
-                    )
-                  }
+                  onChange={(e) => updateService(index, 'port', parseInt(e.target.value) || 3000)}
                   className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-zinc-900 placeholder-zinc-400 focus:ring-2 focus:ring-blue-500 focus:outline-none dark:border-zinc-600 dark:bg-zinc-900 dark:text-white dark:placeholder-zinc-500 dark:focus:ring-blue-400"
                   min="1024"
                   max="65535"
@@ -957,16 +923,12 @@ export default function InitStep4() {
               <div>
                 <label className="mb-1 block text-xs font-medium text-zinc-700 dark:text-zinc-300">
                   Route{' '}
-                  <span className="font-normal text-zinc-500 dark:text-zinc-600">
-                    (optional)
-                  </span>
+                  <span className="font-normal text-zinc-500 dark:text-zinc-600">(optional)</span>
                 </label>
                 <input
                   type="text"
                   value={service.route || ''}
-                  onChange={(e) =>
-                    updateService(index, 'route', e.target.value)
-                  }
+                  onChange={(e) => updateService(index, 'route', e.target.value)}
                   placeholder="api, webhook.site, or leave empty"
                   className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-zinc-900 placeholder-zinc-400 focus:ring-2 focus:ring-blue-500 focus:outline-none dark:border-zinc-600 dark:bg-zinc-900 dark:text-white dark:placeholder-zinc-500 dark:focus:ring-blue-400"
                 />
@@ -975,9 +937,7 @@ export default function InitStep4() {
 
             {/* Route error */}
             {service.routeError && (
-              <p className="mt-2 text-sm text-red-600 dark:text-red-400">
-                {service.routeError}
-              </p>
+              <p className="mt-2 text-sm text-red-600 dark:text-red-400">{service.routeError}</p>
             )}
           </div>
         ))}
@@ -986,9 +946,7 @@ export default function InitStep4() {
         {localServices.length === 0 && (
           <div className="rounded-lg border-2 border-dashed border-zinc-300 py-8 text-center dark:border-zinc-700">
             <Code className="mx-auto mb-3 h-12 w-12 text-zinc-400 dark:text-zinc-500" />
-            <p className="mb-1 text-zinc-600 dark:text-zinc-400">
-              No custom services added yet
-            </p>
+            <p className="mb-1 text-zinc-600 dark:text-zinc-400">No custom services added yet</p>
             <p className="mb-4 text-sm text-zinc-500 dark:text-zinc-500">
               Add services for your APIs, workers, or microservices
             </p>

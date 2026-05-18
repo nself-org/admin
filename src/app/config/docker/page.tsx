@@ -1,14 +1,23 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
-import { AlertCircle, CheckCircle, Container, Loader2, Pencil, Save, WifiOff, X } from 'lucide-react'
+import { FormSkeleton } from '@/components/skeletons'
 import { Alert, AlertDescription } from '@/components/ui/alert'
+import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Badge } from '@/components/ui/badge'
-import { FormSkeleton } from '@/components/skeletons'
+import {
+  AlertCircle,
+  CheckCircle,
+  Container,
+  Loader2,
+  Pencil,
+  Save,
+  WifiOff,
+  X,
+} from 'lucide-react'
+import { useCallback, useEffect, useState } from 'react'
 
 interface DockerService {
   version: string
@@ -46,7 +55,10 @@ const SERVICE_LABELS: Record<keyof DockerServices, string> = {
   mailpit: 'Mailpit',
 }
 
-const SERVICE_ENV_MAP: Record<keyof DockerServices, { version: string; port?: string; sslPort?: string; uiPort?: string; smtpPort?: string }> = {
+const SERVICE_ENV_MAP: Record<
+  keyof DockerServices,
+  { version: string; port?: string; sslPort?: string; uiPort?: string; smtpPort?: string }
+> = {
   postgres: { version: 'POSTGRES_VERSION', port: 'POSTGRES_PORT' },
   hasura: { version: 'HASURA_VERSION' },
   auth: { version: 'AUTH_VERSION', port: 'AUTH_PORT' },
@@ -86,30 +98,40 @@ function ServiceCard({
       <CardContent className="space-y-1">
         <div className="flex items-center justify-between text-xs">
           <span className="text-muted-foreground">Version</span>
-          <Badge variant="secondary" className="font-mono text-xs">{service.version}</Badge>
+          <Badge variant="secondary" className="font-mono text-xs">
+            {service.version}
+          </Badge>
         </div>
         {service.port && (
           <div className="flex items-center justify-between text-xs">
             <span className="text-muted-foreground">Port</span>
-            <Badge variant="outline" className="font-mono text-xs">{service.port}</Badge>
+            <Badge variant="outline" className="font-mono text-xs">
+              {service.port}
+            </Badge>
           </div>
         )}
         {service.sslPort && (
           <div className="flex items-center justify-between text-xs">
             <span className="text-muted-foreground">SSL Port</span>
-            <Badge variant="outline" className="font-mono text-xs">{service.sslPort}</Badge>
+            <Badge variant="outline" className="font-mono text-xs">
+              {service.sslPort}
+            </Badge>
           </div>
         )}
         {service.uiPort && (
           <div className="flex items-center justify-between text-xs">
             <span className="text-muted-foreground">UI Port</span>
-            <Badge variant="outline" className="font-mono text-xs">{service.uiPort}</Badge>
+            <Badge variant="outline" className="font-mono text-xs">
+              {service.uiPort}
+            </Badge>
           </div>
         )}
         {service.smtpPort && (
           <div className="flex items-center justify-between text-xs">
             <span className="text-muted-foreground">SMTP Port</span>
-            <Badge variant="outline" className="font-mono text-xs">{service.smtpPort}</Badge>
+            <Badge variant="outline" className="font-mono text-xs">
+              {service.smtpPort}
+            </Badge>
           </div>
         )}
       </CardContent>
@@ -215,11 +237,20 @@ function DockerContent() {
   // ── State: unauth ──────────────────────────────────────────────────────────
   if (pageState === 'unauth') {
     return (
-      <div className="flex flex-col items-center justify-center py-24 gap-4">
-        <AlertCircle className="h-10 w-10 text-destructive" />
+      <div className="flex flex-col items-center justify-center gap-4 py-24">
+        <AlertCircle className="text-destructive h-10 w-10" />
         <p className="text-lg font-medium">Not authenticated</p>
-        <p className="text-sm text-muted-foreground">Please log in to manage Docker configuration.</p>
-        <Button variant="outline" onClick={() => { window.location.href = '/login' }}>Go to Login</Button>
+        <p className="text-muted-foreground text-sm">
+          Please log in to manage Docker configuration.
+        </p>
+        <Button
+          variant="outline"
+          onClick={() => {
+            window.location.href = '/login'
+          }}
+        >
+          Go to Login
+        </Button>
       </div>
     )
   }
@@ -227,11 +258,13 @@ function DockerContent() {
   // ── State: offline ─────────────────────────────────────────────────────────
   if (pageState === 'offline') {
     return (
-      <div className="flex flex-col items-center justify-center py-24 gap-4">
-        <WifiOff className="h-10 w-10 text-muted-foreground" />
+      <div className="flex flex-col items-center justify-center gap-4 py-24">
+        <WifiOff className="text-muted-foreground h-10 w-10" />
         <p className="text-lg font-medium">Cannot connect to admin API</p>
-        <p className="text-sm text-muted-foreground">{errorMessage}</p>
-        <Button variant="outline" onClick={load}>Retry</Button>
+        <p className="text-muted-foreground text-sm">{errorMessage}</p>
+        <Button variant="outline" onClick={load}>
+          Retry
+        </Button>
       </div>
     )
   }
@@ -239,11 +272,13 @@ function DockerContent() {
   // ── State: error ───────────────────────────────────────────────────────────
   if (pageState === 'error') {
     return (
-      <div className="flex flex-col items-center justify-center py-24 gap-4">
-        <AlertCircle className="h-10 w-10 text-destructive" />
+      <div className="flex flex-col items-center justify-center gap-4 py-24">
+        <AlertCircle className="text-destructive h-10 w-10" />
         <p className="text-lg font-medium">Failed to load Docker configuration</p>
-        <p className="text-sm text-muted-foreground">{errorMessage}</p>
-        <Button variant="outline" onClick={load}>Retry</Button>
+        <p className="text-muted-foreground text-sm">{errorMessage}</p>
+        <Button variant="outline" onClick={load}>
+          Retry
+        </Button>
       </div>
     )
   }
@@ -259,16 +294,16 @@ function DockerContent() {
 
   // ── States: empty / partial / success ─────────────────────────────────────
   return (
-    <div className="space-y-6 max-w-3xl">
+    <div className="max-w-3xl space-y-6">
       <div>
-        <h1 className="text-2xl font-bold flex items-center gap-2">
+        <h1 className="flex items-center gap-2 text-2xl font-bold">
           <Container className="h-6 w-6" />
           Docker Configuration
         </h1>
-        <p className="text-sm text-muted-foreground mt-1">
-          View and edit service image versions and port mappings.
-          Changes are saved to <code className="text-xs bg-muted px-1 rounded">.env.dev</code> — run{' '}
-          <code className="text-xs bg-muted px-1 rounded">nself build</code> to apply.
+        <p className="text-muted-foreground mt-1 text-sm">
+          View and edit service image versions and port mappings. Changes are saved to{' '}
+          <code className="bg-muted rounded px-1 text-xs">.env.dev</code> — run{' '}
+          <code className="bg-muted rounded px-1 text-xs">nself build</code> to apply.
         </p>
       </div>
 
@@ -293,9 +328,7 @@ function DockerContent() {
         <Card className="border-primary">
           <CardHeader className="pb-3">
             <div className="flex items-center justify-between">
-              <CardTitle className="text-base">
-                Edit {SERVICE_LABELS[editingService]}
-              </CardTitle>
+              <CardTitle className="text-base">Edit {SERVICE_LABELS[editingService]}</CardTitle>
               <Button variant="ghost" size="icon" className="h-7 w-7" onClick={cancelEdit}>
                 <X className="h-4 w-4" />
               </Button>
@@ -365,7 +398,11 @@ function DockerContent() {
             )}
             <div className="flex gap-2 pt-2">
               <Button onClick={handleSave} disabled={saving} className="gap-2">
-                {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
+                {saving ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <Save className="h-4 w-4" />
+                )}
                 {saving ? 'Saving…' : 'Save'}
               </Button>
               <Button variant="outline" onClick={cancelEdit} disabled={saving}>
@@ -377,7 +414,7 @@ function DockerContent() {
       )}
 
       {/* Service cards grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {(Object.keys(services) as Array<keyof DockerServices>).map((name) => (
           <ServiceCard
             key={name}
@@ -392,15 +429,15 @@ function DockerContent() {
       {/* Raw vars (advanced) */}
       {Object.keys(dockerConfig.raw).length > 0 && (
         <details className="group">
-          <summary className="cursor-pointer text-sm text-muted-foreground hover:text-foreground list-none flex items-center gap-1">
+          <summary className="text-muted-foreground hover:text-foreground flex cursor-pointer list-none items-center gap-1 text-sm">
             <span className="group-open:hidden">▶</span>
             <span className="hidden group-open:inline">▼</span>
             Advanced — raw env vars
           </summary>
-          <div className="mt-3 rounded-md border bg-muted/50 p-3">
+          <div className="bg-muted/50 mt-3 rounded-md border p-3">
             <dl className="space-y-1">
               {Object.entries(dockerConfig.raw).map(([key, val]) => (
-                <div key={key} className="flex items-center gap-2 text-xs font-mono">
+                <div key={key} className="flex items-center gap-2 font-mono text-xs">
                   <dt className="text-muted-foreground shrink-0">{key}</dt>
                   <dd className="text-foreground">{val}</dd>
                 </div>

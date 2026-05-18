@@ -38,11 +38,7 @@ function MetricCard({
   const mouseX = useMotionValue(0)
   const mouseY = useMotionValue(0)
 
-  function onMouseMove({
-    currentTarget,
-    clientX,
-    clientY,
-  }: React.MouseEvent<HTMLDivElement>) {
+  function onMouseMove({ currentTarget, clientX, clientY }: React.MouseEvent<HTMLDivElement>) {
     const { left, top } = currentTarget.getBoundingClientRect()
     mouseX.set(clientX - left)
     mouseY.set(clientY - top)
@@ -63,17 +59,13 @@ function MetricCard({
       <div className="absolute inset-0 rounded-2xl ring-1 ring-zinc-900/10 transition-colors duration-300 ring-inset group-hover:ring-emerald-500/50 dark:ring-white/20 dark:group-hover:ring-emerald-400/60" />
       <div className="relative">
         <div className="flex items-center justify-between">
-          <h3 className="text-sm font-semibold text-zinc-900 dark:text-white">
-            {title}
-          </h3>
+          <h3 className="text-sm font-semibold text-zinc-900 dark:text-white">{title}</h3>
           <div className="flex h-8 w-8 items-center justify-center rounded-full bg-emerald-500/20 transition-colors duration-300 group-hover:bg-emerald-500/40 dark:bg-emerald-400/20 dark:group-hover:bg-emerald-400/40">
             <Icon className="h-4 w-4 text-emerald-600 group-hover:text-emerald-500 dark:text-emerald-400 dark:group-hover:text-emerald-300" />
           </div>
         </div>
         <div className="mt-4">
-          <div className="text-2xl font-bold text-zinc-900 dark:text-white">
-            {value}
-          </div>
+          <div className="text-2xl font-bold text-zinc-900 dark:text-white">{value}</div>
           {percentage !== undefined && (
             <div className="mt-2 h-2 rounded-full bg-zinc-200 dark:bg-zinc-800">
               <div
@@ -83,9 +75,7 @@ function MetricCard({
             </div>
           )}
         </div>
-        <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
-          {description}
-        </p>
+        <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">{description}</p>
       </div>
     </div>
   )
@@ -113,12 +103,8 @@ function CloudContent() {
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-semibold text-white">
-              Cloud Infrastructure
-            </h1>
-            <p className="text-sm text-zinc-400">
-              Manage cloud providers and servers
-            </p>
+            <h1 className="text-2xl font-semibold text-white">Cloud Infrastructure</h1>
+            <p className="text-sm text-zinc-400">Manage cloud providers and servers</p>
           </div>
         </div>
         <div className="grid animate-pulse grid-cols-1 gap-4 md:grid-cols-4">
@@ -135,12 +121,8 @@ function CloudContent() {
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-semibold text-white">
-              Cloud Infrastructure
-            </h1>
-            <p className="text-sm text-zinc-400">
-              Manage cloud providers and servers
-            </p>
+            <h1 className="text-2xl font-semibold text-white">Cloud Infrastructure</h1>
+            <p className="text-sm text-zinc-400">Manage cloud providers and servers</p>
           </div>
         </div>
         <div className="flex flex-col items-center justify-center rounded-lg border border-zinc-700/50 bg-zinc-800/50 p-12">
@@ -205,9 +187,7 @@ function CloudContent() {
           <MetricCard
             title="Active Servers"
             value={runningServers}
-            percentage={
-              servers.length > 0 ? (runningServers / servers.length) * 100 : 0
-            }
+            percentage={servers.length > 0 ? (runningServers / servers.length) * 100 : 0}
             description={`${servers.length} total servers`}
             icon={Server}
           />
@@ -240,9 +220,7 @@ function CloudContent() {
             <Cloud className="h-5 w-5 text-emerald-400" />
           </div>
           <h3 className="mb-1 font-medium text-white">Providers</h3>
-          <p className="text-sm text-zinc-400">
-            Configure {26 - configured} more cloud providers
-          </p>
+          <p className="text-sm text-zinc-400">Configure {26 - configured} more cloud providers</p>
         </Link>
 
         <Link
@@ -253,9 +231,7 @@ function CloudContent() {
             <Server className="h-5 w-5 text-blue-400" />
           </div>
           <h3 className="mb-1 font-medium text-white">Servers</h3>
-          <p className="text-sm text-zinc-400">
-            Manage {servers.length} cloud servers
-          </p>
+          <p className="text-sm text-zinc-400">Manage {servers.length} cloud servers</p>
         </Link>
 
         <Link
@@ -286,10 +262,7 @@ function CloudContent() {
         <div className="rounded-lg border border-zinc-700/50 bg-zinc-800/50">
           <div className="flex items-center justify-between border-b border-zinc-700/50 p-4">
             <h2 className="text-lg font-semibold text-white">Recent Servers</h2>
-            <Link
-              href="/cloud/servers"
-              className="text-sm text-emerald-400 hover:text-emerald-300"
-            >
+            <Link href="/cloud/servers" className="text-sm text-emerald-400 hover:text-emerald-300">
               View all
             </Link>
           </div>
@@ -321,24 +294,16 @@ function CloudContent() {
                       <div className="flex items-center gap-3">
                         <Server className="h-4 w-4 text-zinc-500" />
                         <div>
-                          <div className="text-sm font-medium text-white">
-                            {server.name}
-                          </div>
-                          <div className="text-xs text-zinc-500">
-                            {server.size}
-                          </div>
+                          <div className="text-sm font-medium text-white">{server.name}</div>
+                          <div className="text-xs text-zinc-500">{server.size}</div>
                         </div>
                       </div>
                     </td>
-                    <td className="px-4 py-3 text-sm text-zinc-400">
-                      {server.provider}
-                    </td>
+                    <td className="px-4 py-3 text-sm text-zinc-400">{server.provider}</td>
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-2">
                         <Globe className="h-3 w-3 text-zinc-500" />
-                        <span className="text-sm text-zinc-400">
-                          {server.region}
-                        </span>
+                        <span className="text-sm text-zinc-400">{server.region}</span>
                       </div>
                     </td>
                     <td className="px-4 py-3">
@@ -351,9 +316,7 @@ function CloudContent() {
                               : 'bg-amber-900/30 text-amber-400'
                         }`}
                       >
-                        {server.status === 'running' && (
-                          <CheckCircle className="h-3 w-3" />
-                        )}
+                        {server.status === 'running' && <CheckCircle className="h-3 w-3" />}
                         {server.status}
                       </span>
                     </td>

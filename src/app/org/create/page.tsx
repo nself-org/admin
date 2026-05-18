@@ -26,9 +26,7 @@ export default function CreateOrgPage() {
       const org = await create({ name, description })
       router.push(`/org/${org.id}`)
     } catch (err) {
-      setError(
-        err instanceof Error ? err.message : 'Failed to create organization',
-      )
+      setError(err instanceof Error ? err.message : 'Failed to create organization')
     }
   }
 
@@ -41,12 +39,8 @@ export default function CreateOrgPage() {
         >
           <ArrowLeft className="h-4 w-4" /> Back to Organizations
         </Link>
-        <h1 className="mt-4 text-2xl font-semibold text-white">
-          Create Organization
-        </h1>
-        <p className="text-sm text-zinc-400">
-          Set up a new organization for your team
-        </p>
+        <h1 className="mt-4 text-2xl font-semibold text-white">Create Organization</h1>
+        <p className="text-sm text-zinc-400">Set up a new organization for your team</p>
       </div>
 
       {error && (
@@ -60,9 +54,7 @@ export default function CreateOrgPage() {
         className="space-y-6 rounded-lg border border-zinc-700 bg-zinc-800/50 p-6"
       >
         <div>
-          <label className="mb-2 block text-sm text-zinc-400">
-            Organization Name *
-          </label>
+          <label className="mb-2 block text-sm text-zinc-400">Organization Name *</label>
           <input
             type="text"
             value={name}
@@ -73,9 +65,7 @@ export default function CreateOrgPage() {
         </div>
 
         <div>
-          <label className="mb-2 block text-sm text-zinc-400">
-            Description
-          </label>
+          <label className="mb-2 block text-sm text-zinc-400">Description</label>
           <textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}

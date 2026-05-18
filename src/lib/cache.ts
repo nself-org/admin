@@ -106,7 +106,7 @@ export function useCachedData<T>(
   key: string,
   fetcher: () => Promise<T>,
   ttl: number = CacheTTL.MEDIUM,
-  _dependencies: any[] = [],
+  _dependencies: any[] = []
 ): {
   data: T | null
   loading: boolean

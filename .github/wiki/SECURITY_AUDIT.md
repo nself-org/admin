@@ -84,13 +84,11 @@ command = `nself env delete ${name}${force ? ' --force' : ''}`
 
 ```typescript
 // Line 484-485 - MOST DANGEROUS
-await execAsync(
-  `docker exec nself_minio sh -c "echo '${content}' > ${tempFile}"`,
-)
+await execAsync(`docker exec nself_minio sh -c "echo '${content}' > ${tempFile}"`)
 
 // Line 560-561 - User credentials in command
 const { stdout } = await execAsync(
-  `docker exec nself_minio mc admin user add minio ${user} ${password}`,
+  `docker exec nself_minio mc admin user add minio ${user} ${password}`
 )
 ```
 
@@ -168,9 +166,7 @@ if (values) args.push(`--values=${values}`)
 **Lines:** 21-27, 71-77
 
 ```typescript
-const { stdout } = await execAsync(
-  `${nselfPath} deploy environments ${name} --json`,
-)
+const { stdout } = await execAsync(`${nselfPath} deploy environments ${name} --json`)
 
 // Line 71-73 - Environment variable values unvalidated
 Object.entries(body.env).forEach(([key, value]) => {
@@ -474,8 +470,7 @@ API routes accepting JSON bodies don't enforce size limits - potential DoS vecto
 - `src/app/api/config/env/route.ts` (Lines 31-41)
 
 ```typescript
-const HASURA_ADMIN_SECRET =
-  process.env.HASURA_GRAPHQL_ADMIN_SECRET || 'myadminsecretkey'
+const HASURA_ADMIN_SECRET = process.env.HASURA_GRAPHQL_ADMIN_SECRET || 'myadminsecretkey'
 ```
 
 **Remediation:** Remove fallback values; fail if secrets not configured.
@@ -724,12 +719,9 @@ if (!sessionToken) {
 }
 
 // Call internal API to validate session
-const validationResponse = await fetch(
-  `${request.nextUrl.origin}/api/auth/validate`,
-  {
-    headers: { Cookie: `nself-session=${sessionToken}` },
-  },
-)
+const validationResponse = await fetch(`${request.nextUrl.origin}/api/auth/validate`, {
+  headers: { Cookie: `nself-session=${sessionToken}` },
+})
 if (!validationResponse.ok) {
   return NextResponse.redirect(new URL('/login', request.url))
 }

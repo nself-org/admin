@@ -1,14 +1,6 @@
 'use client'
 
-import {
-  CheckCircle,
-  Code,
-  Database,
-  Layers,
-  Package,
-  Rocket,
-  Settings,
-} from 'lucide-react'
+import { CheckCircle, Code, Database, Layers, Package, Rocket, Settings } from 'lucide-react'
 import { usePathname, useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
@@ -41,10 +33,7 @@ export function ProgressSteps() {
       setVisitedSteps((prev) => {
         const newSet = new Set(prev)
         newSet.add(currentStep)
-        localStorage.setItem(
-          'wizard_visited_steps',
-          JSON.stringify(Array.from(newSet)),
-        )
+        localStorage.setItem('wizard_visited_steps', JSON.stringify(Array.from(newSet)))
         return newSet
       })
     }
@@ -81,10 +70,8 @@ export function ProgressSteps() {
           {steps.map((step) => {
             const Icon = step.icon
             const isActive = step.number === currentStep
-            const isPastDone =
-              visitedSteps.has(step.number) && step.number < currentStep
-            const isFutureDone =
-              visitedSteps.has(step.number) && step.number > currentStep
+            const isPastDone = visitedSteps.has(step.number) && step.number < currentStep
+            const isFutureDone = visitedSteps.has(step.number) && step.number > currentStep
             const _isNotVisited = !visitedSteps.has(step.number) && !isActive
             // Make all steps up to the max visited step clickable
             const isClickable = step.number <= maxVisitedStep || isActive

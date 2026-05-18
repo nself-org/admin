@@ -67,13 +67,7 @@ export interface GitHubWorkflowRun {
   headBranch: string
   headSha: string
   status: 'queued' | 'in_progress' | 'completed' | 'waiting'
-  conclusion?:
-    | 'success'
-    | 'failure'
-    | 'cancelled'
-    | 'skipped'
-    | 'timed_out'
-    | 'action_required'
+  conclusion?: 'success' | 'failure' | 'cancelled' | 'skipped' | 'timed_out' | 'action_required'
   htmlUrl: string
   runNumber: number
   event: string

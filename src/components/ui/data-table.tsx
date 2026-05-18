@@ -20,14 +20,7 @@ import * as React from 'react'
 import { Button } from './button'
 import { Checkbox } from './checkbox'
 import { Input } from './input'
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from './table'
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './table'
 
 /**
  * Advanced data table component with sorting, filtering, pagination, and bulk actions
@@ -91,11 +84,8 @@ export function DataTable<TData, TValue>({
   className,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([])
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    [],
-  )
-  const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>({})
+  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
+  const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({})
   const [rowSelection, setRowSelection] = React.useState<RowSelectionState>({})
 
   // Add selection column if enabled
@@ -149,9 +139,7 @@ export function DataTable<TData, TValue>({
     },
   })
 
-  const selectedRows = table
-    .getFilteredSelectedRowModel()
-    .rows.map((row) => row.original)
+  const selectedRows = table.getFilteredSelectedRowModel().rows.map((row) => row.original)
 
   const exportToCSV = () => {
     const headers = columns.map((col) => {
@@ -166,7 +154,7 @@ export function DataTable<TData, TValue>({
         const accessor = 'accessorKey' in col ? col.accessorKey : undefined
         const value = accessor ? row[accessor as keyof TData] : ''
         return String(value || '')
-      }),
+      })
     )
 
     const csv = [headers, ...rows].map((row) => row.join(',')).join('\n')
@@ -198,12 +186,8 @@ export function DataTable<TData, TValue>({
           {searchKey && (
             <Input
               placeholder={searchPlaceholder}
-              value={
-                (table.getColumn(searchKey)?.getFilterValue() as string) ?? ''
-              }
-              onChange={(event) =>
-                table.getColumn(searchKey)?.setFilterValue(event.target.value)
-              }
+              value={(table.getColumn(searchKey)?.getFilterValue() as string) ?? ''}
+              onChange={(event) => table.getColumn(searchKey)?.setFilterValue(event.target.value)}
               className="w-full sm:max-w-sm"
             />
           )}
@@ -230,11 +214,7 @@ export function DataTable<TData, TValue>({
         {enableExport && (
           <Popover.Root>
             <Popover.Trigger asChild>
-              <Button
-                variant="outline"
-                size="sm"
-                className="w-full gap-2 sm:w-auto"
-              >
+              <Button variant="outline" size="sm" className="w-full gap-2 sm:w-auto">
                 <Download className="h-4 w-4" />
                 <span className="sm:inline">Export</span>
               </Button>
@@ -245,12 +225,7 @@ export function DataTable<TData, TValue>({
                 sideOffset={4}
               >
                 <div className="flex flex-col gap-1">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={exportToCSV}
-                    className="justify-start"
-                  >
+                  <Button variant="ghost" size="sm" onClick={exportToCSV} className="justify-start">
                     Export CSV
                   </Button>
                   <Button
@@ -278,10 +253,7 @@ export function DataTable<TData, TValue>({
                   <TableHead key={header.id}>
                     {header.isPlaceholder
                       ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext(),
-                        )}
+                      : flexRender(header.column.columnDef.header, header.getContext())}
                   </TableHead>
                 ))}
               </TableRow>
@@ -290,26 +262,17 @@ export function DataTable<TData, TValue>({
           <TableBody>
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && 'selected'}
-                >
+                <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext(),
-                      )}
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </TableCell>
                   ))}
                 </TableRow>
               ))
             ) : (
               <TableRow>
-                <TableCell
-                  colSpan={tableColumns.length}
-                  className="h-24 text-center"
-                >
+                <TableCell colSpan={tableColumns.length} className="h-24 text-center">
                   No results.
                 </TableCell>
               </TableRow>
@@ -328,16 +291,12 @@ export function DataTable<TData, TValue>({
             >
               {row.getVisibleCells().map((cell) => {
                 const header = cell.column.columnDef.header
-                const headerText =
-                  typeof header === 'string' ? header : String(cell.column.id)
+                const headerText = typeof header === 'string' ? header : String(cell.column.id)
 
                 if (cell.column.id === 'select') {
                   return (
                     <div key={cell.id} className="mb-3">
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext(),
-                      )}
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </div>
                   )
                 }
@@ -348,10 +307,7 @@ export function DataTable<TData, TValue>({
                       {headerText}
                     </span>
                     <span className="text-sm text-zinc-900 dark:text-white">
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext(),
-                      )}
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </span>
                   </div>
                 )
@@ -368,9 +324,7 @@ export function DataTable<TData, TValue>({
       {/* Pagination */}
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex flex-wrap items-center gap-2">
-          <p className="text-sm text-zinc-500 dark:text-zinc-400">
-            Rows per page
-          </p>
+          <p className="text-sm text-zinc-500 dark:text-zinc-400">Rows per page</p>
           <select
             value={table.getState().pagination.pageSize}
             onChange={(e) => {
@@ -388,8 +342,7 @@ export function DataTable<TData, TValue>({
 
         <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-2">
           <p className="text-sm text-zinc-500 dark:text-zinc-400">
-            Page {table.getState().pagination.pageIndex + 1} of{' '}
-            {table.getPageCount()}
+            Page {table.getState().pagination.pageIndex + 1} of {table.getPageCount()}
           </p>
           <div className="flex gap-1">
             <Button

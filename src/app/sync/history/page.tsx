@@ -25,9 +25,9 @@ const fetcher = (url: string) => fetch(url).then((res) => res.json())
 
 function SyncHistoryContent() {
   const [filterEnv, setFilterEnv] = useState<Environment | 'all'>('all')
-  const [filterStatus, setFilterStatus] = useState<
-    'all' | 'completed' | 'failed' | 'in_progress'
-  >('all')
+  const [filterStatus, setFilterStatus] = useState<'all' | 'completed' | 'failed' | 'in_progress'>(
+    'all'
+  )
 
   const environments: (Environment | 'all')[] = [
     'all',
@@ -46,9 +46,7 @@ function SyncHistoryContent() {
   const allHistory = data?.history ?? []
   let syncHistory = allHistory
   if (filterEnv !== 'all') {
-    syncHistory = syncHistory.filter(
-      (s) => s.source === filterEnv || s.target === filterEnv,
-    )
+    syncHistory = syncHistory.filter((s) => s.source === filterEnv || s.target === filterEnv)
   }
   if (filterStatus !== 'all') {
     syncHistory = syncHistory.filter((s) => s.status === filterStatus)
@@ -143,16 +141,12 @@ function SyncHistoryContent() {
         <div className="mb-6 flex flex-wrap gap-4">
           <div className="flex items-center gap-2">
             <Filter className="h-4 w-4 text-zinc-500" />
-            <span className="text-sm text-zinc-600 dark:text-zinc-400">
-              Filters:
-            </span>
+            <span className="text-sm text-zinc-600 dark:text-zinc-400">Filters:</span>
           </div>
           <div className="relative">
             <select
               value={filterEnv}
-              onChange={(e) =>
-                setFilterEnv(e.target.value as Environment | 'all')
-              }
+              onChange={(e) => setFilterEnv(e.target.value as Environment | 'all')}
               className="appearance-none rounded-lg border border-zinc-300 bg-white px-4 py-2 pr-10 text-sm text-zinc-900 capitalize focus:border-teal-500 focus:ring-1 focus:ring-teal-500 focus:outline-none dark:border-zinc-600 dark:bg-zinc-800 dark:text-white"
             >
               {environments.map((env) => (
@@ -167,13 +161,7 @@ function SyncHistoryContent() {
             <select
               value={filterStatus}
               onChange={(e) =>
-                setFilterStatus(
-                  e.target.value as
-                    | 'all'
-                    | 'completed'
-                    | 'failed'
-                    | 'in_progress',
-                )
+                setFilterStatus(e.target.value as 'all' | 'completed' | 'failed' | 'in_progress')
               }
               className="appearance-none rounded-lg border border-zinc-300 bg-white px-4 py-2 pr-10 text-sm text-zinc-900 capitalize focus:border-teal-500 focus:ring-1 focus:ring-teal-500 focus:outline-none dark:border-zinc-600 dark:bg-zinc-800 dark:text-white"
             >
@@ -198,10 +186,7 @@ function SyncHistoryContent() {
           ) : (
             <div className="divide-y divide-zinc-200 dark:divide-zinc-700">
               {syncHistory.map((sync) => (
-                <div
-                  key={sync.id}
-                  className="p-4 hover:bg-zinc-50 dark:hover:bg-zinc-700/50"
-                >
+                <div key={sync.id} className="p-4 hover:bg-zinc-50 dark:hover:bg-zinc-700/50">
                   <div className="flex items-start justify-between">
                     <div className="flex items-start gap-4">
                       {getStatusIcon(sync.status)}
@@ -243,7 +228,7 @@ function SyncHistoryContent() {
                               {Math.round(
                                 (new Date(sync.completedAt).getTime() -
                                   new Date(sync.startedAt).getTime()) /
-                                  1000,
+                                  1000
                               )}
                               s
                             </span>
@@ -282,18 +267,15 @@ function SyncHistoryContent() {
           </h3>
           <div className="space-y-2 font-mono text-sm">
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-teal-500">nself sync --history</span> - View
-              sync history
+              <span className="text-teal-500">nself sync --history</span> - View sync history
             </p>
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-teal-500">
-                nself sync --history --env=staging
-              </span>{' '}
-              - Filter by environment
+              <span className="text-teal-500">nself sync --history --env=staging</span> - Filter by
+              environment
             </p>
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-teal-500">nself sync revert sync-1</span> -
-              Revert a sync operation
+              <span className="text-teal-500">nself sync revert sync-1</span> - Revert a sync
+              operation
             </p>
           </div>
         </div>

@@ -39,7 +39,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           error: 'Missing required fields',
           details: 'ip and name are required',
         },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -98,7 +98,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         stdout: execError.stdout || '',
         stderr: execError.stderr || '',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

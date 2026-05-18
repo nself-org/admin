@@ -27,14 +27,11 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       args.push(`--services=${body.services.join(',')}`)
     }
 
-    const { stdout } = await execAsync(
-      `${nselfPath} ${args.join(' ')} --json`,
-      {
-        cwd: projectPath,
-        env: { ...process.env, PATH: getEnhancedPath() },
-        timeout: 300000,
-      },
-    )
+    const { stdout } = await execAsync(`${nselfPath} ${args.join(' ')} --json`, {
+      cwd: projectPath,
+      env: { ...process.env, PATH: getEnhancedPath() },
+      timeout: 300000,
+    })
 
     const result = JSON.parse(stdout)
 
@@ -54,7 +51,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to deploy to K8s',
         details: err.message,
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

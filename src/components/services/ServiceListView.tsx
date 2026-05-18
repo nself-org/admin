@@ -24,14 +24,7 @@ interface Container {
   }
 }
 
-type SortColumn =
-  | 'name'
-  | 'status'
-  | 'cpu'
-  | 'memory'
-  | 'disk'
-  | 'uptime'
-  | 'port'
+type SortColumn = 'name' | 'status' | 'cpu' | 'memory' | 'disk' | 'uptime' | 'port'
 
 export function ServiceListView({
   containers,
@@ -79,17 +72,13 @@ export function ServiceListView({
           comparison = a.name.localeCompare(b.name)
           break
         case 'status':
-          comparison = (a.health || 'stopped').localeCompare(
-            b.health || 'stopped',
-          )
+          comparison = (a.health || 'stopped').localeCompare(b.health || 'stopped')
           break
         case 'cpu':
-          comparison =
-            (a.stats?.cpu.percentage || 0) - (b.stats?.cpu.percentage || 0)
+          comparison = (a.stats?.cpu.percentage || 0) - (b.stats?.cpu.percentage || 0)
           break
         case 'memory':
-          comparison =
-            (a.stats?.memory.usage || 0) - (b.stats?.memory.usage || 0)
+          comparison = (a.stats?.memory.usage || 0) - (b.stats?.memory.usage || 0)
           break
         case 'disk':
           comparison =
@@ -113,9 +102,7 @@ export function ServiceListView({
 
   const SortIcon = ({ column }: { column: typeof sortColumn }) => {
     if (sortColumn !== column) {
-      return (
-        <Icons.ArrowUp className="h-3 w-3 text-zinc-400 opacity-0 group-hover:opacity-100" />
-      )
+      return <Icons.ArrowUp className="h-3 w-3 text-zinc-400 opacity-0 group-hover:opacity-100" />
     }
     return sortDirection === 'asc' ? (
       <Icons.ArrowUp className="h-3 w-3 text-blue-500" />
@@ -125,19 +112,14 @@ export function ServiceListView({
   }
 
   const requiredContainers = sortedContainers.filter(
-    (c) => getServiceCategory(c.name) === 'required',
+    (c) => getServiceCategory(c.name) === 'required'
   )
   const optionalContainers = sortedContainers.filter(
-    (c) => getServiceCategory(c.name) === 'optional',
+    (c) => getServiceCategory(c.name) === 'optional'
   )
-  const userContainers = sortedContainers.filter(
-    (c) => getServiceCategory(c.name) === 'user',
-  )
+  const userContainers = sortedContainers.filter((c) => getServiceCategory(c.name) === 'user')
 
-  const renderRows = (
-    containerList: Container[],
-    category: 'required' | 'optional' | 'user',
-  ) => {
+  const renderRows = (containerList: Container[], category: 'required' | 'optional' | 'user') => {
     const categoryIcons = {
       required: <Icons.Layers className="h-4 w-4 text-blue-500" />,
       optional: <Icons.Shield className="h-4 w-4 text-sky-500" />,
@@ -158,28 +140,19 @@ export function ServiceListView({
           <td colSpan={8} className="bg-zinc-50 px-4 py-2 dark:bg-zinc-800/50">
             <div className="flex items-center gap-2">
               {categoryIcons[category]}
-              <span className="text-sm font-medium">
-                {categoryLabels[category]}
-              </span>
-              <span className="text-xs text-zinc-500">
-                ({containerList.length})
-              </span>
+              <span className="text-sm font-medium">{categoryLabels[category]}</span>
+              <span className="text-xs text-zinc-500">({containerList.length})</span>
             </div>
           </td>
         </tr>
         {containerList.map((container) => {
           const primaryPort = container.ports?.find((p) => p.public)
-          const displayName = container.name
-            .replace(/^nself[-_]/, '')
-            .replace(/_/g, '-')
+          const displayName = container.name.replace(/^nself[-_]/, '').replace(/_/g, '-')
           const healthColor = getHealthColor(container.health || 'stopped')
           const healthText = getHealthText(container.health || 'stopped')
 
           return (
-            <tr
-              key={container.id}
-              className="hover:bg-zinc-50 dark:hover:bg-zinc-800/50"
-            >
+            <tr key={container.id} className="hover:bg-zinc-50 dark:hover:bg-zinc-800/50">
               <td className="px-4 py-3">
                 <div>
                   <div className="text-sm font-medium">{displayName}</div>
@@ -206,10 +179,7 @@ export function ServiceListView({
                 {container.stats ? (
                   <div className="text-sm">
                     <div className="text-zinc-600 dark:text-zinc-400">
-                      {(
-                        container.stats.memory.usage /
-                        (1024 * 1024 * 1024)
-                      ).toFixed(1)}
+                      {(container.stats.memory.usage / (1024 * 1024 * 1024)).toFixed(1)}
                       GB
                     </div>
                   </div>
@@ -223,8 +193,7 @@ export function ServiceListView({
                     <div className="text-zinc-600 dark:text-zinc-400">
                       {(() => {
                         if (container.stats?.disk?.used) {
-                          const gb =
-                            container.stats.disk.used / (1024 * 1024 * 1024)
+                          const gb = container.stats.disk.used / (1024 * 1024 * 1024)
                           return gb >= 1
                             ? `${gb.toFixed(1)}GB`
                             : `${(container.stats.disk.used / (1024 * 1024)).toFixed(0)}MB`
@@ -261,9 +230,7 @@ export function ServiceListView({
                 )}
               </td>
               <td className="px-4 py-3">
-                <span className="font-mono text-xs text-zinc-500">
-                  {container.image}
-                </span>
+                <span className="font-mono text-xs text-zinc-500">{container.image}</span>
               </td>
               <td className="px-4 py-3">
                 <div className="flex items-center gap-1">

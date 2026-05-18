@@ -168,18 +168,18 @@ function GraphQLContent() {
   // State 5: Offline
   if (offline) {
     return (
-      <div className="p-6 space-y-4">
-        <div className="flex items-center gap-3 p-4 rounded-lg bg-yellow-500/10 border border-yellow-500/30">
-          <WifiOff className="h-5 w-5 text-yellow-500 flex-shrink-0" />
+      <div className="space-y-4 p-6">
+        <div className="flex items-center gap-3 rounded-lg border border-yellow-500/30 bg-yellow-500/10 p-4">
+          <WifiOff className="h-5 w-5 flex-shrink-0 text-yellow-500" />
           <div>
             <p className="font-medium text-yellow-400">Cannot reach Hasura</p>
-            <p className="text-sm text-gray-400 mt-0.5">
+            <p className="mt-0.5 text-sm text-gray-400">
               Make sure the nself stack is running before using the GraphQL explorer.
             </p>
           </div>
         </div>
         <Button onClick={fetchStats} disabled={loading} variant="secondary" size="sm">
-          <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
+          <RefreshCw className={`mr-2 h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
           Retry
         </Button>
       </div>
@@ -189,16 +189,16 @@ function GraphQLContent() {
   // State 4: Error
   if (error && !stats) {
     return (
-      <div className="p-6 space-y-4">
-        <div className="flex items-center gap-3 p-4 rounded-lg bg-red-500/10 border border-red-500/30">
-          <AlertTriangle className="h-5 w-5 text-red-400 flex-shrink-0" />
+      <div className="space-y-4 p-6">
+        <div className="flex items-center gap-3 rounded-lg border border-red-500/30 bg-red-500/10 p-4">
+          <AlertTriangle className="h-5 w-5 flex-shrink-0 text-red-400" />
           <div>
             <p className="font-medium text-red-400">Failed to connect to Hasura</p>
-            <p className="text-sm text-gray-400 mt-0.5">{error}</p>
+            <p className="mt-0.5 text-sm text-gray-400">{error}</p>
           </div>
         </div>
         <Button onClick={fetchStats} disabled={loading} variant="secondary" size="sm">
-          <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
+          <RefreshCw className={`mr-2 h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
           Retry
         </Button>
       </div>
@@ -209,10 +209,16 @@ function GraphQLContent() {
   if (!stats) {
     return (
       <div className="p-6 text-center text-gray-400">
-        <Code2 className="h-8 w-8 mx-auto mb-2 opacity-50" />
+        <Code2 className="mx-auto mb-2 h-8 w-8 opacity-50" />
         <p>No Hasura connection data available.</p>
-        <Button onClick={fetchStats} disabled={loading} variant="secondary" size="sm" className="mt-3">
-          <RefreshCw className="h-4 w-4 mr-2" />
+        <Button
+          onClick={fetchStats}
+          disabled={loading}
+          variant="secondary"
+          size="sm"
+          className="mt-3"
+        >
+          <RefreshCw className="mr-2 h-4 w-4" />
           Connect
         </Button>
       </div>
@@ -221,25 +227,26 @@ function GraphQLContent() {
 
   // States 6 + 7: Success
   return (
-    <div className="p-6 space-y-6">
+    <div className="space-y-6 p-6">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-xl font-semibold text-white">GraphQL Explorer</h2>
-          <p className="text-sm text-gray-400 mt-1">
-            {stats.endpoint} &mdash; {stats.tables} tables &middot; {stats.relationships} relationships
+          <p className="mt-1 text-sm text-gray-400">
+            {stats.endpoint} &mdash; {stats.tables} tables &middot; {stats.relationships}{' '}
+            relationships
           </p>
         </div>
         <Button onClick={fetchStats} disabled={loading} variant="secondary" size="sm">
           {/* State 2: Refresh spinner */}
-          <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
+          <RefreshCw className={`mr-2 h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
           {loading ? 'Refreshing…' : 'Refresh'}
         </Button>
       </div>
 
       {/* Read-only notice */}
-      <div className="flex items-start gap-3 p-3 rounded-lg bg-sky-500/10 border border-sky-500/20">
-        <Info className="h-4 w-4 text-sky-400 flex-shrink-0 mt-0.5" />
+      <div className="flex items-start gap-3 rounded-lg border border-sky-500/20 bg-sky-500/10 p-3">
+        <Info className="mt-0.5 h-4 w-4 flex-shrink-0 text-sky-400" />
         <p className="text-xs text-sky-300">
           Read-only mode &mdash; mutations, subscriptions, and DELETE operations are blocked. Only{' '}
           <code className="font-mono">query</code> operations and introspection are allowed.
@@ -247,7 +254,7 @@ function GraphQLContent() {
       </div>
 
       {/* Stats bar */}
-      <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-5">
         {[
           { label: 'Tables', value: stats.tables },
           { label: 'Views', value: stats.views },
@@ -266,21 +273,17 @@ function GraphQLContent() {
       </div>
 
       {/* Query editor */}
-      <div className="rounded-lg border border-white/10 overflow-hidden">
+      <div className="overflow-hidden rounded-lg border border-white/10">
         {/* Query toolbar */}
-        <div className="flex items-center justify-between px-4 py-2 bg-white/5 border-b border-white/10">
-          <span className="text-xs font-mono text-gray-400">Query</span>
+        <div className="flex items-center justify-between border-b border-white/10 bg-white/5 px-4 py-2">
+          <span className="font-mono text-xs text-gray-400">Query</span>
           <div className="flex items-center gap-2">
             <button
               onClick={() => setShowVars((v) => !v)}
-              className="flex items-center gap-1 text-xs text-gray-500 hover:text-gray-300 transition-colors"
+              className="flex items-center gap-1 text-xs text-gray-500 transition-colors hover:text-gray-300"
             >
               Variables
-              {showVars ? (
-                <ChevronUp className="h-3 w-3" />
-              ) : (
-                <ChevronDown className="h-3 w-3" />
-              )}
+              {showVars ? <ChevronUp className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />}
             </button>
             <button
               onClick={() => {
@@ -288,14 +291,10 @@ function GraphQLContent() {
                 setShowSchema(next)
                 if (next && !schemaData) loadSchema()
               }}
-              className="flex items-center gap-1 text-xs text-gray-500 hover:text-gray-300 transition-colors"
+              className="flex items-center gap-1 text-xs text-gray-500 transition-colors hover:text-gray-300"
             >
               Schema
-              {showSchema ? (
-                <ChevronUp className="h-3 w-3" />
-              ) : (
-                <ChevronDown className="h-3 w-3" />
-              )}
+              {showSchema ? <ChevronUp className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />}
             </button>
           </div>
         </div>
@@ -305,21 +304,21 @@ function GraphQLContent() {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           spellCheck={false}
-          className="w-full bg-black/40 text-sm text-gray-200 font-mono p-4 resize-none focus:outline-none focus:ring-1 focus:ring-sky-500/50 min-h-[200px]"
+          className="min-h-[200px] w-full resize-none bg-black/40 p-4 font-mono text-sm text-gray-200 focus:ring-1 focus:ring-sky-500/50 focus:outline-none"
           placeholder="Enter your GraphQL query here…"
         />
 
         {/* Variables panel */}
         {showVars && (
           <div className="border-t border-white/10">
-            <div className="px-4 py-2 bg-white/5 border-b border-white/5">
-              <span className="text-xs font-mono text-gray-400">Variables (JSON)</span>
+            <div className="border-b border-white/5 bg-white/5 px-4 py-2">
+              <span className="font-mono text-xs text-gray-400">Variables (JSON)</span>
             </div>
             <textarea
               value={variables}
               onChange={(e) => setVariables(e.target.value)}
               spellCheck={false}
-              className="w-full bg-black/40 text-sm text-gray-200 font-mono p-4 resize-none focus:outline-none focus:ring-1 focus:ring-sky-500/50 min-h-[100px]"
+              className="min-h-[100px] w-full resize-none bg-black/40 p-4 font-mono text-sm text-gray-200 focus:ring-1 focus:ring-sky-500/50 focus:outline-none"
               placeholder='{ "id": "..." }'
             />
           </div>
@@ -328,13 +327,13 @@ function GraphQLContent() {
         {/* Schema panel */}
         {showSchema && (
           <div className="border-t border-white/10">
-            <div className="px-4 py-2 bg-white/5 border-b border-white/5">
-              <span className="text-xs font-mono text-gray-400">Schema (tables)</span>
+            <div className="border-b border-white/5 bg-white/5 px-4 py-2">
+              <span className="font-mono text-xs text-gray-400">Schema (tables)</span>
             </div>
             {schemaLoading ? (
-              <div className="p-4 text-xs text-gray-500 font-mono">Loading…</div>
+              <div className="p-4 font-mono text-xs text-gray-500">Loading…</div>
             ) : schemaData ? (
-              <pre className="p-4 text-xs text-gray-300 font-mono whitespace-pre-wrap overflow-auto max-h-64 bg-black/40">
+              <pre className="max-h-64 overflow-auto bg-black/40 p-4 font-mono text-xs whitespace-pre-wrap text-gray-300">
                 {schemaData}
               </pre>
             ) : null}
@@ -342,9 +341,9 @@ function GraphQLContent() {
         )}
 
         {/* Run bar */}
-        <div className="flex items-center justify-between px-4 py-2 bg-white/5 border-t border-white/10">
+        <div className="flex items-center justify-between border-t border-white/10 bg-white/5 px-4 py-2">
           {runError ? (
-            <p className="text-xs text-red-400 flex-1 mr-3">{runError}</p>
+            <p className="mr-3 flex-1 text-xs text-red-400">{runError}</p>
           ) : (
             <span className="text-xs text-gray-600">Write a query above and click Run</span>
           )}
@@ -354,7 +353,7 @@ function GraphQLContent() {
             variant="primary"
             size="sm"
           >
-            <Play className={`h-4 w-4 mr-2 ${running ? 'animate-pulse' : ''}`} />
+            <Play className={`mr-2 h-4 w-4 ${running ? 'animate-pulse' : ''}`} />
             {running ? 'Running…' : 'Run Query'}
           </Button>
         </div>
@@ -362,9 +361,9 @@ function GraphQLContent() {
 
       {/* Results panel */}
       {result && (
-        <div className="rounded-lg border border-white/10 overflow-hidden">
-          <div className="flex items-center justify-between px-4 py-2 bg-white/5 border-b border-white/10">
-            <span className="text-xs font-mono text-gray-400">Result</span>
+        <div className="overflow-hidden rounded-lg border border-white/10">
+          <div className="flex items-center justify-between border-b border-white/10 bg-white/5 px-4 py-2">
+            <span className="font-mono text-xs text-gray-400">Result</span>
             {result.errors && result.errors.length > 0 && (
               <span className="text-xs text-red-400">
                 {result.errors.length} error{result.errors.length !== 1 ? 's' : ''}
@@ -373,7 +372,7 @@ function GraphQLContent() {
           </div>
           <pre
             ref={resultRef}
-            className="p-4 text-xs text-gray-200 font-mono whitespace-pre-wrap overflow-auto max-h-96 bg-black/40"
+            className="max-h-96 overflow-auto bg-black/40 p-4 font-mono text-xs whitespace-pre-wrap text-gray-200"
           >
             {JSON.stringify(result, null, 2)}
           </pre>

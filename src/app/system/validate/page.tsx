@@ -37,17 +37,23 @@ interface ApiResponse {
 
 function statusColor(status: ValidationCheck['status']) {
   switch (status) {
-    case 'pass': return 'text-green-400'
-    case 'fail': return 'text-red-400'
-    case 'warning': return 'text-yellow-400'
+    case 'pass':
+      return 'text-green-400'
+    case 'fail':
+      return 'text-red-400'
+    case 'warning':
+      return 'text-yellow-400'
   }
 }
 
 function statusIcon(status: ValidationCheck['status']) {
   switch (status) {
-    case 'pass': return <CheckCircle className="h-4 w-4 text-green-400 flex-shrink-0" />
-    case 'fail': return <XCircle className="h-4 w-4 text-red-400 flex-shrink-0" />
-    case 'warning': return <AlertTriangle className="h-4 w-4 text-yellow-400 flex-shrink-0" />
+    case 'pass':
+      return <CheckCircle className="h-4 w-4 flex-shrink-0 text-green-400" />
+    case 'fail':
+      return <XCircle className="h-4 w-4 flex-shrink-0 text-red-400" />
+    case 'warning':
+      return <AlertTriangle className="h-4 w-4 flex-shrink-0 text-yellow-400" />
   }
 }
 
@@ -104,18 +110,18 @@ function ValidateContent() {
   // State 5: Offline
   if (offline) {
     return (
-      <div className="p-6 space-y-4">
-        <div className="flex items-center gap-3 p-4 rounded-lg bg-yellow-500/10 border border-yellow-500/30">
-          <WifiOff className="h-5 w-5 text-yellow-500 flex-shrink-0" />
+      <div className="space-y-4 p-6">
+        <div className="flex items-center gap-3 rounded-lg border border-yellow-500/30 bg-yellow-500/10 p-4">
+          <WifiOff className="h-5 w-5 flex-shrink-0 text-yellow-500" />
           <div>
             <p className="font-medium text-yellow-400">Docker not reachable</p>
-            <p className="text-sm text-gray-400 mt-0.5">
+            <p className="mt-0.5 text-sm text-gray-400">
               Make sure the nself stack is running before validating configuration.
             </p>
           </div>
         </div>
         <Button onClick={runValidation} disabled={loading} variant="secondary" size="sm">
-          <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
+          <RefreshCw className={`mr-2 h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
           Retry
         </Button>
       </div>
@@ -125,16 +131,16 @@ function ValidateContent() {
   // State 4: Error
   if (error && !result) {
     return (
-      <div className="p-6 space-y-4">
-        <div className="flex items-center gap-3 p-4 rounded-lg bg-red-500/10 border border-red-500/30">
-          <AlertTriangle className="h-5 w-5 text-red-400 flex-shrink-0" />
+      <div className="space-y-4 p-6">
+        <div className="flex items-center gap-3 rounded-lg border border-red-500/30 bg-red-500/10 p-4">
+          <AlertTriangle className="h-5 w-5 flex-shrink-0 text-red-400" />
           <div>
             <p className="font-medium text-red-400">Validation failed</p>
-            <p className="text-sm text-gray-400 mt-0.5">{error}</p>
+            <p className="mt-0.5 text-sm text-gray-400">{error}</p>
           </div>
         </div>
         <Button onClick={runValidation} disabled={loading} variant="secondary" size="sm">
-          <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
+          <RefreshCw className={`mr-2 h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
           Retry
         </Button>
       </div>
@@ -145,10 +151,16 @@ function ValidateContent() {
   if (!result) {
     return (
       <div className="p-6 text-center text-gray-400">
-        <ClipboardCheck className="h-8 w-8 mx-auto mb-2 opacity-50" />
+        <ClipboardCheck className="mx-auto mb-2 h-8 w-8 opacity-50" />
         <p>No validation results available.</p>
-        <Button onClick={runValidation} disabled={loading} variant="secondary" size="sm" className="mt-3">
-          <RefreshCw className="h-4 w-4 mr-2" />
+        <Button
+          onClick={runValidation}
+          disabled={loading}
+          variant="secondary"
+          size="sm"
+          className="mt-3"
+        >
+          <RefreshCw className="mr-2 h-4 w-4" />
           Run Validation
         </Button>
       </div>
@@ -162,41 +174,43 @@ function ValidateContent() {
     : checks
 
   const scoreOk = summary.failed === 0
-  const scoreBanner = summary.failed > 0
-    ? 'bg-red-500/10 border-red-500/30'
-    : summary.warnings > 0
-      ? 'bg-yellow-500/10 border-yellow-500/30'
-      : 'bg-green-500/10 border-green-500/30'
+  const scoreBanner =
+    summary.failed > 0
+      ? 'bg-red-500/10 border-red-500/30'
+      : summary.warnings > 0
+        ? 'bg-yellow-500/10 border-yellow-500/30'
+        : 'bg-green-500/10 border-green-500/30'
 
   // States 6 + 7: Success
   return (
-    <div className="p-6 space-y-6">
+    <div className="space-y-6 p-6">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-xl font-semibold text-white">Configuration Validation</h2>
-          <p className="text-sm text-gray-400 mt-1">
+          <p className="mt-1 text-sm text-gray-400">
             Last run: {new Date(result.timestamp).toLocaleString()}
           </p>
         </div>
         <Button onClick={runValidation} disabled={loading} variant="secondary" size="sm">
           {/* State 2: Refresh spinner */}
-          <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
+          <RefreshCw className={`mr-2 h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
           {loading ? 'Validating…' : 'Re-validate'}
         </Button>
       </div>
 
       {/* Score banner */}
-      <div className={`flex items-center gap-4 p-4 rounded-lg border ${scoreBanner}`}>
-        {scoreOk
-          ? <CheckCircle className="h-6 w-6 text-green-400 flex-shrink-0" />
-          : <XCircle className="h-6 w-6 text-red-400 flex-shrink-0" />
-        }
+      <div className={`flex items-center gap-4 rounded-lg border p-4 ${scoreBanner}`}>
+        {scoreOk ? (
+          <CheckCircle className="h-6 w-6 flex-shrink-0 text-green-400" />
+        ) : (
+          <XCircle className="h-6 w-6 flex-shrink-0 text-red-400" />
+        )}
         <div className="flex-1">
           <p className="font-medium text-white">
             Score: <span className="font-mono">{summary.score}</span> checks passed
           </p>
-          <p className="text-sm text-gray-400 mt-0.5">
+          <p className="mt-0.5 text-sm text-gray-400">
             {summary.passed} passed · {summary.failed} failed · {summary.warnings} warnings
           </p>
         </div>
@@ -207,10 +221,10 @@ function ValidateContent() {
         <div className="flex flex-wrap gap-2">
           <button
             onClick={() => setActiveCategory(null)}
-            className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${
+            className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
               activeCategory === null
-                ? 'bg-sky-500/20 text-sky-400 border border-sky-500/30'
-                : 'bg-white/5 text-gray-400 border border-white/10 hover:bg-white/10'
+                ? 'border border-sky-500/30 bg-sky-500/20 text-sky-400'
+                : 'border border-white/10 bg-white/5 text-gray-400 hover:bg-white/10'
             }`}
           >
             All ({summary.total})
@@ -219,10 +233,10 @@ function ValidateContent() {
             <button
               key={cat}
               onClick={() => setActiveCategory(cat)}
-              className={`px-3 py-1 rounded-full text-xs font-medium transition-colors capitalize ${
+              className={`rounded-full px-3 py-1 text-xs font-medium capitalize transition-colors ${
                 activeCategory === cat
-                  ? 'bg-sky-500/20 text-sky-400 border border-sky-500/30'
-                  : 'bg-white/5 text-gray-400 border border-white/10 hover:bg-white/10'
+                  ? 'border border-sky-500/30 bg-sky-500/20 text-sky-400'
+                  : 'border border-white/10 bg-white/5 text-gray-400 hover:bg-white/10'
               }`}
             >
               {cat} ({categories[cat].total})
@@ -237,18 +251,21 @@ function ValidateContent() {
           <p className="text-gray-400">No validation checks found.</p>
         </div>
       ) : (
-        <div className="rounded-lg border border-white/10 overflow-hidden divide-y divide-white/5">
+        <div className="divide-y divide-white/5 overflow-hidden rounded-lg border border-white/10">
           {filteredChecks.map((check, i) => (
-            <div key={i} className="flex items-start gap-3 px-4 py-3 hover:bg-white/[0.02] transition-colors">
+            <div
+              key={i}
+              className="flex items-start gap-3 px-4 py-3 transition-colors hover:bg-white/[0.02]"
+            >
               {statusIcon(check.status)}
-              <div className="flex-1 min-w-0">
-                <p className="text-sm text-white font-medium">{check.name}</p>
-                <p className="text-xs text-gray-400 mt-0.5">{check.message}</p>
+              <div className="min-w-0 flex-1">
+                <p className="text-sm font-medium text-white">{check.name}</p>
+                <p className="mt-0.5 text-xs text-gray-400">{check.message}</p>
                 {check.suggestion && (
-                  <p className="text-xs text-sky-400 mt-1 font-mono">{check.suggestion}</p>
+                  <p className="mt-1 font-mono text-xs text-sky-400">{check.suggestion}</p>
                 )}
               </div>
-              <div className="flex items-center gap-2 flex-shrink-0">
+              <div className="flex flex-shrink-0 items-center gap-2">
                 <span className={`text-xs font-medium capitalize ${statusColor(check.status)}`}>
                   {check.status}
                 </span>
@@ -261,9 +278,9 @@ function ValidateContent() {
 
       {/* Error overlay when result present but error also set */}
       {error && result && (
-        <div className="flex items-center gap-3 p-4 rounded-lg bg-red-500/10 border border-red-500/30">
-          <AlertTriangle className="h-5 w-5 text-red-400 flex-shrink-0" />
-          <p className="text-red-400 text-sm">{error}</p>
+        <div className="flex items-center gap-3 rounded-lg border border-red-500/30 bg-red-500/10 p-4">
+          <AlertTriangle className="h-5 w-5 flex-shrink-0 text-red-400" />
+          <p className="text-sm text-red-400">{error}</p>
         </div>
       )}
     </div>

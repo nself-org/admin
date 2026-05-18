@@ -48,46 +48,28 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     const since = searchParams.get('since')
 
     if (!pod) {
-      return NextResponse.json(
-        { success: false, error: 'Pod name is required' },
-        { status: 400 },
-      )
+      return NextResponse.json({ success: false, error: 'Pod name is required' }, { status: 400 })
     }
 
     // Validate all inputs
     if (!validatePodName(pod)) {
-      return NextResponse.json(
-        { success: false, error: 'Invalid pod name' },
-        { status: 400 },
-      )
+      return NextResponse.json({ success: false, error: 'Invalid pod name' }, { status: 400 })
     }
 
     if (namespace && !validateNamespace(namespace)) {
-      return NextResponse.json(
-        { success: false, error: 'Invalid namespace' },
-        { status: 400 },
-      )
+      return NextResponse.json({ success: false, error: 'Invalid namespace' }, { status: 400 })
     }
 
     if (container && !validateContainer(container)) {
-      return NextResponse.json(
-        { success: false, error: 'Invalid container name' },
-        { status: 400 },
-      )
+      return NextResponse.json({ success: false, error: 'Invalid container name' }, { status: 400 })
     }
 
     if (tail && !validateTail(tail)) {
-      return NextResponse.json(
-        { success: false, error: 'Invalid tail value' },
-        { status: 400 },
-      )
+      return NextResponse.json({ success: false, error: 'Invalid tail value' }, { status: 400 })
     }
 
     if (since && !validateSince(since)) {
-      return NextResponse.json(
-        { success: false, error: 'Invalid since value' },
-        { status: 400 },
-      )
+      return NextResponse.json({ success: false, error: 'Invalid since value' }, { status: 400 })
     }
 
     const args: string[] = ['k8s', 'logs', pod]
@@ -118,7 +100,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     logger.error('Failed to get pod logs', { error: err.message })
     return NextResponse.json(
       { success: false, error: 'Failed to get pod logs', details: err.message },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

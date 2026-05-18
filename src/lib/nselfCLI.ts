@@ -30,7 +30,7 @@ export interface CLIResult {
 export async function executeNselfCommand(
   command: string,
   args: string[] = [],
-  options: Record<string, any> = {},
+  options: Record<string, any> = {}
 ): Promise<CLIResult> {
   try {
     // Validate command
@@ -91,10 +91,7 @@ export async function executeNselfCommand(
     }
 
     // Build arguments safely
-    const cmdArgs = [
-      command,
-      ...args.filter((arg) => arg && typeof arg === 'string'),
-    ]
+    const cmdArgs = [command, ...args.filter((arg) => arg && typeof arg === 'string')]
 
     // Execute with timeout using execFile for safety
     const timeout = options.timeout || 60000 // Increased default timeout
@@ -138,17 +135,10 @@ export function streamNselfCommand(
   args: string[] = [],
   onData: (chunk: string) => void,
   onError?: (error: string) => void,
-  onClose?: (code: number) => void,
+  onClose?: (code: number) => void
 ): () => void {
   // Validate command
-  const allowedCommands = [
-    'logs',
-    'monitor',
-    'watch',
-    'tail',
-    'health',
-    'metrics',
-  ]
+  const allowedCommands = ['logs', 'monitor', 'watch', 'tail', 'health', 'metrics']
 
   if (!allowedCommands.includes(command)) {
     throw new Error(`Invalid streaming command: ${command}`)
@@ -201,10 +191,7 @@ export async function nselfRestart(): Promise<CLIResult> {
   return executeNselfCommand('restart')
 }
 
-export async function nselfLogs(
-  service?: string,
-  lines?: number,
-): Promise<CLIResult> {
+export async function nselfLogs(service?: string, lines?: number): Promise<CLIResult> {
   const args = []
   if (service) args.push(service)
   if (lines) args.push(`-n${lines}`)
@@ -223,7 +210,7 @@ export async function nselfRestore(backupPath: string): Promise<CLIResult> {
 export async function nselfConfig(
   action: 'get' | 'set',
   key?: string,
-  value?: string,
+  value?: string
 ): Promise<CLIResult> {
   const args: string[] = [action]
   if (key) args.push(key)
@@ -240,17 +227,13 @@ export async function nselfDbSync(): Promise<CLIResult> {
   return executeNselfCommand('db', ['sync'])
 }
 
-export async function nselfDbSeed(options?: {
-  force?: boolean
-}): Promise<CLIResult> {
+export async function nselfDbSeed(options?: { force?: boolean }): Promise<CLIResult> {
   const args = ['seed']
   if (options?.force) args.push('--force')
   return executeNselfCommand('db', args)
 }
 
-export async function nselfDbMigrate(options?: {
-  target?: string
-}): Promise<CLIResult> {
+export async function nselfDbMigrate(options?: { target?: string }): Promise<CLIResult> {
   const args = ['migrate']
   if (options?.target) args.push('--target', options.target)
   return executeNselfCommand('db', args)
@@ -266,9 +249,7 @@ export async function nselfDbRestore(backupPath: string): Promise<CLIResult> {
   return executeNselfCommand('db', ['restore', backupPath])
 }
 
-export async function nselfDbReset(options?: {
-  force?: boolean
-}): Promise<CLIResult> {
+export async function nselfDbReset(options?: { force?: boolean }): Promise<CLIResult> {
   const args = ['reset']
   if (options?.force) args.push('--force')
   return executeNselfCommand('db', args)
@@ -288,7 +269,7 @@ export async function nselfDbAnalyze(): Promise<CLIResult> {
 
 export async function nselfDeploy(
   target: string,
-  options?: Record<string, any>,
+  options?: Record<string, any>
 ): Promise<CLIResult> {
   const args = [target]
   if (options) {
@@ -319,9 +300,7 @@ export async function nselfDoctor(fix: boolean = false): Promise<CLIResult> {
   return executeNselfCommand('doctor', args)
 }
 
-export async function nselfMonitor(
-  action?: 'enable' | 'disable' | 'status',
-): Promise<CLIResult> {
+export async function nselfMonitor(action?: 'enable' | 'disable' | 'status'): Promise<CLIResult> {
   const args = action ? [`--${action}`] : []
   return executeNselfCommand('monitor', args)
 }
@@ -338,7 +317,7 @@ export async function nselfApply(configPath?: string): Promise<CLIResult> {
 
 export async function nselfSecrets(
   action: 'generate' | 'rotate',
-  service?: string,
+  service?: string
 ): Promise<CLIResult> {
   const args: string[] = [action]
   if (service) args.push(service)
@@ -347,17 +326,14 @@ export async function nselfSecrets(
 
 export async function nselfExport(
   format: 'compose' | 'kubernetes',
-  outputPath?: string,
+  outputPath?: string
 ): Promise<CLIResult> {
   const args = ['--format', format]
   if (outputPath) args.push('--output', outputPath)
   return executeNselfCommand('export', args)
 }
 
-export async function nselfScale(
-  service: string,
-  replicas: number,
-): Promise<CLIResult> {
+export async function nselfScale(service: string, replicas: number): Promise<CLIResult> {
   return executeNselfCommand('scale', [service, String(replicas)])
 }
 
@@ -387,17 +363,13 @@ export async function nselfSslTrust(): Promise<CLIResult> {
 }
 
 // Build command
-export async function nselfBuild(options?: {
-  force?: boolean
-}): Promise<CLIResult> {
+export async function nselfBuild(options?: { force?: boolean }): Promise<CLIResult> {
   const args = options?.force ? ['--force'] : []
   return executeNselfCommand('build', args)
 }
 
 // Init command
-export async function nselfInit(options?: {
-  full?: boolean
-}): Promise<CLIResult> {
+export async function nselfInit(options?: { full?: boolean }): Promise<CLIResult> {
   const args = options?.full ? ['--full'] : []
   return executeNselfCommand('init', args)
 }

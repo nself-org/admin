@@ -60,9 +60,7 @@ function StatCard({
     <div className="rounded-xl border border-zinc-700/50 bg-zinc-800/50 p-4">
       <div className="mb-2 flex items-center gap-2">
         <Icon className="h-4 w-4 text-zinc-500" />
-        <span className="text-xs font-medium tracking-wide text-zinc-500 uppercase">
-          {label}
-        </span>
+        <span className="text-xs font-medium tracking-wide text-zinc-500 uppercase">{label}</span>
       </div>
       <p className="text-2xl font-semibold text-white">{value}</p>
     </div>
@@ -102,9 +100,7 @@ function ScreenshotCard({ screenshot }: { screenshot: Screenshot }) {
         )}
       </div>
       <div className="px-3 py-2">
-        <p className="truncate text-xs font-medium text-zinc-300">
-          {screenshot.site}
-        </p>
+        <p className="truncate text-xs font-medium text-zinc-300">{screenshot.site}</p>
         <p className="mt-0.5 flex items-center gap-1 text-xs text-zinc-600">
           <Clock className="h-3 w-3 shrink-0" />
           {new Date(screenshot.created_at).toLocaleString()}
@@ -271,9 +267,7 @@ export default function BrowserPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-semibold text-white">Browser</h1>
-          <p className="mt-0.5 text-sm text-zinc-400">
-            Playwright-powered browser automation
-          </p>
+          <p className="mt-0.5 text-sm text-zinc-400">Playwright-powered browser automation</p>
         </div>
         <div className="flex items-center gap-3">
           <StatusBadge />
@@ -299,9 +293,7 @@ export default function BrowserPage() {
           <div className="flex items-start gap-3">
             <AlertCircle className="mt-0.5 h-5 w-5 shrink-0 text-yellow-400" />
             <div>
-              <p className="font-medium text-yellow-300">
-                nself-browser is not running
-              </p>
+              <p className="font-medium text-yellow-300">nself-browser is not running</p>
               <p className="mt-1 text-sm text-yellow-400/80">
                 Install and start the browser plugin to use automation features.
               </p>
@@ -337,9 +329,7 @@ export default function BrowserPage() {
               </div>
               <div className="flex items-center gap-2">
                 <span className="inline-block h-2 w-2 rounded-full bg-green-400" />
-                <span className="text-sm font-medium text-green-300">
-                  Running
-                </span>
+                <span className="text-sm font-medium text-green-300">Running</span>
               </div>
             </div>
           </div>
@@ -368,10 +358,7 @@ export default function BrowserPage() {
             {sessionsLoading ? (
               <div className="space-y-2 p-4">
                 {[1, 2, 3].map((n) => (
-                  <div
-                    key={n}
-                    className="h-12 animate-pulse rounded-lg bg-zinc-700/40"
-                  />
+                  <div key={n} className="h-12 animate-pulse rounded-lg bg-zinc-700/40" />
                 ))}
               </div>
             ) : sessions.length === 0 ? (
@@ -385,10 +372,7 @@ export default function BrowserPage() {
             ) : (
               <div className="divide-y divide-zinc-700/50">
                 {sessions.map((session) => (
-                  <div
-                    key={session.id}
-                    className="flex items-center gap-3 px-5 py-3.5"
-                  >
+                  <div key={session.id} className="flex items-center gap-3 px-5 py-3.5">
                     {/* Site icon */}
                     <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-zinc-600/50 bg-zinc-700/50">
                       <Globe className="h-4 w-4 text-zinc-400" />
@@ -396,20 +380,16 @@ export default function BrowserPage() {
 
                     {/* Site info */}
                     <div className="min-w-0 flex-1">
-                      <p className="truncate text-sm font-medium text-zinc-200">
-                        {session.site}
-                      </p>
+                      <p className="truncate text-sm font-medium text-zinc-200">{session.site}</p>
                       <p className="mt-0.5 flex items-center gap-1 text-xs text-zinc-500">
                         <Clock className="h-3 w-3 shrink-0" />
-                        Last used:{' '}
-                        {new Date(session.last_used).toLocaleString()}
+                        Last used: {new Date(session.last_used).toLocaleString()}
                       </p>
                     </div>
 
                     {/* Cookies badge */}
                     <span className="shrink-0 rounded-full border border-zinc-600/50 bg-zinc-700/50 px-2 py-0.5 text-xs text-zinc-400">
-                      {session.cookies_count}{' '}
-                      {session.cookies_count === 1 ? 'cookie' : 'cookies'}
+                      {session.cookies_count} {session.cookies_count === 1 ? 'cookie' : 'cookies'}
                     </span>
 
                     {/* Delete button */}
@@ -435,19 +415,14 @@ export default function BrowserPage() {
           {/* Screenshots */}
           <div className="rounded-xl border border-zinc-700/50 bg-zinc-800/50">
             <div className="flex items-center justify-between border-b border-zinc-700/50 px-5 py-4">
-              <h2 className="text-sm font-semibold text-white">
-                Recent Screenshots
-              </h2>
+              <h2 className="text-sm font-semibold text-white">Recent Screenshots</h2>
               <span className="text-xs text-zinc-500">Last 10</span>
             </div>
 
             {screenshotsLoading ? (
               <div className="grid grid-cols-4 gap-3 p-4">
                 {[1, 2, 3, 4].map((n) => (
-                  <div
-                    key={n}
-                    className="aspect-video animate-pulse rounded-lg bg-zinc-700/40"
-                  />
+                  <div key={n} className="aspect-video animate-pulse rounded-lg bg-zinc-700/40" />
                 ))}
               </div>
             ) : screenshots.length === 0 ? (

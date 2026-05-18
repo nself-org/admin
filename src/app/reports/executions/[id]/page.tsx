@@ -21,9 +21,7 @@ function ExecutionDetailContent() {
     isLoading: isLoadingExecution,
     isError: isExecutionError,
   } = useReportExecution(executionId)
-  const { template, isLoading: isLoadingTemplate } = useReportTemplate(
-    execution?.reportId,
-  )
+  const { template, isLoading: isLoadingTemplate } = useReportTemplate(execution?.reportId)
 
   const isLoading = isLoadingExecution || isLoadingTemplate
 
@@ -95,8 +93,7 @@ function ExecutionDetailContent() {
             <AlertCircle className="h-4 w-4" />
             <AlertTitle>Execution not found</AlertTitle>
             <AlertDescription>
-              The report execution you are looking for does not exist or has
-              been deleted.
+              The report execution you are looking for does not exist or has been deleted.
             </AlertDescription>
           </Alert>
         </PageContent>
@@ -122,11 +119,7 @@ function ExecutionDetailContent() {
         actions={
           <div className="flex items-center gap-2">
             {execution.reportId && (
-              <Button
-                variant="outline"
-                className="gap-2"
-                onClick={handleGenerateAnother}
-              >
+              <Button variant="outline" className="gap-2" onClick={handleGenerateAnother}>
                 <Play className="h-4 w-4" />
                 Generate Another
               </Button>
@@ -141,18 +134,12 @@ function ExecutionDetailContent() {
         }
       />
       <PageContent>
-        <ReportViewer
-          executionId={executionId}
-          onSchedule={handleSchedule}
-          onShare={handleShare}
-        />
+        <ReportViewer executionId={executionId} onSchedule={handleSchedule} onShare={handleShare} />
 
         {/* Related Template Info */}
         {template && (
           <div className="mt-8">
-            <h2 className="mb-4 text-lg font-semibold text-white">
-              Report Template
-            </h2>
+            <h2 className="mb-4 text-lg font-semibold text-white">Report Template</h2>
             <Link
               href={`/reports/${template.id}`}
               className="block rounded-xl border border-zinc-700/50 bg-zinc-800/50 p-4 transition-colors hover:border-emerald-500/50"
@@ -164,9 +151,7 @@ function ExecutionDetailContent() {
                 <div className="flex-1">
                   <h3 className="font-medium text-white">{template.name}</h3>
                   {template.description && (
-                    <p className="mt-1 text-sm text-zinc-400">
-                      {template.description}
-                    </p>
+                    <p className="mt-1 text-sm text-zinc-400">{template.description}</p>
                   )}
                 </div>
                 <span className="rounded-full bg-zinc-700 px-2.5 py-1 text-xs text-zinc-300">
@@ -179,29 +164,21 @@ function ExecutionDetailContent() {
 
         {/* Execution Metadata */}
         <div className="mt-8">
-          <h2 className="mb-4 text-lg font-semibold text-white">
-            Execution Details
-          </h2>
+          <h2 className="mb-4 text-lg font-semibold text-white">Execution Details</h2>
           <div className="rounded-xl border border-zinc-700/50 bg-zinc-800/50 p-4">
             <dl className="grid grid-cols-2 gap-4 md:grid-cols-4">
               <div>
                 <dt className="text-xs text-zinc-500">Execution ID</dt>
-                <dd className="mt-1 font-mono text-sm text-white">
-                  {execution.id}
-                </dd>
+                <dd className="mt-1 font-mono text-sm text-white">{execution.id}</dd>
               </div>
               <div>
                 <dt className="text-xs text-zinc-500">Created By</dt>
-                <dd className="mt-1 text-sm text-white">
-                  {execution.createdBy || 'System'}
-                </dd>
+                <dd className="mt-1 text-sm text-white">{execution.createdBy || 'System'}</dd>
               </div>
               {execution.scheduleId && (
                 <div>
                   <dt className="text-xs text-zinc-500">Schedule ID</dt>
-                  <dd className="mt-1 font-mono text-sm text-white">
-                    {execution.scheduleId}
-                  </dd>
+                  <dd className="mt-1 font-mono text-sm text-white">{execution.scheduleId}</dd>
                 </div>
               )}
               {execution.filters && execution.filters.length > 0 && (
@@ -214,8 +191,7 @@ function ExecutionDetailContent() {
                           key={index}
                           className="inline-flex items-center rounded-full bg-zinc-700 px-2.5 py-1 text-xs text-zinc-300"
                         >
-                          {filter.field} {filter.operator}{' '}
-                          {String(filter.value)}
+                          {filter.field} {filter.operator} {String(filter.value)}
                         </span>
                       ))}
                     </div>

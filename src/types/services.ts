@@ -2,12 +2,7 @@
  * Service Management Types for nself-admin v0.0.8
  */
 
-export type ServiceCategory =
-  | 'required'
-  | 'optional'
-  | 'monitoring'
-  | 'custom'
-  | 'plugin'
+export type ServiceCategory = 'required' | 'optional' | 'monitoring' | 'custom' | 'plugin'
 
 export type ServiceStatus =
   | 'running'
@@ -92,14 +87,7 @@ export interface OptionalService {
   description: string
   enabled: boolean
   installed: boolean
-  category:
-    | 'storage'
-    | 'cache'
-    | 'search'
-    | 'email'
-    | 'functions'
-    | 'ml'
-    | 'monitoring'
+  category: 'storage' | 'cache' | 'search' | 'email' | 'functions' | 'ml' | 'monitoring'
   envVar: string
   ports: { port: number; description: string }[]
   requiredEnvVars?: string[]

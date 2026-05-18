@@ -9,16 +9,14 @@ interface BeforeInstallPromptEvent extends Event {
 }
 
 export function PWAInstallPrompt() {
-  const [deferredPrompt, setDeferredPrompt] =
-    useState<BeforeInstallPromptEvent | null>(null)
+  const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null)
   const [showPrompt, setShowPrompt] = useState(false)
 
   useEffect(() => {
     const dismissed = localStorage.getItem('pwa-install-dismissed')
     if (dismissed) {
       const dismissedTime = parseInt(dismissed)
-      const daysSinceDismissed =
-        (Date.now() - dismissedTime) / (1000 * 60 * 60 * 24)
+      const daysSinceDismissed = (Date.now() - dismissedTime) / (1000 * 60 * 60 * 24)
 
       if (daysSinceDismissed < 7) {
         return
@@ -68,9 +66,7 @@ export function PWAInstallPrompt() {
             <Download className="h-5 w-5 text-blue-600 dark:text-blue-400" />
           </div>
           <div className="flex-1">
-            <h3 className="text-sm font-semibold text-zinc-900 dark:text-white">
-              Install nAdmin
-            </h3>
+            <h3 className="text-sm font-semibold text-zinc-900 dark:text-white">Install nAdmin</h3>
             <p className="mt-1 text-xs text-zinc-600 dark:text-zinc-400">
               Add to your home screen for quick access and offline support.
             </p>

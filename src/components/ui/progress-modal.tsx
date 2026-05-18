@@ -74,9 +74,7 @@ export function ProgressModal({
           ) : (
             <div className="space-y-2">
               <Progress value={progress} className="h-2" />
-              <p className="text-muted-foreground text-right text-sm">
-                {progress}%
-              </p>
+              <p className="text-muted-foreground text-right text-sm">{progress}%</p>
             </div>
           )}
 

@@ -47,9 +47,7 @@ function validatePolicy(input: string): boolean {
 
 function validatePassword(input: string): boolean {
   // Password must be 8-40 chars, no shell metacharacters
-  return (
-    input.length >= 8 && input.length <= 40 && !/[;&|`$(){}[\]<>\\]/.test(input)
-  )
+  return input.length >= 8 && input.length <= 40 && !/[;&|`$(){}[\]<>\\]/.test(input)
 }
 
 export async function GET(request: NextRequest): Promise<NextResponse> {
@@ -61,18 +59,12 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 
     // Validate bucket if provided
     if (bucket && !validateBucketName(bucket)) {
-      return NextResponse.json(
-        { success: false, error: 'Invalid bucket name' },
-        { status: 400 },
-      )
+      return NextResponse.json({ success: false, error: 'Invalid bucket name' }, { status: 400 })
     }
 
     // Validate prefix if provided
     if (prefix && !validateObjectName(prefix)) {
-      return NextResponse.json(
-        { success: false, error: 'Invalid prefix' },
-        { status: 400 },
-      )
+      return NextResponse.json({ success: false, error: 'Invalid prefix' }, { status: 400 })
     }
 
     switch (action) {
@@ -91,7 +83,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       default:
         return NextResponse.json(
           { success: false, error: `Unknown action: ${action}` },
-          { status: 400 },
+          { status: 400 }
         )
     }
   } catch (error) {
@@ -101,7 +93,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         error: 'Storage operation failed',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -116,34 +108,22 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
     // Validate bucket if provided
     if (bucket && !validateBucketName(bucket)) {
-      return NextResponse.json(
-        { success: false, error: 'Invalid bucket name' },
-        { status: 400 },
-      )
+      return NextResponse.json({ success: false, error: 'Invalid bucket name' }, { status: 400 })
     }
 
     // Validate object if provided
     if (object && !validateObjectName(object)) {
-      return NextResponse.json(
-        { success: false, error: 'Invalid object name' },
-        { status: 400 },
-      )
+      return NextResponse.json({ success: false, error: 'Invalid object name' }, { status: 400 })
     }
 
     // Validate user if provided
     if (user && !validateUserName(user)) {
-      return NextResponse.json(
-        { success: false, error: 'Invalid user name' },
-        { status: 400 },
-      )
+      return NextResponse.json({ success: false, error: 'Invalid user name' }, { status: 400 })
     }
 
     // Validate policy if provided
     if (policy && !validatePolicy(policy)) {
-      return NextResponse.json(
-        { success: false, error: 'Invalid policy' },
-        { status: 400 },
-      )
+      return NextResponse.json({ success: false, error: 'Invalid policy' }, { status: 400 })
     }
 
     // Validate password if provided
@@ -151,10 +131,9 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       return NextResponse.json(
         {
           success: false,
-          error:
-            'Invalid password. Must be 8-40 characters without shell metacharacters.',
+          error: 'Invalid password. Must be 8-40 characters without shell metacharacters.',
         },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -176,7 +155,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       default:
         return NextResponse.json(
           { success: false, error: `Unknown action: ${action}` },
-          { status: 400 },
+          { status: 400 }
         )
     }
   } catch (error) {
@@ -186,7 +165,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         error: 'Storage operation failed',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -195,7 +174,7 @@ async function getBuckets() {
   const { stdout } = await execFileAsync(
     'docker',
     ['exec', 'nself_minio', 'mc', 'ls', 'minio', '--json'],
-    { timeout: 30000 },
+    { timeout: 30000 }
   )
 
   const buckets = stdout
@@ -223,22 +202,15 @@ async function getBuckets() {
       try {
         const { stdout: statOutput } = await execFileAsync(
           'docker',
-          [
-            'exec',
-            'nself_minio',
-            'mc',
-            'stat',
-            `minio/${bucket.name}`,
-            '--json',
-          ],
-          { timeout: 30000 },
+          ['exec', 'nself_minio', 'mc', 'stat', `minio/${bucket.name}`, '--json'],
+          { timeout: 30000 }
         )
         const stat = JSON.parse(statOutput)
 
         const { stdout: duOutput } = await execFileAsync(
           'docker',
           ['exec', 'nself_minio', 'mc', 'du', `minio/${bucket.name}`, '--json'],
-          { timeout: 30000 },
+          { timeout: 30000 }
         )
         // Get last line of output
         const duLines = duOutput.trim().split('\n')
@@ -254,7 +226,7 @@ async function getBuckets() {
       } catch {
         return bucket
       }
-    }),
+    })
   )
 
   return NextResponse.json({
@@ -269,17 +241,14 @@ async function getBuckets() {
 
 async function getObjects(bucket?: string, prefix?: string) {
   if (!bucket) {
-    return NextResponse.json(
-      { success: false, error: 'Bucket name is required' },
-      { status: 400 },
-    )
+    return NextResponse.json({ success: false, error: 'Bucket name is required' }, { status: 400 })
   }
 
   const objectPath = prefix ? `minio/${bucket}/${prefix}` : `minio/${bucket}`
   const { stdout } = await execFileAsync(
     'docker',
     ['exec', 'nself_minio', 'mc', 'ls', objectPath, '--json'],
-    { timeout: 30000 },
+    { timeout: 30000 }
   )
 
   const objects = stdout
@@ -320,7 +289,7 @@ async function getStorageInfo() {
     const { stdout: adminInfo } = await execFileAsync(
       'docker',
       ['exec', 'nself_minio', 'mc', 'admin', 'info', 'minio', '--json'],
-      { timeout: 30000 },
+      { timeout: 30000 }
     )
 
     const info = JSON.parse(adminInfo)
@@ -328,7 +297,7 @@ async function getStorageInfo() {
     const { stdout: diskUsage } = await execFileAsync(
       'docker',
       ['exec', 'nself_minio', 'mc', 'admin', 'disk', 'minio', '--json'],
-      { timeout: 30000 },
+      { timeout: 30000 }
     )
 
     // Get first line
@@ -391,16 +360,8 @@ async function getPolicies(bucket?: string) {
     if (bucket) {
       const { stdout } = await execFileAsync(
         'docker',
-        [
-          'exec',
-          'nself_minio',
-          'mc',
-          'policy',
-          'get',
-          `minio/${bucket}`,
-          '--json',
-        ],
-        { timeout: 30000 },
+        ['exec', 'nself_minio', 'mc', 'policy', 'get', `minio/${bucket}`, '--json'],
+        { timeout: 30000 }
       )
 
       return NextResponse.json({
@@ -414,17 +375,8 @@ async function getPolicies(bucket?: string) {
     } else {
       const { stdout } = await execFileAsync(
         'docker',
-        [
-          'exec',
-          'nself_minio',
-          'mc',
-          'admin',
-          'policy',
-          'list',
-          'minio',
-          '--json',
-        ],
-        { timeout: 30000 },
+        ['exec', 'nself_minio', 'mc', 'admin', 'policy', 'list', 'minio', '--json'],
+        { timeout: 30000 }
       )
 
       const policies = stdout
@@ -466,7 +418,7 @@ async function getUsers() {
     const { stdout } = await execFileAsync(
       'docker',
       ['exec', 'nself_minio', 'mc', 'admin', 'user', 'list', 'minio', '--json'],
-      { timeout: 30000 },
+      { timeout: 30000 }
     )
 
     const users = stdout
@@ -518,7 +470,7 @@ async function getStorageStats() {
     const { stdout: prometheus } = await execFileAsync(
       'docker',
       ['exec', 'nself_minio', 'mc', 'admin', 'prometheus', 'metrics', 'minio'],
-      { timeout: 30000 },
+      { timeout: 30000 }
     )
 
     // Only take first 50 lines
@@ -548,8 +500,7 @@ async function getStorageStats() {
           freeInodes: metrics['minio_disk_storage_free_inodes'] || 0,
         },
         network: {
-          receivedBytes:
-            metrics['minio_inter_node_traffic_received_bytes'] || 0,
+          receivedBytes: metrics['minio_inter_node_traffic_received_bytes'] || 0,
           sentBytes: metrics['minio_inter_node_traffic_sent_bytes'] || 0,
         },
         s3: {
@@ -581,16 +532,13 @@ async function getStorageStats() {
 
 async function createBucket(bucket: string) {
   if (!bucket) {
-    return NextResponse.json(
-      { success: false, error: 'Bucket name is required' },
-      { status: 400 },
-    )
+    return NextResponse.json({ success: false, error: 'Bucket name is required' }, { status: 400 })
   }
 
   const { stdout } = await execFileAsync(
     'docker',
     ['exec', 'nself_minio', 'mc', 'mb', `minio/${bucket}`],
-    { timeout: 30000 },
+    { timeout: 30000 }
   )
 
   return NextResponse.json({
@@ -605,16 +553,13 @@ async function createBucket(bucket: string) {
 
 async function deleteBucket(bucket: string) {
   if (!bucket) {
-    return NextResponse.json(
-      { success: false, error: 'Bucket name is required' },
-      { status: 400 },
-    )
+    return NextResponse.json({ success: false, error: 'Bucket name is required' }, { status: 400 })
   }
 
   const { stdout } = await execFileAsync(
     'docker',
     ['exec', 'nself_minio', 'mc', 'rb', `minio/${bucket}`, '--force'],
-    { timeout: 30000 },
+    { timeout: 30000 }
   )
 
   return NextResponse.json({
@@ -634,7 +579,7 @@ async function uploadObject(bucket: string, object: string, content: string) {
         success: false,
         error: 'Bucket, object name, and content are required',
       },
-      { status: 400 },
+      { status: 400 }
     )
   }
 
@@ -644,22 +589,14 @@ async function uploadObject(bucket: string, object: string, content: string) {
   // Write content using printf in docker (safer than echo with quotes)
   await execFileAsync(
     'docker',
-    [
-      'exec',
-      'nself_minio',
-      'sh',
-      '-c',
-      `printf '%s' "$1" > ${tempFile}`,
-      '--',
-      content,
-    ],
-    { timeout: 30000 },
+    ['exec', 'nself_minio', 'sh', '-c', `printf '%s' "$1" > ${tempFile}`, '--', content],
+    { timeout: 30000 }
   )
 
   const { stdout } = await execFileAsync(
     'docker',
     ['exec', 'nself_minio', 'mc', 'cp', tempFile, `minio/${bucket}/${object}`],
-    { timeout: 30000 },
+    { timeout: 30000 }
   )
 
   // Clean up temp file
@@ -685,14 +622,14 @@ async function deleteObject(bucket: string, object: string) {
   if (!bucket || !object) {
     return NextResponse.json(
       { success: false, error: 'Bucket and object name are required' },
-      { status: 400 },
+      { status: 400 }
     )
   }
 
   const { stdout } = await execFileAsync(
     'docker',
     ['exec', 'nself_minio', 'mc', 'rm', `minio/${bucket}/${object}`],
-    { timeout: 30000 },
+    { timeout: 30000 }
   )
 
   return NextResponse.json({
@@ -710,14 +647,14 @@ async function setPolicy(bucket: string, policy: string) {
   if (!bucket || !policy) {
     return NextResponse.json(
       { success: false, error: 'Bucket and policy are required' },
-      { status: 400 },
+      { status: 400 }
     )
   }
 
   const { stdout } = await execFileAsync(
     'docker',
     ['exec', 'nself_minio', 'mc', 'policy', 'set', policy, `minio/${bucket}`],
-    { timeout: 30000 },
+    { timeout: 30000 }
   )
 
   return NextResponse.json({
@@ -735,24 +672,14 @@ async function createUser(user: string, password: string) {
   if (!user || !password) {
     return NextResponse.json(
       { success: false, error: 'User and password are required' },
-      { status: 400 },
+      { status: 400 }
     )
   }
 
   const { stdout } = await execFileAsync(
     'docker',
-    [
-      'exec',
-      'nself_minio',
-      'mc',
-      'admin',
-      'user',
-      'add',
-      'minio',
-      user,
-      password,
-    ],
-    { timeout: 30000 },
+    ['exec', 'nself_minio', 'mc', 'admin', 'user', 'add', 'minio', user, password],
+    { timeout: 30000 }
   )
 
   return NextResponse.json({
@@ -767,16 +694,13 @@ async function createUser(user: string, password: string) {
 
 async function deleteUser(user: string) {
   if (!user) {
-    return NextResponse.json(
-      { success: false, error: 'User is required' },
-      { status: 400 },
-    )
+    return NextResponse.json({ success: false, error: 'User is required' }, { status: 400 })
   }
 
   const { stdout } = await execFileAsync(
     'docker',
     ['exec', 'nself_minio', 'mc', 'admin', 'user', 'remove', 'minio', user],
-    { timeout: 30000 },
+    { timeout: 30000 }
   )
 
   return NextResponse.json({

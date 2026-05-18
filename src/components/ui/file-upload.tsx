@@ -147,23 +147,20 @@ export function FileUpload({
           isDragging
             ? 'border-zinc-900 bg-zinc-100 dark:border-zinc-50 dark:bg-zinc-800'
             : 'border-zinc-300 hover:border-zinc-400 dark:border-zinc-700 dark:hover:border-zinc-600',
-          disabled && 'cursor-not-allowed opacity-50',
+          disabled && 'cursor-not-allowed opacity-50'
         )}
       >
         <Upload
           className={cn(
             'mb-4 h-10 w-10',
-            isDragging
-              ? 'text-zinc-900 dark:text-zinc-50'
-              : 'text-zinc-400 dark:text-zinc-500',
+            isDragging ? 'text-zinc-900 dark:text-zinc-50' : 'text-zinc-400 dark:text-zinc-500'
           )}
         />
         <p className="mb-2 text-sm font-medium text-zinc-900 dark:text-zinc-50">
           {isDragging ? 'Drop files here' : 'Click or drag files to upload'}
         </p>
         <p className="text-xs text-zinc-500 dark:text-zinc-400">
-          {accept ? `Accepts: ${accept}` : 'All file types accepted'} • Max{' '}
-          {formatBytes(maxSize)}
+          {accept ? `Accepts: ${accept}` : 'All file types accepted'} • Max {formatBytes(maxSize)}
         </p>
         <input
           ref={inputRef}
@@ -196,9 +193,7 @@ export function FileUpload({
               >
                 <div className="flex items-center gap-2">
                   <File className="h-4 w-4 text-zinc-500 dark:text-zinc-400" />
-                  <span className="text-sm text-zinc-900 dark:text-zinc-50">
-                    {file.name}
-                  </span>
+                  <span className="text-sm text-zinc-900 dark:text-zinc-50">{file.name}</span>
                   <span className="text-xs text-zinc-500 dark:text-zinc-400">
                     ({formatBytes(file.size)})
                   </span>

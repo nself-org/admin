@@ -6,10 +6,7 @@ interface RouteParams {
   params: Promise<{ id: string }>
 }
 
-export async function POST(
-  request: NextRequest,
-  { params }: RouteParams,
-): Promise<NextResponse> {
+export async function POST(request: NextRequest, { params }: RouteParams): Promise<NextResponse> {
   const authError = await requireAuth(request)
   if (authError) return authError
 
@@ -22,7 +19,7 @@ export async function POST(
           success: false,
           error: 'Dashboard ID is required',
         },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -35,7 +32,7 @@ export async function POST(
           success: false,
           error: 'Widget type is required',
         },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -45,7 +42,7 @@ export async function POST(
           success: false,
           error: 'Widget position is required',
         },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -55,7 +52,7 @@ export async function POST(
           success: false,
           error: 'Widget config is required',
         },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -71,7 +68,7 @@ export async function POST(
           success: false,
           error: 'Dashboard not found',
         },
-        { status: 404 },
+        { status: 404 }
       )
     }
 
@@ -80,7 +77,7 @@ export async function POST(
         success: true,
         widget,
       },
-      { status: 201 },
+      { status: 201 }
     )
   } catch (error) {
     return NextResponse.json(
@@ -88,7 +85,7 @@ export async function POST(
         success: false,
         error: error instanceof Error ? error.message : 'Failed to add widget',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

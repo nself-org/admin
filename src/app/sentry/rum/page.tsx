@@ -1,7 +1,7 @@
 'use client'
 
-import { SessionReplay } from '@/components/sentry/SessionReplay'
 import type { RumEvent } from '@/components/sentry/SessionReplay'
+import { SessionReplay } from '@/components/sentry/SessionReplay'
 import { AlertTriangle, Loader2, Monitor, RefreshCw, XCircle } from 'lucide-react'
 import { useCallback, useEffect, useState } from 'react'
 
@@ -24,24 +24,12 @@ interface RumMetrics {
   generatedAt: string
 }
 
-function MetricCard({
-  label,
-  value,
-  sub,
-}: {
-  label: string
-  value: string
-  sub?: string
-}) {
+function MetricCard({ label, value, sub }: { label: string; value: string; sub?: string }) {
   return (
     <div className="border-nself-border rounded-lg border px-4 py-3">
       <p className="text-nself-text-muted text-xs">{label}</p>
-      <p className="nself-gradient-text mt-0.5 text-2xl font-semibold">
-        {value}
-      </p>
-      {sub !== undefined && (
-        <p className="text-nself-text-muted text-xs">{sub}</p>
-      )}
+      <p className="nself-gradient-text mt-0.5 text-2xl font-semibold">{value}</p>
+      {sub !== undefined && <p className="text-nself-text-muted text-xs">{sub}</p>}
     </div>
   )
 }
@@ -60,9 +48,7 @@ export default function SentryRumPage() {
       const json = (await res.json()) as RumMetrics
       setData(json)
     } catch (err) {
-      setError(
-        err instanceof Error ? err.message : 'Failed to load RUM metrics.',
-      )
+      setError(err instanceof Error ? err.message : 'Failed to load RUM metrics.')
     } finally {
       setLoading(false)
     }
@@ -128,18 +114,9 @@ export default function SentryRumPage() {
         <>
           {/* Metric cards */}
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-            <MetricCard
-              label="Events (24h)"
-              value={data.eventCount24h.toLocaleString()}
-            />
-            <MetricCard
-              label="Active sessions"
-              value={data.activeSessionCount.toLocaleString()}
-            />
-            <MetricCard
-              label="Page load P50"
-              value={`${data.p50LoadMs} ms`}
-            />
+            <MetricCard label="Events (24h)" value={data.eventCount24h.toLocaleString()} />
+            <MetricCard label="Active sessions" value={data.activeSessionCount.toLocaleString()} />
+            <MetricCard label="Page load P50" value={`${data.p50LoadMs} ms`} />
             <MetricCard
               label="Page load P95"
               value={`${data.p95LoadMs} ms`}
@@ -151,14 +128,10 @@ export default function SentryRumPage() {
           <div className="glass-card p-4">
             <div className="mb-3 flex items-center gap-2">
               <AlertTriangle className="h-4 w-4 text-amber-400" />
-              <p className="text-nself-text text-sm font-semibold">
-                Top Errors
-              </p>
+              <p className="text-nself-text text-sm font-semibold">Top Errors</p>
             </div>
             {data.topErrors.length === 0 ? (
-              <p className="text-nself-text-muted text-xs">
-                No errors recorded in the last 24h.
-              </p>
+              <p className="text-nself-text-muted text-xs">No errors recorded in the last 24h.</p>
             ) : (
               <ul className="space-y-1.5">
                 {data.topErrors.map((err, idx) => (
@@ -166,13 +139,10 @@ export default function SentryRumPage() {
                     key={idx}
                     className="border-nself-border flex items-start gap-3 rounded-lg border px-3 py-2"
                   >
-                    <div className="flex-1 min-w-0">
-                      <p className="text-nself-text truncate font-mono text-xs">
-                        {err.message}
-                      </p>
+                    <div className="min-w-0 flex-1">
+                      <p className="text-nself-text truncate font-mono text-xs">{err.message}</p>
                       <p className="text-nself-text-muted text-xs">
-                        last seen{' '}
-                        {new Date(err.lastSeenAt).toLocaleTimeString()}
+                        last seen {new Date(err.lastSeenAt).toLocaleTimeString()}
                       </p>
                     </div>
                     <span className="shrink-0 rounded-full border border-red-500/40 bg-red-500/10 px-2 py-0.5 text-xs text-red-400">
@@ -189,14 +159,9 @@ export default function SentryRumPage() {
             <div className="glass-card p-4">
               <div className="mb-3 flex items-center gap-2">
                 <Monitor className="h-4 w-4 text-blue-400" />
-                <p className="text-nself-text text-sm font-semibold">
-                  Recent Session
-                </p>
+                <p className="text-nself-text text-sm font-semibold">Recent Session</p>
               </div>
-              <SessionReplay
-                sessionId={data.recentSession.id}
-                events={data.recentSession.events}
-              />
+              <SessionReplay sessionId={data.recentSession.id} events={data.recentSession.events} />
             </div>
           )}
         </>

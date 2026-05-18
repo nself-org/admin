@@ -22,10 +22,7 @@ const fetcher = async <T>(url: string): Promise<T> => {
   return data.data
 }
 
-async function postFetcher<T>(
-  url: string,
-  { arg }: { arg: T },
-): Promise<unknown> {
+async function postFetcher<T>(url: string, { arg }: { arg: T }): Promise<unknown> {
   const response = await fetch(url, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -130,11 +127,9 @@ export function useReportTemplates(category?: string) {
   const queryString = queryParams.toString()
   const url = `/api/reports/templates${queryString ? `?${queryString}` : ''}`
 
-  const { data, error, isLoading, mutate } = useSWR<ReportTemplate[]>(
-    url,
-    fetcher,
-    { refreshInterval: 30000 },
-  )
+  const { data, error, isLoading, mutate } = useSWR<ReportTemplate[]>(url, fetcher, {
+    refreshInterval: 30000,
+  })
 
   return {
     templates: data ?? [],
@@ -152,7 +147,7 @@ export function useReportTemplate(id: string | undefined) {
   const { data, error, isLoading, mutate } = useSWR<ReportTemplate>(
     id ? `/api/reports/templates/${id}` : null,
     fetcher,
-    { refreshInterval: 30000 },
+    { refreshInterval: 30000 }
   )
 
   return {
@@ -167,10 +162,7 @@ export function useReportTemplate(id: string | undefined) {
 /**
  * Fetch report executions, optionally filtered by reportId and options
  */
-export function useReportExecutions(
-  reportId?: string,
-  options?: GetReportExecutionsOptions,
-) {
+export function useReportExecutions(reportId?: string, options?: GetReportExecutionsOptions) {
   const queryParams = new URLSearchParams()
   if (reportId) queryParams.set('reportId', reportId)
   if (options?.status) queryParams.set('status', options.status)
@@ -179,11 +171,9 @@ export function useReportExecutions(
   const queryString = queryParams.toString()
   const url = `/api/reports/executions${queryString ? `?${queryString}` : ''}`
 
-  const { data, error, isLoading, mutate } = useSWR<ReportExecution[]>(
-    url,
-    fetcher,
-    { refreshInterval: 10000 },
-  )
+  const { data, error, isLoading, mutate } = useSWR<ReportExecution[]>(url, fetcher, {
+    refreshInterval: 10000,
+  })
 
   return {
     executions: data ?? [],
@@ -201,7 +191,7 @@ export function useReportExecution(id: string | undefined) {
   const { data, error, isLoading, mutate } = useSWR<ReportExecution>(
     id ? `/api/reports/executions/${id}` : null,
     fetcher,
-    { refreshInterval: 5000 }, // Poll more frequently for execution status
+    { refreshInterval: 5000 } // Poll more frequently for execution status
   )
 
   return {
@@ -220,7 +210,7 @@ export function useReportSchedules(reportId: string | undefined) {
   const { data, error, isLoading, mutate } = useSWR<ReportSchedule[]>(
     reportId ? `/api/reports/schedules?reportId=${reportId}` : null,
     fetcher,
-    { refreshInterval: 30000 },
+    { refreshInterval: 30000 }
   )
 
   return {
@@ -236,11 +226,9 @@ export function useReportSchedules(reportId: string | undefined) {
  * Fetch report statistics
  */
 export function useReportStats() {
-  const { data, error, isLoading, mutate } = useSWR<ReportStats>(
-    '/api/reports/stats',
-    fetcher,
-    { refreshInterval: 60000 },
-  )
+  const { data, error, isLoading, mutate } = useSWR<ReportStats>('/api/reports/stats', fetcher, {
+    refreshInterval: 60000,
+  })
 
   return {
     stats: data,
@@ -283,13 +271,12 @@ export function useGenerateReport() {
       try {
         return await trigger(input)
       } catch (err) {
-        const message =
-          err instanceof Error ? err.message : 'Failed to generate report'
+        const message = err instanceof Error ? err.message : 'Failed to generate report'
         setError(message)
         throw err
       }
     },
-    [trigger],
+    [trigger]
   )
 
   return {
@@ -309,43 +296,37 @@ export function useDownloadReport() {
   const [isDownloading, setIsDownloading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  const download = useCallback(
-    async (executionId: string, filename?: string) => {
-      setIsDownloading(true)
-      setError(null)
-      try {
-        const response = await fetch(
-          `/api/reports/executions/${executionId}/download`,
-        )
-        if (!response.ok) {
-          throw new Error('Failed to download report')
-        }
-        const blob = await response.blob()
-
-        // Create download link
-        const url = window.URL.createObjectURL(blob)
-        const link = document.createElement('a')
-        link.href = url
-        link.download = filename || `report-${executionId}`
-
-        // Trigger download
-        document.body.appendChild(link)
-        link.click()
-
-        // Cleanup
-        document.body.removeChild(link)
-        window.URL.revokeObjectURL(url)
-      } catch (err) {
-        const message =
-          err instanceof Error ? err.message : 'Failed to download report'
-        setError(message)
-        throw err
-      } finally {
-        setIsDownloading(false)
+  const download = useCallback(async (executionId: string, filename?: string) => {
+    setIsDownloading(true)
+    setError(null)
+    try {
+      const response = await fetch(`/api/reports/executions/${executionId}/download`)
+      if (!response.ok) {
+        throw new Error('Failed to download report')
       }
-    },
-    [],
-  )
+      const blob = await response.blob()
+
+      // Create download link
+      const url = window.URL.createObjectURL(blob)
+      const link = document.createElement('a')
+      link.href = url
+      link.download = filename || `report-${executionId}`
+
+      // Trigger download
+      document.body.appendChild(link)
+      link.click()
+
+      // Cleanup
+      document.body.removeChild(link)
+      window.URL.revokeObjectURL(url)
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Failed to download report'
+      setError(message)
+      throw err
+    } finally {
+      setIsDownloading(false)
+    }
+  }, [])
 
   return {
     download,
@@ -363,7 +344,7 @@ export function useCreateReportTemplate() {
 
   const { trigger, isMutating, data, reset } = useSWRMutation(
     '/api/reports/templates',
-    postFetcher<CreateReportTemplateInput>,
+    postFetcher<CreateReportTemplateInput>
   )
 
   const create = useCallback(
@@ -372,13 +353,12 @@ export function useCreateReportTemplate() {
       try {
         return (await trigger(input)) as ReportTemplate
       } catch (err) {
-        const message =
-          err instanceof Error ? err.message : 'Failed to create template'
+        const message = err instanceof Error ? err.message : 'Failed to create template'
         setError(message)
         throw err
       }
     },
-    [trigger],
+    [trigger]
   )
 
   return {
@@ -397,30 +377,26 @@ export function useUpdateReportTemplate() {
   const [isUpdating, setIsUpdating] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  const update = useCallback(
-    async (id: string, updates: UpdateReportTemplateInput) => {
-      setIsUpdating(true)
-      setError(null)
-      try {
-        const response = await fetch(`/api/reports/templates/${id}`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(updates),
-        })
-        const data = await response.json()
-        if (!data.success) throw new Error(data.error || 'Failed to update')
-        return data.data as ReportTemplate
-      } catch (err) {
-        const message =
-          err instanceof Error ? err.message : 'Failed to update template'
-        setError(message)
-        throw err
-      } finally {
-        setIsUpdating(false)
-      }
-    },
-    [],
-  )
+  const update = useCallback(async (id: string, updates: UpdateReportTemplateInput) => {
+    setIsUpdating(true)
+    setError(null)
+    try {
+      const response = await fetch(`/api/reports/templates/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updates),
+      })
+      const data = await response.json()
+      if (!data.success) throw new Error(data.error || 'Failed to update')
+      return data.data as ReportTemplate
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Failed to update template'
+      setError(message)
+      throw err
+    } finally {
+      setIsUpdating(false)
+    }
+  }, [])
 
   return {
     update,
@@ -443,8 +419,7 @@ export function useDeleteReportTemplate() {
     try {
       await deleteFetcher(`/api/reports/templates/${id}`)
     } catch (err) {
-      const message =
-        err instanceof Error ? err.message : 'Failed to delete template'
+      const message = err instanceof Error ? err.message : 'Failed to delete template'
       setError(message)
       throw err
     } finally {
@@ -467,30 +442,26 @@ export function useCreateSchedule() {
   const [isCreating, setIsCreating] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  const create = useCallback(
-    async (reportId: string, schedule: CreateScheduleInput) => {
-      setIsCreating(true)
-      setError(null)
-      try {
-        const response = await fetch(`/api/reports/schedules`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ reportId, ...schedule }),
-        })
-        const data = await response.json()
-        if (!data.success) throw new Error(data.error || 'Failed to create')
-        return data.data as ReportSchedule
-      } catch (err) {
-        const message =
-          err instanceof Error ? err.message : 'Failed to create schedule'
-        setError(message)
-        throw err
-      } finally {
-        setIsCreating(false)
-      }
-    },
-    [],
-  )
+  const create = useCallback(async (reportId: string, schedule: CreateScheduleInput) => {
+    setIsCreating(true)
+    setError(null)
+    try {
+      const response = await fetch(`/api/reports/schedules`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ reportId, ...schedule }),
+      })
+      const data = await response.json()
+      if (!data.success) throw new Error(data.error || 'Failed to create')
+      return data.data as ReportSchedule
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Failed to create schedule'
+      setError(message)
+      throw err
+    } finally {
+      setIsCreating(false)
+    }
+  }, [])
 
   return {
     create,
@@ -507,30 +478,26 @@ export function useUpdateSchedule() {
   const [isUpdating, setIsUpdating] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  const update = useCallback(
-    async (scheduleId: string, updates: UpdateScheduleInput) => {
-      setIsUpdating(true)
-      setError(null)
-      try {
-        const response = await fetch(`/api/reports/schedules/${scheduleId}`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(updates),
-        })
-        const data = await response.json()
-        if (!data.success) throw new Error(data.error || 'Failed to update')
-        return data.data as ReportSchedule
-      } catch (err) {
-        const message =
-          err instanceof Error ? err.message : 'Failed to update schedule'
-        setError(message)
-        throw err
-      } finally {
-        setIsUpdating(false)
-      }
-    },
-    [],
-  )
+  const update = useCallback(async (scheduleId: string, updates: UpdateScheduleInput) => {
+    setIsUpdating(true)
+    setError(null)
+    try {
+      const response = await fetch(`/api/reports/schedules/${scheduleId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updates),
+      })
+      const data = await response.json()
+      if (!data.success) throw new Error(data.error || 'Failed to update')
+      return data.data as ReportSchedule
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Failed to update schedule'
+      setError(message)
+      throw err
+    } finally {
+      setIsUpdating(false)
+    }
+  }, [])
 
   return {
     update,
@@ -553,8 +520,7 @@ export function useDeleteSchedule() {
     try {
       await deleteFetcher(`/api/reports/schedules/${scheduleId}`)
     } catch (err) {
-      const message =
-        err instanceof Error ? err.message : 'Failed to delete schedule'
+      const message = err instanceof Error ? err.message : 'Failed to delete schedule'
       setError(message)
       throw err
     } finally {

@@ -33,9 +33,7 @@ const statusColors: Record<string, string> = {
 function K8sStatusContent() {
   const [activeTab, setActiveTab] = useUrlState<string>('tab', 'deployments')
   const [searchQuery, setSearchQuery] = useState('')
-  const [selectedDeployment, setSelectedDeployment] = useState<string | null>(
-    null,
-  )
+  const [selectedDeployment, setSelectedDeployment] = useState<string | null>(null)
 
   const { data, isLoading, error, mutate } = useSWR<{
     deployments: K8sDeployment[]
@@ -48,19 +46,14 @@ function K8sStatusContent() {
   const pods = data?.pods ?? []
 
   const filteredDeployments = deployments.filter((d) =>
-    d.name.toLowerCase().includes(searchQuery.toLowerCase()),
+    d.name.toLowerCase().includes(searchQuery.toLowerCase())
   )
 
   const filteredPods = selectedDeployment
     ? pods.filter((p) => p.name.startsWith(selectedDeployment))
-    : pods.filter((p) =>
-        p.name.toLowerCase().includes(searchQuery.toLowerCase()),
-      )
+    : pods.filter((p) => p.name.toLowerCase().includes(searchQuery.toLowerCase()))
 
-  const handleAction = async (
-    _action: 'restart' | 'scale' | 'delete',
-    _name: string,
-  ) => {
+  const handleAction = async (_action: 'restart' | 'scale' | 'delete', _name: string) => {
     // Would call API
     await mutate()
   }
@@ -124,9 +117,7 @@ function K8sStatusContent() {
             <ArrowLeft className="h-5 w-5" />
           </Link>
           <div>
-            <h1 className="text-2xl font-semibold text-white">
-              Deployment Status
-            </h1>
+            <h1 className="text-2xl font-semibold text-white">Deployment Status</h1>
             <p className="text-sm text-zinc-400">
               {deployments.length} deployments, {pods.length} pods
             </p>
@@ -212,8 +203,7 @@ function K8sStatusContent() {
             </thead>
             <tbody className="divide-y divide-zinc-700/50">
               {filteredDeployments.map((deployment) => {
-                const isHealthy =
-                  deployment.replicas.ready === deployment.replicas.desired
+                const isHealthy = deployment.replicas.ready === deployment.replicas.desired
                 return (
                   <tr key={deployment.name} className="hover:bg-zinc-800/50">
                     <td className="px-4 py-3">
@@ -225,9 +215,7 @@ function K8sStatusContent() {
                         className="flex items-center gap-3 hover:text-blue-400"
                       >
                         <Layers className="h-4 w-4 text-zinc-500" />
-                        <span className="font-medium text-white">
-                          {deployment.name}
-                        </span>
+                        <span className="font-medium text-white">{deployment.name}</span>
                       </button>
                     </td>
                     <td className="px-4 py-3">
@@ -237,8 +225,7 @@ function K8sStatusContent() {
                     </td>
                     <td className="px-4 py-3">
                       <span className="text-sm text-zinc-400">
-                        {deployment.replicas.ready}/
-                        {deployment.replicas.desired}
+                        {deployment.replicas.ready}/{deployment.replicas.desired}
                       </span>
                     </td>
                     <td className="px-4 py-3">
@@ -260,15 +247,11 @@ function K8sStatusContent() {
                         )}
                       </span>
                     </td>
-                    <td className="px-4 py-3 text-sm text-zinc-400">
-                      {deployment.strategy}
-                    </td>
+                    <td className="px-4 py-3 text-sm text-zinc-400">{deployment.strategy}</td>
                     <td className="px-4 py-3">
                       <div className="flex items-center justify-end gap-1">
                         <button
-                          onClick={() =>
-                            handleAction('restart', deployment.name)
-                          }
+                          onClick={() => handleAction('restart', deployment.name)}
                           className="rounded p-1.5 text-zinc-400 hover:bg-zinc-700 hover:text-white"
                           title="Restart"
                         >
@@ -282,9 +265,7 @@ function K8sStatusContent() {
                           <Scale className="h-4 w-4" />
                         </Link>
                         <button
-                          onClick={() =>
-                            handleAction('delete', deployment.name)
-                          }
+                          onClick={() => handleAction('delete', deployment.name)}
                           className="rounded p-1.5 text-red-400 hover:bg-zinc-700"
                           title="Delete"
                         >
@@ -354,14 +335,10 @@ function K8sStatusContent() {
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-3">
                         <Box className="h-4 w-4 text-zinc-500" />
-                        <span className="font-mono text-sm text-white">
-                          {pod.name}
-                        </span>
+                        <span className="font-mono text-sm text-white">{pod.name}</span>
                       </div>
                     </td>
-                    <td className="px-4 py-3 text-sm text-zinc-400">
-                      {pod.ready}
-                    </td>
+                    <td className="px-4 py-3 text-sm text-zinc-400">{pod.ready}</td>
                     <td className="px-4 py-3">
                       <span
                         className={`inline-flex rounded-full px-2 py-0.5 text-xs ${
@@ -381,16 +358,10 @@ function K8sStatusContent() {
                       </span>
                     </td>
                     <td className="px-4 py-3">
-                      <code className="text-sm text-zinc-400">
-                        {pod.ip || '-'}
-                      </code>
+                      <code className="text-sm text-zinc-400">{pod.ip || '-'}</code>
                     </td>
-                    <td className="px-4 py-3 text-sm text-zinc-400">
-                      {pod.node || '-'}
-                    </td>
-                    <td className="px-4 py-3 text-sm text-zinc-400">
-                      {pod.age}
-                    </td>
+                    <td className="px-4 py-3 text-sm text-zinc-400">{pod.node || '-'}</td>
+                    <td className="px-4 py-3 text-sm text-zinc-400">{pod.age}</td>
                     <td className="px-4 py-3">
                       <div className="flex items-center justify-end gap-1">
                         <Link

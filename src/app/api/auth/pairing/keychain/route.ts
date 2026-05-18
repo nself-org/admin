@@ -33,11 +33,7 @@ function detectPlatform(): 'macos' | 'linux' | 'unsupported' {
  * Runs a command and pipes `stdinData` to its stdin.
  * Used for `secret-tool store` which reads the password from stdin.
  */
-function spawnWithStdin(
-  cmd: string,
-  args: string[],
-  stdinData: string,
-): Promise<void> {
+function spawnWithStdin(cmd: string, args: string[], stdinData: string): Promise<void> {
   return new Promise((resolve, reject) => {
     const proc = spawn(cmd, args)
     let stderr = ''
@@ -49,9 +45,7 @@ function spawnWithStdin(
     proc.on('error', (err) => reject(err))
     proc.on('close', (code) => {
       if (code !== 0) {
-        reject(
-          new Error(`${cmd} exited with code ${code ?? 'null'}: ${stderr}`),
-        )
+        reject(new Error(`${cmd} exited with code ${code ?? 'null'}: ${stderr}`))
       } else {
         resolve()
       }
@@ -144,12 +138,10 @@ async function storeInKeychain(token: AuthToken): Promise<void> {
         'account',
         KEYCHAIN_ACCOUNT,
       ],
-      encoded,
+      encoded
     )
   } else {
-    throw new Error(
-      `Keychain storage not supported on this platform: ${process.platform}`,
-    )
+    throw new Error(`Keychain storage not supported on this platform: ${process.platform}`)
   }
 }
 
@@ -191,7 +183,7 @@ export async function GET(_request: NextRequest): Promise<NextResponse> {
         error: 'Failed to retrieve token from keychain',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -205,7 +197,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     if (!body?.token) {
       return NextResponse.json(
         { success: false, error: 'Request body must include a token object' },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -218,7 +210,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to store token in keychain',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -234,7 +226,7 @@ export async function DELETE(_request: NextRequest): Promise<NextResponse> {
         error: 'Failed to clear keychain',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

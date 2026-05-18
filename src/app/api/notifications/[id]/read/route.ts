@@ -11,10 +11,7 @@ interface RouteParams {
 /**
  * POST /api/notifications/[id]/read - Mark a notification as read
  */
-export async function POST(
-  request: NextRequest,
-  { params }: RouteParams,
-): Promise<NextResponse> {
+export async function POST(request: NextRequest, { params }: RouteParams): Promise<NextResponse> {
   const authError = await requireAuth(request)
   if (authError) return authError
 
@@ -37,25 +34,17 @@ export async function POST(
     if (!id) {
       return NextResponse.json(
         { success: false, error: 'Notification ID is required' },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
     const notification = await notificationsApi.markAsRead(id, userId)
 
     if (!notification) {
-      return NextResponse.json(
-        { success: false, error: 'Notification not found' },
-        { status: 404 },
-      )
+      return NextResponse.json({ success: false, error: 'Notification not found' }, { status: 404 })
     }
 
-    logger.api(
-      'POST',
-      `/api/notifications/${id}/read`,
-      200,
-      Date.now() - startTime,
-    )
+    logger.api('POST', `/api/notifications/${id}/read`, 200, Date.now() - startTime)
     logger.info('Marked notification as read', { id })
 
     return NextResponse.json({
@@ -73,7 +62,7 @@ export async function POST(
         error: 'Failed to mark notification as read',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

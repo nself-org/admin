@@ -5,16 +5,7 @@ import { useOrganization } from '@/hooks/useOrganization'
 import { useOrgTeams } from '@/hooks/useOrgTeams'
 import { usePermissions } from '@/hooks/usePermissions'
 import type { OrgRole } from '@/types/tenant'
-import {
-  ArrowLeft,
-  Check,
-  Crown,
-  Eye,
-  Filter,
-  Shield,
-  User,
-  X,
-} from 'lucide-react'
+import { ArrowLeft, Check, Crown, Eye, Filter, Shield, User, X } from 'lucide-react'
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
 import { useState } from 'react'
@@ -55,9 +46,7 @@ export default function OrgPermissionsPage() {
   if (orgError || permsError || !org) {
     return (
       <div className="rounded-lg border border-red-500/30 bg-red-900/20 p-4">
-        <p className="text-red-400">
-          {orgError || permsError || 'Organization not found'}
-        </p>
+        <p className="text-red-400">{orgError || permsError || 'Organization not found'}</p>
       </div>
     )
   }
@@ -74,7 +63,7 @@ export default function OrgPermissionsPage() {
       acc[perm.category].push(perm)
       return acc
     },
-    {} as Record<string, typeof standardPermissions>,
+    {} as Record<string, typeof standardPermissions>
   )
 
   const roles: OrgRole[] = ['owner', 'admin', 'member', 'viewer']
@@ -93,12 +82,8 @@ export default function OrgPermissionsPage() {
         >
           <ArrowLeft className="h-4 w-4" /> Back to {org.name}
         </Link>
-        <h1 className="mt-4 text-2xl font-semibold text-white">
-          Permissions Matrix
-        </h1>
-        <p className="text-sm text-zinc-400">
-          View permissions across roles and teams
-        </p>
+        <h1 className="mt-4 text-2xl font-semibold text-white">Permissions Matrix</h1>
+        <p className="text-sm text-zinc-400">View permissions across roles and teams</p>
       </div>
 
       {/* Controls */}
@@ -180,9 +165,7 @@ export default function OrgPermissionsPage() {
                         <td className="px-4 py-3">
                           <div>
                             <p className="text-sm text-white">{perm.name}</p>
-                            <p className="text-xs text-zinc-500">
-                              {perm.description}
-                            </p>
+                            <p className="text-xs text-zinc-500">{perm.description}</p>
                           </div>
                         </td>
                         {roles.map((role) => (
@@ -243,9 +226,7 @@ export default function OrgPermissionsPage() {
                         <td className="px-4 py-3">
                           <div>
                             <p className="text-sm text-white">{perm.name}</p>
-                            <p className="text-xs text-zinc-500">
-                              {perm.description}
-                            </p>
+                            <p className="text-xs text-zinc-500">{perm.description}</p>
                           </div>
                         </td>
                         {teams.map((team) => (
@@ -283,18 +264,14 @@ export default function OrgPermissionsPage() {
         </div>
 
         <div className="mt-4 border-t border-zinc-700 pt-4">
-          <h4 className="mb-2 text-xs font-medium text-zinc-500 uppercase">
-            Role Hierarchy
-          </h4>
+          <h4 className="mb-2 text-xs font-medium text-zinc-500 uppercase">Role Hierarchy</h4>
           <div className="flex flex-wrap gap-4">
             {roles.map((role) => {
               const Icon = roleIcons[role]
               return (
                 <div key={role} className="flex items-center gap-2">
                   <Icon className={`h-4 w-4 ${roleColors[role]}`} />
-                  <span className="text-sm text-zinc-300 capitalize">
-                    {role}
-                  </span>
+                  <span className="text-sm text-zinc-300 capitalize">{role}</span>
                 </div>
               )
             })}

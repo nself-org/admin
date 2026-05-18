@@ -26,7 +26,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
             error:
               'Invalid provider name. Only letters, numbers, hyphens, and underscores are allowed.',
           },
-          { status: 400 },
+          { status: 400 }
         )
       }
       args.push(`--provider=${provider}`)
@@ -36,10 +36,9 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         return NextResponse.json(
           {
             success: false,
-            error:
-              'Invalid port number. Must be an integer between 1 and 65535.',
+            error: 'Invalid port number. Must be an integer between 1 and 65535.',
           },
-          { status: 400 },
+          { status: 400 }
         )
       }
       args.push(`--port=${port}`)
@@ -54,7 +53,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           error: 'Failed to initialize real-time service',
           details: result.error || result.stderr || 'Unknown error',
         },
-        { status: 500 },
+        { status: 500 }
       )
     }
 
@@ -69,7 +68,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to initialize real-time service',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

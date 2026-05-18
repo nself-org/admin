@@ -73,17 +73,13 @@ export function TerminalOutput({
     <div
       className={cn(
         'flex flex-col rounded-lg border border-zinc-200 bg-zinc-950 dark:border-zinc-800',
-        className,
+        className
       )}
     >
       {/* Header */}
       {(title || copyable || downloadable) && (
         <div className="flex items-center justify-between border-b border-zinc-800 px-4 py-2">
-          {title && (
-            <h3 className="font-mono text-sm font-semibold text-zinc-100">
-              {title}
-            </h3>
-          )}
+          {title && <h3 className="font-mono text-sm font-semibold text-zinc-100">{title}</h3>}
           <div className="flex items-center gap-2">
             {copyable && (
               <Button

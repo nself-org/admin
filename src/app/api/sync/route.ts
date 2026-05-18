@@ -43,7 +43,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to get sync status',
         details: err.message,
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -66,14 +66,11 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     if (dryRun) args.push('--dry-run')
     if (force) args.push('--force')
 
-    const { stdout } = await execAsync(
-      `${nselfPath} ${args.join(' ')} --json`,
-      {
-        cwd: projectPath,
-        env: { ...process.env, PATH: getEnhancedPath() },
-        timeout: 600000,
-      },
-    )
+    const { stdout } = await execAsync(`${nselfPath} ${args.join(' ')} --json`, {
+      cwd: projectPath,
+      env: { ...process.env, PATH: getEnhancedPath() },
+      timeout: 600000,
+    })
 
     const result = JSON.parse(stdout)
 
@@ -91,7 +88,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     logger.error('Failed to sync', { error: err.message })
     return NextResponse.json(
       { success: false, error: 'Failed to sync', details: err.message },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

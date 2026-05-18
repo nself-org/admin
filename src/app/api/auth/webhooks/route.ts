@@ -17,7 +17,7 @@ export async function GET(): Promise<NextResponse> {
           error: 'Failed to list webhooks',
           details: result.error || result.stderr || 'Unknown error',
         },
-        { status: 500 },
+        { status: 500 }
       )
     }
 
@@ -32,7 +32,7 @@ export async function GET(): Promise<NextResponse> {
         error: 'Failed to list webhooks',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -68,17 +68,14 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     if (!url || typeof url !== 'string') {
       return NextResponse.json(
         { success: false, error: 'Webhook URL is required' },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
     try {
       new URL(url)
     } catch (_urlError) {
-      return NextResponse.json(
-        { success: false, error: 'Invalid URL format' },
-        { status: 400 },
-      )
+      return NextResponse.json({ success: false, error: 'Invalid URL format' }, { status: 400 })
     }
 
     // Validate events
@@ -88,7 +85,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           success: false,
           error: 'At least one event type is required',
         },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -99,16 +96,11 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           success: false,
           error: `Invalid event types: ${invalidEvents.join(', ')}. Valid events: ${VALID_EVENTS.join(', ')}`,
         },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
-    const args = [
-      'webhooks',
-      'create',
-      `--url=${url}`,
-      `--events=${events.join(',')}`,
-    ]
+    const args = ['webhooks', 'create', `--url=${url}`, `--events=${events.join(',')}`]
 
     if (secret && typeof secret === 'string') {
       args.push(`--secret=${secret}`)
@@ -123,7 +115,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           error: 'Failed to create webhook',
           details: result.error || result.stderr || 'Unknown error',
         },
-        { status: 500 },
+        { status: 500 }
       )
     }
 
@@ -138,7 +130,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to create webhook',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

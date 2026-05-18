@@ -34,12 +34,7 @@ function SyncContent() {
     dryRun: true,
   })
 
-  const environments: Environment[] = [
-    'local',
-    'development',
-    'staging',
-    'production',
-  ]
+  const environments: Environment[] = ['local', 'development', 'staging', 'production']
 
   const fetchRecentSyncs = useCallback(async () => {
     setLoading(true)
@@ -48,22 +43,17 @@ function SyncContent() {
       const res = await fetch('/api/sync')
       if (!res.ok) {
         const data = await res.json().catch(() => ({}))
-        throw new Error(
-          (data as { error?: string }).error ?? `HTTP ${res.status}`,
-        )
+        throw new Error((data as { error?: string }).error ?? `HTTP ${res.status}`)
       }
       const data = (await res.json()) as {
         history?: SyncOperation[]
         recentSyncs?: SyncOperation[]
       }
-      const history: SyncOperation[] =
-        data.history ?? data.recentSyncs ?? []
+      const history: SyncOperation[] = data.history ?? data.recentSyncs ?? []
       setRecentSyncs(history)
       setUiState(history.length === 0 ? 'empty' : 'data')
     } catch (err) {
-      setError(
-        err instanceof Error ? err.message : 'Failed to load sync history',
-      )
+      setError(err instanceof Error ? err.message : 'Failed to load sync history')
       setUiState('error')
     } finally {
       setLoading(false)
@@ -252,9 +242,7 @@ function SyncContent() {
                   }
                   className="h-4 w-4 rounded border-zinc-300 text-teal-600 focus:ring-teal-500"
                 />
-                <span className="text-sm text-zinc-700 dark:text-zinc-300">
-                  Sync secrets
-                </span>
+                <span className="text-sm text-zinc-700 dark:text-zinc-300">Sync secrets</span>
                 {syncOptions.secrets && (
                   <span className="rounded bg-yellow-100 px-2 py-0.5 text-xs font-medium text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400">
                     Requires elevated permissions
@@ -283,9 +271,7 @@ function SyncContent() {
                 <input
                   type="checkbox"
                   checked={syncOptions.dryRun}
-                  onChange={(e) =>
-                    setSyncOptions({ ...syncOptions, dryRun: e.target.checked })
-                  }
+                  onChange={(e) => setSyncOptions({ ...syncOptions, dryRun: e.target.checked })}
                   className="h-4 w-4 rounded border-zinc-300 text-teal-600 focus:ring-teal-500"
                 />
                 <span className="text-sm text-zinc-700 dark:text-zinc-300">
@@ -304,8 +290,8 @@ function SyncContent() {
                   Production Warning
                 </p>
                 <p className="text-sm text-yellow-700 dark:text-yellow-400">
-                  You are about to sync changes to production. Please ensure all
-                  changes have been tested in staging first.
+                  You are about to sync changes to production. Please ensure all changes have been
+                  tested in staging first.
                 </p>
               </div>
             </div>
@@ -347,54 +333,52 @@ function SyncContent() {
               </p>
             </div>
           ) : (
-          <div className="space-y-4">
-            {recentSyncs.map((sync) => (
-              <div
-                key={sync.id}
-                className="rounded-lg border border-zinc-200 p-4 dark:border-zinc-700"
-              >
-                <div className="flex items-start justify-between">
-                  <div>
-                    <div className="mb-2 flex items-center gap-3">
-                      <span className="rounded bg-zinc-100 px-2 py-0.5 text-sm font-medium text-zinc-700 capitalize dark:bg-zinc-700 dark:text-zinc-300">
-                        {sync.source}
-                      </span>
-                      <ArrowRight className="h-4 w-4 text-zinc-400" />
-                      <span className="rounded bg-zinc-100 px-2 py-0.5 text-sm font-medium text-zinc-700 capitalize dark:bg-zinc-700 dark:text-zinc-300">
-                        {sync.target}
-                      </span>
-                      {sync.status === 'completed' ? (
-                        <CheckCircle className="h-4 w-4 text-green-500" />
-                      ) : sync.status === 'failed' ? (
-                        <XCircle className="h-4 w-4 text-red-500" />
-                      ) : (
-                        <RefreshCw className="h-4 w-4 animate-spin text-blue-500" />
+            <div className="space-y-4">
+              {recentSyncs.map((sync) => (
+                <div
+                  key={sync.id}
+                  className="rounded-lg border border-zinc-200 p-4 dark:border-zinc-700"
+                >
+                  <div className="flex items-start justify-between">
+                    <div>
+                      <div className="mb-2 flex items-center gap-3">
+                        <span className="rounded bg-zinc-100 px-2 py-0.5 text-sm font-medium text-zinc-700 capitalize dark:bg-zinc-700 dark:text-zinc-300">
+                          {sync.source}
+                        </span>
+                        <ArrowRight className="h-4 w-4 text-zinc-400" />
+                        <span className="rounded bg-zinc-100 px-2 py-0.5 text-sm font-medium text-zinc-700 capitalize dark:bg-zinc-700 dark:text-zinc-300">
+                          {sync.target}
+                        </span>
+                        {sync.status === 'completed' ? (
+                          <CheckCircle className="h-4 w-4 text-green-500" />
+                        ) : sync.status === 'failed' ? (
+                          <XCircle className="h-4 w-4 text-red-500" />
+                        ) : (
+                          <RefreshCw className="h-4 w-4 animate-spin text-blue-500" />
+                        )}
+                      </div>
+                      {sync.changes && (
+                        <div className="flex gap-4 text-sm text-zinc-500 dark:text-zinc-400">
+                          <span>{sync.changes.variables} variables</span>
+                          <span>{sync.changes.secrets} secrets</span>
+                          <span>{sync.changes.services} services</span>
+                        </div>
+                      )}
+                      {sync.error && (
+                        <p className="mt-1 text-sm text-red-600 dark:text-red-400">{sync.error}</p>
                       )}
                     </div>
-                    {sync.changes && (
-                      <div className="flex gap-4 text-sm text-zinc-500 dark:text-zinc-400">
-                        <span>{sync.changes.variables} variables</span>
-                        <span>{sync.changes.secrets} secrets</span>
-                        <span>{sync.changes.services} services</span>
+                    <div className="text-right text-sm text-zinc-500">
+                      <div className="flex items-center gap-1">
+                        <Clock className="h-4 w-4" />
+                        {new Date(sync.startedAt).toLocaleString()}
                       </div>
-                    )}
-                    {sync.error && (
-                      <p className="mt-1 text-sm text-red-600 dark:text-red-400">
-                        {sync.error}
-                      </p>
-                    )}
-                  </div>
-                  <div className="text-right text-sm text-zinc-500">
-                    <div className="flex items-center gap-1">
-                      <Clock className="h-4 w-4" />
-                      {new Date(sync.startedAt).toLocaleString()}
+                      <p className="mt-1">{sync.syncedBy}</p>
                     </div>
-                    <p className="mt-1">{sync.syncedBy}</p>
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
           )}
         </div>
 
@@ -405,24 +389,19 @@ function SyncContent() {
           </h3>
           <div className="space-y-2 font-mono text-sm">
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-teal-500">nself sync staging prod</span> -
-              Sync staging to production
+              <span className="text-teal-500">nself sync staging prod</span> - Sync staging to
+              production
             </p>
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-teal-500">
-                nself sync staging prod --dry-run
-              </span>{' '}
-              - Preview changes
+              <span className="text-teal-500">nself sync staging prod --dry-run</span> - Preview
+              changes
             </p>
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-teal-500">
-                nself sync staging prod --include-secrets
-              </span>{' '}
-              - Include secrets
+              <span className="text-teal-500">nself sync staging prod --include-secrets</span> -
+              Include secrets
             </p>
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-teal-500">nself sync --history</span> - View
-              sync history
+              <span className="text-teal-500">nself sync --history</span> - View sync history
             </p>
           </div>
         </div>

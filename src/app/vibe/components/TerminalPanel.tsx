@@ -1,10 +1,6 @@
 'use client'
 
-import type {
-  ApplyStatus,
-  TargetEnv,
-  VibeGeneration,
-} from '@/app/vibe/hooks/useVibeSession'
+import type { ApplyStatus, TargetEnv, VibeGeneration } from '@/app/vibe/hooks/useVibeSession'
 import type { StreamChunk } from '@/app/vibe/hooks/useVibeStream'
 import { AlertTriangle, CheckCircle2, Loader2, Terminal } from 'lucide-react'
 import { useCallback, useEffect, useRef, useState } from 'react'
@@ -39,9 +35,7 @@ export function TerminalPanel({
   const isProd = targetEnv === 'prod'
   const prodPhraseValid = !isProd || confirmPhrase === 'confirm-prod'
   const canApply =
-    generation?.status === 'done' &&
-    generation.applied_at === null &&
-    applyStatus === 'idle'
+    generation?.status === 'done' && generation.applied_at === null && applyStatus === 'idle'
 
   // Auto-scroll terminal
   useEffect(() => {
@@ -128,11 +122,7 @@ export function TerminalPanel({
   })
 
   return (
-    <section
-      role="region"
-      aria-label="Terminal"
-      className="flex h-full flex-col"
-    >
+    <section role="region" aria-label="Terminal" className="flex h-full flex-col">
       <div className="flex items-center justify-between border-b border-zinc-800 px-4 py-3">
         <h2 className="flex items-center gap-2 text-sm font-semibold text-zinc-100">
           <Terminal className="h-3.5 w-3.5 text-zinc-400" aria-hidden="true" />
@@ -214,10 +204,7 @@ export function TerminalPanel({
               id="confirm-title"
               className="flex items-center gap-2 text-sm font-semibold text-zinc-100"
             >
-              <AlertTriangle
-                className="h-4 w-4 text-amber-400"
-                aria-hidden="true"
-              />
+              <AlertTriangle className="h-4 w-4 text-amber-400" aria-hidden="true" />
               Confirm Apply
               {isProd && (
                 <span className="rounded bg-red-500 px-1.5 py-0.5 text-xs text-white">
@@ -227,22 +214,15 @@ export function TerminalPanel({
             </h3>
 
             <p id="confirm-desc" className="mt-2 text-xs text-zinc-400">
-              This will run the migration, update Hasura permissions, and write
-              UI files to your{' '}
-              <strong className="text-zinc-200">{targetEnv}</strong>{' '}
-              environment. This cannot be undone automatically.
+              This will run the migration, update Hasura permissions, and write UI files to your{' '}
+              <strong className="text-zinc-200">{targetEnv}</strong> environment. This cannot be
+              undone automatically.
             </p>
 
             {isProd && (
               <div className="mt-3">
-                <label
-                  htmlFor="prod-confirm-phrase"
-                  className="text-xs font-medium text-zinc-300"
-                >
-                  Type{' '}
-                  <code className="rounded bg-zinc-800 px-1 text-sky-400">
-                    confirm-prod
-                  </code>{' '}
+                <label htmlFor="prod-confirm-phrase" className="text-xs font-medium text-zinc-300">
+                  Type <code className="rounded bg-zinc-800 px-1 text-sky-400">confirm-prod</code>{' '}
                   to confirm
                 </label>
                 <input
@@ -276,10 +256,7 @@ export function TerminalPanel({
               </button>
             </div>
             {!countdownDone && (
-              <p
-                id="countdown-desc"
-                className="mt-2 text-center text-xs text-zinc-600"
-              >
+              <p id="countdown-desc" className="mt-2 text-center text-xs text-zinc-600">
                 Review the diff before applying
               </p>
             )}

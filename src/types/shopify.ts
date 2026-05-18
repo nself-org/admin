@@ -54,19 +54,8 @@ export interface ShopifyOrder {
   totalDiscounts: number
   totalShipping: number
   currency: string
-  financialStatus:
-    | 'pending'
-    | 'authorized'
-    | 'paid'
-    | 'partially_paid'
-    | 'refunded'
-    | 'voided'
-  fulfillmentStatus:
-    | 'fulfilled'
-    | 'partial'
-    | 'unfulfilled'
-    | 'restocked'
-    | null
+  financialStatus: 'pending' | 'authorized' | 'paid' | 'partially_paid' | 'refunded' | 'voided'
+  fulfillmentStatus: 'fulfilled' | 'partial' | 'unfulfilled' | 'restocked' | null
   lineItemsCount: number
   customerName?: string
   shippingAddress?: {

@@ -248,12 +248,8 @@ app.kubernetes.io/instance: {{ .Release.Name }}
           <ArrowLeft className="h-5 w-5" />
         </Link>
         <div>
-          <h1 className="text-2xl font-semibold text-white">
-            Initialize Helm Chart
-          </h1>
-          <p className="text-sm text-zinc-400">
-            Create a new Helm chart structure
-          </p>
+          <h1 className="text-2xl font-semibold text-white">Initialize Helm Chart</h1>
+          <p className="text-sm text-zinc-400">Create a new Helm chart structure</p>
         </div>
       </div>
 
@@ -261,15 +257,11 @@ app.kubernetes.io/instance: {{ .Release.Name }}
         {/* Configuration */}
         <div className="space-y-4">
           <div className="rounded-lg border border-zinc-700/50 bg-zinc-800/50 p-4">
-            <h2 className="mb-4 font-semibold text-white">
-              Chart Configuration
-            </h2>
+            <h2 className="mb-4 font-semibold text-white">Chart Configuration</h2>
 
             <div className="space-y-4">
               <div>
-                <label className="mb-1 block text-sm text-zinc-400">
-                  Chart Name
-                </label>
+                <label className="mb-1 block text-sm text-zinc-400">Chart Name</label>
                 <input
                   type="text"
                   value={chartName}
@@ -280,9 +272,7 @@ app.kubernetes.io/instance: {{ .Release.Name }}
               </div>
 
               <div>
-                <label className="mb-1 block text-sm text-zinc-400">
-                  Chart Version
-                </label>
+                <label className="mb-1 block text-sm text-zinc-400">Chart Version</label>
                 <input
                   type="text"
                   value={chartVersion}
@@ -293,9 +283,7 @@ app.kubernetes.io/instance: {{ .Release.Name }}
               </div>
 
               <div>
-                <label className="mb-1 block text-sm text-zinc-400">
-                  App Version
-                </label>
+                <label className="mb-1 block text-sm text-zinc-400">App Version</label>
                 <input
                   type="text"
                   value={appVersion}
@@ -306,9 +294,7 @@ app.kubernetes.io/instance: {{ .Release.Name }}
               </div>
 
               <div>
-                <label className="mb-1 block text-sm text-zinc-400">
-                  Description
-                </label>
+                <label className="mb-1 block text-sm text-zinc-400">Description</label>
                 <textarea
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
@@ -340,9 +326,7 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 
           {/* CLI Command */}
           <div className="rounded-lg border border-zinc-700/50 bg-zinc-800/50 p-4">
-            <h3 className="mb-2 text-sm font-medium text-zinc-400">
-              Or use CLI
-            </h3>
+            <h3 className="mb-2 text-sm font-medium text-zinc-400">Or use CLI</h3>
             <code className="block rounded bg-zinc-900 p-3 text-sm text-sky-400">
               helm create {chartName || 'my-chart'}
             </code>
@@ -391,9 +375,7 @@ app.kubernetes.io/instance: {{ .Release.Name }}
             <div className="flex flex-col items-center justify-center rounded-lg border border-zinc-700/50 bg-zinc-800/50 p-12 text-center">
               <FolderTree className="mb-4 h-12 w-12 text-zinc-500" />
               <p className="text-zinc-400">No files generated yet</p>
-              <p className="text-sm text-zinc-500">
-                Configure your chart and click Generate
-              </p>
+              <p className="text-sm text-zinc-500">Configure your chart and click Generate</p>
             </div>
           )}
         </div>
@@ -425,14 +407,10 @@ app.kubernetes.io/instance: {{ .Release.Name }}
           {selectedFile ? (
             <div className="mt-4 overflow-hidden rounded-lg border border-zinc-700/50 bg-zinc-900">
               <div className="border-b border-zinc-700/50 bg-zinc-800/50 px-4 py-2">
-                <span className="font-mono text-sm text-zinc-400">
-                  {selectedFile.path}
-                </span>
+                <span className="font-mono text-sm text-zinc-400">{selectedFile.path}</span>
               </div>
               <pre className="max-h-[500px] overflow-auto p-4">
-                <code className="font-mono text-sm text-zinc-300">
-                  {selectedFile.content}
-                </code>
+                <code className="font-mono text-sm text-zinc-300">{selectedFile.content}</code>
               </pre>
             </div>
           ) : (
@@ -450,12 +428,10 @@ app.kubernetes.io/instance: {{ .Release.Name }}
           <div className="flex items-start gap-3">
             <CheckCircle className="mt-0.5 h-5 w-5 text-emerald-400" />
             <div>
-              <h3 className="font-medium text-emerald-400">
-                Chart Generated Successfully
-              </h3>
+              <h3 className="font-medium text-emerald-400">Chart Generated Successfully</h3>
               <p className="mt-1 text-sm text-zinc-400">
-                {files.length} files have been generated. You can now customize
-                the values and install the chart.
+                {files.length} files have been generated. You can now customize the values and
+                install the chart.
               </p>
               <div className="mt-3 flex items-center gap-3">
                 <Link

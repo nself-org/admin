@@ -15,7 +15,7 @@ self.addEventListener('install', (event) => {
       return cache.addAll(urlsToCache).catch((err) => {
         console.error('Failed to cache resources:', err)
       })
-    }),
+    })
   )
   self.skipWaiting()
 })
@@ -28,9 +28,9 @@ self.addEventListener('activate', (event) => {
           if (cacheName !== CACHE_NAME) {
             return caches.delete(cacheName)
           }
-        }),
+        })
       )
-    }),
+    })
   )
   self.clients.claim()
 })
@@ -68,6 +68,6 @@ self.addEventListener('fetch', (event) => {
             return caches.match(OFFLINE_URL)
           }
         })
-      }),
+      })
   )
 })

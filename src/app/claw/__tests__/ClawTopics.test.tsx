@@ -76,9 +76,7 @@ describe('TopicsPage', () => {
   it('renders the Topics header', () => {
     render(<TopicsPage />)
     expect(screen.getByText('Topics')).toBeInTheDocument()
-    expect(
-      screen.getByText('Auto-detected conversation topics'),
-    ).toBeInTheDocument()
+    expect(screen.getByText('Auto-detected conversation topics')).toBeInTheDocument()
   })
 
   it('shows a search input', () => {
@@ -159,14 +157,9 @@ describe('TopicsPage', () => {
     await waitFor(() => {
       expect(screen.getByText('Machine Learning')).toBeInTheDocument()
     })
-    await user.type(
-      screen.getByPlaceholderText('Search topics...'),
-      'xyznotfound',
-    )
+    await user.type(screen.getByPlaceholderText('Search topics...'), 'xyznotfound')
     await waitFor(() => {
-      expect(
-        screen.getByText('No topics match your search'),
-      ).toBeInTheDocument()
+      expect(screen.getByText('No topics match your search')).toBeInTheDocument()
     })
   })
 
@@ -193,9 +186,7 @@ describe('TopicsPage', () => {
     const user = userEvent.setup()
     render(<TopicsPage />)
     await waitFor(() => {
-      expect(
-        screen.getByRole('button', { name: /Refresh/i }),
-      ).toBeInTheDocument()
+      expect(screen.getByRole('button', { name: /Refresh/i })).toBeInTheDocument()
     })
     const before = mockFetch.mock.calls.length
     await user.click(screen.getByRole('button', { name: /Refresh/i }))

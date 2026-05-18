@@ -23,14 +23,11 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     if (body.namespace) args.push(`--namespace=${body.namespace}`)
     if (body.dryRun) args.push('--dry-run')
 
-    const { stdout } = await execAsync(
-      `${nselfPath} ${args.join(' ')} --json`,
-      {
-        cwd: projectPath,
-        env: { ...process.env, PATH: getEnhancedPath() },
-        timeout: 180000,
-      },
-    )
+    const { stdout } = await execAsync(`${nselfPath} ${args.join(' ')} --json`, {
+      cwd: projectPath,
+      env: { ...process.env, PATH: getEnhancedPath() },
+      timeout: 180000,
+    })
 
     const result = JSON.parse(stdout)
 
@@ -50,7 +47,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to apply K8s manifests',
         details: err.message,
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

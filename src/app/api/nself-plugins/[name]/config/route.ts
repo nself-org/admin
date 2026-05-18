@@ -7,10 +7,7 @@ import { NextRequest, NextResponse } from 'next/server'
  * and accepts any shape on PUT.
  */
 
-export async function GET(
-  request: NextRequest,
-  context: { params: Promise<{ name: string }> },
-) {
+export async function GET(request: NextRequest, context: { params: Promise<{ name: string }> }) {
   const { name } = await context.params
   if (!/^[a-z0-9-]+$/.test(name)) {
     return NextResponse.json({ error: 'Invalid plugin name.' }, { status: 400 })
@@ -32,10 +29,7 @@ export async function GET(
   return NextResponse.json({ env: starters[name] ?? {} })
 }
 
-export async function PUT(
-  request: NextRequest,
-  context: { params: Promise<{ name: string }> },
-) {
+export async function PUT(request: NextRequest, context: { params: Promise<{ name: string }> }) {
   const authError = await requireAuth(request)
   if (authError) return authError
 
@@ -46,10 +40,7 @@ export async function PUT(
   try {
     const body = (await request.json()) as { env: Record<string, string> }
     if (typeof body.env !== 'object' || body.env === null) {
-      return NextResponse.json(
-        { error: 'env must be an object.' },
-        { status: 400 },
-      )
+      return NextResponse.json({ error: 'env must be an object.' }, { status: 400 })
     }
     return NextResponse.json({
       success: true,

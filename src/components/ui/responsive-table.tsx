@@ -56,9 +56,7 @@ export function ResponsiveTable<T extends { id: string | number }>({
   return (
     <>
       {/* Desktop: Table */}
-      <div
-        className={`hidden overflow-hidden rounded-xl md:block ${className}`}
-      >
+      <div className={`hidden overflow-hidden rounded-xl md:block ${className}`}>
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead className="border-b border-zinc-200 bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-800/50">
@@ -91,15 +89,9 @@ export function ResponsiveTable<T extends { id: string | number }>({
             </thead>
             <tbody className="divide-y divide-zinc-100 dark:divide-zinc-800">
               {data.map((row) => (
-                <tr
-                  key={row.id}
-                  className="hover:bg-zinc-50 dark:hover:bg-zinc-800/50"
-                >
+                <tr key={row.id} className="hover:bg-zinc-50 dark:hover:bg-zinc-800/50">
                   {columns.map((column) => (
-                    <td
-                      key={column.key}
-                      className={`px-4 py-3 ${column.className || ''}`}
-                    >
+                    <td key={column.key} className={`px-4 py-3 ${column.className || ''}`}>
                       {column.render(row)}
                     </td>
                   ))}
@@ -187,22 +179,14 @@ export function MobileDataCard({
         <div className="flex items-center gap-2">
           {Icon && <Icon className="h-5 w-5 text-zinc-500" />}
           <div>
-            <div className="font-medium text-zinc-900 dark:text-white">
-              {title}
-            </div>
-            {subtitle && (
-              <div className="text-xs text-zinc-500">{subtitle}</div>
-            )}
+            <div className="font-medium text-zinc-900 dark:text-white">{title}</div>
+            {subtitle && <div className="text-xs text-zinc-500">{subtitle}</div>}
           </div>
         </div>
         {status && (
           <div className="flex items-center gap-2">
-            <div
-              className={`h-2 w-2 rounded-full ${statusColors[status.color]}`}
-            />
-            <span className={`text-sm ${statusTextColors[status.color]}`}>
-              {status.text}
-            </span>
+            <div className={`h-2 w-2 rounded-full ${statusColors[status.color]}`} />
+            <span className={`text-sm ${statusTextColors[status.color]}`}>{status.text}</span>
           </div>
         )}
       </div>

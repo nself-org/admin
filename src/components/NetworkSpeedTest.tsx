@@ -106,19 +106,13 @@ export default function NetworkSpeedTest() {
 
         <div className="grid grid-cols-2 gap-3 text-xs">
           <div className="space-y-1">
-            <div className="text-muted-foreground">
-              Interface (Wi-Fi/Ethernet)
-            </div>
+            <div className="text-muted-foreground">Interface (Wi-Fi/Ethernet)</div>
             <div className="flex items-center gap-2">
               <Wifi className="h-3 w-3" />
-              <span
-                className={bottleneck === 'interface' ? 'text-yellow-500' : ''}
-              >
+              <span className={bottleneck === 'interface' ? 'text-yellow-500' : ''}>
                 {speedInfo.interface.speedText}
               </span>
-              {bottleneck === 'interface' && (
-                <AlertCircle className="h-3 w-3 text-yellow-500" />
-              )}
+              {bottleneck === 'interface' && <AlertCircle className="h-3 w-3 text-yellow-500" />}
             </div>
           </div>
 
@@ -129,9 +123,7 @@ export default function NetworkSpeedTest() {
               <span className={bottleneck === 'isp' ? 'text-yellow-500' : ''}>
                 {speedInfo.isp.speedText}
               </span>
-              {bottleneck === 'isp' && (
-                <AlertCircle className="h-3 w-3 text-yellow-500" />
-              )}
+              {bottleneck === 'isp' && <AlertCircle className="h-3 w-3 text-yellow-500" />}
             </div>
           </div>
         </div>
@@ -139,9 +131,7 @@ export default function NetworkSpeedTest() {
         <div className="border-t pt-2">
           <div className="flex items-center justify-between">
             <div>
-              <div className="text-muted-foreground text-xs">
-                Effective Speed
-              </div>
+              <div className="text-muted-foreground text-xs">Effective Speed</div>
               <div className="flex items-center gap-2 text-sm font-medium">
                 <CheckCircle2 className="h-3 w-3 text-green-500" />
                 {speedInfo.effective.speedText}
@@ -160,9 +150,7 @@ export default function NetworkSpeedTest() {
           </div>
 
           {testResult && (
-            <div className="mt-2 text-xs text-green-500">
-              Speed test result: {testResult} Mbps
-            </div>
+            <div className="mt-2 text-xs text-green-500">Speed test result: {testResult} Mbps</div>
           )}
 
           {speedInfo.isp.estimated && (

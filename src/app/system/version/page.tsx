@@ -74,18 +74,18 @@ function VersionContent() {
   // State 5: Offline
   if (offline) {
     return (
-      <div className="p-6 space-y-4">
-        <div className="flex items-center gap-3 p-4 rounded-lg bg-yellow-500/10 border border-yellow-500/30">
-          <WifiOff className="h-5 w-5 text-yellow-500 flex-shrink-0" />
+      <div className="space-y-4 p-6">
+        <div className="flex items-center gap-3 rounded-lg border border-yellow-500/30 bg-yellow-500/10 p-4">
+          <WifiOff className="h-5 w-5 flex-shrink-0 text-yellow-500" />
           <div>
             <p className="font-medium text-yellow-400">Cannot reach nself CLI</p>
-            <p className="text-sm text-gray-400 mt-0.5">
+            <p className="mt-0.5 text-sm text-gray-400">
               Verify the nself binary is installed and on PATH.
             </p>
           </div>
         </div>
         <Button onClick={fetchVersion} disabled={loading} variant="secondary" size="sm">
-          <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
+          <RefreshCw className={`mr-2 h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
           Retry
         </Button>
       </div>
@@ -95,16 +95,16 @@ function VersionContent() {
   // State 4: Error
   if (error && !info) {
     return (
-      <div className="p-6 space-y-4">
-        <div className="flex items-center gap-3 p-4 rounded-lg bg-red-500/10 border border-red-500/30">
-          <AlertTriangle className="h-5 w-5 text-red-400 flex-shrink-0" />
+      <div className="space-y-4 p-6">
+        <div className="flex items-center gap-3 rounded-lg border border-red-500/30 bg-red-500/10 p-4">
+          <AlertTriangle className="h-5 w-5 flex-shrink-0 text-red-400" />
           <div>
             <p className="font-medium text-red-400">Failed to load version info</p>
-            <p className="text-sm text-gray-400 mt-0.5">{error}</p>
+            <p className="mt-0.5 text-sm text-gray-400">{error}</p>
           </div>
         </div>
         <Button onClick={fetchVersion} disabled={loading} variant="secondary" size="sm">
-          <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
+          <RefreshCw className={`mr-2 h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
           Retry
         </Button>
       </div>
@@ -115,10 +115,16 @@ function VersionContent() {
   if (!info) {
     return (
       <div className="p-6 text-center text-gray-400">
-        <Binary className="h-8 w-8 mx-auto mb-2 opacity-50" />
+        <Binary className="mx-auto mb-2 h-8 w-8 opacity-50" />
         <p>No version information available.</p>
-        <Button onClick={fetchVersion} disabled={loading} variant="secondary" size="sm" className="mt-3">
-          <RefreshCw className="h-4 w-4 mr-2" />
+        <Button
+          onClick={fetchVersion}
+          disabled={loading}
+          variant="secondary"
+          size="sm"
+          className="mt-3"
+        >
+          <RefreshCw className="mr-2 h-4 w-4" />
           Load Info
         </Button>
       </div>
@@ -153,43 +159,39 @@ function VersionContent() {
 
   // States 6 + 7: Success
   return (
-    <div className="p-6 space-y-6">
+    <div className="space-y-6 p-6">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-xl font-semibold text-white">Version Information</h2>
-          <p className="text-sm text-gray-400 mt-1">System and component version details</p>
+          <p className="mt-1 text-sm text-gray-400">System and component version details</p>
         </div>
-        <Button
-          onClick={fetchVersion}
-          disabled={loading}
-          variant="secondary"
-          size="sm"
-        >
+        <Button onClick={fetchVersion} disabled={loading} variant="secondary" size="sm">
           {/* State 2: Refresh spinner */}
-          <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
+          <RefreshCw className={`mr-2 h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
           {loading ? 'Refreshing…' : 'Refresh'}
         </Button>
       </div>
 
       {/* Version highlight card */}
-      <div className="flex items-center gap-4 p-5 rounded-xl border border-sky-500/30 bg-sky-500/5">
-        <CheckCircle className="h-8 w-8 text-sky-400 flex-shrink-0" />
+      <div className="flex items-center gap-4 rounded-xl border border-sky-500/30 bg-sky-500/5 p-5">
+        <CheckCircle className="h-8 w-8 flex-shrink-0 text-sky-400" />
         <div>
           <p className="text-sm text-gray-400">nself CLI</p>
-          <p className="text-3xl font-mono font-bold text-white">{info.version}</p>
+          <p className="font-mono text-3xl font-bold text-white">{info.version}</p>
         </div>
       </div>
 
       {/* Details list */}
-      <div className="rounded-lg border border-white/10 overflow-hidden divide-y divide-white/5">
+      <div className="divide-y divide-white/5 overflow-hidden rounded-lg border border-white/10">
         {rows.map((row, i) => (
-          <div key={i} className="flex items-center gap-4 px-4 py-3 hover:bg-white/[0.02] transition-colors">
-            <div className="flex-shrink-0 w-5 flex items-center justify-center">
-              {row.icon}
-            </div>
-            <span className="text-gray-400 text-sm w-40 flex-shrink-0">{row.label}</span>
-            <span className={`text-white text-sm flex-1 ${row.mono ? 'font-mono' : ''}`}>
+          <div
+            key={i}
+            className="flex items-center gap-4 px-4 py-3 transition-colors hover:bg-white/[0.02]"
+          >
+            <div className="flex w-5 flex-shrink-0 items-center justify-center">{row.icon}</div>
+            <span className="w-40 flex-shrink-0 text-sm text-gray-400">{row.label}</span>
+            <span className={`flex-1 text-sm text-white ${row.mono ? 'font-mono' : ''}`}>
               {row.value}
             </span>
           </div>

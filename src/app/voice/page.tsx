@@ -56,20 +56,12 @@ function StatusBadge({ status }: { status: PluginStatus }) {
 
 // ── Speed slider ──────────────────────────────────────────────────────────────
 
-function SpeedSlider({
-  value,
-  onChange,
-}: {
-  value: number
-  onChange: (v: number) => void
-}) {
+function SpeedSlider({ value, onChange }: { value: number; onChange: (v: number) => void }) {
   return (
     <div className="space-y-1.5">
       <div className="flex items-center justify-between">
         <label className="text-sm font-medium text-zinc-300">Speed</label>
-        <span className="text-sm font-medium text-sky-300">
-          {value.toFixed(1)}×
-        </span>
+        <span className="text-sm font-medium text-sky-300">{value.toFixed(1)}×</span>
       </div>
       <input
         type="range"
@@ -156,11 +148,8 @@ export default function VoiceConfigPage() {
 
   useEffect(() => {
     try {
-      const storedProvider = sessionStorage.getItem(
-        'voice_provider',
-      ) as Provider | null
-      const storedVoiceId =
-        sessionStorage.getItem('voice_elevenlabs_voice_id') ?? ''
+      const storedProvider = sessionStorage.getItem('voice_provider') as Provider | null
+      const storedVoiceId = sessionStorage.getItem('voice_elevenlabs_voice_id') ?? ''
 
       if (storedProvider === 'elevenlabs' || storedProvider === 'piper') {
         setProvider(storedProvider)
@@ -230,9 +219,7 @@ export default function VoiceConfigPage() {
       })
       if (!res.ok) {
         const text = await res.text().catch(() => '')
-        setVoiceError(
-          `ElevenLabs API error ${res.status}${text ? ': ' + text.slice(0, 120) : ''}`,
-        )
+        setVoiceError(`ElevenLabs API error ${res.status}${text ? ': ' + text.slice(0, 120) : ''}`)
         return
       }
       const data = (await res.json()) as { voices: ElevenLabsVoice[] }
@@ -247,9 +234,7 @@ export default function VoiceConfigPage() {
         }
       }
     } catch {
-      setVoiceError(
-        'Failed to reach ElevenLabs API. Check your network connection.',
-      )
+      setVoiceError('Failed to reach ElevenLabs API. Check your network connection.')
     } finally {
       setFetchingVoices(false)
     }
@@ -291,7 +276,7 @@ export default function VoiceConfigPage() {
       if (!res.ok) {
         const text = await res.text().catch(() => '')
         setTestError(
-          `Voice synthesis failed (HTTP ${res.status})${text ? ': ' + text.slice(0, 200) : ''}.`,
+          `Voice synthesis failed (HTTP ${res.status})${text ? ': ' + text.slice(0, 200) : ''}.`
         )
         return
       }
@@ -299,9 +284,7 @@ export default function VoiceConfigPage() {
       const url = URL.createObjectURL(blob)
       setAudioSrc(url)
     } catch {
-      setTestError(
-        'Could not reach the voice plugin. Make sure nself-voice is running.',
-      )
+      setTestError('Could not reach the voice plugin. Make sure nself-voice is running.')
     } finally {
       setTesting(false)
     }
@@ -347,12 +330,10 @@ export default function VoiceConfigPage() {
           <div className="flex items-start gap-3">
             <AlertCircle className="mt-0.5 h-5 w-5 shrink-0 text-yellow-400" />
             <div>
-              <p className="font-medium text-yellow-300">
-                nself-voice is not running
-              </p>
+              <p className="font-medium text-yellow-300">nself-voice is not running</p>
               <p className="mt-1 text-sm text-yellow-400/80">
-                Install and start the voice plugin to test synthesis. You can
-                still configure settings below.
+                Install and start the voice plugin to test synthesis. You can still configure
+                settings below.
               </p>
             </div>
           </div>
@@ -369,9 +350,7 @@ export default function VoiceConfigPage() {
               type="button"
               onClick={() => handleProviderChange(p)}
               className={`flex items-center gap-2 rounded-md px-4 py-1.5 text-sm font-medium transition-colors ${
-                provider === p
-                  ? 'bg-sky-500 text-white'
-                  : 'text-zinc-400 hover:text-zinc-200'
+                provider === p ? 'bg-sky-500 text-white' : 'text-zinc-400 hover:text-zinc-200'
               }`}
             >
               {p === 'elevenlabs' ? (
@@ -393,9 +372,7 @@ export default function VoiceConfigPage() {
       {/* ElevenLabs section */}
       {provider === 'elevenlabs' && (
         <div className="space-y-5 rounded-xl border border-zinc-700/50 bg-zinc-800/30 p-5">
-          <h2 className="text-base font-semibold text-white">
-            ElevenLabs Settings
-          </h2>
+          <h2 className="text-base font-semibold text-white">ElevenLabs Settings</h2>
 
           {/* API key */}
           <div className="space-y-1.5">
@@ -415,11 +392,7 @@ export default function VoiceConfigPage() {
                   className="absolute inset-y-0 right-2.5 flex items-center text-zinc-500 hover:text-zinc-300"
                   aria-label={showKey ? 'Hide key' : 'Show key'}
                 >
-                  {showKey ? (
-                    <EyeOff className="h-4 w-4" />
-                  ) : (
-                    <Eye className="h-4 w-4" />
-                  )}
+                  {showKey ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                 </button>
               </div>
               <button
@@ -436,9 +409,7 @@ export default function VoiceConfigPage() {
                 Fetch Voices
               </button>
             </div>
-            {voiceError && (
-              <p className="mt-1 text-xs text-red-400">{voiceError}</p>
-            )}
+            {voiceError && <p className="mt-1 text-xs text-red-400">{voiceError}</p>}
           </div>
 
           {/* Voice dropdown */}
@@ -464,17 +435,13 @@ export default function VoiceConfigPage() {
               <ChevronDown className="pointer-events-none absolute inset-y-0 right-2.5 my-auto h-4 w-4 text-zinc-500" />
             </div>
             {voices.length > 0 && (
-              <p className="text-xs text-zinc-600">
-                {voices.length} voices loaded
-              </p>
+              <p className="text-xs text-zinc-600">{voices.length} voices loaded</p>
             )}
           </div>
 
           {/* Sample text */}
           <div className="space-y-1.5">
-            <label className="text-sm font-medium text-zinc-300">
-              Sample Text
-            </label>
+            <label className="text-sm font-medium text-zinc-300">Sample Text</label>
             <textarea
               value={sampleText}
               onChange={(e) => setSampleText(e.target.value)}
@@ -519,9 +486,7 @@ export default function VoiceConfigPage() {
 
           {/* Model path */}
           <div className="space-y-1.5">
-            <label className="text-sm font-medium text-zinc-300">
-              Model File Path
-            </label>
+            <label className="text-sm font-medium text-zinc-300">Model File Path</label>
             <input
               type="text"
               value={piperModelPath}
@@ -530,16 +495,13 @@ export default function VoiceConfigPage() {
               className="w-full rounded-lg border border-zinc-600/50 bg-zinc-800/50 px-3 py-2 text-sm text-zinc-100 placeholder-zinc-500 focus:border-sky-500/50 focus:ring-1 focus:ring-sky-500/30 focus:outline-none"
             />
             <p className="text-xs text-zinc-600">
-              Absolute path to the .onnx model file on the server running
-              nself-voice.
+              Absolute path to the .onnx model file on the server running nself-voice.
             </p>
           </div>
 
           {/* Sample text */}
           <div className="space-y-1.5">
-            <label className="text-sm font-medium text-zinc-300">
-              Sample Text
-            </label>
+            <label className="text-sm font-medium text-zinc-300">Sample Text</label>
             <textarea
               value={sampleText}
               onChange={(e) => setSampleText(e.target.value)}

@@ -44,8 +44,7 @@ export function RoleBadge({ role, size = 'sm' }: RoleBadgeProps) {
   const config = roleConfig[role]
   const Icon = config.icon
 
-  const sizeClasses =
-    size === 'sm' ? 'px-2 py-0.5 text-xs gap-1' : 'px-3 py-1 text-sm gap-1.5'
+  const sizeClasses = size === 'sm' ? 'px-2 py-0.5 text-xs gap-1' : 'px-3 py-1 text-sm gap-1.5'
 
   const iconSize = size === 'sm' ? 'h-3 w-3' : 'h-4 w-4'
 

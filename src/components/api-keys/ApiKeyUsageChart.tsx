@@ -6,14 +6,7 @@ import { Chart } from '@/components/ui/chart'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useApiKeyUsageStats } from '@/hooks/useApiKeys'
 import type { ApiKeyUsageStats } from '@/types/api-key'
-import {
-  Activity,
-  BarChart3,
-  CheckCircle2,
-  Clock,
-  TrendingUp,
-  XCircle,
-} from 'lucide-react'
+import { Activity, BarChart3, CheckCircle2, Clock, TrendingUp, XCircle } from 'lucide-react'
 
 interface ApiKeyUsageChartProps {
   /** API key ID to show usage for */
@@ -60,11 +53,7 @@ function StatCard({
           {typeof value === 'number' ? value.toLocaleString() : value}
         </p>
         <p className="text-sm text-zinc-500 dark:text-zinc-400">{label}</p>
-        {subValue && (
-          <p className="mt-1 text-xs text-zinc-400 dark:text-zinc-500">
-            {subValue}
-          </p>
-        )}
+        {subValue && <p className="mt-1 text-xs text-zinc-400 dark:text-zinc-500">{subValue}</p>}
       </div>
     </div>
   )
@@ -100,9 +89,7 @@ export function ApiKeyUsageChart({
   if (isError) {
     return (
       <div className="rounded-lg border border-red-200 bg-red-50 p-4 text-center dark:border-red-800 dark:bg-red-950">
-        <p className="text-sm text-red-600 dark:text-red-400">
-          Failed to load usage data: {error}
-        </p>
+        <p className="text-sm text-red-600 dark:text-red-400">Failed to load usage data: {error}</p>
       </div>
     )
   }
@@ -111,9 +98,7 @@ export function ApiKeyUsageChart({
     return (
       <div className="rounded-lg border border-dashed border-zinc-300 p-8 text-center dark:border-zinc-700">
         <BarChart3 className="mx-auto h-12 w-12 text-zinc-400" />
-        <h4 className="mt-4 text-sm font-medium text-zinc-900 dark:text-zinc-100">
-          No Usage Data
-        </h4>
+        <h4 className="mt-4 text-sm font-medium text-zinc-900 dark:text-zinc-100">No Usage Data</h4>
         <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
           This API key has not been used yet.
         </p>
@@ -129,31 +114,22 @@ export function ApiKeyUsageChart({
 
   // Transform endpoint data for chart
   const endpointData = stats.topEndpoints.slice(0, 5).map((item) => ({
-    name:
-      item.endpoint.length > 30
-        ? `${item.endpoint.slice(0, 30)}...`
-        : item.endpoint,
+    name: item.endpoint.length > 30 ? `${item.endpoint.slice(0, 30)}...` : item.endpoint,
     requests: item.count,
     avgTime: item.avgTime,
   }))
 
   // Transform status code data for pie chart
-  const statusData = Object.entries(stats.requestsByStatus).map(
-    ([status, count]) => ({
-      name: `${status}`,
-      value: count,
-    }),
-  )
+  const statusData = Object.entries(stats.requestsByStatus).map(([status, count]) => ({
+    name: `${status}`,
+    value: count,
+  }))
 
   if (compact) {
     return (
       <div className="space-y-4">
         <div className="grid gap-4 sm:grid-cols-2">
-          <StatCard
-            icon={Activity}
-            label="Total Requests"
-            value={stats.totalRequests}
-          />
+          <StatCard icon={Activity} label="Total Requests" value={stats.totalRequests} />
           <StatCard
             icon={Clock}
             label="Avg Response Time"
@@ -179,11 +155,7 @@ export function ApiKeyUsageChart({
     <div className="space-y-6">
       {/* Stats Grid */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <StatCard
-          icon={Activity}
-          label="Total Requests"
-          value={stats.totalRequests}
-        />
+        <StatCard icon={Activity} label="Total Requests" value={stats.totalRequests} />
         <StatCard
           icon={CheckCircle2}
           label="Successful"
@@ -247,12 +219,8 @@ export function ApiKeyUsageChart({
                     className="flex items-center justify-between text-sm"
                   >
                     <div className="flex items-center gap-2">
-                      <span className="font-mono text-zinc-600 dark:text-zinc-400">
-                        {i + 1}.
-                      </span>
-                      <code className="max-w-[200px] truncate text-xs">
-                        {endpoint.endpoint}
-                      </code>
+                      <span className="font-mono text-zinc-600 dark:text-zinc-400">{i + 1}.</span>
+                      <code className="max-w-[200px] truncate text-xs">{endpoint.endpoint}</code>
                     </div>
                     <div className="flex items-center gap-2">
                       <Badge variant="secondary" className="text-xs">
@@ -285,33 +253,27 @@ export function ApiKeyUsageChart({
                 showLegend={true}
               />
               <div className="mt-4 grid grid-cols-2 gap-2">
-                {Object.entries(stats.requestsByStatus).map(
-                  ([status, count]) => {
-                    const statusNum = parseInt(status)
-                    const variant =
-                      statusNum < 300
-                        ? 'bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300'
-                        : statusNum < 400
-                          ? 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300'
-                          : statusNum < 500
-                            ? 'bg-amber-100 text-amber-700 dark:bg-amber-900 dark:text-amber-300'
-                            : 'bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300'
+                {Object.entries(stats.requestsByStatus).map(([status, count]) => {
+                  const statusNum = parseInt(status)
+                  const variant =
+                    statusNum < 300
+                      ? 'bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300'
+                      : statusNum < 400
+                        ? 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300'
+                        : statusNum < 500
+                          ? 'bg-amber-100 text-amber-700 dark:bg-amber-900 dark:text-amber-300'
+                          : 'bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300'
 
-                    return (
-                      <div
-                        key={status}
-                        className={`flex items-center justify-between rounded-md px-3 py-2 ${variant}`}
-                      >
-                        <span className="font-mono text-sm font-medium">
-                          {status}
-                        </span>
-                        <span className="text-sm">
-                          {count.toLocaleString()}
-                        </span>
-                      </div>
-                    )
-                  },
-                )}
+                  return (
+                    <div
+                      key={status}
+                      className={`flex items-center justify-between rounded-md px-3 py-2 ${variant}`}
+                    >
+                      <span className="font-mono text-sm font-medium">{status}</span>
+                      <span className="text-sm">{count.toLocaleString()}</span>
+                    </div>
+                  )
+                })}
               </div>
             </CardContent>
           </Card>

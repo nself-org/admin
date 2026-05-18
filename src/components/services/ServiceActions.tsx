@@ -30,39 +30,23 @@ export function ServiceActions({
       </CardHeader>
       <CardContent className="space-y-3">
         {webUIUrl && onAccessUI && (
-          <Button
-            onClick={onAccessUI}
-            variant="outline"
-            className="w-full justify-start"
-          >
+          <Button onClick={onAccessUI} variant="outline" className="w-full justify-start">
             <ExternalLink className="mr-2 h-4 w-4" />
             Access Web UI
-            <span className="ml-auto font-mono text-xs text-zinc-500">
-              {webUIUrl}
-            </span>
+            <span className="ml-auto font-mono text-xs text-zinc-500">{webUIUrl}</span>
           </Button>
         )}
 
         {dockerContainer && onViewDocker && (
-          <Button
-            onClick={onViewDocker}
-            variant="outline"
-            className="w-full justify-start"
-          >
+          <Button onClick={onViewDocker} variant="outline" className="w-full justify-start">
             <Container className="mr-2 h-4 w-4" />
             View in Docker
-            <span className="ml-auto font-mono text-xs text-zinc-500">
-              {dockerContainer}
-            </span>
+            <span className="ml-auto font-mono text-xs text-zinc-500">{dockerContainer}</span>
           </Button>
         )}
 
         {onViewCompose && (
-          <Button
-            onClick={onViewCompose}
-            variant="outline"
-            className="w-full justify-start"
-          >
+          <Button onClick={onViewCompose} variant="outline" className="w-full justify-start">
             <FileText className="mr-2 h-4 w-4" />
             View Compose Config
           </Button>

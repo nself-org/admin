@@ -3,13 +3,7 @@
 import { PageShell } from '@/components/PageShell'
 import { ServiceDetailSkeleton } from '@/components/skeletons'
 import { Button } from '@/components/ui/button'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import {
   AlertTriangle,
@@ -60,14 +54,11 @@ function parseStatsFromOutput(output: string): CacheStats | null {
   if (Object.keys(stats).length > 0) {
     return {
       memoryUsed: stats['used_memory_human'] || stats['memoryUsed'] || '--',
-      memoryPeak:
-        stats['used_memory_peak_human'] || stats['memoryPeak'] || '--',
+      memoryPeak: stats['used_memory_peak_human'] || stats['memoryPeak'] || '--',
       totalKeys: stats['db0'] || stats['totalKeys'] || '--',
       hitRate: stats['keyspace_hit_rate'] || stats['hitRate'] || '--',
-      uptimeSeconds:
-        stats['uptime_in_seconds'] || stats['uptimeSeconds'] || '--',
-      connectedClients:
-        stats['connected_clients'] || stats['connectedClients'] || '--',
+      uptimeSeconds: stats['uptime_in_seconds'] || stats['uptimeSeconds'] || '--',
+      connectedClients: stats['connected_clients'] || stats['connectedClients'] || '--',
     }
   }
 
@@ -81,9 +72,7 @@ function parseStatsFromOutput(output: string): CacheStats | null {
 function CacheManagementContent() {
   const [stats, setStats] = useState<CacheStats | null>(null)
   const [cliCommand, setCliCommand] = useState('')
-  const [cliHistory, setCliHistory] = useState<
-    { command: string; output: string }[]
-  >([])
+  const [cliHistory, setCliHistory] = useState<{ command: string; output: string }[]>([])
   const [loading, setLoading] = useState(false)
   const [flushing, setFlushing] = useState(false)
   const [confirmFlush, setConfirmFlush] = useState(false)
@@ -214,10 +203,7 @@ function CacheManagementContent() {
         : data.details || data.error || 'Command failed'
 
       setOutput(resultOutput)
-      setCliHistory((prev) => [
-        ...prev,
-        { command: cliCommand.trim(), output: resultOutput },
-      ])
+      setCliHistory((prev) => [...prev, { command: cliCommand.trim(), output: resultOutput }])
       setCliCommand('')
 
       if (!data.success) {
@@ -333,16 +319,10 @@ function CacheManagementContent() {
                 <Play className="h-5 w-5" />
                 Initialize Cache
               </CardTitle>
-              <CardDescription>
-                Start or restart the Redis cache service.
-              </CardDescription>
+              <CardDescription>Start or restart the Redis cache service.</CardDescription>
             </CardHeader>
             <CardContent>
-              <Button
-                onClick={handleInit}
-                disabled={loading}
-                className="w-full"
-              >
+              <Button onClick={handleInit} disabled={loading} className="w-full">
                 {loading ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -364,17 +344,10 @@ function CacheManagementContent() {
                 <BarChart3 className="h-5 w-5" />
                 Refresh Stats
               </CardTitle>
-              <CardDescription>
-                Fetch the latest cache statistics from Redis.
-              </CardDescription>
+              <CardDescription>Fetch the latest cache statistics from Redis.</CardDescription>
             </CardHeader>
             <CardContent>
-              <Button
-                onClick={fetchStats}
-                disabled={loading}
-                variant="outline"
-                className="w-full"
-              >
+              <Button onClick={fetchStats} disabled={loading} variant="outline" className="w-full">
                 {loading ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -404,9 +377,7 @@ function CacheManagementContent() {
               {confirmFlush && (
                 <div className="mb-3 flex items-center gap-2 rounded-md border border-yellow-300 bg-yellow-50 p-2 text-xs text-yellow-800 dark:border-yellow-700 dark:bg-yellow-900/20 dark:text-yellow-200">
                   <AlertTriangle className="h-4 w-4 shrink-0" />
-                  <span>
-                    Click again to confirm flush. All data will be lost.
-                  </span>
+                  <span>Click again to confirm flush. All data will be lost.</span>
                 </div>
               )}
               <Button
@@ -451,17 +422,13 @@ function CacheManagementContent() {
             <ScrollArea className="mb-4 h-48 w-full rounded-md border border-zinc-200 bg-zinc-950 p-4 dark:border-zinc-700">
               <pre className="font-mono text-sm text-green-400">
                 {cliHistory.length > 0
-                  ? cliHistory
-                      .map((entry) => `> ${entry.command}\n${entry.output}`)
-                      .join('\n\n')
+                  ? cliHistory.map((entry) => `> ${entry.command}\n${entry.output}`).join('\n\n')
                   : 'Redis CLI ready. Enter commands like GET, SET, KEYS *, INFO, etc.'}
               </pre>
             </ScrollArea>
             <div className="flex gap-3">
               <div className="flex flex-1 items-center rounded-md border border-zinc-300 bg-white shadow-sm dark:border-zinc-600 dark:bg-zinc-800">
-                <span className="px-3 font-mono text-sm text-zinc-400">
-                  {'> '}
-                </span>
+                <span className="px-3 font-mono text-sm text-zinc-400">{'> '}</span>
                 <input
                   type="text"
                   value={cliCommand}
@@ -473,15 +440,8 @@ function CacheManagementContent() {
                   className="flex-1 border-0 bg-transparent py-2 pr-3 font-mono text-sm text-zinc-900 placeholder:text-zinc-400 focus:outline-none dark:text-white dark:placeholder:text-zinc-500"
                 />
               </div>
-              <Button
-                onClick={handleCli}
-                disabled={loading || !cliCommand.trim()}
-              >
-                {loading ? (
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                ) : (
-                  'Execute'
-                )}
+              <Button onClick={handleCli} disabled={loading || !cliCommand.trim()}>
+                {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Execute'}
               </Button>
             </div>
           </CardContent>
@@ -513,8 +473,7 @@ function CacheManagementContent() {
             )}
             <ScrollArea className="h-48 w-full rounded-md border border-zinc-200 bg-zinc-950 p-4 dark:border-zinc-700">
               <pre className="font-mono text-sm text-green-400">
-                {output ||
-                  'No output yet. Use the controls above to get started.'}
+                {output || 'No output yet. Use the controls above to get started.'}
               </pre>
             </ScrollArea>
           </CardContent>

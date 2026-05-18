@@ -17,10 +17,7 @@ import { getWebSocketServer } from '@/lib/websocket/server'
 /**
  * Emit service status update
  */
-export function emitServiceStatus(
-  data: ServiceStatusEvent,
-  room?: string,
-): void {
+export function emitServiceStatus(data: ServiceStatusEvent, room?: string): void {
   try {
     const wsServer = getWebSocketServer()
     if (room) {
@@ -36,10 +33,7 @@ export function emitServiceStatus(
 /**
  * Emit build progress update
  */
-export function emitBuildProgress(
-  data: BuildProgressEvent,
-  room?: string,
-): void {
+export function emitBuildProgress(data: BuildProgressEvent, room?: string): void {
   try {
     const wsServer = getWebSocketServer()
     if (room) {
@@ -55,10 +49,7 @@ export function emitBuildProgress(
 /**
  * Emit deploy progress update
  */
-export function emitDeployProgress(
-  data: DeployProgressEvent,
-  room?: string,
-): void {
+export function emitDeployProgress(data: DeployProgressEvent, room?: string): void {
   try {
     const wsServer = getWebSocketServer()
     if (room) {
@@ -106,10 +97,7 @@ export function emitDockerStats(data: DockerStatsEvent, room?: string): void {
 /**
  * Emit database query result
  */
-export function emitDbQueryResult(
-  data: DbQueryResultEvent,
-  room?: string,
-): void {
+export function emitDbQueryResult(data: DbQueryResultEvent, room?: string): void {
   try {
     const wsServer = getWebSocketServer()
     if (room) {
@@ -170,10 +158,7 @@ export function emitUserTyping(data: UserTypingEvent, room?: string): void {
 /**
  * Emit cursor position update
  */
-export function emitCursorPosition(
-  data: CursorPositionEvent,
-  room?: string,
-): void {
+export function emitCursorPosition(data: CursorPositionEvent, room?: string): void {
   try {
     const wsServer = getWebSocketServer()
     if (room) {
@@ -189,10 +174,7 @@ export function emitCursorPosition(
 /**
  * Emit text selection update
  */
-export function emitTextSelection(
-  data: TextSelectionEvent,
-  room?: string,
-): void {
+export function emitTextSelection(data: TextSelectionEvent, room?: string): void {
   try {
     const wsServer = getWebSocketServer()
     if (room) {

@@ -76,12 +76,9 @@ export default function UptimePage() {
     <div className="mx-auto max-w-4xl space-y-4 p-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="nself-gradient-text text-xl font-semibold">
-            Health &amp; Uptime
-          </h1>
+          <h1 className="nself-gradient-text text-xl font-semibold">Health &amp; Uptime</h1>
           <p className="text-nself-text-muted text-xs">
-            Continuous health probe of every registered service. Refreshes every
-            30 s.
+            Continuous health probe of every registered service. Refreshes every 30 s.
           </p>
         </div>
         <button
@@ -114,9 +111,7 @@ export default function UptimePage() {
                 <Activity className="text-nself-primary h-5 w-5" />
               </div>
               <div>
-                <p className="text-nself-text-muted text-xs">
-                  24h overall uptime
-                </p>
+                <p className="text-nself-text-muted text-xs">24h overall uptime</p>
                 <p className="nself-gradient-text text-2xl font-semibold">
                   {pct(report.overallUptimePct)}
                 </p>
@@ -128,20 +123,13 @@ export default function UptimePage() {
           </div>
 
           <div className="glass-card p-4">
-            <p className="text-nself-text mb-3 text-sm font-semibold">
-              Services
-            </p>
+            <p className="text-nself-text mb-3 text-sm font-semibold">Services</p>
             {report.services.length === 0 ? (
-              <p className="text-nself-text-muted text-xs">
-                No services registered yet.
-              </p>
+              <p className="text-nself-text-muted text-xs">No services registered yet.</p>
             ) : (
               <ul className="space-y-2">
                 {report.services.map((svc) => (
-                  <li
-                    key={svc.name}
-                    className="border-nself-border rounded-lg border px-3 py-2"
-                  >
+                  <li key={svc.name} className="border-nself-border rounded-lg border px-3 py-2">
                     <div className="flex items-center gap-2">
                       <StatusIcon status={svc.status} />
                       <span className="text-nself-text flex-1 truncate text-sm font-medium">
@@ -171,14 +159,11 @@ export default function UptimePage() {
                       )}
                     </p>
                     {svc.errorMessage !== null && (
-                      <p className="mt-1 text-xs text-red-300">
-                        {svc.errorMessage}
-                      </p>
+                      <p className="mt-1 text-xs text-red-300">{svc.errorMessage}</p>
                     )}
                     {svc.lastIncidentAt !== null && (
                       <p className="text-nself-text-muted mt-1 text-xs">
-                        Last incident:{' '}
-                        {new Date(svc.lastIncidentAt).toLocaleString()}
+                        Last incident: {new Date(svc.lastIncidentAt).toLocaleString()}
                       </p>
                     )}
                   </li>

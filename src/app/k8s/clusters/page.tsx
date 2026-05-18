@@ -25,7 +25,7 @@ function K8sClustersContent() {
 
   const { data, isLoading, error, mutate } = useSWR<{ clusters: K8sCluster[] }>(
     '/api/k8s/clusters',
-    fetcher,
+    fetcher
   )
 
   const clusters = data?.clusters ?? []
@@ -34,7 +34,9 @@ function K8sClustersContent() {
   const handleSwitch = async (clusterName: string) => {
     setSwitching(clusterName)
     try {
-      const res = await fetch(`/api/k8s/clusters/${encodeURIComponent(clusterName)}/switch`, { method: 'POST' })
+      const res = await fetch(`/api/k8s/clusters/${encodeURIComponent(clusterName)}/switch`, {
+        method: 'POST',
+      })
       if (!res.ok) throw new Error(`HTTP ${res.status}`)
       await mutate()
     } finally {
@@ -43,11 +45,7 @@ function K8sClustersContent() {
   }
 
   const handleDelete = async (clusterName: string) => {
-    if (
-      !confirm(
-        `Are you sure you want to remove ${clusterName} from your contexts?`,
-      )
-    ) {
+    if (!confirm(`Are you sure you want to remove ${clusterName} from your contexts?`)) {
       return
     }
     // Would call API
@@ -86,7 +84,10 @@ function K8sClustersContent() {
     return (
       <div className="space-y-6">
         <div className="flex items-center gap-4">
-          <Link href="/k8s" className="rounded-lg border border-zinc-700 bg-zinc-800 p-2 hover:bg-zinc-700">
+          <Link
+            href="/k8s"
+            className="rounded-lg border border-zinc-700 bg-zinc-800 p-2 hover:bg-zinc-700"
+          >
             <ArrowLeft className="h-5 w-5" />
           </Link>
           <h1 className="text-2xl font-semibold text-white">Kubernetes Clusters</h1>
@@ -119,12 +120,8 @@ function K8sClustersContent() {
             <ArrowLeft className="h-5 w-5" />
           </Link>
           <div>
-            <h1 className="text-2xl font-semibold text-white">
-              Kubernetes Clusters
-            </h1>
-            <p className="text-sm text-zinc-400">
-              {clusters.length} clusters configured
-            </p>
+            <h1 className="text-2xl font-semibold text-white">Kubernetes Clusters</h1>
+            <p className="text-sm text-zinc-400">{clusters.length} clusters configured</p>
           </div>
         </div>
 
@@ -155,17 +152,14 @@ function K8sClustersContent() {
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h2 className="font-medium text-white">
-                  Current: {currentCluster.name}
-                </h2>
+                <h2 className="font-medium text-white">Current: {currentCluster.name}</h2>
                 <span className="rounded-full bg-emerald-900/30 px-2 py-0.5 text-xs text-emerald-400">
                   Active
                 </span>
               </div>
               <p className="text-sm text-zinc-400">
-                {platformLabels[currentCluster.platform] ||
-                  currentCluster.platform}{' '}
-                | v{currentCluster.version} | {currentCluster.nodes} nodes
+                {platformLabels[currentCluster.platform] || currentCluster.platform} | v
+                {currentCluster.version} | {currentCluster.nodes} nodes
               </p>
             </div>
           </div>
@@ -196,16 +190,12 @@ function K8sClustersContent() {
               <div className="flex items-center gap-4">
                 <div
                   className={`flex h-12 w-12 items-center justify-center rounded-lg ${
-                    cluster.status === 'connected'
-                      ? 'bg-blue-500/20'
-                      : 'bg-zinc-700'
+                    cluster.status === 'connected' ? 'bg-blue-500/20' : 'bg-zinc-700'
                   }`}
                 >
                   <Box
                     className={`h-6 w-6 ${
-                      cluster.status === 'connected'
-                        ? 'text-blue-400'
-                        : 'text-zinc-500'
+                      cluster.status === 'connected' ? 'text-blue-400' : 'text-zinc-500'
                     }`}
                   />
                 </div>
@@ -224,9 +214,7 @@ function K8sClustersContent() {
                           : 'bg-zinc-700 text-zinc-400'
                       }`}
                     >
-                      {cluster.status === 'connected' && (
-                        <CheckCircle className="h-3 w-3" />
-                      )}
+                      {cluster.status === 'connected' && <CheckCircle className="h-3 w-3" />}
                       {cluster.status}
                     </span>
                   </div>
@@ -242,8 +230,7 @@ function K8sClustersContent() {
                     {platformLabels[cluster.platform] || cluster.platform}
                   </div>
                   <div className="flex items-center justify-end gap-2 text-sm text-zinc-400">
-                    <Server className="h-4 w-4" />v{cluster.version} |{' '}
-                    {cluster.nodes} nodes
+                    <Server className="h-4 w-4" />v{cluster.version} | {cluster.nodes} nodes
                   </div>
                 </div>
 
@@ -278,11 +265,7 @@ function K8sClustersContent() {
                     onClick={() => handleDelete(cluster.name)}
                     disabled={cluster.current}
                     className="rounded-lg border border-zinc-700 bg-zinc-800 p-2 text-zinc-400 hover:bg-zinc-700 hover:text-red-400 disabled:opacity-50"
-                    title={
-                      cluster.current
-                        ? "Can't delete current cluster"
-                        : 'Remove cluster'
-                    }
+                    title={cluster.current ? "Can't delete current cluster" : 'Remove cluster'}
                   >
                     <Trash2 className="h-4 w-4" />
                   </button>
@@ -298,9 +281,7 @@ function K8sClustersContent() {
         <div className="flex flex-col items-center justify-center rounded-lg border border-zinc-700/50 bg-zinc-800/50 p-12 text-center">
           <Box className="mb-4 h-12 w-12 text-zinc-500" />
           <p className="text-lg text-zinc-400">No clusters configured</p>
-          <p className="text-sm text-zinc-500">
-            Add a Kubernetes cluster to get started
-          </p>
+          <p className="text-sm text-zinc-500">Add a Kubernetes cluster to get started</p>
           <Link
             href="/k8s/setup"
             className="mt-4 inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm text-white hover:bg-blue-500"

@@ -30,15 +30,11 @@ function validateSafeArg(input: string): boolean {
  */
 async function fetchAllowedEnvironments(projectPath: string): Promise<string[] | null> {
   try {
-    const { stdout } = await execFileAsync(
-      'nself',
-      ['deploy', 'environments', '--json'],
-      {
-        cwd: projectPath,
-        env: { ...process.env, PATH: getEnhancedPath() },
-        timeout: 15000,
-      },
-    )
+    const { stdout } = await execFileAsync('nself', ['deploy', 'environments', '--json'], {
+      cwd: projectPath,
+      env: { ...process.env, PATH: getEnhancedPath() },
+      timeout: 15000,
+    })
     const parsed = JSON.parse(stdout.trim()) as unknown
     // CLI returns { environments: [...] } or a flat string[]
     if (Array.isArray(parsed)) {
@@ -68,14 +64,18 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       if (!validateSafeArg(environment)) {
         return NextResponse.json(
           { success: false, error: 'Invalid environment name' },
-          { status: 400 },
+          { status: 400 }
         )
       }
       const allowedEnvs = await fetchAllowedEnvironments(projectPath)
       if (allowedEnvs !== null && !allowedEnvs.includes(environment)) {
         return NextResponse.json(
-          { success: false, error: `Unknown environment: ${environment}`, allowedEnvironments: allowedEnvs },
-          { status: 400 },
+          {
+            success: false,
+            error: `Unknown environment: ${environment}`,
+            allowedEnvironments: allowedEnvs,
+          },
+          { status: 400 }
         )
       }
     }
@@ -114,7 +114,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to get deployment status',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -134,14 +134,18 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       if (!validateSafeArg(environment)) {
         return NextResponse.json(
           { success: false, error: 'Invalid environment name' },
-          { status: 400 },
+          { status: 400 }
         )
       }
       const allowedEnvs = await fetchAllowedEnvironments(projectPath)
       if (allowedEnvs !== null && !allowedEnvs.includes(environment)) {
         return NextResponse.json(
-          { success: false, error: `Unknown environment: ${environment}`, allowedEnvironments: allowedEnvs },
-          { status: 400 },
+          {
+            success: false,
+            error: `Unknown environment: ${environment}`,
+            allowedEnvironments: allowedEnvs,
+          },
+          { status: 400 }
         )
       }
     }
@@ -149,10 +153,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     // Validate optional server param
     if (options.server !== undefined) {
       if (typeof options.server !== 'string' || !validateSafeArg(options.server)) {
-        return NextResponse.json(
-          { success: false, error: 'Invalid server name' },
-          { status: 400 },
-        )
+        return NextResponse.json({ success: false, error: 'Invalid server name' }, { status: 400 })
       }
     }
 
@@ -163,7 +164,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         if (!environment) {
           return NextResponse.json(
             { success: false, error: 'Environment is required for deploy' },
-            { status: 400 },
+            { status: 400 }
           )
         }
         // nself deploy staging|prod [options]
@@ -212,7 +213,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       default:
         return NextResponse.json(
           { success: false, error: `Unknown action: ${action}` },
-          { status: 400 },
+          { status: 400 }
         )
     }
 
@@ -244,7 +245,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         stdout: execError.stdout || '',
         stderr: execError.stderr || '',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

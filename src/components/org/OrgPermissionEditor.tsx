@@ -18,7 +18,7 @@ export function OrgPermissionEditor({
   isLoading,
 }: OrgPermissionEditorProps) {
   const [selectedPermissions, setSelectedPermissions] = useState<Set<string>>(
-    new Set(role.permissions),
+    new Set(role.permissions)
   )
   const [hasChanges, setHasChanges] = useState(false)
 
@@ -28,7 +28,7 @@ export function OrgPermissionEditor({
       acc[perm.category].push(perm)
       return acc
     },
-    {} as Record<string, OrgPermission[]>,
+    {} as Record<string, OrgPermission[]>
   )
 
   const togglePermission = (permId: string) => {
@@ -75,24 +75,16 @@ export function OrgPermissionEditor({
 
       <div className="space-y-4">
         {Object.entries(groupedPermissions).map(([category, perms]) => (
-          <div
-            key={category}
-            className="rounded-lg border border-zinc-700 bg-zinc-800/50"
-          >
+          <div key={category} className="rounded-lg border border-zinc-700 bg-zinc-800/50">
             <div className="border-b border-zinc-700 px-4 py-3">
               <h4 className="text-sm font-medium text-zinc-300">{category}</h4>
             </div>
             <div className="divide-y divide-zinc-700/50">
               {perms.map((perm) => (
-                <div
-                  key={perm.id}
-                  className="flex items-center justify-between px-4 py-3"
-                >
+                <div key={perm.id} className="flex items-center justify-between px-4 py-3">
                   <div>
                     <div className="text-sm text-white">{perm.name}</div>
-                    <div className="text-xs text-zinc-500">
-                      {perm.description}
-                    </div>
+                    <div className="text-xs text-zinc-500">{perm.description}</div>
                   </div>
                   <button
                     onClick={() => togglePermission(perm.id)}

@@ -4,13 +4,7 @@ import { PageShell } from '@/components/PageShell'
 import { ServiceDetailSkeleton } from '@/components/skeletons'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { useUrlState } from '@/hooks/useUrlState'
 import {
@@ -98,11 +92,7 @@ function ConnectionBadge({ connected }: { connected: boolean }) {
           : 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300'
       }
     >
-      {connected ? (
-        <Wifi className="mr-1 h-3 w-3" />
-      ) : (
-        <WifiOff className="mr-1 h-3 w-3" />
-      )}
+      {connected ? <Wifi className="mr-1 h-3 w-3" /> : <WifiOff className="mr-1 h-3 w-3" />}
       {connected ? 'Connected' : 'Disconnected'}
     </Badge>
   )
@@ -116,14 +106,10 @@ function ChannelRow({ channel }: { channel: Channel }) {
     <div className="flex items-center justify-between rounded-lg border border-zinc-200 bg-white px-4 py-3 dark:border-zinc-700 dark:bg-zinc-800">
       <div className="flex items-center gap-3">
         <div className={`rounded-md p-1.5 ${typeConfig?.bg || ''}`}>
-          <TypeIcon
-            className={`h-4 w-4 ${typeConfig?.color || 'text-zinc-500'}`}
-          />
+          <TypeIcon className={`h-4 w-4 ${typeConfig?.color || 'text-zinc-500'}`} />
         </div>
         <div>
-          <p className="text-sm font-medium text-zinc-900 dark:text-white">
-            {channel.name}
-          </p>
+          <p className="text-sm font-medium text-zinc-900 dark:text-white">{channel.name}</p>
           <p className="text-xs text-zinc-500 dark:text-zinc-400">
             {typeConfig?.label || channel.type}
           </p>
@@ -161,9 +147,7 @@ function RealtimeContent() {
   const [connected, setConnected] = useState(false)
   const [cliOutput, setCliOutput] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
-  const [lastCommand, setLastCommand] = useState<string>(
-    'nself service realtime channels',
-  )
+  const [lastCommand, setLastCommand] = useState<string>('nself service realtime channels')
   const [channelsOutput, setChannelsOutput] = useState<string | null>(null)
   const [eventsOutput, setEventsOutput] = useState<string | null>(null)
   const [activeTab, setActiveTab] = useUrlState<string>('tab', 'channels')
@@ -260,7 +244,7 @@ function RealtimeContent() {
     setTestLoading(true)
     setError(null)
     setLastCommand(
-      `nself service realtime test --channel=${testChannel} --event=${testEvent} --message="${testMessage}"`,
+      `nself service realtime test --channel=${testChannel} --event=${testEvent} --message="${testMessage}"`
     )
     try {
       const res = await fetch('/api/services/realtime/test', {
@@ -287,14 +271,8 @@ function RealtimeContent() {
     }
   }, [testChannel, testEvent, testMessage])
 
-  const totalSubscribers = EMPTY_CHANNELS.reduce(
-    (sum, c) => sum + c.subscribers,
-    0,
-  )
-  const totalMessagesPerMin = EMPTY_CHANNELS.reduce(
-    (sum, c) => sum + c.messagesPerMin,
-    0,
-  )
+  const totalSubscribers = EMPTY_CHANNELS.reduce((sum, c) => sum + c.subscribers, 0)
+  const totalMessagesPerMin = EMPTY_CHANNELS.reduce((sum, c) => sum + c.messagesPerMin, 0)
 
   return (
     <PageShell
@@ -303,12 +281,7 @@ function RealtimeContent() {
       actions={
         <div className="flex items-center gap-2">
           <ConnectionBadge connected={connected} />
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={initRealtime}
-            disabled={initLoading}
-          >
+          <Button variant="outline" size="sm" onClick={initRealtime} disabled={initLoading}>
             {initLoading ? (
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
             ) : (
@@ -316,12 +289,7 @@ function RealtimeContent() {
             )}
             Initialize
           </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={fetchChannels}
-            disabled={loading}
-          >
+          <Button variant="outline" size="sm" onClick={fetchChannels} disabled={loading}>
             {loading ? (
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
             ) : (
@@ -345,9 +313,7 @@ function RealtimeContent() {
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-zinc-600 dark:text-zinc-400">
-                  Channels
-                </p>
+                <p className="text-sm text-zinc-600 dark:text-zinc-400">Channels</p>
                 <p className="text-2xl font-bold">{EMPTY_CHANNELS.length}</p>
               </div>
               <Radio className="h-8 w-8 text-blue-500" />
@@ -358,9 +324,7 @@ function RealtimeContent() {
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-zinc-600 dark:text-zinc-400">
-                  Subscribers
-                </p>
+                <p className="text-sm text-zinc-600 dark:text-zinc-400">Subscribers</p>
                 <p className="text-2xl font-bold">{totalSubscribers}</p>
               </div>
               <Users className="h-8 w-8 text-emerald-500" />
@@ -371,9 +335,7 @@ function RealtimeContent() {
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-zinc-600 dark:text-zinc-400">
-                  Messages/min
-                </p>
+                <p className="text-sm text-zinc-600 dark:text-zinc-400">Messages/min</p>
                 <p className="text-2xl font-bold">{totalMessagesPerMin}</p>
               </div>
               <Zap className="h-8 w-8 text-amber-500" />
@@ -384,12 +346,8 @@ function RealtimeContent() {
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-zinc-600 dark:text-zinc-400">
-                  Status
-                </p>
-                <p className="text-2xl font-bold">
-                  {connected ? 'Active' : 'Idle'}
-                </p>
+                <p className="text-sm text-zinc-600 dark:text-zinc-400">Status</p>
+                <p className="text-2xl font-bold">{connected ? 'Active' : 'Idle'}</p>
               </div>
               {connected ? (
                 <Wifi className="h-8 w-8 text-emerald-500" />
@@ -432,9 +390,7 @@ function RealtimeContent() {
         <div className="mb-6 space-y-4">
           {/* Channel Type Filter */}
           <div className="flex items-center gap-2">
-            <span className="text-sm text-zinc-500 dark:text-zinc-400">
-              Filter:
-            </span>
+            <span className="text-sm text-zinc-500 dark:text-zinc-400">Filter:</span>
             {[
               { value: 'all', label: 'All' },
               ...CHANNEL_TYPES.map((t) => ({
@@ -459,9 +415,7 @@ function RealtimeContent() {
           {/* Channel Type Summary Cards */}
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {CHANNEL_TYPES.map((ct) => {
-              const count = EMPTY_CHANNELS.filter(
-                (c) => c.type === ct.type,
-              ).length
+              const count = EMPTY_CHANNELS.filter((c) => c.type === ct.type).length
               const Icon = ct.icon
               return (
                 <Card key={ct.type}>
@@ -500,15 +454,11 @@ function RealtimeContent() {
             <Card>
               <CardHeader className="pb-3">
                 <CardTitle className="text-base">Channels from CLI</CardTitle>
-                <CardDescription>
-                  Output from nself service realtime channels
-                </CardDescription>
+                <CardDescription>Output from nself service realtime channels</CardDescription>
               </CardHeader>
               <CardContent>
                 <ScrollArea className="h-32">
-                  <pre className="text-xs text-zinc-700 dark:text-zinc-300">
-                    {channelsOutput}
-                  </pre>
+                  <pre className="text-xs text-zinc-700 dark:text-zinc-300">{channelsOutput}</pre>
                 </ScrollArea>
               </CardContent>
             </Card>
@@ -523,12 +473,7 @@ function RealtimeContent() {
             <h3 className="text-lg font-semibold text-zinc-900 dark:text-white">
               Live Event Stream
             </h3>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={fetchEvents}
-              disabled={loading}
-            >
+            <Button variant="outline" size="sm" onClick={fetchEvents} disabled={loading}>
               {loading ? (
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               ) : (
@@ -567,49 +512,40 @@ function RealtimeContent() {
             Presence Indicators
           </h3>
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-            {EMPTY_CHANNELS.filter((c) => c.type === 'presence').map(
-              (channel) => (
-                <Card key={channel.name}>
-                  <CardHeader className="pb-3">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <Users className="h-4 w-4 text-blue-500" />
-                        <CardTitle className="text-base">
-                          {channel.name}
-                        </CardTitle>
+            {EMPTY_CHANNELS.filter((c) => c.type === 'presence').map((channel) => (
+              <Card key={channel.name}>
+                <CardHeader className="pb-3">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <Users className="h-4 w-4 text-blue-500" />
+                      <CardTitle className="text-base">{channel.name}</CardTitle>
+                    </div>
+                    <Badge variant="secondary">{channel.subscribers} online</Badge>
+                  </div>
+                  <CardDescription>
+                    Presence channel with {channel.subscribers} active members
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="flex flex-wrap gap-2">
+                    {Array.from({ length: Math.min(channel.subscribers, 8) }, (_, i) => (
+                      <div
+                        key={i}
+                        className="flex items-center gap-1.5 rounded-full bg-zinc-100 px-2 py-1 text-xs dark:bg-zinc-700"
+                      >
+                        <Circle className="h-2 w-2 fill-emerald-500 text-emerald-500" />
+                        User {i + 1}
                       </div>
-                      <Badge variant="secondary">
-                        {channel.subscribers} online
-                      </Badge>
-                    </div>
-                    <CardDescription>
-                      Presence channel with {channel.subscribers} active members
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="flex flex-wrap gap-2">
-                      {Array.from(
-                        { length: Math.min(channel.subscribers, 8) },
-                        (_, i) => (
-                          <div
-                            key={i}
-                            className="flex items-center gap-1.5 rounded-full bg-zinc-100 px-2 py-1 text-xs dark:bg-zinc-700"
-                          >
-                            <Circle className="h-2 w-2 fill-emerald-500 text-emerald-500" />
-                            User {i + 1}
-                          </div>
-                        ),
-                      )}
-                      {channel.subscribers > 8 && (
-                        <div className="flex items-center rounded-full bg-zinc-100 px-2 py-1 text-xs text-zinc-500 dark:bg-zinc-700 dark:text-zinc-400">
-                          +{channel.subscribers - 8} more
-                        </div>
-                      )}
-                    </div>
-                  </CardContent>
-                </Card>
-              ),
-            )}
+                    ))}
+                    {channel.subscribers > 8 && (
+                      <div className="flex items-center rounded-full bg-zinc-100 px-2 py-1 text-xs text-zinc-500 dark:bg-zinc-700 dark:text-zinc-400">
+                        +{channel.subscribers - 8} more
+                      </div>
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
           </div>
 
           {EMPTY_CHANNELS.filter((c) => c.type === 'presence').length === 0 && (
@@ -624,9 +560,7 @@ function RealtimeContent() {
       {/* Test Message Tab */}
       {activeTab === 'test' && (
         <div className="mb-6 space-y-4">
-          <h3 className="text-lg font-semibold text-zinc-900 dark:text-white">
-            Send Test Message
-          </h3>
+          <h3 className="text-lg font-semibold text-zinc-900 dark:text-white">Send Test Message</h3>
           <Card>
             <CardContent className="pt-6">
               <div className="space-y-4">
@@ -668,9 +602,7 @@ function RealtimeContent() {
                 </div>
                 <Button
                   onClick={sendTestMessage}
-                  disabled={
-                    testLoading || !testChannel.trim() || !testMessage.trim()
-                  }
+                  disabled={testLoading || !testChannel.trim() || !testMessage.trim()}
                   className="flex items-center gap-2"
                 >
                   {testLoading ? (
@@ -693,26 +625,18 @@ function RealtimeContent() {
             <Terminal className="h-4 w-4 text-zinc-500" />
             <CardTitle className="text-base">CLI Command</CardTitle>
           </div>
-          <CardDescription>
-            Command executed against the nself CLI
-          </CardDescription>
+          <CardDescription>Command executed against the nself CLI</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="rounded-lg bg-zinc-950 p-4">
-            <div className="mb-2 font-mono text-sm text-emerald-400">
-              $ {lastCommand}
-            </div>
+            <div className="mb-2 font-mono text-sm text-emerald-400">$ {lastCommand}</div>
             {cliOutput && (
               <ScrollArea className="max-h-48">
-                <pre className="font-mono text-xs text-zinc-300">
-                  {cliOutput}
-                </pre>
+                <pre className="font-mono text-xs text-zinc-300">{cliOutput}</pre>
               </ScrollArea>
             )}
             {!cliOutput && (
-              <p className="font-mono text-xs text-zinc-500">
-                Run a command to see output here
-              </p>
+              <p className="font-mono text-xs text-zinc-500">Run a command to see output here</p>
             )}
           </div>
         </CardContent>

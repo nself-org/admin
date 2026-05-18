@@ -13,10 +13,9 @@ export async function GET(): Promise<NextResponse> {
     return NextResponse.json(
       {
         success: false,
-        error:
-          error instanceof Error ? error.message : 'Failed to fetch templates',
+        error: error instanceof Error ? error.message : 'Failed to fetch templates',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

@@ -7,10 +7,7 @@ interface AutoSaveOptions {
   enabled?: boolean
 }
 
-export function useAutoSave(
-  data: any,
-  { onSave, delay = 500, enabled = true }: AutoSaveOptions,
-) {
+export function useAutoSave(data: any, { onSave, delay = 500, enabled = true }: AutoSaveOptions) {
   const isFirstRender = useRef(true)
   const saveInProgress = useRef(false)
 
@@ -27,7 +24,7 @@ export function useAutoSave(
       } finally {
         saveInProgress.current = false
       }
-    }, delay),
+    }, delay)
   ).current
 
   // Save on data changes (but skip first render)

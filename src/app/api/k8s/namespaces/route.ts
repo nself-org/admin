@@ -37,7 +37,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to list namespaces',
         details: err.message,
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -57,21 +57,18 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     if (!name) {
       return NextResponse.json(
         { success: false, error: 'Namespace name is required' },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
     const args: string[] = ['k8s', 'namespaces', 'create', name]
     if (labels) args.push(`--labels=${JSON.stringify(labels)}`)
 
-    const { stdout } = await execAsync(
-      `${nselfPath} ${args.join(' ')} --json`,
-      {
-        cwd: projectPath,
-        env: { ...process.env, PATH: getEnhancedPath() },
-        timeout: 60000,
-      },
-    )
+    const { stdout } = await execAsync(`${nselfPath} ${args.join(' ')} --json`, {
+      cwd: projectPath,
+      env: { ...process.env, PATH: getEnhancedPath() },
+      timeout: 60000,
+    })
 
     const result = JSON.parse(stdout)
 
@@ -90,7 +87,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to create namespace',
         details: err.message,
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

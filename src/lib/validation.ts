@@ -2,10 +2,7 @@ import { z } from 'zod'
 
 // Authentication schemas
 export const loginSchema = z.object({
-  password: z
-    .string()
-    .min(1, 'Password is required')
-    .max(256, 'Password too long'),
+  password: z.string().min(1, 'Password is required').max(256, 'Password too long'),
 })
 
 // Docker operation schemas
@@ -44,7 +41,7 @@ const DANGEROUS_SQL_KEYWORDS_PROD = [
 
 export function validateSQLQuery(
   query: string,
-  isProduction: boolean = false,
+  isProduction: boolean = false
 ): { valid: boolean; error?: string } {
   // In production, block dangerous operations
   if (isProduction) {
@@ -62,8 +59,7 @@ export function validateSQLQuery(
   // Check for comment-based SQL injection attempts
   if (query.includes('--') || query.includes('/*') || query.includes('*/')) {
     // Allow comments only if they're properly formatted
-    const hasValidComments =
-      /--\s+.+/.test(query) || /\/\*[\s\S]*?\*\//.test(query)
+    const hasValidComments = /--\s+.+/.test(query) || /\/\*[\s\S]*?\*\//.test(query)
     if (!hasValidComments && (query.includes('--') || query.includes('/*'))) {
       return {
         valid: false,
@@ -77,9 +73,7 @@ export function validateSQLQuery(
 
 // Configuration schemas
 export const envUpdateSchema = z.object({
-  key: z
-    .string()
-    .regex(/^[A-Z][A-Z0-9_]*$/, 'Invalid environment variable name'),
+  key: z.string().regex(/^[A-Z][A-Z0-9_]*$/, 'Invalid environment variable name'),
   value: z.string().max(10000),
   description: z.string().optional(),
 })
@@ -180,9 +174,7 @@ export function sanitizePath(path: string): string {
 
   // Ensure path doesn't escape allowed directories
   const allowedPrefixes = ['/project', '/backups', '/data', '/tmp']
-  const hasAllowedPrefix = allowedPrefixes.some((prefix) =>
-    sanitized.startsWith(prefix),
-  )
+  const hasAllowedPrefix = allowedPrefixes.some((prefix) => sanitized.startsWith(prefix))
 
   if (!hasAllowedPrefix && !sanitized.startsWith('./')) {
     // Force path to be relative to project directory
@@ -241,10 +233,8 @@ export function isValidFilePath(path: string): boolean {
 // Validation middleware helper
 export async function validateRequest<T>(
   data: unknown,
-  schema: z.ZodSchema<T>,
-): Promise<
-  { success: true; data: T } | { success: false; errors: z.ZodError }
-> {
+  schema: z.ZodSchema<T>
+): Promise<{ success: true; data: T } | { success: false; errors: z.ZodError }> {
   try {
     const validated = await schema.parseAsync(data)
     return { success: true, data: validated }

@@ -134,7 +134,7 @@ function OAuthManagementContent() {
       installed: false,
       enabled: false,
       configured: false,
-    })),
+    }))
   )
   const [loading, setLoading] = useState(false)
   const [actionLoading, setActionLoading] = useState<string | null>(null)
@@ -155,58 +155,50 @@ function OAuthManagementContent() {
 
   // -- Helpers --
 
-  const addOutput = useCallback(
-    (command: string, output: string, success: boolean) => {
-      setCliOutputs((prev) => [
-        {
-          command,
-          output,
-          success,
-          timestamp: new Date().toLocaleTimeString(),
-        },
-        ...prev.slice(0, 49),
-      ])
-    },
-    [],
-  )
+  const addOutput = useCallback((command: string, output: string, success: boolean) => {
+    setCliOutputs((prev) => [
+      {
+        command,
+        output,
+        success,
+        timestamp: new Date().toLocaleTimeString(),
+      },
+      ...prev.slice(0, 49),
+    ])
+  }, [])
 
-  const parseProviderStatus = useCallback(
-    (output: string): Partial<ProviderInfo>[] => {
-      // Try to parse JSON output from CLI
-      try {
-        const parsed = JSON.parse(output)
-        if (Array.isArray(parsed)) {
-          return parsed
-        }
-        if (parsed.providers && Array.isArray(parsed.providers)) {
-          return parsed.providers
-        }
-      } catch {
-        // Not JSON, try line-by-line parsing
+  const parseProviderStatus = useCallback((output: string): Partial<ProviderInfo>[] => {
+    // Try to parse JSON output from CLI
+    try {
+      const parsed = JSON.parse(output)
+      if (Array.isArray(parsed)) {
+        return parsed
       }
+      if (parsed.providers && Array.isArray(parsed.providers)) {
+        return parsed.providers
+      }
+    } catch {
+      // Not JSON, try line-by-line parsing
+    }
 
-      // Fallback: parse text output line by line
-      const results: Partial<ProviderInfo>[] = []
-      const lines = output.split('\n').filter((l) => l.trim())
-      for (const line of lines) {
-        const lower = line.toLowerCase()
-        for (const p of PROVIDERS) {
-          if (lower.includes(p.id)) {
-            results.push({
-              id: p.id,
-              installed:
-                lower.includes('installed') || lower.includes('enabled'),
-              enabled: lower.includes('enabled') && !lower.includes('disabled'),
-              configured:
-                lower.includes('configured') || lower.includes('enabled'),
-            })
-          }
+    // Fallback: parse text output line by line
+    const results: Partial<ProviderInfo>[] = []
+    const lines = output.split('\n').filter((l) => l.trim())
+    for (const line of lines) {
+      const lower = line.toLowerCase()
+      for (const p of PROVIDERS) {
+        if (lower.includes(p.id)) {
+          results.push({
+            id: p.id,
+            installed: lower.includes('installed') || lower.includes('enabled'),
+            enabled: lower.includes('enabled') && !lower.includes('disabled'),
+            configured: lower.includes('configured') || lower.includes('enabled'),
+          })
         }
       }
-      return results
-    },
-    [],
-  )
+    }
+    return results
+  }, [])
 
   // -- Data Fetching --
 
@@ -233,7 +225,7 @@ function OAuthManagementContent() {
               }
             }
             return p
-          }),
+          })
         )
       } else {
         const errorMsg = json.error || json.details || 'Failed to fetch status'
@@ -265,25 +257,15 @@ function OAuthManagementContent() {
       })
       const json = await response.json()
       const output = json.data?.output || json.details || json.error || ''
-      addOutput(
-        `nself auth oauth install --provider=${providerId}`,
-        output,
-        json.success,
-      )
+      addOutput(`nself auth oauth install --provider=${providerId}`, output, json.success)
 
       if (json.success) {
         setProviders((prev) =>
-          prev.map((p) =>
-            p.id === providerId ? { ...p, installed: true } : p,
-          ),
+          prev.map((p) => (p.id === providerId ? { ...p, installed: true } : p))
         )
       }
     } catch (_err) {
-      addOutput(
-        `nself auth oauth install --provider=${providerId}`,
-        'Connection error',
-        false,
-      )
+      addOutput(`nself auth oauth install --provider=${providerId}`, 'Connection error', false)
     } finally {
       setActionLoading(null)
       setCommandPreview('')
@@ -301,23 +283,13 @@ function OAuthManagementContent() {
       })
       const json = await response.json()
       const output = json.data?.output || json.details || json.error || ''
-      addOutput(
-        `nself auth oauth enable --provider=${providerId}`,
-        output,
-        json.success,
-      )
+      addOutput(`nself auth oauth enable --provider=${providerId}`, output, json.success)
 
       if (json.success) {
-        setProviders((prev) =>
-          prev.map((p) => (p.id === providerId ? { ...p, enabled: true } : p)),
-        )
+        setProviders((prev) => prev.map((p) => (p.id === providerId ? { ...p, enabled: true } : p)))
       }
     } catch (_err) {
-      addOutput(
-        `nself auth oauth enable --provider=${providerId}`,
-        'Connection error',
-        false,
-      )
+      addOutput(`nself auth oauth enable --provider=${providerId}`, 'Connection error', false)
     } finally {
       setActionLoading(null)
       setCommandPreview('')
@@ -335,23 +307,15 @@ function OAuthManagementContent() {
       })
       const json = await response.json()
       const output = json.data?.output || json.details || json.error || ''
-      addOutput(
-        `nself auth oauth disable --provider=${providerId}`,
-        output,
-        json.success,
-      )
+      addOutput(`nself auth oauth disable --provider=${providerId}`, output, json.success)
 
       if (json.success) {
         setProviders((prev) =>
-          prev.map((p) => (p.id === providerId ? { ...p, enabled: false } : p)),
+          prev.map((p) => (p.id === providerId ? { ...p, enabled: false } : p))
         )
       }
     } catch (_err) {
-      addOutput(
-        `nself auth oauth disable --provider=${providerId}`,
-        'Connection error',
-        false,
-      )
+      addOutput(`nself auth oauth disable --provider=${providerId}`, 'Connection error', false)
     } finally {
       setActionLoading(null)
       setCommandPreview('')
@@ -369,17 +333,9 @@ function OAuthManagementContent() {
       })
       const json = await response.json()
       const output = json.data?.output || json.details || json.error || ''
-      addOutput(
-        `nself auth oauth test --provider=${providerId}`,
-        output,
-        json.success,
-      )
+      addOutput(`nself auth oauth test --provider=${providerId}`, output, json.success)
     } catch (_err) {
-      addOutput(
-        `nself auth oauth test --provider=${providerId}`,
-        'Connection error',
-        false,
-      )
+      addOutput(`nself auth oauth test --provider=${providerId}`, 'Connection error', false)
     } finally {
       setActionLoading(null)
       setCommandPreview('')
@@ -394,16 +350,10 @@ function OAuthManagementContent() {
 
     // Fetch existing config
     try {
-      const response = await fetch(
-        `/api/auth/oauth/config?provider=${providerId}`,
-      )
+      const response = await fetch(`/api/auth/oauth/config?provider=${providerId}`)
       const json = await response.json()
       if (json.success && json.data?.output) {
-        addOutput(
-          `nself auth oauth config --provider=${providerId}`,
-          json.data.output,
-          true,
-        )
+        addOutput(`nself auth oauth config --provider=${providerId}`, json.data.output, true)
         // Try to parse existing config from output
         try {
           const parsed = JSON.parse(json.data.output)
@@ -441,26 +391,16 @@ function OAuthManagementContent() {
       })
       const json = await response.json()
       const output = json.data?.output || json.details || json.error || ''
-      addOutput(
-        `nself auth oauth config --provider=${configProvider}`,
-        output,
-        json.success,
-      )
+      addOutput(`nself auth oauth config --provider=${configProvider}`, output, json.success)
 
       if (json.success) {
         setProviders((prev) =>
-          prev.map((p) =>
-            p.id === configProvider ? { ...p, configured: true } : p,
-          ),
+          prev.map((p) => (p.id === configProvider ? { ...p, configured: true } : p))
         )
         setConfigDialogOpen(false)
       }
     } catch (_err) {
-      addOutput(
-        `nself auth oauth config --provider=${configProvider}`,
-        'Connection error',
-        false,
-      )
+      addOutput(`nself auth oauth config --provider=${configProvider}`, 'Connection error', false)
     } finally {
       setConfigLoading(false)
       setCommandPreview('')
@@ -501,12 +441,8 @@ function OAuthManagementContent() {
             <div className="flex items-start gap-3">
               <XCircle className="h-5 w-5 flex-shrink-0 text-red-500" />
               <div>
-                <h3 className="text-sm font-semibold text-red-800 dark:text-red-300">
-                  Error
-                </h3>
-                <p className="mt-1 text-sm text-red-700 dark:text-red-400">
-                  {error}
-                </p>
+                <h3 className="text-sm font-semibold text-red-800 dark:text-red-300">Error</h3>
+                <p className="mt-1 text-sm text-red-700 dark:text-red-400">{error}</p>
               </div>
             </div>
           </div>
@@ -671,12 +607,8 @@ function OAuthManagementContent() {
                       ) : (
                         <XCircle className="h-3.5 w-3.5 text-red-500" />
                       )}
-                      <span className="font-mono text-green-400">
-                        $ {entry.command}
-                      </span>
-                      <span className="ml-auto text-zinc-500">
-                        {entry.timestamp}
-                      </span>
+                      <span className="font-mono text-green-400">$ {entry.command}</span>
+                      <span className="ml-auto text-zinc-500">{entry.timestamp}</span>
                     </div>
                     <pre className="mt-1 font-mono text-xs whitespace-pre-wrap text-zinc-300">
                       {entry.output || '(no output)'}
@@ -695,15 +627,13 @@ function OAuthManagementContent() {
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <KeyRound className="h-5 w-5" />
-              Configure{' '}
-              {configProvider
+              Configure {configProvider
                 ? PROVIDERS.find((p) => p.id === configProvider)?.name
                 : ''}{' '}
               OAuth
             </DialogTitle>
             <DialogDescription>
-              Enter the OAuth credentials from your provider&apos;s developer
-              console.
+              Enter the OAuth credentials from your provider&apos;s developer console.
             </DialogDescription>
           </DialogHeader>
 
@@ -743,11 +673,7 @@ function OAuthManagementContent() {
                   className="absolute top-1/2 right-3 -translate-y-1/2 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300"
                   onClick={() => setShowSecret(!showSecret)}
                 >
-                  {showSecret ? (
-                    <EyeOff className="h-4 w-4" />
-                  ) : (
-                    <Eye className="h-4 w-4" />
-                  )}
+                  {showSecret ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                 </button>
               </div>
             </div>
@@ -776,13 +702,10 @@ function OAuthManagementContent() {
                 <span>Command</span>
               </div>
               <pre className="mt-1 font-mono text-xs text-green-400">
-                nself auth oauth config --provider={configProvider || '...'}{' '}
-                --client-id=
+                nself auth oauth config --provider={configProvider || '...'} --client-id=
                 {configForm.clientId ? '***' : '<client-id>'} --client-secret=
                 {configForm.clientSecret ? '***' : '<client-secret>'}
-                {configForm.redirectUri
-                  ? ` --redirect-uri=${configForm.redirectUri}`
-                  : ''}
+                {configForm.redirectUri ? ` --redirect-uri=${configForm.redirectUri}` : ''}
               </pre>
             </div>
           </div>
@@ -797,11 +720,7 @@ function OAuthManagementContent() {
             </Button>
             <Button
               onClick={handleConfigSave}
-              disabled={
-                configLoading ||
-                !configForm.clientId ||
-                !configForm.clientSecret
-              }
+              disabled={configLoading || !configForm.clientId || !configForm.clientSecret}
             >
               {configLoading ? (
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />

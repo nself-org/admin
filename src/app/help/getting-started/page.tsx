@@ -55,13 +55,11 @@ function GettingStartedContent() {
   ])
 
   const getStartedArticles = helpArticlesArray.filter(
-    (a: HelpArticle) => a.category === 'getting-started',
+    (a: HelpArticle) => a.category === 'getting-started'
   )
 
   const markStepComplete = (stepId: number) => {
-    setSteps((prev) =>
-      prev.map((s) => (s.id === stepId ? { ...s, completed: true } : s)),
-    )
+    setSteps((prev) => prev.map((s) => (s.id === stepId ? { ...s, completed: true } : s)))
     if (stepId < steps.length) {
       setCurrentStep(stepId + 1)
     }
@@ -84,8 +82,7 @@ function GettingStartedContent() {
               <div className="mb-4 flex items-center justify-between">
                 <h3 className="text-lg font-semibold">Your Progress</h3>
                 <span className="text-sm text-zinc-500">
-                  {steps.filter((s) => s.completed).length} / {steps.length}{' '}
-                  completed
+                  {steps.filter((s) => s.completed).length} / {steps.length} completed
                 </span>
               </div>
               <div className="h-2 w-full overflow-hidden rounded-full bg-zinc-200 dark:bg-zinc-800">
@@ -105,9 +102,7 @@ function GettingStartedContent() {
                   <Badge className="mb-2">
                     Step {currentStep} of {steps.length}
                   </Badge>
-                  <h2 className="text-2xl font-bold">
-                    {currentStepData.title}
-                  </h2>
+                  <h2 className="text-2xl font-bold">{currentStepData.title}</h2>
                   <p className="mt-2 text-zinc-600 dark:text-zinc-400">
                     {currentStepData.description}
                   </p>
@@ -134,8 +129,8 @@ function GettingStartedContent() {
                       mkdir my-project{'\n'}cd my-project{'\n'}nself init --full
                     </pre>
                     <p>
-                      This creates environment files, docker-compose.yml, and
-                      configuration templates.
+                      This creates environment files, docker-compose.yml, and configuration
+                      templates.
                     </p>
                   </div>
                 )}
@@ -161,8 +156,8 @@ function GettingStartedContent() {
                       nself build
                     </pre>
                     <p>
-                      This reads your .env files and generates all necessary
-                      configuration files for each service.
+                      This reads your .env files and generates all necessary configuration files for
+                      each service.
                     </p>
                   </div>
                 )}
@@ -178,8 +173,7 @@ function GettingStartedContent() {
                       nself status
                     </pre>
                     <p>
-                      Your services should now be running! Access Hasura at
-                      http://localhost:8080
+                      Your services should now be running! Access Hasura at http://localhost:8080
                     </p>
                   </div>
                 )}
@@ -193,10 +187,7 @@ function GettingStartedContent() {
                     Mark Complete
                   </Button>
                   {currentStep < steps.length && (
-                    <Button
-                      variant="outline"
-                      onClick={() => setCurrentStep(currentStep + 1)}
-                    >
+                    <Button variant="outline" onClick={() => setCurrentStep(currentStep + 1)}>
                       Skip Step
                     </Button>
                   )}
@@ -212,8 +203,7 @@ function GettingStartedContent() {
                 </div>
                 <h2 className="mb-2 text-2xl font-bold">Congratulations!</h2>
                 <p className="mb-6 text-zinc-600 dark:text-zinc-400">
-                  You've completed the getting started guide. Your nself project
-                  is ready to use!
+                  You've completed the getting started guide. Your nself project is ready to use!
                 </p>
                 <div className="flex justify-center gap-3">
                   <Link href="/">
@@ -275,9 +265,7 @@ function GettingStartedContent() {
                     href={`/help/article/${article.id}`}
                     className="block rounded-lg border border-zinc-200 p-3 transition-colors hover:bg-zinc-50 dark:border-zinc-800 dark:hover:bg-zinc-900"
                   >
-                    <h4 className="mb-1 text-sm font-medium">
-                      {article.title}
-                    </h4>
+                    <h4 className="mb-1 text-sm font-medium">{article.title}</h4>
                     <div className="flex items-center gap-2 text-xs text-zinc-500">
                       <Clock className="h-3 w-3" />
                       <span>{article.readTime} min read</span>

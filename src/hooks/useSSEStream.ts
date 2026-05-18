@@ -130,10 +130,7 @@ export function useSSEStream() {
     }
 
     // Calculate delay with exponential backoff (max 30 seconds)
-    const delay = Math.min(
-      baseReconnectDelay * Math.pow(2, reconnectAttemptsRef.current),
-      30000,
-    )
+    const delay = Math.min(baseReconnectDelay * Math.pow(2, reconnectAttemptsRef.current), 30000)
 
     reconnectTimeoutRef.current = setTimeout(() => {
       reconnectAttemptsRef.current++

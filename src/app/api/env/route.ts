@@ -72,10 +72,7 @@ export async function GET(): Promise<NextResponse> {
         let serverConfig
         if (hasServer) {
           try {
-            const serverJson = await fs.readFile(
-              path.join(envPath, 'server.json'),
-              'utf-8',
-            )
+            const serverJson = await fs.readFile(path.join(envPath, 'server.json'), 'utf-8')
             serverConfig = JSON.parse(serverJson)
           } catch {
             // Invalid JSON, skip
@@ -86,8 +83,7 @@ export async function GET(): Promise<NextResponse> {
         let type: Environment['type'] = 'custom'
         if (envName === 'dev' || envName === 'local') type = 'local'
         else if (envName === 'staging') type = 'staging'
-        else if (envName === 'prod' || envName === 'production')
-          type = 'production'
+        else if (envName === 'prod' || envName === 'production') type = 'production'
 
         environments.push({
           name: envName,
@@ -158,7 +154,7 @@ export async function GET(): Promise<NextResponse> {
         error: 'Failed to list environments',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -177,20 +173,13 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     if (name && typeof name === 'string' && !validateSafeName(name)) {
       return NextResponse.json(
         { success: false, error: 'Invalid environment name' },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
     // Validate template if provided
-    if (
-      template &&
-      typeof template === 'string' &&
-      !ALLOWED_TEMPLATES.includes(template)
-    ) {
-      return NextResponse.json(
-        { success: false, error: 'Invalid template name' },
-        { status: 400 },
-      )
+    if (template && typeof template === 'string' && !ALLOWED_TEMPLATES.includes(template)) {
+      return NextResponse.json({ success: false, error: 'Invalid template name' }, { status: 400 })
     }
 
     const execArgs: string[] = ['env']
@@ -200,7 +189,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         if (!name) {
           return NextResponse.json(
             { success: false, error: 'Name is required for create action' },
-            { status: 400 },
+            { status: 400 }
           )
         }
         execArgs.push('create', name, template || 'local')
@@ -211,7 +200,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         if (!name) {
           return NextResponse.json(
             { success: false, error: 'Name is required for switch action' },
-            { status: 400 },
+            { status: 400 }
           )
         }
         execArgs.push('switch', name)
@@ -221,7 +210,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         if (!name) {
           return NextResponse.json(
             { success: false, error: 'Name is required for delete action' },
-            { status: 400 },
+            { status: 400 }
           )
         }
         execArgs.push('delete', name)
@@ -250,13 +239,13 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
               success: false,
               error: 'env1 and env2 are required for diff action',
             },
-            { status: 400 },
+            { status: 400 }
           )
         }
         if (!validateSafeName(env1) || !validateSafeName(env2)) {
           return NextResponse.json(
             { success: false, error: 'Invalid environment names for diff' },
-            { status: 400 },
+            { status: 400 }
           )
         }
         execArgs.push('diff', env1, env2)
@@ -266,7 +255,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       default:
         return NextResponse.json(
           { success: false, error: `Unknown action: ${action}` },
-          { status: 400 },
+          { status: 400 }
         )
     }
 
@@ -296,7 +285,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         stdout: execError.stdout || '',
         stderr: execError.stderr || '',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

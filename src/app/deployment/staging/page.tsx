@@ -42,13 +42,11 @@ function StagingContent() {
       if (data.success) {
         // Parse CLI output to determine status
         const output = data.status || ''
-        const isConfigured =
-          !output.includes('not-configured') && !output.includes('not found')
+        const isConfigured = !output.includes('not-configured') && !output.includes('not found')
 
         setStatus({
           configured: isConfigured,
-          connected:
-            output.includes('connected') || output.includes('reachable'),
+          connected: output.includes('connected') || output.includes('reachable'),
           health: output.includes('healthy')
             ? 'healthy'
             : output.includes('unhealthy')
@@ -77,10 +75,7 @@ function StagingContent() {
     return match?.[1]
   }
 
-  const executeAction = async (
-    action: string,
-    options: Record<string, unknown> = {},
-  ) => {
+  const executeAction = async (action: string, options: Record<string, unknown> = {}) => {
     setActionLoading(action)
     setActionResult(null)
 
@@ -176,9 +171,7 @@ function StagingContent() {
                 </svg>
               </div>
               <div>
-                <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                  Configuration
-                </p>
+                <p className="text-sm text-zinc-500 dark:text-zinc-400">Configuration</p>
                 <p
                   className={`font-semibold ${status?.configured ? 'text-green-600 dark:text-green-400' : 'text-yellow-600 dark:text-yellow-400'}`}
                 >
@@ -209,9 +202,7 @@ function StagingContent() {
                 </svg>
               </div>
               <div>
-                <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                  Connection
-                </p>
+                <p className="text-sm text-zinc-500 dark:text-zinc-400">Connection</p>
                 <p
                   className={`font-semibold ${status?.connected ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}
                 >
@@ -242,9 +233,7 @@ function StagingContent() {
                 </svg>
               </div>
               <div>
-                <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                  Health
-                </p>
+                <p className="text-sm text-zinc-500 dark:text-zinc-400">Health</p>
                 <p
                   className={`font-semibold capitalize ${status?.health === 'healthy' ? 'text-green-600 dark:text-green-400' : status?.health === 'unhealthy' ? 'text-red-600 dark:text-red-400' : 'text-zinc-500'}`}
                 >
@@ -270,9 +259,7 @@ function StagingContent() {
               </div>
               {status.serverConfig.user && (
                 <div>
-                  <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                    User
-                  </p>
+                  <p className="text-sm text-zinc-500 dark:text-zinc-400">User</p>
                   <p className="font-mono text-zinc-900 dark:text-white">
                     {status.serverConfig.user}
                   </p>
@@ -280,9 +267,7 @@ function StagingContent() {
               )}
               {status.serverConfig.deployPath && (
                 <div>
-                  <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                    Deploy Path
-                  </p>
+                  <p className="text-sm text-zinc-500 dark:text-zinc-400">Deploy Path</p>
                   <p className="font-mono text-zinc-900 dark:text-white">
                     {status.serverConfig.deployPath}
                   </p>
@@ -342,9 +327,7 @@ function StagingContent() {
                   disabled={!initDomain || actionLoading === 'init'}
                   className="rounded-lg bg-blue-600 px-4 py-2 font-medium text-white transition-colors hover:bg-blue-700 disabled:opacity-50"
                 >
-                  {actionLoading === 'init'
-                    ? 'Initializing...'
-                    : 'Initialize Staging'}
+                  {actionLoading === 'init' ? 'Initializing...' : 'Initialize Staging'}
                 </button>
                 <button
                   type="button"
@@ -409,12 +392,7 @@ function StagingContent() {
                 onClick={() => setActionResult(null)}
                 className="text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300"
               >
-                <svg
-                  className="h-5 w-5"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
+                <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
@@ -440,12 +418,7 @@ function StagingContent() {
                   onClick={() => setShowInitForm(true)}
                   className="flex items-center gap-3 rounded-lg bg-blue-600 px-4 py-3 font-medium text-white transition-colors hover:bg-blue-700"
                 >
-                  <svg
-                    className="h-5 w-5"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
+                  <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
@@ -462,12 +435,7 @@ function StagingContent() {
                 disabled={!status?.configured || actionLoading !== null}
                 className="flex items-center gap-3 rounded-lg border border-zinc-300 px-4 py-3 font-medium text-zinc-700 transition-colors hover:bg-zinc-50 disabled:opacity-50 dark:border-zinc-600 dark:text-zinc-300 dark:hover:bg-zinc-700"
               >
-                <svg
-                  className="h-5 w-5"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
+                <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
@@ -481,9 +449,7 @@ function StagingContent() {
                     d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
                   />
                 </svg>
-                {actionLoading === 'deploy-dry'
-                  ? 'Running...'
-                  : 'Preview Deploy (Dry Run)'}
+                {actionLoading === 'deploy-dry' ? 'Running...' : 'Preview Deploy (Dry Run)'}
               </button>
 
               <button
@@ -491,12 +457,7 @@ function StagingContent() {
                 disabled={!status?.configured || actionLoading !== null}
                 className="flex items-center gap-3 rounded-lg bg-green-600 px-4 py-3 font-medium text-white transition-colors hover:bg-green-700 disabled:opacity-50"
               >
-                <svg
-                  className="h-5 w-5"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
+                <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
@@ -504,9 +465,7 @@ function StagingContent() {
                     d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
                   />
                 </svg>
-                {actionLoading === 'deploy'
-                  ? 'Deploying...'
-                  : 'Deploy to Staging'}
+                {actionLoading === 'deploy' ? 'Deploying...' : 'Deploy to Staging'}
               </button>
 
               <button
@@ -514,12 +473,7 @@ function StagingContent() {
                 disabled={!status?.configured || actionLoading !== null}
                 className="flex items-center gap-3 rounded-lg border border-zinc-300 px-4 py-3 font-medium text-zinc-700 transition-colors hover:bg-zinc-50 disabled:opacity-50 dark:border-zinc-600 dark:text-zinc-300 dark:hover:bg-zinc-700"
               >
-                <svg
-                  className="h-5 w-5"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
+                <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
@@ -539,18 +493,11 @@ function StagingContent() {
             </h3>
             <div className="grid gap-3">
               <button
-                onClick={() =>
-                  executeAction('secrets', { secretAction: 'generate' })
-                }
+                onClick={() => executeAction('secrets', { secretAction: 'generate' })}
                 disabled={!status?.configured || actionLoading !== null}
                 className="flex items-center gap-3 rounded-lg border border-zinc-300 px-4 py-3 font-medium text-zinc-700 transition-colors hover:bg-zinc-50 disabled:opacity-50 dark:border-zinc-600 dark:text-zinc-300 dark:hover:bg-zinc-700"
               >
-                <svg
-                  className="h-5 w-5"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
+                <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
@@ -558,9 +505,7 @@ function StagingContent() {
                     d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"
                   />
                 </svg>
-                {actionLoading === 'secrets'
-                  ? 'Generating...'
-                  : 'Generate Secrets'}
+                {actionLoading === 'secrets' ? 'Generating...' : 'Generate Secrets'}
               </button>
 
               <button
@@ -568,12 +513,7 @@ function StagingContent() {
                 disabled={!status?.configured || actionLoading !== null}
                 className="flex items-center gap-3 rounded-lg border border-zinc-300 px-4 py-3 font-medium text-zinc-700 transition-colors hover:bg-zinc-50 disabled:opacity-50 dark:border-zinc-600 dark:text-zinc-300 dark:hover:bg-zinc-700"
               >
-                <svg
-                  className="h-5 w-5"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
+                <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
@@ -589,12 +529,7 @@ function StagingContent() {
                 disabled={!status?.configured || actionLoading !== null}
                 className="flex items-center gap-3 rounded-lg border border-yellow-300 bg-yellow-50 px-4 py-3 font-medium text-yellow-700 transition-colors hover:bg-yellow-100 disabled:opacity-50 dark:border-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400 dark:hover:bg-yellow-900/30"
               >
-                <svg
-                  className="h-5 w-5"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
+                <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
@@ -602,24 +537,15 @@ function StagingContent() {
                     d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
                   />
                 </svg>
-                {actionLoading === 'reset'
-                  ? 'Resetting...'
-                  : 'Reset Environment'}
+                {actionLoading === 'reset' ? 'Resetting...' : 'Reset Environment'}
               </button>
 
               <button
-                onClick={() =>
-                  executeAction('reset', { data: true, force: true })
-                }
+                onClick={() => executeAction('reset', { data: true, force: true })}
                 disabled={!status?.configured || actionLoading !== null}
                 className="flex items-center gap-3 rounded-lg border border-red-300 bg-red-50 px-4 py-3 font-medium text-red-700 transition-colors hover:bg-red-100 disabled:opacity-50 dark:border-red-800 dark:bg-red-900/20 dark:text-red-400 dark:hover:bg-red-900/30"
               >
-                <svg
-                  className="h-5 w-5"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
+                <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
@@ -627,9 +553,7 @@ function StagingContent() {
                     d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
                   />
                 </svg>
-                {actionLoading === 'reset-data'
-                  ? 'Resetting...'
-                  : 'Reset with Data (Destructive)'}
+                {actionLoading === 'reset-data' ? 'Resetting...' : 'Reset with Data (Destructive)'}
               </button>
             </div>
           </div>
@@ -642,28 +566,23 @@ function StagingContent() {
           </h3>
           <div className="space-y-2 font-mono text-sm">
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-blue-500">nself staging init</span>{' '}
-              &lt;domain&gt; - Initialize staging environment
+              <span className="text-blue-500">nself staging init</span> &lt;domain&gt; - Initialize
+              staging environment
             </p>
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-blue-500">nself staging deploy</span> -
-              Deploy to staging
+              <span className="text-blue-500">nself staging deploy</span> - Deploy to staging
             </p>
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-blue-500">nself staging status</span> -
-              Check staging status
+              <span className="text-blue-500">nself staging status</span> - Check staging status
             </p>
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-blue-500">nself staging logs</span>{' '}
-              [service] - View logs
+              <span className="text-blue-500">nself staging logs</span> [service] - View logs
             </p>
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-blue-500">nself staging shell</span> - SSH
-              to staging server
+              <span className="text-blue-500">nself staging shell</span> - SSH to staging server
             </p>
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-blue-500">nself staging reset</span> --data
-              - Reset with data
+              <span className="text-blue-500">nself staging reset</span> --data - Reset with data
             </p>
           </div>
         </div>

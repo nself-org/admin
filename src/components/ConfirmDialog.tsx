@@ -57,13 +57,7 @@ export function ConfirmProvider({ children }: { children: React.ReactNode }) {
     <ConfirmContext.Provider value={{ confirm }}>
       {children}
       <AnimatePresence>
-        {dialog && (
-          <ConfirmDialog
-            {...dialog}
-            onConfirm={handleConfirm}
-            onCancel={handleCancel}
-          />
-        )}
+        {dialog && <ConfirmDialog {...dialog} onConfirm={handleConfirm} onCancel={handleCancel} />}
       </AnimatePresence>
     </ConfirmContext.Provider>
   )
@@ -101,9 +95,7 @@ function ConfirmDialog({
         <div className="flex items-start">
           <div
             className={`rounded-lg p-2 ${
-              dangerous
-                ? 'bg-red-100 dark:bg-red-900/30'
-                : 'bg-yellow-100 dark:bg-yellow-900/30'
+              dangerous ? 'bg-red-100 dark:bg-red-900/30' : 'bg-yellow-100 dark:bg-yellow-900/30'
             }`}
           >
             <Icon
@@ -115,12 +107,8 @@ function ConfirmDialog({
             />
           </div>
           <div className="ml-4 flex-1">
-            <h3 className="text-lg font-semibold text-zinc-900 dark:text-white">
-              {title}
-            </h3>
-            <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
-              {message}
-            </p>
+            <h3 className="text-lg font-semibold text-zinc-900 dark:text-white">{title}</h3>
+            <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">{message}</p>
           </div>
         </div>
 
@@ -136,9 +124,7 @@ function ConfirmDialog({
             className={
               confirmButtonClass ||
               `rounded-lg px-4 py-2 text-sm font-medium text-white transition-colors ${
-                dangerous
-                  ? 'bg-red-600 hover:bg-red-700'
-                  : 'bg-blue-600 hover:bg-blue-700'
+                dangerous ? 'bg-red-600 hover:bg-red-700' : 'bg-blue-600 hover:bg-blue-700'
               }`
             }
           >
@@ -154,7 +140,7 @@ function ConfirmDialog({
 export async function confirmAction(
   title: string,
   message: string,
-  options: Partial<ConfirmOptions> = {},
+  options: Partial<ConfirmOptions> = {}
 ): Promise<boolean> {
   return new Promise((resolve) => {
     if (typeof window !== 'undefined') {

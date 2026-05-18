@@ -68,7 +68,7 @@ export async function GET(): Promise<NextResponse> {
         error: 'nself CLI not found',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 404 },
+      { status: 404 }
     )
   }
 }

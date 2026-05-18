@@ -17,11 +17,7 @@ interface HealthBadgeProps {
  *   score >= 50 || half-open → amber
  *   score <  50 || open    → red
  */
-export function HealthBadge({
-  score,
-  circuitState,
-  className = '',
-}: HealthBadgeProps) {
+export function HealthBadge({ score, circuitState, className = '' }: HealthBadgeProps) {
   const colour = (() => {
     if (circuitState === 'open') return 'red'
     if (circuitState === 'half-open') return 'amber'
@@ -31,11 +27,7 @@ export function HealthBadge({
   })()
 
   const dotClass =
-    colour === 'green'
-      ? 'bg-emerald-500'
-      : colour === 'amber'
-        ? 'bg-amber-500'
-        : 'bg-red-500'
+    colour === 'green' ? 'bg-emerald-500' : colour === 'amber' ? 'bg-amber-500' : 'bg-red-500'
 
   const textClass =
     colour === 'green'
@@ -62,10 +54,7 @@ export function HealthBadge({
       className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-xs font-semibold ${bgClass} ${textClass} ${className}`}
       title={`Health: ${score}/100 | Circuit: ${circuitState}`}
     >
-      <span
-        className={`h-1.5 w-1.5 rounded-full ${dotClass}`}
-        aria-hidden="true"
-      />
+      <span className={`h-1.5 w-1.5 rounded-full ${dotClass}`} aria-hidden="true" />
       <span>{score}/100</span>
       <span className="opacity-60">·</span>
       <span>{circuitLabel}</span>

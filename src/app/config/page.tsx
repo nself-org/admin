@@ -27,9 +27,7 @@ function ConfigContent() {
   const [searchTerm, setSearchTerm] = useState('')
   const [editingKey, setEditingKey] = useState<string | null>(null)
   const [tempValue, setTempValue] = useState('')
-  const [collapsedSections, setCollapsedSections] = useState<Set<string>>(
-    new Set(),
-  )
+  const [collapsedSections, setCollapsedSections] = useState<Set<string>>(new Set())
 
   // Use async data hook for non-blocking fetch
   const { data, loading, error, refetch } = useAsyncData<EnvVariable[]>(
@@ -38,12 +36,9 @@ function ConfigContent() {
       const timeoutId = setTimeout(() => controller.abort(), 3000)
 
       try {
-        const res = await fetch(
-          `/api/config/env?env=${environment}&defaults=${showDefaults}`,
-          {
-            signal: controller.signal,
-          },
-        )
+        const res = await fetch(`/api/config/env?env=${environment}&defaults=${showDefaults}`, {
+          signal: controller.signal,
+        })
 
         clearTimeout(timeoutId)
 
@@ -67,7 +62,7 @@ function ConfigContent() {
     {
       fetchOnMount: true,
       dependencies: [environment, showDefaults],
-    },
+    }
   )
 
   // Update local variables when data changes
@@ -106,10 +101,8 @@ function ConfigContent() {
   const updateVariable = (key: string, value: string) => {
     setVariables((vars) =>
       vars.map((v) =>
-        v.key === key
-          ? { ...v, value, hasChanges: true, source: 'env' as const }
-          : v,
-      ),
+        v.key === key ? { ...v, value, hasChanges: true, source: 'env' as const } : v
+      )
     )
     setHasChanges(true)
   }
@@ -159,7 +152,7 @@ function ConfigContent() {
       acc[cat].push(v)
       return acc
     },
-    {} as Record<string, EnvVariable[]>,
+    {} as Record<string, EnvVariable[]>
   )
 
   // Compact variable row component
@@ -174,9 +167,7 @@ function ConfigContent() {
         <tr className="bg-blue-50 dark:bg-blue-950/20">
           <td className="px-3 py-1 font-mono text-xs">
             {variable.key}
-            {variable.isSecret && (
-              <Icons.Lock className="ml-1 inline h-3 w-3 text-zinc-400" />
-            )}
+            {variable.isSecret && <Icons.Lock className="ml-1 inline h-3 w-3 text-zinc-400" />}
           </td>
           <td className="px-3 py-1" colSpan={2}>
             <div className="flex items-center gap-1">
@@ -224,9 +215,7 @@ function ConfigContent() {
       >
         <td className="px-3 py-1 font-mono text-xs text-zinc-700 dark:text-zinc-300">
           {variable.key}
-          {variable.isSecret && (
-            <Icons.Lock className="ml-1 inline h-3 w-3 text-zinc-400" />
-          )}
+          {variable.isSecret && <Icons.Lock className="ml-1 inline h-3 w-3 text-zinc-400" />}
         </td>
         <td className="px-3 py-1 font-mono text-xs">
           <div className="flex items-center gap-2">
@@ -305,10 +294,7 @@ function ConfigContent() {
         <Icons.RefreshCw className="h-3 w-3" />
       </Button>
 
-      <Button
-        onClick={saveEnvironmentVariables}
-        disabled={!hasChanges || saving}
-      >
+      <Button onClick={saveEnvironmentVariables} disabled={!hasChanges || saving}>
         <Icons.Save className="mr-1 h-3 w-3" />
         Save
       </Button>
@@ -367,11 +353,7 @@ function ConfigContent() {
             onClick={() => setShowSecrets(!showSecrets)}
             className="flex items-center gap-1 rounded-lg bg-zinc-100 px-3 py-1.5 text-xs text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400"
           >
-            {showSecrets ? (
-              <Icons.EyeOff className="h-3 w-3" />
-            ) : (
-              <Icons.Eye className="h-3 w-3" />
-            )}
+            {showSecrets ? <Icons.EyeOff className="h-3 w-3" /> : <Icons.Eye className="h-3 w-3" />}
             Secrets
           </button>
         </div>
@@ -382,9 +364,7 @@ function ConfigContent() {
         {variables.length === 0 && !loading ? (
           <div className="rounded-xl bg-zinc-50 p-12 text-center dark:bg-zinc-900/50">
             <Icons.Settings className="mx-auto mb-4 h-12 w-12 text-zinc-400" />
-            <p className="text-zinc-600 dark:text-zinc-400">
-              No environment variables found
-            </p>
+            <p className="text-zinc-600 dark:text-zinc-400">No environment variables found</p>
           </div>
         ) : (
           Object.entries(groupedVariables).map(([category, vars]) => {

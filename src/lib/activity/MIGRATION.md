@@ -156,7 +156,7 @@ await logConfigurationChange(
     { field: 'PORT', oldValue: '3000', newValue: '3021' },
     { field: 'DEBUG', oldValue: false, newValue: true },
   ],
-  'admin',
+  'admin'
 )
 ```
 
@@ -174,15 +174,9 @@ await logDatabaseOperation(request, 'sync', 'updated', 'admin', {
 ```typescript
 import { logApiActivity } from '@/lib/activity/logger'
 
-await logApiActivity(
-  request,
-  'created',
-  'api_key',
-  'key-abc123',
-  'Production API Key',
-  'admin',
-  { permissions: ['read', 'write'] },
-)
+await logApiActivity(request, 'created', 'api_key', 'key-abc123', 'Production API Key', 'admin', {
+  permissions: ['read', 'write'],
+})
 ```
 
 ## Activity Sources
@@ -240,7 +234,7 @@ await addAuditLog(
     resourceName: 'postgres',
   },
   true,
-  'admin',
+  'admin'
 )
 
 // Query activities
@@ -316,7 +310,7 @@ export async function POST(request: NextRequest) {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

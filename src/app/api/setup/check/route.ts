@@ -83,7 +83,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   } catch {
     return NextResponse.json(
       { success: false, message: 'Check failed due to internal error' },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

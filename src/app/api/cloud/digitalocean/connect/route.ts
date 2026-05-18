@@ -7,7 +7,7 @@ import { NextRequest, NextResponse } from 'next/server'
  * Returns {valid, email?, error?}.
  */
 async function validateDigitalOceanToken(
-  token: string,
+  token: string
 ): Promise<{ valid: boolean; email?: string; error?: string }> {
   const response = await fetch('https://api.digitalocean.com/v2/account', {
     headers: { Authorization: `Bearer ${token}` },
@@ -37,10 +37,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     const { apiToken } = await request.json()
 
     if (!apiToken) {
-      return NextResponse.json(
-        { success: false, error: 'API token is required' },
-        { status: 400 },
-      )
+      return NextResponse.json({ success: false, error: 'API token is required' }, { status: 400 })
     }
 
     const result = await validateDigitalOceanToken(apiToken)
@@ -52,7 +49,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           error: result.error || 'DigitalOcean token validation failed',
           configured: false,
         },
-        { status: 422 },
+        { status: 422 }
       )
     }
 
@@ -76,7 +73,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to connect to DigitalOcean',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

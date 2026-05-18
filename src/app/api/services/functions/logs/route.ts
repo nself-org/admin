@@ -14,15 +14,11 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     if (!name || !/^[a-z0-9][a-z0-9-]*$/.test(name)) {
       return NextResponse.json(
         { success: false, error: 'Invalid or missing function name' },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
-    const result = await executeNselfCommand('functions', [
-      'logs',
-      name,
-      `--tail=${tail}`,
-    ])
+    const result = await executeNselfCommand('functions', ['logs', name, `--tail=${tail}`])
 
     if (!result.success) {
       return NextResponse.json(
@@ -31,7 +27,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
           error: 'Failed to retrieve function logs',
           details: result.error || result.stderr || 'Unknown error',
         },
-        { status: 500 },
+        { status: 500 }
       )
     }
 
@@ -46,7 +42,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to retrieve function logs',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

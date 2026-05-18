@@ -33,8 +33,7 @@ export const metadata: Metadata = {
     template: '%s - nAdmin',
     default: 'nAdmin - nself Administration Overview',
   },
-  description:
-    'Web-based administration interface for the nself CLI backend stack',
+  description: 'Web-based administration interface for the nself CLI backend stack',
   manifest: '/site.webmanifest',
   appleWebApp: {
     capable: true,
@@ -51,23 +50,14 @@ export const metadata: Metadata = {
   },
 }
 
-export default async function RootLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
   // Empty sections for now since we're not using MDX
   const allSections = {}
   const messages = await getMessages()
 
   return (
     // For RTL languages, set dir="rtl" on the html element. Currently English-only (ltr).
-    <html
-      lang="en"
-      dir="ltr"
-      className={`h-full ${inter.variable}`}
-      suppressHydrationWarning
-    >
+    <html lang="en" dir="ltr" className={`h-full ${inter.variable}`} suppressHydrationWarning>
       <body className="flex min-h-full bg-gradient-to-b from-slate-50 via-white to-slate-100 bg-fixed font-sans antialiased dark:from-gray-950 dark:via-gray-950 dark:to-gray-950">
         <ErrorSuppressor />
         <PWARegister />

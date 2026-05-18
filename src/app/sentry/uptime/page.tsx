@@ -1,16 +1,9 @@
 'use client'
 
-import { StatusBadge } from '@/components/sentry/StatusBadge'
 import type { SentryStatus } from '@/components/sentry/StatusBadge'
+import { StatusBadge } from '@/components/sentry/StatusBadge'
 import { UptimeSparkline } from '@/components/sentry/UptimeSparkline'
-import {
-  Activity,
-  CheckCircle2,
-  Loader2,
-  PlusCircle,
-  RefreshCw,
-  XCircle,
-} from 'lucide-react'
+import { Activity, CheckCircle2, Loader2, PlusCircle, RefreshCw, XCircle } from 'lucide-react'
 import { useCallback, useEffect, useState } from 'react'
 
 interface UptimeCheck {
@@ -84,9 +77,7 @@ export default function SentryUptimePage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="nself-gradient-text text-xl font-semibold">
-            ɳSentry — Uptime Monitors
-          </h1>
+          <h1 className="nself-gradient-text text-xl font-semibold">ɳSentry — Uptime Monitors</h1>
           {data !== null && (
             <p className="text-nself-text-muted mt-0.5 text-xs">
               {operational}/{total} monitors operational · refreshed{' '}
@@ -149,72 +140,51 @@ export default function SentryUptimePage() {
       {/* Monitors table */}
       {data !== null && (
         <div className="glass-card p-4">
-          <p className="text-nself-text mb-3 text-sm font-semibold">
-            Monitors ({total})
-          </p>
+          <p className="text-nself-text mb-3 text-sm font-semibold">Monitors ({total})</p>
           {total === 0 ? (
             <p className="text-nself-text-muted text-xs">
-              No monitors configured. Click &ldquo;Add Monitor&rdquo; to start
-              tracking uptime.
+              No monitors configured. Click &ldquo;Add Monitor&rdquo; to start tracking uptime.
             </p>
           ) : (
             <div className="space-y-3">
               {data.monitors.map((monitor) => (
-                <div
-                  key={monitor.id}
-                  className="border-nself-border rounded-lg border px-4 py-3"
-                >
+                <div key={monitor.id} className="border-nself-border rounded-lg border px-4 py-3">
                   {/* Row 1: name + status + latency */}
                   <div className="flex items-center gap-3">
-                    <div className="flex-1 min-w-0">
-                      <p className="text-nself-text truncate text-sm font-medium">
-                        {monitor.name}
-                      </p>
+                    <div className="min-w-0 flex-1">
+                      <p className="text-nself-text truncate text-sm font-medium">{monitor.name}</p>
                       <p className="text-nself-text-muted truncate font-mono text-xs">
                         {monitor.url}
                       </p>
                     </div>
                     <span className="text-nself-text-muted shrink-0 font-mono text-xs">
-                      {monitor.latencyMs !== null
-                        ? `${monitor.latencyMs} ms`
-                        : '—'}
+                      {monitor.latencyMs !== null ? `${monitor.latencyMs} ms` : '—'}
                     </span>
                     <StatusBadge status={monitor.status} />
                   </div>
 
                   {/* Row 2: sparkline */}
                   <div className="mt-3">
-                    <UptimeSparkline
-                      dataPoints={monitor.checks}
-                      width={480}
-                      height={20}
-                    />
+                    <UptimeSparkline dataPoints={monitor.checks} width={480} height={20} />
                   </div>
 
                   {/* Row 3: uptime % */}
                   <div className="mt-2 flex items-center gap-4">
                     <span className="text-nself-text-muted text-xs">
                       24h:{' '}
-                      <span className="text-nself-text font-medium">
-                        {pct(monitor.uptime24h)}
-                      </span>
+                      <span className="text-nself-text font-medium">{pct(monitor.uptime24h)}</span>
                     </span>
                     <span className="text-nself-text-muted text-xs">
                       7d:{' '}
-                      <span className="text-nself-text font-medium">
-                        {pct(monitor.uptime7d)}
-                      </span>
+                      <span className="text-nself-text font-medium">{pct(monitor.uptime7d)}</span>
                     </span>
                     <span className="text-nself-text-muted text-xs">
                       30d:{' '}
-                      <span className="text-nself-text font-medium">
-                        {pct(monitor.uptime30d)}
-                      </span>
+                      <span className="text-nself-text font-medium">{pct(monitor.uptime30d)}</span>
                     </span>
                     {monitor.lastCheckedAt !== null && (
                       <span className="text-nself-text-muted ml-auto text-xs">
-                        checked{' '}
-                        {new Date(monitor.lastCheckedAt).toLocaleTimeString()}
+                        checked {new Date(monitor.lastCheckedAt).toLocaleTimeString()}
                       </span>
                     )}
                   </div>

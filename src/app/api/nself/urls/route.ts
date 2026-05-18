@@ -20,7 +20,9 @@ interface UrlsResult {
   rawOutput?: string
 }
 
-async function checkReachability(url: string): Promise<{ reachable: boolean; latencyMs?: number; error?: string }> {
+async function checkReachability(
+  url: string
+): Promise<{ reachable: boolean; latencyMs?: number; error?: string }> {
   const start = Date.now()
   try {
     const response = await fetch(url, {
@@ -90,7 +92,7 @@ export async function GET(): Promise<NextResponse> {
     // Check reachability in parallel (max 10)
     const toCheck = parsedUrls.slice(0, 10)
     const reachabilityResults = await Promise.all(
-      toCheck.map((u) => (u.url ? checkReachability(u.url) : Promise.resolve({ reachable: false }))),
+      toCheck.map((u) => (u.url ? checkReachability(u.url) : Promise.resolve({ reachable: false })))
     )
 
     const urls: ServiceUrl[] = parsedUrls.map((u, i) => ({
@@ -102,9 +104,6 @@ export async function GET(): Promise<NextResponse> {
     return NextResponse.json(result)
   } catch (error) {
     const msg = error instanceof Error ? error.message : 'Unknown error'
-    return NextResponse.json(
-      { error: 'Failed to retrieve URLs', details: msg },
-      { status: 500 },
-    )
+    return NextResponse.json({ error: 'Failed to retrieve URLs', details: msg }, { status: 500 })
   }
 }

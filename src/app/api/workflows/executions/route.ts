@@ -13,10 +13,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     const status = searchParams.get('status') as WorkflowExecutionStatus | null
     const limit = searchParams.get('limit')
     const offset = searchParams.get('offset')
-    const orderBy = searchParams.get('orderBy') as
-      | 'startedAt'
-      | 'completedAt'
-      | null
+    const orderBy = searchParams.get('orderBy') as 'startedAt' | 'completedAt' | null
     const orderDir = searchParams.get('orderDir') as 'asc' | 'desc' | null
 
     const executions = await workflowsApi.getWorkflowExecutions({
@@ -37,12 +34,9 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     return NextResponse.json(
       {
         success: false,
-        error:
-          error instanceof Error
-            ? error.message
-            : 'Failed to get workflow executions',
+        error: error instanceof Error ? error.message : 'Failed to get workflow executions',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

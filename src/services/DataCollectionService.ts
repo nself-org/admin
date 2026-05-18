@@ -36,10 +36,7 @@ class RequestDeduplicator {
 
 // Cache with TTL support
 class DataCache {
-  private cache = new Map<
-    string,
-    { data: any; timestamp: number; ttl: number }
-  >()
+  private cache = new Map<string, { data: any; timestamp: number; ttl: number }>()
 
   set(key: string, data: any, ttl: number) {
     this.cache.set(key, {
@@ -129,10 +126,7 @@ export class DataCollectionService {
     const fetch = async () => {
       if (!this.isRunning) return
       try {
-        await Promise.all([
-          this.fetchDockerStats(),
-          this.fetchContainerHealth(),
-        ])
+        await Promise.all([this.fetchDockerStats(), this.fetchContainerHealth()])
       } catch (error) {
         if (error instanceof Error && error.name !== 'AbortError') {
           // Intentionally empty - error handled silently
@@ -148,10 +142,7 @@ export class DataCollectionService {
     const fetch = async () => {
       if (!this.isRunning) return
       try {
-        await Promise.all([
-          this.fetchSystemMetrics(),
-          this.fetchContainerDetails(),
-        ])
+        await Promise.all([this.fetchSystemMetrics(), this.fetchContainerDetails()])
       } catch (error) {
         if (error instanceof Error && error.name !== 'AbortError') {
           // Intentionally empty - error handled silently
@@ -442,16 +433,10 @@ export class DataCollectionService {
             const name = c.name?.toLowerCase() || ''
             let category: 'required' | 'optional' | 'user' = 'user'
 
-            if (
-              ['postgres', 'hasura', 'auth', 'nginx'].some((s) =>
-                name.includes(s),
-              )
-            ) {
+            if (['postgres', 'hasura', 'auth', 'nginx'].some((s) => name.includes(s))) {
               category = 'required'
             } else if (
-              ['minio', 'redis', 'mailpit', 'grafana', 'prometheus'].some((s) =>
-                name.includes(s),
-              )
+              ['minio', 'redis', 'mailpit', 'grafana', 'prometheus'].some((s) => name.includes(s))
             ) {
               category = 'optional'
             }
@@ -484,8 +469,7 @@ export class DataCollectionService {
             running: containers.filter((c) => c.state === 'running').length,
             stopped: containers.filter((c) => c.state === 'stopped').length,
             healthy: containers.filter((c) => c.health === 'healthy').length,
-            unhealthy: containers.filter((c) => c.health === 'unhealthy')
-              .length,
+            unhealthy: containers.filter((c) => c.health === 'unhealthy').length,
           }
 
           // Update both containers and counts

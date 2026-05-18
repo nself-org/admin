@@ -20,7 +20,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     if (!sessionId) {
       return NextResponse.json(
         { success: false, error: 'sessionId query parameter is required' },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -38,9 +38,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     const body: PairingStatusResponse = {
       sessionId,
       status: entry.status,
-      ...(entry.status === 'paired' && entry.token
-        ? { token: entry.token }
-        : {}),
+      ...(entry.status === 'paired' && entry.token ? { token: entry.token } : {}),
     }
 
     return NextResponse.json(body)
@@ -51,7 +49,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to retrieve pairing status',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

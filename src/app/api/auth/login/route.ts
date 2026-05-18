@@ -6,21 +6,14 @@ import {
   verifyAdminLogin,
 } from '@/lib/auth-db'
 import { setCSRFCookie } from '@/lib/csrf'
-import {
-  clearRateLimit,
-  getRateLimitInfo,
-  isRateLimited,
-} from '@/lib/rateLimiter'
+import { clearRateLimit, getRateLimitInfo, isRateLimited } from '@/lib/rateLimiter'
 import { validateRequest } from '@/lib/validation'
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
 
 // Schema for login request
 const loginSchema = z.object({
-  password: z
-    .string()
-    .min(1, 'Password is required')
-    .max(256, 'Password too long'),
+  password: z.string().min(1, 'Password is required').max(256, 'Password too long'),
   rememberMe: z.boolean().optional().default(false),
 })
 
@@ -35,7 +28,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           'Account temporarily locked due to too many failed login attempts. Please try again in 1 hour.',
         locked: true,
       },
-      { status: 423 }, // 423 Locked
+      { status: 423 } // 423 Locked
     )
   }
 
@@ -51,14 +44,12 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       {
         status: 429,
         headers: {
-          'Retry-After': String(
-            Math.ceil((info.resetTime - Date.now()) / 1000),
-          ),
+          'Retry-After': String(Math.ceil((info.resetTime - Date.now()) / 1000)),
           'X-RateLimit-Limit': String(info.limit),
           'X-RateLimit-Remaining': String(info.remaining),
           'X-RateLimit-Reset': new Date(info.resetTime).toISOString(),
         },
-      },
+      }
     )
   }
 
@@ -72,7 +63,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           success: false,
           error: 'Invalid request body',
         },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -85,7 +76,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           error: 'Validation failed',
           details: validation.errors.format(),
         },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -100,7 +91,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           error: 'No password configured. Please set up your password first.',
           needsSetup: true,
         },
-        { status: 401 },
+        { status: 401 }
       )
     }
 
@@ -113,9 +104,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
       // Get client info
       const ip =
-        request.headers.get('x-forwarded-for') ||
-        request.headers.get('x-real-ip') ||
-        'unknown'
+        request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown'
       const userAgent = request.headers.get('user-agent') || undefined
 
       // Create session in database
@@ -160,13 +149,10 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         success: false,
         error: 'Invalid credentials',
       },
-      { status: 401 },
+      { status: 401 }
     )
   } catch (error) {
-    console.error(
-      'Login error:',
-      error instanceof Error ? error.message : 'Unknown error',
-    )
+    console.error('Login error:', error instanceof Error ? error.message : 'Unknown error')
 
     // Don't leak internal errors
     return NextResponse.json(
@@ -174,7 +160,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         success: false,
         error: 'Authentication failed',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

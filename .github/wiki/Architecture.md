@@ -538,10 +538,7 @@ All API routes (except `/api/health` and `/api/auth/login`) require authenticati
 export async function GET(request: Request) {
   const session = await validateSession(request)
   if (!session) {
-    return NextResponse.json(
-      { success: false, error: 'Unauthorized' },
-      { status: 401 },
-    )
+    return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 })
   }
   // ...
 }
@@ -565,10 +562,7 @@ export async function POST(request: Request) {
     // Validate session
     const session = await validateSession(request)
     if (!session) {
-      return NextResponse.json(
-        { success: false, error: 'Unauthorized' },
-        { status: 401 },
-      )
+      return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 })
     }
 
     // Validate input
@@ -591,7 +585,7 @@ export async function POST(request: Request) {
         error: 'Operation failed',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

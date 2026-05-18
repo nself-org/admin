@@ -27,12 +27,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
     const count = await notificationsApi.markAllAsRead(userId)
 
-    logger.api(
-      'POST',
-      '/api/notifications/read-all',
-      200,
-      Date.now() - startTime,
-    )
+    logger.api('POST', '/api/notifications/read-all', 200, Date.now() - startTime)
     logger.info('Marked all notifications as read', { count })
 
     return NextResponse.json({
@@ -53,7 +48,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to mark all notifications as read',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

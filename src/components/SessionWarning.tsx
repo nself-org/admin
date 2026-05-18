@@ -5,8 +5,7 @@ import { AlertTriangle, RefreshCw } from 'lucide-react'
 import { useEffect, useState } from 'react'
 
 export function SessionWarning() {
-  const { isExpiringSoon, minutesUntilExpiry, refreshSession, isRefreshing } =
-    useSession()
+  const { isExpiringSoon, minutesUntilExpiry, refreshSession, isRefreshing } = useSession()
   const [showWarning, setShowWarning] = useState(false)
 
   useEffect(() => {
@@ -28,10 +27,8 @@ export function SessionWarning() {
             Session Expiring Soon
           </h3>
           <p className="mt-1 text-sm text-yellow-800 dark:text-yellow-200">
-            Your session will expire in{' '}
-            {hours > 0 && `${hours} hour${hours > 1 ? 's' : ''} and `}
-            {minutes} minute{minutes !== 1 ? 's' : ''}. You'll be automatically
-            logged out.
+            Your session will expire in {hours > 0 && `${hours} hour${hours > 1 ? 's' : ''} and `}
+            {minutes} minute{minutes !== 1 ? 's' : ''}. You'll be automatically logged out.
           </p>
           <div className="mt-3 flex gap-2">
             <button

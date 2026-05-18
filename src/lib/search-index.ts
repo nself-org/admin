@@ -57,7 +57,7 @@ export interface SearchOptions extends SearchFilters {
  */
 export async function search(
   query: string,
-  options: SearchOptions = {},
+  options: SearchOptions = {}
 ): Promise<{
   results: SearchResult[]
   total: number
@@ -86,9 +86,7 @@ export async function search(
   const searchPromises: Promise<SearchResult[]>[] = []
 
   if (!types || types.includes('audit')) {
-    searchPromises.push(
-      searchAuditLogs(query, { caseSensitive, dateFrom, dateTo }),
-    )
+    searchPromises.push(searchAuditLogs(query, { caseSensitive, dateFrom, dateTo }))
   }
 
   if (!types || types.includes('log')) {
@@ -100,7 +98,7 @@ export async function search(
         dateTo,
         regex,
         caseSensitive,
-      }),
+      })
     )
   }
 
@@ -136,7 +134,7 @@ export async function search(
  */
 async function searchAuditLogs(
   query: string,
-  options: { caseSensitive?: boolean; dateFrom?: Date; dateTo?: Date },
+  options: { caseSensitive?: boolean; dateFrom?: Date; dateTo?: Date }
 ): Promise<SearchResult[]> {
   await initDatabase()
   const logs = await getAuditLogs(1000, 0)
@@ -183,17 +181,13 @@ async function searchContainerLogs(
     dateTo?: Date
     regex?: boolean
     caseSensitive?: boolean
-  },
+  }
 ): Promise<SearchResult[]> {
   const results: SearchResult[] = []
 
   try {
     // Get list of running containers
-    const { stdout } = await execFileAsync('docker', [
-      'ps',
-      '--format',
-      '{{.Names}}',
-    ])
+    const { stdout } = await execFileAsync('docker', ['ps', '--format', '{{.Names}}'])
 
     const containers = stdout.trim().split('\n').filter(Boolean)
 
@@ -203,69 +197,63 @@ async function searchContainerLogs(
       : containers
 
     // Search logs for each container (limit to first 5 for performance)
-    const searchPromises = targetContainers
-      .slice(0, 5)
-      .map(async (container) => {
-        try {
-          const { stdout: logs } = await execFileAsync('docker', [
-            'logs',
-            container,
-            '--tail',
-            '500',
-            '--timestamps',
-          ])
+    const searchPromises = targetContainers.slice(0, 5).map(async (container) => {
+      try {
+        const { stdout: logs } = await execFileAsync('docker', [
+          'logs',
+          container,
+          '--tail',
+          '500',
+          '--timestamps',
+        ])
 
-          const lines = logs.split('\n').filter(Boolean)
-          const searchQuery = options.caseSensitive
-            ? query
-            : query.toLowerCase()
+        const lines = logs.split('\n').filter(Boolean)
+        const searchQuery = options.caseSensitive ? query : query.toLowerCase()
 
-          for (const line of lines) {
-            const searchLine = options.caseSensitive ? line : line.toLowerCase()
+        for (const line of lines) {
+          const searchLine = options.caseSensitive ? line : line.toLowerCase()
 
-            if (
-              options.regex
-                ? new RegExp(query, options.caseSensitive ? '' : 'i').test(line)
-                : searchLine.includes(searchQuery)
-            ) {
-              // Extract timestamp and message
-              const timestampMatch = line.match(/^(\S+)\s+(.+)$/)
-              const timestamp = timestampMatch
-                ? new Date(timestampMatch[1])
-                : new Date()
-              const message = timestampMatch ? timestampMatch[2] : line
+          if (
+            options.regex
+              ? new RegExp(query, options.caseSensitive ? '' : 'i').test(line)
+              : searchLine.includes(searchQuery)
+          ) {
+            // Extract timestamp and message
+            const timestampMatch = line.match(/^(\S+)\s+(.+)$/)
+            const timestamp = timestampMatch ? new Date(timestampMatch[1]) : new Date()
+            const message = timestampMatch ? timestampMatch[2] : line
 
-              // Detect log level
-              let level: 'error' | 'warn' | 'info' | 'debug' = 'info'
-              if (/error|err|fatal|critical/i.test(message)) level = 'error'
-              else if (/warn|warning/i.test(message)) level = 'warn'
-              else if (/debug|trace/i.test(message)) level = 'debug'
+            // Detect log level
+            let level: 'error' | 'warn' | 'info' | 'debug' = 'info'
+            if (/error|err|fatal|critical/i.test(message)) level = 'error'
+            else if (/warn|warning/i.test(message)) level = 'warn'
+            else if (/debug|trace/i.test(message)) level = 'debug'
 
-              // Filter by level if specified
-              if (options.levels && !options.levels.includes(level)) continue
+            // Filter by level if specified
+            if (options.levels && !options.levels.includes(level)) continue
 
-              // Filter by date range
-              if (options.dateFrom && timestamp < options.dateFrom) continue
-              if (options.dateTo && timestamp > options.dateTo) continue
+            // Filter by date range
+            if (options.dateFrom && timestamp < options.dateFrom) continue
+            if (options.dateTo && timestamp > options.dateTo) continue
 
-              results.push({
-                id: `log-${container}-${timestamp.getTime()}`,
-                type: 'log',
-                title: container,
-                description: message.substring(0, 200),
-                content: message,
-                timestamp,
-                service: container,
-                level,
-                score: 0,
-                url: `/services/logs?container=${container}`,
-              })
-            }
+            results.push({
+              id: `log-${container}-${timestamp.getTime()}`,
+              type: 'log',
+              title: container,
+              description: message.substring(0, 200),
+              content: message,
+              timestamp,
+              service: container,
+              level,
+              score: 0,
+              url: `/services/logs?container=${container}`,
+            })
           }
-        } catch {
-          // Ignore errors for individual containers
         }
-      })
+      } catch {
+        // Ignore errors for individual containers
+      }
+    })
 
     await Promise.all(searchPromises)
   } catch {
@@ -280,7 +268,7 @@ async function searchContainerLogs(
  */
 async function searchConfigs(
   query: string,
-  options: { caseSensitive?: boolean },
+  options: { caseSensitive?: boolean }
 ): Promise<SearchResult[]> {
   const results: SearchResult[] = []
 
@@ -331,7 +319,7 @@ async function searchConfigs(
  */
 async function searchFiles(
   query: string,
-  options: { caseSensitive?: boolean; regex?: boolean },
+  options: { caseSensitive?: boolean; regex?: boolean }
 ): Promise<SearchResult[]> {
   const results: SearchResult[] = []
 
@@ -441,10 +429,7 @@ function rankResults(results: SearchResult[], query: string): SearchResult[] {
 /**
  * Get search suggestions based on partial query
  */
-export async function getSuggestions(
-  query: string,
-  limit = 5,
-): Promise<string[]> {
+export async function getSuggestions(query: string, limit = 5): Promise<string[]> {
   if (!query || query.length < 2) return []
 
   const { results } = await search(query, { limit: 20 })
@@ -457,10 +442,7 @@ export async function getSuggestions(
     }
 
     // Add service names
-    if (
-      result.service &&
-      result.service.toLowerCase().includes(query.toLowerCase())
-    ) {
+    if (result.service && result.service.toLowerCase().includes(query.toLowerCase())) {
       suggestions.add(result.service)
     }
 
@@ -479,39 +461,19 @@ export async function getSearchFilters(): Promise<{
   levels: string[]
 }> {
   try {
-    const { stdout } = await execFileAsync('docker', [
-      'ps',
-      '--format',
-      '{{.Names}}',
-    ])
+    const { stdout } = await execFileAsync('docker', ['ps', '--format', '{{.Names}}'])
 
     const services = stdout.trim().split('\n').filter(Boolean)
 
     return {
       services,
-      types: [
-        'log',
-        'audit',
-        'config',
-        'service',
-        'database',
-        'navigation',
-        'file',
-      ],
+      types: ['log', 'audit', 'config', 'service', 'database', 'navigation', 'file'],
       levels: ['error', 'warn', 'info', 'debug'],
     }
   } catch {
     return {
       services: [],
-      types: [
-        'log',
-        'audit',
-        'config',
-        'service',
-        'database',
-        'navigation',
-        'file',
-      ],
+      types: ['log', 'audit', 'config', 'service', 'database', 'navigation', 'file'],
       levels: ['error', 'warn', 'info', 'debug'],
     }
   }

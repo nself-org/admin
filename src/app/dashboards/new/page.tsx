@@ -53,10 +53,7 @@ export default function NewDashboardPage() {
       <PageHeader
         title="Create Dashboard"
         description="Set up a new custom dashboard"
-        breadcrumbs={[
-          { label: 'Dashboards', href: '/dashboards' },
-          { label: 'New' },
-        ]}
+        breadcrumbs={[{ label: 'Dashboards', href: '/dashboards' }, { label: 'New' }]}
       />
       <PageContent>
         <Card className="mx-auto max-w-2xl p-6">
@@ -186,25 +183,19 @@ export default function NewDashboardPage() {
           </h3>
           <div className="grid gap-4 md:grid-cols-3">
             <div className="rounded-lg border border-zinc-200 p-4 dark:border-zinc-700">
-              <h4 className="mb-2 font-medium text-zinc-900 dark:text-white">
-                Start Simple
-              </h4>
+              <h4 className="mb-2 font-medium text-zinc-900 dark:text-white">Start Simple</h4>
               <p className="text-sm text-zinc-500 dark:text-zinc-400">
                 Begin with a few key metrics and expand as needed
               </p>
             </div>
             <div className="rounded-lg border border-zinc-200 p-4 dark:border-zinc-700">
-              <h4 className="mb-2 font-medium text-zinc-900 dark:text-white">
-                Group Related Data
-              </h4>
+              <h4 className="mb-2 font-medium text-zinc-900 dark:text-white">Group Related Data</h4>
               <p className="text-sm text-zinc-500 dark:text-zinc-400">
                 Place related widgets together for easier scanning
               </p>
             </div>
             <div className="rounded-lg border border-zinc-200 p-4 dark:border-zinc-700">
-              <h4 className="mb-2 font-medium text-zinc-900 dark:text-white">
-                Use Clear Titles
-              </h4>
+              <h4 className="mb-2 font-medium text-zinc-900 dark:text-white">Use Clear Titles</h4>
               <p className="text-sm text-zinc-500 dark:text-zinc-400">
                 Give each widget a descriptive name for clarity
               </p>

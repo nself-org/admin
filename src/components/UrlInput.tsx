@@ -122,10 +122,7 @@ export function UrlInput({
         }
       } else {
         // Single word - valid
-        if (
-          !/^[a-z0-9][a-z0-9-]*[a-z0-9]$/.test(val) &&
-          !/^[a-z0-9]$/.test(val)
-        ) {
+        if (!/^[a-z0-9][a-z0-9-]*[a-z0-9]$/.test(val) && !/^[a-z0-9]$/.test(val)) {
           return 'Invalid format'
         }
       }

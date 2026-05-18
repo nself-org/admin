@@ -11,20 +11,14 @@ interface RouteParams {
   params: Promise<{ id: string }>
 }
 
-export async function DELETE(
-  request: NextRequest,
-  { params }: RouteParams,
-): Promise<NextResponse> {
+export async function DELETE(request: NextRequest, { params }: RouteParams): Promise<NextResponse> {
   const authError = await requireAuth(request)
   if (authError) return authError
 
   const { id } = await params
 
   if (typeof id !== 'string' || id.trim().length === 0) {
-    return NextResponse.json(
-      { success: false, error: 'Project id is required' },
-      { status: 400 },
-    )
+    return NextResponse.json({ success: false, error: 'Project id is required' }, { status: 400 })
   }
 
   try {
@@ -39,7 +33,7 @@ export async function DELETE(
           error: pickerErr.message,
           code: pickerErr.code,
         },
-        { status: 404 },
+        { status: 404 }
       )
     }
     return NextResponse.json(
@@ -48,7 +42,7 @@ export async function DELETE(
         error: 'Failed to remove project',
         details: err instanceof Error ? err.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

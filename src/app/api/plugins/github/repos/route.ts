@@ -39,17 +39,14 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         affiliation: 'owner,collaborator,organization_member',
       })
 
-      const resp = await fetch(
-        `https://api.github.com/user/repos?${ghParams}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            Accept: 'application/vnd.github+json',
-            'X-GitHub-Api-Version': '2022-11-28',
-          },
-          signal: AbortSignal.timeout(15_000),
+      const resp = await fetch(`https://api.github.com/user/repos?${ghParams}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          Accept: 'application/vnd.github+json',
+          'X-GitHub-Api-Version': '2022-11-28',
         },
-      )
+        signal: AbortSignal.timeout(15_000),
+      })
 
       if (!resp.ok) {
         const text = await resp.text()
@@ -58,7 +55,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
             error: `GitHub API returned ${resp.status}`,
             details: text.slice(0, 500),
           },
-          { status: 502 },
+          { status: 502 }
         )
       }
 
@@ -94,9 +91,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     if (search) {
       const q = search.toLowerCase()
       filtered = filtered.filter(
-        (repo) =>
-          repo.name.toLowerCase().includes(q) ||
-          repo.description?.toLowerCase().includes(q),
+        (repo) => repo.name.toLowerCase().includes(q) || repo.description?.toLowerCase().includes(q)
       )
     }
     if (filter === 'has_issues') {
@@ -125,7 +120,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to fetch repositories',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

@@ -58,9 +58,7 @@ async function validateDigitalOcean(token: string): Promise<ValidationResult> {
  * Full API validation requires the Google Auth library which may not be present.
  * We validate the JSON structure and attempt a token exchange if possible.
  */
-async function validateGCP(
-  serviceAccountJson: string,
-): Promise<ValidationResult> {
+async function validateGCP(serviceAccountJson: string): Promise<ValidationResult> {
   try {
     let parsed: Record<string, unknown>
     try {
@@ -104,10 +102,7 @@ async function validateGCP(
 
     // Validate private key format
     const privateKey = parsed.private_key as string
-    if (
-      !privateKey.includes('-----BEGIN') ||
-      !privateKey.includes('-----END')
-    ) {
+    if (!privateKey.includes('-----BEGIN') || !privateKey.includes('-----END')) {
       return {
         provider: 'gcp',
         valid: false,
@@ -222,7 +217,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           if (!token) {
             return NextResponse.json(
               { success: false, error: 'DigitalOcean API token is required' },
-              { status: 400 },
+              { status: 400 }
             )
           }
           result = await validateDigitalOcean(token)
@@ -258,7 +253,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         'POST',
         '/api/cloud/providers/validate',
         result.valid ? 200 : 422,
-        Date.now() - startTime,
+        Date.now() - startTime
       )
 
       return NextResponse.json({
@@ -321,7 +316,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         stdout: execError.stdout || '',
         stderr: execError.stderr || '',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

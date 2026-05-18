@@ -126,7 +126,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
               success: false,
               error: 'File parameter is required for read action',
             },
-            { status: 400 },
+            { status: 400 }
           )
         }
         return await readConfigFile(file)
@@ -139,7 +139,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       default:
         return NextResponse.json(
           { success: false, error: `Unknown action: ${action}` },
-          { status: 400 },
+          { status: 400 }
         )
     }
   } catch (error) {
@@ -149,7 +149,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         error: 'Configuration operation failed',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -162,10 +162,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     const { action, file, content, options = {} } = await request.json()
 
     if (!action) {
-      return NextResponse.json(
-        { success: false, error: 'Action is required' },
-        { status: 400 },
-      )
+      return NextResponse.json({ success: false, error: 'Action is required' }, { status: 400 })
     }
 
     switch (action) {
@@ -176,19 +173,15 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
               success: false,
               error: 'File and content are required for write action',
             },
-            { status: 400 },
+            { status: 400 }
           )
         }
-        return await writeConfigFile(
-          file,
-          content,
-          options as WriteConfigOptions,
-        )
+        return await writeConfigFile(file, content, options as WriteConfigOptions)
       case 'update':
         if (!file) {
           return NextResponse.json(
             { success: false, error: 'File is required for update action' },
-            { status: 400 },
+            { status: 400 }
           )
         }
         return await updateConfigFile(file, options as UpdateConfigOptions)
@@ -201,7 +194,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       default:
         return NextResponse.json(
           { success: false, error: `Unknown action: ${action}` },
-          { status: 400 },
+          { status: 400 }
         )
     }
   } catch (error) {
@@ -211,7 +204,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         error: 'Configuration operation failed',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -247,8 +240,7 @@ async function getConfigFiles() {
           lines: content.split('\n').length,
           variables: content
             .split('\n')
-            .filter((line) => line.trim() && !line.trim().startsWith('#'))
-            .length,
+            .filter((line) => line.trim() && !line.trim().startsWith('#')).length,
         })
       } catch {
         configFiles.push({
@@ -322,15 +314,9 @@ async function getConfigFiles() {
         files: configFiles,
         summary: {
           total: configFiles.filter((f) => f.exists).length,
-          environments: configFiles.filter(
-            (f) => f.type === 'environment' && f.exists,
-          ).length,
-          dockerFiles: configFiles.filter(
-            (f) => f.type === 'docker-compose' && f.exists,
-          ).length,
-          directories: configFiles.filter(
-            (f) => f.type === 'directory' && f.exists,
-          ).length,
+          environments: configFiles.filter((f) => f.type === 'environment' && f.exists).length,
+          dockerFiles: configFiles.filter((f) => f.type === 'docker-compose' && f.exists).length,
+          directories: configFiles.filter((f) => f.type === 'directory' && f.exists).length,
         },
         timestamp: new Date().toISOString(),
       },
@@ -342,7 +328,7 @@ async function getConfigFiles() {
         error: 'Failed to get configuration files',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -358,7 +344,7 @@ async function readConfigFile(fileName: string) {
         success: false,
         error: validation.error,
       },
-      { status: 403 },
+      { status: 403 }
     )
   }
 
@@ -397,16 +383,12 @@ async function readConfigFile(fileName: string) {
         error: `Failed to read file '${safeFileName}'`,
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
 
-async function writeConfigFile(
-  fileName: string,
-  content: string,
-  options: WriteConfigOptions,
-) {
+async function writeConfigFile(fileName: string, content: string, options: WriteConfigOptions) {
   const backendPath = getProjectPath()
 
   // Validate file path
@@ -417,7 +399,7 @@ async function writeConfigFile(
         success: false,
         error: validation.error,
       },
-      { status: 403 },
+      { status: 403 }
     )
   }
 
@@ -478,15 +460,12 @@ async function writeConfigFile(
         error: `Failed to write file '${safeFileName}'`,
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
 
-async function updateConfigFile(
-  fileName: string,
-  options: UpdateConfigOptions,
-) {
+async function updateConfigFile(fileName: string, options: UpdateConfigOptions) {
   const backendPath = getProjectPath()
 
   // Validate file path
@@ -497,7 +476,7 @@ async function updateConfigFile(
         success: false,
         error: validation.error,
       },
-      { status: 403 },
+      { status: 403 }
     )
   }
 
@@ -543,7 +522,7 @@ async function updateConfigFile(
         error: `Failed to update file '${safeFileName}'`,
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -553,15 +532,11 @@ async function validateConfiguration() {
 
   try {
     // Validate using nself doctor — use execFile with cwd to avoid shell injection
-    const { stdout: nselfValidation, stderr } = await execFileAsync(
-      'nself',
-      ['doctor'],
-      {
-        timeout: 30000,
-        cwd: backendPath,
-        env: { ...process.env, PATH: getEnhancedPath() },
-      },
-    )
+    const { stdout: nselfValidation, stderr } = await execFileAsync('nself', ['doctor'], {
+      timeout: 30000,
+      cwd: backendPath,
+      env: { ...process.env, PATH: getEnhancedPath() },
+    })
 
     // Validate Docker Compose
     const { stdout: dockerValidation } = await execFileAsync(
@@ -571,7 +546,7 @@ async function validateConfiguration() {
         timeout: 30000,
         cwd: backendPath,
         env: { ...process.env, PATH: getEnhancedPath() },
-      },
+      }
     ).catch((error) => ({
       stdout: '',
       stderr: error instanceof Error ? error.message : 'Unknown error',
@@ -632,7 +607,7 @@ async function validateConfiguration() {
         error: 'Configuration validation failed',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -645,42 +620,30 @@ async function applyConfiguration(options: ApplyConfigOptions) {
 
     // Restart services if requested
     if (options.restart) {
-      const { stdout, stderr } = await execFileAsync(
-        'docker-compose',
-        ['restart'],
-        {
-          timeout: 60000,
-          cwd: backendPath,
-          env: { ...process.env, PATH: getEnhancedPath() },
-        },
-      )
+      const { stdout, stderr } = await execFileAsync('docker-compose', ['restart'], {
+        timeout: 60000,
+        cwd: backendPath,
+        env: { ...process.env, PATH: getEnhancedPath() },
+      })
       results.push({ action: 'restart', stdout, stderr })
     }
 
     // Rebuild services if requested
     if (options.rebuild) {
-      const { stdout, stderr } = await execFileAsync(
-        'docker-compose',
-        ['build'],
-        {
-          timeout: 300000,
-          cwd: backendPath,
-          env: { ...process.env, PATH: getEnhancedPath() },
-        },
-      )
+      const { stdout, stderr } = await execFileAsync('docker-compose', ['build'], {
+        timeout: 300000,
+        cwd: backendPath,
+        env: { ...process.env, PATH: getEnhancedPath() },
+      })
       results.push({ action: 'rebuild', stdout, stderr })
     }
 
     // Apply nself configuration
-    const { stdout: nselfOutput, stderr: nselfError } = await execFileAsync(
-      'nself',
-      ['apply'],
-      {
-        timeout: 30000,
-        cwd: backendPath,
-        env: { ...process.env, PATH: getEnhancedPath() },
-      },
-    ).catch((error) => ({
+    const { stdout: nselfOutput, stderr: nselfError } = await execFileAsync('nself', ['apply'], {
+      timeout: 30000,
+      cwd: backendPath,
+      env: { ...process.env, PATH: getEnhancedPath() },
+    }).catch((error) => ({
       stdout: '',
       stderr: error instanceof Error ? error.message : 'Unknown error',
     }))
@@ -705,7 +668,7 @@ async function applyConfiguration(options: ApplyConfigOptions) {
         error: 'Failed to apply configuration',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -722,7 +685,7 @@ async function createEnvironmentFile(options: CreateEnvOptions) {
         success: false,
         error: validation.error,
       },
-      { status: 403 },
+      { status: 403 }
     )
   }
 
@@ -789,7 +752,7 @@ EMAIL_FROM=admin@localhost
         error: `Failed to create environment file '${fileName}'`,
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -841,7 +804,7 @@ async function backupConfiguration() {
         error: 'Failed to backup configuration',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -869,7 +832,7 @@ async function getEnvTemplate() {
         error: 'Failed to get environment template',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -881,7 +844,7 @@ async function restoreConfiguration(options: RestoreConfigOptions) {
         success: false,
         error: 'Backup path is required',
       },
-      { status: 400 },
+      { status: 400 }
     )
   }
 
@@ -893,7 +856,7 @@ async function restoreConfiguration(options: RestoreConfigOptions) {
         success: false,
         error: 'Invalid backup path',
       },
-      { status: 403 },
+      { status: 403 }
     )
   }
 
@@ -929,7 +892,7 @@ async function restoreConfiguration(options: RestoreConfigOptions) {
         error: 'Failed to restore configuration',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -938,34 +901,21 @@ async function applyEnvironmentChanges() {
   const backendPath = getProjectPath()
 
   // Restart containers to pick up new environment variables
-  const { stdout, stderr } = await execFileAsync(
-    'docker-compose',
-    ['restart'],
-    {
-      timeout: 60000,
-      cwd: backendPath,
-      env: { ...process.env, PATH: getEnhancedPath() },
-    },
-  )
+  const { stdout, stderr } = await execFileAsync('docker-compose', ['restart'], {
+    timeout: 60000,
+    cwd: backendPath,
+    env: { ...process.env, PATH: getEnhancedPath() },
+  })
 
   return { success: true, stdout, stderr }
 }
 
-const SENSITIVE_KEY_PATTERNS = [
-  /password/i,
-  /secret/i,
-  /key/i,
-  /token/i,
-  /credential/i,
-  /private/i,
-]
+const SENSITIVE_KEY_PATTERNS = [/password/i, /secret/i, /key/i, /token/i, /credential/i, /private/i]
 
 function redactSensitive(env: Record<string, string>): Record<string, string> {
   const result: Record<string, string> = {}
   for (const [k, v] of Object.entries(env)) {
-    const isSensitive = SENSITIVE_KEY_PATTERNS.some((pattern) =>
-      pattern.test(k),
-    )
+    const isSensitive = SENSITIVE_KEY_PATTERNS.some((pattern) => pattern.test(k))
     result[k] = isSensitive ? '***REDACTED***' : v
   }
   return result

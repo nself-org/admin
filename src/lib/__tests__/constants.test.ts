@@ -60,9 +60,7 @@ describe('PORT_RANGES', () => {
   it('has valid system services range', () => {
     expect(PORT_RANGES.SYSTEM_SERVICES.start).toBe(3100)
     expect(PORT_RANGES.SYSTEM_SERVICES.end).toBe(3199)
-    expect(PORT_RANGES.SYSTEM_SERVICES.start).toBeLessThan(
-      PORT_RANGES.SYSTEM_SERVICES.end,
-    )
+    expect(PORT_RANGES.SYSTEM_SERVICES.start).toBeLessThan(PORT_RANGES.SYSTEM_SERVICES.end)
   })
 })
 

@@ -12,10 +12,7 @@ interface RouteParams {
   params: Promise<{ name: string }>
 }
 
-export async function POST(
-  request: NextRequest,
-  { params }: RouteParams,
-): Promise<NextResponse> {
+export async function POST(request: NextRequest, { params }: RouteParams): Promise<NextResponse> {
   const authError = await requireAuth(request)
   if (authError) return authError
 
@@ -35,23 +32,15 @@ export async function POST(
     if (preview) args.push('--preview')
     if (cdn) args.push(`--cdn=${cdn}`)
 
-    const { stdout } = await execAsync(
-      `${nselfPath} ${args.join(' ')} --json`,
-      {
-        cwd: projectPath,
-        env: { ...process.env, PATH: getEnhancedPath() },
-        timeout: 600000,
-      },
-    )
+    const { stdout } = await execAsync(`${nselfPath} ${args.join(' ')} --json`, {
+      cwd: projectPath,
+      env: { ...process.env, PATH: getEnhancedPath() },
+      timeout: 600000,
+    })
 
     const result = JSON.parse(stdout)
 
-    logger.api(
-      'POST',
-      `/api/frontend/${name}/deploy`,
-      200,
-      Date.now() - startTime,
-    )
+    logger.api('POST', `/api/frontend/${name}/deploy`, 200, Date.now() - startTime)
     return NextResponse.json({
       success: true,
       message: result.message ?? `Frontend app ${name} deployed`,
@@ -72,7 +61,7 @@ export async function POST(
         error: 'Failed to deploy frontend app',
         details: err.message,
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

@@ -119,9 +119,7 @@ export function useSession(): UseSessionReturn {
 
   // Calculate minutes until expiry
   const minutesUntilExpiry = sessionInfo
-    ? Math.floor(
-        (new Date(sessionInfo.expiresAt).getTime() - Date.now()) / 1000 / 60,
-      )
+    ? Math.floor((new Date(sessionInfo.expiresAt).getTime() - Date.now()) / 1000 / 60)
     : 0
 
   return {

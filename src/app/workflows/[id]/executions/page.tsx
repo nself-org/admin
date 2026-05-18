@@ -23,10 +23,7 @@ import Link from 'next/link'
 import { useParams, useSearchParams } from 'next/navigation'
 import * as React from 'react'
 
-const stepStatusIcons: Record<
-  WorkflowExecutionStep['status'],
-  React.ReactNode
-> = {
+const stepStatusIcons: Record<WorkflowExecutionStep['status'], React.ReactNode> = {
   pending: <Clock className="h-4 w-4 text-zinc-400" />,
   running: <Loader2 className="h-4 w-4 animate-spin text-blue-500" />,
   completed: <CheckCircle className="h-4 w-4 text-green-500" />,
@@ -41,11 +38,11 @@ export default function WorkflowExecutionsPage() {
   const highlightedId = searchParams.get('highlight')
 
   const { workflow, isLoading: workflowLoading } = useWorkflow(workflowId)
-  const [selectedExecution, setSelectedExecution] =
-    React.useState<WorkflowExecution | null>(null)
+  const [selectedExecution, setSelectedExecution] = React.useState<WorkflowExecution | null>(null)
 
-  const { execution: executionDetails, isLoading: executionLoading } =
-    useWorkflowExecution(selectedExecution?.id)
+  const { execution: executionDetails, isLoading: executionLoading } = useWorkflowExecution(
+    selectedExecution?.id
+  )
 
   const handleExecutionClick = (execution: WorkflowExecution) => {
     setSelectedExecution(execution)
@@ -157,11 +154,7 @@ export default function WorkflowExecutionsPage() {
                   <h3 className="font-semibold text-zinc-900 dark:text-zinc-50">
                     Execution Details
                   </h3>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => setSelectedExecution(null)}
-                  >
+                  <Button variant="ghost" size="sm" onClick={() => setSelectedExecution(null)}>
                     <XCircle className="h-4 w-4" />
                   </Button>
                 </div>
@@ -176,9 +169,7 @@ export default function WorkflowExecutionsPage() {
                   <div className="space-y-4">
                     {/* Status Badge */}
                     <div className="flex items-center gap-2">
-                      <span className="text-sm text-zinc-500 dark:text-zinc-400">
-                        Status:
-                      </span>
+                      <span className="text-sm text-zinc-500 dark:text-zinc-400">Status:</span>
                       <Badge
                         className={
                           executionDetails.status === 'completed'
@@ -207,41 +198,23 @@ export default function WorkflowExecutionsPage() {
                     {/* Execution Info */}
                     <div className="space-y-2 text-sm">
                       <div className="flex justify-between">
-                        <span className="text-zinc-500 dark:text-zinc-400">
-                          ID:
-                        </span>
-                        <span className="font-mono text-xs">
-                          {executionDetails.id}
-                        </span>
+                        <span className="text-zinc-500 dark:text-zinc-400">ID:</span>
+                        <span className="font-mono text-xs">{executionDetails.id}</span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-zinc-500 dark:text-zinc-400">
-                          Trigger:
-                        </span>
-                        <span className="capitalize">
-                          {executionDetails.triggerType}
-                        </span>
+                        <span className="text-zinc-500 dark:text-zinc-400">Trigger:</span>
+                        <span className="capitalize">{executionDetails.triggerType}</span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-zinc-500 dark:text-zinc-400">
-                          Started:
-                        </span>
-                        <span>
-                          {formatTimestamp(executionDetails.startedAt)}
-                        </span>
+                        <span className="text-zinc-500 dark:text-zinc-400">Started:</span>
+                        <span>{formatTimestamp(executionDetails.startedAt)}</span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-zinc-500 dark:text-zinc-400">
-                          Completed:
-                        </span>
-                        <span>
-                          {formatTimestamp(executionDetails.completedAt)}
-                        </span>
+                        <span className="text-zinc-500 dark:text-zinc-400">Completed:</span>
+                        <span>{formatTimestamp(executionDetails.completedAt)}</span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-zinc-500 dark:text-zinc-400">
-                          Duration:
-                        </span>
+                        <span className="text-zinc-500 dark:text-zinc-400">Duration:</span>
                         <span className="font-mono">
                           {formatDuration(executionDetails.duration)}
                         </span>
@@ -261,33 +234,30 @@ export default function WorkflowExecutionsPage() {
                     )}
 
                     {/* Steps */}
-                    {executionDetails.steps &&
-                      executionDetails.steps.length > 0 && (
-                        <div>
-                          <h4 className="mb-2 text-sm font-medium text-zinc-900 dark:text-zinc-50">
-                            Steps
-                          </h4>
-                          <div className="space-y-2">
-                            {executionDetails.steps.map((step, index) => (
-                              <div
-                                key={step.actionId}
-                                className="flex items-center gap-2 rounded-md border bg-zinc-50 p-2 dark:border-zinc-800 dark:bg-zinc-900"
-                              >
-                                <span className="flex h-5 w-5 items-center justify-center rounded-full bg-zinc-200 text-xs font-medium dark:bg-zinc-700">
-                                  {index + 1}
-                                </span>
-                                {stepStatusIcons[step.status]}
-                                <span className="flex-1 truncate text-sm">
-                                  {step.actionName}
-                                </span>
-                                <span className="font-mono text-xs text-zinc-500">
-                                  {formatDuration(step.duration)}
-                                </span>
-                              </div>
-                            ))}
-                          </div>
+                    {executionDetails.steps && executionDetails.steps.length > 0 && (
+                      <div>
+                        <h4 className="mb-2 text-sm font-medium text-zinc-900 dark:text-zinc-50">
+                          Steps
+                        </h4>
+                        <div className="space-y-2">
+                          {executionDetails.steps.map((step, index) => (
+                            <div
+                              key={step.actionId}
+                              className="flex items-center gap-2 rounded-md border bg-zinc-50 p-2 dark:border-zinc-800 dark:bg-zinc-900"
+                            >
+                              <span className="flex h-5 w-5 items-center justify-center rounded-full bg-zinc-200 text-xs font-medium dark:bg-zinc-700">
+                                {index + 1}
+                              </span>
+                              {stepStatusIcons[step.status]}
+                              <span className="flex-1 truncate text-sm">{step.actionName}</span>
+                              <span className="font-mono text-xs text-zinc-500">
+                                {formatDuration(step.duration)}
+                              </span>
+                            </div>
+                          ))}
                         </div>
-                      )}
+                      </div>
+                    )}
 
                     {/* Input/Output */}
                     {executionDetails.input !== undefined && (
@@ -296,9 +266,7 @@ export default function WorkflowExecutionsPage() {
                           Input
                         </h4>
                         <pre className="max-h-32 overflow-auto rounded-md bg-zinc-100 p-2 font-mono text-xs dark:bg-zinc-800">
-                          {String(
-                            JSON.stringify(executionDetails.input, null, 2),
-                          )}
+                          {String(JSON.stringify(executionDetails.input, null, 2))}
                         </pre>
                       </div>
                     )}
@@ -309,9 +277,7 @@ export default function WorkflowExecutionsPage() {
                           Output
                         </h4>
                         <pre className="max-h-32 overflow-auto rounded-md bg-zinc-100 p-2 font-mono text-xs dark:bg-zinc-800">
-                          {String(
-                            JSON.stringify(executionDetails.output, null, 2),
-                          )}
+                          {String(JSON.stringify(executionDetails.output, null, 2))}
                         </pre>
                       </div>
                     )}

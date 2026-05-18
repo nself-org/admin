@@ -59,39 +59,34 @@ describe('POST /api/services — nSelf-First Doctrine (G-009)', () => {
     jest.clearAllMocks()
   })
 
-  describe.each(['start', 'stop', 'restart'] as const)(
-    'controlService(%s)',
-    (action) => {
-      it(`returns 501 NotImplemented with cliGap=G-009 for ${action}`, async () => {
-        const res = await POST(makePost({ action, service: 'postgres' }))
-        expect(res.status).toBe(501)
-        const body = await res.json()
-        expect(body.error).toBe('NotImplemented')
-        expect(body.cliGap).toBe('G-009')
-        expect(body.message).toMatch(/nself service/i)
-      })
+  describe.each(['start', 'stop', 'restart'] as const)('controlService(%s)', (action) => {
+    it(`returns 501 NotImplemented with cliGap=G-009 for ${action}`, async () => {
+      const res = await POST(makePost({ action, service: 'postgres' }))
+      expect(res.status).toBe(501)
+      const body = await res.json()
+      expect(body.error).toBe('NotImplemented')
+      expect(body.cliGap).toBe('G-009')
+      expect(body.message).toMatch(/nself service/i)
+    })
 
-      it(`rejects invalid service name with 400 (before CLI dispatch) for ${action}`, async () => {
-        const res = await POST(
-          makePost({ action, service: 'bad; rm -rf /' }),
-        )
-        expect(res.status).toBe(400)
-        const body = await res.json()
-        expect(body.success).toBe(false)
-        expect(body.error).toMatch(/Invalid service name/i)
-      })
+    it(`rejects invalid service name with 400 (before CLI dispatch) for ${action}`, async () => {
+      const res = await POST(makePost({ action, service: 'bad; rm -rf /' }))
+      expect(res.status).toBe(400)
+      const body = await res.json()
+      expect(body.success).toBe(false)
+      expect(body.error).toMatch(/Invalid service name/i)
+    })
 
-      it(`rejects missing service name with 400 for ${action}`, async () => {
-        const res = await POST(makePost({ action }))
-        expect(res.status).toBe(400)
-      })
-    },
-  )
+    it(`rejects missing service name with 400 for ${action}`, async () => {
+      const res = await POST(makePost({ action }))
+      expect(res.status).toBe(400)
+    })
+  })
 
   describe('scaleService', () => {
     it('returns 501 NotImplemented with cliGap=G-009', async () => {
       const res = await POST(
-        makePost({ action: 'scale', service: 'hasura', options: { replicas: 2 } }),
+        makePost({ action: 'scale', service: 'hasura', options: { replicas: 2 } })
       )
       expect(res.status).toBe(501)
       const body = await res.json()
@@ -101,7 +96,7 @@ describe('POST /api/services — nSelf-First Doctrine (G-009)', () => {
 
     it('rejects invalid serviceName with 400 before reaching 501 stub', async () => {
       const res = await POST(
-        makePost({ action: 'scale', service: 'has ura', options: { replicas: 2 } }),
+        makePost({ action: 'scale', service: 'has ura', options: { replicas: 2 } })
       )
       expect(res.status).toBe(400)
     })
@@ -109,9 +104,7 @@ describe('POST /api/services — nSelf-First Doctrine (G-009)', () => {
 
   describe('updateService', () => {
     it('returns 501 NotImplemented with cliGap=G-009', async () => {
-      const res = await POST(
-        makePost({ action: 'update', service: 'auth' }),
-      )
+      const res = await POST(makePost({ action: 'update', service: 'auth' }))
       expect(res.status).toBe(501)
       const body = await res.json()
       expect(body.error).toBe('NotImplemented')
@@ -119,9 +112,7 @@ describe('POST /api/services — nSelf-First Doctrine (G-009)', () => {
     })
 
     it('rejects invalid serviceName with 400', async () => {
-      const res = await POST(
-        makePost({ action: 'update', service: 'AUTH$' }),
-      )
+      const res = await POST(makePost({ action: 'update', service: 'AUTH$' }))
       expect(res.status).toBe(400)
     })
   })
@@ -135,9 +126,7 @@ describe('POST /api/services — nSelf-First Doctrine (G-009)', () => {
     })
 
     it('rejects unknown action with 400', async () => {
-      const res = await POST(
-        makePost({ action: 'nuke', service: 'postgres' }),
-      )
+      const res = await POST(makePost({ action: 'nuke', service: 'postgres' }))
       expect(res.status).toBe(400)
       const body = await res.json()
       expect(body.error).toMatch(/Unknown action/i)
@@ -151,7 +140,7 @@ describe('POST /api/services — nSelf-First Doctrine (G-009)', () => {
           action: 'batch',
           services: ['postgres', 'hasura'],
           options: { operation: 'start' },
-        }),
+        })
       )
       expect(res.status).toBe(200)
       const body = await res.json()
@@ -164,7 +153,7 @@ describe('POST /api/services — nSelf-First Doctrine (G-009)', () => {
 
     it('rejects empty services list with 400', async () => {
       const res = await POST(
-        makePost({ action: 'batch', services: [], options: { operation: 'start' } }),
+        makePost({ action: 'batch', services: [], options: { operation: 'start' } })
       )
       expect(res.status).toBe(400)
     })

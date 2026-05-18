@@ -40,8 +40,7 @@ export const toast = {
     }),
 
   // Generic toast with custom duration
-  message: (message: string, options?: ToastOptions) =>
-    sonnerToast(message, options),
+  message: (message: string, options?: ToastOptions) => sonnerToast(message, options),
 
   // Promise toast (for async operations)
   promise: sonnerToast.promise,

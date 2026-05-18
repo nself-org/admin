@@ -110,11 +110,18 @@ function RollbackContent() {
   }
 
   return (
-    <PageShell title="Rollback" description="Roll back your nSelf stack to the previous deployment.">
+    <PageShell
+      title="Rollback"
+      description="Roll back your nSelf stack to the previous deployment."
+    >
       <div className="space-y-6">
         <div className="flex items-center gap-3">
           <Button variant="outline" size="sm" onClick={() => void fetchStatus()} disabled={loading}>
-            {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <RefreshCw className="h-4 w-4" />}
+            {loading ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <RefreshCw className="h-4 w-4" />
+            )}
             Refresh
           </Button>
           {actionSuccess && (
@@ -132,7 +139,7 @@ function RollbackContent() {
         {error && (
           <Card className="border-destructive">
             <CardContent className="pt-6">
-              <div className="flex items-start gap-2 text-destructive">
+              <div className="text-destructive flex items-start gap-2">
                 <XCircle className="h-5 w-5 shrink-0" />
                 <div>
                   <p className="font-medium">Failed to load deployment status</p>
@@ -153,19 +160,19 @@ function RollbackContent() {
             </CardHeader>
             <CardContent className="grid grid-cols-2 gap-4 sm:grid-cols-4">
               <div>
-                <p className="text-xs text-muted-foreground">Current Version</p>
+                <p className="text-muted-foreground text-xs">Current Version</p>
                 <p className="font-medium">{status.currentVersion || '—'}</p>
               </div>
               <div>
-                <p className="text-xs text-muted-foreground">Previous Version</p>
+                <p className="text-muted-foreground text-xs">Previous Version</p>
                 <p className="font-medium">{status.previousVersion || '—'}</p>
               </div>
               <div>
-                <p className="text-xs text-muted-foreground">Last Rollback</p>
+                <p className="text-muted-foreground text-xs">Last Rollback</p>
                 <p className="font-medium">{status.lastRollback || '—'}</p>
               </div>
               <div>
-                <p className="text-xs text-muted-foreground">Status</p>
+                <p className="text-muted-foreground text-xs">Status</p>
                 <Badge variant={status.status === 'running' ? 'default' : 'secondary'}>
                   {status.status || 'unknown'}
                 </Badge>
@@ -176,7 +183,7 @@ function RollbackContent() {
 
         {!loading && !error && !status && (
           <Card>
-            <CardContent className="pt-6 text-center text-muted-foreground">
+            <CardContent className="text-muted-foreground pt-6 text-center">
               No deployment status available.
             </CardContent>
           </Card>
@@ -190,7 +197,8 @@ function RollbackContent() {
             </CardTitle>
             <CardDescription>
               Revert to the previous deployment. This will run{' '}
-              <code className="text-xs">nself deploy rollback</code> and cannot be undone without a fresh deploy.
+              <code className="text-xs">nself deploy rollback</code> and cannot be undone without a
+              fresh deploy.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -212,18 +220,22 @@ function RollbackContent() {
               <Card className="border-destructive bg-red-50 dark:bg-red-950/20">
                 <CardContent className="pt-4">
                   <div className="flex items-start gap-2">
-                    <AlertTriangle className="h-5 w-5 shrink-0 text-destructive" />
+                    <AlertTriangle className="text-destructive h-5 w-5 shrink-0" />
                     <div className="flex-1">
-                      <p className="font-medium text-destructive">Confirm rollback</p>
+                      <p className="text-destructive font-medium">Confirm rollback</p>
                       <p className="text-sm text-red-700 dark:text-red-300">
-                        This will run <code>nself deploy rollback</code> and revert your stack to the
-                        previous deployment. A fresh deploy is required to undo this.
+                        This will run <code>nself deploy rollback</code> and revert your stack to
+                        the previous deployment. A fresh deploy is required to undo this.
                       </p>
                       <div className="mt-3 flex gap-2">
                         <Button size="sm" variant="destructive" onClick={() => void runRollback()}>
                           Confirm Rollback
                         </Button>
-                        <Button size="sm" variant="outline" onClick={() => setConfirmRollback(false)}>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => setConfirmRollback(false)}
+                        >
                           Cancel
                         </Button>
                       </div>
@@ -233,19 +245,19 @@ function RollbackContent() {
               </Card>
             )}
 
-            {actionError && (
-              <p className="text-sm text-destructive">{actionError}</p>
-            )}
+            {actionError && <p className="text-destructive text-sm">{actionError}</p>}
           </CardContent>
         </Card>
 
         {output && (
           <Card>
             <CardHeader>
-              <CardTitle className="text-sm font-mono text-muted-foreground">{lastCommand}</CardTitle>
+              <CardTitle className="text-muted-foreground font-mono text-sm">
+                {lastCommand}
+              </CardTitle>
             </CardHeader>
             <CardContent>
-              <pre className="overflow-x-auto rounded bg-muted p-4 text-xs">{output}</pre>
+              <pre className="bg-muted overflow-x-auto rounded p-4 text-xs">{output}</pre>
             </CardContent>
           </Card>
         )}

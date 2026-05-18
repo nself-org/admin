@@ -25,14 +25,11 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     if (source) args.push(`--source=${source}`)
     if (target) args.push(`--target=${target}`)
 
-    const { stdout } = await execAsync(
-      `${nselfPath} ${args.join(' ')} --json`,
-      {
-        cwd: projectPath,
-        env: { ...process.env, PATH: getEnhancedPath() },
-        timeout: 60000,
-      },
-    )
+    const { stdout } = await execAsync(`${nselfPath} ${args.join(' ')} --json`, {
+      cwd: projectPath,
+      env: { ...process.env, PATH: getEnhancedPath() },
+      timeout: 60000,
+    })
 
     const result = JSON.parse(stdout)
 
@@ -51,7 +48,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to get sync history',
         details: err.message,
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

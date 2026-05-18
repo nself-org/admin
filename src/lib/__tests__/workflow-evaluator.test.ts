@@ -14,10 +14,7 @@ import vm from 'vm'
 // We test the primitive directly rather than routing through the full LokiJS
 // workflow engine, keeping the test fast and isolated.
 
-function evalInSandbox(
-  expr: string,
-  context: Record<string, unknown>,
-): unknown {
+function evalInSandbox(expr: string, context: Record<string, unknown>): unknown {
   const ctx = vm.createContext({ ...context })
   return vm.runInContext(expr, ctx, { timeout: 1000 })
 }

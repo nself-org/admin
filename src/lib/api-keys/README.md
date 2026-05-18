@@ -93,7 +93,7 @@ export const GET = withApiKey(
     requiredScope: 'read', // Minimum required scope
     checkRateLimit: true, // Default: true
     trackUsage: true, // Default: true
-  },
+  }
 )
 ```
 
@@ -111,7 +111,7 @@ export const POST = withApiKey(
   {
     requiredResource: 'deployments',
     requiredAction: 'execute',
-  },
+  }
 )
 ```
 
@@ -186,7 +186,7 @@ await recordApiKeyUsage(
   '192.168.1.100', // IP address
   'Mozilla/5.0 ...', // User agent (optional)
   128, // Request size (optional)
-  15420, // Response size (optional)
+  15420 // Response size (optional)
 )
 
 // Get usage data
@@ -200,10 +200,7 @@ const usage = await apiKeysApi.getUsage(keyId, {
 // Get usage statistics
 const stats = await apiKeysApi.getUsageStats(keyId)
 console.log('Total requests:', stats.totalRequests)
-console.log(
-  'Success rate:',
-  (stats.successfulRequests / stats.totalRequests) * 100,
-)
+console.log('Success rate:', (stats.successfulRequests / stats.totalRequests) * 100)
 console.log('Average response time:', stats.averageResponseTime)
 ```
 

@@ -11,17 +11,10 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     const { deviceId } = body as { deviceId?: string }
 
     if (!deviceId) {
-      return NextResponse.json(
-        { success: false, error: 'Device ID is required' },
-        { status: 400 },
-      )
+      return NextResponse.json({ success: false, error: 'Device ID is required' }, { status: 400 })
     }
 
-    const result = await executeNselfCommand('auth', [
-      'devices',
-      'trust',
-      `--device=${deviceId}`,
-    ])
+    const result = await executeNselfCommand('auth', ['devices', 'trust', `--device=${deviceId}`])
 
     if (!result.success) {
       return NextResponse.json(
@@ -30,7 +23,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           error: 'Failed to trust device',
           details: result.error || result.stderr || 'Unknown error',
         },
-        { status: 500 },
+        { status: 500 }
       )
     }
 
@@ -45,7 +38,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to trust device',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

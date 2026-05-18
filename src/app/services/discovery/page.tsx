@@ -2,13 +2,7 @@
 
 import { ServiceDetailSkeleton } from '@/components/skeletons'
 import { Badge } from '@/components/ui/badge'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Globe, Network, RefreshCw, Server, Shield } from 'lucide-react'
 import { Suspense, useCallback, useEffect, useState } from 'react'
 
@@ -41,7 +35,7 @@ function DiscoveryContent() {
             status: svc.status === 'running' ? 'active' : 'inactive',
             healthCheck: `/api/services/${svc.name}/health`,
             lastSeen: new Date().toISOString(),
-          }),
+          })
         )
         setEndpoints(discovered)
       }
@@ -64,9 +58,7 @@ function DiscoveryContent() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-zinc-900 dark:text-white">
-            Service Discovery
-          </h1>
+          <h1 className="text-2xl font-bold text-zinc-900 dark:text-white">Service Discovery</h1>
           <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
             Automatically discovered service endpoints and health status
           </p>
@@ -88,9 +80,7 @@ function DiscoveryContent() {
               <Server className="h-5 w-5 text-blue-600 dark:text-blue-400" />
             </div>
             <div>
-              <p className="text-2xl font-bold text-zinc-900 dark:text-white">
-                {endpoints.length}
-              </p>
+              <p className="text-2xl font-bold text-zinc-900 dark:text-white">{endpoints.length}</p>
               <p className="text-sm text-zinc-500">Total Services</p>
             </div>
           </CardContent>
@@ -127,17 +117,14 @@ function DiscoveryContent() {
       <Card>
         <CardHeader>
           <CardTitle>Discovered Endpoints</CardTitle>
-          <CardDescription>
-            Service endpoints found in the current Docker network
-          </CardDescription>
+          <CardDescription>Service endpoints found in the current Docker network</CardDescription>
         </CardHeader>
         <CardContent>
           {endpoints.length === 0 ? (
             <div className="py-12 text-center">
               <Globe className="mx-auto h-12 w-12 text-zinc-300 dark:text-zinc-600" />
               <p className="mt-4 text-sm text-zinc-500">
-                No service endpoints discovered. Start your services to see them
-                here.
+                No service endpoints discovered. Start your services to see them here.
               </p>
             </div>
           ) : (
@@ -145,21 +132,11 @@ function DiscoveryContent() {
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b border-zinc-200 dark:border-zinc-700">
-                    <th className="px-3 py-2 text-left font-medium text-zinc-500">
-                      Service
-                    </th>
-                    <th className="px-3 py-2 text-left font-medium text-zinc-500">
-                      URL
-                    </th>
-                    <th className="px-3 py-2 text-left font-medium text-zinc-500">
-                      Port
-                    </th>
-                    <th className="px-3 py-2 text-left font-medium text-zinc-500">
-                      Protocol
-                    </th>
-                    <th className="px-3 py-2 text-left font-medium text-zinc-500">
-                      Status
-                    </th>
+                    <th className="px-3 py-2 text-left font-medium text-zinc-500">Service</th>
+                    <th className="px-3 py-2 text-left font-medium text-zinc-500">URL</th>
+                    <th className="px-3 py-2 text-left font-medium text-zinc-500">Port</th>
+                    <th className="px-3 py-2 text-left font-medium text-zinc-500">Protocol</th>
+                    <th className="px-3 py-2 text-left font-medium text-zinc-500">Status</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -181,13 +158,7 @@ function DiscoveryContent() {
                         {endpoint.protocol}
                       </td>
                       <td className="px-3 py-2">
-                        <Badge
-                          variant={
-                            endpoint.status === 'active'
-                              ? 'default'
-                              : 'secondary'
-                          }
-                        >
+                        <Badge variant={endpoint.status === 'active' ? 'default' : 'secondary'}>
                           {endpoint.status}
                         </Badge>
                       </td>

@@ -53,7 +53,7 @@ const BreadcrumbItem = React.forwardRef<
         'inline-flex items-center',
         isActive && 'text-foreground font-medium',
         !isActive && 'text-muted-foreground hover:text-foreground',
-        className,
+        className
       )}
       aria-current={isActive ? 'page' : undefined}
       {...props}

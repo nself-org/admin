@@ -23,7 +23,7 @@ export interface SSLProvisionResult {
  */
 export async function provisionSSLCertificate(
   tenantId: string,
-  domain: string,
+  domain: string
 ): Promise<SSLProvisionResult> {
   try {
     // Verify domain exists and belongs to tenant
@@ -60,11 +60,7 @@ export async function provisionSSLCertificate(
     ])
 
     if (!result.success) {
-      await addAuditLog(
-        'ssl_provision_failed',
-        { tenantId, domain, error: result.stderr },
-        false,
-      )
+      await addAuditLog('ssl_provision_failed', { tenantId, domain, error: result.stderr }, false)
 
       return {
         success: false,
@@ -91,7 +87,7 @@ export async function provisionSSLCertificate(
     await addAuditLog(
       'ssl_provision_success',
       { tenantId, domain, expiresAt: sslData.expiresAt },
-      true,
+      true
     )
 
     return {
@@ -103,14 +99,9 @@ export async function provisionSSLCertificate(
       keyPath: sslData.keyPath,
     }
   } catch (error) {
-    const errorMessage =
-      error instanceof Error ? error.message : 'Unknown error'
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error'
 
-    await addAuditLog(
-      'ssl_provision_error',
-      { tenantId, domain, error: errorMessage },
-      false,
-    )
+    await addAuditLog('ssl_provision_error', { tenantId, domain, error: errorMessage }, false)
 
     return {
       success: false,
@@ -124,9 +115,7 @@ export async function provisionSSLCertificate(
 /**
  * Automatically provision SSL for all verified domains without SSL
  */
-export async function autoProvisionSSLForTenant(
-  tenantId: string,
-): Promise<SSLProvisionResult[]> {
+export async function autoProvisionSSLForTenant(tenantId: string): Promise<SSLProvisionResult[]> {
   const { listTenantDomains } = await import('../database')
   const domains = await listTenantDomains(tenantId)
 
@@ -148,7 +137,7 @@ export async function autoProvisionSSLForTenant(
  */
 export async function renewSSLCertificate(
   tenantId: string,
-  domain: string,
+  domain: string
 ): Promise<SSLProvisionResult> {
   try {
     const domainRecord = await getTenantDomain(domain, tenantId)
@@ -172,11 +161,7 @@ export async function renewSSLCertificate(
     ])
 
     if (!result.success) {
-      await addAuditLog(
-        'ssl_renew_failed',
-        { tenantId, domain, error: result.stderr },
-        false,
-      )
+      await addAuditLog('ssl_renew_failed', { tenantId, domain, error: result.stderr }, false)
 
       return {
         success: false,
@@ -193,11 +178,7 @@ export async function renewSSLCertificate(
       sslData = { ssl: true }
     }
 
-    await addAuditLog(
-      'ssl_renew_success',
-      { tenantId, domain, expiresAt: sslData.expiresAt },
-      true,
-    )
+    await addAuditLog('ssl_renew_success', { tenantId, domain, expiresAt: sslData.expiresAt }, true)
 
     return {
       success: true,
@@ -208,14 +189,9 @@ export async function renewSSLCertificate(
       keyPath: sslData.keyPath,
     }
   } catch (error) {
-    const errorMessage =
-      error instanceof Error ? error.message : 'Unknown error'
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error'
 
-    await addAuditLog(
-      'ssl_renew_error',
-      { tenantId, domain, error: errorMessage },
-      false,
-    )
+    await addAuditLog('ssl_renew_error', { tenantId, domain, error: errorMessage }, false)
 
     return {
       success: false,
@@ -231,7 +207,7 @@ export async function renewSSLCertificate(
  */
 export async function checkAndRenewSSL(
   tenantId: string,
-  domain: string,
+  domain: string
 ): Promise<SSLProvisionResult | null> {
   const domainRecord = await getTenantDomain(domain, tenantId)
   if (!domainRecord || !domainRecord.ssl) {
@@ -251,7 +227,7 @@ export async function checkAndRenewSSL(
  */
 export async function revokeSSLCertificate(
   tenantId: string,
-  domain: string,
+  domain: string
 ): Promise<SSLProvisionResult> {
   try {
     const domainRecord = await getTenantDomain(domain, tenantId)
@@ -274,11 +250,7 @@ export async function revokeSSLCertificate(
     ])
 
     if (!result.success) {
-      await addAuditLog(
-        'ssl_revoke_failed',
-        { tenantId, domain, error: result.stderr },
-        false,
-      )
+      await addAuditLog('ssl_revoke_failed', { tenantId, domain, error: result.stderr }, false)
 
       return {
         success: false,
@@ -301,14 +273,9 @@ export async function revokeSSLCertificate(
       ssl: false,
     }
   } catch (error) {
-    const errorMessage =
-      error instanceof Error ? error.message : 'Unknown error'
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error'
 
-    await addAuditLog(
-      'ssl_revoke_error',
-      { tenantId, domain, error: errorMessage },
-      false,
-    )
+    await addAuditLog('ssl_revoke_error', { tenantId, domain, error: errorMessage }, false)
 
     return {
       success: false,
@@ -324,7 +291,7 @@ export async function revokeSSLCertificate(
  */
 export async function getSSLStatus(
   tenantId: string,
-  domain: string,
+  domain: string
 ): Promise<{
   hasSSL: boolean
   expiresAt?: string
@@ -341,12 +308,7 @@ export async function getSSLStatus(
   }
 
   // Execute nself CLI to check SSL status
-  const result = await executeNselfCommand('ssl', [
-    'status',
-    '--domain',
-    domain,
-    '--json',
-  ])
+  const result = await executeNselfCommand('ssl', ['status', '--domain', domain, '--json'])
 
   if (!result.success) {
     return {

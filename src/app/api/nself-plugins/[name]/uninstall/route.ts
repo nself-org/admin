@@ -2,10 +2,7 @@ import { executeNselfCommand } from '@/lib/nselfCLI'
 import { requireAuth } from '@/lib/require-auth'
 import { NextRequest, NextResponse } from 'next/server'
 
-export async function POST(
-  request: NextRequest,
-  context: { params: Promise<{ name: string }> },
-) {
+export async function POST(request: NextRequest, context: { params: Promise<{ name: string }> }) {
   const authError = await requireAuth(request)
   if (authError) return authError
 
@@ -22,7 +19,7 @@ export async function POST(
           error: 'Failed to uninstall plugin',
           details: result.error || result.stderr || 'Unknown error',
         },
-        { status: 500 },
+        { status: 500 }
       )
     }
     return NextResponse.json({
@@ -37,7 +34,7 @@ export async function POST(
         error: 'Failed to uninstall plugin',
         details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

@@ -91,9 +91,7 @@ export class WebSocketServer {
         // Input validation: reject non-array packets or oversized serialized data
         const serialized = JSON.stringify(packet)
         if (serialized.length > MAX_MESSAGE_SIZE) {
-          console.warn(
-            `Oversized payload rejected from ${socket.id}: ${serialized.length} bytes`,
-          )
+          console.warn(`Oversized payload rejected from ${socket.id}: ${serialized.length} bytes`)
           next(new Error('Payload too large'))
           return
         }
@@ -108,27 +106,21 @@ export class WebSocketServer {
       })
 
       // Room management
-      socket.on(
-        EventType.JOIN_ROOM,
-        (message: WebSocketMessage<{ roomId: string }>) => {
-          if (!this.isValidRoomId(message?.data?.roomId)) {
-            socket.emit(EventType.ERROR, { error: 'Invalid room ID' })
-            return
-          }
-          this.handleJoinRoom(socket, message.data.roomId)
-        },
-      )
+      socket.on(EventType.JOIN_ROOM, (message: WebSocketMessage<{ roomId: string }>) => {
+        if (!this.isValidRoomId(message?.data?.roomId)) {
+          socket.emit(EventType.ERROR, { error: 'Invalid room ID' })
+          return
+        }
+        this.handleJoinRoom(socket, message.data.roomId)
+      })
 
-      socket.on(
-        EventType.LEAVE_ROOM,
-        (message: WebSocketMessage<{ roomId: string }>) => {
-          if (!this.isValidRoomId(message?.data?.roomId)) {
-            socket.emit(EventType.ERROR, { error: 'Invalid room ID' })
-            return
-          }
-          this.handleLeaveRoom(socket, message.data.roomId)
-        },
-      )
+      socket.on(EventType.LEAVE_ROOM, (message: WebSocketMessage<{ roomId: string }>) => {
+        if (!this.isValidRoomId(message?.data?.roomId)) {
+          socket.emit(EventType.ERROR, { error: 'Invalid room ID' })
+          return
+        }
+        this.handleLeaveRoom(socket, message.data.roomId)
+      })
 
       // Disconnection
       socket.on('disconnect', (_reason: string) => {
@@ -219,11 +211,7 @@ export class WebSocketServer {
   /**
    * Broadcast event to all clients in a room
    */
-  broadcastToRoom<T = unknown>(
-    roomId: string,
-    eventType: EventType,
-    data: T,
-  ): void {
+  broadcastToRoom<T = unknown>(roomId: string, eventType: EventType, data: T): void {
     if (!this.io) return
 
     const message: WebSocketMessage<T> = {
@@ -239,11 +227,7 @@ export class WebSocketServer {
   /**
    * Emit event to specific socket
    */
-  emitToSocket<T = unknown>(
-    socketId: string,
-    eventType: EventType,
-    data: T,
-  ): void {
+  emitToSocket<T = unknown>(socketId: string, eventType: EventType, data: T): void {
     if (!this.io) return
 
     const message: WebSocketMessage<T> = {
@@ -359,14 +343,12 @@ export class WebSocketServer {
       const now = Date.now()
       const staleThreshold = 5 * 60 * 1000 // 5 minutes
 
-      Array.from(this.presence.entries()).forEach(
-        ([socketId, presenceInfo]) => {
-          const lastSeen = new Date(presenceInfo.lastSeen).getTime()
-          if (now - lastSeen > staleThreshold) {
-            this.presence.delete(socketId)
-          }
-        },
-      )
+      Array.from(this.presence.entries()).forEach(([socketId, presenceInfo]) => {
+        const lastSeen = new Date(presenceInfo.lastSeen).getTime()
+        if (now - lastSeen > staleThreshold) {
+          this.presence.delete(socketId)
+        }
+      })
     }, 60000) // Check every minute
   }
 

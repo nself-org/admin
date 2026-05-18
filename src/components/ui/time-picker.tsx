@@ -78,11 +78,7 @@ export function TimePicker({
     setOpen(false)
   }
 
-  const displayValue = value
-    ? use12Hour
-      ? `${hours}:${minutes} ${period}`
-      : value
-    : ''
+  const displayValue = value ? (use12Hour ? `${hours}:${minutes} ${period}` : value) : ''
 
   return (
     <Popover.Root open={open} onOpenChange={setOpen}>
@@ -93,7 +89,7 @@ export function TimePicker({
           className={cn(
             'w-full justify-start text-left font-normal',
             !value && 'text-zinc-500 dark:text-zinc-400',
-            className,
+            className
           )}
         >
           <Clock className="mr-2 h-4 w-4" />

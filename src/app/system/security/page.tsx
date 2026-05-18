@@ -120,12 +120,8 @@ function SecurityOverview({ settings }: { settings: SecuritySettings }) {
       <div className="rounded-lg border border-zinc-200 bg-white p-6 dark:border-zinc-700 dark:bg-zinc-800">
         <div className="flex items-start justify-between">
           <div>
-            <p className="text-sm text-zinc-600 dark:text-zinc-400">
-              Password Policy
-            </p>
-            <p className={`text-2xl font-bold ${strength.color}`}>
-              {strength.label}
-            </p>
+            <p className="text-sm text-zinc-600 dark:text-zinc-400">Password Policy</p>
+            <p className={`text-2xl font-bold ${strength.color}`}>{strength.label}</p>
           </div>
           <Lock className="h-8 w-8 text-blue-500" />
         </div>
@@ -134,9 +130,7 @@ function SecurityOverview({ settings }: { settings: SecuritySettings }) {
       <div className="rounded-lg border border-zinc-200 bg-white p-6 dark:border-zinc-700 dark:bg-zinc-800">
         <div className="flex items-start justify-between">
           <div>
-            <p className="text-sm text-zinc-600 dark:text-zinc-400">
-              2FA Status
-            </p>
+            <p className="text-sm text-zinc-600 dark:text-zinc-400">2FA Status</p>
             <p
               className={`text-2xl font-bold ${settings.twoFactorAuth.enabled ? 'text-green-600' : 'text-red-600'}`}
             >
@@ -150,9 +144,7 @@ function SecurityOverview({ settings }: { settings: SecuritySettings }) {
       <div className="rounded-lg border border-zinc-200 bg-white p-6 dark:border-zinc-700 dark:bg-zinc-800">
         <div className="flex items-start justify-between">
           <div>
-            <p className="text-sm text-zinc-600 dark:text-zinc-400">
-              Session Timeout
-            </p>
+            <p className="text-sm text-zinc-600 dark:text-zinc-400">Session Timeout</p>
             <p className="text-2xl font-bold text-zinc-900 dark:text-white">
               {settings.sessionSettings.timeout}m
             </p>
@@ -164,9 +156,7 @@ function SecurityOverview({ settings }: { settings: SecuritySettings }) {
       <div className="rounded-lg border border-zinc-200 bg-white p-6 dark:border-zinc-700 dark:bg-zinc-800">
         <div className="flex items-start justify-between">
           <div>
-            <p className="text-sm text-zinc-600 dark:text-zinc-400">
-              IP Whitelist
-            </p>
+            <p className="text-sm text-zinc-600 dark:text-zinc-400">IP Whitelist</p>
             <p className="text-2xl font-bold text-zinc-900 dark:text-white">
               {settings.ipWhitelist.addresses.length}
             </p>
@@ -187,9 +177,7 @@ function PasswordPolicySettings({
 }) {
   return (
     <div className="rounded-lg border border-zinc-200 bg-white p-6 dark:border-zinc-700 dark:bg-zinc-800">
-      <h3 className="mb-4 text-lg font-semibold text-zinc-900 dark:text-white">
-        Password Policy
-      </h3>
+      <h3 className="mb-4 text-lg font-semibold text-zinc-900 dark:text-white">Password Policy</h3>
 
       <div className="space-y-4">
         <div>
@@ -201,9 +189,7 @@ function PasswordPolicySettings({
             min="3"
             max="128"
             value={policy.minLength}
-            onChange={(e) =>
-              onChange({ ...policy, minLength: parseInt(e.target.value) })
-            }
+            onChange={(e) => onChange({ ...policy, minLength: parseInt(e.target.value) })}
             className="w-full rounded-lg border border-zinc-200 bg-white px-3 py-2 dark:border-zinc-700 dark:bg-zinc-900"
           />
         </div>
@@ -213,9 +199,7 @@ function PasswordPolicySettings({
             <input
               type="checkbox"
               checked={policy.requireUppercase}
-              onChange={(e) =>
-                onChange({ ...policy, requireUppercase: e.target.checked })
-              }
+              onChange={(e) => onChange({ ...policy, requireUppercase: e.target.checked })}
               className="h-4 w-4 rounded text-blue-600"
             />
             <span className="text-sm">Require uppercase letters</span>
@@ -225,9 +209,7 @@ function PasswordPolicySettings({
             <input
               type="checkbox"
               checked={policy.requireLowercase}
-              onChange={(e) =>
-                onChange({ ...policy, requireLowercase: e.target.checked })
-              }
+              onChange={(e) => onChange({ ...policy, requireLowercase: e.target.checked })}
               className="h-4 w-4 rounded text-blue-600"
             />
             <span className="text-sm">Require lowercase letters</span>
@@ -237,9 +219,7 @@ function PasswordPolicySettings({
             <input
               type="checkbox"
               checked={policy.requireNumbers}
-              onChange={(e) =>
-                onChange({ ...policy, requireNumbers: e.target.checked })
-              }
+              onChange={(e) => onChange({ ...policy, requireNumbers: e.target.checked })}
               className="h-4 w-4 rounded text-blue-600"
             />
             <span className="text-sm">Require numbers</span>
@@ -249,9 +229,7 @@ function PasswordPolicySettings({
             <input
               type="checkbox"
               checked={policy.requireSpecialChars}
-              onChange={(e) =>
-                onChange({ ...policy, requireSpecialChars: e.target.checked })
-              }
+              onChange={(e) => onChange({ ...policy, requireSpecialChars: e.target.checked })}
               className="h-4 w-4 rounded text-blue-600"
             />
             <span className="text-sm">Require special characters</span>
@@ -268,9 +246,7 @@ function PasswordPolicySettings({
               min="0"
               max="365"
               value={policy.expiryDays}
-              onChange={(e) =>
-                onChange({ ...policy, expiryDays: parseInt(e.target.value) })
-              }
+              onChange={(e) => onChange({ ...policy, expiryDays: parseInt(e.target.value) })}
               className="w-full rounded-lg border border-zinc-200 bg-white px-3 py-2 dark:border-zinc-700 dark:bg-zinc-900"
             />
             <p className="mt-1 text-xs text-zinc-500">0 = never expire</p>
@@ -285,9 +261,7 @@ function PasswordPolicySettings({
               min="0"
               max="24"
               value={policy.preventReuse}
-              onChange={(e) =>
-                onChange({ ...policy, preventReuse: parseInt(e.target.value) })
-              }
+              onChange={(e) => onChange({ ...policy, preventReuse: parseInt(e.target.value) })}
               className="w-full rounded-lg border border-zinc-200 bg-white px-3 py-2 dark:border-zinc-700 dark:bg-zinc-900"
             />
             <p className="mt-1 text-xs text-zinc-500">Last N passwords</p>
@@ -329,16 +303,12 @@ function IPWhitelistManager({
   return (
     <div className="rounded-lg border border-zinc-200 bg-white p-6 dark:border-zinc-700 dark:bg-zinc-800">
       <div className="mb-4 flex items-center justify-between">
-        <h3 className="text-lg font-semibold text-zinc-900 dark:text-white">
-          IP Whitelist
-        </h3>
+        <h3 className="text-lg font-semibold text-zinc-900 dark:text-white">IP Whitelist</h3>
         <label className="flex items-center gap-2">
           <input
             type="checkbox"
             checked={whitelist.enabled}
-            onChange={(e) =>
-              onChange({ ...whitelist, enabled: e.target.checked })
-            }
+            onChange={(e) => onChange({ ...whitelist, enabled: e.target.checked })}
             className="h-4 w-4 rounded text-blue-600"
           />
           <span className="text-sm">Enabled</span>
@@ -351,11 +321,7 @@ function IPWhitelistManager({
             <p className="text-sm text-zinc-600 dark:text-zinc-400">
               {whitelist.addresses.length} addresses whitelisted
             </p>
-            <Button
-              onClick={() => setShowAddForm(true)}
-              variant="outline"
-              className="text-xs"
-            >
+            <Button onClick={() => setShowAddForm(true)} variant="outline" className="text-xs">
               <Plus className="mr-1 h-3 w-3" />
               Add IP
             </Button>
@@ -373,11 +339,7 @@ function IPWhitelistManager({
               <Button onClick={addIP} className="text-sm">
                 Add
               </Button>
-              <Button
-                onClick={() => setShowAddForm(false)}
-                variant="outline"
-                className="text-sm"
-              >
+              <Button onClick={() => setShowAddForm(false)} variant="outline" className="text-sm">
                 Cancel
               </Button>
             </div>
@@ -417,17 +379,14 @@ function SecurityScanPanel({
   const severityColors = {
     critical: 'bg-sky-100 text-sky-800 dark:bg-sky-900/20 dark:text-sky-400',
     high: 'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400',
-    medium:
-      'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400',
+    medium: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400',
     low: 'bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400',
   }
 
   return (
     <div className="rounded-lg border border-zinc-200 bg-white p-6 dark:border-zinc-700 dark:bg-zinc-800">
       <div className="mb-4 flex items-center justify-between">
-        <h3 className="text-lg font-semibold text-zinc-900 dark:text-white">
-          Security Scan
-        </h3>
+        <h3 className="text-lg font-semibold text-zinc-900 dark:text-white">Security Scan</h3>
         <Button onClick={onRunScan} disabled={scanning}>
           {scanning ? (
             <>
@@ -486,14 +445,10 @@ function SecurityScanPanel({
                       >
                         {issue.severity.toUpperCase()}
                       </span>
-                      <span className="text-sm font-medium">
-                        {issue.category}
-                      </span>
+                      <span className="text-sm font-medium">{issue.category}</span>
                     </div>
                   </div>
-                  <p className="mb-2 text-sm text-zinc-900 dark:text-white">
-                    {issue.description}
-                  </p>
+                  <p className="mb-2 text-sm text-zinc-900 dark:text-white">{issue.description}</p>
                   <p className="text-xs text-zinc-600 dark:text-zinc-400">
                     <strong>Recommendation:</strong> {issue.recommendation}
                   </p>
@@ -585,10 +540,7 @@ function SystemSecurityContent() {
               </p>
             </div>
             <div className="flex items-center gap-2">
-              <Button
-                onClick={() => setShowPasswords(!showPasswords)}
-                variant="outline"
-              >
+              <Button onClick={() => setShowPasswords(!showPasswords)} variant="outline">
                 {showPasswords ? (
                   <EyeOff className="mr-2 h-4 w-4" />
                 ) : (
@@ -623,9 +575,7 @@ function SystemSecurityContent() {
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
           <PasswordPolicySettings
             policy={settings.passwordPolicy}
-            onChange={(policy) =>
-              setSettings({ ...settings, passwordPolicy: policy })
-            }
+            onChange={(policy) => setSettings({ ...settings, passwordPolicy: policy })}
           />
 
           <div className="space-y-6">
@@ -693,9 +643,7 @@ function SystemSecurityContent() {
                     }
                     className="h-4 w-4 rounded text-blue-600"
                   />
-                  <span className="text-sm">
-                    Force re-authentication for sensitive actions
-                  </span>
+                  <span className="text-sm">Force re-authentication for sensitive actions</span>
                 </label>
               </div>
             </div>
@@ -720,9 +668,7 @@ function SystemSecurityContent() {
                     }
                     className="h-4 w-4 rounded text-blue-600"
                   />
-                  <span className="text-sm font-medium">
-                    Enable Two-Factor Authentication
-                  </span>
+                  <span className="text-sm font-medium">Enable Two-Factor Authentication</span>
                 </label>
 
                 {settings.twoFactorAuth.enabled && (
@@ -753,18 +699,11 @@ function SystemSecurityContent() {
                         <label className="flex items-center gap-2">
                           <input
                             type="checkbox"
-                            checked={settings.twoFactorAuth.allowedMethods.includes(
-                              'totp',
-                            )}
+                            checked={settings.twoFactorAuth.allowedMethods.includes('totp')}
                             onChange={(e) => {
                               const methods = e.target.checked
-                                ? [
-                                    ...settings.twoFactorAuth.allowedMethods,
-                                    'totp',
-                                  ]
-                                : settings.twoFactorAuth.allowedMethods.filter(
-                                    (m) => m !== 'totp',
-                                  )
+                                ? [...settings.twoFactorAuth.allowedMethods, 'totp']
+                                : settings.twoFactorAuth.allowedMethods.filter((m) => m !== 'totp')
                               setSettings({
                                 ...settings,
                                 twoFactorAuth: {
@@ -775,25 +714,16 @@ function SystemSecurityContent() {
                             }}
                             className="h-4 w-4 rounded text-blue-600"
                           />
-                          <span className="text-sm">
-                            Authenticator App (TOTP)
-                          </span>
+                          <span className="text-sm">Authenticator App (TOTP)</span>
                         </label>
                         <label className="flex items-center gap-2">
                           <input
                             type="checkbox"
-                            checked={settings.twoFactorAuth.allowedMethods.includes(
-                              'sms',
-                            )}
+                            checked={settings.twoFactorAuth.allowedMethods.includes('sms')}
                             onChange={(e) => {
                               const methods = e.target.checked
-                                ? [
-                                    ...settings.twoFactorAuth.allowedMethods,
-                                    'sms',
-                                  ]
-                                : settings.twoFactorAuth.allowedMethods.filter(
-                                    (m) => m !== 'sms',
-                                  )
+                                ? [...settings.twoFactorAuth.allowedMethods, 'sms']
+                                : settings.twoFactorAuth.allowedMethods.filter((m) => m !== 'sms')
                               setSettings({
                                 ...settings,
                                 twoFactorAuth: {
@@ -816,16 +746,10 @@ function SystemSecurityContent() {
 
           <IPWhitelistManager
             whitelist={settings.ipWhitelist}
-            onChange={(whitelist) =>
-              setSettings({ ...settings, ipWhitelist: whitelist })
-            }
+            onChange={(whitelist) => setSettings({ ...settings, ipWhitelist: whitelist })}
           />
 
-          <SecurityScanPanel
-            onRunScan={handleRunScan}
-            scanning={scanning}
-            lastScan={lastScan}
-          />
+          <SecurityScanPanel onRunScan={handleRunScan} scanning={scanning} lastScan={lastScan} />
         </div>
       </div>
     </>

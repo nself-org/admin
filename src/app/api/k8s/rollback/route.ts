@@ -23,7 +23,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     if (!deployment) {
       return NextResponse.json(
         { success: false, error: 'Deployment name is required' },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -31,14 +31,11 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     if (revision) args.push(`--revision=${revision}`)
     if (namespace) args.push(`--namespace=${namespace}`)
 
-    const { stdout } = await execAsync(
-      `${nselfPath} ${args.join(' ')} --json`,
-      {
-        cwd: projectPath,
-        env: { ...process.env, PATH: getEnhancedPath() },
-        timeout: 180000,
-      },
-    )
+    const { stdout } = await execAsync(`${nselfPath} ${args.join(' ')} --json`, {
+      cwd: projectPath,
+      env: { ...process.env, PATH: getEnhancedPath() },
+      timeout: 180000,
+    })
 
     const result = JSON.parse(stdout)
 
@@ -59,7 +56,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to rollback deployment',
         details: err.message,
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

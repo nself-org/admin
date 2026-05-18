@@ -29,7 +29,7 @@ const fetcher = async (url: string) => {
 // API mutation functions for useSWRMutation
 async function createApiKeyFn(
   _url: string,
-  { arg }: { arg: CreateApiKeyInput },
+  { arg }: { arg: CreateApiKeyInput }
 ): Promise<CreateApiKeyResult> {
   const response = await apiPost('/api/api-keys', arg)
   const data = await response.json()
@@ -39,7 +39,7 @@ async function createApiKeyFn(
 
 async function updateApiKeyFn(
   url: string,
-  { arg }: { arg: Partial<CreateApiKeyInput> },
+  { arg }: { arg: Partial<CreateApiKeyInput> }
 ): Promise<ApiKey> {
   const response = await apiPatch(url, arg)
   const data = await response.json()
@@ -93,7 +93,7 @@ export function useApiKey(id: string | undefined) {
   const { data, error, isLoading, mutate } = useSWR<ApiKey>(
     id ? `/api/api-keys/${id}` : null,
     fetcher,
-    { refreshInterval: 30000 },
+    { refreshInterval: 30000 }
   )
 
   return {
@@ -108,10 +108,7 @@ export function useApiKey(id: string | undefined) {
 /**
  * Hook to get usage data for an API key
  */
-export function useApiKeyUsage(
-  keyId: string | undefined,
-  options?: ListQueryOptions,
-) {
+export function useApiKeyUsage(keyId: string | undefined, options?: ListQueryOptions) {
   const params = new URLSearchParams()
   if (options?.limit) params.set('limit', String(options.limit))
   if (options?.offset) params.set('offset', String(options.offset))
@@ -119,9 +116,7 @@ export function useApiKeyUsage(
   if (options?.endDate) params.set('endDate', options.endDate)
 
   const queryString = params.toString()
-  const url = keyId
-    ? `/api/api-keys/${keyId}/usage${queryString ? `?${queryString}` : ''}`
-    : null
+  const url = keyId ? `/api/api-keys/${keyId}/usage${queryString ? `?${queryString}` : ''}` : null
 
   const { data, error, isLoading, mutate } = useSWR<{
     usage: ApiKeyUsage[]
@@ -145,7 +140,7 @@ export function useApiKeyUsageStats(keyId: string | undefined) {
   const { data, error, isLoading, mutate } = useSWR<ApiKeyUsageStats>(
     keyId ? `/api/api-keys/${keyId}/stats` : null,
     fetcher,
-    { refreshInterval: 60000 },
+    { refreshInterval: 60000 }
   )
 
   return {
@@ -164,7 +159,7 @@ export function useApiKeyRateLimit(keyId: string | undefined) {
   const { data, error, isLoading, mutate } = useSWR<ApiKeyRateLimit>(
     keyId ? `/api/api-keys/${keyId}/rate-limit` : null,
     fetcher,
-    { refreshInterval: 5000 }, // More frequent refresh for rate limit status
+    { refreshInterval: 5000 } // More frequent refresh for rate limit status
   )
 
   return {
@@ -179,10 +174,7 @@ export function useApiKeyRateLimit(keyId: string | undefined) {
 /**
  * Hook to get audit logs for an API key
  */
-export function useApiKeyLogs(
-  keyId: string | undefined,
-  options?: ListQueryOptions,
-) {
+export function useApiKeyLogs(keyId: string | undefined, options?: ListQueryOptions) {
   const params = new URLSearchParams()
   if (options?.limit) params.set('limit', String(options.limit))
   if (options?.offset) params.set('offset', String(options.offset))
@@ -190,9 +182,7 @@ export function useApiKeyLogs(
   if (options?.endDate) params.set('endDate', options.endDate)
 
   const queryString = params.toString()
-  const url = keyId
-    ? `/api/api-keys/${keyId}/logs${queryString ? `?${queryString}` : ''}`
-    : null
+  const url = keyId ? `/api/api-keys/${keyId}/logs${queryString ? `?${queryString}` : ''}` : null
 
   const { data, error, isLoading, mutate } = useSWR<{
     logs: ApiKeyLog[]
@@ -213,11 +203,9 @@ export function useApiKeyLogs(
  * Hook to get overall API key statistics
  */
 export function useApiKeyStats() {
-  const { data, error, isLoading, mutate } = useSWR<ApiKeyStats>(
-    '/api/api-keys/stats',
-    fetcher,
-    { refreshInterval: 60000 },
-  )
+  const { data, error, isLoading, mutate } = useSWR<ApiKeyStats>('/api/api-keys/stats', fetcher, {
+    refreshInterval: 60000,
+  })
 
   return {
     stats: data,
@@ -233,10 +221,7 @@ export function useApiKeyStats() {
  * Returns the secret key only once on creation!
  */
 export function useCreateApiKey() {
-  const { trigger, isMutating, error, reset } = useSWRMutation(
-    '/api/api-keys',
-    createApiKeyFn,
-  )
+  const { trigger, isMutating, error, reset } = useSWRMutation('/api/api-keys', createApiKeyFn)
 
   return {
     createApiKey: trigger,
@@ -252,7 +237,7 @@ export function useCreateApiKey() {
 export function useUpdateApiKey(keyId: string | undefined) {
   const { trigger, isMutating, error, reset } = useSWRMutation(
     keyId ? `/api/api-keys/${keyId}` : null,
-    updateApiKeyFn,
+    updateApiKeyFn
   )
 
   return {
@@ -269,7 +254,7 @@ export function useUpdateApiKey(keyId: string | undefined) {
 export function useRevokeApiKey(keyId: string | undefined) {
   const { trigger, isMutating, error, reset } = useSWRMutation(
     keyId ? `/api/api-keys/${keyId}` : null,
-    revokeApiKeyFn,
+    revokeApiKeyFn
   )
 
   return {
@@ -286,7 +271,7 @@ export function useRevokeApiKey(keyId: string | undefined) {
 export function useDeleteApiKey(keyId: string | undefined) {
   const { trigger, isMutating, error, reset } = useSWRMutation(
     keyId ? `/api/api-keys/${keyId}` : null,
-    deleteApiKeyFn,
+    deleteApiKeyFn
   )
 
   return {
@@ -317,14 +302,14 @@ export function useApiKeyManagement(keyId: string | undefined) {
   const { data: usageStats } = useSWR<ApiKeyUsageStats>(
     keyId ? `/api/api-keys/${keyId}/stats` : null,
     fetcher,
-    { refreshInterval: 60000 },
+    { refreshInterval: 60000 }
   )
 
   // Fetch rate limit
   const { data: rateLimit } = useSWR<ApiKeyRateLimit>(
     keyId ? `/api/api-keys/${keyId}/rate-limit` : null,
     fetcher,
-    { refreshInterval: 5000 },
+    { refreshInterval: 5000 }
   )
 
   const update = useCallback(
@@ -339,15 +324,14 @@ export function useApiKeyManagement(keyId: string | undefined) {
         mutate(data.data)
         return data.data as ApiKey
       } catch (err) {
-        const message =
-          err instanceof Error ? err.message : 'Failed to update API key'
+        const message = err instanceof Error ? err.message : 'Failed to update API key'
         setOperationError(message)
         throw err
       } finally {
         setIsLoading(false)
       }
     },
-    [keyId, mutate],
+    [keyId, mutate]
   )
 
   const revoke = useCallback(async () => {
@@ -360,8 +344,7 @@ export function useApiKeyManagement(keyId: string | undefined) {
       if (!data.success) throw new Error(data.error || 'Failed to revoke')
       mutate()
     } catch (err) {
-      const message =
-        err instanceof Error ? err.message : 'Failed to revoke API key'
+      const message = err instanceof Error ? err.message : 'Failed to revoke API key'
       setOperationError(message)
       throw err
     } finally {
@@ -378,8 +361,7 @@ export function useApiKeyManagement(keyId: string | undefined) {
       const data = await response.json()
       if (!data.success) throw new Error(data.error || 'Failed to delete')
     } catch (err) {
-      const message =
-        err instanceof Error ? err.message : 'Failed to delete API key'
+      const message = err instanceof Error ? err.message : 'Failed to delete API key'
       setOperationError(message)
       throw err
     } finally {

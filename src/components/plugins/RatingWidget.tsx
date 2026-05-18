@@ -6,13 +6,7 @@
  */
 
 import type { PluginRatings, PluginReview } from '@/types/plugins'
-import {
-  AlertCircle,
-  ChevronDown,
-  ChevronUp,
-  Loader2,
-  Star,
-} from 'lucide-react'
+import { AlertCircle, ChevronDown, ChevronUp, Loader2, Star } from 'lucide-react'
 import { useEffect, useState } from 'react'
 
 export interface RatingWidgetProps {
@@ -36,13 +30,7 @@ function formatRelative(iso: string): string {
 
 // ── Sub-components ────────────────────────────────────────────────────────────
 
-function StarDisplay({
-  rating,
-  size = 'sm',
-}: {
-  rating: number
-  size?: 'sm' | 'md'
-}) {
+function StarDisplay({ rating, size = 'sm' }: { rating: number; size?: 'sm' | 'md' }) {
   const full = Math.floor(rating)
   const half = rating - full >= 0.5
   const empty = 5 - full - (half ? 1 : 0)
@@ -51,42 +39,21 @@ function StarDisplay({
   return (
     <div className="flex items-center gap-0.5">
       {Array.from({ length: full }).map((_, i) => (
-        <Star
-          key={`f${i}`}
-          className={`${cls} fill-yellow-400 text-yellow-400`}
-        />
+        <Star key={`f${i}`} className={`${cls} fill-yellow-400 text-yellow-400`} />
       ))}
-      {half && (
-        <Star
-          key="half"
-          className={`${cls} fill-yellow-400/50 text-yellow-400`}
-        />
-      )}
+      {half && <Star key="half" className={`${cls} fill-yellow-400/50 text-yellow-400`} />}
       {Array.from({ length: empty }).map((_, i) => (
-        <Star
-          key={`e${i}`}
-          className={`${cls} fill-transparent text-zinc-600`}
-        />
+        <Star key={`e${i}`} className={`${cls} fill-transparent text-zinc-600`} />
       ))}
     </div>
   )
 }
 
-function StarPicker({
-  value,
-  onChange,
-}: {
-  value: number
-  onChange: (v: number) => void
-}) {
+function StarPicker({ value, onChange }: { value: number; onChange: (v: number) => void }) {
   const [hovered, setHovered] = useState(0)
 
   return (
-    <div
-      className="flex items-center gap-1"
-      role="radiogroup"
-      aria-label="Rate this plugin"
-    >
+    <div className="flex items-center gap-1" role="radiogroup" aria-label="Rate this plugin">
       {[1, 2, 3, 4, 5].map((n) => {
         const filled = n <= (hovered || value)
         return (
@@ -120,18 +87,10 @@ function ReviewRow({ review }: { review: PluginReview }) {
     <div className="space-y-1.5 rounded-lg border border-zinc-700/50 bg-zinc-800/40 p-3">
       <div className="flex items-center justify-between">
         <StarDisplay rating={review.rating} />
-        <span className="text-xs text-zinc-500">
-          {formatRelative(review.createdAt)}
-        </span>
+        <span className="text-xs text-zinc-500">{formatRelative(review.createdAt)}</span>
       </div>
-      {review.comment && (
-        <p className="text-sm leading-relaxed text-zinc-300">
-          {review.comment}
-        </p>
-      )}
-      <p className="text-xs text-zinc-600">
-        by {review.user.slice(0, 8)}&hellip;
-      </p>
+      {review.comment && <p className="text-sm leading-relaxed text-zinc-300">{review.comment}</p>}
+      <p className="text-xs text-zinc-600">by {review.user.slice(0, 8)}&hellip;</p>
     </div>
   )
 }
@@ -178,9 +137,7 @@ export function RatingWidget({
       setLoading(true)
       setFetchError(null)
       try {
-        const res = await fetch(
-          `/api/plugins/${encodeURIComponent(pluginName)}/ratings`,
-        )
+        const res = await fetch(`/api/plugins/${encodeURIComponent(pluginName)}/ratings`)
         if (!res.ok) {
           const body = (await res.json().catch(() => ({}))) as {
             error?: string
@@ -191,12 +148,9 @@ export function RatingWidget({
         if (!cancelled) {
           setData({
             name: body.name ?? pluginName,
-            rating:
-              typeof body.rating === 'number' ? body.rating : initialRating,
+            rating: typeof body.rating === 'number' ? body.rating : initialRating,
             reviewCount:
-              typeof body.reviewCount === 'number'
-                ? body.reviewCount
-                : initialReviewCount,
+              typeof body.reviewCount === 'number' ? body.reviewCount : initialReviewCount,
             reviews: Array.isArray(body.reviews) ? body.reviews : [],
           })
         }
@@ -231,17 +185,14 @@ export function RatingWidget({
     setSubmitError(null)
 
     try {
-      const res = await fetch(
-        `/api/plugins/${encodeURIComponent(pluginName)}/ratings`,
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            rating: selectedRating,
-            comment: comment.trim() || undefined,
-          }),
-        },
-      )
+      const res = await fetch(`/api/plugins/${encodeURIComponent(pluginName)}/ratings`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          rating: selectedRating,
+          comment: comment.trim() || undefined,
+        }),
+      })
 
       const body = (await res.json().catch(() => ({}))) as {
         success?: boolean
@@ -253,18 +204,14 @@ export function RatingWidget({
 
       setSubmitted(true)
       // Re-fetch to show updated aggregate
-      const updated = await fetch(
-        `/api/plugins/${encodeURIComponent(pluginName)}/ratings`,
-      )
+      const updated = await fetch(`/api/plugins/${encodeURIComponent(pluginName)}/ratings`)
       if (updated.ok) {
         const updatedBody = (await updated.json()) as PluginRatings
         setData({
           name: updatedBody.name ?? pluginName,
           rating: updatedBody.rating ?? 0,
           reviewCount: updatedBody.reviewCount ?? 0,
-          reviews: Array.isArray(updatedBody.reviews)
-            ? updatedBody.reviews
-            : [],
+          reviews: Array.isArray(updatedBody.reviews) ? updatedBody.reviews : [],
         })
       }
     } catch (err) {
@@ -283,9 +230,7 @@ export function RatingWidget({
     reviewCount: initialReviewCount,
     reviews: [],
   }
-  const visibleReviews = showAll
-    ? aggregate.reviews
-    : aggregate.reviews.slice(0, 5)
+  const visibleReviews = showAll ? aggregate.reviews : aggregate.reviews.slice(0, 5)
   const hasMoreReviews = aggregate.reviews.length > 5
 
   return (
@@ -340,9 +285,7 @@ export function RatingWidget({
             />
 
             <div className="flex items-center justify-between">
-              <span className="text-xs text-zinc-500">
-                {comment.length}/500
-              </span>
+              <span className="text-xs text-zinc-500">{comment.length}/500</span>
               <button
                 type="submit"
                 disabled={selectedRating === 0 || submitting}

@@ -55,11 +55,7 @@ function PRRow({ pr }: { pr: GitHubPullRequest }) {
             className="mt-1 h-4 w-4 text-zinc-400"
             style={{
               color:
-                pr.state === 'open'
-                  ? '#34d399'
-                  : pr.state === 'merged'
-                    ? '#a78bfa'
-                    : '#f87171',
+                pr.state === 'open' ? '#34d399' : pr.state === 'merged' ? '#a78bfa' : '#f87171',
             }}
           />
           <div>
@@ -108,9 +104,7 @@ function PRRow({ pr }: { pr: GitHubPullRequest }) {
             </span>
           ))}
           {pr.labels.length > 2 && (
-            <span className="text-xs text-zinc-500">
-              +{pr.labels.length - 2}
-            </span>
+            <span className="text-xs text-zinc-500">+{pr.labels.length - 2}</span>
           )}
         </div>
       </td>
@@ -168,7 +162,7 @@ function GitHubPRsContent() {
   }>(
     `/api/plugins/github/prs?page=${page}&pageSize=${pageSize}&search=${searchQuery}&filter=${stateFilter}`,
     fetcher,
-    { refreshInterval: 60000 },
+    { refreshInterval: 60000 }
   )
 
   const handleSync = async () => {
@@ -239,9 +233,7 @@ function GitHubPRsContent() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-semibold text-white">Pull Requests</h1>
-          <p className="text-sm text-zinc-400">
-            {total.toLocaleString()} total pull requests
-          </p>
+          <p className="text-sm text-zinc-400">{total.toLocaleString()} total pull requests</p>
         </div>
         <button
           onClick={handleSync}
@@ -332,8 +324,7 @@ function GitHubPRsContent() {
       {totalPages > 1 && (
         <div className="flex items-center justify-between">
           <p className="text-sm text-zinc-400">
-            Showing {(page - 1) * pageSize + 1} to{' '}
-            {Math.min(page * pageSize, total)} of {total}
+            Showing {(page - 1) * pageSize + 1} to {Math.min(page * pageSize, total)} of {total}
           </p>
           <div className="flex items-center gap-2">
             <button

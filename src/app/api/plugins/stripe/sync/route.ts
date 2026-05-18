@@ -39,7 +39,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           error: 'Stripe sync failed',
           details: result.error || result.stderr || 'Unknown error',
         },
-        { status: 500 },
+        { status: 500 }
       )
     }
 
@@ -72,7 +72,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         error: 'Failed to sync Stripe data',
         details: err.message || 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

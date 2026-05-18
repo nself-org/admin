@@ -87,10 +87,7 @@ function Skeleton() {
   return (
     <div aria-busy="true" aria-label="Loading free-user accounts">
       {[1, 2, 3, 4].map((i) => (
-        <div
-          key={i}
-          className="mb-3 h-12 animate-pulse rounded-xl bg-zinc-100 dark:bg-zinc-800"
-        />
+        <div key={i} className="mb-3 h-12 animate-pulse rounded-xl bg-zinc-100 dark:bg-zinc-800" />
       ))}
     </div>
   )
@@ -149,17 +146,13 @@ export default function FreeUsersPage() {
       })
       const json = await res.json().catch(() => ({}))
       if (res.ok) {
-        setCronResult(
-          `Anti-sharing cron complete: ${json.flagged ?? 0} key(s) flagged.`,
-        )
+        setCronResult(`Anti-sharing cron complete: ${json.flagged ?? 0} key(s) flagged.`)
         fetchAccounts(filter)
       } else {
         setCronResult(`Cron error: ${json.error || res.statusText}`)
       }
     } catch (err: unknown) {
-      setCronResult(
-        `Cron network error: ${err instanceof Error ? err.message : String(err)}`,
-      )
+      setCronResult(`Cron network error: ${err instanceof Error ? err.message : String(err)}`)
     } finally {
       setCronRunning(false)
     }
@@ -178,8 +171,7 @@ export default function FreeUsersPage() {
               Free-Plugin Accounts
             </h1>
             <p className="mt-0.5 text-sm text-zinc-500 dark:text-zinc-400">
-              Devices registered with a{' '}
-              <code className="text-xs">nself_free_</code> key
+              Devices registered with a <code className="text-xs">nself_free_</code> key
             </p>
           </div>
         </div>
@@ -237,9 +229,7 @@ export default function FreeUsersPage() {
       {offline && (
         <div className="flex flex-col items-center gap-3 py-16 text-zinc-400">
           <WifiOff className="h-10 w-10" />
-          <p className="text-sm">
-            Unable to reach the server. Check your network and retry.
-          </p>
+          <p className="text-sm">Unable to reach the server. Check your network and retry.</p>
           <button
             onClick={() => fetchAccounts(filter)}
             className="rounded-lg border border-zinc-200 px-4 py-2 text-sm hover:bg-zinc-50 dark:border-zinc-700 dark:hover:bg-zinc-800"
@@ -276,8 +266,8 @@ export default function FreeUsersPage() {
           {filter === 'flagged' && (
             <div className="mb-3 flex items-center gap-2 rounded-lg border border-amber-500/30 bg-amber-500/10 px-3 py-2 text-xs text-amber-400">
               <AlertTriangle className="h-4 w-4 shrink-0" />
-              Flagged keys have been used from more than 3 distinct IPs in the
-              past 7 days. Review before revoking.
+              Flagged keys have been used from more than 3 distinct IPs in the past 7 days. Review
+              before revoking.
             </div>
           )}
 
@@ -337,9 +327,7 @@ export default function FreeUsersPage() {
                             ))
                           )}
                           {plugins.length > 4 && (
-                            <span className="text-xs text-zinc-400">
-                              +{plugins.length - 4}
-                            </span>
+                            <span className="text-xs text-zinc-400">+{plugins.length - 4}</span>
                           )}
                         </div>
                       </td>

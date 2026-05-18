@@ -21,7 +21,7 @@ export async function GET(): Promise<NextResponse> {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }
@@ -61,7 +61,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         success: false,
         error: 'No action specified',
       },
-      { status: 400 },
+      { status: 400 }
     )
   } catch (error) {
     return NextResponse.json(
@@ -69,7 +69,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 }

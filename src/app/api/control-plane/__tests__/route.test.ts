@@ -4,8 +4,19 @@
  * CR-A: validates auth guard, input validation, and pure execFile passthrough.
  * Zero TS control-plane logic is reimplemented here — all verification is about
  * correct CLI arg construction and response mapping.
+ *
+ * Mocking strategy:
+ *   child_process.execFile is mocked with a callback-style jest.fn() that also has
+ *   util.promisify.custom set to a jest.fn() returning a promise. This ensures that
+ *   util.promisify(execFile) returns the custom mock (which resolves { stdout, stderr })
+ *   rather than the default promisify wrapper (which resolves only stdout as a string).
+ *
+ *   NextRequest must be constructed with a string URL (not a URL object) — in jsdom,
+ *   NextRequest.url is undefined when constructed with a URL object, causing the route
+ *   to throw a non-Error when it calls new URL(request.url).
  */
 
+import { execFile } from 'child_process'
 import { NextRequest } from 'next/server'
 
 // ── Mocks ─────────────────────────────────────────────────────────────────────
@@ -22,31 +33,30 @@ jest.mock('@/lib/require-auth', () => ({
   requireAuth: jest.fn(),
 }))
 
-// Mock execFile at the util level since route.ts uses promisify(execFile)
-const mockExecFile = jest.fn()
-jest.mock('child_process', () => ({
-  execFile: (...args: unknown[]) => mockExecFile(...args),
-}))
+// Mock child_process.execFile with a callback-style stub PLUS util.promisify.custom.
+//
+// Background: Node's real execFile has util.promisify.custom set, so promisify(execFile)
+// returns a function that resolves { stdout, stderr }. A plain jest.fn() lacks this
+// symbol, so promisify(jest.fn()) resolves only stdout (a string), breaking
+// the route's const { stdout, stderr } = await execFileAsync(...) destructuring.
+//
+// Solution: attach a custom jest.fn() via the util.promisify.custom symbol so that
+// promisify(execFile) returns the custom mock, which we control to resolve { stdout, stderr }.
+jest.mock('child_process', () => {
+  const { promisify } = jest.requireActual<typeof import('util')>('util')
+  // The custom mock that util.promisify will use when wrapping execFileMock.
+  // Its implementation is set per-test via setExecSuccess / setExecError.
+  const execFileCustom = jest.fn<
+    Promise<{ stdout: string; stderr: string }>,
+    [string, string[], object]
+  >()
 
-// promisify wraps the last callback arg — return a real async function
-jest.mock('util', () => ({
-  promisify:
-    (fn: (...args: unknown[]) => void) =>
-    (...args: unknown[]) =>
-      new Promise<{ stdout: string; stderr: string }>((resolve, reject) => {
-        // inject callback as last arg
-        fn(...args, (err: Error | null, stdout: string, stderr: string) => {
-          if (err) {
-            const enhanced = err as Error & { stdout?: string; stderr?: string }
-            enhanced.stdout = stdout
-            enhanced.stderr = stderr
-            reject(enhanced)
-          } else {
-            resolve({ stdout, stderr })
-          }
-        })
-      }),
-}))
+  const execFileMock = jest.fn()
+  // Attach the custom symbol so promisify(execFileMock) returns execFileCustom.
+  ;(execFileMock as unknown as Record<symbol, unknown>)[promisify.custom] = execFileCustom
+
+  return { execFile: execFileMock, __execFileCustom: execFileCustom }
+})
 
 import { requireAuth } from '@/lib/require-auth'
 import { GET, POST } from '../route'
@@ -55,12 +65,23 @@ import { GET, POST } from '../route'
 
 const mockRequireAuth = requireAuth as jest.MockedFunction<typeof requireAuth>
 
+// Access both the outer mock (for call-count assertions) and the custom
+// promisify target (for resolving promises).
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const mockExecFile = execFile as jest.MockedFunction<any>
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const mockExecFileCustom = (jest.requireMock('child_process') as any)
+  .__execFileCustom as jest.MockedFunction<() => Promise<{ stdout: string; stderr: string }>>
+
 function makeGETRequest(params: Record<string, string> = {}): NextRequest {
   const url = new URL('http://localhost:3021/api/control-plane')
   for (const [k, v] of Object.entries(params)) {
     url.searchParams.set(k, v)
   }
-  return new NextRequest(url)
+  // Pass url.toString() (not the URL object) — NextRequest.url is undefined in
+  // jsdom when constructed with a URL object, causing the route to throw a non-Error
+  // when it calls new URL(request.url).
+  return new NextRequest(url.toString())
 }
 
 function makePOSTRequest(body: unknown): NextRequest {
@@ -71,19 +92,40 @@ function makePOSTRequest(body: unknown): NextRequest {
   })
 }
 
+/**
+ * Configure execFile mock to resolve successfully.
+ * Sets both the outer mock (call-count tracking) and the custom promisify target.
+ */
 function setExecSuccess(stdout: string, stderr = ''): void {
+  mockExecFileCustom.mockResolvedValue({ stdout, stderr })
+  // Also make the outer execFile call the custom implementation (for call-count assertions).
   mockExecFile.mockImplementation(
-    (_bin: string, _args: string[], _opts: unknown, cb: (err: null, stdout: string, stderr: string) => void) => {
-      cb(null, stdout, stderr)
-    },
+    (
+      _bin: string,
+      _args: string[],
+      _opts: object,
+      callback: (err: null, stdout: string, stderr: string) => void
+    ) => {
+      callback(null, stdout, stderr)
+    }
   )
 }
 
+/**
+ * Configure execFile mock to reject with an error.
+ */
 function setExecError(message: string, stdout = '', stderr = ''): void {
+  const err = Object.assign(new Error(message), { stdout, stderr })
+  mockExecFileCustom.mockRejectedValue(err)
   mockExecFile.mockImplementation(
-    (_bin: string, _args: string[], _opts: unknown, cb: (err: Error, stdout: string, stderr: string) => void) => {
-      cb(Object.assign(new Error(message), { stdout, stderr }), stdout, stderr)
-    },
+    (
+      _bin: string,
+      _args: string[],
+      _opts: object,
+      callback: (err: Error, stdout: string, stderr: string) => void
+    ) => {
+      callback(err, stdout, stderr)
+    }
   )
 }
 
@@ -117,12 +159,13 @@ describe('GET /api/control-plane', () => {
 
     expect(res.status).toBe(200)
     expect(json.action).toBe('probe')
-    // Verify execFile was called with correct nself args
-    expect(mockExecFile).toHaveBeenCalledWith(
+    // Verify execFileAsync (the promisified version = execFileCustom) was called with correct nself args.
+    // The promisify.custom mock means promisify(execFile) === execFileCustom directly —
+    // execFileCustom is what the route actually invokes (no callback arg).
+    expect(mockExecFileCustom).toHaveBeenCalledWith(
       'nself',
       expect.arrayContaining(['env', 'target', 'probe', '--json']),
-      expect.any(Object),
-      expect.any(Function),
+      expect.any(Object)
     )
   })
 
@@ -171,11 +214,11 @@ describe('POST /api/control-plane — auth', () => {
 
   it('returns 401 when unauthenticated', async () => {
     const { NextResponse } = await import('next/server')
-    mockRequireAuth.mockResolvedValue(
-      NextResponse.json({ error: 'Unauthorized' }, { status: 401 }),
-    )
+    mockRequireAuth.mockResolvedValue(NextResponse.json({ error: 'Unauthorized' }, { status: 401 }))
 
-    const res = await POST(makePOSTRequest({ action: 'add', name: 'prod', host: '1.2.3.4', role: 'primary' }))
+    const res = await POST(
+      makePOSTRequest({ action: 'add', name: 'prod', host: '1.2.3.4', role: 'primary' })
+    )
     expect(res.status).toBe(401)
   })
 })
@@ -191,39 +234,54 @@ describe('POST /api/control-plane — add', () => {
   it('returns 200 when add succeeds', async () => {
     setExecSuccess('Server prod added successfully')
 
-    const res = await POST(makePOSTRequest({ action: 'add', name: 'prod', host: '5.5.5.5', role: 'primary' }))
+    const res = await POST(
+      makePOSTRequest({ action: 'add', name: 'prod', host: '5.5.5.5', role: 'primary' })
+    )
     const json = await res.json()
 
     expect(res.status).toBe(200)
     expect(json.success).toBe(true)
     expect(json.action).toBe('add')
     expect(json.name).toBe('prod')
-    // Verify CLI args
-    expect(mockExecFile).toHaveBeenCalledWith(
+    // Verify CLI args via the promisified mock (execFileCustom — no callback arg).
+    expect(mockExecFileCustom).toHaveBeenCalledWith(
       'nself',
       ['env', 'target', 'add', 'prod', '--host', '5.5.5.5', '--role', 'primary'],
-      expect.any(Object),
-      expect.any(Function),
+      expect.any(Object)
     )
   })
 
   it('passes optional sshUser and sshKeyPath to CLI', async () => {
     setExecSuccess('OK')
 
-    await POST(makePOSTRequest({
-      action: 'add',
-      name: 'staging',
-      host: '1.2.3.4',
-      role: 'secondary',
-      sshUser: 'deploy',
-      sshKeyPath: '/home/user/.ssh/id_rsa',
-    }))
+    await POST(
+      makePOSTRequest({
+        action: 'add',
+        name: 'staging',
+        host: '1.2.3.4',
+        role: 'secondary',
+        sshUser: 'deploy',
+        sshKeyPath: '/home/user/.ssh/id_rsa',
+      })
+    )
 
-    expect(mockExecFile).toHaveBeenCalledWith(
+    expect(mockExecFileCustom).toHaveBeenCalledWith(
       'nself',
-      ['env', 'target', 'add', 'staging', '--host', '1.2.3.4', '--role', 'secondary', '--ssh-user', 'deploy', '--ssh-key', '/home/user/.ssh/id_rsa'],
-      expect.any(Object),
-      expect.any(Function),
+      [
+        'env',
+        'target',
+        'add',
+        'staging',
+        '--host',
+        '1.2.3.4',
+        '--role',
+        'secondary',
+        '--ssh-user',
+        'deploy',
+        '--ssh-key',
+        '/home/user/.ssh/id_rsa',
+      ],
+      expect.any(Object)
     )
   })
 
@@ -236,12 +294,14 @@ describe('POST /api/control-plane — add', () => {
   })
 
   it('returns 400 for injection attempt in host field', async () => {
-    const res = await POST(makePOSTRequest({
-      action: 'add',
-      name: 'prod',
-      host: '$(rm -rf /)',
-      role: 'primary',
-    }))
+    const res = await POST(
+      makePOSTRequest({
+        action: 'add',
+        name: 'prod',
+        host: '$(rm -rf /)',
+        role: 'primary',
+      })
+    )
     const json = await res.json()
 
     expect(res.status).toBe(400)
@@ -249,13 +309,15 @@ describe('POST /api/control-plane — add', () => {
   })
 
   it('rejects path traversal in sshKeyPath', async () => {
-    const res = await POST(makePOSTRequest({
-      action: 'add',
-      name: 'prod',
-      host: '1.2.3.4',
-      role: 'primary',
-      sshKeyPath: '../../etc/passwd',
-    }))
+    const res = await POST(
+      makePOSTRequest({
+        action: 'add',
+        name: 'prod',
+        host: '1.2.3.4',
+        role: 'primary',
+        sshKeyPath: '../../etc/passwd',
+      })
+    )
     const json = await res.json()
 
     expect(res.status).toBe(400)
@@ -280,11 +342,10 @@ describe('POST /api/control-plane — remove', () => {
     expect(res.status).toBe(200)
     expect(json.success).toBe(true)
     expect(json.action).toBe('remove')
-    expect(mockExecFile).toHaveBeenCalledWith(
+    expect(mockExecFileCustom).toHaveBeenCalledWith(
       'nself',
       ['env', 'target', 'remove', 'prod'],
-      expect.any(Object),
-      expect.any(Function),
+      expect.any(Object)
     )
   })
 

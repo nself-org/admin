@@ -507,8 +507,9 @@ test.describe('/services/logs — 7 UI states', () => {
     await mockNselfSuccess(page, LOG_SERVICE_LIST)
     await page.goto('/services/logs', { waitUntil: 'domcontentloaded' })
 
-    // Select trigger should be visible (service selector)
-    const trigger = page.locator('button[role="combobox"]').first()
+    // Select trigger should be visible (service selector).
+    // The custom Select component renders a plain <button> with className="w-52" — no role="combobox".
+    const trigger = page.locator('button.w-52').first()
     await expect(trigger).toBeVisible()
   })
 
@@ -602,7 +603,7 @@ test.describe('/services/logs — 7 UI states', () => {
 
     await page.goto('/services/logs', { waitUntil: 'domcontentloaded' })
     await page.waitForTimeout(800)
-    await expect(page.locator('pre')).toContainText('startup complete')
+    await expect(page.locator('pre').first()).toContainText('startup complete')
   })
 
   test('07 refresh-logs — Refresh Logs button triggers new log fetch', async ({ page }) => {
@@ -650,19 +651,19 @@ test.describe('/operations/scale — 7 UI states', () => {
 
   test('01 error — error card renders', async ({ page }) => {
     await mockNselfError(page)
-    await page.goto('/operations/scale', { waitUntil: 'networkidle' })
+    await page.goto('/operations/scale', { waitUntil: 'domcontentloaded' })
     await expect(page.locator('text=Failed to load services')).toBeVisible()
   })
 
   test('02 empty — no services found', async ({ page }) => {
     await mockNselfEmpty(page)
-    await page.goto('/operations/scale', { waitUntil: 'networkidle' })
+    await page.goto('/operations/scale', { waitUntil: 'domcontentloaded' })
     await expect(page.locator('text=No services found')).toBeVisible()
   })
 
   test('03 success — service cards with replica inputs', async ({ page }) => {
     await mockNselfSuccess(page, SCALE_LIST_JSON)
-    await page.goto('/operations/scale', { waitUntil: 'networkidle' })
+    await page.goto('/operations/scale', { waitUntil: 'domcontentloaded' })
 
     await expect(page.locator('text=api')).toBeVisible()
     await expect(page.locator('input[type="number"]').first()).toBeVisible()
@@ -692,7 +693,7 @@ test.describe('/operations/scale — 7 UI states', () => {
       })
     })
 
-    await page.goto('/operations/scale', { waitUntil: 'networkidle' })
+    await page.goto('/operations/scale', { waitUntil: 'domcontentloaded' })
     await expect(page.locator('text=api')).toBeVisible()
     await page.locator('button:has-text("Apply")').first().click()
     await expect(page.locator('.animate-spin').first()).toBeVisible()
@@ -706,7 +707,7 @@ test.describe('/operations/scale — 7 UI states', () => {
       { success: true, data: { stdout: '', stderr: '' } }
     )
 
-    await page.goto('/operations/scale', { waitUntil: 'networkidle' })
+    await page.goto('/operations/scale', { waitUntil: 'domcontentloaded' })
     await expect(page.locator('text=api')).toBeVisible()
     await page.locator('button:has-text("Apply")').first().click()
     await page.waitForTimeout(500)
@@ -721,7 +722,8 @@ test.describe('/operations/scale — 7 UI states', () => {
       { success: false, error: 'scale failed: quota exceeded' }
     )
 
-    await page.goto('/operations/scale', { waitUntil: 'networkidle' })
+    await page.goto('/operations/scale', { waitUntil: 'domcontentloaded' })
+    await expect(page.locator('text=api')).toBeVisible()
     await page.locator('button:has-text("Apply")').first().click()
     await page.waitForTimeout(500)
 
@@ -730,7 +732,8 @@ test.describe('/operations/scale — 7 UI states', () => {
 
   test('07 invalid-replica — error badge for non-numeric input', async ({ page }) => {
     await mockNselfSuccess(page, SCALE_LIST_JSON)
-    await page.goto('/operations/scale', { waitUntil: 'networkidle' })
+    await page.goto('/operations/scale', { waitUntil: 'domcontentloaded' })
+    await expect(page.locator('text=api')).toBeVisible()
 
     // Clear the input and enter an invalid value
     const input = page.locator('input[type="number"]').first()
@@ -764,7 +767,7 @@ for (const { path, title } of STACK_PAGES) {
 
     test('error — error card renders', async ({ page }) => {
       await mockNselfError(page, `${title} unavailable`)
-      await page.goto(path, { waitUntil: 'networkidle' })
+      await page.goto(path, { waitUntil: 'domcontentloaded' })
       // All stack pages show a destructive error card
       await expect(
         page.locator('[class*="destructive"], [class*="border-destructive"]').first()
@@ -773,7 +776,7 @@ for (const { path, title } of STACK_PAGES) {
 
     test('page renders without crash on success', async ({ page }) => {
       await mockNselfSuccess(page, SERVICE_LIST_JSON)
-      await page.goto(path, { waitUntil: 'networkidle' })
+      await page.goto(path, { waitUntil: 'domcontentloaded' })
       // Page title (h1 or page-level heading) should be visible
       const heading = page.locator('h1, h2').first()
       await expect(heading).toBeVisible()
@@ -800,14 +803,14 @@ for (const { path } of OPS_PAGES) {
 
     test('page loads and heading visible on success', async ({ page }) => {
       await mockNselfSuccess(page, SERVICE_LIST_JSON)
-      await page.goto(path, { waitUntil: 'networkidle' })
+      await page.goto(path, { waitUntil: 'domcontentloaded' })
       const heading = page.locator('h1, h2').first()
       await expect(heading).toBeVisible()
     })
 
     test('error state — error card or message visible', async ({ page }) => {
       await mockNselfError(page, 'nself unavailable')
-      await page.goto(path, { waitUntil: 'networkidle' })
+      await page.goto(path, { waitUntil: 'domcontentloaded' })
       // Either a destructive card or generic error text
       const errorCard = page.locator('[class*="destructive"], text=Failed to, text=unavailable')
       // The page should show something that indicates an error (non-deterministic on which element

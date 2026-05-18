@@ -189,7 +189,7 @@ function MonitorContent() {
           </Card>
         )}
 
-        {!loading && !error && (!data || data.services.length === 0) && (
+        {!loading && !error && (!data || (data.services?.length ?? 0) === 0) && (
           <Card>
             <CardContent className="text-muted-foreground pt-6 text-center">
               No monitoring data available.

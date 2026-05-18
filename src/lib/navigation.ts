@@ -412,6 +412,12 @@ const _allNavigation: Array<NavGroup> = [
           { label: 'Commands', href: '/history/commands' },
         ],
       },
+      {
+        title: 'Remote',
+        href: '/remote',
+        icon: 'server',
+        description: 'Remote server connections and control-plane targets',
+      },
     ],
   },
   // ── Monitoring ────────────────────────────────────────────

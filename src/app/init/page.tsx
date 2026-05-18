@@ -2,16 +2,17 @@
 
 import { FormSkeleton } from '@/components/skeletons'
 import { safeNavigate } from '@/lib/routing'
-import { CheckCircle, Folder, Hammer } from 'lucide-react'
+import { AlertCircle, CheckCircle, Folder, Hammer } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { Suspense, useCallback, useEffect, useRef, useState } from 'react'
 
 function InitContent() {
   const router = useRouter()
   const [status, setStatus] = useState<
-    'checking' | 'initializing' | 'ready' | 'built'
+    'checking' | 'initializing' | 'ready' | 'built' | 'error'
   >('checking')
   const [message, setMessage] = useState('Checking project status...')
+  const [errorDetail, setErrorDetail] = useState<string>('')
   const hasChecked = useRef(false)
 
   const checkAndInitializeProject = useCallback(async () => {
@@ -52,7 +53,7 @@ function InitContent() {
           const initResponse = await fetch('/api/nself/init', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ projectName: 'my_project' }),
+            body: JSON.stringify({}),
           })
 
           if (initResponse.ok) {
@@ -63,11 +64,17 @@ function InitContent() {
               safeNavigate(router, '/init/1')
             }, 500)
           } else {
-            // If init fails, still go to wizard to let user configure manually
-            setMessage('Starting setup wizard...')
-            setTimeout(() => {
-              safeNavigate(router, '/init/1')
-            }, 500)
+            // Show inline error with Retry option — do not silently redirect (ADM-T03)
+            let detail = 'Unknown error'
+            try {
+              const errData = await initResponse.json()
+              detail = errData.details || errData.error || detail
+            } catch {
+              // ignore parse failure
+            }
+            setErrorDetail(detail)
+            setStatus('error')
+            setMessage('Failed to initialize project')
           }
         }
       } else {
@@ -76,10 +83,19 @@ function InitContent() {
       }
     } catch (error) {
       console.error('Error checking project status:', error)
-      // On error, redirect to step 1
-      safeNavigate(router, '/init/1')
+      setErrorDetail(error instanceof Error ? error.message : 'Unknown error')
+      setStatus('error')
+      setMessage('Failed to check project status')
     }
   }, [router])
+
+  const handleRetry = useCallback(() => {
+    hasChecked.current = false
+    setStatus('checking')
+    setMessage('Checking project status...')
+    setErrorDetail('')
+    checkAndInitializeProject()
+  }, [checkAndInitializeProject])
 
   useEffect(() => {
     // Prevent multiple checks
@@ -113,12 +129,34 @@ function InitContent() {
                 <Hammer className="h-8 w-8 text-green-600 dark:text-green-400" />
               </div>
             )}
+            {status === 'error' && (
+              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/20">
+                <AlertCircle className="h-8 w-8 text-red-600 dark:text-red-400" />
+              </div>
+            )}
           </div>
 
           {/* Message */}
           <h2 className="text-lg font-medium text-zinc-900 dark:text-white">
             {message}
           </h2>
+
+          {/* Error detail + Retry (ADM-T03) */}
+          {status === 'error' && (
+            <div className="mt-4 max-w-sm space-y-3">
+              {errorDetail && (
+                <p className="rounded-md bg-red-50 px-4 py-2 text-sm text-red-700 dark:bg-red-900/20 dark:text-red-400">
+                  {errorDetail}
+                </p>
+              )}
+              <button
+                onClick={handleRetry}
+                className="inline-flex items-center gap-2 rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+              >
+                Retry
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </div>

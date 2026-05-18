@@ -3,7 +3,8 @@ import { NextRequest, NextResponse } from 'next/server'
 
 /**
  * GET /api/plugins/github/repos
- * Returns list of GitHub repositories with pagination and search
+ * Returns list of GitHub repositories with pagination and search.
+ * Requires GITHUB_TOKEN env var. Returns honest empty with a note when unconfigured.
  */
 export async function GET(request: NextRequest): Promise<NextResponse> {
   try {
@@ -14,152 +15,110 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     const filter = searchParams.get('filter') || 'all' // all, has_issues, has_prs
     const sort = searchParams.get('sort') || 'updated' // name, updated, stars
 
-    // Mock data - will be replaced with real GitHub API
-    const mockRepos: GitHubRepo[] = [
-      {
-        id: 1,
-        name: 'nself',
-        fullName: 'nself-org/cli',
-        description: 'Self-hosted development platform',
-        private: false,
-        htmlUrl: 'https://github.com/nself-org/cli',
-        cloneUrl: 'https://github.com/nself-org/cli.git',
-        language: 'TypeScript',
-        stargazersCount: 234,
-        forksCount: 45,
-        openIssuesCount: 12,
-        defaultBranch: 'main',
-        createdAt: '2024-01-15T10:30:00Z',
-        updatedAt: '2026-01-30T14:20:00Z',
-        pushedAt: '2026-01-30T14:20:00Z',
-      },
-      {
-        id: 2,
-        name: 'nself-admin',
-        fullName: 'nself-org/admin',
-        description: 'Web UI for nself CLI management',
-        private: false,
-        htmlUrl: 'https://github.com/nself-org/admin',
-        cloneUrl: 'https://github.com/nself-org/admin.git',
-        language: 'TypeScript',
-        stargazersCount: 89,
-        forksCount: 12,
-        openIssuesCount: 8,
-        defaultBranch: 'main',
-        createdAt: '2024-06-10T09:15:00Z',
-        updatedAt: '2026-01-31T11:45:00Z',
-        pushedAt: '2026-01-31T11:45:00Z',
-      },
-      {
-        id: 3,
-        name: 'api-gateway',
-        fullName: 'nself-org/api-gateway',
-        description: 'Modern API gateway with rate limiting and auth',
-        private: true,
-        htmlUrl: 'https://github.com/nself-org/api-gateway',
-        cloneUrl: 'https://github.com/nself-org/api-gateway.git',
-        language: 'Go',
-        stargazersCount: 156,
-        forksCount: 28,
-        openIssuesCount: 5,
-        defaultBranch: 'main',
-        createdAt: '2023-11-20T16:00:00Z',
-        updatedAt: '2026-01-29T18:30:00Z',
-        pushedAt: '2026-01-29T18:30:00Z',
-      },
-      {
-        id: 4,
-        name: 'analytics-dashboard',
-        fullName: 'nself-org/analytics-dashboard',
-        description: 'Real-time analytics and visualization platform',
-        private: false,
-        htmlUrl: 'https://github.com/nself-org/analytics-dashboard',
-        cloneUrl: 'https://github.com/nself-org/analytics-dashboard.git',
-        language: 'Python',
-        stargazersCount: 312,
-        forksCount: 67,
-        openIssuesCount: 18,
-        defaultBranch: 'main',
-        createdAt: '2024-03-05T12:45:00Z',
-        updatedAt: '2026-01-28T20:10:00Z',
-        pushedAt: '2026-01-28T20:10:00Z',
-      },
-      {
-        id: 5,
-        name: 'microservice-starter',
-        fullName: 'nself-org/microservice-starter',
-        description: 'Production-ready microservice template with Docker',
-        private: false,
-        htmlUrl: 'https://github.com/nself-org/microservice-starter',
-        cloneUrl: 'https://github.com/nself-org/microservice-starter.git',
-        language: 'JavaScript',
-        stargazersCount: 445,
-        forksCount: 92,
-        openIssuesCount: 24,
-        defaultBranch: 'main',
-        createdAt: '2023-09-12T08:20:00Z',
-        updatedAt: '2026-01-27T15:55:00Z',
-        pushedAt: '2026-01-27T15:55:00Z',
-      },
-      {
-        id: 6,
-        name: 'rust-cli-tools',
-        fullName: 'nself-org/rust-cli-tools',
-        description: 'Collection of CLI utilities written in Rust',
-        private: false,
-        htmlUrl: 'https://github.com/nself-org/rust-cli-tools',
-        cloneUrl: 'https://github.com/nself-org/rust-cli-tools.git',
-        language: 'Rust',
-        stargazersCount: 678,
-        forksCount: 134,
-        openIssuesCount: 0,
-        defaultBranch: 'main',
-        createdAt: '2023-07-18T14:30:00Z',
-        updatedAt: '2026-01-26T09:40:00Z',
-        pushedAt: '2026-01-26T09:40:00Z',
-      },
-    ]
+    const token = process.env.GITHUB_TOKEN
+    if (!token) {
+      return NextResponse.json({
+        repos: [],
+        total: 0,
+        page,
+        pageSize,
+        note: 'github-token-not-configured',
+      })
+    }
+
+    // Fetch all accessible repos for the authenticated user/org
+    // GitHub paginates at 100 per page; fetch up to 10 pages (1000 repos)
+    const allRepos: GitHubRepo[] = []
+    let ghPage = 1
+    while (ghPage <= 10) {
+      const ghParams = new URLSearchParams({
+        per_page: '100',
+        page: String(ghPage),
+        sort: sort === 'stars' ? 'stargazers' : sort === 'name' ? 'full_name' : 'updated',
+        direction: 'desc',
+        affiliation: 'owner,collaborator,organization_member',
+      })
+
+      const resp = await fetch(
+        `https://api.github.com/user/repos?${ghParams}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            Accept: 'application/vnd.github+json',
+            'X-GitHub-Api-Version': '2022-11-28',
+          },
+          signal: AbortSignal.timeout(15_000),
+        },
+      )
+
+      if (!resp.ok) {
+        const text = await resp.text()
+        return NextResponse.json(
+          {
+            error: `GitHub API returned ${resp.status}`,
+            details: text.slice(0, 500),
+          },
+          { status: 502 },
+        )
+      }
+
+      const batch: Array<Record<string, unknown>> = await resp.json()
+      if (!Array.isArray(batch) || batch.length === 0) break
+
+      for (const r of batch) {
+        allRepos.push({
+          id: r.id as number,
+          name: r.name as string,
+          fullName: r.full_name as string,
+          description: (r.description as string | null) ?? undefined,
+          private: r.private as boolean,
+          htmlUrl: r.html_url as string,
+          cloneUrl: r.clone_url as string,
+          language: (r.language as string | null) ?? undefined,
+          stargazersCount: (r.stargazers_count as number) ?? 0,
+          forksCount: (r.forks_count as number) ?? 0,
+          openIssuesCount: (r.open_issues_count as number) ?? 0,
+          defaultBranch: (r.default_branch as string) ?? 'main',
+          createdAt: r.created_at as string,
+          updatedAt: r.updated_at as string,
+          pushedAt: (r.pushed_at as string) ?? (r.updated_at as string),
+        })
+      }
+
+      if (batch.length < 100) break
+      ghPage++
+    }
 
     // Filter repos
-    let filteredRepos = mockRepos
+    let filtered = allRepos
     if (search) {
-      filteredRepos = filteredRepos.filter(
+      const q = search.toLowerCase()
+      filtered = filtered.filter(
         (repo) =>
-          repo.name.toLowerCase().includes(search.toLowerCase()) ||
-          repo.description?.toLowerCase().includes(search.toLowerCase()),
+          repo.name.toLowerCase().includes(q) ||
+          repo.description?.toLowerCase().includes(q),
       )
     }
     if (filter === 'has_issues') {
-      filteredRepos = filteredRepos.filter((repo) => repo.openIssuesCount > 0)
-    } else if (filter === 'has_prs') {
-      // Mock: assume repos with issues have PRs
-      filteredRepos = filteredRepos.filter((repo) => repo.openIssuesCount > 0)
+      filtered = filtered.filter((repo) => repo.openIssuesCount > 0)
+    }
+    // has_prs: GitHub issues count includes PRs; keep same filter as has_issues
+    if (filter === 'has_prs') {
+      filtered = filtered.filter((repo) => repo.openIssuesCount > 0)
     }
 
-    // Sort repos
-    filteredRepos.sort((a, b) => {
-      if (sort === 'name') {
-        return a.name.localeCompare(b.name)
-      } else if (sort === 'stars') {
-        return b.stargazersCount - a.stargazersCount
-      } else {
-        // updated
-        return new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
-      }
+    // Sort (API already sorted by updated desc; re-sort locally for other options)
+    filtered.sort((a, b) => {
+      if (sort === 'name') return a.name.localeCompare(b.name)
+      if (sort === 'stars') return b.stargazersCount - a.stargazersCount
+      return new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
     })
 
-    // Paginate
-    const total = filteredRepos.length
+    const total = filtered.length
     const start = (page - 1) * pageSize
-    const end = start + pageSize
-    const repos = filteredRepos.slice(start, end)
+    const repos = filtered.slice(start, start + pageSize)
 
-    return NextResponse.json({
-      repos,
-      total,
-      page,
-      pageSize,
-    })
+    return NextResponse.json({ repos, total, page, pageSize })
   } catch (error) {
     return NextResponse.json(
       {

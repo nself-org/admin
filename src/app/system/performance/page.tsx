@@ -16,7 +16,10 @@ import {
   TrendingUp,
   Zap,
 } from 'lucide-react'
-import { Suspense, useEffect, useState } from 'react'
+import { Suspense, useState } from 'react'
+import useSWR from 'swr'
+
+const fetcher = (url: string) => fetch(url).then((res) => res.json())
 
 interface PerformanceMetrics {
   responseTime: {
@@ -449,130 +452,37 @@ function OptimizationSuggestions({
 }
 
 function SystemPerformanceContent() {
-  const [metrics, setMetrics] = useState<PerformanceMetrics | null>(null)
-  const [loading, setLoading] = useState(true)
   const [autoRefresh, setAutoRefresh] = useState(true)
 
-  useEffect(() => {
-    const mockMetrics: PerformanceMetrics = {
-      responseTime: {
-        p50: 45,
-        p95: 185,
-        p99: 320,
-        average: 78,
-      },
-      throughput: {
-        requestsPerSecond: 156,
-        totalRequests: 562800,
-        successRate: 99.2,
-      },
-      errorRate: {
-        percentage: 0.8,
-        total: 4502,
-        byType: {
-          '400': 1234,
-          '404': 2156,
-          '500': 892,
-          '503': 220,
-        },
-      },
-      endpoints: [
-        {
-          path: '/api/users',
-          method: 'GET',
-          avgResponseTime: 42,
-          requestCount: 125600,
-          errorRate: 0.3,
-          p95: 98,
-        },
-        {
-          path: '/api/auth/login',
-          method: 'POST',
-          avgResponseTime: 156,
-          requestCount: 8920,
-          errorRate: 1.2,
-          p95: 287,
-        },
-        {
-          path: '/api/data/export',
-          method: 'GET',
-          avgResponseTime: 892,
-          requestCount: 450,
-          errorRate: 0.1,
-          p95: 1456,
-        },
-      ],
-      database: {
-        avgQueryTime: 12,
-        queryCount: 892000,
-        connectionPoolUsage: 45,
-        slowQueries: [
-          {
-            query:
-              'SELECT * FROM users WHERE created_at > NOW() - INTERVAL 30 DAY',
-            avgTime: 342,
-            count: 156,
-            timestamp: new Date().toISOString(),
-          },
-          {
-            query: 'SELECT COUNT(*) FROM logs GROUP BY service',
-            avgTime: 287,
-            count: 89,
-            timestamp: new Date().toISOString(),
-          },
-        ],
-      },
-      cache: {
-        hitRate: 87.5,
-        missRate: 12.5,
-        totalRequests: 245000,
-        evictionRate: 2.1,
-      },
-      optimization: [
-        {
-          id: '1',
-          severity: 'high',
-          category: 'Database',
-          title: 'Add index to users.created_at column',
-          description: 'Query on users table is slow due to missing index',
-          impact: 'Reduce query time by ~70%',
-          action: 'Create Index',
-        },
-        {
-          id: '2',
-          severity: 'medium',
-          category: 'Caching',
-          title: 'Increase cache TTL for static data',
-          description: 'Frequently requested data is being evicted too soon',
-          impact: 'Reduce database load by ~15%',
-          action: 'Update Cache Config',
-        },
-        {
-          id: '3',
-          severity: 'low',
-          category: 'API',
-          title: 'Enable response compression',
-          description: 'Large JSON responses could benefit from compression',
-          impact: 'Reduce bandwidth by ~30%',
-          action: 'Enable Compression',
-        },
-      ],
-    }
+  const { data, error, isLoading, mutate } = useSWR<PerformanceMetrics | null>(
+    '/api/system/performance',
+    fetcher,
+    { refreshInterval: autoRefresh ? 30000 : 0 },
+  )
 
-    setMetrics(mockMetrics)
-    setLoading(false)
-  }, [])
+  const metrics = data ?? null
 
-  useEffect(() => {
-    if (autoRefresh) {
-      const interval = setInterval(() => {
-        // Refresh metrics
-      }, 30000)
-      return () => clearInterval(interval)
-    }
-  }, [autoRefresh])
+  if (error) {
+    return (
+      <>
+        <HeroPattern />
+        <div className="mx-auto max-w-7xl">
+          <div className="py-12 text-center">
+            <AlertCircle className="mx-auto mb-4 h-12 w-12 text-red-500" />
+            <h2 className="mb-2 text-xl font-semibold text-zinc-900 dark:text-white">
+              Unable to load performance metrics
+            </h2>
+            <Button onClick={() => mutate()}>
+              <RefreshCw className="mr-2 h-4 w-4" />
+              Retry
+            </Button>
+          </div>
+        </div>
+      </>
+    )
+  }
 
-  if (loading) {
+  if (isLoading) {
     return (
       <>
         <HeroPattern />
@@ -596,11 +506,11 @@ function SystemPerformanceContent() {
           <div className="py-12 text-center">
             <AlertCircle className="mx-auto mb-4 h-12 w-12 text-red-500" />
             <h2 className="mb-2 text-xl font-semibold text-zinc-900 dark:text-white">
-              Unable to load performance metrics
+              No performance metrics available
             </h2>
-            <Button onClick={() => window.location.reload()}>
+            <Button onClick={() => mutate()}>
               <RefreshCw className="mr-2 h-4 w-4" />
-              Retry
+              Refresh
             </Button>
           </div>
         </div>
@@ -633,7 +543,7 @@ function SystemPerformanceContent() {
                 />
                 Auto-refresh
               </label>
-              <Button variant="outline">
+              <Button variant="outline" onClick={() => mutate()}>
                 <RefreshCw className="mr-2 h-4 w-4" />
                 Refresh
               </Button>

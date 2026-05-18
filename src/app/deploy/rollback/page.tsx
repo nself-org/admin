@@ -27,59 +27,12 @@ function RollbackContent() {
 
   const fetchDeployments = useCallback(async () => {
     try {
-      // Mock data - replace with real API
-      const mockDeployments: Deployment[] = [
-        {
-          id: 'deploy-1',
-          environment: 'production',
-          strategy: 'standard',
-          status: 'success',
-          version: 'v1.3.0',
-          commit: 'a1b2c3d',
-          branch: 'main',
-          startedAt: new Date(Date.now() - 3600000).toISOString(),
-          completedAt: new Date(Date.now() - 3500000).toISOString(),
-          duration: 100,
-          deployedBy: 'developer@example.com',
-          changes: ['Add user profile feature', 'Fix payment bug'],
-          rollbackAvailable: false,
-        },
-        {
-          id: 'deploy-2',
-          environment: 'production',
-          strategy: 'standard',
-          status: 'success',
-          version: 'v1.2.5',
-          commit: 'e4f5g6h',
-          branch: 'main',
-          startedAt: new Date(Date.now() - 86400000).toISOString(),
-          completedAt: new Date(Date.now() - 86400000 + 120000).toISOString(),
-          duration: 120,
-          deployedBy: 'developer@example.com',
-          changes: ['Update dependencies', 'Performance improvements'],
-          rollbackAvailable: true,
-        },
-        {
-          id: 'deploy-3',
-          environment: 'production',
-          strategy: 'standard',
-          status: 'success',
-          version: 'v1.2.4',
-          commit: 'i7j8k9l',
-          branch: 'main',
-          startedAt: new Date(Date.now() - 86400000 * 3).toISOString(),
-          completedAt: new Date(
-            Date.now() - 86400000 * 3 + 90000,
-          ).toISOString(),
-          duration: 90,
-          deployedBy: 'developer@example.com',
-          changes: ['Bug fixes', 'Minor UI updates'],
-          rollbackAvailable: true,
-        },
-      ]
-      setDeployments(mockDeployments)
+      const res = await fetch('/api/deploy')
+      if (!res.ok) throw new Error(`HTTP ${res.status}`)
+      const data = await res.json()
+      setDeployments(data.deployments ?? [])
     } catch (_error) {
-      // Handle error silently
+      setDeployments([])
     } finally {
       setLoading(false)
     }

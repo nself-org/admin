@@ -47,54 +47,6 @@ const statusIcons: Record<string, typeof CheckCircle> = {
   unknown: AlertCircle,
 }
 
-// Mock servers for demo
-const mockServers: CloudServer[] = [
-  {
-    id: 'srv-1',
-    name: 'prod-api-1',
-    ip: '203.0.113.10',
-    provider: 'digitalocean',
-    region: 'nyc1',
-    size: 'medium',
-    status: 'running',
-    createdAt: '2024-01-15T10:30:00Z',
-    specs: { vcpu: 2, memory: '4 GB', storage: '80 GB SSD' },
-  },
-  {
-    id: 'srv-2',
-    name: 'prod-db-1',
-    ip: '203.0.113.11',
-    provider: 'hetzner',
-    region: 'fsn1',
-    size: 'large',
-    status: 'running',
-    createdAt: '2024-01-10T08:00:00Z',
-    specs: { vcpu: 4, memory: '16 GB', storage: '160 GB SSD' },
-  },
-  {
-    id: 'srv-3',
-    name: 'staging-1',
-    ip: '203.0.113.12',
-    provider: 'vultr',
-    region: 'ewr',
-    size: 'small',
-    status: 'stopped',
-    createdAt: '2024-01-20T14:00:00Z',
-    specs: { vcpu: 1, memory: '2 GB', storage: '40 GB SSD' },
-  },
-  {
-    id: 'srv-4',
-    name: 'dev-1',
-    ip: '',
-    provider: 'linode',
-    region: 'us-east',
-    size: 'tiny',
-    status: 'provisioning',
-    createdAt: '2024-01-25T09:00:00Z',
-    specs: { vcpu: 1, memory: '1 GB', storage: '25 GB SSD' },
-  },
-]
-
 function ServersContent() {
   const [searchQuery, setSearchQuery] = useState('')
   const [statusFilter, setStatusFilter] = useState<string>('all')
@@ -104,13 +56,10 @@ function ServersContent() {
   const { data, isLoading, mutate } = useSWR<{ servers: CloudServer[] }>(
     '/api/cloud/servers',
     fetcher,
-    {
-      fallbackData: { servers: mockServers },
-      refreshInterval: 30000,
-    },
+    { refreshInterval: 30000 },
   )
 
-  const servers = data?.servers || mockServers
+  const servers = data?.servers ?? []
 
   const filteredServers = servers.filter((server) => {
     const matchesSearch =

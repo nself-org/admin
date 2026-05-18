@@ -1,6 +1,5 @@
 'use client'
 
-import { PageTemplate } from '@/components/PageTemplate'
 import { TableSkeleton } from '@/components/skeletons'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Badge } from '@/components/ui/badge'
@@ -157,10 +156,18 @@ function DatabaseRestoreContent() {
   }
 
   return (
-    <PageTemplate
-      title="Restore Database"
-      description="Restore your database from a backup file using nself CLI"
-    >
+    <div className="space-y-6 p-6">
+      <div>
+        <h1 className="text-2xl font-bold text-zinc-900 dark:text-white">
+          Restore Database
+        </h1>
+        <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
+          Restore your database from a backup file using{' '}
+          <code className="rounded bg-zinc-100 px-1 py-0.5 text-xs dark:bg-zinc-800">
+            nself db restore
+          </code>
+        </p>
+      </div>
       <div className="space-y-6">
         {/* Production Warning */}
         {isProductionEnvironment && (
@@ -536,7 +543,7 @@ function DatabaseRestoreContent() {
           </div>
         )}
       </div>
-    </PageTemplate>
+    </div>
   )
 }
 

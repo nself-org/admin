@@ -82,26 +82,7 @@ const CHANNEL_TYPES = [
   },
 ]
 
-const MOCK_CHANNELS: Channel[] = [
-  { name: 'general', type: 'public', subscribers: 24, messagesPerMin: 8 },
-  {
-    name: 'notifications',
-    type: 'public',
-    subscribers: 156,
-    messagesPerMin: 42,
-  },
-  { name: 'admin-updates', type: 'private', subscribers: 5, messagesPerMin: 2 },
-  { name: 'team-chat', type: 'private', subscribers: 12, messagesPerMin: 15 },
-  { name: 'lobby', type: 'presence', subscribers: 38, messagesPerMin: 6 },
-  {
-    name: 'support-room',
-    type: 'presence',
-    subscribers: 9,
-    messagesPerMin: 11,
-  },
-  { name: 'user:1:user:2', type: 'direct', subscribers: 2, messagesPerMin: 3 },
-  { name: 'user:3:user:5', type: 'direct', subscribers: 2, messagesPerMin: 1 },
-]
+const EMPTY_CHANNELS: Channel[] = []
 
 // ---------------------------------------------------------------------------
 // Helper Components
@@ -197,8 +178,8 @@ function RealtimeContent() {
 
   const filteredChannels =
     channelFilter === 'all'
-      ? MOCK_CHANNELS
-      : MOCK_CHANNELS.filter((c) => c.type === channelFilter)
+      ? EMPTY_CHANNELS
+      : EMPTY_CHANNELS.filter((c) => c.type === channelFilter)
 
   // Initialize real-time service
   const initRealtime = useCallback(async () => {
@@ -306,11 +287,11 @@ function RealtimeContent() {
     }
   }, [testChannel, testEvent, testMessage])
 
-  const totalSubscribers = MOCK_CHANNELS.reduce(
+  const totalSubscribers = EMPTY_CHANNELS.reduce(
     (sum, c) => sum + c.subscribers,
     0,
   )
-  const totalMessagesPerMin = MOCK_CHANNELS.reduce(
+  const totalMessagesPerMin = EMPTY_CHANNELS.reduce(
     (sum, c) => sum + c.messagesPerMin,
     0,
   )
@@ -367,7 +348,7 @@ function RealtimeContent() {
                 <p className="text-sm text-zinc-600 dark:text-zinc-400">
                   Channels
                 </p>
-                <p className="text-2xl font-bold">{MOCK_CHANNELS.length}</p>
+                <p className="text-2xl font-bold">{EMPTY_CHANNELS.length}</p>
               </div>
               <Radio className="h-8 w-8 text-blue-500" />
             </div>
@@ -478,7 +459,7 @@ function RealtimeContent() {
           {/* Channel Type Summary Cards */}
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {CHANNEL_TYPES.map((ct) => {
-              const count = MOCK_CHANNELS.filter(
+              const count = EMPTY_CHANNELS.filter(
                 (c) => c.type === ct.type,
               ).length
               const Icon = ct.icon
@@ -586,7 +567,7 @@ function RealtimeContent() {
             Presence Indicators
           </h3>
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-            {MOCK_CHANNELS.filter((c) => c.type === 'presence').map(
+            {EMPTY_CHANNELS.filter((c) => c.type === 'presence').map(
               (channel) => (
                 <Card key={channel.name}>
                   <CardHeader className="pb-3">
@@ -631,7 +612,7 @@ function RealtimeContent() {
             )}
           </div>
 
-          {MOCK_CHANNELS.filter((c) => c.type === 'presence').length === 0 && (
+          {EMPTY_CHANNELS.filter((c) => c.type === 'presence').length === 0 && (
             <div className="flex h-40 flex-col items-center justify-center text-zinc-500">
               <Users className="mb-3 h-10 w-10 text-zinc-300 dark:text-zinc-600" />
               <p className="text-sm">No presence channels found.</p>

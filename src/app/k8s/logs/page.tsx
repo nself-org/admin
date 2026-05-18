@@ -2,121 +2,28 @@
 
 import type { K8sPod } from '@/types/k8s'
 import {
+  AlertCircle,
   ArrowLeft,
   Box,
   Download,
   Pause,
   Play,
+  RefreshCw,
   Search,
   Terminal,
 } from 'lucide-react'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
-import { Suspense, useEffect, useRef, useState } from 'react'
+import { Suspense, useCallback, useEffect, useRef, useState } from 'react'
 import useSWR from 'swr'
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json())
 
-// Mock pods
-const mockPods: K8sPod[] = [
-  {
-    name: 'nself-api-7d9f8b6c5-abc12',
-    namespace: 'default',
-    status: 'Running',
-    ready: '1/1',
-    restarts: 0,
-    age: '2d',
-    containers: [
-      {
-        name: 'api',
-        image: 'nself/api:v1.2.3',
-        ready: true,
-        restartCount: 0,
-        state: 'running',
-      },
-    ],
-  },
-  {
-    name: 'nself-api-7d9f8b6c5-def34',
-    namespace: 'default',
-    status: 'Running',
-    ready: '1/1',
-    restarts: 0,
-    age: '2d',
-    containers: [
-      {
-        name: 'api',
-        image: 'nself/api:v1.2.3',
-        ready: true,
-        restartCount: 0,
-        state: 'running',
-      },
-    ],
-  },
-  {
-    name: 'nself-hasura-5c4d3b2a1-jkl78',
-    namespace: 'default',
-    status: 'Running',
-    ready: '1/1',
-    restarts: 0,
-    age: '2d',
-    containers: [
-      {
-        name: 'hasura',
-        image: 'hasura/graphql-engine:v2.35.0',
-        ready: true,
-        restartCount: 0,
-        state: 'running',
-      },
-    ],
-  },
-  {
-    name: 'nself-auth-6e5f4g3h2-pqr12',
-    namespace: 'default',
-    status: 'Running',
-    ready: '1/1',
-    restarts: 0,
-    age: '2d',
-    containers: [
-      {
-        name: 'auth',
-        image: 'nself/auth:v1.0.0',
-        ready: true,
-        restartCount: 0,
-        state: 'running',
-      },
-    ],
-  },
-]
-
-// Mock log lines
-const generateMockLogs = (podName: string) => {
-  const timestamps = Array.from({ length: 50 }, (_, i) => {
-    const d = new Date()
-    d.setSeconds(d.getSeconds() - (50 - i) * 10)
-    return d.toISOString()
-  })
-
-  const levels = ['INFO', 'DEBUG', 'WARN', 'ERROR']
-  const messages = [
-    'Request received: GET /api/health',
-    'Database connection established',
-    'Cache hit for key: user:1234',
-    'Processing webhook payload',
-    'JWT token validated successfully',
-    'GraphQL query executed in 45ms',
-    'Starting background job: email-sender',
-    'Memory usage: 256MB / 512MB',
-    'HTTP request completed: 200 OK',
-    'Websocket connection established',
-  ]
-
-  return timestamps.map((ts, _i) => ({
-    timestamp: ts,
-    level: levels[Math.floor(Math.random() * levels.length)],
-    message: messages[Math.floor(Math.random() * messages.length)],
-    pod: podName,
-  }))
+interface LogLine {
+  timestamp: string
+  level: string
+  message: string
+  pod: string
 }
 
 function K8sLogsPageContent() {
@@ -127,16 +34,16 @@ function K8sLogsPageContent() {
   const [selectedContainer, setSelectedContainer] = useState('')
   const [streaming, setStreaming] = useState(true)
   const [searchQuery, setSearchQuery] = useState('')
-  const [logs, setLogs] = useState<any[]>([])
+  const [logs, setLogs] = useState<LogLine[]>([])
+  const [logsError, setLogsError] = useState<string | null>(null)
   const logsEndRef = useRef<HTMLDivElement>(null)
 
-  const { data: podData } = useSWR<{ pods: K8sPod[] }>(
+  const { data: podData, error: podError, mutate: mutatePods } = useSWR<{ pods: K8sPod[] }>(
     '/api/k8s/pods',
     fetcher,
-    { fallbackData: { pods: mockPods } },
   )
 
-  const pods = podData?.pods || mockPods
+  const pods = podData?.pods ?? []
   const selectedPodData = pods.find((p) => p.name === selectedPod)
 
   // Set initial container when pod changes
@@ -146,38 +53,55 @@ function K8sLogsPageContent() {
     }
   }, [selectedPodData])
 
-  // Generate initial logs
+  const fetchLogs = useCallback(async () => {
+    if (!selectedPod) return
+    setLogsError(null)
+    try {
+      const params = new URLSearchParams({ pod: selectedPod })
+      if (selectedContainer) params.set('container', selectedContainer)
+      const res = await fetch(`/api/k8s/pods/${encodeURIComponent(selectedPod)}/logs?${params}`)
+      if (!res.ok) throw new Error(`HTTP ${res.status}`)
+      const data = await res.json()
+      setLogs(data?.logs ?? [])
+    } catch (err) {
+      setLogsError(err instanceof Error ? err.message : 'Failed to fetch logs')
+    }
+  }, [selectedPod, selectedContainer])
+
+  // Fetch logs when pod/container selection changes
   useEffect(() => {
     if (selectedPod) {
-      setLogs(generateMockLogs(selectedPod))
+      fetchLogs()
+    } else {
+      setLogs([])
     }
-  }, [selectedPod])
+  }, [selectedPod, fetchLogs])
 
-  // Simulate streaming logs
+  // Poll for new log lines when streaming is enabled
   useEffect(() => {
     if (!streaming || !selectedPod) return
 
-    const interval = setInterval(() => {
-      const levels = ['INFO', 'DEBUG', 'WARN']
-      const messages = [
-        'Request received: GET /api/health',
-        'Processing request...',
-        'Response sent: 200 OK',
-      ]
-
-      setLogs((prev) => [
-        ...prev.slice(-99),
-        {
-          timestamp: new Date().toISOString(),
-          level: levels[Math.floor(Math.random() * levels.length)],
-          message: messages[Math.floor(Math.random() * messages.length)],
-          pod: selectedPod,
-        },
-      ])
-    }, 2000)
+    const interval = setInterval(async () => {
+      try {
+        const params = new URLSearchParams({ pod: selectedPod, tail: '20' })
+        if (selectedContainer) params.set('container', selectedContainer)
+        const res = await fetch(`/api/k8s/pods/${encodeURIComponent(selectedPod)}/logs?${params}`)
+        if (!res.ok) return
+        const data = await res.json()
+        const newLines: LogLine[] = data?.logs ?? []
+        if (newLines.length > 0) {
+          setLogs((prev) => {
+            const combined = [...prev, ...newLines]
+            return combined.slice(-200)
+          })
+        }
+      } catch {
+        // polling failure — stay silent, keep existing logs
+      }
+    }, 5000)
 
     return () => clearInterval(interval)
-  }, [streaming, selectedPod])
+  }, [streaming, selectedPod, selectedContainer])
 
   // Auto-scroll
   useEffect(() => {
@@ -210,6 +134,34 @@ function K8sLogsPageContent() {
     a.download = `${selectedPod}-logs.txt`
     a.click()
     URL.revokeObjectURL(url)
+  }
+
+  if (podError) {
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center gap-4">
+          <Link href="/k8s" className="rounded-lg border border-zinc-700 bg-zinc-800 p-2 hover:bg-zinc-700">
+            <ArrowLeft className="h-5 w-5" />
+          </Link>
+          <h1 className="text-2xl font-semibold text-white">Pod Logs</h1>
+        </div>
+        <div className="rounded-lg border border-red-500/30 bg-red-900/20 p-6">
+          <div className="flex items-center gap-3">
+            <AlertCircle className="h-5 w-5 text-red-400" />
+            <p className="text-red-400">
+              {podError instanceof Error ? podError.message : 'Failed to load pods'}
+            </p>
+          </div>
+          <button
+            onClick={() => mutatePods()}
+            className="mt-4 inline-flex items-center gap-2 rounded-lg border border-zinc-700 bg-zinc-800 px-4 py-2 text-sm text-white hover:bg-zinc-700"
+          >
+            <RefreshCw className="h-4 w-4" />
+            Retry
+          </button>
+        </div>
+      </div>
+    )
   }
 
   return (
@@ -325,7 +277,7 @@ function K8sLogsPageContent() {
               {selectedContainer && ` / ${selectedContainer}`}
             </span>
           </div>
-          {streaming && (
+          {streaming && selectedPod && (
             <div className="flex items-center gap-2">
               <div className="h-2 w-2 animate-pulse rounded-full bg-emerald-400" />
               <span className="text-xs text-emerald-400">Live</span>
@@ -334,36 +286,46 @@ function K8sLogsPageContent() {
         </div>
 
         <div className="h-[500px] overflow-y-auto p-4 font-mono text-sm">
-          {selectedPod ? (
-            filteredLogs.length > 0 ? (
-              <>
-                {filteredLogs.map((log, i) => (
-                  <div
-                    key={i}
-                    className="flex gap-4 border-b border-zinc-800 py-1 hover:bg-zinc-800/50"
-                  >
-                    <span className="shrink-0 text-zinc-500">
-                      {new Date(log.timestamp).toLocaleTimeString()}
-                    </span>
-                    <span
-                      className={`w-12 shrink-0 ${levelColors[log.level] || 'text-zinc-400'}`}
-                    >
-                      [{log.level}]
-                    </span>
-                    <span className="text-zinc-300">{log.message}</span>
-                  </div>
-                ))}
-                <div ref={logsEndRef} />
-              </>
-            ) : (
-              <div className="flex h-full items-center justify-center text-zinc-500">
-                No logs matching filter
-              </div>
-            )
-          ) : (
+          {!selectedPod ? (
             <div className="flex h-full flex-col items-center justify-center text-zinc-500">
               <Box className="mb-4 h-12 w-12" />
               <p>Select a pod to view logs</p>
+            </div>
+          ) : logsError ? (
+            <div className="flex h-full flex-col items-center justify-center gap-3 text-zinc-500">
+              <AlertCircle className="h-8 w-8 text-red-400" />
+              <p className="text-red-400">{logsError}</p>
+              <button
+                onClick={fetchLogs}
+                className="inline-flex items-center gap-2 rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-1.5 text-sm text-white hover:bg-zinc-700"
+              >
+                <RefreshCw className="h-3.5 w-3.5" />
+                Retry
+              </button>
+            </div>
+          ) : filteredLogs.length > 0 ? (
+            <>
+              {filteredLogs.map((log, i) => (
+                <div
+                  key={i}
+                  className="flex gap-4 border-b border-zinc-800 py-1 hover:bg-zinc-800/50"
+                >
+                  <span className="shrink-0 text-zinc-500">
+                    {new Date(log.timestamp).toLocaleTimeString()}
+                  </span>
+                  <span
+                    className={`w-12 shrink-0 ${levelColors[log.level] || 'text-zinc-400'}`}
+                  >
+                    [{log.level}]
+                  </span>
+                  <span className="text-zinc-300">{log.message}</span>
+                </div>
+              ))}
+              <div ref={logsEndRef} />
+            </>
+          ) : (
+            <div className="flex h-full items-center justify-center text-zinc-500">
+              No logs matching filter
             </div>
           )}
         </div>

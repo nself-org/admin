@@ -16,9 +16,14 @@ import {
 import Link from 'next/link'
 import { Suspense, useCallback, useEffect, useState } from 'react'
 
+type SyncUIState = 'loading' | 'empty' | 'error' | 'data'
+
 function SyncContent() {
+  const [uiState, setUiState] = useState<SyncUIState>('loading')
   const [loading, setLoading] = useState(true)
   const [syncing, setSyncing] = useState(false)
+  const [syncSuccess, setSyncSuccess] = useState<string | null>(null)
+  const [error, setError] = useState<string | null>(null)
   const [sourceEnv, setSourceEnv] = useState<Environment>('staging')
   const [targetEnv, setTargetEnv] = useState<Environment>('production')
   const [recentSyncs, setRecentSyncs] = useState<SyncOperation[]>([])
@@ -37,49 +42,29 @@ function SyncContent() {
   ]
 
   const fetchRecentSyncs = useCallback(async () => {
+    setLoading(true)
+    setError(null)
     try {
-      // Mock data - replace with real API
-      setRecentSyncs([
-        {
-          id: 'sync-1',
-          source: 'staging',
-          target: 'production',
-          status: 'completed',
-          startedAt: new Date(Date.now() - 3600000).toISOString(),
-          completedAt: new Date(Date.now() - 3500000).toISOString(),
-          changes: {
-            variables: 3,
-            secrets: 0,
-            services: 1,
-          },
-          syncedBy: 'developer@example.com',
-        },
-        {
-          id: 'sync-2',
-          source: 'development',
-          target: 'staging',
-          status: 'completed',
-          startedAt: new Date(Date.now() - 86400000).toISOString(),
-          completedAt: new Date(Date.now() - 86400000 + 60000).toISOString(),
-          changes: {
-            variables: 5,
-            secrets: 2,
-            services: 2,
-          },
-          syncedBy: 'developer@example.com',
-        },
-        {
-          id: 'sync-3',
-          source: 'staging',
-          target: 'production',
-          status: 'failed',
-          startedAt: new Date(Date.now() - 172800000).toISOString(),
-          error: 'Connection timeout to production server',
-          syncedBy: 'developer@example.com',
-        },
-      ])
-    } catch (_error) {
-      // Handle error silently
+      const res = await fetch('/api/sync')
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}))
+        throw new Error(
+          (data as { error?: string }).error ?? `HTTP ${res.status}`,
+        )
+      }
+      const data = (await res.json()) as {
+        history?: SyncOperation[]
+        recentSyncs?: SyncOperation[]
+      }
+      const history: SyncOperation[] =
+        data.history ?? data.recentSyncs ?? []
+      setRecentSyncs(history)
+      setUiState(history.length === 0 ? 'empty' : 'data')
+    } catch (err) {
+      setError(
+        err instanceof Error ? err.message : 'Failed to load sync history',
+      )
+      setUiState('error')
     } finally {
       setLoading(false)
     }
@@ -91,8 +76,9 @@ function SyncContent() {
 
   const executeSync = async () => {
     setSyncing(true)
+    setSyncSuccess(null)
     try {
-      await fetch('/api/sync', {
+      const res = await fetch('/api/sync', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -101,13 +87,18 @@ function SyncContent() {
           options: syncOptions,
         }),
       })
+      if (res.ok) {
+        const label = syncOptions.dryRun ? 'Dry run' : 'Sync'
+        setSyncSuccess(`${label} from ${sourceEnv} → ${targetEnv} completed`)
+        setTimeout(() => setSyncSuccess(null), 4000)
+      }
       await fetchRecentSyncs()
     } finally {
       setSyncing(false)
     }
   }
 
-  if (loading) {
+  if (uiState === 'loading') {
     return (
       <>
         <HeroPattern />
@@ -120,10 +111,41 @@ function SyncContent() {
     )
   }
 
+  if (uiState === 'error') {
+    return (
+      <>
+        <HeroPattern />
+        <div className="relative mx-auto max-w-7xl">
+          <div className="flex flex-col items-center justify-center py-20 text-center">
+            <AlertTriangle className="mb-4 h-12 w-12 text-red-500" />
+            <h2 className="mb-2 text-xl font-semibold text-zinc-900 dark:text-white">
+              Failed to load sync history
+            </h2>
+            <p className="mb-6 text-zinc-500 dark:text-zinc-400">{error}</p>
+            <button
+              onClick={() => fetchRecentSyncs()}
+              className="flex items-center gap-2 rounded-lg bg-teal-600 px-4 py-2 text-sm font-medium text-white hover:bg-teal-700"
+            >
+              <RefreshCw className="h-4 w-4" />
+              Retry
+            </button>
+          </div>
+        </div>
+      </>
+    )
+  }
+
   return (
     <>
       <HeroPattern />
       <div className="relative mx-auto max-w-7xl">
+        {syncSuccess && (
+          <div className="mb-4 flex items-center gap-2 rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-700 dark:border-green-800 dark:bg-green-900/20 dark:text-green-400">
+            <CheckCircle className="h-4 w-4 flex-shrink-0" />
+            {syncSuccess}
+          </div>
+        )}
+
         <div className="mb-10 border-b border-zinc-200 pb-8 dark:border-zinc-800">
           <div className="flex items-center justify-between">
             <div>
@@ -314,6 +336,17 @@ function SyncContent() {
           <h3 className="mb-4 text-lg font-semibold text-zinc-900 dark:text-white">
             Recent Sync Operations
           </h3>
+          {uiState === 'empty' ? (
+            <div className="flex flex-col items-center justify-center py-12 text-center">
+              <History className="mb-3 h-10 w-10 text-zinc-300 dark:text-zinc-600" />
+              <p className="text-sm font-medium text-zinc-500 dark:text-zinc-400">
+                No sync operations yet
+              </p>
+              <p className="mt-1 text-xs text-zinc-400 dark:text-zinc-500">
+                Run your first sync above to see history here
+              </p>
+            </div>
+          ) : (
           <div className="space-y-4">
             {recentSyncs.map((sync) => (
               <div
@@ -362,6 +395,7 @@ function SyncContent() {
               </div>
             ))}
           </div>
+          )}
         </div>
 
         {/* CLI Reference */}

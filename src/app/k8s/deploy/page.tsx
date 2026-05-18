@@ -17,26 +17,6 @@ import useSWR from 'swr'
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json())
 
-// Mock data
-const mockCluster: K8sCluster = {
-  name: 'production',
-  context: 'do-nyc1-production',
-  platform: 'doks',
-  apiServer: 'https://k8s.example.com:6443',
-  namespace: 'default',
-  status: 'connected',
-  version: '1.28.2',
-  nodes: 3,
-  current: true,
-}
-
-const mockNamespaces: K8sNamespace[] = [
-  { name: 'default', status: 'Active', createdAt: '2024-01-01T00:00:00Z' },
-  { name: 'production', status: 'Active', createdAt: '2024-01-05T00:00:00Z' },
-  { name: 'staging', status: 'Active', createdAt: '2024-01-05T00:00:00Z' },
-  { name: 'kube-system', status: 'Active', createdAt: '2024-01-01T00:00:00Z' },
-]
-
 type DeploymentStep = {
   name: string
   status: 'pending' | 'running' | 'success' | 'error'
@@ -49,64 +29,77 @@ function K8sDeployContent() {
   const [deploying, setDeploying] = useState(false)
   const [deploymentSteps, setDeploymentSteps] = useState<DeploymentStep[]>([])
 
-  const { data: clusterData } = useSWR<{ cluster: K8sCluster }>(
-    '/api/k8s/cluster',
-    fetcher,
-    { fallbackData: { cluster: mockCluster } },
-  )
+  const { data: clusterData, error: clusterError } = useSWR<{
+    cluster: K8sCluster
+  }>('/api/k8s/cluster', fetcher)
 
-  const { data: namespaceData } = useSWR<{ namespaces: K8sNamespace[] }>(
-    '/api/k8s/namespaces',
-    fetcher,
-    { fallbackData: { namespaces: mockNamespaces } },
-  )
+  const { data: namespaceData, error: namespaceError } = useSWR<{
+    namespaces: K8sNamespace[]
+  }>('/api/k8s/namespaces', fetcher)
 
-  const cluster = clusterData?.cluster || mockCluster
-  const namespaces = namespaceData?.namespaces || mockNamespaces
+  const cluster = clusterData?.cluster ?? null
+  const namespaces = namespaceData?.namespaces ?? []
 
   const handleDeploy = async () => {
     setDeploying(true)
-    const steps: DeploymentStep[] = [
-      { name: 'Validating manifests', status: 'pending' },
-      { name: 'Checking cluster connection', status: 'pending' },
-      { name: 'Creating namespace (if needed)', status: 'pending' },
-      { name: 'Applying ConfigMaps and Secrets', status: 'pending' },
-      { name: 'Deploying Services', status: 'pending' },
-      { name: 'Deploying Deployments', status: 'pending' },
-      { name: 'Configuring Ingress', status: 'pending' },
-      { name: 'Waiting for pods to be ready', status: 'pending' },
-    ]
+    setDeploymentSteps([{ name: 'Deploying to cluster', status: 'running' }])
 
-    setDeploymentSteps(steps)
-
-    for (let i = 0; i < steps.length; i++) {
-      setDeploymentSteps((prev) =>
-        prev.map((s, idx) => (idx === i ? { ...s, status: 'running' } : s)),
-      )
-
-      await new Promise((resolve) =>
-        setTimeout(resolve, 1000 + Math.random() * 1000),
-      )
-
-      setDeploymentSteps((prev) =>
-        prev.map((s, idx) =>
-          idx === i
-            ? {
-                ...s,
-                status: 'success',
-                message: dryRun ? 'Dry run - no changes made' : 'Completed',
-              }
-            : s,
-        ),
-      )
+    try {
+      const res = await fetch('/api/k8s/deploy', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ namespace: selectedNamespace, dryRun }),
+      })
+      if (!res.ok) throw new Error(`HTTP ${res.status}`)
+      setDeploymentSteps([
+        {
+          name: 'Deploying to cluster',
+          status: 'success',
+          message: dryRun ? 'Dry run - no changes made' : 'Completed',
+        },
+      ])
+    } catch (err) {
+      setDeploymentSteps([
+        {
+          name: 'Deploying to cluster',
+          status: 'error',
+          message:
+            err instanceof Error ? err.message : 'Deployment failed',
+        },
+      ])
+    } finally {
+      setDeploying(false)
     }
-
-    setDeploying(false)
   }
 
   const isDeploymentComplete =
     deploymentSteps.length > 0 &&
     deploymentSteps.every((s) => s.status === 'success' || s.status === 'error')
+
+  if (clusterError || namespaceError) {
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center gap-4">
+          <Link
+            href="/k8s"
+            className="rounded-lg border border-zinc-700 bg-zinc-800 p-2 hover:bg-zinc-700"
+          >
+            <ArrowLeft className="h-5 w-5" />
+          </Link>
+          <h1 className="text-2xl font-semibold text-white">
+            Deploy to Kubernetes
+          </h1>
+        </div>
+        <div className="rounded-lg border border-red-500/30 bg-red-900/20 p-6">
+          <p className="text-red-400">
+            {(clusterError ?? namespaceError) instanceof Error
+              ? (clusterError ?? namespaceError).message
+              : 'Failed to load cluster data'}
+          </p>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="space-y-6">
@@ -129,6 +122,8 @@ function K8sDeployContent() {
       </div>
 
       {/* Cluster Status */}
+      {cluster ? (
+      <>
       <div className="flex items-center justify-between rounded-lg border border-zinc-700/50 bg-zinc-800/50 p-4">
         <div className="flex items-center gap-4">
           <div
@@ -368,6 +363,15 @@ function K8sDeployContent() {
           </div>
         </div>
       </div>
+      </>
+    ) : (
+      <div className="rounded-lg border border-zinc-700/50 bg-zinc-800/50 p-6 text-center">
+        <p className="text-zinc-400">No cluster connected</p>
+        <p className="text-sm text-zinc-500">
+          Connect a Kubernetes cluster to enable deployments
+        </p>
+      </div>
+    )}
     </div>
   )
 }

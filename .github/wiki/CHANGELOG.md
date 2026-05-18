@@ -5,6 +5,12 @@ All notable changes to nself-admin will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased] — v1.2.0
+
+### Security
+
+- **RCE via shell injection fixed** — the deployment environments API route (`src/app/api/deployment/environments/route.ts`) passed user-supplied environment names and actions into a shell string via `exec()`. An attacker with an authenticated admin session could inject shell metacharacters to execute arbitrary OS commands on the machine running nself-admin. The route now uses `execFile()` with a structured argv array, a Zod action enum (`create | diff | delete | list`), `IDENTIFIER_PATTERN` validation (rejects all non-alphanumeric-or-interior-hyphen input), a `KNOWN_TEMPLATES` allowlist, a `validateServiceName()` guard, and a `'--'` end-of-options separator before user-controlled positionals. Auth check runs before any processing; GET returns 405; all operations are appended to the audit log. Severity: Critical. Chain ID: a83c99d6. Advisory: `.github/SECURITY-ADVISORIES/2026-05-15-rce-and-secrets.md`.
+
 ## [1.1.2] - 2026-05-15
 
 Patch release. CLI ↔ Admin lockstep at v1.1.2. P101 nClaw groundwork carry-through plus security hardening and doc-truth corrections.

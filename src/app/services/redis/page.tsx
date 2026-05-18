@@ -35,7 +35,8 @@ import {
   Users,
   X,
 } from 'lucide-react'
-import React, { Suspense, useEffect, useState } from 'react'
+import React, { Suspense, useState } from 'react'
+import useSWR from 'swr'
 
 interface RedisKey {
   name: string
@@ -47,17 +48,31 @@ interface RedisKey {
 }
 
 interface RedisStats {
-  version: string
-  uptime: number
-  connectedClients: number
-  usedMemory: number
-  maxMemory: number
-  keyspaceHits: number
-  keyspaceMisses: number
-  evictedKeys: number
-  expiredKeys: number
-  totalKeys: number
-  databases: { [key: string]: number }
+  status: 'healthy' | 'unhealthy' | 'stopped'
+  memory: {
+    used: string
+    peak: string
+    percentage: number
+    evictedKeys: number
+  }
+  performance: {
+    connectedClients: number
+    opsPerSecond: number
+    hitRate: number
+    missRate: number
+    totalCommands: number
+  }
+  persistence: {
+    lastSave: string
+    changesSinceSave: number
+    aofEnabled: boolean
+  }
+  databases: {
+    [key: string]: {
+      keys: number
+      expires: number
+    }
+  }
 }
 
 interface SlowQuery {
@@ -75,6 +90,8 @@ interface PubSubChannel {
   messages: number
   lastMessage: string
 }
+
+const fetcher = (url: string) => fetch(url).then((res) => res.json())
 
 const typeIcons = {
   string: Key,
@@ -95,9 +112,7 @@ const typeColors = {
 }
 
 function MemoryChart({ stats }: { stats: RedisStats }) {
-  const memoryPercent = (stats.usedMemory / stats.maxMemory) * 100
-  const hitRate =
-    (stats.keyspaceHits / (stats.keyspaceHits + stats.keyspaceMisses)) * 100
+  const memoryPercent = stats.memory.percentage
 
   return (
     <div className="mb-6 grid grid-cols-1 gap-4 md:grid-cols-3">
@@ -108,18 +123,15 @@ function MemoryChart({ stats }: { stats: RedisStats }) {
           </h3>
           <HardDrive className="h-4 w-4 text-zinc-400" />
         </div>
-        <div className="mb-2 text-2xl font-bold">
-          {(stats.usedMemory / (1024 * 1024 * 1024)).toFixed(1)} GB
-        </div>
+        <div className="mb-2 text-2xl font-bold">{stats.memory.used}</div>
         <div className="mb-2 h-2 w-full rounded-full bg-zinc-200 dark:bg-zinc-700">
           <div
             className={`h-2 rounded-full ${memoryPercent > 90 ? 'bg-red-500' : memoryPercent > 70 ? 'bg-yellow-500' : 'bg-green-500'}`}
-            style={{ width: `${memoryPercent}%` }}
+            style={{ width: `${Math.min(memoryPercent, 100)}%` }}
           />
         </div>
         <div className="text-xs text-zinc-500">
-          {memoryPercent.toFixed(1)}% of{' '}
-          {(stats.maxMemory / (1024 * 1024 * 1024)).toFixed(1)} GB
+          {memoryPercent.toFixed(1)}% used
         </div>
       </div>
 
@@ -130,14 +142,10 @@ function MemoryChart({ stats }: { stats: RedisStats }) {
           </h3>
           <TrendingUp className="h-4 w-4 text-green-500" />
         </div>
-        <div className="mb-2 text-2xl font-bold">{hitRate.toFixed(1)}%</div>
+        <div className="mb-2 text-2xl font-bold">{stats.performance.hitRate.toFixed(1)}%</div>
         <div className="flex items-center gap-2 text-xs text-zinc-500">
-          <span className="text-green-600">
-            {stats.keyspaceHits.toLocaleString()} hits
-          </span>
-          <span>/</span>
           <span className="text-red-600">
-            {stats.keyspaceMisses.toLocaleString()} misses
+            miss rate: {stats.performance.missRate.toFixed(1)}%
           </span>
         </div>
       </div>
@@ -149,7 +157,7 @@ function MemoryChart({ stats }: { stats: RedisStats }) {
           </h3>
           <Users className="h-4 w-4 text-blue-500" />
         </div>
-        <div className="mb-2 text-2xl font-bold">{stats.connectedClients}</div>
+        <div className="mb-2 text-2xl font-bold">{stats.performance.connectedClients}</div>
         <div className="text-xs text-zinc-500">Active connections</div>
       </div>
     </div>
@@ -341,34 +349,6 @@ function KeyDetails({
   const [value, setValue] = useState('')
   const [editing, setEditing] = useState(false)
   const [ttl, setTtl] = useState(redisKey.ttl)
-
-  useEffect(() => {
-    const mockValues = {
-      string: 'Hello, World!',
-      hash: JSON.stringify(
-        { field1: 'value1', field2: 'value2', field3: 'value3' },
-        null,
-        2,
-      ),
-      list: JSON.stringify(['item1', 'item2', 'item3'], null, 2),
-      set: JSON.stringify(['member1', 'member2', 'member3'], null, 2),
-      zset: JSON.stringify(
-        [
-          { member: 'item1', score: 1 },
-          { member: 'item2', score: 2 },
-        ],
-        null,
-        2,
-      ),
-      stream: JSON.stringify(
-        [{ id: '1-0', fields: { field1: 'value1' } }],
-        null,
-        2,
-      ),
-    }
-
-    setValue(mockValues[redisKey.type])
-  }, [redisKey])
 
   return (
     <div className="rounded-lg border border-zinc-200 bg-white dark:border-zinc-700 dark:bg-zinc-800">
@@ -729,113 +709,17 @@ function ConfigurationEditor() {
 function RedisContent() {
   const [activeTab, setActiveTab] = useUrlState<string>('tab', 'overview')
   const [selectedKey, setSelectedKey] = useState<RedisKey | null>(null)
-  const [_loading, _setLoading] = useState(false)
 
-  // Mock data
-  const [stats] = useState<RedisStats>({
-    version: 'Redis 7.0.11',
-    uptime: 86400 * 7,
-    connectedClients: 12,
-    usedMemory: 1024 * 1024 * 1024 * 1.5, // 1.5GB
-    maxMemory: 1024 * 1024 * 1024 * 2, // 2GB
-    keyspaceHits: 150234,
-    keyspaceMisses: 5021,
-    evictedKeys: 12,
-    expiredKeys: 456,
-    totalKeys: 8432,
-    databases: { '0': 8432, '1': 234, '2': 56 },
-  })
+  const { data: redisData, error: redisError } = useSWR<{
+    success: boolean
+    data: RedisStats
+  }>('/api/services/redis', fetcher)
 
-  const [keys] = useState<RedisKey[]>([
-    {
-      name: 'user:session:abc123',
-      type: 'string',
-      ttl: 3600,
-      size: 1024,
-      encoding: 'embstr',
-      lastAccess: '2024-01-17 10:30:00',
-    },
-    {
-      name: 'user:profile:123',
-      type: 'hash',
-      ttl: -1,
-      size: 2048,
-      encoding: 'hashtable',
-      lastAccess: '2024-01-17 10:29:45',
-    },
-    {
-      name: 'notifications:queue',
-      type: 'list',
-      ttl: 7200,
-      size: 4096,
-      encoding: 'linkedlist',
-      lastAccess: '2024-01-17 10:29:30',
-    },
-    {
-      name: 'active:users',
-      type: 'set',
-      ttl: -1,
-      size: 8192,
-      encoding: 'hashtable',
-      lastAccess: '2024-01-17 10:29:15',
-    },
-    {
-      name: 'leaderboard:scores',
-      type: 'zset',
-      ttl: 86400,
-      size: 3072,
-      encoding: 'skiplist',
-      lastAccess: '2024-01-17 10:29:00',
-    },
-    {
-      name: 'events:stream:analytics',
-      type: 'stream',
-      ttl: -1,
-      size: 16384,
-      encoding: 'stream',
-      lastAccess: '2024-01-17 10:28:45',
-    },
-  ])
+  const stats: RedisStats | null = redisData?.data ?? null
 
-  const [slowQueries] = useState<SlowQuery[]>([
-    {
-      id: 1,
-      timestamp: '2024-01-17 10:25:30',
-      duration: 1250,
-      command: 'KEYS',
-      args: ['user:*'],
-      client: '127.0.0.1:45123',
-    },
-    {
-      id: 2,
-      timestamp: '2024-01-17 10:20:15',
-      duration: 890,
-      command: 'ZRANGE',
-      args: ['leaderboard:scores', '0', '-1', 'WITHSCORES'],
-      client: '127.0.0.1:45124',
-    },
-  ])
-
-  const [pubsubChannels] = useState<PubSubChannel[]>([
-    {
-      name: 'notifications',
-      subscribers: 5,
-      messages: 1234,
-      lastMessage: '2 min ago',
-    },
-    {
-      name: 'chat:room:general',
-      subscribers: 12,
-      messages: 5678,
-      lastMessage: '30s ago',
-    },
-    {
-      name: 'analytics:events',
-      subscribers: 3,
-      messages: 890,
-      lastMessage: '5 min ago',
-    },
-  ])
+  const keys: RedisKey[] = []
+  const slowQueries: SlowQuery[] = []
+  const pubsubChannels: PubSubChannel[] = []
 
   const tabs = [
     { id: 'overview', label: 'Overview', icon: BarChart3 },
@@ -844,6 +728,26 @@ function RedisContent() {
     { id: 'slowlog', label: 'Slow Queries', icon: Clock },
     { id: 'config', label: 'Configuration', icon: Settings },
   ]
+
+  if (redisError) {
+    return (
+      <>
+        <HeroPattern />
+        <div className="mx-auto max-w-7xl">
+          <div className="rounded-lg border border-red-500/30 bg-red-900/20 p-6">
+            <div className="flex items-center gap-3">
+              <AlertCircle className="h-5 w-5 text-red-400" />
+              <p className="text-red-400">
+                {redisError instanceof Error
+                  ? redisError.message
+                  : 'Failed to load Redis stats'}
+              </p>
+            </div>
+          </div>
+        </div>
+      </>
+    )
+  }
 
   return (
     <>
@@ -873,46 +777,18 @@ function RedisContent() {
           </div>
 
           {/* Stats Overview */}
-          <MemoryChart stats={stats} />
+          {stats && <MemoryChart stats={stats} />}
 
           {/* Quick Stats */}
-          <div className="mb-6 grid grid-cols-2 gap-4 lg:grid-cols-5">
+          <div className="mb-6 grid grid-cols-2 gap-4 lg:grid-cols-4">
             <div className="rounded-lg border border-zinc-200 bg-white p-4 dark:border-zinc-700 dark:bg-zinc-800">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-zinc-600 dark:text-zinc-400">
-                    Total Keys
-                  </p>
-                  <p className="text-2xl font-bold">
-                    {stats.totalKeys.toLocaleString()}
-                  </p>
-                </div>
-                <Key className="h-6 w-6 text-blue-500" />
-              </div>
-            </div>
-
-            <div className="rounded-lg border border-zinc-200 bg-white p-4 dark:border-zinc-700 dark:bg-zinc-800">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-zinc-600 dark:text-zinc-400">
-                    Expired
-                  </p>
-                  <p className="text-2xl font-bold text-orange-600">
-                    {stats.expiredKeys}
-                  </p>
-                </div>
-                <Clock className="h-6 w-6 text-orange-500" />
-              </div>
-            </div>
-
-            <div className="rounded-lg border border-zinc-200 bg-white p-4 dark:border-zinc-700 dark:bg-zinc-800">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-zinc-600 dark:text-zinc-400">
-                    Evicted
+                    Evicted Keys
                   </p>
                   <p className="text-2xl font-bold text-red-600">
-                    {stats.evictedKeys}
+                    {stats?.memory.evictedKeys ?? '—'}
                   </p>
                 </div>
                 <TrendingDown className="h-6 w-6 text-red-500" />
@@ -923,13 +799,13 @@ function RedisContent() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-zinc-600 dark:text-zinc-400">
-                    Version
+                    Ops/sec
                   </p>
-                  <p className="text-lg font-bold">
-                    {stats.version.split(' ')[1]}
+                  <p className="text-2xl font-bold">
+                    {stats?.performance.opsPerSecond ?? '—'}
                   </p>
                 </div>
-                <Info className="h-6 w-6 text-zinc-500" />
+                <Activity className="h-6 w-6 text-green-500" />
               </div>
             </div>
 
@@ -937,13 +813,27 @@ function RedisContent() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-zinc-600 dark:text-zinc-400">
-                    Uptime
+                    Total Commands
                   </p>
-                  <p className="text-lg font-bold">
-                    {Math.floor(stats.uptime / 86400)}d
+                  <p className="text-2xl font-bold">
+                    {stats?.performance.totalCommands?.toLocaleString() ?? '—'}
                   </p>
                 </div>
-                <Activity className="h-6 w-6 text-green-500" />
+                <Key className="h-6 w-6 text-blue-500" />
+              </div>
+            </div>
+
+            <div className="rounded-lg border border-zinc-200 bg-white p-4 dark:border-zinc-700 dark:bg-zinc-800">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-zinc-600 dark:text-zinc-400">
+                    Status
+                  </p>
+                  <p className="text-lg font-bold capitalize">
+                    {stats?.status ?? '—'}
+                  </p>
+                </div>
+                <Info className="h-6 w-6 text-zinc-500" />
               </div>
             </div>
           </div>
@@ -978,29 +868,42 @@ function RedisContent() {
                   </h3>
                 </div>
                 <div className="p-4">
-                  <div className="space-y-3">
-                    {Object.entries(stats.databases).map(([db, count]) => (
-                      <div
-                        key={db}
-                        className="flex items-center justify-between"
-                      >
-                        <span className="text-sm">Database {db}</span>
-                        <div className="flex items-center gap-2">
-                          <div className="h-2 w-32 rounded-full bg-zinc-200 dark:bg-zinc-700">
-                            <div
-                              className="h-2 rounded-full bg-blue-500"
-                              style={{
-                                width: `${(count / stats.totalKeys) * 100}%`,
-                              }}
-                            />
+                  {!stats?.databases || Object.keys(stats.databases).length === 0 ? (
+                    <div className="py-4 text-center text-sm text-zinc-500">
+                      No database information available
+                    </div>
+                  ) : (
+                    <div className="space-y-3">
+                      {(() => {
+                        const totalKeys = Object.values(stats.databases).reduce(
+                          (sum, db) => sum + db.keys,
+                          0,
+                        )
+                        const safeDenom = totalKeys || 1
+                        return Object.entries(stats.databases).map(([db, dbInfo]) => (
+                          <div
+                            key={db}
+                            className="flex items-center justify-between"
+                          >
+                            <span className="text-sm">Database {db}</span>
+                            <div className="flex items-center gap-2">
+                              <div className="h-2 w-32 rounded-full bg-zinc-200 dark:bg-zinc-700">
+                                <div
+                                  className="h-2 rounded-full bg-blue-500"
+                                  style={{
+                                    width: `${(dbInfo.keys / safeDenom) * 100}%`,
+                                  }}
+                                />
+                              </div>
+                              <span className="w-16 text-right text-sm font-medium">
+                                {dbInfo.keys.toLocaleString()}
+                              </span>
+                            </div>
                           </div>
-                          <span className="w-16 text-right text-sm font-medium">
-                            {count.toLocaleString()}
-                          </span>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
+                        ))
+                      })()}
+                    </div>
+                  )}
                 </div>
               </div>
 
@@ -1014,7 +917,7 @@ function RedisContent() {
                   <div className="space-y-3">
                     {Object.entries(typeColors).map(([type, colorClass]) => {
                       const count = keys.filter((k) => k.type === type).length
-                      const percentage = (count / keys.length) * 100
+                      const percentage = keys.length > 0 ? (count / keys.length) * 100 : 0
 
                       return (
                         <div

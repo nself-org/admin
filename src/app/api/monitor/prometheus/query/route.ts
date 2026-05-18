@@ -15,15 +15,71 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       )
     }
 
-    // Mock data - in production, this would query actual Prometheus
-    const now = Date.now()
-    const points = range === '5m' ? 10 : range === '1h' ? 60 : 24
-    const interval = range === '5m' ? 30000 : range === '1h' ? 60000 : 3600000
+    const promUrl =
+      process.env.PROMETHEUS_URL || process.env.NSELF_PROMETHEUS_URL
+    if (!promUrl) {
+      return NextResponse.json({
+        success: true,
+        results: [],
+        query,
+        range,
+        note: 'prometheus-not-configured',
+      })
+    }
 
-    const results = Array.from({ length: points }, (_, i) => ({
-      timestamp: new Date(now - (points - i) * interval).toISOString(),
-      value: Math.random() * 100,
-    }))
+    // Map range to Prometheus step
+    const now = Math.floor(Date.now() / 1000)
+    const rangeSeconds =
+      range === '5m' ? 300 : range === '1h' ? 3600 : 86400
+    const start = now - rangeSeconds
+    const step =
+      range === '5m' ? '30s' : range === '1h' ? '60s' : '3600s'
+
+    const params = new URLSearchParams({
+      query,
+      start: String(start),
+      end: String(now),
+      step,
+    })
+
+    const promResponse = await fetch(
+      `${promUrl.replace(/\/$/, '')}/api/v1/query_range?${params}`,
+      {
+        headers: { 'Content-Type': 'application/json' },
+        signal: AbortSignal.timeout(10_000),
+      },
+    )
+
+    if (!promResponse.ok) {
+      const text = await promResponse.text()
+      return NextResponse.json(
+        {
+          success: false,
+          error: `Prometheus returned ${promResponse.status}`,
+          details: text.slice(0, 500),
+        },
+        { status: 502 },
+      )
+    }
+
+    const promData = await promResponse.json()
+
+    // Flatten matrix result into flat time-series array
+    const results: { timestamp: string; value: number }[] = []
+    const matrixResult: Array<{ metric: Record<string, string>; values: [number, string][] }> =
+      promData?.data?.result ?? []
+
+    for (const series of matrixResult) {
+      for (const [ts, val] of series.values) {
+        results.push({
+          timestamp: new Date(ts * 1000).toISOString(),
+          value: parseFloat(val),
+        })
+      }
+    }
+
+    // If multiple series returned, caller receives merged flat array
+    results.sort((a, b) => a.timestamp.localeCompare(b.timestamp))
 
     return NextResponse.json({
       success: true,

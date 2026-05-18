@@ -30,59 +30,34 @@ interface AutoScalingSettings {
 
 function AutoScalingContent() {
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
   const [saving, setSaving] = useState<string | null>(null)
   const [settings, setSettings] = useState<AutoScalingSettings[]>([])
   const [editingService, setEditingService] = useState<string | null>(null)
   const [saveSuccess, setSaveSuccess] = useState<string | null>(null)
 
   const fetchSettings = useCallback(async () => {
+    setLoading(true)
+    setError(null)
     try {
-      // Mock data - replace with real API
-      const mockSettings: AutoScalingSettings[] = [
-        {
-          service: 'Hasura',
-          enabled: true,
-          minReplicas: 2,
-          maxReplicas: 5,
-          targetCPU: 70,
-          targetMemory: 80,
-          scaleUpCooldown: 60,
-          scaleDownCooldown: 300,
-        },
-        {
-          service: 'Auth Service',
-          enabled: false,
-          minReplicas: 1,
-          maxReplicas: 3,
-          targetCPU: 70,
-          targetMemory: 80,
-          scaleUpCooldown: 60,
-          scaleDownCooldown: 300,
-        },
-        {
-          service: 'Functions',
-          enabled: true,
-          minReplicas: 1,
-          maxReplicas: 10,
-          targetCPU: 60,
-          targetMemory: 70,
-          scaleUpCooldown: 30,
-          scaleDownCooldown: 180,
-        },
-        {
-          service: 'API Gateway',
-          enabled: false,
-          minReplicas: 1,
-          maxReplicas: 5,
-          targetCPU: 75,
-          targetMemory: 80,
-          scaleUpCooldown: 60,
-          scaleDownCooldown: 300,
-        },
-      ]
-      setSettings(mockSettings)
-    } catch (_error) {
-      // Handle error silently
+      const res = await fetch('/api/scale/auto')
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}))
+        throw new Error(
+          (data as { error?: string }).error ?? `HTTP ${res.status}`,
+        )
+      }
+      const data = (await res.json()) as {
+        settings?: AutoScalingSettings[]
+        policies?: AutoScalingSettings[]
+      }
+      setSettings(data.settings ?? data.policies ?? [])
+    } catch (err) {
+      setError(
+        err instanceof Error
+          ? err.message
+          : 'Failed to load autoscaling settings',
+      )
     } finally {
       setLoading(false)
     }
@@ -131,6 +106,63 @@ function AutoScalingContent() {
         <div className="relative mx-auto max-w-7xl">
           <div className="flex items-center justify-center py-20">
             <div className="h-8 w-8 animate-spin rounded-full border-4 border-sky-500 border-t-transparent" />
+          </div>
+        </div>
+      </>
+    )
+  }
+
+  if (error) {
+    return (
+      <>
+        <HeroPattern />
+        <div className="relative mx-auto max-w-7xl">
+          <div className="flex flex-col items-center justify-center py-20 text-center">
+            <Settings className="mb-4 h-12 w-12 text-red-400" />
+            <h2 className="mb-2 text-xl font-semibold text-zinc-900 dark:text-white">
+              Failed to load autoscaling settings
+            </h2>
+            <p className="mb-6 text-sm text-zinc-500 dark:text-zinc-400">
+              {error}
+            </p>
+            <button
+              onClick={() => void fetchSettings()}
+              className="inline-flex items-center gap-2 rounded-lg bg-sky-500 px-4 py-2 text-sm font-medium text-white hover:bg-sky-600"
+            >
+              <RefreshCw className="h-4 w-4" />
+              Retry
+            </button>
+          </div>
+        </div>
+      </>
+    )
+  }
+
+  if (settings.length === 0) {
+    return (
+      <>
+        <HeroPattern />
+        <div className="relative mx-auto max-w-7xl">
+          <div className="mb-10 border-b border-zinc-200 pb-8 dark:border-zinc-800">
+            <Link
+              href="/scale"
+              className="mb-4 inline-flex items-center gap-2 text-sm text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              Back to Scaling
+            </Link>
+            <h1 className="bg-gradient-to-r from-sky-500 to-blue-400 bg-clip-text text-4xl font-bold text-transparent dark:from-sky-400 dark:to-blue-300">
+              Autoscaling Configuration
+            </h1>
+          </div>
+          <div className="flex flex-col items-center justify-center py-20 text-center">
+            <TrendingUp className="mb-4 h-12 w-12 text-zinc-300 dark:text-zinc-600" />
+            <h2 className="mb-2 text-xl font-semibold text-zinc-900 dark:text-white">
+              No autoscaling settings
+            </h2>
+            <p className="text-sm text-zinc-500 dark:text-zinc-400">
+              Autoscaling configuration is not available for this deployment.
+            </p>
           </div>
         </div>
       </>

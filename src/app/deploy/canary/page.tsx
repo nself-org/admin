@@ -16,29 +16,20 @@ import { Suspense, useCallback, useEffect, useState } from 'react'
 
 function CanaryDeployContent() {
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
   const [actionLoading, setActionLoading] = useState<string | null>(null)
   const [canary, setCanary] = useState<CanaryDeployment | null>(null)
   const [trafficPercentage, setTrafficPercentage] = useState(10)
 
   const fetchCanary = useCallback(async () => {
     try {
-      // Mock data - replace with real API
-      setCanary({
-        id: 'canary-1',
-        environment: 'production',
-        status: 'in_progress',
-        trafficPercentage: 25,
-        newVersion: 'v1.3.0',
-        currentVersion: 'v1.2.5',
-        startedAt: new Date(Date.now() - 3600000).toISOString(),
-        metrics: {
-          errorRate: { new: 0.015, current: 0.012 },
-          latency: { new: 48, current: 45 },
-          successRate: { new: 98.5, current: 98.8 },
-        },
-      })
-    } catch (_error) {
-      // Handle error silently
+      setError(null)
+      const res = await fetch('/api/deploy/canary')
+      if (!res.ok) throw new Error(`HTTP ${res.status}`)
+      const data = await res.json()
+      setCanary(data.canary ?? null)
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to load canary status')
     } finally {
       setLoading(false)
     }
@@ -131,6 +122,25 @@ function CanaryDeployContent() {
         <div className="relative mx-auto max-w-7xl">
           <div className="flex items-center justify-center py-20">
             <div className="h-8 w-8 animate-spin rounded-full border-4 border-yellow-500 border-t-transparent" />
+          </div>
+        </div>
+      </>
+    )
+  }
+
+  if (error) {
+    return (
+      <>
+        <HeroPattern />
+        <div className="relative mx-auto max-w-7xl">
+          <div className="rounded-xl border border-red-200 bg-red-50 p-6 dark:border-red-800 dark:bg-red-900/20">
+            <p className="text-red-700 dark:text-red-400">{error}</p>
+            <button
+              onClick={fetchCanary}
+              className="mt-4 rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700"
+            >
+              Retry
+            </button>
           </div>
         </div>
       </>

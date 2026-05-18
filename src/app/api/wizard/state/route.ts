@@ -1,8 +1,5 @@
 import { getDatabase } from '@/lib/database'
-import {
-  requireAuthPreSetup,
-  requireWizardNotComplete,
-} from '@/lib/require-auth'
+import { requireWizardNotComplete } from '@/lib/require-auth'
 import { NextRequest, NextResponse } from 'next/server'
 
 // GET wizard state
@@ -40,8 +37,6 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 
 // POST wizard state
 export async function POST(request: NextRequest): Promise<NextResponse> {
-  const authError = await requireAuthPreSetup(request)
-  if (authError) return authError
   const wizardError = await requireWizardNotComplete(request)
   if (wizardError) return wizardError
 
@@ -109,8 +104,6 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
 // DELETE wizard state (clear)
 export async function DELETE(request: NextRequest): Promise<NextResponse> {
-  const authError = await requireAuthPreSetup(request)
-  if (authError) return authError
   const wizardError = await requireWizardNotComplete(request)
   if (wizardError) return wizardError
 

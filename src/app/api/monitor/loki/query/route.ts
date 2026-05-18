@@ -15,38 +15,74 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       )
     }
 
-    // Mock data - in production, this would query actual Loki
-    const now = Date.now()
-    const points = range === '5m' ? 20 : range === '1h' ? 100 : 200
-    const interval = range === '5m' ? 15000 : range === '1h' ? 36000 : 72000
+    const lokiUrl = process.env.LOKI_URL || process.env.NSELF_LOKI_URL
+    if (!lokiUrl) {
+      return NextResponse.json({
+        success: true,
+        logs: [],
+        query,
+        range,
+        note: 'loki-not-configured',
+      })
+    }
 
-    const levels = ['info', 'warning', 'error', 'debug'] as const
-    const services = [
-      'postgres',
-      'hasura',
-      'auth',
-      'functions',
-      'minio',
-      'redis',
-      'nginx',
-    ]
-    const messages = [
-      'Request completed successfully',
-      'Connection pool warning: high usage',
-      'Failed to connect to database',
-      'Cache hit ratio: 85%',
-      'Backup completed',
-      'Configuration reloaded',
-      'Health check passed',
-      'Query execution time: 45ms',
-    ]
+    // Map range to Loki time window
+    const now = Math.floor(Date.now() / 1000)
+    const rangeSeconds =
+      range === '5m' ? 300 : range === '1h' ? 3600 : 86400
+    const start = (now - rangeSeconds) * 1_000_000_000 // nanoseconds
+    const end = now * 1_000_000_000
 
-    const logs = Array.from({ length: points }, (_, i) => ({
-      timestamp: new Date(now - (points - i) * interval).toISOString(),
-      level: levels[Math.floor(Math.random() * levels.length)],
-      service: services[Math.floor(Math.random() * services.length)],
-      message: messages[Math.floor(Math.random() * messages.length)],
-    }))
+    const params = new URLSearchParams({
+      query,
+      start: String(start),
+      end: String(end),
+      limit: '500',
+      direction: 'BACKWARD',
+    })
+
+    const lokiResponse = await fetch(
+      `${lokiUrl.replace(/\/$/, '')}/loki/api/v1/query_range?${params}`,
+      {
+        headers: { 'Content-Type': 'application/json' },
+        signal: AbortSignal.timeout(10_000),
+      },
+    )
+
+    if (!lokiResponse.ok) {
+      const text = await lokiResponse.text()
+      return NextResponse.json(
+        {
+          success: false,
+          error: `Loki returned ${lokiResponse.status}`,
+          details: text.slice(0, 500),
+        },
+        { status: 502 },
+      )
+    }
+
+    const lokiData = await lokiResponse.json()
+
+    // Flatten Loki streams into log entries
+    const logs: { timestamp: string; level: string; service: string; message: string }[] = []
+    const streams: Array<{ stream: Record<string, string>; values: [string, string][] }> =
+      lokiData?.data?.result ?? []
+
+    for (const stream of streams) {
+      const service = stream.stream?.service_name ?? stream.stream?.job ?? 'unknown'
+      const level = stream.stream?.level ?? stream.stream?.severity ?? 'info'
+      for (const [nanoTs, line] of stream.values) {
+        logs.push({
+          timestamp: new Date(Math.floor(Number(nanoTs) / 1_000_000)).toISOString(),
+          level,
+          service,
+          message: line,
+        })
+      }
+    }
+
+    // Sort ascending by timestamp
+    logs.sort((a, b) => a.timestamp.localeCompare(b.timestamp))
 
     return NextResponse.json({
       success: true,

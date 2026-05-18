@@ -1,6 +1,5 @@
 'use client'
 
-import { PageTemplate } from '@/components/PageTemplate'
 import { TableSkeleton } from '@/components/skeletons'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Badge } from '@/components/ui/badge'
@@ -82,57 +81,42 @@ function DatabaseMigrationsContent() {
   }, [])
 
   /**
-   * Fetch current migration status from nself CLI
+   * Fetch current migration list from /api/database/migrations (GET).
+   * Calls nself CLI under the hood — no mock data (ADM-T07).
    */
   const fetchMigrationStatus = useCallback(async () => {
     setIsLoadingStatus(true)
     try {
-      const response = await fetch('/api/database/cli', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'migrate', options: { status: true } }),
+      const response = await fetch('/api/database/migrations', {
+        cache: 'no-store',
       })
+
+      if (response.status === 401) {
+        // Unauthenticated — middleware will redirect, but handle gracefully
+        setLastOutput('Authentication required. Please log in.')
+        setMigrations([])
+        return
+      }
 
       const data = await response.json()
 
-      if (data.success) {
-        const output = data.data?.output || ''
-        setLastOutput(output)
-
-        // Parse migrations from output (mock for now)
-        // In real implementation, CLI would return JSON
-        const mockMigrations: Migration[] = [
-          {
-            id: '001',
-            name: '001_create_users_table',
-            status: 'applied',
-            appliedAt: '2024-01-10T10:30:00Z',
-            batch: 1,
-            sql: 'CREATE TABLE users (id UUID PRIMARY KEY, email VARCHAR(255) NOT NULL);',
-            rollbackSql: 'DROP TABLE users;',
-          },
-          {
-            id: '002',
-            name: '002_add_user_profiles',
-            status: 'applied',
-            appliedAt: '2024-01-11T14:20:00Z',
-            batch: 2,
-            sql: 'CREATE TABLE profiles (id UUID PRIMARY KEY, user_id UUID REFERENCES users(id));',
-            rollbackSql: 'DROP TABLE profiles;',
-          },
-          {
-            id: '003',
-            name: '003_add_posts_table',
-            status: 'pending',
-            batch: 0,
-            sql: 'CREATE TABLE posts (id UUID PRIMARY KEY, title VARCHAR(255), user_id UUID REFERENCES users(id));',
-            rollbackSql: 'DROP TABLE posts;',
-          },
-        ]
-        setMigrations(mockMigrations)
+      if (!response.ok) {
+        setLastOutput(
+          data.details || data.error || `Error ${response.status}`,
+        )
+        setMigrations([])
+        return
       }
+
+      const fetched: Migration[] = Array.isArray(data.data) ? data.data : []
+      setMigrations(fetched)
+      setLastOutput(fetched.length === 0 ? '' : `Loaded ${fetched.length} migration(s)`)
     } catch (error) {
-      console.error('Failed to fetch migration status:', error)
+      // Offline / Docker down
+      setLastOutput(
+        error instanceof Error ? error.message : 'Could not reach the admin API',
+      )
+      setMigrations([])
     } finally {
       setIsLoadingStatus(false)
     }
@@ -303,10 +287,18 @@ function DatabaseMigrationsContent() {
   }
 
   return (
-    <PageTemplate
-      title="Database Migrations"
-      description="Run and manage database schema migrations using nself CLI"
-    >
+    <div className="space-y-6 p-6">
+      <div>
+        <h1 className="text-2xl font-bold text-zinc-900 dark:text-white">
+          Database Migrations
+        </h1>
+        <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
+          Run and manage database schema migrations using{' '}
+          <code className="rounded bg-zinc-100 px-1 py-0.5 text-xs dark:bg-zinc-800">
+            nself db migrate
+          </code>
+        </p>
+      </div>
       <div className="space-y-6">
         {/* CLI Info */}
         <Alert>
@@ -850,7 +842,7 @@ function DatabaseMigrationsContent() {
           </Card>
         )}
       </div>
-    </PageTemplate>
+    </div>
   )
 }
 

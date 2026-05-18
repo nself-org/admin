@@ -1,103 +1,158 @@
+import { appendAuditFile, extractSourceIp } from '@/lib/audit-file'
 import { getProjectPath } from '@/lib/paths'
 import { requireAuth } from '@/lib/require-auth'
-import { exec } from 'child_process'
+import { validateServiceName } from '@/lib/validation/service-name'
+import { execFile } from 'child_process'
 import { NextRequest, NextResponse } from 'next/server'
 import { promisify } from 'util'
+import { z } from 'zod'
 
-const execAsync = promisify(exec)
+const execFileAsync = promisify(execFile)
 
+/**
+ * Known template names accepted by `nself env create --template`.
+ * The CLI env.go does not currently advertise a --template flag; this list
+ * guards any future expansion of that flag by enforcing an explicit allowlist
+ * rather than passing arbitrary user input to execFile.
+ */
+const KNOWN_TEMPLATES = ['default', 'minimal', 'dev', 'staging', 'prod'] as const
+
+// Tightened pattern: no leading or trailing hyphen, preventing argument-injection
+// via values like "--help" or "-rf" being interpreted as CLI flags.
+const IDENTIFIER_PATTERN = /^[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/
+
+const EnvironmentActionSchema = z.object({
+  action: z.enum(['create', 'diff', 'delete', 'list']),
+  environment: z
+    .string()
+    .regex(IDENTIFIER_PATTERN, 'environment must be lowercase alphanumeric with no leading or trailing hyphen')
+    .optional(),
+  options: z
+    .object({
+      template: z
+        .string()
+        .refine((t): t is (typeof KNOWN_TEMPLATES)[number] => (KNOWN_TEMPLATES as readonly string[]).includes(t), {
+          message: 'template must be one of: ' + KNOWN_TEMPLATES.join(', '),
+        })
+        .optional(),
+      compare: z
+        .string()
+        .regex(IDENTIFIER_PATTERN, 'compare must be lowercase alphanumeric with no leading or trailing hyphen')
+        .optional(),
+      force: z.boolean().optional(),
+    })
+    .optional(),
+})
+
+type EnvironmentAction = z.infer<typeof EnvironmentActionSchema>
+
+/** GET is not a mutation — reject to prevent CSRF-style abuse via URL navigation. */
 export async function GET(): Promise<NextResponse> {
-  try {
-    const projectPath = getProjectPath()
-
-    const { stdout } = await execAsync('nself env list', {
-      cwd: projectPath,
-    })
-
-    return NextResponse.json({
-      success: true,
-      output: stdout,
-      environments: parseEnvironments(stdout),
-    })
-  } catch (error) {
-    const err = error as { message?: string; stdout?: string; stderr?: string }
-    return NextResponse.json(
-      {
-        success: false,
-        error: 'Failed to list environments',
-        details: err.message || 'Unknown error',
-        stderr: err.stderr,
-      },
-      { status: 500 },
-    )
-  }
+  return NextResponse.json({ error: 'method_not_allowed' }, { status: 405 })
 }
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
   const authError = await requireAuth(request)
   if (authError) return authError
 
-  try {
-    const body = await request.json()
-    const { action, environment, options = {} } = body
+  const body: unknown = await request.json().catch(() => null)
+  if (body === null) {
+    return NextResponse.json({ error: 'invalid_input' }, { status: 400 })
+  }
 
-    const projectPath = getProjectPath()
+  const parsed = EnvironmentActionSchema.safeParse(body)
+  if (!parsed.success) {
+    return NextResponse.json({ error: 'invalid_input' }, { status: 400 })
+  }
 
-    let command = ''
+  const { action, environment, options = {} }: EnvironmentAction = parsed.data
 
-    switch (action) {
-      case 'create':
-        command = `nself env create ${environment}`
-        if (options.template) {
-          command += ` --template=${options.template}`
-        }
-        break
+  // Per-action required-field checks after schema validation
+  if (action !== 'list' && (!environment || !validateServiceName(environment))) {
+    return NextResponse.json({ error: 'invalid_input' }, { status: 400 })
+  }
+  if (action === 'diff' && (!options.compare || !validateServiceName(options.compare))) {
+    return NextResponse.json({ error: 'invalid_input' }, { status: 400 })
+  }
 
-      case 'delete':
-        command = `nself env delete ${environment}`
-        if (options.force) {
-          command += ' --force'
-        }
-        break
+  const projectPath = getProjectPath()
+  const sourceIp = extractSourceIp(request.headers)
 
-      case 'switch':
-        command = `nself env switch ${environment}`
-        break
+  // Build argv array — never a shell string.  execFile does not invoke sh.
+  // The literal '--' end-of-options separator is inserted before every
+  // user-controlled positional so that even a future regex regression cannot
+  // cause a value to be interpreted as a CLI flag by the nself arg parser.
+  let args: string[]
+  switch (action) {
+    case 'list':
+      args = ['env', 'list']
+      break
 
-      case 'validate':
-        command = `nself env validate ${environment}`
-        break
-
-      case 'diff':
-        command = `nself env diff ${environment} ${options.compare}`
-        break
-
-      default:
-        return NextResponse.json(
-          {
-            success: false,
-            error: 'Invalid action',
-          },
-          { status: 400 },
-        )
+    case 'create': {
+      // Flag arguments (--template) must precede the '--' end-of-options separator.
+      // User-controlled positionals come after '--' so they cannot be misinterpreted as flags.
+      args = [
+        'env',
+        'create',
+        ...(options.template ? ['--template', options.template] : []),
+        '--',
+        environment as string,
+      ]
+      break
     }
 
-    const { stdout, stderr } = await execAsync(command, {
-      cwd: projectPath,
+    case 'delete':
+      args = ['env', 'delete', '--', environment as string]
+      if (options.force) {
+        args.push('--force')
+      }
+      break
+
+    case 'diff':
+      args = ['env', 'diff', '--', environment as string, options.compare as string]
+      break
+  }
+
+  try {
+    const { stdout, stderr } = await execFileAsync('nself', args, { cwd: projectPath })
+
+    appendAuditFile({
+      timestamp: new Date().toISOString(),
+      user: 'admin',
+      action: `env:${action}`,
+      sourceIp,
+      method: 'POST',
+      path: '/api/deployment/environments',
+      after: { environment, options },
+      success: true,
     })
 
     return NextResponse.json({
       success: true,
       output: stdout,
       stderr,
+      ...(action === 'list' ? { environments: parseEnvironments(stdout) } : {}),
     })
   } catch (error) {
     const err = error as { message?: string; stdout?: string; stderr?: string }
+
+    appendAuditFile({
+      timestamp: new Date().toISOString(),
+      user: 'admin',
+      action: `env:${action}`,
+      sourceIp,
+      method: 'POST',
+      path: '/api/deployment/environments',
+      after: { environment, options },
+      success: false,
+      details: err.message,
+    })
+
     return NextResponse.json(
       {
         success: false,
         error: 'Environment operation failed',
-        details: err.message || 'Unknown error',
+        details: err.message ?? 'Unknown error',
         stderr: err.stderr,
         stdout: err.stdout,
       },

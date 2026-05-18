@@ -7,8 +7,54 @@ import { promisify } from 'util'
 
 const execFileAsync = promisify(execFile)
 
-// Allowed environments for deployment
-const ALLOWED_ENVIRONMENTS = ['staging', 'production', 'development']
+// Strict validation pattern — matches /api/control-plane/route.ts pattern
+const SAFE_ARG_PATTERN = /^[a-zA-Z0-9][a-zA-Z0-9_\-.:=/]*$/
+
+function validateSafeArg(input: string): boolean {
+  return (
+    SAFE_ARG_PATTERN.test(input) &&
+    !input.includes('..') &&
+    !input.includes('&&') &&
+    !input.includes('||') &&
+    !input.includes(';') &&
+    !input.includes('`') &&
+    !input.includes('$(') &&
+    !input.includes('|')
+  )
+}
+
+/**
+ * Fetch the reality-derived environment list from the CLI at request time.
+ * Replaces the old hardcoded ALLOWED_ENVIRONMENTS constant.
+ * Returns null on CLI failure — caller should surface the error.
+ */
+async function fetchAllowedEnvironments(projectPath: string): Promise<string[] | null> {
+  try {
+    const { stdout } = await execFileAsync(
+      'nself',
+      ['deploy', 'environments', '--json'],
+      {
+        cwd: projectPath,
+        env: { ...process.env, PATH: getEnhancedPath() },
+        timeout: 15000,
+      },
+    )
+    const parsed = JSON.parse(stdout.trim()) as unknown
+    // CLI returns { environments: [...] } or a flat string[]
+    if (Array.isArray(parsed)) {
+      return parsed.map(String)
+    }
+    if (parsed && typeof parsed === 'object' && 'environments' in parsed) {
+      const envs = (parsed as { environments: unknown }).environments
+      if (Array.isArray(envs)) {
+        return envs.map(String)
+      }
+    }
+    return null
+  } catch {
+    return null
+  }
+}
 
 // GET /api/deploy - Get deployment status
 export async function GET(request: NextRequest): Promise<NextResponse> {
@@ -17,12 +63,21 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     const environment = searchParams.get('environment')
     const projectPath = getProjectPath()
 
-    // Validate environment if provided
-    if (environment && !ALLOWED_ENVIRONMENTS.includes(environment)) {
-      return NextResponse.json(
-        { success: false, error: 'Invalid environment' },
-        { status: 400 },
-      )
+    // Validate environment against reality-derived list (not a hardcoded array)
+    if (environment) {
+      if (!validateSafeArg(environment)) {
+        return NextResponse.json(
+          { success: false, error: 'Invalid environment name' },
+          { status: 400 },
+        )
+      }
+      const allowedEnvs = await fetchAllowedEnvironments(projectPath)
+      if (allowedEnvs !== null && !allowedEnvs.includes(environment)) {
+        return NextResponse.json(
+          { success: false, error: `Unknown environment: ${environment}`, allowedEnvironments: allowedEnvs },
+          { status: 400 },
+        )
+      }
     }
 
     // Build args array
@@ -74,12 +129,31 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     const { action, environment, options = {} } = body
     const projectPath = getProjectPath()
 
-    // Validate environment if provided
-    if (environment && !ALLOWED_ENVIRONMENTS.includes(environment)) {
-      return NextResponse.json(
-        { success: false, error: 'Invalid environment' },
-        { status: 400 },
-      )
+    // Validate environment against reality-derived list — no hardcoded array
+    if (environment) {
+      if (!validateSafeArg(environment)) {
+        return NextResponse.json(
+          { success: false, error: 'Invalid environment name' },
+          { status: 400 },
+        )
+      }
+      const allowedEnvs = await fetchAllowedEnvironments(projectPath)
+      if (allowedEnvs !== null && !allowedEnvs.includes(environment)) {
+        return NextResponse.json(
+          { success: false, error: `Unknown environment: ${environment}`, allowedEnvironments: allowedEnvs },
+          { status: 400 },
+        )
+      }
+    }
+
+    // Validate optional server param
+    if (options.server !== undefined) {
+      if (typeof options.server !== 'string' || !validateSafeArg(options.server)) {
+        return NextResponse.json(
+          { success: false, error: 'Invalid server name' },
+          { status: 400 },
+        )
+      }
     }
 
     const execArgs: string[] = ['deploy']
@@ -100,6 +174,8 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         if (options.skipHealth) execArgs.push('--skip-health')
         if (options.includeFrontends) execArgs.push('--include-frontends')
         if (options.excludeFrontends) execArgs.push('--exclude-frontends')
+        // Server passthrough — deploy to a specific server in the environment
+        if (options.server) execArgs.push('--server', options.server)
         break
       }
 
@@ -113,6 +189,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         // nself deploy rollback
         execArgs.push('rollback')
         if (environment) execArgs.push(environment)
+        if (options.server) execArgs.push('--server', options.server)
         break
       }
 
@@ -120,6 +197,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         // nself deploy logs
         execArgs.push('logs')
         if (environment) execArgs.push(environment)
+        if (options.server) execArgs.push('--server', options.server)
         break
       }
 
@@ -127,6 +205,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         // nself deploy health
         execArgs.push('health')
         if (environment) execArgs.push(environment)
+        if (options.server) execArgs.push('--server', options.server)
         break
       }
 
@@ -147,6 +226,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       success: true,
       action,
       environment,
+      server: options.server ?? null,
       output: stdout.trim(),
       stderr: stderr.trim(),
     })

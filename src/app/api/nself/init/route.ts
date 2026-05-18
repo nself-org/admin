@@ -1,6 +1,7 @@
 import { nselfInit } from '@/lib/nselfCLI'
 import { getProjectPath } from '@/lib/paths'
 import { requireAuth } from '@/lib/require-auth'
+import { basename } from 'path'
 import { NextRequest, NextResponse } from 'next/server'
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
@@ -8,8 +9,11 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   if (authError) return authError
 
   try {
-    const { projectName: _projectName = 'my_project' } = await request.json()
-    const _projectPath = getProjectPath()
+    // Derive projectName server-side from the actual project path (ADM-T03).
+    // The client-supplied value is ignored — basename(getProjectPath()) is authoritative.
+    await request.json().catch(() => ({})) // consume body to avoid connection leak
+    const projectPath = getProjectPath()
+    const _projectName = basename(projectPath) || 'my_project'
 
     // Run nself init --full using secure CLI wrapper
 
@@ -50,12 +54,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     return NextResponse.json(
       {
         error: 'Failed to initialize project',
-        details:
-          error instanceof Error
-            ? error instanceof Error
-              ? error.message
-              : 'Unknown error'
-            : 'Unknown error',
+        details: error instanceof Error ? error.message : 'Unknown error',
       },
       { status: 500 },
     )

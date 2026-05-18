@@ -1,18 +1,11 @@
 import { getDockerSocketPath, getProjectPath } from '@/lib/paths'
 import { requireAuth } from '@/lib/require-auth'
+import { validateServiceName } from '@/lib/validation/service-name'
 import { emitServiceStatus } from '@/lib/websocket/emitters'
 import Docker from 'dockerode'
 import { NextRequest, NextResponse } from 'next/server'
 
 // execAsync removed: all docker-compose shell-outs replaced with 501 stubs (G-009) or dockerode API calls.
-
-// Allowlist for serviceName: lowercase alphanumeric + hyphens only.
-// Prevents command-injection when a future nself CLI integration is wired.
-const SERVICE_NAME_PATTERN = /^[a-z0-9-]+$/
-
-function validateServiceName(name: string): boolean {
-  return SERVICE_NAME_PATTERN.test(name)
-}
 
 /** 501 stub returned for service mutations not yet supported by the nself CLI.
  *  Filed as G-009 in cli/.claude/docs/doctrines/nself-first-cli-gaps.md.
@@ -76,6 +69,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         success: false,
         error: 'Services operation failed',
         details: error instanceof Error ? error.message : 'Unknown error',
+        data: { services: [] },
       },
       { status: 500 },
     )
@@ -222,6 +216,7 @@ async function getServicesList() {
         success: false,
         error: 'Failed to get services list',
         details: error instanceof Error ? error.message : 'Unknown error',
+        data: { services: [] },
       },
       { status: 500 },
     )
@@ -402,10 +397,10 @@ async function controlService(serviceName: string, operation: string) {
     )
   }
 
-  // Sanitize: allowlist ^[a-z0-9-]+$ before any CLI invocation.
+  // Sanitize: shared validateServiceName (no leading/trailing hyphen, alphanumeric + interior hyphens).
   if (!validateServiceName(serviceName)) {
     return NextResponse.json(
-      { success: false, error: 'Invalid service name: must match ^[a-z0-9-]+$' },
+      { success: false, error: 'Invalid service name: must be lowercase alphanumeric with no leading or trailing hyphen' },
       { status: 400 },
     )
   }
@@ -437,7 +432,7 @@ async function scaleService(serviceName: string, _replicas: number) {
   // when G-009 ships and this becomes a real CLI call.
   if (!serviceName || !validateServiceName(serviceName)) {
     return NextResponse.json(
-      { success: false, error: 'Invalid or missing service name: must match ^[a-z0-9-]+$' },
+      { success: false, error: 'Invalid or missing service name: must be lowercase alphanumeric with no leading or trailing hyphen' },
       { status: 400 },
     )
   }
@@ -488,7 +483,7 @@ async function updateService(serviceName: string, _options: unknown) {
   // Sanitize input even though we return 501.
   if (!serviceName || !validateServiceName(serviceName)) {
     return NextResponse.json(
-      { success: false, error: 'Invalid or missing service name: must match ^[a-z0-9-]+$' },
+      { success: false, error: 'Invalid or missing service name: must be lowercase alphanumeric with no leading or trailing hyphen' },
       { status: 400 },
     )
   }

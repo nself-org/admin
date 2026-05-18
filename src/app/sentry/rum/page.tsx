@@ -74,6 +74,20 @@ export default function SentryRumPage() {
     return () => clearInterval(id)
   }, [load])
 
+  if (loading && data === null) {
+    return (
+      <div className="mx-auto max-w-4xl space-y-4 p-6">
+        <div className="bg-nself-surface h-8 w-64 animate-pulse rounded-lg" />
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+          {[0, 1, 2, 3].map((i) => (
+            <div key={i} className="bg-nself-surface h-20 animate-pulse rounded-lg" />
+          ))}
+        </div>
+        <div className="bg-nself-surface h-40 animate-pulse rounded-lg" />
+      </div>
+    )
+  }
+
   return (
     <div className="mx-auto max-w-4xl space-y-4 p-6">
       {/* Header */}

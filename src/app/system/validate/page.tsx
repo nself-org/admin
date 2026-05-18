@@ -1,17 +1,279 @@
 'use client'
 
-import { PageTemplate } from '@/components/PageTemplate'
+import { Button } from '@/components/Button'
 import { FormSkeleton } from '@/components/skeletons'
-import { Suspense } from 'react'
+import {
+  AlertTriangle,
+  CheckCircle,
+  ClipboardCheck,
+  RefreshCw,
+  WifiOff,
+  XCircle,
+} from 'lucide-react'
+import { Suspense, useCallback, useEffect, useState } from 'react'
 
-function Content() {
-  return <PageTemplate description="Validate system configuration" />
+interface ValidationCheck {
+  name: string
+  category: string
+  status: 'pass' | 'fail' | 'warning'
+  message: string
+  suggestion?: string
 }
 
-export default function Page() {
+interface ValidationResult {
+  checks: ValidationCheck[]
+  categories: Record<string, { total: number; passed: number; failed: number; warnings: number }>
+  summary: { total: number; passed: number; failed: number; warnings: number; score: string }
+  rawOutput: string
+  timestamp: string
+}
+
+interface ApiResponse {
+  success: boolean
+  data?: ValidationResult
+  error?: string
+  details?: string
+}
+
+function statusColor(status: ValidationCheck['status']) {
+  switch (status) {
+    case 'pass': return 'text-green-400'
+    case 'fail': return 'text-red-400'
+    case 'warning': return 'text-yellow-400'
+  }
+}
+
+function statusIcon(status: ValidationCheck['status']) {
+  switch (status) {
+    case 'pass': return <CheckCircle className="h-4 w-4 text-green-400 flex-shrink-0" />
+    case 'fail': return <XCircle className="h-4 w-4 text-red-400 flex-shrink-0" />
+    case 'warning': return <AlertTriangle className="h-4 w-4 text-yellow-400 flex-shrink-0" />
+  }
+}
+
+function ValidateContent() {
+  const [loading, setLoading] = useState(false)
+  const [initialLoad, setInitialLoad] = useState(true)
+  const [result, setResult] = useState<ValidationResult | null>(null)
+  const [error, setError] = useState<string | null>(null)
+  const [offline, setOffline] = useState(false)
+  const [activeCategory, setActiveCategory] = useState<string | null>(null)
+
+  const runValidation = useCallback(async () => {
+    setLoading(true)
+    setError(null)
+    setOffline(false)
+    try {
+      const response = await fetch('/api/config/validate')
+      if (response.status === 401) {
+        window.location.href = '/login'
+        return
+      }
+      if (!response.ok) {
+        const body = await response.json().catch(() => ({}))
+        const msg: string = body?.error ?? `Request failed: ${response.status}`
+        if (msg.toLowerCase().includes('docker') || msg.toLowerCase().includes('connect')) {
+          setOffline(true)
+        } else {
+          setError(msg)
+        }
+        return
+      }
+      const json: ApiResponse = await response.json()
+      if (!json.success || !json.data) {
+        setError(json.error ?? 'Validation returned no data')
+        return
+      }
+      setResult(json.data)
+      setActiveCategory(null)
+    } catch {
+      setOffline(true)
+    } finally {
+      setLoading(false)
+      setInitialLoad(false)
+    }
+  }, [])
+
+  useEffect(() => {
+    runValidation()
+  }, [runValidation])
+
+  // State 1: Initial skeleton
+  if (initialLoad && loading) return <FormSkeleton />
+
+  // State 5: Offline
+  if (offline) {
+    return (
+      <div className="p-6 space-y-4">
+        <div className="flex items-center gap-3 p-4 rounded-lg bg-yellow-500/10 border border-yellow-500/30">
+          <WifiOff className="h-5 w-5 text-yellow-500 flex-shrink-0" />
+          <div>
+            <p className="font-medium text-yellow-400">Docker not reachable</p>
+            <p className="text-sm text-gray-400 mt-0.5">
+              Make sure the nself stack is running before validating configuration.
+            </p>
+          </div>
+        </div>
+        <Button onClick={runValidation} disabled={loading} variant="secondary" size="sm">
+          <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
+          Retry
+        </Button>
+      </div>
+    )
+  }
+
+  // State 4: Error
+  if (error && !result) {
+    return (
+      <div className="p-6 space-y-4">
+        <div className="flex items-center gap-3 p-4 rounded-lg bg-red-500/10 border border-red-500/30">
+          <AlertTriangle className="h-5 w-5 text-red-400 flex-shrink-0" />
+          <div>
+            <p className="font-medium text-red-400">Validation failed</p>
+            <p className="text-sm text-gray-400 mt-0.5">{error}</p>
+          </div>
+        </div>
+        <Button onClick={runValidation} disabled={loading} variant="secondary" size="sm">
+          <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
+          Retry
+        </Button>
+      </div>
+    )
+  }
+
+  // State 3: No data yet
+  if (!result) {
+    return (
+      <div className="p-6 text-center text-gray-400">
+        <ClipboardCheck className="h-8 w-8 mx-auto mb-2 opacity-50" />
+        <p>No validation results available.</p>
+        <Button onClick={runValidation} disabled={loading} variant="secondary" size="sm" className="mt-3">
+          <RefreshCw className="h-4 w-4 mr-2" />
+          Run Validation
+        </Button>
+      </div>
+    )
+  }
+
+  const { summary, categories, checks } = result
+  const categoryNames = Object.keys(categories)
+  const filteredChecks = activeCategory
+    ? checks.filter((c) => c.category === activeCategory)
+    : checks
+
+  const scoreOk = summary.failed === 0
+  const scoreBanner = summary.failed > 0
+    ? 'bg-red-500/10 border-red-500/30'
+    : summary.warnings > 0
+      ? 'bg-yellow-500/10 border-yellow-500/30'
+      : 'bg-green-500/10 border-green-500/30'
+
+  // States 6 + 7: Success
+  return (
+    <div className="p-6 space-y-6">
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-xl font-semibold text-white">Configuration Validation</h2>
+          <p className="text-sm text-gray-400 mt-1">
+            Last run: {new Date(result.timestamp).toLocaleString()}
+          </p>
+        </div>
+        <Button onClick={runValidation} disabled={loading} variant="secondary" size="sm">
+          {/* State 2: Refresh spinner */}
+          <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
+          {loading ? 'Validating…' : 'Re-validate'}
+        </Button>
+      </div>
+
+      {/* Score banner */}
+      <div className={`flex items-center gap-4 p-4 rounded-lg border ${scoreBanner}`}>
+        {scoreOk
+          ? <CheckCircle className="h-6 w-6 text-green-400 flex-shrink-0" />
+          : <XCircle className="h-6 w-6 text-red-400 flex-shrink-0" />
+        }
+        <div className="flex-1">
+          <p className="font-medium text-white">
+            Score: <span className="font-mono">{summary.score}</span> checks passed
+          </p>
+          <p className="text-sm text-gray-400 mt-0.5">
+            {summary.passed} passed · {summary.failed} failed · {summary.warnings} warnings
+          </p>
+        </div>
+      </div>
+
+      {/* Category filter pills */}
+      {categoryNames.length > 1 && (
+        <div className="flex flex-wrap gap-2">
+          <button
+            onClick={() => setActiveCategory(null)}
+            className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${
+              activeCategory === null
+                ? 'bg-sky-500/20 text-sky-400 border border-sky-500/30'
+                : 'bg-white/5 text-gray-400 border border-white/10 hover:bg-white/10'
+            }`}
+          >
+            All ({summary.total})
+          </button>
+          {categoryNames.map((cat) => (
+            <button
+              key={cat}
+              onClick={() => setActiveCategory(cat)}
+              className={`px-3 py-1 rounded-full text-xs font-medium transition-colors capitalize ${
+                activeCategory === cat
+                  ? 'bg-sky-500/20 text-sky-400 border border-sky-500/30'
+                  : 'bg-white/5 text-gray-400 border border-white/10 hover:bg-white/10'
+              }`}
+            >
+              {cat} ({categories[cat].total})
+            </button>
+          ))}
+        </div>
+      )}
+
+      {/* Checks list — State 3 empty variant */}
+      {filteredChecks.length === 0 ? (
+        <div className="rounded-lg border border-white/10 bg-white/5 p-8 text-center">
+          <p className="text-gray-400">No validation checks found.</p>
+        </div>
+      ) : (
+        <div className="rounded-lg border border-white/10 overflow-hidden divide-y divide-white/5">
+          {filteredChecks.map((check, i) => (
+            <div key={i} className="flex items-start gap-3 px-4 py-3 hover:bg-white/[0.02] transition-colors">
+              {statusIcon(check.status)}
+              <div className="flex-1 min-w-0">
+                <p className="text-sm text-white font-medium">{check.name}</p>
+                <p className="text-xs text-gray-400 mt-0.5">{check.message}</p>
+                {check.suggestion && (
+                  <p className="text-xs text-sky-400 mt-1 font-mono">{check.suggestion}</p>
+                )}
+              </div>
+              <div className="flex items-center gap-2 flex-shrink-0">
+                <span className={`text-xs font-medium capitalize ${statusColor(check.status)}`}>
+                  {check.status}
+                </span>
+                <span className="text-xs text-gray-600 capitalize">{check.category}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Error overlay when result present but error also set */}
+      {error && result && (
+        <div className="flex items-center gap-3 p-4 rounded-lg bg-red-500/10 border border-red-500/30">
+          <AlertTriangle className="h-5 w-5 text-red-400 flex-shrink-0" />
+          <p className="text-red-400 text-sm">{error}</p>
+        </div>
+      )}
+    </div>
+  )
+}
+
+export default function ValidatePage() {
   return (
     <Suspense fallback={<FormSkeleton />}>
-      <Content />
+      <ValidateContent />
     </Suspense>
   )
 }

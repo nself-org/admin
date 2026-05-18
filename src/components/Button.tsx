@@ -26,8 +26,15 @@ const variantStyles = {
   text: 'text-blue-600 hover:text-blue-700 focus-visible:rounded focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:outline-none dark:text-blue-400 dark:hover:text-blue-300',
 }
 
+const sizeStyles = {
+  sm: 'py-0.5 px-2 text-xs',
+  md: '',
+  lg: 'py-1.5 px-4 text-base',
+}
+
 type ButtonProps = {
   variant?: keyof typeof variantStyles
+  size?: keyof typeof sizeStyles
   arrow?: 'left' | 'right'
 } & (
   | React.ComponentPropsWithoutRef<typeof Link>
@@ -36,6 +43,7 @@ type ButtonProps = {
 
 export function Button({
   variant = 'primary',
+  size,
   className,
   children,
   arrow,
@@ -44,6 +52,7 @@ export function Button({
   className = clsx(
     'inline-flex gap-0.5 justify-center overflow-hidden text-sm font-medium transition',
     variantStyles[variant],
+    size && sizeStyles[size],
     className,
   )
 

@@ -1,9 +1,6 @@
 import { readEnvFile } from '@/lib/env-handler'
 import { getProjectPath } from '@/lib/paths'
-import {
-  requireAuthPreSetup,
-  requireWizardNotComplete,
-} from '@/lib/require-auth'
+import { requireWizardNotComplete } from '@/lib/require-auth'
 import { existsSync } from 'fs'
 import { NextRequest, NextResponse } from 'next/server'
 import { join } from 'path'
@@ -15,8 +12,6 @@ interface ValidationIssue {
 }
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
-  const authError = await requireAuthPreSetup(request)
-  if (authError) return authError
   const wizardError = await requireWizardNotComplete(request)
   if (wizardError) return wizardError
 

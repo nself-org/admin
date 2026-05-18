@@ -95,6 +95,16 @@ export default function SentryIncidentsPage() {
   const filtered =
     filter === 'all' ? incidents : incidents.filter((i) => i.status === filter)
 
+  if (loading && data === null) {
+    return (
+      <div className="mx-auto max-w-4xl space-y-4 p-6">
+        <div className="bg-nself-surface h-8 w-56 animate-pulse rounded-lg" />
+        <div className="bg-nself-surface h-10 w-64 animate-pulse rounded-lg" />
+        <div className="bg-nself-surface h-48 animate-pulse rounded-lg" />
+      </div>
+    )
+  }
+
   return (
     <div className="mx-auto max-w-4xl space-y-4 p-6">
       {/* Header */}

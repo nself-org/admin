@@ -31,110 +31,30 @@ import {
 
 function CompareContent() {
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
   const [baselines, setBaselines] = useState<BenchmarkBaseline[]>([])
   const [selectedBaseline, setSelectedBaseline] = useState<string>('')
   const [selectedCurrent, setSelectedCurrent] = useState<string>('')
   const [comparison, setComparison] = useState<BenchmarkComparison | null>(null)
 
   const fetchBaselines = useCallback(async () => {
+    setError(null)
     try {
-      // Mock data - replace with real API
-      const mockBaselines: BenchmarkBaseline[] = [
-        {
-          id: 'baseline-1',
-          name: 'Production v1.2.0',
-          createdAt: new Date(Date.now() - 86400000 * 7).toISOString(),
-          results: [
-            {
-              id: '1',
-              target: 'API - GraphQL',
-              type: 'api',
-              timestamp: new Date(Date.now() - 86400000 * 7).toISOString(),
-              duration: 60000,
-              requests: {
-                total: 15000,
-                successful: 14985,
-                failed: 15,
-                perSecond: 250,
-              },
-              latency: {
-                min: 5,
-                max: 450,
-                avg: 45,
-                p50: 38,
-                p95: 120,
-                p99: 250,
-              },
-              throughput: { bytesPerSecond: 2500000, requestsPerSecond: 250 },
-            },
-          ],
-        },
-        {
-          id: 'baseline-2',
-          name: 'Pre-optimization',
-          createdAt: new Date(Date.now() - 86400000 * 14).toISOString(),
-          results: [
-            {
-              id: '2',
-              target: 'API - GraphQL',
-              type: 'api',
-              timestamp: new Date(Date.now() - 86400000 * 14).toISOString(),
-              duration: 60000,
-              requests: {
-                total: 12000,
-                successful: 11900,
-                failed: 100,
-                perSecond: 200,
-              },
-              latency: {
-                min: 10,
-                max: 650,
-                avg: 75,
-                p50: 60,
-                p95: 180,
-                p99: 400,
-              },
-              throughput: { bytesPerSecond: 2000000, requestsPerSecond: 200 },
-            },
-          ],
-        },
-        {
-          id: 'current',
-          name: 'Current (Latest Run)',
-          createdAt: new Date().toISOString(),
-          results: [
-            {
-              id: '3',
-              target: 'API - GraphQL',
-              type: 'api',
-              timestamp: new Date().toISOString(),
-              duration: 60000,
-              requests: {
-                total: 18000,
-                successful: 17990,
-                failed: 10,
-                perSecond: 300,
-              },
-              latency: {
-                min: 3,
-                max: 350,
-                avg: 35,
-                p50: 28,
-                p95: 95,
-                p99: 200,
-              },
-              throughput: { bytesPerSecond: 3000000, requestsPerSecond: 300 },
-            },
-          ],
-        },
-      ]
-      setBaselines(mockBaselines)
-      if (mockBaselines.length >= 2) {
-        setSelectedBaseline(mockBaselines[1].id)
-        setSelectedCurrent(mockBaselines[0].id)
+      const res = await fetch('/api/benchmark/baseline')
+      const data = await res.json()
+      if (!res.ok || !data.success) {
+        throw new Error(data.error ?? 'Failed to load baselines')
       }
-    } catch (_error) {
-      // Handle error silently
+      // API returns a single baseline or null; present as array for the dropdowns
+      const arr: BenchmarkBaseline[] = data.data ? [data.data] : []
+      setBaselines(arr)
+      // Auto-select the single baseline in both slots so comparison is immediately visible
+      if (arr.length >= 1) {
+        setSelectedBaseline(arr[0].id)
+        setSelectedCurrent(arr[0].id)
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to load baselines')
     } finally {
       setLoading(false)
     }
@@ -256,6 +176,25 @@ function CompareContent() {
         <div className="relative mx-auto max-w-7xl">
           <div className="flex items-center justify-center py-20">
             <div className="h-8 w-8 animate-spin rounded-full border-4 border-sky-500 border-t-transparent" />
+          </div>
+        </div>
+      </>
+    )
+  }
+
+  if (error) {
+    return (
+      <>
+        <HeroPattern />
+        <div className="relative mx-auto max-w-7xl">
+          <div className="rounded-xl border border-red-200 bg-red-50 p-8 text-center dark:border-red-800 dark:bg-red-900/20">
+            <p className="mb-4 text-red-700 dark:text-red-400">{error}</p>
+            <button
+              onClick={fetchBaselines}
+              className="rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700"
+            >
+              Retry
+            </button>
           </div>
         </div>
       </>

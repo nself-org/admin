@@ -2,6 +2,7 @@
 
 import { DashboardSkeleton } from '@/components/skeletons'
 import { useOrganization } from '@/hooks/useOrganization'
+import type { StripeInvoice, StripeSubscription } from '@/types/stripe'
 import {
   ArrowLeft,
   ArrowUpRight,
@@ -15,7 +16,7 @@ import {
 } from 'lucide-react'
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 interface Plan {
   id: string
@@ -23,7 +24,6 @@ interface Plan {
   price: number
   interval: 'month' | 'year'
   features: string[]
-  current?: boolean
   popular?: boolean
 }
 
@@ -73,33 +73,129 @@ const plans: Plan[] = [
   },
 ]
 
-const invoices = [
-  { id: 'INV-001', date: '2024-01-01', amount: 29, status: 'paid' },
-  { id: 'INV-002', date: '2024-02-01', amount: 29, status: 'paid' },
-  { id: 'INV-003', date: '2024-03-01', amount: 29, status: 'pending' },
-]
+interface BillingData {
+  invoices: StripeInvoice[]
+  subscription: StripeSubscription | null
+  pluginInstalled: boolean
+}
+
+function formatCurrency(amount: number, currency: string = 'usd'): string {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: currency.toUpperCase(),
+    minimumFractionDigits: 2,
+  }).format(amount / 100)
+}
+
+function useBillingData(): {
+  data: BillingData | null
+  isLoading: boolean
+  error: string | null
+} {
+  const [data, setData] = useState<BillingData | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+  const abortRef = useRef<AbortController | null>(null)
+
+  useEffect(() => {
+    abortRef.current = new AbortController()
+    const signal = abortRef.current.signal
+
+    async function fetchBilling() {
+      setIsLoading(true)
+      setError(null)
+
+      try {
+        const [invoicesRes, subscriptionsRes] = await Promise.all([
+          fetch('/api/plugins/stripe/invoices?pageSize=10', { signal }),
+          fetch('/api/plugins/stripe/subscriptions?pageSize=1&status=active', {
+            signal,
+          }),
+        ])
+
+        const [invoicesJson, subscriptionsJson] = await Promise.all([
+          invoicesRes.json() as Promise<{
+            success: boolean
+            pluginInstalled: boolean
+            invoices?: StripeInvoice[]
+            error?: string
+          }>,
+          subscriptionsRes.json() as Promise<{
+            success: boolean
+            pluginInstalled: boolean
+            subscriptions?: StripeSubscription[]
+            error?: string
+          }>,
+        ])
+
+        if (!invoicesJson.success) {
+          setError(invoicesJson.error ?? 'Failed to load billing data')
+          return
+        }
+
+        setData({
+          invoices: invoicesJson.invoices ?? [],
+          subscription: subscriptionsJson.subscriptions?.[0] ?? null,
+          pluginInstalled: invoicesJson.pluginInstalled,
+        })
+      } catch (err) {
+        if ((err as { name?: string }).name !== 'AbortError') {
+          setError('Failed to load billing data')
+        }
+      } finally {
+        if (!signal.aborted) setIsLoading(false)
+      }
+    }
+
+    void fetchBilling()
+
+    return () => {
+      abortRef.current?.abort()
+    }
+  }, [])
+
+  return { data, isLoading, error }
+}
 
 export default function OrgBillingPage() {
   const params = useParams()
   const orgId = params.id as string
-  const { org, isLoading, error } = useOrganization(orgId)
+  const { org, isLoading: orgLoading, error: orgError } = useOrganization(orgId)
+  const { data: billing, isLoading: billingLoading, error: billingError } = useBillingData()
   const [billingInterval, setBillingInterval] = useState<'month' | 'year'>(
     'month',
   )
   const [selectedPlan, setSelectedPlan] = useState<string | null>(null)
 
-  if (isLoading) return <DashboardSkeleton />
+  if (orgLoading || billingLoading) return <DashboardSkeleton />
 
-  if (error || !org) {
+  if (orgError || !org) {
     return (
       <div className="rounded-lg border border-red-500/30 bg-red-900/20 p-4">
-        <p className="text-red-400">{error || 'Organization not found'}</p>
+        <p className="text-red-400">{orgError || 'Organization not found'}</p>
       </div>
     )
   }
 
-  // Mock current plan - in real app, this would come from the org data
-  const currentPlan = 'pro'
+  // Derive the current plan from org data when available.
+  // Organization does not carry a plan field directly (plan lives on the Tenant).
+  // Show null until a tenant-level billing API exposes the plan.
+  const currentPlan: string | null = null
+
+  // Next billing date from the active subscription's current_period_end (real data).
+  const nextBillingDate: string =
+    billing?.subscription?.currentPeriodEnd
+      ? new Date(billing.subscription.currentPeriodEnd).toLocaleDateString(
+          'en-US',
+          { year: 'numeric', month: 'short', day: 'numeric' },
+        )
+      : '—'
+
+  // Monthly spend from active subscription amount (real data, stored in cents).
+  const monthlySpend: string =
+    billing?.subscription
+      ? formatCurrency(billing.subscription.amount, billing.subscription.currency)
+      : '—'
 
   const getAdjustedPrice = (price: number) => {
     if (billingInterval === 'year') {
@@ -132,7 +228,9 @@ export default function OrgBillingPage() {
             </div>
             <div>
               <p className="text-sm text-zinc-400">Current Plan</p>
-              <p className="text-xl font-semibold text-white">Pro</p>
+              <p className="text-xl font-semibold text-white">
+                {currentPlan ?? 'Unknown'}
+              </p>
             </div>
           </div>
         </div>
@@ -144,7 +242,7 @@ export default function OrgBillingPage() {
             </div>
             <div>
               <p className="text-sm text-zinc-400">Next Billing Date</p>
-              <p className="text-xl font-semibold text-white">Apr 1, 2024</p>
+              <p className="text-xl font-semibold text-white">{nextBillingDate}</p>
             </div>
           </div>
         </div>
@@ -156,7 +254,7 @@ export default function OrgBillingPage() {
             </div>
             <div>
               <p className="text-sm text-zinc-400">Monthly Spend</p>
-              <p className="text-xl font-semibold text-white">$29.00</p>
+              <p className="text-xl font-semibold text-white">{monthlySpend}</p>
             </div>
           </div>
         </div>
@@ -267,12 +365,9 @@ export default function OrgBillingPage() {
           <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-zinc-800">
             <CreditCard className="h-6 w-6 text-zinc-400" />
           </div>
-          <div>
-            <p className="text-sm font-medium text-white">
-              Visa ending in 4242
-            </p>
-            <p className="text-xs text-zinc-500">Expires 12/2025</p>
-          </div>
+          <p className="text-sm text-zinc-400">
+            Payment method details are managed via the Stripe plugin.
+          </p>
         </div>
       </div>
 
@@ -280,116 +375,107 @@ export default function OrgBillingPage() {
       <div className="rounded-lg border border-zinc-700 bg-zinc-800/50 p-6">
         <div className="mb-4 flex items-center justify-between">
           <h2 className="text-lg font-medium text-white">Billing History</h2>
-          <button className="inline-flex items-center gap-2 text-sm text-emerald-400 hover:text-emerald-300">
-            <Download className="h-4 w-4" /> Download All
-          </button>
+          {billing?.pluginInstalled && billing.invoices.length > 0 && (
+            <Link
+              href="/plugins/stripe/invoices"
+              className="inline-flex items-center gap-2 text-sm text-emerald-400 hover:text-emerald-300"
+            >
+              <Download className="h-4 w-4" /> View All
+            </Link>
+          )}
         </div>
 
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead>
-              <tr className="border-b border-zinc-700">
-                <th className="px-4 py-3 text-left text-xs font-medium tracking-wider text-zinc-400 uppercase">
-                  Invoice
-                </th>
-                <th className="px-4 py-3 text-left text-xs font-medium tracking-wider text-zinc-400 uppercase">
-                  Date
-                </th>
-                <th className="px-4 py-3 text-left text-xs font-medium tracking-wider text-zinc-400 uppercase">
-                  Amount
-                </th>
-                <th className="px-4 py-3 text-left text-xs font-medium tracking-wider text-zinc-400 uppercase">
-                  Status
-                </th>
-                <th className="px-4 py-3 text-right text-xs font-medium tracking-wider text-zinc-400 uppercase">
-                  Actions
-                </th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-zinc-700">
-              {invoices.map((invoice) => (
-                <tr key={invoice.id} className="hover:bg-zinc-800/50">
-                  <td className="px-4 py-3">
-                    <div className="flex items-center gap-2">
-                      <Receipt className="h-4 w-4 text-zinc-500" />
-                      <span className="text-sm text-white">{invoice.id}</span>
-                    </div>
-                  </td>
-                  <td className="px-4 py-3 text-sm text-zinc-400">
-                    {new Date(invoice.date).toLocaleDateString()}
-                  </td>
-                  <td className="px-4 py-3 text-sm text-white">
-                    ${invoice.amount.toFixed(2)}
-                  </td>
-                  <td className="px-4 py-3">
-                    <span
-                      className={`inline-flex rounded-full px-2 py-0.5 text-xs font-medium ${
-                        invoice.status === 'paid'
-                          ? 'bg-emerald-500/20 text-emerald-400'
-                          : 'bg-yellow-500/20 text-yellow-400'
-                      }`}
-                    >
-                      {invoice.status}
-                    </span>
-                  </td>
-                  <td className="px-4 py-3 text-right">
-                    <button className="inline-flex items-center gap-1 text-sm text-zinc-400 hover:text-white">
-                      <ArrowUpRight className="h-4 w-4" />
-                      View
-                    </button>
-                  </td>
+        {billingError && (
+          <p className="text-sm text-red-400">{billingError}</p>
+        )}
+
+        {!billingError && !billing?.pluginInstalled && (
+          <p className="text-sm text-zinc-500">
+            Stripe plugin not installed. Run{' '}
+            <code className="rounded bg-zinc-800 px-1 py-0.5 font-mono text-xs">
+              nself plugin install stripe
+            </code>{' '}
+            to enable billing history.
+          </p>
+        )}
+
+        {!billingError && billing?.pluginInstalled && billing.invoices.length === 0 && (
+          <p className="text-sm text-zinc-500">No invoices available.</p>
+        )}
+
+        {!billingError && billing?.pluginInstalled && billing.invoices.length > 0 && (
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead>
+                <tr className="border-b border-zinc-700">
+                  <th className="px-4 py-3 text-left text-xs font-medium tracking-wider text-zinc-400 uppercase">
+                    Invoice
+                  </th>
+                  <th className="px-4 py-3 text-left text-xs font-medium tracking-wider text-zinc-400 uppercase">
+                    Date
+                  </th>
+                  <th className="px-4 py-3 text-left text-xs font-medium tracking-wider text-zinc-400 uppercase">
+                    Amount
+                  </th>
+                  <th className="px-4 py-3 text-left text-xs font-medium tracking-wider text-zinc-400 uppercase">
+                    Status
+                  </th>
+                  <th className="px-4 py-3 text-right text-xs font-medium tracking-wider text-zinc-400 uppercase">
+                    Actions
+                  </th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      {/* Usage Stats */}
-      <div className="rounded-lg border border-zinc-700 bg-zinc-800/50 p-6">
-        <h2 className="mb-4 text-lg font-medium text-white">
-          Usage This Month
-        </h2>
-        <div className="space-y-4">
-          <div>
-            <div className="mb-1 flex items-center justify-between">
-              <span className="text-sm text-zinc-400">Team Members</span>
-              <span className="text-sm text-white">12 / 25</span>
-            </div>
-            <div className="h-2 overflow-hidden rounded-full bg-zinc-700">
-              <div
-                className="h-full rounded-full bg-emerald-500"
-                style={{ width: '48%' }}
-              />
-            </div>
+              </thead>
+              <tbody className="divide-y divide-zinc-700">
+                {billing.invoices.map((invoice) => (
+                  <tr key={invoice.id} className="hover:bg-zinc-800/50">
+                    <td className="px-4 py-3">
+                      <div className="flex items-center gap-2">
+                        <Receipt className="h-4 w-4 text-zinc-500" />
+                        <span className="font-mono text-sm text-white">
+                          {invoice.id}
+                        </span>
+                      </div>
+                    </td>
+                    <td className="px-4 py-3 text-sm text-zinc-400">
+                      {new Date(invoice.created).toLocaleDateString()}
+                    </td>
+                    <td className="px-4 py-3 text-sm text-white">
+                      {formatCurrency(invoice.amount, invoice.currency)}
+                    </td>
+                    <td className="px-4 py-3">
+                      <span
+                        className={`inline-flex rounded-full px-2 py-0.5 text-xs font-medium ${
+                          invoice.status === 'paid'
+                            ? 'bg-emerald-500/20 text-emerald-400'
+                            : invoice.status === 'open'
+                              ? 'bg-yellow-500/20 text-yellow-400'
+                              : 'bg-zinc-500/20 text-zinc-400'
+                        }`}
+                      >
+                        {invoice.status}
+                      </span>
+                    </td>
+                    <td className="px-4 py-3 text-right">
+                      {invoice.hostedInvoiceUrl ? (
+                        <a
+                          href={invoice.hostedInvoiceUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1 text-sm text-zinc-400 hover:text-white"
+                        >
+                          <ArrowUpRight className="h-4 w-4" />
+                          View
+                        </a>
+                      ) : (
+                        <span className="text-sm text-zinc-600">—</span>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
-
-          <div>
-            <div className="mb-1 flex items-center justify-between">
-              <span className="text-sm text-zinc-400">Teams</span>
-              <span className="text-sm text-white">4 / Unlimited</span>
-            </div>
-            <div className="h-2 overflow-hidden rounded-full bg-zinc-700">
-              <div
-                className="h-full rounded-full bg-blue-500"
-                style={{ width: '10%' }}
-              />
-            </div>
-          </div>
-
-          <div>
-            <div className="mb-1 flex items-center justify-between">
-              <span className="text-sm text-zinc-400">API Calls</span>
-              <span className="text-sm text-white">8,234 / 50,000</span>
-            </div>
-            <div className="h-2 overflow-hidden rounded-full bg-zinc-700">
-              <div
-                className="h-full rounded-full bg-yellow-500"
-                style={{ width: '16%' }}
-              />
-            </div>
-          </div>
-        </div>
+        )}
       </div>
     </div>
   )

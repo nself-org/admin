@@ -1,6 +1,5 @@
 'use client'
 
-import { PageTemplate } from '@/components/PageTemplate'
 import { FormSkeleton } from '@/components/skeletons'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Badge } from '@/components/ui/badge'
@@ -93,7 +92,18 @@ function DatabaseSyncContent() {
   }
 
   return (
-    <PageTemplate description="Synchronize database between environments using nself CLI">
+    <div className="space-y-6 p-6">
+      <div>
+        <h1 className="text-2xl font-bold text-zinc-900 dark:text-white">
+          Sync Database
+        </h1>
+        <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
+          Synchronize database between environments using{' '}
+          <code className="rounded bg-zinc-100 px-1 py-0.5 text-xs dark:bg-zinc-800">
+            nself db sync
+          </code>
+        </p>
+      </div>
       <div className="space-y-6">
         <Alert>
           <Database className="h-4 w-4" />
@@ -295,7 +305,7 @@ function DatabaseSyncContent() {
           </CardContent>
         </Card>
       </div>
-    </PageTemplate>
+    </div>
   )
 }
 

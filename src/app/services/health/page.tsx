@@ -61,6 +61,7 @@ function ServiceHealthContent() {
   const [healthMatrix, setHealthMatrix] = useState<HealthMatrix | null>(null)
   const [selectedService, setSelectedService] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
   const [autoRefresh, setAutoRefresh] = useState(true)
   const [viewMode, setViewMode] = useState<'matrix' | 'list' | 'dependencies'>(
     'matrix',
@@ -77,142 +78,25 @@ function ServiceHealthContent() {
 
   const fetchHealthData = async () => {
     try {
-      // Simulate fetching health data
-      const mockServices: ServiceHealth[] = [
-        {
-          name: 'postgres',
-          displayName: 'PostgreSQL',
-          status: 'healthy',
-          uptime: 99.99,
-          responseTime: 5,
-          errorRate: 0,
-          cpu: 15,
-          memory: 35,
-          dependencies: [],
-          lastCheck: new Date().toISOString(),
-          metrics: { requests: 15420, errors: 2, latency: 5, throughput: 250 },
-        },
-        {
-          name: 'hasura',
-          displayName: 'Hasura GraphQL',
-          status: 'healthy',
-          uptime: 99.95,
-          responseTime: 25,
-          errorRate: 0.1,
-          cpu: 8,
-          memory: 28,
-          dependencies: ['postgres'],
-          lastCheck: new Date().toISOString(),
-          metrics: { requests: 8932, errors: 8, latency: 25, throughput: 150 },
-        },
-        {
-          name: 'auth',
-          displayName: 'Auth Service',
-          status: 'healthy',
-          uptime: 99.98,
-          responseTime: 15,
-          errorRate: 0.05,
-          cpu: 5,
-          memory: 18,
-          dependencies: ['postgres', 'hasura'],
-          lastCheck: new Date().toISOString(),
-          metrics: { requests: 3251, errors: 1, latency: 15, throughput: 50 },
-        },
-        {
-          name: 'minio',
-          displayName: 'MinIO Storage',
-          status: 'healthy',
-          uptime: 100,
-          responseTime: 10,
-          errorRate: 0,
-          cpu: 12,
-          memory: 25,
-          dependencies: [],
-          lastCheck: new Date().toISOString(),
-          metrics: { requests: 5821, errors: 0, latency: 10, throughput: 100 },
-        },
-        {
-          name: 'redis',
-          displayName: 'Redis Cache',
-          status: 'healthy',
-          uptime: 100,
-          responseTime: 2,
-          errorRate: 0,
-          cpu: 3,
-          memory: 8,
-          dependencies: [],
-          lastCheck: new Date().toISOString(),
-          metrics: { requests: 45231, errors: 0, latency: 2, throughput: 1000 },
-        },
-        {
-          name: 'nginx',
-          displayName: 'Nginx',
-          status: 'healthy',
-          uptime: 100,
-          responseTime: 1,
-          errorRate: 0,
-          cpu: 2,
-          memory: 5,
-          dependencies: [],
-          lastCheck: new Date().toISOString(),
-          metrics: { requests: 82341, errors: 0, latency: 1, throughput: 2000 },
-        },
-        {
-          name: 'mailpit',
-          displayName: 'Mailpit',
-          status: 'degraded',
-          uptime: 98.5,
-          responseTime: 50,
-          errorRate: 2,
-          cpu: 1,
-          memory: 3,
-          dependencies: [],
-          lastCheck: new Date().toISOString(),
-          metrics: { requests: 521, errors: 10, latency: 50, throughput: 10 },
-        },
-        {
-          name: 'grafana',
-          displayName: 'Grafana',
-          status: 'healthy',
-          uptime: 99.9,
-          responseTime: 35,
-          errorRate: 0.1,
-          cpu: 6,
-          memory: 15,
-          dependencies: ['prometheus'],
-          lastCheck: new Date().toISOString(),
-          metrics: { requests: 1823, errors: 1, latency: 35, throughput: 30 },
-        },
-        {
-          name: 'prometheus',
-          displayName: 'Prometheus',
-          status: 'healthy',
-          uptime: 100,
-          responseTime: 8,
-          errorRate: 0,
-          cpu: 10,
-          memory: 22,
-          dependencies: [],
-          lastCheck: new Date().toISOString(),
-          metrics: { requests: 9821, errors: 0, latency: 8, throughput: 200 },
-        },
-      ]
-
-      const overallStatus = mockServices.some(
+      const res = await fetch('/api/services')
+      if (!res.ok) throw new Error(`HTTP ${res.status}`)
+      const data = await res.json()
+      const services: ServiceHealth[] = data?.services ?? []
+      const overallStatus = services.some(
         (s) => s.status === 'unhealthy' || s.status === 'offline',
       )
         ? 'critical'
-        : mockServices.some((s) => s.status === 'degraded')
+        : services.some((s) => s.status === 'degraded')
           ? 'degraded'
           : 'healthy'
-
       setHealthMatrix({
-        services: mockServices,
+        services,
         overall: overallStatus,
         timestamp: new Date().toISOString(),
       })
-    } catch (_error) {
-      // Intentionally empty - health data load failure handled silently
+      setError(null)
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to fetch health data')
     } finally {
       setLoading(false)
     }
@@ -268,6 +152,24 @@ function ServiceHealthContent() {
     return (
       <div className="flex h-96 items-center justify-center">
         <div className="border-primary h-8 w-8 animate-spin rounded-full border-b-2"></div>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="rounded-lg border border-red-500/30 bg-red-900/20 p-6">
+        <div className="flex items-center gap-3">
+          <AlertCircle className="h-5 w-5 text-red-400" />
+          <p className="text-red-400">{error}</p>
+        </div>
+        <button
+          onClick={fetchHealthData}
+          className="mt-4 inline-flex items-center gap-2 rounded-lg border border-zinc-700 bg-zinc-800 px-4 py-2 text-sm text-white hover:bg-zinc-700"
+        >
+          <RefreshCw className="h-4 w-4" />
+          Retry
+        </button>
       </div>
     )
   }

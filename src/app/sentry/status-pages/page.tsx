@@ -52,6 +52,16 @@ export default function SentryStatusPagesPage() {
     load()
   }, [load])
 
+  if (loading && data === null) {
+    return (
+      <div className="mx-auto max-w-4xl space-y-4 p-6">
+        <div className="bg-nself-surface h-8 w-52 animate-pulse rounded-lg" />
+        <div className="bg-nself-surface h-20 animate-pulse rounded-lg" />
+        <div className="bg-nself-surface h-36 animate-pulse rounded-lg" />
+      </div>
+    )
+  }
+
   return (
     <div className="mx-auto max-w-4xl space-y-4 p-6">
       {/* Header */}

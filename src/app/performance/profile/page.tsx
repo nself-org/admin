@@ -4,6 +4,7 @@ import { HeroPattern } from '@/components/HeroPattern'
 import { ChartSkeleton } from '@/components/skeletons'
 import type { DatabaseProfile, PerformanceProfile } from '@/types/performance'
 import {
+  AlertCircle,
   ArrowLeft,
   Cpu,
   Database,
@@ -15,99 +16,28 @@ import {
   Server,
 } from 'lucide-react'
 import Link from 'next/link'
-import { Suspense, useCallback, useEffect, useState } from 'react'
+import { Suspense, useState } from 'react'
+import useSWR from 'swr'
+
+const fetcher = (url: string) => fetch(url).then((res) => res.json())
 
 function ProfileContent() {
-  const [loading, setLoading] = useState(true)
   const [isRunning, setIsRunning] = useState(false)
-  const [profile, setProfile] = useState<PerformanceProfile | null>(null)
-  const [dbProfile, setDbProfile] = useState<DatabaseProfile | null>(null)
 
-  const fetchProfile = useCallback(async () => {
-    try {
-      // Mock data - replace with real API
-      setProfile({
-        timestamp: new Date().toISOString(),
-        duration: 2500,
-        services: [
-          {
-            name: 'PostgreSQL',
-            cpu: 8.5,
-            memory: { used: 512, limit: 2048, percentage: 25 },
-            responseTime: { avg: 2.3, p50: 1.8, p95: 5.2, p99: 12.1 },
-            requestsPerSecond: 150,
-            errorRate: 0.01,
-          },
-          {
-            name: 'Hasura',
-            cpu: 15.2,
-            memory: { used: 768, limit: 2048, percentage: 37.5 },
-            responseTime: { avg: 45, p50: 32, p95: 120, p99: 250 },
-            requestsPerSecond: 85,
-            errorRate: 0.02,
-          },
-        ],
-        system: {
-          cpu: {
-            usage: 35.5,
-            cores: 8,
-            loadAvg: [1.2, 1.5, 1.8],
-          },
-          memory: {
-            total: 16384,
-            used: 10240,
-            free: 6144,
-            percentage: 62.5,
-          },
-          disk: {
-            total: 512000,
-            used: 180000,
-            free: 332000,
-            percentage: 35.2,
-          },
-          network: {
-            bytesIn: 1024000,
-            bytesOut: 512000,
-            packetsIn: 10000,
-            packetsOut: 8000,
-          },
-        },
-        database: {
-          connections: { active: 15, idle: 85, max: 100 },
-          cacheHitRatio: 98.5,
-          transactionsPerSecond: 150,
-          avgQueryTime: 2.3,
-          slowQueries: 3,
-          deadlocks: 0,
-          replicationLag: 0,
-        },
-      })
+  const { data, error, isLoading, mutate } = useSWR<{
+    success: boolean
+    profile: PerformanceProfile | null
+    dbProfile: DatabaseProfile | null
+  }>('/api/performance/profile', fetcher)
 
-      setDbProfile({
-        connections: { active: 15, idle: 85, max: 100 },
-        cacheHitRatio: 98.5,
-        transactionsPerSecond: 150,
-        avgQueryTime: 2.3,
-        slowQueries: 3,
-        deadlocks: 0,
-        replicationLag: 0,
-      })
-    } catch (_error) {
-      // Handle error silently
-    } finally {
-      setLoading(false)
-    }
-  }, [])
-
-  useEffect(() => {
-    fetchProfile()
-  }, [fetchProfile])
+  const profile = data?.profile ?? null
+  const dbProfile = data?.dbProfile ?? null
 
   const runProfile = async () => {
     setIsRunning(true)
     try {
       await fetch('/api/performance/profile', { method: 'POST' })
-      await fetchProfile()
+      await mutate()
     } finally {
       setIsRunning(false)
     }
@@ -118,7 +48,23 @@ function ProfileContent() {
     return `${mb} MB`
   }
 
-  if (loading) {
+  if (error) {
+    return (
+      <>
+        <HeroPattern />
+        <div className="relative mx-auto max-w-7xl">
+          <div className="flex items-center gap-3 rounded-xl border border-red-200 bg-red-50 p-6 dark:border-red-800 dark:bg-red-900/20">
+            <AlertCircle className="h-5 w-5 shrink-0 text-red-500" />
+            <p className="text-sm text-red-700 dark:text-red-400">
+              Failed to load performance profile. Please try again.
+            </p>
+          </div>
+        </div>
+      </>
+    )
+  }
+
+  if (isLoading) {
     return (
       <>
         <HeroPattern />

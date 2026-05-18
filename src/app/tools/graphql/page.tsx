@@ -60,212 +60,9 @@ interface QueryResult {
   extensions?: any
 }
 
-const mockQueries: GraphQLQuery[] = [
-  {
-    id: '1',
-    name: 'Get Users',
-    query: `query GetUsers($limit: Int = 10) {
-  users(limit: $limit) {
-    id
-    email
-    first_name
-    last_name
-    created_at
-    role
-  }
-}`,
-    variables: '{\n  "limit": 10\n}',
-    lastExecuted: '2024-01-15T10:30:00Z',
-    executionTime: 245,
-    favorite: true,
-  },
-  {
-    id: '2',
-    name: 'Create Project',
-    query: `mutation CreateProject($input: ProjectInput!) {
-  createProject(input: $input) {
-    id
-    name
-    description
-    owner {
-      id
-      email
-    }
-    created_at
-  }
-}`,
-    variables:
-      '{\n  "input": {\n    "name": "New Project",\n    "description": "A sample project"\n  }\n}',
-    lastExecuted: '2024-01-15T09:45:00Z',
-    executionTime: 180,
-    favorite: false,
-  },
-  {
-    id: '3',
-    name: 'Project Tasks',
-    query: `query ProjectTasks($projectId: UUID!) {
-  project(id: $projectId) {
-    id
-    name
-    tasks {
-      id
-      title
-      status
-      priority
-      assignee {
-        id
-        email
-      }
-      created_at
-      due_date
-    }
-  }
-}`,
-    variables: '{\n  "projectId": "123e4567-e89b-12d3-a456-426614174000"\n}',
-    favorite: true,
-  },
-]
+const EMPTY_QUERIES: GraphQLQuery[] = []
+const EMPTY_SCHEMA: GraphQLType[] = []
 
-const mockSchema: GraphQLType[] = [
-  {
-    name: 'Query',
-    kind: 'OBJECT',
-    description: 'The root query type',
-    fields: [
-      {
-        name: 'users',
-        type: '[User!]!',
-        description: 'Get list of users',
-        args: [
-          {
-            name: 'limit',
-            type: 'Int',
-            description: 'Limit number of results',
-          },
-          { name: 'offset', type: 'Int', description: 'Offset for pagination' },
-        ],
-      },
-      {
-        name: 'user',
-        type: 'User',
-        description: 'Get user by ID',
-        args: [{ name: 'id', type: 'UUID!', description: 'User ID' }],
-      },
-      {
-        name: 'projects',
-        type: '[Project!]!',
-        description: 'Get list of projects',
-      },
-      {
-        name: 'project',
-        type: 'Project',
-        description: 'Get project by ID',
-        args: [{ name: 'id', type: 'UUID!', description: 'Project ID' }],
-      },
-    ],
-  },
-  {
-    name: 'Mutation',
-    kind: 'OBJECT',
-    description: 'The root mutation type',
-    fields: [
-      {
-        name: 'createUser',
-        type: 'User!',
-        description: 'Create a new user',
-        args: [
-          { name: 'input', type: 'UserInput!', description: 'User input data' },
-        ],
-      },
-      {
-        name: 'updateUser',
-        type: 'User!',
-        description: 'Update existing user',
-        args: [
-          { name: 'id', type: 'UUID!', description: 'User ID' },
-          { name: 'input', type: 'UserInput!', description: 'User input data' },
-        ],
-      },
-      {
-        name: 'createProject',
-        type: 'Project!',
-        description: 'Create a new project',
-        args: [
-          {
-            name: 'input',
-            type: 'ProjectInput!',
-            description: 'Project input data',
-          },
-        ],
-      },
-    ],
-  },
-  {
-    name: 'User',
-    kind: 'OBJECT',
-    description: 'User account',
-    fields: [
-      { name: 'id', type: 'UUID!', description: 'Unique identifier' },
-      { name: 'email', type: 'String!', description: 'Email address' },
-      { name: 'first_name', type: 'String', description: 'First name' },
-      { name: 'last_name', type: 'String', description: 'Last name' },
-      { name: 'role', type: 'UserRole!', description: 'User role' },
-      {
-        name: 'created_at',
-        type: 'DateTime!',
-        description: 'Creation timestamp',
-      },
-      {
-        name: 'updated_at',
-        type: 'DateTime!',
-        description: 'Last update timestamp',
-      },
-      { name: 'projects', type: '[Project!]!', description: 'User projects' },
-    ],
-  },
-  {
-    name: 'Project',
-    kind: 'OBJECT',
-    description: 'Project workspace',
-    fields: [
-      { name: 'id', type: 'UUID!', description: 'Unique identifier' },
-      { name: 'name', type: 'String!', description: 'Project name' },
-      {
-        name: 'description',
-        type: 'String',
-        description: 'Project description',
-      },
-      { name: 'status', type: 'ProjectStatus!', description: 'Project status' },
-      { name: 'owner', type: 'User!', description: 'Project owner' },
-      { name: 'tasks', type: '[Task!]!', description: 'Project tasks' },
-      {
-        name: 'created_at',
-        type: 'DateTime!',
-        description: 'Creation timestamp',
-      },
-    ],
-  },
-  {
-    name: 'UserRole',
-    kind: 'ENUM',
-    description: 'User role enumeration',
-    enumValues: [
-      { name: 'ADMIN', description: 'Administrator user' },
-      { name: 'USER', description: 'Regular user' },
-      { name: 'GUEST', description: 'Guest user' },
-    ],
-  },
-  {
-    name: 'UUID',
-    kind: 'SCALAR',
-    description: 'UUID scalar type',
-  },
-  {
-    name: 'DateTime',
-    kind: 'SCALAR',
-    description: 'DateTime scalar type',
-  },
-]
 
 function formatDate(dateString: string): string {
   return new Date(dateString).toLocaleString()
@@ -661,8 +458,8 @@ function QueryResult({
 }
 
 function GraphQLToolsContent() {
-  const [queries, setQueries] = useState<GraphQLQuery[]>(mockQueries)
-  const [activeQueryId, setActiveQueryId] = useState<string>('1')
+  const [queries, setQueries] = useState<GraphQLQuery[]>(EMPTY_QUERIES)
+  const [activeQueryId, setActiveQueryId] = useState<string | null>(null)
   const [activeTab, setActiveTab] = useState<'query' | 'schema'>('query')
   const [schemaTab, setSchemaTab] = useState<'explorer' | 'details'>('explorer')
   const [selectedType, setSelectedType] = useState<GraphQLType | null>(null)
@@ -714,81 +511,78 @@ function GraphQLToolsContent() {
   }
 
   const handleExecuteQuery = async () => {
+    if (!currentQuery.trim()) return
     setLoading(true)
+    setQueryResult(null)
 
-    // Simulate API call
-    setTimeout(
-      () => {
-        // Mock response based on query type
-        if (currentQuery.includes('users')) {
-          setQueryResult({
-            data: {
-              users: [
-                {
-                  id: '123e4567-e89b-12d3-a456-426614174000',
-                  email: 'john.doe@example.com',
-                  first_name: 'John',
-                  last_name: 'Doe',
-                  created_at: '2024-01-01T00:00:00Z',
-                  role: 'USER',
-                },
-                {
-                  id: '987fcdeb-51a2-43d1-b5c6-142857398765',
-                  email: 'jane.smith@example.com',
-                  first_name: 'Jane',
-                  last_name: 'Smith',
-                  created_at: '2024-01-02T00:00:00Z',
-                  role: 'ADMIN',
-                },
-              ],
-            },
-            extensions: {
-              tracing: {
-                duration: 245000000,
-                execution: { resolvers: [] },
-              },
-            },
-          })
-        } else if (currentQuery.includes('createProject')) {
-          setQueryResult({
-            data: {
-              createProject: {
-                id: '456e7890-e12b-34c5-d678-901234567890',
-                name: 'New Project',
-                description: 'A sample project',
-                owner: {
-                  id: '123e4567-e89b-12d3-a456-426614174000',
-                  email: 'john.doe@example.com',
-                },
-                created_at: '2024-01-15T10:30:00Z',
-              },
-            },
-          })
-        } else {
-          setQueryResult({
-            data: { message: 'Query executed successfully' },
-          })
+    const startTime = Date.now()
+
+    try {
+      let parsedVariables: Record<string, unknown> | undefined
+      if (variables.trim() && variables.trim() !== '{}') {
+        try {
+          parsedVariables = JSON.parse(variables)
+        } catch {
+          setQueryResult({ errors: [{ message: 'Variables JSON is invalid' }] })
+          setLoading(false)
+          return
         }
+      }
 
-        // Update query execution info
-        if (activeQuery) {
-          setQueries((prev) =>
-            prev.map((query) =>
-              query.id === activeQueryId
-                ? {
-                    ...query,
-                    lastExecuted: new Date().toISOString(),
-                    executionTime: 200 + Math.floor(Math.random() * 300),
-                  }
-                : query,
-            ),
-          )
+      let extraHeaders: Record<string, string> = {}
+      if (headers.trim() && headers.trim() !== '{}') {
+        try {
+          extraHeaders = JSON.parse(headers)
+        } catch {
+          // Ignore malformed headers JSON — proceed without them
         }
+      }
 
-        setLoading(false)
-      },
-      1000 + Math.random() * 2000,
-    )
+      const resp = await fetch('/api/graphql/hasura', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', ...extraHeaders },
+        body: JSON.stringify({
+          query: currentQuery,
+          variables: parsedVariables,
+        }),
+      })
+
+      if (resp.status === 401) {
+        window.location.href = '/login'
+        return
+      }
+
+      const result: QueryResult = await resp.json()
+      const executionTime = Date.now() - startTime
+
+      setQueryResult(result)
+
+      // Update query execution metadata
+      if (activeQuery) {
+        setQueries((prev) =>
+          prev.map((query) =>
+            query.id === activeQueryId
+              ? {
+                  ...query,
+                  lastExecuted: new Date().toISOString(),
+                  executionTime,
+                }
+              : query,
+          ),
+        )
+      }
+    } catch (err) {
+      setQueryResult({
+        errors: [
+          {
+            message:
+              err instanceof Error ? err.message : 'Failed to execute query',
+          },
+        ],
+      })
+    } finally {
+      setLoading(false)
+    }
   }
 
   const handleSaveQuery = () => {
@@ -1049,7 +843,7 @@ function GraphQLToolsContent() {
 
               {schemaTab === 'explorer' && (
                 <SchemaExplorer
-                  schema={mockSchema}
+                  schema={EMPTY_SCHEMA}
                   onTypeSelect={setSelectedType}
                 />
               )}
@@ -1087,18 +881,18 @@ function GraphQLToolsContent() {
 
                 <div className="mb-6 grid grid-cols-2 gap-4 lg:grid-cols-4">
                   {[
-                    { label: 'Types', count: mockSchema.length, icon: Box },
+                    { label: 'Types', count: EMPTY_SCHEMA.length, icon: Box },
                     {
                       label: 'Queries',
                       count:
-                        mockSchema.find((t) => t.name === 'Query')?.fields
+                        EMPTY_SCHEMA.find((t) => t.name === 'Query')?.fields
                           ?.length || 0,
                       icon: Search,
                     },
                     {
                       label: 'Mutations',
                       count:
-                        mockSchema.find((t) => t.name === 'Mutation')?.fields
+                        EMPTY_SCHEMA.find((t) => t.name === 'Mutation')?.fields
                           ?.length || 0,
                       icon: Edit3,
                     },

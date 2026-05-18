@@ -740,6 +740,24 @@ execFile('nself', ['start', serviceName])
 exec(`nself start ${serviceName}`) // Vulnerable!
 ```
 
+**Exec Isolation Policy (S45.T01, 2026-05-15):**
+
+All API routes that invoke the `nself` CLI must use `execFile()` (never `exec()` or `spawn()` with `shell: true`). `execFile()` passes arguments as an explicit argv array and never invokes a shell interpreter, eliminating shell injection at the process boundary regardless of input content.
+
+Shared identifier validation lives in `src/lib/validation/service-name.ts`:
+
+```typescript
+// Pattern: lowercase alphanumeric + hyphens only — no shell metacharacters
+export const SERVICE_NAME_PATTERN = /^[a-z0-9-]+$/
+
+export function validateServiceName(name: string): boolean {
+  if (!name) return false
+  return SERVICE_NAME_PATTERN.test(name)
+}
+```
+
+Every route that accepts a user-supplied identifier (service name, environment name, compare target) must validate it through this shared function before including it in an argv array. Template values must be validated against an explicit allowlist. GET handlers that would trigger mutations must return 405 (Method Not Allowed).
+
 ### 4. Data Protection
 
 - Secrets encrypted in database
@@ -982,6 +1000,7 @@ performance.measure('api-call', 'api-call-start', 'api-call-end')
 - [Deployment Guide](DEPLOYMENT.md)
 - [Development Guide](DEVELOPMENT.md)
 - [nself CLI Documentation](https://github.com/nself-org/cli)
+- [Security Advisory 2026-05-15](../SECURITY-ADVISORIES/2026-05-15-rce-and-secrets.md) — RCE via shell injection in deployment environments endpoint (Critical, fixed v1.2.0)
 
 ---
 

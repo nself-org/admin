@@ -26,91 +26,25 @@ import {
 
 function BenchmarkContent() {
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
   const [results, setResults] = useState<BenchmarkResult[]>([])
   const [baselines, setBaselines] = useState<BenchmarkBaseline[]>([])
 
   const fetchData = useCallback(async () => {
+    setError(null)
     try {
-      // Mock data - replace with real API
-      const mockResults: BenchmarkResult[] = [
-        {
-          id: '1',
-          target: 'API - GraphQL',
-          type: 'api',
-          timestamp: new Date(Date.now() - 3600000).toISOString(),
-          duration: 60000,
-          requests: {
-            total: 15000,
-            successful: 14985,
-            failed: 15,
-            perSecond: 250,
-          },
-          latency: {
-            min: 5,
-            max: 450,
-            avg: 45,
-            p50: 38,
-            p95: 120,
-            p99: 250,
-          },
-          throughput: {
-            bytesPerSecond: 2500000,
-            requestsPerSecond: 250,
-          },
-        },
-        {
-          id: '2',
-          target: 'Database - PostgreSQL',
-          type: 'database',
-          timestamp: new Date(Date.now() - 7200000).toISOString(),
-          duration: 30000,
-          requests: {
-            total: 50000,
-            successful: 49998,
-            failed: 2,
-            perSecond: 1666,
-          },
-          latency: {
-            min: 0.5,
-            max: 85,
-            avg: 2.5,
-            p50: 1.8,
-            p95: 8,
-            p99: 25,
-          },
-          throughput: {
-            bytesPerSecond: 5000000,
-            requestsPerSecond: 1666,
-          },
-        },
-      ]
-
-      const mockBaselines: BenchmarkBaseline[] = [
-        {
-          id: 'baseline-1',
-          name: 'Production v1.2.0',
-          createdAt: new Date(Date.now() - 86400000 * 7).toISOString(),
-          results: mockResults,
-        },
-        {
-          id: 'baseline-2',
-          name: 'Pre-optimization',
-          createdAt: new Date(Date.now() - 86400000 * 14).toISOString(),
-          results: mockResults.map((r) => ({
-            ...r,
-            latency: {
-              ...r.latency,
-              avg: r.latency.avg * 1.5,
-              p95: r.latency.p95 * 1.5,
-            },
-          })),
-        },
-      ]
-
-      setResults(mockResults)
-      setBaselines(mockBaselines)
-    } catch (_error) {
-      // Handle error silently
+      const res = await fetch('/api/benchmark/baseline')
+      const data = await res.json()
+      if (!res.ok || !data.success) {
+        throw new Error(data.error ?? 'Failed to load baselines')
+      }
+      // API returns a single baseline or null; adapt to array for display
+      const arr: BenchmarkBaseline[] = data.data ? [data.data] : []
+      setBaselines(arr)
+      // No results history API — results are run-time only via POST /api/benchmark/run
+      setResults([])
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to load data')
     } finally {
       setLoading(false)
     }
@@ -139,6 +73,25 @@ function BenchmarkContent() {
         <div className="relative mx-auto max-w-7xl">
           <div className="flex items-center justify-center py-20">
             <div className="h-8 w-8 animate-spin rounded-full border-4 border-sky-500 border-t-transparent" />
+          </div>
+        </div>
+      </>
+    )
+  }
+
+  if (error) {
+    return (
+      <>
+        <HeroPattern />
+        <div className="relative mx-auto max-w-7xl">
+          <div className="rounded-xl border border-red-200 bg-red-50 p-8 text-center dark:border-red-800 dark:bg-red-900/20">
+            <p className="mb-4 text-red-700 dark:text-red-400">{error}</p>
+            <button
+              onClick={fetchData}
+              className="rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700"
+            >
+              Retry
+            </button>
           </div>
         </div>
       </>

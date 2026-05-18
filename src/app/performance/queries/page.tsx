@@ -3,6 +3,7 @@
 import { HeroPattern } from '@/components/HeroPattern'
 import { TableSkeleton } from '@/components/skeletons'
 import {
+  AlertCircle,
   AlertTriangle,
   ArrowLeft,
   Clock,
@@ -13,7 +14,10 @@ import {
   Zap,
 } from 'lucide-react'
 import Link from 'next/link'
-import { Suspense, useCallback, useEffect, useState } from 'react'
+import { Suspense, useState } from 'react'
+import useSWR from 'swr'
+
+const fetcher = (url: string) => fetch(url).then((res) => res.json())
 
 interface SlowQuery {
   id: string
@@ -28,90 +32,18 @@ interface SlowQuery {
 }
 
 function QueriesContent() {
-  const [loading, setLoading] = useState(true)
-  const [queries, setQueries] = useState<SlowQuery[]>([])
   const [searchQuery, setSearchQuery] = useState('')
   const [sortBy, setSortBy] = useState<'avgTime' | 'calls' | 'totalTime'>(
     'totalTime',
   )
   const [selectedQuery, setSelectedQuery] = useState<SlowQuery | null>(null)
 
-  const fetchQueries = useCallback(async () => {
-    try {
-      // Mock data - replace with real API
-      const mockQueries: SlowQuery[] = [
-        {
-          id: '1',
-          query:
-            'SELECT * FROM users WHERE email LIKE $1 ORDER BY created_at DESC LIMIT 100',
-          avgTime: 125.5,
-          maxTime: 850.2,
-          calls: 1520,
-          totalTime: 190760,
-          rows: 45600,
-          shared_blks_hit: 15000,
-          shared_blks_read: 2500,
-        },
-        {
-          id: '2',
-          query:
-            'SELECT u.*, p.* FROM users u JOIN profiles p ON u.id = p.user_id WHERE u.status = $1',
-          avgTime: 85.3,
-          maxTime: 520.1,
-          calls: 3200,
-          totalTime: 272960,
-          rows: 128000,
-          shared_blks_hit: 28000,
-          shared_blks_read: 1200,
-        },
-        {
-          id: '3',
-          query:
-            'UPDATE sessions SET last_active = $1 WHERE user_id = $2 AND expires_at > $3',
-          avgTime: 45.2,
-          maxTime: 180.5,
-          calls: 8500,
-          totalTime: 384200,
-          rows: 8500,
-          shared_blks_hit: 42500,
-          shared_blks_read: 500,
-        },
-        {
-          id: '4',
-          query:
-            'SELECT COUNT(*) FROM orders WHERE created_at BETWEEN $1 AND $2 AND status = $3',
-          avgTime: 220.8,
-          maxTime: 1250.3,
-          calls: 450,
-          totalTime: 99360,
-          rows: 450,
-          shared_blks_hit: 8500,
-          shared_blks_read: 4200,
-        },
-        {
-          id: '5',
-          query:
-            'INSERT INTO audit_log (user_id, action, metadata, created_at) VALUES ($1, $2, $3, $4)',
-          avgTime: 12.5,
-          maxTime: 85.2,
-          calls: 25000,
-          totalTime: 312500,
-          rows: 25000,
-          shared_blks_hit: 50000,
-          shared_blks_read: 100,
-        },
-      ]
-      setQueries(mockQueries)
-    } catch (_error) {
-      // Handle error silently
-    } finally {
-      setLoading(false)
-    }
-  }, [])
+  const { data, error, isLoading, mutate } = useSWR<{
+    success: boolean
+    queries: SlowQuery[]
+  }>('/api/performance/queries', fetcher)
 
-  useEffect(() => {
-    fetchQueries()
-  }, [fetchQueries])
+  const queries = data?.queries ?? []
 
   const filteredQueries = queries
     .filter((q) => q.query.toLowerCase().includes(searchQuery.toLowerCase()))
@@ -125,7 +57,27 @@ function QueriesContent() {
       queries.reduce((acc, q) => acc + q.avgTime, 0) / queries.length || 0,
   }
 
-  if (loading) {
+  if (error) {
+    return (
+      <>
+        <HeroPattern />
+        <div className="relative mx-auto max-w-7xl">
+          <div className="rounded-lg border border-red-500/30 bg-red-900/20 p-6">
+            <div className="flex items-center gap-3">
+              <AlertCircle className="h-5 w-5 text-red-400" />
+              <p className="text-red-400">
+                {error instanceof Error
+                  ? error.message
+                  : 'Failed to load slow queries'}
+              </p>
+            </div>
+          </div>
+        </div>
+      </>
+    )
+  }
+
+  if (isLoading) {
     return (
       <>
         <HeroPattern />
@@ -160,7 +112,7 @@ function QueriesContent() {
               </p>
             </div>
             <button
-              onClick={() => fetchQueries()}
+              onClick={() => mutate()}
               className="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700"
             >
               <RefreshCw className="h-4 w-4" />

@@ -22,170 +22,6 @@ import useSWR from 'swr'
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json())
 
-// Mock data
-const mockDeployments: K8sDeployment[] = [
-  {
-    name: 'nself-api',
-    namespace: 'default',
-    replicas: { desired: 3, ready: 3, available: 3, updated: 3 },
-    strategy: 'RollingUpdate',
-    image: 'nself/api:v1.2.3',
-    createdAt: '2024-01-15T10:30:00Z',
-    conditions: [
-      {
-        type: 'Available',
-        status: 'True',
-        lastTransitionTime: '2024-01-15T10:30:00Z',
-      },
-    ],
-  },
-  {
-    name: 'nself-hasura',
-    namespace: 'default',
-    replicas: { desired: 2, ready: 2, available: 2, updated: 2 },
-    strategy: 'RollingUpdate',
-    image: 'hasura/graphql-engine:v2.35.0',
-    createdAt: '2024-01-15T10:30:00Z',
-    conditions: [
-      {
-        type: 'Available',
-        status: 'True',
-        lastTransitionTime: '2024-01-15T10:30:00Z',
-      },
-    ],
-  },
-  {
-    name: 'nself-auth',
-    namespace: 'default',
-    replicas: { desired: 2, ready: 1, available: 1, updated: 2 },
-    strategy: 'RollingUpdate',
-    image: 'nself/auth:v1.0.0',
-    createdAt: '2024-01-15T10:30:00Z',
-    conditions: [
-      {
-        type: 'Progressing',
-        status: 'True',
-        lastTransitionTime: '2024-01-15T10:30:00Z',
-      },
-    ],
-  },
-  {
-    name: 'nself-nginx',
-    namespace: 'default',
-    replicas: { desired: 2, ready: 2, available: 2, updated: 2 },
-    strategy: 'RollingUpdate',
-    image: 'nginx:1.25-alpine',
-    createdAt: '2024-01-15T10:30:00Z',
-    conditions: [
-      {
-        type: 'Available',
-        status: 'True',
-        lastTransitionTime: '2024-01-15T10:30:00Z',
-      },
-    ],
-  },
-]
-
-const mockPods: K8sPod[] = [
-  {
-    name: 'nself-api-7d9f8b6c5-abc12',
-    namespace: 'default',
-    status: 'Running',
-    ready: '1/1',
-    restarts: 0,
-    age: '2d',
-    ip: '10.0.1.10',
-    node: 'node-1',
-    containers: [],
-  },
-  {
-    name: 'nself-api-7d9f8b6c5-def34',
-    namespace: 'default',
-    status: 'Running',
-    ready: '1/1',
-    restarts: 0,
-    age: '2d',
-    ip: '10.0.1.11',
-    node: 'node-2',
-    containers: [],
-  },
-  {
-    name: 'nself-api-7d9f8b6c5-ghi56',
-    namespace: 'default',
-    status: 'Running',
-    ready: '1/1',
-    restarts: 1,
-    age: '2d',
-    ip: '10.0.1.12',
-    node: 'node-3',
-    containers: [],
-  },
-  {
-    name: 'nself-hasura-5c4d3b2a1-jkl78',
-    namespace: 'default',
-    status: 'Running',
-    ready: '1/1',
-    restarts: 0,
-    age: '2d',
-    ip: '10.0.2.10',
-    node: 'node-1',
-    containers: [],
-  },
-  {
-    name: 'nself-hasura-5c4d3b2a1-mno90',
-    namespace: 'default',
-    status: 'Running',
-    ready: '1/1',
-    restarts: 0,
-    age: '2d',
-    ip: '10.0.2.11',
-    node: 'node-2',
-    containers: [],
-  },
-  {
-    name: 'nself-auth-6e5f4g3h2-pqr12',
-    namespace: 'default',
-    status: 'Running',
-    ready: '1/1',
-    restarts: 0,
-    age: '2d',
-    ip: '10.0.3.10',
-    node: 'node-1',
-    containers: [],
-  },
-  {
-    name: 'nself-auth-6e5f4g3h2-stu34',
-    namespace: 'default',
-    status: 'Pending',
-    ready: '0/1',
-    restarts: 0,
-    age: '5m',
-    containers: [],
-  },
-  {
-    name: 'nself-nginx-8h9i0j1k2-vwx56',
-    namespace: 'default',
-    status: 'Running',
-    ready: '1/1',
-    restarts: 0,
-    age: '2d',
-    ip: '10.0.4.10',
-    node: 'node-2',
-    containers: [],
-  },
-  {
-    name: 'nself-nginx-8h9i0j1k2-yza78',
-    namespace: 'default',
-    status: 'Running',
-    ready: '1/1',
-    restarts: 2,
-    age: '2d',
-    ip: '10.0.4.11',
-    node: 'node-3',
-    containers: [],
-  },
-]
-
 const statusColors: Record<string, string> = {
   Running: 'bg-emerald-900/30 text-emerald-400',
   Pending: 'bg-amber-900/30 text-amber-400',
@@ -201,16 +37,15 @@ function K8sStatusContent() {
     null,
   )
 
-  const { data, isLoading, mutate } = useSWR<{
+  const { data, isLoading, error, mutate } = useSWR<{
     deployments: K8sDeployment[]
     pods: K8sPod[]
   }>('/api/k8s/status', fetcher, {
-    fallbackData: { deployments: mockDeployments, pods: mockPods },
     refreshInterval: 10000,
   })
 
-  const deployments = data?.deployments || mockDeployments
-  const pods = data?.pods || mockPods
+  const deployments = data?.deployments ?? []
+  const pods = data?.pods ?? []
 
   const filteredDeployments = deployments.filter((d) =>
     d.name.toLowerCase().includes(searchQuery.toLowerCase()),
@@ -241,6 +76,37 @@ function K8sStatusContent() {
           {[1, 2, 3].map((i) => (
             <div key={i} className="h-20 rounded-lg bg-zinc-800/50" />
           ))}
+        </div>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center gap-4">
+          <Link
+            href="/k8s"
+            className="rounded-lg border border-zinc-700 bg-zinc-800 p-2 hover:bg-zinc-700"
+          >
+            <ArrowLeft className="h-5 w-5" />
+          </Link>
+          <h1 className="text-2xl font-semibold text-white">K8s Status</h1>
+        </div>
+        <div className="rounded-lg border border-red-500/30 bg-red-900/20 p-6">
+          <div className="flex items-center gap-3">
+            <AlertCircle className="h-5 w-5 text-red-400" />
+            <p className="text-red-400">
+              {error instanceof Error ? error.message : 'Failed to load status data'}
+            </p>
+          </div>
+          <button
+            onClick={() => mutate()}
+            className="mt-4 inline-flex items-center gap-2 rounded-lg border border-zinc-700 bg-zinc-800 px-4 py-2 text-sm text-white hover:bg-zinc-700"
+          >
+            <RefreshCw className="h-4 w-4" />
+            Retry
+          </button>
         </div>
       </div>
     )

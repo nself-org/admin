@@ -5,11 +5,12 @@
 
 import { getDb } from '@/lib/database'
 import { requireAuth } from '@/lib/require-auth'
-import { exec } from 'child_process'
+import { execFile } from 'child_process'
 import { NextRequest, NextResponse } from 'next/server'
 import { promisify } from 'util'
 
-const execPromise = promisify(exec)
+// R3: execFile — argv array, no /bin/sh, no string interpolation
+const execFilePromise = promisify(execFile)
 
 function getJobsCollection() {
   const db = getDb()
@@ -49,19 +50,23 @@ export async function POST(
       )
     }
 
-    // Execute DDL via nself db query CLI command
-    const ddlEscaped = (job.forwardDDL as string).replace(/'/g, "'\\''")
+    // R3: Execute DDL via nself CLI — argv array, no shell, no string interpolation
     let output = ''
     let applyError: string | undefined
 
     try {
-      const result = await execPromise(
-        `nself db query --sql '${ddlEscaped}' 2>&1`,
+      const result = await execFilePromise(
+        'nself',
+        ['db', 'query', '--sql', job.forwardDDL as string],
         { timeout: 30000 },
       )
       output = result.stdout
     } catch (err) {
-      applyError = err instanceof Error ? err.message : 'CLI execution failed'
+      // execFile puts stderr in err.stderr when shell=false; combine for caller
+      const execErr = err as NodeJS.ErrnoException & { stderr?: string; stdout?: string }
+      output = execErr.stdout ?? ''
+      const stderrPart = execErr.stderr ? ` | stderr: ${execErr.stderr}` : ''
+      applyError = execErr.message ? `${execErr.message}${stderrPart}` : 'CLI execution failed'
     }
 
     if (applyError) {

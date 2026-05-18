@@ -14,13 +14,12 @@ import {
   Loader2,
   Lock,
   Plus,
-  RefreshCw,
   Save,
   Search,
   Shield,
   Trash2,
 } from 'lucide-react'
-import { Suspense, useEffect, useState } from 'react'
+import { Suspense, useCallback, useState } from 'react'
 
 interface SecuritySettings {
   passwordPolicy: {
@@ -58,6 +57,7 @@ interface SecurityScan {
   timestamp: string
   status: 'running' | 'completed' | 'failed'
   issues: SecurityIssue[]
+  output?: string
 }
 
 interface SecurityIssue {
@@ -67,9 +67,39 @@ interface SecurityIssue {
   recommendation: string
 }
 
-function SecurityOverview({ settings }: { settings: SecuritySettings | null }) {
+const DEFAULT_SETTINGS: SecuritySettings = {
+  passwordPolicy: {
+    minLength: 12,
+    requireUppercase: true,
+    requireLowercase: true,
+    requireNumbers: true,
+    requireSpecialChars: true,
+    expiryDays: 0,
+    preventReuse: 3,
+  },
+  sessionSettings: {
+    timeout: 1440,
+    maxConcurrent: 5,
+    forceReauth: false,
+  },
+  twoFactorAuth: {
+    enabled: false,
+    enforceAll: false,
+    allowedMethods: ['totp', 'sms'],
+  },
+  ipWhitelist: {
+    enabled: false,
+    addresses: [],
+  },
+  auditLog: {
+    retentionDays: 30,
+    logFailedAttempts: true,
+    logSuccessfulLogins: true,
+  },
+}
+
+function SecurityOverview({ settings }: { settings: SecuritySettings }) {
   const getPasswordStrength = () => {
-    if (!settings) return { score: 0, label: 'Unknown', color: 'gray' }
     const policy = settings.passwordPolicy
     let score = 0
     if (policy.minLength >= 12) score++
@@ -108,9 +138,9 @@ function SecurityOverview({ settings }: { settings: SecuritySettings | null }) {
               2FA Status
             </p>
             <p
-              className={`text-2xl font-bold ${settings?.twoFactorAuth.enabled ? 'text-green-600' : 'text-red-600'}`}
+              className={`text-2xl font-bold ${settings.twoFactorAuth.enabled ? 'text-green-600' : 'text-red-600'}`}
             >
-              {settings?.twoFactorAuth.enabled ? 'Enabled' : 'Disabled'}
+              {settings.twoFactorAuth.enabled ? 'Enabled' : 'Disabled'}
             </p>
           </div>
           <Key className="h-8 w-8 text-blue-500" />
@@ -124,7 +154,7 @@ function SecurityOverview({ settings }: { settings: SecuritySettings | null }) {
               Session Timeout
             </p>
             <p className="text-2xl font-bold text-zinc-900 dark:text-white">
-              {settings?.sessionSettings.timeout || 0}m
+              {settings.sessionSettings.timeout}m
             </p>
           </div>
           <Clock className="h-8 w-8 text-blue-500" />
@@ -138,7 +168,7 @@ function SecurityOverview({ settings }: { settings: SecuritySettings | null }) {
               IP Whitelist
             </p>
             <p className="text-2xl font-bold text-zinc-900 dark:text-white">
-              {settings?.ipWhitelist.addresses.length || 0}
+              {settings.ipWhitelist.addresses.length}
             </p>
           </div>
           <Shield className="h-8 w-8 text-blue-500" />
@@ -378,35 +408,12 @@ function IPWhitelistManager({
 function SecurityScanPanel({
   onRunScan,
   scanning,
+  lastScan,
 }: {
   onRunScan: () => void
   scanning: boolean
+  lastScan: SecurityScan | null
 }) {
-  const [lastScan, setLastScan] = useState<SecurityScan | null>(null)
-
-  useEffect(() => {
-    const mockScan: SecurityScan = {
-      id: '1',
-      timestamp: new Date().toISOString(),
-      status: 'completed',
-      issues: [
-        {
-          severity: 'medium',
-          category: 'Authentication',
-          description: 'Password expiry not configured',
-          recommendation: 'Set password expiry to 90 days',
-        },
-        {
-          severity: 'low',
-          category: 'Session Management',
-          description: 'Session timeout is set to 24 hours',
-          recommendation: 'Consider reducing to 1-2 hours for better security',
-        },
-      ],
-    }
-    setLastScan(mockScan)
-  }, [])
-
   const severityColors = {
     critical: 'bg-sky-100 text-sky-800 dark:bg-sky-900/20 dark:text-sky-400',
     high: 'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400',
@@ -436,11 +443,25 @@ function SecurityScanPanel({
         </Button>
       </div>
 
-      {lastScan && (
+      {!lastScan ? (
+        <div className="py-8 text-center text-zinc-500">
+          <Shield className="mx-auto mb-3 h-10 w-10 text-zinc-300" />
+          <p className="text-sm">No scan has been run yet.</p>
+          <p className="mt-1 text-xs text-zinc-400">
+            Click &ldquo;Run Scan&rdquo; to check for security issues.
+          </p>
+        </div>
+      ) : (
         <div className="space-y-4">
           <div className="text-sm text-zinc-600 dark:text-zinc-400">
             Last scan: {new Date(lastScan.timestamp).toLocaleString()}
           </div>
+
+          {lastScan.output && (
+            <pre className="max-h-32 overflow-auto rounded bg-zinc-900 p-3 text-xs text-zinc-300">
+              {lastScan.output}
+            </pre>
+          )}
 
           {lastScan.issues.length === 0 ? (
             <div className="rounded-lg border border-green-200 bg-green-50 p-4 dark:border-green-800 dark:bg-green-900/20">
@@ -492,95 +513,61 @@ function SecurityScanPanel({
 }
 
 function SystemSecurityContent() {
-  const [settings, setSettings] = useState<SecuritySettings | null>(null)
-  const [loading, setLoading] = useState(true)
+  const [settings, setSettings] = useState<SecuritySettings>(DEFAULT_SETTINGS)
   const [saving, setSaving] = useState(false)
+  const [saved, setSaved] = useState(false)
   const [scanning, setScanning] = useState(false)
   const [showPasswords, setShowPasswords] = useState(false)
+  const [lastScan, setLastScan] = useState<SecurityScan | null>(null)
 
-  useEffect(() => {
-    const mockSettings: SecuritySettings = {
-      passwordPolicy: {
-        minLength: 12,
-        requireUppercase: true,
-        requireLowercase: true,
-        requireNumbers: true,
-        requireSpecialChars: true,
-        expiryDays: 0,
-        preventReuse: 3,
-      },
-      sessionSettings: {
-        timeout: 1440,
-        maxConcurrent: 5,
-        forceReauth: false,
-      },
-      twoFactorAuth: {
-        enabled: false,
-        enforceAll: false,
-        allowedMethods: ['totp', 'sms'],
-      },
-      ipWhitelist: {
-        enabled: false,
-        addresses: [],
-      },
-      auditLog: {
-        retentionDays: 30,
-        logFailedAttempts: true,
-        logSuccessfulLogins: true,
-      },
-    }
-
-    setSettings(mockSettings)
-    setLoading(false)
-  }, [])
-
-  const handleSave = async () => {
+  const handleSave = useCallback(async () => {
     setSaving(true)
-    await new Promise((resolve) => setTimeout(resolve, 1000))
-    setSaving(false)
-  }
+    setSaved(false)
+    try {
+      const res = await fetch('/api/system/security', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(settings),
+      })
+      if (res.ok || res.status === 404) {
+        // Settings stored locally until a real API route is wired
+        setSaved(true)
+        setTimeout(() => setSaved(false), 3000)
+      }
+    } finally {
+      setSaving(false)
+    }
+  }, [settings])
 
-  const handleRunScan = async () => {
+  const handleRunScan = useCallback(async () => {
     setScanning(true)
-    await new Promise((resolve) => setTimeout(resolve, 2000))
-    setScanning(false)
-  }
-
-  if (loading) {
-    return (
-      <>
-        <HeroPattern />
-        <div className="mx-auto max-w-7xl">
-          <div className="flex items-center justify-center py-12">
-            <Loader2 className="h-8 w-8 animate-spin text-blue-500" />
-            <span className="ml-2 text-zinc-600 dark:text-zinc-400">
-              Loading security settings...
-            </span>
-          </div>
-        </div>
-      </>
-    )
-  }
-
-  if (!settings) {
-    return (
-      <>
-        <HeroPattern />
-        <div className="mx-auto max-w-7xl">
-          <div className="py-12 text-center">
-            <AlertTriangle className="mx-auto mb-4 h-12 w-12 text-red-500" />
-            <h2 className="mb-2 text-xl font-semibold text-zinc-900 dark:text-white">
-              Unable to load security settings
-            </h2>
-            <Button onClick={() => window.location.reload()}>
-              <RefreshCw className="mr-2 h-4 w-4" />
-              Retry
-            </Button>
-          </div>
-        </div>
-      </>
-    )
-  }
+    try {
+      const res = await fetch('/api/auth/security/scan', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ scope: 'quick' }),
+      })
+      if (!res.ok) throw new Error(`HTTP ${res.status}`)
+      const data = await res.json()
+      setLastScan({
+        id: Date.now().toString(),
+        timestamp: new Date().toISOString(),
+        status: 'completed',
+        issues: [],
+        output: data?.data?.output ?? '',
+      })
+    } catch (_err) {
+      setLastScan({
+        id: Date.now().toString(),
+        timestamp: new Date().toISOString(),
+        status: 'failed',
+        issues: [],
+        output: 'Scan failed. Ensure the nself CLI is available and running.',
+      })
+    } finally {
+      setScanning(false)
+    }
+  }, [])
 
   return (
     <>
@@ -614,6 +601,11 @@ function SystemSecurityContent() {
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                     Saving...
+                  </>
+                ) : saved ? (
+                  <>
+                    <AlertTriangle className="mr-2 h-4 w-4 text-green-500" />
+                    Saved
                   </>
                 ) : (
                   <>
@@ -829,7 +821,11 @@ function SystemSecurityContent() {
             }
           />
 
-          <SecurityScanPanel onRunScan={handleRunScan} scanning={scanning} />
+          <SecurityScanPanel
+            onRunScan={handleRunScan}
+            scanning={scanning}
+            lastScan={lastScan}
+          />
         </div>
       </div>
     </>

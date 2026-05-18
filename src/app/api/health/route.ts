@@ -204,7 +204,41 @@ async function getCpuUsage(): Promise<number> {
   }
 }
 
-export async function GET(): Promise<NextResponse> {
+interface ServiceHealth {
+  name: string
+  status: 'healthy' | 'degraded' | 'unhealthy' | 'unknown'
+  latencyMs?: number
+  message?: string
+}
+
+interface HealthData {
+  overall: 'healthy' | 'degraded' | 'unhealthy'
+  services: ServiceHealth[]
+  checkedAt: string
+}
+
+function checksToServiceHealthList(
+  checks: Record<string, boolean>,
+  latencyMs: number,
+): ServiceHealth[] {
+  const labelMap: Record<string, string> = {
+    docker: 'Docker',
+    filesystem: 'Filesystem',
+    memory: 'Memory',
+    network: 'Network',
+    nself: 'nSelf CLI',
+  }
+  return Object.entries(checks).map(([key, ok]) => ({
+    name: labelMap[key] ?? key,
+    status: ok ? 'healthy' : 'unhealthy',
+    latencyMs,
+  }))
+}
+
+export async function GET(request: Request): Promise<NextResponse> {
+  const { searchParams } = new URL(request.url)
+  const all = searchParams.get('all') === 'true'
+
   try {
     const startTime = process.hrtime()
 
@@ -252,6 +286,24 @@ export async function GET(): Promise<NextResponse> {
       status = 'unhealthy'
     }
 
+    const [, elapsed] = process.hrtime(startTime)
+    const responseTime = Math.round(elapsed / 1000000) // Convert to milliseconds
+
+    // ?all=true — return HealthData shape expected by the health dashboard UI
+    if (all) {
+      const healthData: HealthData = {
+        overall: status,
+        services: checksToServiceHealthList(checks, responseTime),
+        checkedAt: new Date().toISOString(),
+      }
+      return NextResponse.json(healthData, {
+        headers: {
+          'X-Response-Time': `${responseTime}ms`,
+          'Cache-Control': 'no-cache, no-store, must-revalidate',
+        },
+      })
+    }
+
     const uptimeSeconds = process.uptime()
     const health: HealthStatus = {
       status,
@@ -269,9 +321,6 @@ export async function GET(): Promise<NextResponse> {
       },
     }
 
-    const [, elapsed] = process.hrtime(startTime)
-    const responseTime = Math.round(elapsed / 1000000) // Convert to milliseconds
-
     return NextResponse.json(health, {
       status: status === 'unhealthy' ? 503 : 200,
       headers: {
@@ -280,6 +329,15 @@ export async function GET(): Promise<NextResponse> {
       },
     })
   } catch (error: unknown) {
+    // On fatal error, always return a safe shape
+    if (all) {
+      const errData: HealthData = {
+        overall: 'unhealthy',
+        services: [],
+        checkedAt: new Date().toISOString(),
+      }
+      return NextResponse.json(errData, { status: 503 })
+    }
     return NextResponse.json(
       {
         status: 'unhealthy',

@@ -1,6 +1,5 @@
 'use client'
 
-import { PageTemplate } from '@/components/PageTemplate'
 import { TableSkeleton } from '@/components/skeletons'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Badge } from '@/components/ui/badge'
@@ -63,161 +62,6 @@ const LANGUAGE_CONFIGS: Record<
   },
 }
 
-const SAMPLE_TYPESCRIPT = `// Generated from database schema
-// Generated at: ${new Date().toISOString()}
-
-export interface User {
-  /** Unique identifier */
-  id: string;
-  /** User's email address */
-  email: string;
-  /** Hashed password */
-  password_hash: string;
-  /** Display name */
-  name: string | null;
-  /** Avatar image URL */
-  avatar_url: string | null;
-  /** User role (admin, user, etc.) */
-  role: string;
-  /** Account creation timestamp */
-  created_at: Date;
-  /** Last update timestamp */
-  updated_at: Date;
-}
-
-export interface Post {
-  /** Unique identifier */
-  id: string;
-  /** Post title */
-  title: string;
-  /** Post content (markdown) */
-  content: string | null;
-  /** Author user ID */
-  user_id: string;
-  /** Publication status */
-  status: 'draft' | 'published' | 'archived';
-  /** Publication timestamp */
-  published_at: Date | null;
-  /** Creation timestamp */
-  created_at: Date;
-  /** Last update timestamp */
-  updated_at: Date;
-}
-
-export interface Comment {
-  /** Unique identifier */
-  id: string;
-  /** Comment content */
-  content: string;
-  /** Parent post ID */
-  post_id: string;
-  /** Author user ID */
-  user_id: string;
-  /** Creation timestamp */
-  created_at: Date;
-}
-
-// Type helpers
-export type UserInsert = Omit<User, 'id' | 'created_at' | 'updated_at'>;
-export type UserUpdate = Partial<UserInsert>;
-export type PostInsert = Omit<Post, 'id' | 'created_at' | 'updated_at'>;
-export type PostUpdate = Partial<PostInsert>;
-`
-
-const SAMPLE_GO = `// Generated from database schema
-// Generated at: ${new Date().toISOString()}
-
-package models
-
-import (
-\t"time"
-)
-
-// User represents the users table
-type User struct {
-\tID           string    \`json:"id" db:"id"\`
-\tEmail        string    \`json:"email" db:"email"\`
-\tPasswordHash string    \`json:"-" db:"password_hash"\`
-\tName         *string   \`json:"name,omitempty" db:"name"\`
-\tAvatarURL    *string   \`json:"avatar_url,omitempty" db:"avatar_url"\`
-\tRole         string    \`json:"role" db:"role"\`
-\tCreatedAt    time.Time \`json:"created_at" db:"created_at"\`
-\tUpdatedAt    time.Time \`json:"updated_at" db:"updated_at"\`
-}
-
-// Post represents the posts table
-type Post struct {
-\tID          string     \`json:"id" db:"id"\`
-\tTitle       string     \`json:"title" db:"title"\`
-\tContent     *string    \`json:"content,omitempty" db:"content"\`
-\tUserID      string     \`json:"user_id" db:"user_id"\`
-\tStatus      string     \`json:"status" db:"status"\`
-\tPublishedAt *time.Time \`json:"published_at,omitempty" db:"published_at"\`
-\tCreatedAt   time.Time  \`json:"created_at" db:"created_at"\`
-\tUpdatedAt   time.Time  \`json:"updated_at" db:"updated_at"\`
-}
-
-// Comment represents the comments table
-type Comment struct {
-\tID        string    \`json:"id" db:"id"\`
-\tContent   string    \`json:"content" db:"content"\`
-\tPostID    string    \`json:"post_id" db:"post_id"\`
-\tUserID    string    \`json:"user_id" db:"user_id"\`
-\tCreatedAt time.Time \`json:"created_at" db:"created_at"\`
-}
-`
-
-const SAMPLE_PYTHON = `# Generated from database schema
-# Generated at: ${new Date().toISOString()}
-
-from dataclasses import dataclass
-from datetime import datetime
-from typing import Optional
-from enum import Enum
-
-
-class PostStatus(Enum):
-    DRAFT = "draft"
-    PUBLISHED = "published"
-    ARCHIVED = "archived"
-
-
-@dataclass
-class User:
-    """User model representing the users table"""
-    id: str
-    email: str
-    password_hash: str
-    name: Optional[str]
-    avatar_url: Optional[str]
-    role: str
-    created_at: datetime
-    updated_at: datetime
-
-
-@dataclass
-class Post:
-    """Post model representing the posts table"""
-    id: str
-    title: str
-    content: Optional[str]
-    user_id: str
-    status: PostStatus
-    published_at: Optional[datetime]
-    created_at: datetime
-    updated_at: datetime
-
-
-@dataclass
-class Comment:
-    """Comment model representing the comments table"""
-    id: str
-    content: str
-    post_id: str
-    user_id: str
-    created_at: datetime
-`
-
 function DatabaseTypesContent() {
   const [language, setLanguage] = useState<Language>('typescript')
   const [isGenerating, setIsGenerating] = useState(false)
@@ -235,28 +79,39 @@ function DatabaseTypesContent() {
   const generateTypes = async () => {
     setIsGenerating(true)
     setLastOutput('')
+    setGeneratedCode(null)
 
     try {
-      // Simulate CLI call
-      await new Promise((resolve) => setTimeout(resolve, 1500))
+      const response = await fetch('/api/database/cli', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'types',
+          lang: language,
+          includeComments: options.includeComments,
+          includeNullable: options.includeNullable,
+          useOptional: options.useOptional,
+          generateValidation: options.generateValidation,
+          exportTypes: options.exportTypes,
+        }),
+      })
 
-      let code = ''
-      switch (language) {
-        case 'typescript':
-          code = SAMPLE_TYPESCRIPT
-          break
-        case 'go':
-          code = SAMPLE_GO
-          break
-        case 'python':
-          code = SAMPLE_PYTHON
-          break
+      if (response.status === 401) {
+        window.location.href = '/login'
+        return
       }
 
-      setGeneratedCode(code)
-      setLastOutput(
-        `Successfully generated ${language} types from schema\n\nTables processed: 3\nTypes generated: 3\nHelper types: ${language === 'typescript' ? '4' : '0'}`,
-      )
+      const data = await response.json()
+
+      if (!response.ok || !data.success) {
+        setLastOutput(data.details || data.error || `Error ${response.status}`)
+        return
+      }
+
+      const code: string = data.data?.code || data.data?.output || ''
+      const output: string = data.data?.output || `Generated ${language} types from schema.`
+      setGeneratedCode(code || null)
+      setLastOutput(output)
     } catch (error) {
       setLastOutput(
         error instanceof Error ? error.message : 'Generation failed',
@@ -288,10 +143,15 @@ function DatabaseTypesContent() {
   }
 
   return (
-    <PageTemplate
-      title="Type Generation"
-      description="Generate type definitions from your database schema"
-    >
+    <div className="space-y-6 p-6">
+      <div>
+        <h1 className="text-2xl font-bold text-zinc-900 dark:text-white">
+          Type Generation
+        </h1>
+        <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
+          Generate TypeScript type definitions from your database schema
+        </p>
+      </div>
       <div className="space-y-6">
         {/* Info Alert */}
         <Alert>
@@ -541,7 +401,7 @@ function DatabaseTypesContent() {
           </Card>
         )}
       </div>
-    </PageTemplate>
+    </div>
   )
 }
 

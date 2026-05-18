@@ -20,69 +20,19 @@ import { Suspense, useCallback, useEffect, useState } from 'react'
 
 function FrontendContent() {
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
   const [apps, setApps] = useState<FrontendApp[]>([])
 
   const fetchApps = useCallback(async () => {
     try {
-      // Mock data - replace with real API
-      const mockApps: FrontendApp[] = [
-        {
-          id: 'app-1',
-          name: 'main-website',
-          framework: 'Next.js',
-          status: 'running',
-          url: 'https://example.com',
-          branch: 'main',
-          lastDeployed: new Date(Date.now() - 3600000).toISOString(),
-          buildTime: 45,
-          metrics: {
-            requests: 15000,
-            latency: 120,
-            errors: 5,
-          },
-        },
-        {
-          id: 'app-2',
-          name: 'admin-dashboard',
-          framework: 'React',
-          status: 'running',
-          url: 'https://admin.example.com',
-          branch: 'main',
-          lastDeployed: new Date(Date.now() - 86400000).toISOString(),
-          buildTime: 32,
-          metrics: {
-            requests: 2500,
-            latency: 85,
-            errors: 0,
-          },
-        },
-        {
-          id: 'app-3',
-          name: 'docs-site',
-          framework: 'Astro',
-          status: 'running',
-          url: 'https://docs.example.com',
-          branch: 'main',
-          lastDeployed: new Date(Date.now() - 172800000).toISOString(),
-          buildTime: 18,
-          metrics: {
-            requests: 8500,
-            latency: 45,
-            errors: 2,
-          },
-        },
-        {
-          id: 'app-4',
-          name: 'mobile-app',
-          framework: 'React Native Web',
-          status: 'building',
-          branch: 'feature/new-ui',
-          buildTime: 0,
-        },
-      ]
-      setApps(mockApps)
-    } catch (_error) {
-      // Handle error silently
+      setError(null)
+      const res = await fetch('/api/frontend')
+      if (!res.ok) throw new Error(`HTTP ${res.status}`)
+      const data = await res.json()
+      setApps(data.apps ?? [])
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to load frontend apps')
+      setApps([])
     } finally {
       setLoading(false)
     }
@@ -127,6 +77,25 @@ function FrontendContent() {
         <div className="relative mx-auto max-w-7xl">
           <div className="flex items-center justify-center py-20">
             <div className="h-8 w-8 animate-spin rounded-full border-4 border-cyan-500 border-t-transparent" />
+          </div>
+        </div>
+      </>
+    )
+  }
+
+  if (error) {
+    return (
+      <>
+        <HeroPattern />
+        <div className="relative mx-auto max-w-7xl">
+          <div className="rounded-xl border border-red-200 bg-red-50 p-6 dark:border-red-800 dark:bg-red-900/20">
+            <p className="text-red-700 dark:text-red-400">{error}</p>
+            <button
+              onClick={fetchApps}
+              className="mt-4 rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700"
+            >
+              Retry
+            </button>
           </div>
         </div>
       </>

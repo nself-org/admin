@@ -5,6 +5,7 @@ import { HeroPattern } from '@/components/HeroPattern'
 import { ListSkeleton } from '@/components/skeletons'
 import { useUrlState } from '@/hooks/useUrlState'
 import {
+  AlertCircle,
   Archive,
   CheckCircle,
   Clock,
@@ -27,7 +28,9 @@ import {
   XCircle,
   Zap,
 } from 'lucide-react'
-import { Suspense, useState } from 'react'
+import Link from 'next/link'
+import { Suspense, useCallback, useState } from 'react'
+import useSWR from 'swr'
 
 interface Backup {
   id: string
@@ -68,127 +71,7 @@ interface BackupJob {
   status: 'active' | 'paused' | 'error'
 }
 
-const mockBackups: Backup[] = [
-  {
-    id: '1',
-    name: 'Daily Full Backup',
-    type: 'full',
-    status: 'completed',
-    size: 2.4 * 1024 * 1024 * 1024, // 2.4GB
-    created: '2024-01-15T08:00:00Z',
-    duration: 420000, // 7 minutes
-    databases: ['nself_main', 'nself_auth', 'nself_analytics'],
-    retentionDays: 30,
-    location: '/backups/full/backup_20240115_080000.sql.gz',
-    compression: true,
-    encryption: true,
-    schedule: {
-      frequency: 'daily',
-      time: '08:00',
-      enabled: true,
-    },
-  },
-  {
-    id: '2',
-    name: 'Incremental Backup',
-    type: 'incremental',
-    status: 'running',
-    progress: 65,
-    size: 128 * 1024 * 1024, // 128MB
-    created: '2024-01-15T12:00:00Z',
-    databases: ['nself_main'],
-    retentionDays: 7,
-    location: '/backups/incremental/backup_20240115_120000.sql.gz',
-    compression: true,
-    encryption: false,
-  },
-  {
-    id: '3',
-    name: 'Weekly Archive',
-    type: 'full',
-    status: 'completed',
-    size: 1.8 * 1024 * 1024 * 1024, // 1.8GB
-    created: '2024-01-08T02:00:00Z',
-    duration: 360000, // 6 minutes
-    databases: ['nself_main', 'nself_auth'],
-    retentionDays: 90,
-    location: '/backups/weekly/backup_20240108_020000.sql.gz',
-    compression: true,
-    encryption: true,
-    schedule: {
-      frequency: 'weekly',
-      time: '02:00',
-      enabled: true,
-    },
-  },
-  {
-    id: '4',
-    name: 'Manual Export',
-    type: 'full',
-    status: 'failed',
-    size: 0,
-    created: '2024-01-14T16:30:00Z',
-    databases: ['nself_main', 'nself_auth', 'nself_analytics'],
-    retentionDays: 14,
-    location: '/backups/manual/backup_20240114_163000.sql.gz',
-    compression: true,
-    encryption: true,
-  },
-]
-
-const mockJobs: BackupJob[] = [
-  {
-    id: '1',
-    name: 'Daily Full System Backup',
-    type: 'full',
-    schedule: {
-      frequency: 'daily',
-      time: '08:00',
-      enabled: true,
-    },
-    targets: ['nself_main', 'nself_auth', 'nself_analytics'],
-    retentionDays: 30,
-    compression: true,
-    encryption: true,
-    lastRun: '2024-01-15T08:00:00Z',
-    nextRun: '2024-01-16T08:00:00Z',
-    status: 'active',
-  },
-  {
-    id: '2',
-    name: 'Hourly Incremental',
-    type: 'incremental',
-    schedule: {
-      frequency: 'daily',
-      time: '*/4', // Every 4 hours
-      enabled: true,
-    },
-    targets: ['nself_main'],
-    retentionDays: 7,
-    compression: true,
-    encryption: false,
-    lastRun: '2024-01-15T12:00:00Z',
-    nextRun: '2024-01-15T16:00:00Z',
-    status: 'active',
-  },
-  {
-    id: '3',
-    name: 'Weekly Archive',
-    type: 'full',
-    schedule: {
-      frequency: 'weekly',
-      time: '02:00',
-      enabled: false,
-    },
-    targets: ['nself_main', 'nself_auth'],
-    retentionDays: 90,
-    compression: true,
-    encryption: true,
-    lastRun: '2024-01-08T02:00:00Z',
-    nextRun: '2024-01-22T02:00:00Z',
-    status: 'paused',
-  },
-]
+const fetcher = (url: string) => fetch(url).then((res) => res.json())
 
 function formatSize(bytes: number): string {
   const sizes = ['B', 'KB', 'MB', 'GB', 'TB']
@@ -507,33 +390,49 @@ function JobCard({
 }
 
 function BackupsContent() {
-  const [backups, _setBackups] = useState<Backup[]>(mockBackups)
-  const [jobs, setJobs] = useState<BackupJob[]>(mockJobs)
-  const [loading, setLoading] = useState(false)
+  const [actionLoading, setActionLoading] = useState(false)
   const [activeTab, setActiveTab] = useUrlState<string>('tab', 'backups')
   const [filter, setFilter] = useState<string>('all')
   const [searchQuery, setSearchQuery] = useState('')
 
-  const handleBackupAction = async (_action: string, _id: string) => {
-    // Simulate API call
-    setLoading(true)
-    setTimeout(() => setLoading(false), 1000)
-  }
+  const {
+    data,
+    error,
+    mutate,
+  } = useSWR<{ backups: Backup[]; jobs: BackupJob[] }>('/api/backup', fetcher)
 
-  const handleJobAction = async (action: string, id: string) => {
-    if (action === 'pause' || action === 'resume') {
-      setJobs((prev) =>
-        prev.map((job) =>
-          job.id === id
-            ? { ...job, status: action === 'pause' ? 'paused' : 'active' }
-            : job,
-        ),
-      )
+  const backups = data?.backups ?? []
+  const jobs = data?.jobs ?? []
+
+  const handleBackupAction = useCallback(async (action: string, id: string) => {
+    setActionLoading(true)
+    try {
+      const res = await fetch(`/api/backup/${encodeURIComponent(id)}`, {
+        method: action === 'delete' ? 'DELETE' : 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: action !== 'delete' ? JSON.stringify({ action }) : undefined,
+      })
+      if (!res.ok) throw new Error(`HTTP ${res.status}`)
+      await mutate()
+    } finally {
+      setActionLoading(false)
     }
+  }, [mutate])
 
-    setLoading(true)
-    setTimeout(() => setLoading(false), 1000)
-  }
+  const handleJobAction = useCallback(async (action: string, id: string) => {
+    setActionLoading(true)
+    try {
+      const res = await fetch(`/api/backup/jobs/${encodeURIComponent(id)}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action }),
+      })
+      if (!res.ok) throw new Error(`HTTP ${res.status}`)
+      await mutate()
+    } finally {
+      setActionLoading(false)
+    }
+  }, [mutate])
 
   const filteredBackups = backups.filter((backup) => {
     if (filter !== 'all' && backup.status !== filter) return false
@@ -556,6 +455,34 @@ function BackupsContent() {
     activeJobs: jobs.filter((j) => j.status === 'active').length,
   }
 
+  if (error) {
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center gap-4">
+          <Link href="/operations" className="rounded-lg border border-zinc-700 bg-zinc-800 p-2 hover:bg-zinc-700">
+            <AlertCircle className="h-5 w-5" />
+          </Link>
+          <h1 className="text-2xl font-semibold text-white">Backup Manager</h1>
+        </div>
+        <div className="rounded-lg border border-red-500/30 bg-red-900/20 p-6">
+          <div className="flex items-center gap-3">
+            <AlertCircle className="h-5 w-5 text-red-400" />
+            <p className="text-red-400">
+              {error instanceof Error ? error.message : 'Failed to load backup data'}
+            </p>
+          </div>
+          <button
+            onClick={() => mutate()}
+            className="mt-4 inline-flex items-center gap-2 rounded-lg border border-zinc-700 bg-zinc-800 px-4 py-2 text-sm text-white hover:bg-zinc-700"
+          >
+            <RefreshCw className="h-4 w-4" />
+            Retry
+          </button>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <>
       <HeroPattern />
@@ -571,12 +498,12 @@ function BackupsContent() {
               </p>
             </div>
             <div className="flex items-center gap-2">
-              <Button variant="filled" className="flex items-center gap-2">
+              <Button variant="filled" className="flex items-center gap-2" disabled={actionLoading}>
                 <Save className="h-4 w-4" />
                 Create Backup
               </Button>
               <Button
-                onClick={() => setLoading(!loading)}
+                onClick={() => mutate()}
                 variant="outline"
                 className="flex items-center gap-2"
               >
@@ -741,13 +668,23 @@ function BackupsContent() {
         {/* Tab Content */}
         {activeTab === 'backups' && (
           <div className="grid gap-6 lg:grid-cols-2">
-            {filteredBackups.map((backup) => (
-              <BackupCard
-                key={backup.id}
-                backup={backup}
-                onAction={handleBackupAction}
-              />
-            ))}
+            {filteredBackups.length === 0 ? (
+              <div className="col-span-2 flex flex-col items-center justify-center rounded-lg border border-zinc-200 bg-white p-12 text-center dark:border-zinc-700 dark:bg-zinc-800">
+                <Archive className="mb-4 h-12 w-12 text-zinc-400" />
+                <p className="text-zinc-500">No backups found</p>
+                <p className="mt-1 text-sm text-zinc-400">
+                  Create a backup to get started
+                </p>
+              </div>
+            ) : (
+              filteredBackups.map((backup) => (
+                <BackupCard
+                  key={backup.id}
+                  backup={backup}
+                  onAction={handleBackupAction}
+                />
+              ))
+            )}
           </div>
         )}
 
@@ -763,11 +700,21 @@ function BackupsContent() {
               </Button>
             </div>
 
-            <div className="grid gap-6 lg:grid-cols-2">
-              {jobs.map((job) => (
-                <JobCard key={job.id} job={job} onAction={handleJobAction} />
-              ))}
-            </div>
+            {jobs.length === 0 ? (
+              <div className="flex flex-col items-center justify-center rounded-lg border border-zinc-200 bg-white p-12 text-center dark:border-zinc-700 dark:bg-zinc-800">
+                <Timer className="mb-4 h-12 w-12 text-zinc-400" />
+                <p className="text-zinc-500">No scheduled jobs</p>
+                <p className="mt-1 text-sm text-zinc-400">
+                  Create a job to automate backups
+                </p>
+              </div>
+            ) : (
+              <div className="grid gap-6 lg:grid-cols-2">
+                {jobs.map((job) => (
+                  <JobCard key={job.id} job={job} onAction={handleJobAction} />
+                ))}
+              </div>
+            )}
           </div>
         )}
 
@@ -785,7 +732,7 @@ function BackupsContent() {
                   </label>
                   <input
                     type="text"
-                    value="/var/lib/nself/backups"
+                    defaultValue="/var/lib/nself/backups"
                     className="w-full rounded-lg border border-zinc-200 bg-white px-3 py-2 dark:border-zinc-700 dark:bg-zinc-800"
                   />
                 </div>
@@ -796,7 +743,7 @@ function BackupsContent() {
                   </label>
                   <input
                     type="number"
-                    value={30}
+                    defaultValue={30}
                     className="w-full rounded-lg border border-zinc-200 bg-white px-3 py-2 dark:border-zinc-700 dark:bg-zinc-800"
                   />
                 </div>

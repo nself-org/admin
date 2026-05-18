@@ -17,6 +17,9 @@ import {
   X,
 } from 'lucide-react'
 import { Suspense, useEffect, useRef, useState } from 'react'
+import useSWR from 'swr'
+
+const fetcher = (url: string) => fetch(url).then((res) => res.json())
 
 interface TerminalSession {
   id: string
@@ -59,109 +62,9 @@ interface SystemInfo {
   }
 }
 
-const mockSessions: TerminalSession[] = [
-  {
-    id: '1',
-    name: 'Main Terminal',
-    status: 'running',
-    created: '2024-01-15T10:00:00Z',
-    lastActivity: '2024-01-15T10:30:00Z',
-    command: 'docker ps',
-    pid: 12345,
-    workingDir: '/var/lib/nself',
-    environment: 'production',
-    user: 'nself',
-  },
-  {
-    id: '2',
-    name: 'Database Console',
-    status: 'running',
-    created: '2024-01-15T09:45:00Z',
-    lastActivity: '2024-01-15T10:25:00Z',
-    command: 'psql -h localhost -U postgres',
-    pid: 12378,
-    workingDir: '/home/nself',
-    environment: 'production',
-    user: 'postgres',
-  },
-  {
-    id: '3',
-    name: 'Build Process',
-    status: 'stopped',
-    created: '2024-01-15T09:30:00Z',
-    lastActivity: '2024-01-15T09:35:00Z',
-    command: 'npm run build',
-    workingDir: '/app/frontend',
-    environment: 'development',
-    user: 'node',
-  },
-]
+const EMPTY_SESSIONS: TerminalSession[] = []
+const EMPTY_OUTPUTS: TerminalOutput[] = []
 
-const mockOutputs: TerminalOutput[] = [
-  {
-    id: '1',
-    sessionId: '1',
-    type: 'system',
-    content: 'Terminal session started',
-    timestamp: '2024-01-15T10:00:00Z',
-  },
-  {
-    id: '2',
-    sessionId: '1',
-    type: 'command',
-    content: '$ docker ps',
-    timestamp: '2024-01-15T10:00:05Z',
-  },
-  {
-    id: '3',
-    sessionId: '1',
-    type: 'output',
-    content: `CONTAINER ID   IMAGE                    COMMAND                  CREATED        STATUS        PORTS                    NAMES
-b8f2c1d5e4a3   nself/postgres:latest    "docker-entrypoint.s…"  2 hours ago    Up 2 hours    0.0.0.0:5432->5432/tcp   nself_postgres
-a7e9d3c2b1f0   nself/hasura:latest      "graphql-engine serve"   2 hours ago    Up 2 hours    0.0.0.0:8080->8080/tcp   nself_hasura
-c9f1e5a8d2b6   nself/nginx:latest       "/docker-entrypoint.…"  2 hours ago    Up 2 hours    0.0.0.0:80->80/tcp       nself_nginx`,
-    timestamp: '2024-01-15T10:00:06Z',
-  },
-  {
-    id: '4',
-    sessionId: '1',
-    type: 'command',
-    content: '$ ls -la',
-    timestamp: '2024-01-15T10:01:00Z',
-  },
-  {
-    id: '5',
-    sessionId: '1',
-    type: 'output',
-    content: `total 48
-drwxr-xr-x  12 nself  nself   384 Jan 15 10:00 .
-drwxr-xr-x   6 root   root    192 Jan 15 09:00 ..
--rw-r--r--   1 nself  nself  1024 Jan 15 09:30 docker-compose.yml
-drwxr-xr-x   8 nself  nself   256 Jan 15 09:45 data
-drwxr-xr-x   4 nself  nself   128 Jan 15 09:30 logs
--rw-r--r--   1 nself  nself   512 Jan 15 09:30 README.md`,
-    timestamp: '2024-01-15T10:01:01Z',
-  },
-]
-
-const mockSystemInfo: SystemInfo = {
-  hostname: 'nself-server-01',
-  platform: 'linux',
-  arch: 'x64',
-  release: 'Ubuntu 22.04.3 LTS',
-  uptime: 172800, // 2 days
-  loadAverage: [0.85, 0.92, 1.15],
-  memory: {
-    total: 16 * 1024 * 1024 * 1024, // 16GB
-    free: 8 * 1024 * 1024 * 1024, // 8GB
-    used: 8 * 1024 * 1024 * 1024, // 8GB
-  },
-  cpu: {
-    model: 'Intel(R) Xeon(R) CPU E5-2686 v4 @ 2.30GHz',
-    cores: 8,
-    usage: 35.6,
-  },
-}
 
 function formatSize(bytes: number): string {
   const sizes = ['B', 'KB', 'MB', 'GB', 'TB']
@@ -426,7 +329,8 @@ function SessionInfo({ session }: { session: TerminalSession }) {
   )
 }
 
-function SystemStats({ systemInfo }: { systemInfo: SystemInfo }) {
+function SystemStats({ systemInfo }: { systemInfo: SystemInfo | null }) {
+  if (!systemInfo) return null
   return (
     <div className="rounded-lg border border-zinc-200 bg-white p-4 dark:border-zinc-700 dark:bg-zinc-800">
       <h3 className="mb-3 font-semibold text-zinc-900 dark:text-white">
@@ -498,11 +402,26 @@ function SystemStats({ systemInfo }: { systemInfo: SystemInfo }) {
 }
 
 function TerminalContent() {
-  const [sessions, setSessions] = useState<TerminalSession[]>(mockSessions)
-  const [outputs, setOutputs] = useState<TerminalOutput[]>(mockOutputs)
-  const [activeSessionId, setActiveSessionId] = useState<string>('1')
+  const [sessions, setSessions] = useState<TerminalSession[]>(EMPTY_SESSIONS)
+  const [outputs, setOutputs] = useState<TerminalOutput[]>(EMPTY_OUTPUTS)
+  const [activeSessionId, setActiveSessionId] = useState<string | null>(null)
   const [isRunning, setIsRunning] = useState(false)
   const [showSidebar, setShowSidebar] = useState(true)
+
+  const { data: sysData } = useSWR<{ metrics: { loadAverage: number[]; uptime: number; memory: { total: number; free: number; used: number } } }>('/api/system/resources', fetcher, { refreshInterval: 30000 })
+
+  const systemInfo: SystemInfo | null = sysData?.metrics
+    ? {
+        hostname: 'nself-server',
+        platform: 'linux',
+        arch: 'x64',
+        release: '',
+        uptime: sysData.metrics.uptime,
+        loadAverage: sysData.metrics.loadAverage,
+        memory: sysData.metrics.memory,
+        cpu: { model: '', cores: 0, usage: 0 },
+      }
+    : null
 
   const activeSession = sessions.find((s) => s.id === activeSessionId)
 
@@ -552,7 +471,7 @@ function TerminalContent() {
     // Add command to outputs
     const commandOutput: TerminalOutput = {
       id: Date.now().toString(),
-      sessionId: activeSessionId,
+      sessionId: activeSessionId ?? '',
       type: 'command',
       content: `$ ${command}`,
       timestamp: new Date().toISOString(),
@@ -565,7 +484,7 @@ function TerminalContent() {
       () => {
         const responseOutput: TerminalOutput = {
           id: (Date.now() + 1).toString(),
-          sessionId: activeSessionId,
+          sessionId: activeSessionId ?? '',
           type: command.startsWith('ls') ? 'output' : 'output',
           content: getSimulatedResponse(command),
           timestamp: new Date().toISOString(),
@@ -697,7 +616,7 @@ Use 'man <command>' for more information.`
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="text-xs text-zinc-400">
-                    {activeSession?.user}@{mockSystemInfo.hostname}
+                    {activeSession?.user}@{systemInfo?.hostname ?? 'nself-server'}
                   </span>
                   <button className="text-zinc-400 hover:text-white">
                     <MoreHorizontal className="h-4 w-4" />
@@ -710,7 +629,7 @@ Use 'man <command>' for more information.`
                 <>
                   <TerminalOutput
                     outputs={outputs}
-                    sessionId={activeSessionId}
+                    sessionId={activeSessionId ?? ''}
                   />
                   <CommandInput
                     onExecute={handleExecuteCommand}
@@ -734,7 +653,7 @@ Use 'man <command>' for more information.`
           {showSidebar && (
             <div className="w-80 space-y-4">
               {activeSession && <SessionInfo session={activeSession} />}
-              <SystemStats systemInfo={mockSystemInfo} />
+              <SystemStats systemInfo={systemInfo} />
 
               {/* Quick Commands */}
               <div className="rounded-lg border border-zinc-200 bg-white p-4 dark:border-zinc-700 dark:bg-zinc-800">

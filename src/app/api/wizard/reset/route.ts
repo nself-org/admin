@@ -1,9 +1,6 @@
 import { findNselfPath, getEnhancedPath } from '@/lib/nself-path'
 import { getProjectPath } from '@/lib/paths'
-import {
-  requireAuthPreSetup,
-  requireWizardNotComplete,
-} from '@/lib/require-auth'
+import { requireWizardNotComplete } from '@/lib/require-auth'
 import { exec } from 'child_process'
 import { promises as fs } from 'fs'
 import { NextRequest, NextResponse } from 'next/server'
@@ -13,8 +10,6 @@ import { promisify } from 'util'
 const execAsync = promisify(exec)
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
-  const authError = await requireAuthPreSetup(req)
-  if (authError) return authError
   const wizardError = await requireWizardNotComplete(req)
   if (wizardError) return wizardError
 

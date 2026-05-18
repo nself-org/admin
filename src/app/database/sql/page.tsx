@@ -1,6 +1,5 @@
 'use client'
 
-import { PageTemplate } from '@/components/PageTemplate'
 import { CodeEditorSkeleton } from '@/components/skeletons'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -88,143 +87,147 @@ function SQLConsoleContent() {
   const [savedQueries, setSavedQueries] = useState<SavedQuery[]>([])
   const [showHistory, setShowHistory] = useState(false)
   const [showSaved, setShowSaved] = useState(false)
-  const [_autoComplete, setAutoComplete] = useState<string[]>([])
-  const [isConnected, _setIsConnected] = useState(true)
+  const [isConnected, setIsConnected] = useState(false)
+  const [databases, setDatabases] = useState<string[]>([])
   const textareaRef = useRef<HTMLTextAreaElement>(null)
 
-  // Mock data
-  const databases = ['main', 'users', 'analytics', 'logs']
+  useEffect(() => {
+    // Load databases from API
+    fetch('/api/database/query', { cache: 'no-store' })
+      .then(async (res) => {
+        if (res.status === 401) { window.location.href = '/login'; return }
+        if (!res.ok) return
+        const data = await res.json()
+        const dbs = data.data?.databases ?? data.data ?? []
+        if (Array.isArray(dbs) && dbs.length > 0) {
+          setDatabases(dbs)
+          setSelectedDatabase(dbs[0])
+          setTabs((prev) => prev.map((t, i) => i === 0 ? { ...t, database: dbs[0] } : t))
+        }
+        setIsConnected(true)
+      })
+      .catch(() => setIsConnected(false))
+
+    // Load persisted history and saved queries from localStorage
+    try {
+      const h = localStorage.getItem('sql-console-history')
+      if (h) setQueryHistory(JSON.parse(h).slice(0, 50))
+    } catch { /* ignore */ }
+
+    try {
+      const s = localStorage.getItem('sql-console-saved')
+      if (s) setSavedQueries(JSON.parse(s))
+    } catch { /* ignore */ }
+  }, [])
+
+  // Persist history and saved queries
+  useEffect(() => {
+    if (queryHistory.length > 0) {
+      localStorage.setItem('sql-console-history', JSON.stringify(queryHistory.slice(0, 50)))
+    }
+  }, [queryHistory])
 
   useEffect(() => {
-    const sampleTables = [
-      'users',
-      'posts',
-      'comments',
-      'categories',
-      'tags',
-      'user_profiles',
-    ]
-    const sampleColumns = [
-      'id',
-      'name',
-      'email',
-      'created_at',
-      'updated_at',
-      'title',
-      'content',
-    ]
-
-    // Mock query history
-    setQueryHistory([
-      {
-        id: '1',
-        query: 'SELECT * FROM users LIMIT 10',
-        database: 'main',
-        executionTime: 45,
-        timestamp: '2024-01-15 10:30:25',
-        status: 'success',
-        rowCount: 10,
-      },
-      {
-        id: '2',
-        query:
-          'SELECT COUNT(*) FROM posts WHERE created_at > NOW() - INTERVAL 1 DAY',
-        database: 'main',
-        executionTime: 123,
-        timestamp: '2024-01-15 10:28:15',
-        status: 'success',
-        rowCount: 1,
-      },
-      {
-        id: '3',
-        query: 'SELECT * FROM invalid_table',
-        database: 'main',
-        executionTime: 0,
-        timestamp: '2024-01-15 10:25:45',
-        status: 'error',
-        error: 'Table "invalid_table" does not exist',
-      },
-    ])
-
-    // Mock saved queries
-    setSavedQueries([
-      {
-        id: '1',
-        name: 'Active Users Today',
-        query:
-          'SELECT u.id, u.name, u.email FROM users u WHERE u.last_login_at > CURRENT_DATE',
-        database: 'main',
-        createdAt: '2024-01-10',
-        starred: true,
-      },
-      {
-        id: '2',
-        name: 'Popular Posts This Week',
-        query:
-          'SELECT p.title, COUNT(l.id) as likes FROM posts p LEFT JOIN likes l ON p.id = l.post_id WHERE p.created_at > NOW() - INTERVAL 7 DAY GROUP BY p.id ORDER BY likes DESC LIMIT 20',
-        database: 'main',
-        createdAt: '2024-01-12',
-        starred: false,
-      },
-    ])
-
-    // Setup autocomplete
-    setAutoComplete([
-      ...sampleTables,
-      ...sampleColumns,
-      'SELECT',
-      'FROM',
-      'WHERE',
-      'JOIN',
-      'INSERT',
-      'UPDATE',
-      'DELETE',
-    ])
-  }, [])
+    if (savedQueries.length > 0) {
+      localStorage.setItem('sql-console-saved', JSON.stringify(savedQueries))
+    }
+  }, [savedQueries])
 
   const executeQuery = async (tabId: string) => {
     const tab = tabs.find((t) => t.id === tabId)
     if (!tab || !tab.query.trim()) return
 
     setTabs((prev) =>
-      prev.map((t) => (t.id === tabId ? { ...t, isExecuting: true } : t)),
+      prev.map((t) => (t.id === tabId ? { ...t, isExecuting: true, result: undefined } : t)),
     )
 
-    // Simulate API call
-    await new Promise((resolve) =>
-      setTimeout(resolve, 1000 + Math.random() * 2000),
-    )
+    const startTime = Date.now()
 
-    const mockResult: QueryResult = {
-      columns: ['id', 'name', 'email', 'created_at'],
-      rows: [
-        [1, 'John Doe', 'john@example.com', '2024-01-15 09:30:00'],
-        [2, 'Jane Smith', 'jane@example.com', '2024-01-15 09:45:00'],
-        [3, 'Bob Wilson', 'bob@example.com', '2024-01-15 10:00:00'],
-        [4, 'Alice Johnson', 'alice@example.com', '2024-01-15 10:15:00'],
-        [5, 'Charlie Brown', 'charlie@example.com', '2024-01-15 10:30:00'],
-      ],
-      rowCount: 5,
-      executionTime: 156,
+    try {
+      const response = await fetch('/api/database/query', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sql: tab.query, database: tab.database }),
+      })
+
+      if (response.status === 401) {
+        window.location.href = '/login'
+        return
+      }
+
+      const data = await response.json()
+      const executionTime = Date.now() - startTime
+
+      if (!response.ok || !data.success) {
+        const errorMessage = data.error ?? `HTTP ${response.status}`
+        const errResult: QueryResult = {
+          columns: [],
+          rows: [],
+          rowCount: 0,
+          executionTime,
+          error: errorMessage,
+        }
+        setTabs((prev) =>
+          prev.map((t) => t.id === tabId ? { ...t, isExecuting: false, result: errResult } : t)
+        )
+        const historyEntry: QueryHistory = {
+          id: Date.now().toString(),
+          query: tab.query,
+          database: tab.database,
+          executionTime,
+          timestamp: new Date().toLocaleString(),
+          status: 'error',
+          error: errorMessage,
+        }
+        setQueryHistory((prev) => [historyEntry, ...prev])
+        return
+      }
+
+      const queryResult: QueryResult = {
+        columns: data.data?.columns ?? [],
+        rows: data.data?.rows ?? [],
+        rowCount: data.data?.rowCount ?? 0,
+        executionTime,
+      }
+
+      setTabs((prev) =>
+        prev.map((t) => t.id === tabId ? { ...t, isExecuting: false, result: queryResult } : t)
+      )
+
+      const historyEntry: QueryHistory = {
+        id: Date.now().toString(),
+        query: tab.query,
+        database: tab.database,
+        executionTime,
+        timestamp: new Date().toLocaleString(),
+        status: 'success',
+        rowCount: queryResult.rowCount,
+      }
+      setQueryHistory((prev) => [historyEntry, ...prev])
+    } catch (err) {
+      const executionTime = Date.now() - startTime
+      const errorMessage = err instanceof Error ? err.message : 'Query execution failed'
+      const errResult: QueryResult = {
+        columns: [],
+        rows: [],
+        rowCount: 0,
+        executionTime,
+        error: errorMessage,
+      }
+      setTabs((prev) =>
+        prev.map((t) => t.id === tabId ? { ...t, isExecuting: false, result: errResult } : t)
+      )
+      const historyEntry: QueryHistory = {
+        id: Date.now().toString(),
+        query: tab.query,
+        database: tab.database,
+        executionTime,
+        timestamp: new Date().toLocaleString(),
+        status: 'error',
+        error: errorMessage,
+      }
+      setQueryHistory((prev) => [historyEntry, ...prev])
     }
-
-    // Add to history
-    const historyEntry: QueryHistory = {
-      id: Date.now().toString(),
-      query: tab.query,
-      database: tab.database,
-      executionTime: mockResult.executionTime,
-      timestamp: new Date().toLocaleString(),
-      status: 'success',
-      rowCount: mockResult.rowCount,
-    }
-    setQueryHistory((prev) => [historyEntry, ...prev])
-
-    setTabs((prev) =>
-      prev.map((t) =>
-        t.id === tabId ? { ...t, isExecuting: false, result: mockResult } : t,
-      ),
-    )
   }
 
   const addNewTab = () => {
@@ -287,17 +290,58 @@ function SQLConsoleContent() {
     }
   }
 
-  const exportResults = (_format: 'csv' | 'json') => {
+  const exportResults = (format: 'csv' | 'json') => {
     const activeTabData = tabs.find((t) => t.id === activeTab)
     if (!activeTabData?.result) return
 
-    // Mock export functionality
+    const { columns, rows } = activeTabData.result
+    let content: string
+    let mimeType: string
+    let filename: string
+
+    if (format === 'csv') {
+      const escape = (v: unknown) => {
+        const s = v === null || v === undefined ? '' : String(v)
+        return s.includes(',') || s.includes('"') || s.includes('\n')
+          ? `"${s.replace(/"/g, '""')}"`
+          : s
+      }
+      const header = columns.map(escape).join(',')
+      const body = rows.map((row) => row.map(escape).join(',')).join('\n')
+      content = `${header}\n${body}`
+      mimeType = 'text/csv;charset=utf-8;'
+      filename = 'query-results.csv'
+    } else {
+      const objects = rows.map((row) =>
+        Object.fromEntries(columns.map((col, i) => [col, row[i]])),
+      )
+      content = JSON.stringify(objects, null, 2)
+      mimeType = 'application/json'
+      filename = 'query-results.json'
+    }
+
+    const blob = new Blob([content], { type: mimeType })
+    const url = URL.createObjectURL(blob)
+    const anchor = document.createElement('a')
+    anchor.href = url
+    anchor.download = filename
+    anchor.click()
+    URL.revokeObjectURL(url)
   }
 
   const activeTabData = tabs.find((t) => t.id === activeTab)
 
   return (
-    <PageTemplate description="Execute SQL queries with multi-tab editor, query history, and results export">
+    <div className="space-y-6 p-6">
+      <div>
+        <h1 className="text-2xl font-bold text-zinc-900 dark:text-white">
+          SQL Runner
+        </h1>
+        <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
+          Execute SQL queries with multi-tab editor, query history, and results
+          export. Destructive statements require confirmation.
+        </p>
+      </div>
       <div className="space-y-6">
         {/* Connection Status & Database Selector */}
         <Card>
@@ -661,7 +705,7 @@ function SQLConsoleContent() {
           </CardContent>
         </Card>
       </div>
-    </PageTemplate>
+    </div>
   )
 }
 

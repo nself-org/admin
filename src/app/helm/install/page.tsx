@@ -18,80 +18,6 @@ import useSWR from 'swr'
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json())
 
-// Mock repos and charts
-const mockRepos: HelmRepo[] = [
-  {
-    name: 'bitnami',
-    url: 'https://charts.bitnami.com/bitnami',
-    lastUpdated: '2024-01-25T10:00:00Z',
-  },
-  {
-    name: 'prometheus-community',
-    url: 'https://prometheus-community.github.io/helm-charts',
-    lastUpdated: '2024-01-24T10:00:00Z',
-  },
-  {
-    name: 'grafana',
-    url: 'https://grafana.github.io/helm-charts',
-    lastUpdated: '2024-01-24T10:00:00Z',
-  },
-  {
-    name: 'jetstack',
-    url: 'https://charts.jetstack.io',
-    lastUpdated: '2024-01-23T10:00:00Z',
-  },
-  {
-    name: 'ingress-nginx',
-    url: 'https://kubernetes.github.io/ingress-nginx',
-    lastUpdated: '2024-01-22T10:00:00Z',
-  },
-]
-
-const mockCharts: HelmChart[] = [
-  {
-    name: 'postgresql',
-    version: '13.2.24',
-    appVersion: '16.1.0',
-    description: 'PostgreSQL database',
-    keywords: ['database', 'sql'],
-  },
-  {
-    name: 'redis',
-    version: '18.6.1',
-    appVersion: '7.2.4',
-    description: 'Redis in-memory data store',
-    keywords: ['cache', 'database'],
-  },
-  {
-    name: 'nginx',
-    version: '15.7.0',
-    appVersion: '1.25.3',
-    description: 'NGINX web server',
-    keywords: ['web', 'proxy'],
-  },
-  {
-    name: 'prometheus',
-    version: '25.8.0',
-    appVersion: '2.48.0',
-    description: 'Prometheus monitoring',
-    keywords: ['monitoring', 'metrics'],
-  },
-  {
-    name: 'grafana',
-    version: '7.0.19',
-    appVersion: '10.2.3',
-    description: 'Grafana dashboards',
-    keywords: ['monitoring', 'visualization'],
-  },
-  {
-    name: 'cert-manager',
-    version: '1.13.3',
-    appVersion: '1.13.3',
-    description: 'Certificate management',
-    keywords: ['ssl', 'tls'],
-  },
-]
-
 type InstallStep = {
   name: string
   status: 'pending' | 'running' | 'success' | 'error'
@@ -111,17 +37,17 @@ function HelmInstallContent() {
   const { data: repoData } = useSWR<{ repos: HelmRepo[] }>(
     '/api/helm/repos',
     fetcher,
-    { fallbackData: { repos: mockRepos } },
+
   )
 
   const { data: chartData } = useSWR<{ charts: HelmChart[] }>(
     selectedRepo ? `/api/helm/repos/${selectedRepo}/charts` : null,
     fetcher,
-    { fallbackData: { charts: mockCharts } },
+
   )
 
-  const repos = repoData?.repos || mockRepos
-  const charts = chartData?.charts || (selectedRepo ? mockCharts : [])
+  const repos = repoData?.repos ?? []
+  const charts = chartData?.charts ?? []
 
   const filteredCharts = charts.filter(
     (c) =>

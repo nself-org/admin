@@ -18,14 +18,13 @@ import { ensureCorrectRoute } from '@/lib/routing-logic'
 import { useProjectStore } from '@/stores/projectStore'
 import { Box, FolderOpen, RefreshCw, Settings, Wifi, WifiOff } from 'lucide-react'
 import { useRouter } from 'next/navigation'
-import { Suspense, useEffect, useState } from 'react'
+import { Suspense, useEffect, useMemo, useState } from 'react'
 
 function DashboardContent() {
   const router = useRouter()
   const [isInitialLoad, setIsInitialLoad] = useState(true)
   const [environment] = useState<Environment>('local')
   const [activityEvents, setActivityEvents] = useState<ActivityEvent[]>([])
-  const [alerts, setAlerts] = useState<Alert[]>([])
 
   // WebSocket connection for real-time updates
   const { connected, reconnecting } = useWebSocket()
@@ -146,14 +145,14 @@ function DashboardContent() {
     ((systemMetrics?.system?.network?.rx || 0) + (systemMetrics?.system?.network?.tx || 0)) / 10
   )
 
-  // Generate sample alerts based on system state
-  useEffect(() => {
-    const newAlerts: Alert[] = []
+  // Derive alerts from current system state without triggering extra renders
+  const alerts = useMemo<Alert[]>(() => {
+    const derived: Alert[] = []
 
     // Critical: Services down
     const errorServices = services.filter((s) => s.status === 'error' || s.health === 'unhealthy')
     if (errorServices.length > 0) {
-      newAlerts.push({
+      derived.push({
         id: 'critical-services-down',
         type: 'critical',
         title: 'Services Unhealthy',
@@ -165,7 +164,7 @@ function DashboardContent() {
 
     // Warning: High resource usage
     if (healthMetrics.cpuUsage > 80) {
-      newAlerts.push({
+      derived.push({
         id: 'warning-high-cpu',
         type: 'warning',
         title: 'High CPU Usage',
@@ -176,7 +175,7 @@ function DashboardContent() {
     }
 
     if (healthMetrics.memoryUsage > 80) {
-      newAlerts.push({
+      derived.push({
         id: 'warning-high-memory',
         type: 'warning',
         title: 'High Memory Usage',
@@ -186,8 +185,14 @@ function DashboardContent() {
       })
     }
 
-    setAlerts(newAlerts)
-  }, [services, healthMetrics])
+    return derived
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    healthMetrics.cpuUsage,
+    healthMetrics.memoryUsage,
+    healthMetrics.errorCount,
+    services.length,
+  ])
 
   // Service action handlers
   const handleStartService = async (name: string) => {

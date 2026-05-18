@@ -31,8 +31,18 @@ interface EndpointResult {
   error?: string
 }
 
+interface ApiServiceUrl {
+  name: string
+  url: string
+  reachable?: boolean
+  latencyMs?: number
+  error?: string
+}
+
 interface UrlsData {
-  urls: Record<string, string>
+  urls: ApiServiceUrl[] | Record<string, string>
+  projectPath?: string
+  rawOutput?: string
   raw?: string
 }
 
@@ -49,15 +59,21 @@ const ENDPOINT_LABELS: Record<string, { label: string; type: ServiceUrl['type'] 
 
 function parseServiceUrls(data: UrlsData): ServiceUrl[] {
   const urls = data.urls ?? {}
-  return Object.entries(urls)
-    .filter(([, url]) => url && url.startsWith('http'))
-    .map(([name, url]) => {
-      const meta = ENDPOINT_LABELS[name.toLowerCase()] ?? {
-        label: name.replace(/[-_]/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase()),
-        type: 'other' as const,
-      }
-      return { name, label: meta.label, url, type: meta.type }
-    })
+  // API may return an array of {name, url, ...} objects or a legacy Record<string, string>
+  const entries: Array<[string, string]> = Array.isArray(urls)
+    ? (urls as ApiServiceUrl[])
+        .filter((u) => u.url && typeof u.url === 'string' && u.url.startsWith('http'))
+        .map((u) => [u.name, u.url] as [string, string])
+    : Object.entries(urls as Record<string, string>).filter(
+        ([, url]) => url && typeof url === 'string' && url.startsWith('http'),
+      )
+  return entries.map(([name, url]) => {
+    const meta = ENDPOINT_LABELS[name.toLowerCase()] ?? {
+      label: name.replace(/[-_]/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase()),
+      type: 'other' as const,
+    }
+    return { name, label: meta.label, url, type: meta.type }
+  })
 }
 
 const TYPE_COLORS: Record<ServiceUrl['type'], string> = {

@@ -43,12 +43,15 @@ COPY postcss.config.js ./
 
 # Set build-time environment variables for standalone mode
 ENV NEXT_TELEMETRY_DISABLED=1
-ENV NODE_ENV=production
 ENV STANDALONE=true
 ENV NODE_OPTIONS=--max-old-space-size=4096
 
-# Build the application in standalone mode
-RUN pnpm run build
+# Build the application in standalone mode.
+# NODE_ENV must NOT be "production" during the build step: the hasura-client module
+# guard (src/lib/hasura-client.ts) throws at module load when NODE_ENV=production and
+# HASURA_GRAPHQL_ADMIN_SECRET is unset, which Next.js triggers during page-data
+# collection. Build-time env vars are not runtime secrets; override for this step only.
+RUN NODE_ENV=build pnpm run build
 
 # Remove dev dependencies to reduce image size
 RUN pnpm prune --prod

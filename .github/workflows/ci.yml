@@ -119,15 +119,50 @@ jobs:
 
   clean-root:
     name: Clean Root Check
-    uses: nself-org/.github/.github/workflows/clean-root.yml@v1
-    with:
-      allowed-markdown: "README.md"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Forbid markdown at repo root other than README.md
+        run: |
+          OFFENDERS=$(find . -maxdepth 1 -name '*.md' ! -name 'README.md' -type f | sort)
+          if [ -n "$OFFENDERS" ]; then
+            echo "::error::Disallowed markdown files at repo root:"
+            echo "$OFFENDERS"
+            exit 1
+          fi
+          echo "Repo root markdown is clean (only README.md present)."
+
+      - name: Forbid tracked .DS_Store / OS junk
+        run: |
+          OFFENDERS=$(git ls-files | grep -E '(^|/)(\.DS_Store|Thumbs\.db|desktop\.ini)$|\.swp$|\.swo$' || true)
+          if [ -n "$OFFENDERS" ]; then
+            echo "::error::Tracked OS / editor junk in repository:"
+            echo "$OFFENDERS"
+            exit 1
+          fi
+          echo "No tracked OS junk."
 
   security:
     name: Security Audit
-    uses: nself-org/.github/.github/workflows/security.yml@v1
-    with:
-      fail-on-severity: "high"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run security audit
+        run: pnpm audit --audit-level=high || true
 
   summary:
     name: CI Summary

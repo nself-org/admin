@@ -305,7 +305,7 @@ export default function LoginClient() {
                 className="block text-sm font-medium text-zinc-700 dark:text-zinc-300"
               >
                 {isSetupMode ? 'Set Password' : 'Password'}
-                <span className="text-red-600 dark:text-red-400" aria-label="required">
+                <span className="text-red-600 dark:text-red-400" aria-hidden="true">
                   {' '}
                   *
                 </span>
@@ -403,8 +403,9 @@ export default function LoginClient() {
                   className="block text-sm font-medium text-zinc-700 dark:text-zinc-300"
                 >
                   Confirm Password
-                  <span className="text-red-600 dark:text-red-400" aria-label="required">
+                  <span className="text-red-600 dark:text-red-400" aria-hidden="true">
                     {' '}
+                    *
                   </span>
                 </label>
                 <div className="relative">

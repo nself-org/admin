@@ -44,3 +44,7 @@ cadfc1d2e0192b204224b0c2402e896da37dc20c:src/app/tools/webhooks/page.tsx:slack-w
 
 # nsf_ci_abcdef... placeholder token in settings/page.tsx (line shifted by prettier)
 cadfc1d2e0192b204224b0c2402e896da37dc20c:src/app/settings/page.tsx:generic-api-key:484
+
+# SSH key FORMAT example (-----BEGIN/END OPENSSH PRIVATE KEY----- comment block) in docs/CICD.md
+# File deleted in later commit; this is historical false-positive from docs example block
+9dd678b0842b1842eab69d48cd6c48a0043d701d:docs/CICD.md:private-key:964

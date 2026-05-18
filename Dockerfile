@@ -11,6 +11,8 @@ WORKDIR /app
 
 # Copy package files first for better layer caching
 COPY package.json pnpm-lock.yaml ./
+# Copy vendored local workspace packages (referenced in pnpm-lock.yaml as type:directory)
+COPY packages ./packages
 
 # Disable hardlinks: pnpm defaults to hardlink import which fails under QEMU (arm64
 # emulation) because the cache mount and the workdir are on different virtual

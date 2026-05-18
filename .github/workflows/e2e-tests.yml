@@ -7,14 +7,17 @@ on:
     branches: [main, develop]
 
 jobs:
+  # ── Desktop browsers: 3 browsers × 4 shards = 12 parallel jobs ────────────
   e2e-tests:
-    name: E2E Tests (${{ matrix.browser }})
-    timeout-minutes: 60
+    name: E2E (${{ matrix.browser }}, shard ${{ matrix.shardIndex }}/${{ matrix.shardTotal }})
+    timeout-minutes: 20
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
         browser: [chromium, firefox, webkit]
+        shardIndex: [1, 2, 3, 4]
+        shardTotal: [4]
 
     steps:
       - name: Checkout code
@@ -42,35 +45,32 @@ jobs:
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps ${{ matrix.browser }}
 
-      - name: Run E2E tests
-        run: pnpm test:e2e --project=${{ matrix.browser }}
+      - name: Run E2E tests (shard ${{ matrix.shardIndex }}/${{ matrix.shardTotal }})
+        run: |
+          pnpm test:e2e \
+            --project=${{ matrix.browser }} \
+            --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
         env:
-          # globalSetup launches this browser for warmup.  Each matrix job only
-          # installs its own browser, so we must tell globalSetup which to use.
           WARMUP_BROWSER: ${{ matrix.browser }}
 
-      - name: Upload test results
+      - name: Upload blob report
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: playwright-results-${{ matrix.browser }}
-          path: |
-            test-results/
-            playwright-report/
-          retention-days: 30
+          name: blob-report-${{ matrix.browser }}-${{ matrix.shardIndex }}
+          path: blob-report/
+          retention-days: 7
 
-      - name: Upload test report
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: playwright-report-${{ matrix.browser }}
-          path: playwright-report/
-          retention-days: 30
-
+  # ── Mobile viewports: 2 shards ─────────────────────────────────────────────
   mobile-tests:
-    name: Mobile E2E Tests
-    timeout-minutes: 60
+    name: Mobile E2E (shard ${{ matrix.shardIndex }}/${{ matrix.shardTotal }})
+    timeout-minutes: 20
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        shardIndex: [1, 2]
+        shardTotal: [2]
 
     steps:
       - name: Checkout code
@@ -93,41 +93,83 @@ jobs:
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps chromium webkit
 
-      - name: Run Mobile E2E tests
-        run: pnpm test:e2e:mobile
+      - name: Run Mobile E2E tests (shard ${{ matrix.shardIndex }}/${{ matrix.shardTotal }})
+        run: |
+          pnpm test:e2e:mobile \
+            --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
         env:
-          # Mobile job installs chromium + webkit; use chromium for the warmup.
           WARMUP_BROWSER: chromium
 
-      - name: Upload test results
+      - name: Upload blob report
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: playwright-results-mobile
-          path: |
-            test-results/
-            playwright-report/
-          retention-days: 30
+          name: blob-report-mobile-${{ matrix.shardIndex }}
+          path: blob-report/
+          retention-days: 7
 
+  # ── Merge all shard reports + aggregate pass/fail gate ─────────────────────
   summary:
     name: Test Summary
     needs: [e2e-tests, mobile-tests]
     if: always()
     runs-on: ubuntu-latest
     steps:
-      - name: Download all test results
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.28.0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install Playwright (for merge-reports)
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Download all blob reports
         uses: actions/download-artifact@v4
         with:
-          path: all-test-results
+          path: all-blob-reports
+          pattern: blob-report-*
+          merge-multiple: true
 
-      - name: Create test summary
+      - name: Merge shard reports into HTML report
+        run: pnpm exec playwright merge-reports --reporter html ./all-blob-reports
+
+      - name: Upload merged HTML report
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report-merged
+          path: playwright-report/
+          retention-days: 30
+
+      - name: Write step summary
         run: |
           echo "## E2E Test Results" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "### Browser Tests" >> $GITHUB_STEP_SUMMARY
+          echo "### Desktop Browsers (4 shards each)" >> $GITHUB_STEP_SUMMARY
           echo "- Chromium: ${{ needs.e2e-tests.result }}" >> $GITHUB_STEP_SUMMARY
-          echo "- Firefox: ${{ needs.e2e-tests.result }}" >> $GITHUB_STEP_SUMMARY
-          echo "- WebKit: ${{ needs.e2e-tests.result }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Firefox:  ${{ needs.e2e-tests.result }}" >> $GITHUB_STEP_SUMMARY
+          echo "- WebKit:   ${{ needs.e2e-tests.result }}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "### Mobile Tests" >> $GITHUB_STEP_SUMMARY
-          echo "- Mobile: ${{ needs.mobile-tests.result }}" >> $GITHUB_STEP_SUMMARY
+          echo "### Mobile (2 shards)" >> $GITHUB_STEP_SUMMARY
+          echo "- Mobile Chrome + Safari: ${{ needs.mobile-tests.result }}" >> $GITHUB_STEP_SUMMARY
+
+      - name: Fail if any shard failed
+        if: >
+          needs.e2e-tests.result == 'failure' ||
+          needs.e2e-tests.result == 'cancelled' ||
+          needs.mobile-tests.result == 'failure' ||
+          needs.mobile-tests.result == 'cancelled'
+        run: |
+          echo "One or more E2E shards failed or were cancelled."
+          exit 1

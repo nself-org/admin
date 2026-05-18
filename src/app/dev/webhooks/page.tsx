@@ -235,13 +235,13 @@ function WebhooksContent() {
       </div>
 
       {/* Registered endpoints */}
-      {data.endpoints.length > 0 && (
+      {(data.endpoints ?? []).length > 0 && (
         <div className="space-y-2 rounded-lg border border-white/10 bg-white/[0.02] p-4">
           <p className="text-xs font-medium tracking-wider text-gray-400 uppercase">
             Registered Endpoints
           </p>
           <div className="space-y-2">
-            {data.endpoints.map((ep, i) => (
+            {(data.endpoints ?? []).map((ep, i) => (
               <div key={i} className="flex items-start gap-2">
                 <Globe className="mt-0.5 h-4 w-4 flex-shrink-0 text-sky-400" />
                 <div className="min-w-0 flex-1">

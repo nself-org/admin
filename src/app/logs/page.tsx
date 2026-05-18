@@ -54,7 +54,10 @@ function LogsContent() {
         const res = await fetch('/api/project/services-detail')
         if (res.ok) {
           const data = await res.json()
-          const serviceNames = data.services?.map((s: { name: string }) => s.name) || []
+          const raw = data.services ?? {}
+          const serviceNames = Array.isArray(raw)
+            ? (raw as { name: string }[]).map((s) => s.name)
+            : Object.values(raw as Record<string, { name: string }>).map((s) => s.name)
           setServices(serviceNames)
           setIsLoading(false)
         }

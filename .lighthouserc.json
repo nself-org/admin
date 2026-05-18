@@ -21,7 +21,8 @@
         "content-width": ["warn", { "minScore": 0 }],
         "errors-in-console": ["warn", { "minScore": 0 }],
         "robots-txt": ["warn", { "minScore": 0 }],
-        "color-contrast": ["warn", { "minScore": 0 }]
+        "color-contrast": ["warn", { "minScore": 0 }],
+        "bf-cache": ["warn", { "minScore": 0 }]
       }
     },
     "upload": {

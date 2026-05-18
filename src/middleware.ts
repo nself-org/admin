@@ -102,11 +102,7 @@ function buildCsp(nonce: string): string {
   ].join('; ')
 }
 
-function applySecurityHeaders(
-  response: NextResponse,
-  nonce: string,
-  csp: string
-): NextResponse {
+function applySecurityHeaders(response: NextResponse, nonce: string, csp: string): NextResponse {
   response.headers.set('X-Content-Type-Options', 'nosniff')
   response.headers.set('X-Frame-Options', 'DENY')
   response.headers.set('X-XSS-Protection', '1; mode=block')

@@ -66,15 +66,20 @@ export async function setupAuth(page: Page, password = TEST_PASSWORD) {
   // Wait until we've left /login.  With the mock, the app may route to
   // /build, /, /start, or /dashboard depending on race order between
   // Layout's useEffect and the login page's getCorrectRoute call.
+  //
+  // Use waitUntil: 'commit' so the wait resolves as soon as the URL changes
+  // (Next.js client-side navigation).  The default 'load' level waits for
+  // all resources including SSE/polling connections that never complete in
+  // CI, causing 30s timeouts on every shard past the first.
   await page.waitForURL((url) => !url.pathname.includes('/login'), {
     timeout: 30000,
+    waitUntil: 'commit',
   })
-  // Let the redirect finish loading before the test body starts navigating.
-  // Without this, Firefox aborts the next page.goto() with NS_BINDING_ABORTED
-  // because the login redirect is still in-flight.  Catch the timeout that
-  // fires on pages with persistent SSE / polling connections.
-  await page.waitForLoadState('load').catch(() => {
-    // ignore — some pages never settle to 'networkidle' due to SSE streams
+  // Let the redirect settle before the test body starts navigating.
+  // domcontentloaded is sufficient — SSE streams keep 'load'/'networkidle'
+  // busy indefinitely on dashboard pages.
+  await page.waitForLoadState('domcontentloaded').catch(() => {
+    // ignore — rare race where navigation aborts before DOMContentLoaded
   })
 }
 

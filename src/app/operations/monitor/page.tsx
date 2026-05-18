@@ -142,17 +142,17 @@ function MonitorContent() {
           </Card>
         )}
 
-        {!loading && !error && data && data.services.length > 0 && (
+        {!loading && !error && data && (data.services?.length ?? 0) > 0 && (
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Activity className="h-5 w-5" />
-                Service Health ({data.services.length})
+                Service Health ({data.services?.length ?? 0})
               </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="divide-y">
-                {data.services.map((svc, i) => (
+                {(data.services ?? []).map((svc, i) => (
                   <div key={i} className="flex items-center justify-between py-3">
                     <div>
                       <p className="font-mono text-sm font-medium">{svc.name}</p>

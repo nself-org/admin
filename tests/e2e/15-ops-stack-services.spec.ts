@@ -492,20 +492,20 @@ test.describe('/services/logs — 7 UI states', () => {
 
   test('01 services-error — error card when service list fails', async ({ page }) => {
     await mockNselfError(page, 'CLI unavailable')
-    await page.goto('/services/logs', { waitUntil: 'networkidle' })
+    await page.goto('/services/logs', { waitUntil: 'domcontentloaded' })
     await expect(page.locator('text=Failed to load service list')).toBeVisible()
     await expect(page.locator('text=CLI unavailable')).toBeVisible()
   })
 
   test('02 services-empty — empty-state when no services running', async ({ page }) => {
     await mockNselfEmpty(page)
-    await page.goto('/services/logs', { waitUntil: 'networkidle' })
+    await page.goto('/services/logs', { waitUntil: 'domcontentloaded' })
     await expect(page.locator('text=No services running')).toBeVisible()
   })
 
   test('03 services-success — service selector populated', async ({ page }) => {
     await mockNselfSuccess(page, LOG_SERVICE_LIST)
-    await page.goto('/services/logs', { waitUntil: 'networkidle' })
+    await page.goto('/services/logs', { waitUntil: 'domcontentloaded' })
 
     // Select trigger should be visible (service selector)
     const trigger = page.locator('button[role="combobox"]').first()
@@ -541,7 +541,7 @@ test.describe('/services/logs — 7 UI states', () => {
       })
     })
 
-    await page.goto('/services/logs', { waitUntil: 'networkidle' })
+    await page.goto('/services/logs', { waitUntil: 'domcontentloaded' })
     // Spinner for logs loading
     const spinner = page.locator('.animate-spin')
     const spinnerVisible = await spinner
@@ -574,7 +574,7 @@ test.describe('/services/logs — 7 UI states', () => {
       })
     })
 
-    await page.goto('/services/logs', { waitUntil: 'networkidle' })
+    await page.goto('/services/logs', { waitUntil: 'domcontentloaded' })
     await page.waitForTimeout(800)
     await expect(page.locator('text=Failed to load logs')).toBeVisible()
   })
@@ -600,7 +600,7 @@ test.describe('/services/logs — 7 UI states', () => {
       })
     })
 
-    await page.goto('/services/logs', { waitUntil: 'networkidle' })
+    await page.goto('/services/logs', { waitUntil: 'domcontentloaded' })
     await page.waitForTimeout(800)
     await expect(page.locator('pre')).toContainText('startup complete')
   })
@@ -630,7 +630,7 @@ test.describe('/services/logs — 7 UI states', () => {
       })
     })
 
-    await page.goto('/services/logs', { waitUntil: 'networkidle' })
+    await page.goto('/services/logs', { waitUntil: 'domcontentloaded' })
     await page.waitForTimeout(600)
     const before = logCallCount
 

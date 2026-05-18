@@ -263,7 +263,10 @@ test.describe('Rate Limits page', () => {
     await page.waitForLoadState('domcontentloaded')
     // Auto-retries up to expect.timeout — waits for React to render the error state
     await expect(
-      page.getByRole('button', { name: /retry/i }).or(page.getByText(/cannot (connect|reach)/i)).first()
+      page
+        .getByRole('button', { name: /retry/i })
+        .or(page.getByText(/cannot (connect|reach)/i))
+        .first()
     ).toBeVisible()
   })
 

@@ -106,11 +106,13 @@ export default async function globalSetup(config: FullConfig) {
     }
 
     // Step 4: Wait for React hydration.
-    // Once networkidle resolves all JS chunks are compiled, but React still
-    // needs a moment to attach event handlers (hydrate).  Waiting for the
-    // password input to be in a stable, visible state ensures handleSubmit
-    // will intercept the click rather than the native form submit.
-    await page.waitForSelector('input[type="password"]', {
+    // Wait for the password input to become enabled — this happens after
+    // /api/auth/init resolves and React sets isCheckingSetup → false.
+    // Using :not([disabled]) matches the setupAuth() pattern in helpers.ts
+    // and ensures the React onClick handler is attached before we click.
+    // WebKit requires this stricter guard (visible but disabled still fails
+    // to trigger the React synthetic event handler on form submit).
+    await page.waitForSelector('input[type="password"]:not([disabled])', {
       state: 'visible',
       timeout: 15000,
     })

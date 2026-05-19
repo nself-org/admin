@@ -81,8 +81,24 @@ export default async function globalSetup(config: FullConfig) {
     await page.goto('/login', { waitUntil: 'networkidle', timeout: 60000 })
 
     // Step 2: Check password status (warms /api/auth/init GET).
-    const initRes = await page.request.get('/api/auth/init')
-    const { passwordExists } = (await initRes.json()) as {
+    // The Next.js dev server can return a socket hang-up immediately after
+    // networkidle resolves on some browsers/shards (the HTTP/1.1 keep-alive
+    // connection is torn down before the first API request lands).  Retry up
+    // to 5 times with a 1 s back-off before failing.
+    let initRes: Awaited<ReturnType<typeof page.request.get>> | null = null
+    for (let attempt = 1; attempt <= 5; attempt++) {
+      try {
+        initRes = await page.request.get('/api/auth/init')
+        break
+      } catch (err) {
+        if (attempt === 5) throw err
+        console.log(
+          `[globalSetup] /api/auth/init attempt ${attempt} failed (${(err as Error).message}), retrying in ${attempt}s…`
+        )
+        await new Promise((r) => setTimeout(r, attempt * 1000))
+      }
+    }
+    const { passwordExists } = (await initRes!.json()) as {
       passwordExists: boolean
     }
 

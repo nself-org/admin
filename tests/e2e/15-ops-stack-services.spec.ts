@@ -170,7 +170,7 @@ test.describe('/services/nestjs — 7 UI states', () => {
     await mockNselfSuccess(page, SERVICE_LIST_JSON)
     await page.goto('/services/nestjs', { waitUntil: 'networkidle' })
 
-    await expect(page.locator('text=my-service')).toBeVisible()
+    await expect(page.locator('text=my-service').first()).toBeVisible()
     await expect(page.locator('text=running')).toBeVisible()
   })
 
@@ -202,7 +202,7 @@ test.describe('/services/nestjs — 7 UI states', () => {
     })
 
     await page.goto('/services/nestjs', { waitUntil: 'networkidle' })
-    await expect(page.locator('text=my-service')).toBeVisible()
+    await expect(page.locator('text=my-service').first()).toBeVisible()
 
     // Click Restart for the first service (running)
     await page.locator('button:has-text("Restart")').first().click()
@@ -220,7 +220,7 @@ test.describe('/services/nestjs — 7 UI states', () => {
     )
 
     await page.goto('/services/nestjs', { waitUntil: 'networkidle' })
-    await expect(page.locator('text=my-service')).toBeVisible()
+    await expect(page.locator('text=my-service').first()).toBeVisible()
 
     await page.locator('button:has-text("Restart")').first().click()
     await page.waitForTimeout(500)
@@ -236,7 +236,7 @@ test.describe('/services/nestjs — 7 UI states', () => {
     )
 
     await page.goto('/services/nestjs', { waitUntil: 'networkidle' })
-    await expect(page.locator('text=my-service')).toBeVisible()
+    await expect(page.locator('text=my-service').first()).toBeVisible()
 
     await page.locator('button:has-text("Restart")').first().click()
     await page.waitForTimeout(500)
@@ -267,7 +267,7 @@ test.describe('/services/bullmq — 7 UI states', () => {
   test('03 success — service card visible', async ({ page }) => {
     await mockNselfSuccess(page, SERVICE_LIST_JSON)
     await page.goto('/services/bullmq', { waitUntil: 'networkidle' })
-    await expect(page.locator('text=my-service')).toBeVisible()
+    await expect(page.locator('text=my-service').first()).toBeVisible()
   })
 
   test('04 stop-confirm — confirm card shown before stopping', async ({ page }) => {
@@ -346,7 +346,7 @@ test.describe('/services/custom — 7 UI states', () => {
   test('03 success — service card visible', async ({ page }) => {
     await mockNselfSuccess(page, SERVICE_LIST_JSON)
     await page.goto('/services/custom', { waitUntil: 'networkidle' })
-    await expect(page.locator('text=my-service')).toBeVisible()
+    await expect(page.locator('text=my-service').first()).toBeVisible()
   })
 
   test('04 stop-confirm — confirm card appears on Stop click', async ({ page }) => {
@@ -416,7 +416,7 @@ test.describe('/services/python — 7 UI states', () => {
   test('03 success — service card visible with status badge', async ({ page }) => {
     await mockNselfSuccess(page, SERVICE_LIST_JSON)
     await page.goto('/services/python', { waitUntil: 'networkidle' })
-    await expect(page.locator('text=my-service')).toBeVisible()
+    await expect(page.locator('text=my-service').first()).toBeVisible()
     await expect(page.locator('text=running')).toBeVisible()
   })
 
@@ -731,9 +731,8 @@ test.describe('/operations/scale — 7 UI states', () => {
     await page.goto('/operations/scale', { waitUntil: 'domcontentloaded' })
     await expect(page.locator('main').getByText('api', { exact: true }).first()).toBeVisible()
     await page.locator('button:has-text("Apply")').first().click()
-    await page.waitForTimeout(500)
 
-    await expect(page.locator('text=scale failed')).toBeVisible()
+    await expect(page.locator('text=scale failed')).toBeVisible({ timeout: 15000 })
   })
 
   test('07 invalid-replica — error badge for non-numeric input', async ({ page }) => {

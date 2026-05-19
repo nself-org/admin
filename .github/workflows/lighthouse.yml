@@ -41,8 +41,19 @@ jobs:
         run: |
           pnpm start &
           echo "Waiting for app to start..."
-          sleep 20
-          curl --retry 10 --retry-delay 3 http://localhost:3021/api/health
+          # Poll until the health endpoint responds or timeout after 90s.
+          # A fixed sleep(20) is insufficient on slow CI runners; the app can take 40-60s
+          # to hydrate, causing Lighthouse NO_FCP failures on the first run attempt.
+          DEADLINE=$((SECONDS + 90))
+          until curl -sf http://localhost:3021/api/health >/dev/null 2>&1; do
+            if [ $SECONDS -ge $DEADLINE ]; then
+              echo "ERROR: app did not become healthy within 90s"
+              exit 1
+            fi
+            echo "  waiting... ($SECONDS s elapsed)"
+            sleep 3
+          done
+          echo "App is healthy after ${SECONDS}s"
 
       - name: Run Lighthouse audit
         id: lighthouse

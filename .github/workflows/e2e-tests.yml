@@ -88,6 +88,10 @@ jobs:
             --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
         env:
           WARMUP_BROWSER: ${{ matrix.browser }}
+          # Bypass the 10 req/min rate-limit on /api/auth/login so the full
+          # matrix (3 browsers × 4 shards + retries) can authenticate without
+          # exhausting the shared 'unknown' IP bucket.  Has no effect in prod.
+          PLAYWRIGHT_E2E_BYPASS_RATE_LIMIT: 'true'
 
       - name: Upload blob report
         if: always()
@@ -142,6 +146,9 @@ jobs:
             --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
         env:
           WARMUP_BROWSER: chromium
+          # Bypass the 10 req/min rate-limit on /api/auth/login for the same
+          # reason as the desktop shards — mobile shards share the same server.
+          PLAYWRIGHT_E2E_BYPASS_RATE_LIMIT: 'true'
 
       - name: Upload blob report
         if: always()

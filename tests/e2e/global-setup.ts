@@ -117,26 +117,59 @@ export default async function globalSetup(config: FullConfig) {
       timeout: 15000,
     })
 
-    // Step 5: Submit the login form via the React handler.
-    // This warms the remaining server-side routes in a single authenticated pass:
-    //   GET  /api/auth/csrf             (called by handleSubmit before POST)
-    //   POST /api/auth/login            (credential check + session cookie)
-    //   GET  /api/project/status        (called by getCorrectRoute after login)
-    //        middleware                 (fires on first protected-route navigation)
-    //   POST /api/auth/validate-session (middleware's internal fetch)
-    //   /build page SSR + JS bundles    (destination after login)
-    console.log('[globalSetup] Submitting login form to warm remaining routes…')
-    await page.fill('input[type="password"]', TEST_PASSWORD)
-    await page.click('button[type="submit"]')
+    // Step 5: Log in to warm auth routes + obtain a session cookie.
+    //
+    // WHY WE USE DIRECT API CALLS INSTEAD OF THE BROWSER FORM:
+    //   Production builds use a nonce-based script-src CSP:
+    //     script-src 'self' 'nonce-<random>'
+    //   WebKit enforces this strictly — client-side JS that was not stamped with
+    //   the matching nonce is blocked, which prevents Next.js router.push() from
+    //   navigating away from /login after the form submits.  The result is a
+    //   60 s timeout waiting for the URL to leave /login.
+    //
+    //   Chromium and Firefox are lenient about nonce propagation in some edge
+    //   cases, so they navigate successfully via the form.  But direct API calls
+    //   work identically across all three browsers and are faster.
+    //
+    //   The routes warmed here:
+    //     GET  /api/auth/csrf             — CSRF token
+    //     POST /api/auth/login            — credential check + session cookie
+    //     GET  /api/project/status        — post-login routing (mocked)
+    //          middleware                 — session validation
+    //     POST /api/auth/validate-session — middleware's internal endpoint
+    //     /build page SSR + JS bundles    — direct navigation after cookie is set
+    console.log('[globalSetup] Warming auth routes via API (CSP-safe across all browsers)…')
 
-    // 60 s budget for the full cold-start chain.  The project status mock
-    // ensures the app stays on /build or / (depending on routing race order).
-    // Just wait until we've left /login — the exact destination doesn't matter
-    // for warmup.  After this, routes and JS bundles are cached; auth < 5 s.
-    await page.waitForURL((url) => !url.pathname.includes('/login'), {
-      timeout: 60000,
-      waitUntil: 'commit',
+    // 5a: Fetch CSRF token (warms the /api/auth/csrf route; the cookie is
+    // automatically stored in the browser context for subsequent requests).
+    await page.request.get('/api/auth/csrf')
+
+    // 5b: POST login credentials.  The login route (/api/auth/login) validates
+    // only the password field — CSRF is validated via cookie/header for
+    // post-session API calls, not for the login endpoint itself.
+    const loginRes = await page.request.post('/api/auth/login', {
+      data: { password: TEST_PASSWORD },
     })
+    if (!loginRes.ok()) {
+      // Non-fatal for warmup — log and continue.  Tests will create their own
+      // session via setupAuth().  A failed warmup only means the first test in
+      // each shard may be slightly slower (cold-start routes).
+      console.warn(
+        `[globalSetup] Login API returned ${loginRes.status()} — warmup incomplete, tests will self-authenticate.`
+      )
+    } else {
+      // 5c: Navigate the browser to /build so SSR + JS bundles are compiled.
+      // The session cookie set by the login POST is available to page.goto()
+      // because page.request shares the browser context's cookie jar.
+      console.log('[globalSetup] Session established — navigating to /build to warm SSR bundles…')
+      try {
+        await page.goto('/build', { waitUntil: 'domcontentloaded', timeout: 30000 })
+      } catch {
+        // domcontentloaded may not fire if SSE keeps the load event pending —
+        // that is fine; the SSR compilation is already triggered by the request.
+        console.log('[globalSetup] /build navigation settled (SSE may keep load pending).')
+      }
+    }
 
     // Drain the /build page's mount-time API calls so all server-side routes
     // are compiled and their module-level caches are warm before tests start.

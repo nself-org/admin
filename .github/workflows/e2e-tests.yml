@@ -121,6 +121,8 @@ jobs:
             sleep 5
           done
           echo "ERROR: Auth service did not become healthy within 120 s" >&2
+          echo "=== hasura-auth container logs ===" >&2
+          docker compose -f .github/ci/docker-compose.yml logs auth >&2 || true
           exit 1
         working-directory: .
 
@@ -262,6 +264,8 @@ jobs:
             sleep 5
           done
           echo "ERROR: Auth service did not become healthy within 120 s" >&2
+          echo "=== hasura-auth container logs ===" >&2
+          docker compose -f .github/ci/docker-compose.yml logs auth >&2 || true
           exit 1
         working-directory: .
 

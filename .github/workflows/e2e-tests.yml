@@ -78,6 +78,81 @@ jobs:
           name: next-build
           path: .next/
 
+      - name: Create minimal nself project for CI
+        run: |
+          mkdir -p /tmp/nself-ci-project
+          printf 'PROJECT_NAME=nself-admin-ci\n' > /tmp/nself-ci-project/.env.dev
+          printf 'BASE_DOMAIN=localhost\n' >> /tmp/nself-ci-project/.env.dev
+          printf 'HASURA_GRAPHQL_ADMIN_SECRET=hasura-admin-secret-ci-only-32chars\n' >> /tmp/nself-ci-project/.env.dev
+          printf 'DOCKER_NETWORK=admin_network\n' >> /tmp/nself-ci-project/.env.dev
+          printf 'HASURA_GRAPHQL_JWT_SECRET={"type":"HS256","key":"admin-ci-development-secret-key-minimum-32-characters"}\n' >> /tmp/nself-ci-project/.env.dev
+          cp /tmp/nself-ci-project/.env.dev /tmp/nself-ci-project/.env
+
+      - name: Start nself backend stack
+        run: |
+          docker compose -f .github/ci/docker-compose.yml pull --quiet
+          docker compose -f .github/ci/docker-compose.yml up -d
+        working-directory: .
+
+      - name: Wait for Hasura health
+        run: |
+          echo "Waiting for Hasura at http://localhost:8080/healthz ..."
+          for i in $(seq 1 24); do
+            if curl -sf http://localhost:8080/healthz > /dev/null 2>&1; then
+              echo "Hasura healthy (attempt $i)"
+              exit 0
+            fi
+            echo "Attempt $i/24 — waiting 5 s ..."
+            sleep 5
+          done
+          echo "ERROR: Hasura did not become healthy within 120 s" >&2
+          exit 1
+        working-directory: .
+
+      - name: Wait for Auth service health
+        run: |
+          echo "Waiting for Auth at http://localhost:4000/healthz ..."
+          for i in $(seq 1 24); do
+            if curl -sf http://localhost:4000/healthz > /dev/null 2>&1; then
+              echo "Auth healthy (attempt $i)"
+              exit 0
+            fi
+            echo "Attempt $i/24 — waiting 5 s ..."
+            sleep 5
+          done
+          echo "ERROR: Auth service did not become healthy within 120 s" >&2
+          exit 1
+        working-directory: .
+
+      - name: Seed E2E test users
+        run: |
+          AUTH_URL="http://localhost:4000"
+          PASSWORD="password123"
+          seed_user() {
+            local email="$1"
+            local display="$2"
+            local role="$3"
+            local http_code
+            http_code=$(curl -s -o /dev/null -w "%{http_code}" \
+              -X POST "$AUTH_URL/v1/signup/email-password" \
+              -H "Content-Type: application/json" \
+              -d "{\"email\":\"$email\",\"password\":\"$PASSWORD\",\"options\":{\"displayName\":\"$display\",\"locale\":\"en\",\"metadata\":{\"role\":\"$role\"}}}")
+            if [ "$http_code" = "200" ] || [ "$http_code" = "201" ]; then
+              echo "Created: $email"
+            elif [ "$http_code" = "409" ] || [ "$http_code" = "422" ]; then
+              echo "Already exists (ok): $email"
+            else
+              echo "WARNING: unexpected HTTP $http_code for $email"
+            fi
+          }
+          seed_user "owner@nself.org"     "Test Owner"     "owner"
+          seed_user "admin@nself.org"     "Test Admin"     "admin"
+          seed_user "moderator@nself.org" "Test Moderator" "moderator"
+          seed_user "member@nself.org"    "Test Member"    "member"
+          seed_user "guest@nself.org"     "Test Guest"     "guest"
+          echo "Seeding complete."
+        working-directory: .
+
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps ${{ matrix.browser }}
 
@@ -92,6 +167,13 @@ jobs:
           # matrix (3 browsers × 4 shards + retries) can authenticate without
           # exhausting the shared 'unknown' IP bucket.  Has no effect in prod.
           PLAYWRIGHT_E2E_BYPASS_RATE_LIMIT: 'true'
+          # CI nself backend — points to the synthetic project directory created above.
+          # getProjectPath() reads this so all path-based API routes resolve correctly.
+          NSELF_PROJECT_PATH: /tmp/nself-ci-project
+          # Hasura admin secret for the CI stack.  Empty string would also be
+          # safe (guard only fires on non-empty dev-stub values), but setting the
+          # real CI value allows any non-mocked Hasura proxy calls to succeed.
+          HASURA_GRAPHQL_ADMIN_SECRET: hasura-admin-secret-ci-only-32chars
 
       - name: Upload blob report
         if: always()
@@ -137,6 +219,81 @@ jobs:
           name: next-build
           path: .next/
 
+      - name: Create minimal nself project for CI
+        run: |
+          mkdir -p /tmp/nself-ci-project
+          printf 'PROJECT_NAME=nself-admin-ci\n' > /tmp/nself-ci-project/.env.dev
+          printf 'BASE_DOMAIN=localhost\n' >> /tmp/nself-ci-project/.env.dev
+          printf 'HASURA_GRAPHQL_ADMIN_SECRET=hasura-admin-secret-ci-only-32chars\n' >> /tmp/nself-ci-project/.env.dev
+          printf 'DOCKER_NETWORK=admin_network\n' >> /tmp/nself-ci-project/.env.dev
+          printf 'HASURA_GRAPHQL_JWT_SECRET={"type":"HS256","key":"admin-ci-development-secret-key-minimum-32-characters"}\n' >> /tmp/nself-ci-project/.env.dev
+          cp /tmp/nself-ci-project/.env.dev /tmp/nself-ci-project/.env
+
+      - name: Start nself backend stack
+        run: |
+          docker compose -f .github/ci/docker-compose.yml pull --quiet
+          docker compose -f .github/ci/docker-compose.yml up -d
+        working-directory: .
+
+      - name: Wait for Hasura health
+        run: |
+          echo "Waiting for Hasura at http://localhost:8080/healthz ..."
+          for i in $(seq 1 24); do
+            if curl -sf http://localhost:8080/healthz > /dev/null 2>&1; then
+              echo "Hasura healthy (attempt $i)"
+              exit 0
+            fi
+            echo "Attempt $i/24 — waiting 5 s ..."
+            sleep 5
+          done
+          echo "ERROR: Hasura did not become healthy within 120 s" >&2
+          exit 1
+        working-directory: .
+
+      - name: Wait for Auth service health
+        run: |
+          echo "Waiting for Auth at http://localhost:4000/healthz ..."
+          for i in $(seq 1 24); do
+            if curl -sf http://localhost:4000/healthz > /dev/null 2>&1; then
+              echo "Auth healthy (attempt $i)"
+              exit 0
+            fi
+            echo "Attempt $i/24 — waiting 5 s ..."
+            sleep 5
+          done
+          echo "ERROR: Auth service did not become healthy within 120 s" >&2
+          exit 1
+        working-directory: .
+
+      - name: Seed E2E test users
+        run: |
+          AUTH_URL="http://localhost:4000"
+          PASSWORD="password123"
+          seed_user() {
+            local email="$1"
+            local display="$2"
+            local role="$3"
+            local http_code
+            http_code=$(curl -s -o /dev/null -w "%{http_code}" \
+              -X POST "$AUTH_URL/v1/signup/email-password" \
+              -H "Content-Type: application/json" \
+              -d "{\"email\":\"$email\",\"password\":\"$PASSWORD\",\"options\":{\"displayName\":\"$display\",\"locale\":\"en\",\"metadata\":{\"role\":\"$role\"}}}")
+            if [ "$http_code" = "200" ] || [ "$http_code" = "201" ]; then
+              echo "Created: $email"
+            elif [ "$http_code" = "409" ] || [ "$http_code" = "422" ]; then
+              echo "Already exists (ok): $email"
+            else
+              echo "WARNING: unexpected HTTP $http_code for $email"
+            fi
+          }
+          seed_user "owner@nself.org"     "Test Owner"     "owner"
+          seed_user "admin@nself.org"     "Test Admin"     "admin"
+          seed_user "moderator@nself.org" "Test Moderator" "moderator"
+          seed_user "member@nself.org"    "Test Member"    "member"
+          seed_user "guest@nself.org"     "Test Guest"     "guest"
+          echo "Seeding complete."
+        working-directory: .
+
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps chromium webkit
 
@@ -149,6 +306,9 @@ jobs:
           # Bypass the 10 req/min rate-limit on /api/auth/login for the same
           # reason as the desktop shards — mobile shards share the same server.
           PLAYWRIGHT_E2E_BYPASS_RATE_LIMIT: 'true'
+          # CI nself backend — points to the synthetic project directory created above.
+          NSELF_PROJECT_PATH: /tmp/nself-ci-project
+          HASURA_GRAPHQL_ADMIN_SECRET: hasura-admin-secret-ci-only-32chars
 
       - name: Upload blob report
         if: always()

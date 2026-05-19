@@ -80,6 +80,8 @@ volumes/
 # nself project files (when used for development)
 docker-compose.yml
 docker-compose.*.yml
+# Re-include CI fixture — not a local nself project file
+!.github/ci/docker-compose.yml
 .env
 /ssl/
 /certs/

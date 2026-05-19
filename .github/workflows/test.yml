@@ -171,3 +171,4 @@ jobs:
           name: build
           path: .next/
           retention-days: 7
+          include-hidden-files: true

@@ -39,6 +39,7 @@ jobs:
           name: next-build
           path: .next/
           retention-days: 1
+          include-hidden-files: true
 
   # ── Desktop browsers: 3 browsers × 4 shards = 12 parallel jobs ────────────
   e2e-tests:

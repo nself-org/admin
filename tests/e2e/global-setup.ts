@@ -2,7 +2,9 @@
  * Playwright globalSetup — runs once before all test workers start.
  *
  * Purpose: set the admin password exactly once so that every test worker finds
- * the server in login mode from the start.
+ * the server in login mode from the start.  Also pre-warms all Next.js JS
+ * bundles and page-level API routes so the first test in each shard navigates
+ * instantly instead of triggering a cold-start.
  *
  * WHY A REAL BROWSER (not just APIRequestContext):
  *   We use a real browser to exercise the full auth flow — login page, CSRF
@@ -17,14 +19,6 @@
  *   to launch the same binary that is actually installed.
  *   Falls back to chromium for local/mobile runs.
  *
- * NOTE — no compilation warmup needed:
- *   The E2E workflow builds the application with `next build` before running
- *   tests.  `next start` serves a pre-compiled bundle; every route is ready
- *   immediately.  The on-demand-compilation cold-start that used to cause
- *   ~30 s first-navigation timeouts (dev mode) does not occur in production
- *   mode.  The warmup browser pass below is therefore only needed to seed the
- *   LokiJS password and exercise the auth flow once before test workers start.
- *
  * Routes exercised:
  *   /login                          — page load + React hydration
  *   GET  /api/auth/init             — setup/login mode check
@@ -34,7 +28,9 @@
  *   GET  /api/project/status        — post-login routing logic
  *        middleware                 — session validation on every protected route
  *   POST /api/auth/validate-session — middleware's internal endpoint
- *   /build or /init/1               — destination page after login
+ *   /build                          — destination page after login
+ *   /services, /config, /logs, /database, /deployment/staging
+ *                                   — warmed so every spec's first navigation is instant
  */
 
 import { chromium, firefox, webkit, type BrowserType, type FullConfig } from '@playwright/test'

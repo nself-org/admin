@@ -22,8 +22,10 @@ export default defineConfig({
 
   /* Per-test timeout: includes beforeEach + test body.
    * With pre-warmed routes, setupAuth() completes in < 10 s.
-   * 30 s gives the test body a comfortable budget after auth. */
-  timeout: 30000,
+   * 60 s gives the test body a comfortable budget after auth, and absorbs
+   * any residual first-navigation latency from the production server cold-start
+   * on CI runners that are slower than local dev machines. */
+  timeout: 60000,
 
   /* Default timeout for individual expect() assertions.
    * Playwright default is 5 s, but several pages (build, services, database,
@@ -131,6 +133,10 @@ export default defineConfig({
     command: 'pnpm start',
     url: 'http://localhost:3021',
     reuseExistingServer: !process.env.CI,
-    timeout: 60 * 1000,
+    // 5 min budget for `next start` to bind on a cold CI runner.  The default
+    // 60 s is sometimes not enough when the 2-core GitHub Actions runner is
+    // under memory pressure after the build step.  Once the server is bound,
+    // it stays fast — this timeout only covers the initial startup.
+    timeout: 5 * 60 * 1000,
   },
 })

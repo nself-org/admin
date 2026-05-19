@@ -4,11 +4,17 @@ import { type Page } from '@playwright/test'
 export const TEST_PASSWORD = 'Test123!@#Xy'
 
 /**
- * Mock /api/project/status to simulate a configured (but not running) project.
+ * Mock /api/project/status and all CLI-dependent API endpoints that pages
+ * call on mount.
  *
  * In CI there is no nself project, so the real endpoint returns needsSetup: true
  * and ProjectStateWrapper redirects every page to /init/1.  This mock lets tests
  * navigate to /build, /config, /dashboard, etc. without being hijacked.
+ *
+ * The additional mocks below prevent 22-30 s hangs that occur when pages call
+ * CLI-dependent endpoints (docker, nself binary) on mount and the binary is
+ * absent in CI.  Without these mocks, every first test in a spec would exhaust
+ * its 30 s timeout waiting for the unmocked fetch to fail.
  *
  * Call this BEFORE any navigation that triggers ProjectStateWrapper (which is
  * every authenticated page load).
@@ -68,6 +74,98 @@ export async function mockProjectStatus(page: Page) {
       body: JSON.stringify({
         success: true,
         data: { containers: [] },
+      }),
+    })
+  )
+
+  // /build page: runPreBuildChecks() fetches these on mount via useEffect.
+  // Both call the nself binary or Docker daemon which are absent in CI —
+  // without mocks every /build navigation hangs for ~5 s until exec timeout.
+  await page.route('**/api/docker/status', (route) =>
+    route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({
+        running: true,
+        message: 'Docker daemon is running',
+      }),
+    })
+  )
+
+  await page.route('**/api/nself/version', (route) =>
+    route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({
+        version: 'v1.1.1',
+        path: '/usr/local/bin/nself',
+      }),
+    })
+  )
+
+  // /logs page: fetches /api/project/services-detail on mount to populate the
+  // service selector.  The real route reads docker-compose.yml which does not
+  // exist in CI, returning an empty services map.
+  await page.route('**/api/project/services-detail', (route) =>
+    route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({
+        success: true,
+        services: {
+          postgres: { name: 'postgres', image: 'postgres:15' },
+          hasura: { name: 'hasura', image: 'hasura/graphql-engine:latest' },
+          auth: { name: 'auth', image: 'nhost/hasura-auth:latest' },
+          nginx: { name: 'nginx', image: 'nginx:latest' },
+        },
+        projectPath: '/tmp/test',
+      }),
+    })
+  )
+
+  // /config page: fetches /api/config/env on mount to populate the env var
+  // editor.  The real route reads .env.local which does not exist in CI.
+  await page.route('**/api/config/env**', (route) =>
+    route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({
+        success: true,
+        data: {
+          environment: 'local',
+          variables: [],
+          availableEnvironments: ['local', 'dev', 'stage', 'prod', 'secrets'],
+          hasChanges: false,
+        },
+      }),
+    })
+  )
+
+  // /deployment/staging page: fetches /api/deploy/staging on mount.
+  // /deployment/prod page: fetches /api/deploy/production on mount.
+  // Both call the nself binary (nself prod/staging status) which is absent in CI.
+  await page.route('**/api/deploy/staging', (route) =>
+    route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({
+        success: true,
+        status: 'not-configured',
+        output: '',
+        stderr: '',
+      }),
+    })
+  )
+
+  await page.route('**/api/deploy/production', (route) =>
+    route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({
+        success: true,
+        status: 'not-configured',
+        output: '',
+        stderr: '',
       }),
     })
   )

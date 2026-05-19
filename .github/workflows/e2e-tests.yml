@@ -112,15 +112,15 @@ jobs:
       - name: Wait for Auth service health
         run: |
           echo "Waiting for Auth at http://localhost:4000/healthz ..."
-          for i in $(seq 1 24); do
+          for i in $(seq 1 72); do
             if curl -sf http://localhost:4000/healthz > /dev/null 2>&1; then
               echo "Auth healthy (attempt $i)"
               exit 0
             fi
-            echo "Attempt $i/24 — waiting 5 s ..."
+            echo "Attempt $i/72 — waiting 5 s ..."
             sleep 5
           done
-          echo "ERROR: Auth service did not become healthy within 120 s" >&2
+          echo "ERROR: Auth service did not become healthy within 360 s" >&2
           echo "=== hasura-auth container logs ===" >&2
           docker compose -f .github/ci/docker-compose.yml logs auth >&2 || true
           exit 1
@@ -255,15 +255,15 @@ jobs:
       - name: Wait for Auth service health
         run: |
           echo "Waiting for Auth at http://localhost:4000/healthz ..."
-          for i in $(seq 1 24); do
+          for i in $(seq 1 72); do
             if curl -sf http://localhost:4000/healthz > /dev/null 2>&1; then
               echo "Auth healthy (attempt $i)"
               exit 0
             fi
-            echo "Attempt $i/24 — waiting 5 s ..."
+            echo "Attempt $i/72 — waiting 5 s ..."
             sleep 5
           done
-          echo "ERROR: Auth service did not become healthy within 120 s" >&2
+          echo "ERROR: Auth service did not become healthy within 360 s" >&2
           echo "=== hasura-auth container logs ===" >&2
           docker compose -f .github/ci/docker-compose.yml logs auth >&2 || true
           exit 1

@@ -42,6 +42,22 @@ jobs:
           echo "minor=$(echo $VERSION | cut -d. -f1-2)" >> "$GITHUB_OUTPUT"
           echo "Building nself-admin v$VERSION"
 
+      - name: Resolve CLI version for Dockerfile
+        id: cli_version
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          # Use the same version as admin when the CLI release exists; otherwise use latest stable.
+          ADMIN_VER="${{ steps.version.outputs.version }}"
+          if gh release view "v${ADMIN_VER}" --repo nself-org/cli &>/dev/null; then
+            CLI_VER="$ADMIN_VER"
+            echo "Using CLI version matching admin: $CLI_VER"
+          else
+            CLI_VER="$(gh release view --repo nself-org/cli --json tagName --jq '.tagName' | sed 's/^v//')"
+            echo "CLI v${ADMIN_VER} not published yet — using latest stable CLI: $CLI_VER"
+          fi
+          echo "cli_version=$CLI_VER" >> "$GITHUB_OUTPUT"
+
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
 
@@ -74,6 +90,7 @@ jobs:
           tags: ${{ env.DOCKER_IMAGE }}:scan-${{ github.sha }}
           labels: ${{ steps.meta.outputs.labels }}
           platforms: linux/amd64
+          build-args: NSELF_VERSION=${{ steps.cli_version.outputs.cli_version }}
           cache-from: type=registry,ref=${{ env.DOCKER_IMAGE }}:buildcache
           cache-to: type=registry,ref=${{ env.DOCKER_IMAGE }}:buildcache,mode=max
 
@@ -110,6 +127,7 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           platforms: linux/amd64,linux/arm64
+          build-args: NSELF_VERSION=${{ steps.cli_version.outputs.cli_version }}
           cache-from: type=registry,ref=${{ env.DOCKER_IMAGE }}:buildcache
           cache-to: type=registry,ref=${{ env.DOCKER_IMAGE }}:buildcache,mode=max
 

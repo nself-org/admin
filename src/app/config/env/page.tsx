@@ -1186,7 +1186,14 @@ function EnvEditorContent() {
 
 export default function EnvEditorPage() {
   return (
-    <Suspense fallback={<FormSkeleton />}>
+    <Suspense
+      fallback={
+        <div>
+          <h1 className="sr-only">Environment Editor</h1>
+          <FormSkeleton />
+        </div>
+      }
+    >
       <EnvEditorContent />
     </Suspense>
   )

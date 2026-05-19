@@ -415,7 +415,14 @@ function ConfigContent() {
 
 export default function ConfigPage() {
   return (
-    <Suspense fallback={<FormSkeleton />}>
+    <Suspense
+      fallback={
+        <div>
+          <h1 className="sr-only">Configuration</h1>
+          <FormSkeleton />
+        </div>
+      }
+    >
       <ConfigContent />
     </Suspense>
   )

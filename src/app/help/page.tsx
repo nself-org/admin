@@ -2230,7 +2230,14 @@ function HelpContent() {
 
 export default function HelpPage() {
   return (
-    <Suspense fallback={<CardGridSkeleton />}>
+    <Suspense
+      fallback={
+        <div>
+          <h1 className="sr-only">Help & Support</h1>
+          <CardGridSkeleton />
+        </div>
+      }
+    >
       <HelpContent />
     </Suspense>
   )

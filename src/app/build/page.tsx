@@ -450,7 +450,12 @@ function BuildContent() {
 
   // Loading state
   if (buildStatus === 'checking') {
-    return <BuildProgressSkeleton />
+    return (
+      <div>
+        <h1 className="sr-only">Build Project</h1>
+        <BuildProgressSkeleton />
+      </div>
+    )
   }
 
   return (

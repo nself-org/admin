@@ -315,6 +315,7 @@ function LogsContent() {
   if (isLoading) {
     return (
       <>
+        <h1 className="sr-only">Service Logs</h1>
         <HeroPattern />
         <LogViewerSkeleton />
       </>
@@ -464,7 +465,14 @@ function LogsContent() {
 
 export default function LogsPage() {
   return (
-    <Suspense fallback={<LogViewerSkeleton />}>
+    <Suspense
+      fallback={
+        <div>
+          <h1 className="sr-only">Service Logs</h1>
+          <LogViewerSkeleton />
+        </div>
+      }
+    >
       <LogsContent />
     </Suspense>
   )

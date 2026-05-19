@@ -627,7 +627,14 @@ function DatabaseConsoleContent() {
 
 export default function DatabaseConsolePage() {
   return (
-    <Suspense fallback={<CodeEditorSkeleton />}>
+    <Suspense
+      fallback={
+        <div>
+          <h1 className="sr-only">Database Console</h1>
+          <CodeEditorSkeleton />
+        </div>
+      }
+    >
       <DatabaseConsoleContent />
     </Suspense>
   )

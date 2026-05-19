@@ -508,7 +508,14 @@ function DatabaseRestoreContent() {
 
 export default function DatabaseRestorePage() {
   return (
-    <Suspense fallback={<TableSkeleton />}>
+    <Suspense
+      fallback={
+        <div>
+          <h1 className="sr-only">Restore Database</h1>
+          <TableSkeleton />
+        </div>
+      }
+    >
       <DatabaseRestoreContent />
     </Suspense>
   )

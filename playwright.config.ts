@@ -110,11 +110,27 @@ export default defineConfig({
     // },
   ],
 
-  /* Run your local dev server before starting the tests */
+  /* Run the production server before starting the tests.
+   *
+   * WHY PRODUCTION BUILD (not `next dev`):
+   *   `next dev` uses on-demand per-route compilation (Turbopack or webpack).
+   *   The FIRST request to each route triggers a compile that takes 25–35 s,
+   *   which exceeds the 30 s per-test timeout.  Specs that exhaust their retry
+   *   budget cause the shard to fail even though the app is functionally correct.
+   *
+   *   `next build` pre-compiles every route.  `next start` then serves them
+   *   from a ready bundle with zero compilation latency.  First navigation is
+   *   instant, so the 30 s test timeout is never threatened by the server.
+   *
+   *   In CI the workflow runs `pnpm run build` before launching Playwright, so
+   *   the `.next/` artifact is already present when `next start` is called here.
+   *   Locally, ensure `pnpm run build` has been run first, or set
+   *   `reuseExistingServer: true` to reuse a running dev server while iterating.
+   */
   webServer: {
-    command: 'pnpm run dev',
+    command: 'pnpm start',
     url: 'http://localhost:3021',
     reuseExistingServer: !process.env.CI,
-    timeout: 120 * 1000,
+    timeout: 60 * 1000,
   },
 })

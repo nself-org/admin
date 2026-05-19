@@ -7,9 +7,43 @@ on:
     branches: [main, develop]
 
 jobs:
+  # ── Build the production bundle once; all shards share it ──────────────────
+  build:
+    name: Build (production)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.28.0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build application
+        run: pnpm run build
+
+      - name: Upload .next build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: next-build
+          path: .next/
+          retention-days: 1
+
   # ── Desktop browsers: 3 browsers × 4 shards = 12 parallel jobs ────────────
   e2e-tests:
     name: E2E (${{ matrix.browser }}, shard ${{ matrix.shardIndex }}/${{ matrix.shardTotal }})
+    needs: build
     timeout-minutes: 20
     runs-on: ubuntu-latest
     strategy:
@@ -37,6 +71,12 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Download .next build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: next-build
+          path: .next/
+
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps ${{ matrix.browser }}
 
@@ -59,6 +99,7 @@ jobs:
   # ── Mobile viewports: 2 shards ─────────────────────────────────────────────
   mobile-tests:
     name: Mobile E2E (shard ${{ matrix.shardIndex }}/${{ matrix.shardTotal }})
+    needs: build
     timeout-minutes: 20
     runs-on: ubuntu-latest
     strategy:
@@ -84,6 +125,12 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+
+      - name: Download .next build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: next-build
+          path: .next/
 
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps chromium webkit

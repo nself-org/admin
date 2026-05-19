@@ -1,26 +1,14 @@
 /**
  * Playwright globalSetup — runs once before all test workers start.
  *
- * Purpose: pre-warm every Next.js route AND client-side JS bundle that the
- * auth flow touches so that the JIT compilation cost is paid here, not inside
- * individual tests.
+ * Purpose: set the admin password exactly once so that every test worker finds
+ * the server in login mode from the start.
  *
  * WHY A REAL BROWSER (not just APIRequestContext):
- *   Next.js dev mode has two compilation layers:
- *   1. Server-side: React SSR handler compiled on first HTTP request
- *   2. Client-side: JS module chunks compiled when the browser fetches them
- *      via /_next/static/chunks/…
- *
- *   An HTTP-only warm-up (APIRequestContext) only covers layer 1.  The client
- *   JS bundles for the login page are still uncompiled when the first test
- *   browser opens.  React hydration therefore takes 10–20 s, so Playwright
- *   clicks the submit button BEFORE React attaches its event handler.  The
- *   browser then executes the native form submit (page reload to /login)
- *   instead of the AJAX login flow — and the test never navigates away.
- *
- *   A real browser (even headless) fetches all /_next/… JS chunks, causing
- *   Next.js to compile them.  Once compiled they are cached in memory by the
- *   dev server and served instantly to all subsequent browser contexts.
+ *   We use a real browser to exercise the full auth flow — login page, CSRF
+ *   token, login API, post-login routing — so that the LokiJS session state is
+ *   identical to what the test specs expect.  APIRequestContext cannot set
+ *   browser cookies or trigger the React router redirects that seat the session.
  *
  * WHY WE PARAMETERISE THE BROWSER TYPE:
  *   Each CI matrix job (chromium / firefox / webkit) installs only its own
@@ -29,11 +17,16 @@
  *   to launch the same binary that is actually installed.
  *   Falls back to chromium for local/mobile runs.
  *
- * This setup also sets the admin password exactly once so that every test
- * worker finds the server in login mode from the start.
+ * NOTE — no compilation warmup needed:
+ *   The E2E workflow builds the application with `next build` before running
+ *   tests.  `next start` serves a pre-compiled bundle; every route is ready
+ *   immediately.  The on-demand-compilation cold-start that used to cause
+ *   ~30 s first-navigation timeouts (dev mode) does not occur in production
+ *   mode.  The warmup browser pass below is therefore only needed to seed the
+ *   LokiJS password and exercise the auth flow once before test workers start.
  *
- * Routes and bundles warmed:
- *   /login                          — page SSR + client JS bundles
+ * Routes exercised:
+ *   /login                          — page load + React hydration
  *   GET  /api/auth/init             — setup/login mode check
  *   POST /api/auth/init             — password setup (if needed)
  *   GET  /api/auth/csrf             — CSRF token route
@@ -41,8 +34,7 @@
  *   GET  /api/project/status        — post-login routing logic
  *        middleware                 — session validation on every protected route
  *   POST /api/auth/validate-session — middleware's internal endpoint
- *   /build or /init/1               — destination page SSR + client JS bundles
- *        (networkidle drain)        — warms remaining route module caches
+ *   /build or /init/1               — destination page after login
  */
 
 import { chromium, firefox, webkit, type BrowserType, type FullConfig } from '@playwright/test'

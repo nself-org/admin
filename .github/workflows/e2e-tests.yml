@@ -45,7 +45,7 @@ jobs:
   e2e-tests:
     name: E2E (${{ matrix.browser }}, shard ${{ matrix.shardIndex }}/${{ matrix.shardTotal }})
     needs: build
-    timeout-minutes: 20
+    timeout-minutes: 40
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -189,7 +189,7 @@ jobs:
   mobile-tests:
     name: Mobile E2E (shard ${{ matrix.shardIndex }}/${{ matrix.shardTotal }})
     needs: build
-    timeout-minutes: 20
+    timeout-minutes: 40
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false

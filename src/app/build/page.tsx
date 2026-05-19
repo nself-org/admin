@@ -84,6 +84,11 @@ function BuildContent() {
   useEffect(() => {
     preBuildChecksRef.current = preBuildChecks
   }, [preBuildChecks])
+  // Ref to track currentStep so startBuild doesn't need it as a dep
+  const currentStepRef = useRef(currentStep)
+  useEffect(() => {
+    currentStepRef.current = currentStep
+  }, [currentStep])
 
   // Sync WebSocket progress to local state
   useEffect(() => {
@@ -387,11 +392,11 @@ function BuildContent() {
       const message = error instanceof Error ? error.message : 'Build failed'
       setBuildStatus('error')
       setErrorMessage(message)
-      updateStep(currentStep - 1, 'failed', message)
+      updateStep(currentStepRef.current - 1, 'failed', message)
       addLog(`✗ Build failed: ${message}`, 'error')
       if (timerRef.current) clearInterval(timerRef.current)
     }
-  }, [updateStep, addLog, currentStep, router])
+  }, [updateStep, addLog, router])
 
   // Run checks and build on mount
   useEffect(() => {

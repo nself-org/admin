@@ -133,6 +133,7 @@ export default async function globalSetup(config: FullConfig) {
     // for warmup.  After this, routes and JS bundles are cached; auth < 5 s.
     await page.waitForURL((url) => !url.pathname.includes('/login'), {
       timeout: 60000,
+      waitUntil: 'commit',
     })
 
     // Drain the /build page's mount-time API calls so all server-side routes

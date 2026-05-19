@@ -79,6 +79,11 @@ function BuildContent() {
   const buildStartedRef = useRef(false)
   const startTimeRef = useRef<number>(0)
   const timerRef = useRef<NodeJS.Timeout | null>(null)
+  // Ref to track latest preBuildChecks without causing useEffect re-runs
+  const preBuildChecksRef = useRef(preBuildChecks)
+  useEffect(() => {
+    preBuildChecksRef.current = preBuildChecks
+  }, [preBuildChecks])
 
   // Sync WebSocket progress to local state
   useEffect(() => {
@@ -252,8 +257,10 @@ function BuildContent() {
       addLog('⚠ Could not verify nself CLI', 'warn')
     }
 
-    // Check if any checks failed
-    const anyFailed = preBuildChecks.some((c) => c.status === 'failed')
+    // Check if any checks failed (use ref to read latest state without stale closure)
+    const anyFailed = preBuildChecksRef.current.some(
+      (c) => c.status === 'failed',
+    )
     if (anyFailed) {
       addLog(
         'Pre-build checks failed. Please fix issues before building.',
@@ -265,7 +272,7 @@ function BuildContent() {
 
     addLog('All pre-build checks passed', 'info')
     return true
-  }, [addLog, preBuildChecks])
+  }, [addLog])
 
   // Start build process
   const startBuild = useCallback(async () => {

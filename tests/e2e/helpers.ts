@@ -1,6 +1,7 @@
 import { type Page } from '@playwright/test'
 
-export const TEST_PASSWORD = 'Test123!@#'
+// Must satisfy production password policy: ≥12 chars, upper, lower, digit, special
+export const TEST_PASSWORD = 'Test123!@#Xy'
 
 /**
  * Mock /api/project/status to simulate a configured (but not running) project.

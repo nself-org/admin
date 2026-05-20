@@ -38,10 +38,13 @@ test.describe('/system/urls', () => {
     })
     await page.goto('/system/urls')
     await page.waitForLoadState('domcontentloaded')
-    await expect(page.getByText('Hasura')).toBeVisible()
-    // .first() because 'Auth' appears both as a service name and in the
-    // URL column; either visible confirms the table rendered correctly.
-    await expect(page.getByText('Auth').first()).toBeVisible()
+    // Scope locators to the data table to avoid matching the mobile-nav
+    // "Auth & Security" menu entry (which is in the DOM but hidden on
+    // mobile viewports — getByText('Auth').first() would otherwise resolve
+    // to that hidden span on Pixel 5 / iPhone 12 viewports).
+    const table = page.locator('table')
+    await expect(table.getByText('Hasura', { exact: true })).toBeVisible()
+    await expect(table.getByText('Auth', { exact: true })).toBeVisible()
   })
 
   test('offline state: shows retry button on abort', async ({ page }) => {
@@ -211,8 +214,10 @@ test.describe('/system/trust', () => {
     })
     await page.goto('/system/trust')
     await page.waitForLoadState('domcontentloaded')
-    // Auto-retries up to expect.timeout — waits for React to render mocked API data
-    await expect(page.getByText(/ssl|dns|port|trust/i).first()).toBeVisible()
+    // Scope to <main> so we don't accidentally match nav items like
+    // "Support" (matches /port/) or hidden mobile-nav entries.
+    const main = page.locator('main')
+    await expect(main.getByText(/ssl|dns|port|trust/i).first()).toBeVisible()
   })
 
   test('offline state: shows retry on abort', async ({ page }) => {
@@ -246,8 +251,10 @@ test.describe('/system/validate', () => {
     })
     await page.goto('/system/validate')
     await page.waitForLoadState('domcontentloaded')
-    // Auto-retries up to expect.timeout — waits for React to render mocked API data
-    await expect(page.getByText(/config|environment|validate|valid/i).first()).toBeVisible()
+    // Scope to <main> so we don't accidentally match hidden nav items
+    // like "Configuration" (matches /config/) on mobile viewports.
+    const main = page.locator('main')
+    await expect(main.getByText(/config|environment|validate|valid/i).first()).toBeVisible()
   })
 
   test('offline state: shows retry on abort', async ({ page }) => {

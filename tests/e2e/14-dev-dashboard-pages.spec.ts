@@ -134,7 +134,10 @@ test.describe('/dev/api', () => {
     })
     await page.goto('/dev/api')
     await page.waitForLoadState('domcontentloaded')
-    await expect(page.getByText(/Hasura|Auth|API Explorer/i).first()).toBeVisible()
+    // Scope to <main> so we don't match hidden mobile-nav items like
+    // "Auth & Security" (matches /Auth/) or "API Reference" sidebar link.
+    const main = page.locator('main')
+    await expect(main.getByText(/Hasura|Auth|API Explorer/i).first()).toBeVisible()
   })
 
   test('offline state: shows retry on abort', async ({ page }) => {
@@ -195,7 +198,9 @@ test.describe('/dev/scaffold', () => {
     })
     await page.goto('/dev/scaffold')
     await page.waitForLoadState('domcontentloaded')
-    await expect(page.getByText(/scaffold|template|table|generate/i).first()).toBeVisible()
+    // Scope to <main> so we don't match hidden mobile-nav items.
+    const main = page.locator('main')
+    await expect(main.getByText(/scaffold|template|table|generate/i).first()).toBeVisible()
   })
 
   test('offline state: shows retry on abort', async ({ page }) => {
@@ -320,7 +325,10 @@ test.describe('/dev/webhooks', () => {
     })
     await page.goto('/dev/webhooks')
     await page.waitForLoadState('domcontentloaded')
-    await expect(page.getByText(/webhook|test|delivery/i).first()).toBeVisible()
+    // Scope to <main> so we don't match hidden mobile-nav items like
+    // "Webhooks" sidebar nav (matches /webhook/) on mobile viewports.
+    const main = page.locator('main')
+    await expect(main.getByText(/webhook|test|delivery/i).first()).toBeVisible()
   })
 
   test('offline state: shows retry on abort', async ({ page }) => {

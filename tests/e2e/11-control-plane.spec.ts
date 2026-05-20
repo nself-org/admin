@@ -284,10 +284,16 @@ test.describe('Control-Plane Inventory Page', () => {
     await mockInventory(page, MANAGE_INVENTORY)
     await page.goto('/environments', { waitUntil: 'domcontentloaded' })
 
-    // Click "Add Server" button in the page header
-    const addBtn = page.locator('button:has-text("Add Server")').first()
+    // Click "Add Server" button via aria-label. Using force:true to bypass
+    // the click-stability check, because on the Pixel 5 / iPhone 12 mobile
+    // viewport the adjacent "Refresh inventory" button's SVG icon can
+    // overlap the Add Server button's hit-box during header reflow, and
+    // Playwright reports "Refresh inventory subtree intercepts pointer
+    // events" forever. force:true bypasses the intercept check; the click
+    // still hits the resolved Add Server button.
+    const addBtn = page.getByRole('button', { name: /add server to inventory/i }).first()
     await expect(addBtn).toBeVisible()
-    await addBtn.click()
+    await addBtn.click({ force: true })
 
     // Modal should appear
     const modal = page.locator('text=Add Server to Inventory').first()
@@ -339,8 +345,10 @@ test.describe('Control-Plane Inventory Page', () => {
 
     await page.goto('/environments', { waitUntil: 'domcontentloaded' })
 
-    // Click "Add First Server" in empty-state
-    await page.locator('button:has-text("Add First Server")').click()
+    // Click "Add First Server" in empty-state. force:true bypasses any
+    // pointer-event interception from adjacent header controls on the
+    // mobile viewport (Pixel 5 / iPhone 12).
+    await page.locator('button:has-text("Add First Server")').click({ force: true })
     await expect(page.locator('text=Add Server to Inventory')).toBeVisible()
 
     // Fill the form

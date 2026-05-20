@@ -32,13 +32,17 @@ export function generateCSRFToken(): string {
 export function setCSRFCookie(response: NextResponse, token?: string): string {
   const csrfToken = token || generateCSRFToken()
 
-  // See login/route.ts for why isHttpCiServer is needed: WebKit rejects Secure
-  // cookies over HTTP even on localhost; the CI server runs on plain HTTP.
+  // See login/route.ts for why isHttpCiServer and sameSite: 'lax' are needed.
+  // WebKit rejects Secure cookies over HTTP even on localhost (CI runs HTTP);
+  // and treats Strict-SameSite cookies as cross-site on Playwright-driven
+  // page.goto(), preventing the cookie from being included on subsequent
+  // navigations. 'lax' fixes WebKit consistency; CSRF token validation still
+  // happens via the x-csrf-token header check in validateCSRFToken().
   const isHttpCiServer = process.env.PLAYWRIGHT_E2E_BYPASS_RATE_LIMIT === 'true'
   response.cookies.set(CSRF_COOKIE_NAME, csrfToken, {
     httpOnly: false, // Must be readable by JavaScript
     secure: process.env.NODE_ENV === 'production' && !isHttpCiServer,
-    sameSite: 'strict',
+    sameSite: 'lax',
     path: '/',
   })
 

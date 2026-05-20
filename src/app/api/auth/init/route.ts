@@ -57,9 +57,11 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
             success: true,
             message: 'Password set successfully',
           })
+          // See login/route.ts for why isHttpCiServer is needed.
+          const isHttpCiServer = process.env.PLAYWRIGHT_E2E_BYPASS_RATE_LIMIT === 'true'
           response.cookies.set('nself-session', newSession.token, {
             httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
+            secure: process.env.NODE_ENV === 'production' && !isHttpCiServer,
             sameSite: 'strict',
             maxAge: 7 * 24 * 60 * 60,
             path: '/',

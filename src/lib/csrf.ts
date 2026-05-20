@@ -32,9 +32,12 @@ export function generateCSRFToken(): string {
 export function setCSRFCookie(response: NextResponse, token?: string): string {
   const csrfToken = token || generateCSRFToken()
 
+  // See login/route.ts for why isHttpCiServer is needed: WebKit rejects Secure
+  // cookies over HTTP even on localhost; the CI server runs on plain HTTP.
+  const isHttpCiServer = process.env.PLAYWRIGHT_E2E_BYPASS_RATE_LIMIT === 'true'
   response.cookies.set(CSRF_COOKIE_NAME, csrfToken, {
     httpOnly: false, // Must be readable by JavaScript
-    secure: process.env.NODE_ENV === 'production',
+    secure: process.env.NODE_ENV === 'production' && !isHttpCiServer,
     sameSite: 'strict',
     path: '/',
   })

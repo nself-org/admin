@@ -63,9 +63,11 @@ async function handleSSO(request: NextRequest): Promise<NextResponse> {
       expiresAt: new Date(Date.now() + sessionDuration).toISOString(),
     })
 
+    // See login/route.ts for why isHttpCiServer is needed.
+    const isHttpCiServer = process.env.PLAYWRIGHT_E2E_BYPASS_RATE_LIMIT === 'true'
     response.cookies.set('nself-session', sessionToken, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
+      secure: process.env.NODE_ENV === 'production' && !isHttpCiServer,
       sameSite: 'strict',
       maxAge: sessionDuration / 1000,
       path: '/',

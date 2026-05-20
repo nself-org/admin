@@ -12,6 +12,16 @@ import { ToastProvider } from '@/components/Toast'
 import { AuthProvider } from '@/contexts/AuthContext'
 import '@/styles/tailwind.css'
 import { type Metadata, type Viewport } from 'next'
+
+// Force per-request server rendering on every page so the CSP nonce generated
+// by middleware is injected into every inline <script> tag at runtime.
+// Without this, Next.js statically pre-generates pages during `next build`,
+// producing inline scripts WITHOUT the nonce.  The production CSP
+// (script-src 'self' 'nonce-<random>') then blocks those scripts, React
+// hydration never fires, and the AuthProvider spinner blocks all page content
+// permanently.  The login page already has this directive; this root-layout
+// directive propagates it to all child pages in one place.
+export const dynamic = 'force-dynamic'
 import { NextIntlClientProvider } from 'next-intl'
 import { getMessages } from 'next-intl/server'
 import { Inter } from 'next/font/google'

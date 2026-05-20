@@ -323,6 +323,20 @@ export async function setupAuth(page: Page, password = TEST_PASSWORD) {
   await page.waitForLoadState('domcontentloaded').catch(() => {
     // ignore — rare race where navigation aborts before DOMContentLoaded
   })
+  // ProjectStateWrapper renders a full-screen spinner (no children, no h1) when
+  // isAuthenticated=true but localStorage['nself_project_setup_confirmed'] is
+  // absent.  Every test worker starts with a fresh browser context (empty
+  // localStorage), so without this flag the spinner blocks ALL page content
+  // until checkProjectStatus() resolves — but that fetch fires after React
+  // hydration, after mocks are registered, and the race means it sometimes
+  // never resolves within the 20 s timeout.
+  //
+  // Setting the flag here mirrors what happens for a real user after their first
+  // successful project visit.  ProjectStateWrapper then takes the silent path:
+  // loading stays false, children render immediately.
+  await page.evaluate(() => {
+    localStorage.setItem('nself_project_setup_confirmed', 'true')
+  })
 }
 
 /**

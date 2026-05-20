@@ -6,7 +6,6 @@ import { useAuth } from '@/contexts/AuthContext'
 import { VERSION } from '@/lib/constants'
 import { getCorrectRoute } from '@/lib/routing-logic'
 import { AlertCircle, Eye, EyeOff, Loader2, Lock, ShieldCheck } from 'lucide-react'
-import { useRouter } from 'next/navigation'
 import { useEffect, useRef, useState } from 'react'
 
 // Password strength calculation
@@ -52,7 +51,6 @@ export default function LoginClient() {
     attempts: number
   }>({ locked: false, remainingSeconds: 0, attempts: 0 })
 
-  const router = useRouter()
   const { login, checkAuth } = useAuth()
   const passwordRef = useRef<HTMLInputElement>(null)
   const timerRef = useRef<NodeJS.Timeout | null>(null)

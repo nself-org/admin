@@ -24,7 +24,7 @@ test.describe('/system/urls', () => {
   })
 
   test('navigates to /system/urls', async ({ page }) => {
-    await page.goto('/system/urls')
+    await page.goto('/system/urls', { waitUntil: 'commit' })
     await expect(page).toHaveURL(/\/system\/urls/)
   })
 
@@ -36,7 +36,7 @@ test.describe('/system/urls', () => {
       ],
       generatedAt: new Date().toISOString(),
     })
-    await page.goto('/system/urls')
+    await page.goto('/system/urls', { waitUntil: 'commit' })
     await page.waitForLoadState('domcontentloaded')
     // Scope locators to the data table to avoid matching the mobile-nav
     // "Auth & Security" menu entry (which is in the DOM but hidden on
@@ -49,7 +49,7 @@ test.describe('/system/urls', () => {
 
   test('offline state: shows retry button on abort', async ({ page }) => {
     await page.route('**/api/nself/urls', (route) => route.abort('failed'))
-    await page.goto('/system/urls')
+    await page.goto('/system/urls', { waitUntil: 'commit' })
     await page.waitForLoadState('domcontentloaded')
     const retry = page.getByRole('button', { name: /retry/i })
     await expect(retry).toBeVisible()
@@ -63,7 +63,7 @@ test.describe('/system/urls', () => {
         body: JSON.stringify({ error: 'Internal error' }),
       })
     )
-    await page.goto('/system/urls')
+    await page.goto('/system/urls', { waitUntil: 'commit' })
     await page.waitForLoadState('domcontentloaded')
     // Error or offline state shown (depends on message content); auto-retries up to expect.timeout
     await expect(page.getByText(/failed|error|retry/i).first()).toBeVisible()
@@ -71,7 +71,7 @@ test.describe('/system/urls', () => {
 
   test('redirect to login when unauthenticated', async ({ page }) => {
     await page.context().clearCookies()
-    await page.goto('/system/urls')
+    await page.goto('/system/urls', { waitUntil: 'commit' })
     await page.waitForLoadState('domcontentloaded')
     const isAtLogin = page.url().includes('/login')
     const hasUnauthContent = await page
@@ -86,7 +86,7 @@ test.describe('/system/urls', () => {
       urls: [{ name: 'Hasura', url: 'http://localhost:8080', type: 'graphql', status: 'running' }],
       generatedAt: new Date().toISOString(),
     })
-    await page.goto('/system/urls')
+    await page.goto('/system/urls', { waitUntil: 'commit' })
     await page.waitForLoadState('domcontentloaded')
     const refreshBtn = page.getByRole('button', { name: /refresh/i })
     await expect(refreshBtn).toBeVisible()
@@ -101,7 +101,7 @@ test.describe('/system/version', () => {
   })
 
   test('navigates to /system/version', async ({ page }) => {
-    await page.goto('/system/version')
+    await page.goto('/system/version', { waitUntil: 'commit' })
     await expect(page).toHaveURL(/\/system\/version/)
   })
 
@@ -114,7 +114,7 @@ test.describe('/system/version', () => {
       latestRelease: null,
       upToDate: true,
     })
-    await page.goto('/system/version')
+    await page.goto('/system/version', { waitUntil: 'commit' })
     await page.waitForLoadState('domcontentloaded')
     // Auto-retries up to expect.timeout — waits for React to render mocked API data
     await expect(page.getByText(/1\.1\.1|version/i).first()).toBeVisible()
@@ -125,14 +125,14 @@ test.describe('/system/version', () => {
     // previous '**/api/version' pattern never matched, so the real request
     // went through and the page never entered the offline state.
     await page.route('**/api/nself/version', (route) => route.abort('failed'))
-    await page.goto('/system/version')
+    await page.goto('/system/version', { waitUntil: 'commit' })
     await page.waitForLoadState('domcontentloaded')
     await expect(page.getByRole('button', { name: /retry/i })).toBeVisible()
   })
 
   test('redirect to login when unauthenticated', async ({ page }) => {
     await page.context().clearCookies()
-    await page.goto('/system/version')
+    await page.goto('/system/version', { waitUntil: 'commit' })
     await page.waitForLoadState('domcontentloaded')
     expect(
       page.url().includes('/login') ||
@@ -152,7 +152,7 @@ test.describe('/system/diagnostics', () => {
   })
 
   test('navigates to /system/diagnostics', async ({ page }) => {
-    await page.goto('/system/diagnostics')
+    await page.goto('/system/diagnostics', { waitUntil: 'commit' })
     await expect(page).toHaveURL(/\/system\/diagnostics/)
   })
 
@@ -165,7 +165,7 @@ test.describe('/system/diagnostics', () => {
       overall: 'pass',
       runAt: new Date().toISOString(),
     })
-    await page.goto('/system/diagnostics')
+    await page.goto('/system/diagnostics', { waitUntil: 'commit' })
     await page.waitForLoadState('domcontentloaded')
     // Auto-retries up to expect.timeout — waits for React to render mocked API data
     await expect(page.getByText(/CLI binary|Docker daemon|diagnostics/i).first()).toBeVisible()
@@ -173,7 +173,7 @@ test.describe('/system/diagnostics', () => {
 
   test('offline state: shows retry on abort', async ({ page }) => {
     await page.route('**/api/nself/diagnostics', (route) => route.abort('failed'))
-    await page.goto('/system/diagnostics')
+    await page.goto('/system/diagnostics', { waitUntil: 'commit' })
     await page.waitForLoadState('domcontentloaded')
     await expect(page.getByRole('button', { name: /retry/i })).toBeVisible()
   })
@@ -184,7 +184,7 @@ test.describe('/system/diagnostics', () => {
       overall: 'pass',
       runAt: new Date().toISOString(),
     })
-    await page.goto('/system/diagnostics')
+    await page.goto('/system/diagnostics', { waitUntil: 'commit' })
     await page.waitForLoadState('domcontentloaded')
     const btn = page.getByRole('button', { name: /run diagnostics|refresh/i })
     if (await btn.first().isVisible()) {
@@ -201,7 +201,7 @@ test.describe('/system/trust', () => {
   })
 
   test('navigates to /system/trust', async ({ page }) => {
-    await page.goto('/system/trust')
+    await page.goto('/system/trust', { waitUntil: 'commit' })
     await expect(page).toHaveURL(/\/system\/trust/)
   })
 
@@ -212,7 +212,7 @@ test.describe('/system/trust', () => {
       ports: { forwarded: true },
       checkedAt: new Date().toISOString(),
     })
-    await page.goto('/system/trust')
+    await page.goto('/system/trust', { waitUntil: 'commit' })
     await page.waitForLoadState('domcontentloaded')
     // Scope to <main> so we don't accidentally match nav items like
     // "Support" (matches /port/) or hidden mobile-nav entries.
@@ -222,7 +222,7 @@ test.describe('/system/trust', () => {
 
   test('offline state: shows retry on abort', async ({ page }) => {
     await page.route('**/api/nself/trust', (route) => route.abort('failed'))
-    await page.goto('/system/trust')
+    await page.goto('/system/trust', { waitUntil: 'commit' })
     await page.waitForLoadState('domcontentloaded')
     await expect(page.getByRole('button', { name: /retry/i })).toBeVisible()
   })
@@ -236,7 +236,7 @@ test.describe('/system/validate', () => {
   })
 
   test('navigates to /system/validate', async ({ page }) => {
-    await page.goto('/system/validate')
+    await page.goto('/system/validate', { waitUntil: 'commit' })
     await expect(page).toHaveURL(/\/system\/validate/)
   })
 
@@ -249,7 +249,7 @@ test.describe('/system/validate', () => {
       overall: 'pass',
       runAt: new Date().toISOString(),
     })
-    await page.goto('/system/validate')
+    await page.goto('/system/validate', { waitUntil: 'commit' })
     await page.waitForLoadState('domcontentloaded')
     // Scope to <main> so we don't accidentally match hidden nav items
     // like "Configuration" (matches /config/) on mobile viewports.
@@ -260,7 +260,7 @@ test.describe('/system/validate', () => {
   test('offline state: shows retry on abort', async ({ page }) => {
     // /system/validate fetches /api/config/validate (not /api/nself/diagnostics)
     await page.route('**/api/config/validate', (route) => route.abort('failed'))
-    await page.goto('/system/validate')
+    await page.goto('/system/validate', { waitUntil: 'commit' })
     await page.waitForLoadState('domcontentloaded')
     await expect(page.getByRole('button', { name: /retry/i })).toBeVisible()
   })
@@ -274,7 +274,7 @@ test.describe('/system/help', () => {
   })
 
   test('navigates to /system/help', async ({ page }) => {
-    await page.goto('/system/help')
+    await page.goto('/system/help', { waitUntil: 'commit' })
     await expect(page).toHaveURL(/\/system\/help/)
   })
 
@@ -296,7 +296,7 @@ test.describe('/system/help', () => {
       ],
       version: '1.1.1',
     })
-    await page.goto('/system/help')
+    await page.goto('/system/help', { waitUntil: 'commit' })
     await page.waitForLoadState('domcontentloaded')
     // Auto-retries up to expect.timeout — waits for React to render mocked API data
     await expect(page.getByText(/start|stop|command/i).first()).toBeVisible()
@@ -320,7 +320,7 @@ test.describe('/system/help', () => {
       ],
       version: '1.1.1',
     })
-    await page.goto('/system/help')
+    await page.goto('/system/help', { waitUntil: 'commit' })
     await page.waitForLoadState('domcontentloaded')
     const searchBox = page.getByPlaceholder(/search commands/i)
     if (await searchBox.isVisible()) {
@@ -331,14 +331,14 @@ test.describe('/system/help', () => {
 
   test('offline state: shows retry on abort', async ({ page }) => {
     await page.route('**/api/nself/help', (route) => route.abort('failed'))
-    await page.goto('/system/help')
+    await page.goto('/system/help', { waitUntil: 'commit' })
     await page.waitForLoadState('domcontentloaded')
     await expect(page.getByRole('button', { name: /retry/i })).toBeVisible()
   })
 
   test('redirect to login when unauthenticated', async ({ page }) => {
     await page.context().clearCookies()
-    await page.goto('/system/help')
+    await page.goto('/system/help', { waitUntil: 'commit' })
     await page.waitForLoadState('domcontentloaded')
     expect(
       page.url().includes('/login') ||

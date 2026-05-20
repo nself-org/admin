@@ -304,8 +304,14 @@ test.describe('Control-Plane Inventory Page', () => {
     await expect(page.locator('input[placeholder="5.75.235.42"]')).toBeVisible()
     await expect(page.locator('select')).toBeVisible()
 
-    // Close modal
-    await page.locator('button:has-text("Cancel")').click()
+    // Close modal. Scope to the dialog and force the click because on mobile
+    // viewports (Pixel 5 / iPhone 12) the modal backdrop or adjacent controls
+    // can intercept pointer events on the Cancel button, causing Playwright's
+    // click-stability check to time out forever.
+    await page
+      .locator('[role="dialog"] button:has-text("Cancel")')
+      .first()
+      .click({ force: true })
     await expect(modal).not.toBeVisible()
   })
 
@@ -359,7 +365,12 @@ test.describe('Control-Plane Inventory Page', () => {
     // Submit — scope to inside the dialog to avoid the header "Add Server"
     // button.  In webkit the modal backdrop (.fixed.inset-0) intercepts pointer
     // events on the header button, so .first() is not reliable across browsers.
-    await page.locator('[role="dialog"] button:has-text("Add Server")').click()
+    // force:true also needed on mobile viewports for the same reason as the
+    // Cancel button above.
+    await page
+      .locator('[role="dialog"] button:has-text("Add Server")')
+      .first()
+      .click({ force: true })
 
     // Verify captured POST body
     await page.waitForTimeout(500)

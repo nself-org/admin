@@ -22,7 +22,14 @@
         "errors-in-console": ["warn", { "minScore": 0 }],
         "robots-txt": ["warn", { "minScore": 0 }],
         "color-contrast": ["warn", { "minScore": 0 }],
-        "bf-cache": ["warn", { "minScore": 0 }]
+        "bf-cache": ["warn", { "minScore": 0 }],
+
+        "legacy-javascript-insight": ["warn", { "minScore": 0 }],
+        "network-dependency-tree-insight": ["warn", { "minScore": 0 }],
+        "render-blocking-insight": ["warn", { "maxLength": 5 }],
+        "max-potential-fid": ["warn", { "minScore": 0 }],
+        "largest-contentful-paint": ["warn", { "minScore": 0 }],
+        "legacy-javascript": ["warn", { "maxLength": 5 }]
       }
     },
     "upload": {

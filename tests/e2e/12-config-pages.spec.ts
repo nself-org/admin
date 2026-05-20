@@ -82,8 +82,11 @@ test.describe('CORS Configuration page', () => {
     await page.route('/api/config/cors', (route) => route.abort('failed'))
     await page.goto('/config/cors')
     await page.waitForLoadState('domcontentloaded')
-    const retry = page.getByRole('button', { name: /retry/i })
-    const offlineMsg = page.getByText(/cannot (connect|reach)/i)
+    // .first() because both "Cannot connect to admin API" (heading) and
+    // "Cannot reach admin API. Check your network..." (body) render together
+    // in the offline state; strict-mode isVisible() requires a single match.
+    const retry = page.getByRole('button', { name: /retry/i }).first()
+    const offlineMsg = page.getByText(/cannot (connect|reach)/i).first()
     await expect
       .poll(async () => (await retry.isVisible()) || (await offlineMsg.isVisible()), {
         timeout: 20000,
@@ -103,7 +106,7 @@ test.describe('CORS Configuration page', () => {
           (await page
             .getByText(/failed to load/i)
             .first()
-            .isVisible()) || (await page.getByRole('button', { name: /retry/i }).isVisible()),
+            .isVisible()) || (await page.getByRole('button', { name: /retry/i }).first().isVisible()),
         { timeout: 20000 }
       )
       .toBe(true)
@@ -190,7 +193,7 @@ test.describe('Email Configuration page', () => {
     await expect
       .poll(
         async () =>
-          (await page.getByRole('button', { name: /retry/i }).isVisible()) ||
+          (await page.getByRole('button', { name: /retry/i }).first().isVisible()) ||
           (await page
             .getByText(/cannot (connect|reach)/i)
             .first()
@@ -304,7 +307,7 @@ test.describe('Rate Limits page', () => {
           (await page
             .getByText(/failed to load/i)
             .first()
-            .isVisible()) || (await page.getByRole('button', { name: /retry/i }).isVisible()),
+            .isVisible()) || (await page.getByRole('button', { name: /retry/i }).first().isVisible()),
         { timeout: 20000 }
       )
       .toBe(true)
@@ -441,7 +444,7 @@ test.describe('Docker Configuration page', () => {
     await expect
       .poll(
         async () =>
-          (await page.getByRole('button', { name: /retry/i }).isVisible()) ||
+          (await page.getByRole('button', { name: /retry/i }).first().isVisible()) ||
           (await page
             .getByText(/cannot (connect|reach)/i)
             .first()
@@ -463,7 +466,7 @@ test.describe('Docker Configuration page', () => {
           (await page
             .getByText(/failed to load/i)
             .first()
-            .isVisible()) || (await page.getByRole('button', { name: /retry/i }).isVisible()),
+            .isVisible()) || (await page.getByRole('button', { name: /retry/i }).first().isVisible()),
         { timeout: 20000 }
       )
       .toBe(true)

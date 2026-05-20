@@ -29,18 +29,18 @@ test.describe('/dev/graphql', () => {
   })
 
   test('navigates to /dev/graphql', async ({ page }) => {
-    await page.goto('/dev/graphql')
+    await page.goto('/dev/graphql', { waitUntil: 'commit' })
     await expect(page).toHaveURL(/\/dev\/graphql/)
   })
 
   test('success state: shows GraphQL editor UI', async ({ page }) => {
-    await page.goto('/dev/graphql')
+    await page.goto('/dev/graphql', { waitUntil: 'commit' })
     await page.waitForLoadState('domcontentloaded')
     await expect(page.getByText(/GraphQL Explorer|query|Run/i).first()).toBeVisible()
   })
 
   test('run button is visible', async ({ page }) => {
-    await page.goto('/dev/graphql')
+    await page.goto('/dev/graphql', { waitUntil: 'commit' })
     await page.waitForLoadState('domcontentloaded')
     const runBtn = page.getByRole('button', { name: /run|execute/i })
     if (await runBtn.first().isVisible()) {
@@ -50,7 +50,7 @@ test.describe('/dev/graphql', () => {
 
   test('redirect to login when unauthenticated', async ({ page }) => {
     await page.context().clearCookies()
-    await page.goto('/dev/graphql')
+    await page.goto('/dev/graphql', { waitUntil: 'commit' })
     await page.waitForLoadState('domcontentloaded')
     expect(
       page.url().includes('/login') ||
@@ -70,18 +70,18 @@ test.describe('/dev/terminal', () => {
   })
 
   test('navigates to /dev/terminal', async ({ page }) => {
-    await page.goto('/dev/terminal')
+    await page.goto('/dev/terminal', { waitUntil: 'commit' })
     await expect(page).toHaveURL(/\/dev\/terminal/)
   })
 
   test('success state: shows terminal input', async ({ page }) => {
-    await page.goto('/dev/terminal')
+    await page.goto('/dev/terminal', { waitUntil: 'commit' })
     await page.waitForLoadState('domcontentloaded')
     await expect(page.getByPlaceholder(/nself status/i)).toBeVisible()
   })
 
   test('shows allowed command warning or run button', async ({ page }) => {
-    await page.goto('/dev/terminal')
+    await page.goto('/dev/terminal', { waitUntil: 'commit' })
     await page.waitForLoadState('domcontentloaded')
     // OR-condition: poll until either the Run/Execute button OR the nself
     // placeholder input renders.  Under domcontentloaded, fetch-driven UI
@@ -100,7 +100,7 @@ test.describe('/dev/terminal', () => {
 
   test('redirect to login when unauthenticated', async ({ page }) => {
     await page.context().clearCookies()
-    await page.goto('/dev/terminal')
+    await page.goto('/dev/terminal', { waitUntil: 'commit' })
     await page.waitForLoadState('domcontentloaded')
     expect(
       page.url().includes('/login') ||
@@ -120,7 +120,7 @@ test.describe('/dev/api', () => {
   })
 
   test('navigates to /dev/api', async ({ page }) => {
-    await page.goto('/dev/api')
+    await page.goto('/dev/api', { waitUntil: 'commit' })
     await expect(page).toHaveURL(/\/dev\/api/)
   })
 
@@ -132,7 +132,7 @@ test.describe('/dev/api', () => {
       ],
       generatedAt: new Date().toISOString(),
     })
-    await page.goto('/dev/api')
+    await page.goto('/dev/api', { waitUntil: 'commit' })
     await page.waitForLoadState('domcontentloaded')
     // Scope to <main> so we don't match hidden mobile-nav items like
     // "Auth & Security" (matches /Auth/) or "API Reference" sidebar link.
@@ -142,7 +142,7 @@ test.describe('/dev/api', () => {
 
   test('offline state: shows retry on abort', async ({ page }) => {
     await page.route('**/api/nself/urls', (route) => route.abort('failed'))
-    await page.goto('/dev/api')
+    await page.goto('/dev/api', { waitUntil: 'commit' })
     await page.waitForLoadState('domcontentloaded')
     await expect(page.getByRole('button', { name: /retry/i })).toBeVisible()
   })
@@ -152,7 +152,7 @@ test.describe('/dev/api', () => {
       urls: [{ name: 'Hasura', url: 'http://localhost:8080', type: 'graphql', status: 'running' }],
       generatedAt: new Date().toISOString(),
     })
-    await page.goto('/dev/api')
+    await page.goto('/dev/api', { waitUntil: 'commit' })
     await page.waitForLoadState('domcontentloaded')
     const search = page.getByPlaceholder(/search services/i)
     if (await search.isVisible()) {
@@ -162,7 +162,7 @@ test.describe('/dev/api', () => {
 
   test('redirect to login when unauthenticated', async ({ page }) => {
     await page.context().clearCookies()
-    await page.goto('/dev/api')
+    await page.goto('/dev/api', { waitUntil: 'commit' })
     await page.waitForLoadState('domcontentloaded')
     expect(
       page.url().includes('/login') ||
@@ -182,7 +182,7 @@ test.describe('/dev/scaffold', () => {
   })
 
   test('navigates to /dev/scaffold', async ({ page }) => {
-    await page.goto('/dev/scaffold')
+    await page.goto('/dev/scaffold', { waitUntil: 'commit' })
     await expect(page).toHaveURL(/\/dev\/scaffold/)
   })
 
@@ -196,7 +196,7 @@ test.describe('/dev/scaffold', () => {
         },
       ],
     })
-    await page.goto('/dev/scaffold')
+    await page.goto('/dev/scaffold', { waitUntil: 'commit' })
     await page.waitForLoadState('domcontentloaded')
     // Scope to <main> so we don't match hidden mobile-nav items.
     const main = page.locator('main')
@@ -205,7 +205,7 @@ test.describe('/dev/scaffold', () => {
 
   test('offline state: shows retry on abort', async ({ page }) => {
     await page.route('**/api/graphql/hasura**', (route) => route.abort('failed'))
-    await page.goto('/dev/scaffold')
+    await page.goto('/dev/scaffold', { waitUntil: 'commit' })
     await page.waitForLoadState('domcontentloaded')
     await expect(page.getByRole('button', { name: /retry/i })).toBeVisible()
   })
@@ -219,7 +219,7 @@ test.describe('/dev/seed', () => {
   })
 
   test('navigates to /dev/seed', async ({ page }) => {
-    await page.goto('/dev/seed')
+    await page.goto('/dev/seed', { waitUntil: 'commit' })
     await expect(page).toHaveURL(/\/dev\/seed/)
   })
 
@@ -229,7 +229,7 @@ test.describe('/dev/seed', () => {
       tables: [{ name: 'np_users', rowCount: 5 }],
       lastSeededAt: new Date().toISOString(),
     })
-    await page.goto('/dev/seed')
+    await page.goto('/dev/seed', { waitUntil: 'commit' })
     await page.waitForLoadState('domcontentloaded')
     await expect(page.getByText(/seeded|run seed|np_users/i).first()).toBeVisible()
   })
@@ -239,7 +239,7 @@ test.describe('/dev/seed', () => {
       seeded: false,
       tables: [],
     })
-    await page.goto('/dev/seed')
+    await page.goto('/dev/seed', { waitUntil: 'commit' })
     await page.waitForLoadState('domcontentloaded')
     const btn = page.getByRole('button', { name: /run seed/i })
     if (await btn.isVisible()) {
@@ -249,14 +249,14 @@ test.describe('/dev/seed', () => {
 
   test('offline state: shows retry on abort', async ({ page }) => {
     await page.route('**/api/database/seed', (route) => route.abort('failed'))
-    await page.goto('/dev/seed')
+    await page.goto('/dev/seed', { waitUntil: 'commit' })
     await page.waitForLoadState('domcontentloaded')
     await expect(page.getByRole('button', { name: /retry/i })).toBeVisible()
   })
 
   test('redirect to login when unauthenticated', async ({ page }) => {
     await page.context().clearCookies()
-    await page.goto('/dev/seed')
+    await page.goto('/dev/seed', { waitUntil: 'commit' })
     await page.waitForLoadState('domcontentloaded')
     expect(
       page.url().includes('/login') ||
@@ -276,7 +276,7 @@ test.describe('/dev/types', () => {
   })
 
   test('navigates to /dev/types', async ({ page }) => {
-    await page.goto('/dev/types')
+    await page.goto('/dev/types', { waitUntil: 'commit' })
     await expect(page).toHaveURL(/\/dev\/types/)
   })
 
@@ -293,14 +293,14 @@ test.describe('/dev/types', () => {
         },
       ],
     })
-    await page.goto('/dev/types')
+    await page.goto('/dev/types', { waitUntil: 'commit' })
     await page.waitForLoadState('domcontentloaded')
     await expect(page.getByText(/np_users|TypeScript|types/i).first()).toBeVisible()
   })
 
   test('offline state: shows retry on abort', async ({ page }) => {
     await page.route('**/api/graphql/hasura**', (route) => route.abort('failed'))
-    await page.goto('/dev/types')
+    await page.goto('/dev/types', { waitUntil: 'commit' })
     await page.waitForLoadState('domcontentloaded')
     await expect(page.getByRole('button', { name: /retry/i })).toBeVisible()
   })
@@ -314,7 +314,7 @@ test.describe('/dev/webhooks', () => {
   })
 
   test('navigates to /dev/webhooks', async ({ page }) => {
-    await page.goto('/dev/webhooks')
+    await page.goto('/dev/webhooks', { waitUntil: 'commit' })
     await expect(page).toHaveURL(/\/dev\/webhooks/)
   })
 
@@ -323,7 +323,7 @@ test.describe('/dev/webhooks', () => {
       deliveries: [],
       total: 0,
     })
-    await page.goto('/dev/webhooks')
+    await page.goto('/dev/webhooks', { waitUntil: 'commit' })
     await page.waitForLoadState('domcontentloaded')
     // Scope to <main> so we don't match hidden mobile-nav items like
     // "Webhooks" sidebar nav (matches /webhook/) on mobile viewports.
@@ -333,7 +333,7 @@ test.describe('/dev/webhooks', () => {
 
   test('offline state: shows retry on abort', async ({ page }) => {
     await page.route('**/api/workflows**', (route) => route.abort('failed'))
-    await page.goto('/dev/webhooks')
+    await page.goto('/dev/webhooks', { waitUntil: 'commit' })
     await page.waitForLoadState('domcontentloaded')
     await expect(page.getByRole('button', { name: /retry/i })).toBeVisible()
   })
@@ -347,7 +347,7 @@ test.describe('/dev/testing', () => {
   })
 
   test('navigates to /dev/testing', async ({ page }) => {
-    await page.goto('/dev/testing')
+    await page.goto('/dev/testing', { waitUntil: 'commit' })
     await expect(page).toHaveURL(/\/dev\/testing/)
   })
 
@@ -361,7 +361,7 @@ test.describe('/dev/testing', () => {
       success: true,
       data: { stdout: 'ok', stderr: '' },
     })
-    await page.goto('/dev/testing')
+    await page.goto('/dev/testing', { waitUntil: 'commit' })
     await page.waitForLoadState('domcontentloaded')
     await expect(
       page.getByText(/stack smoke test|URL Reachability|health check|testing utilities/i).first()
@@ -369,7 +369,7 @@ test.describe('/dev/testing', () => {
   })
 
   test('run all button is visible', async ({ page }) => {
-    await page.goto('/dev/testing')
+    await page.goto('/dev/testing', { waitUntil: 'commit' })
     await page.waitForLoadState('domcontentloaded')
     const btn = page.getByRole('button', { name: /run all/i })
     if (await btn.isVisible()) {
@@ -379,7 +379,7 @@ test.describe('/dev/testing', () => {
 
   test('redirect to login when unauthenticated', async ({ page }) => {
     await page.context().clearCookies()
-    await page.goto('/dev/testing')
+    await page.goto('/dev/testing', { waitUntil: 'commit' })
     await page.waitForLoadState('domcontentloaded')
     expect(
       page.url().includes('/login') ||
@@ -423,7 +423,7 @@ test.describe('/dashboard/alerts', () => {
       unacknowledgedCount: 1,
       lastUpdatedAt: new Date().toISOString(),
     })
-    await page.goto('/dashboard/alerts')
+    await page.goto('/dashboard/alerts', { waitUntil: 'commit' })
     await page.waitForLoadState('domcontentloaded')
     await expect(page.getByText(/High memory usage|alerts/i).first()).toBeVisible()
   })
@@ -434,7 +434,7 @@ test.describe('/dashboard/alerts', () => {
       unacknowledgedCount: 0,
       lastUpdatedAt: new Date().toISOString(),
     })
-    await page.goto('/dashboard/alerts')
+    await page.goto('/dashboard/alerts', { waitUntil: 'commit' })
     await page.waitForLoadState('domcontentloaded')
     await expect
       .poll(
@@ -454,7 +454,7 @@ test.describe('/dashboard/alerts', () => {
 
   test('offline state: shows retry on abort', async ({ page }) => {
     await page.route('**/api/notifications', (route) => route.abort('failed'))
-    await page.goto('/dashboard/alerts')
+    await page.goto('/dashboard/alerts', { waitUntil: 'commit' })
     await page.waitForLoadState('domcontentloaded')
     await expect(page.getByRole('button', { name: /retry/i })).toBeVisible()
   })
@@ -467,7 +467,7 @@ test.describe('/dashboard/alerts', () => {
         body: JSON.stringify({ error: 'Internal error' }),
       })
     )
-    await page.goto('/dashboard/alerts')
+    await page.goto('/dashboard/alerts', { waitUntil: 'commit' })
     await page.waitForLoadState('domcontentloaded')
     await expect(page.getByText(/failed|error|retry/i).first()).toBeVisible()
   })
@@ -478,7 +478,7 @@ test.describe('/dashboard/alerts', () => {
       unacknowledgedCount: 0,
       lastUpdatedAt: new Date().toISOString(),
     })
-    await page.goto('/dashboard/alerts')
+    await page.goto('/dashboard/alerts', { waitUntil: 'commit' })
     await page.waitForLoadState('domcontentloaded')
     const allTab = page.getByRole('button', { name: /^all$/i })
     if (await allTab.isVisible()) {
@@ -488,7 +488,7 @@ test.describe('/dashboard/alerts', () => {
 
   test('redirect to login when unauthenticated', async ({ page }) => {
     await page.context().clearCookies()
-    await page.goto('/dashboard/alerts')
+    await page.goto('/dashboard/alerts', { waitUntil: 'commit' })
     await page.waitForLoadState('domcontentloaded')
     expect(
       page.url().includes('/login') ||
@@ -508,7 +508,7 @@ test.describe('/dashboard/health', () => {
   })
 
   test('navigates to /dashboard/health', async ({ page }) => {
-    await page.goto('/dashboard/health')
+    await page.goto('/dashboard/health', { waitUntil: 'commit' })
     await expect(page).toHaveURL(/\/dashboard\/health/)
   })
 
@@ -521,7 +521,7 @@ test.describe('/dashboard/health', () => {
       ],
       checkedAt: new Date().toISOString(),
     })
-    await page.goto('/dashboard/health')
+    await page.goto('/dashboard/health', { waitUntil: 'commit' })
     await page.waitForLoadState('domcontentloaded')
     await expect(page.getByText(/postgres|hasura|all systems healthy/i).first()).toBeVisible()
   })
@@ -532,21 +532,21 @@ test.describe('/dashboard/health', () => {
       services: [{ name: 'redis', status: 'degraded', message: 'High latency', latencyMs: 350 }],
       checkedAt: new Date().toISOString(),
     })
-    await page.goto('/dashboard/health')
+    await page.goto('/dashboard/health', { waitUntil: 'commit' })
     await page.waitForLoadState('domcontentloaded')
     await expect(page.getByText(/degraded|experiencing issues/i).first()).toBeVisible()
   })
 
   test('offline state: shows retry on abort', async ({ page }) => {
     await page.route('**/api/health**', (route) => route.abort('failed'))
-    await page.goto('/dashboard/health')
+    await page.goto('/dashboard/health', { waitUntil: 'commit' })
     await page.waitForLoadState('domcontentloaded')
     await expect(page.getByRole('button', { name: /retry/i })).toBeVisible()
   })
 
   test('redirect to login when unauthenticated', async ({ page }) => {
     await page.context().clearCookies()
-    await page.goto('/dashboard/health')
+    await page.goto('/dashboard/health', { waitUntil: 'commit' })
     await page.waitForLoadState('domcontentloaded')
     expect(
       page.url().includes('/login') ||
@@ -566,7 +566,7 @@ test.describe('/dashboard/logs', () => {
   })
 
   test('navigates to /dashboard/logs', async ({ page }) => {
-    await page.goto('/dashboard/logs')
+    await page.goto('/dashboard/logs', { waitUntil: 'commit' })
     await expect(page).toHaveURL(/\/dashboard\/logs/)
   })
 
@@ -585,7 +585,7 @@ test.describe('/dashboard/logs', () => {
       hasMore: false,
       services: ['hasura'],
     })
-    await page.goto('/dashboard/logs')
+    await page.goto('/dashboard/logs', { waitUntil: 'commit' })
     await page.waitForLoadState('domcontentloaded')
     await expect(page.getByText(/Server started|hasura|logs/i).first()).toBeVisible()
   })
@@ -597,7 +597,7 @@ test.describe('/dashboard/logs', () => {
       hasMore: false,
       services: [],
     })
-    await page.goto('/dashboard/logs')
+    await page.goto('/dashboard/logs', { waitUntil: 'commit' })
     await page.waitForLoadState('domcontentloaded')
     await expect
       .poll(
@@ -613,7 +613,7 @@ test.describe('/dashboard/logs', () => {
 
   test('offline state: shows retry on abort', async ({ page }) => {
     await page.route('**/api/logs**', (route) => route.abort('failed'))
-    await page.goto('/dashboard/logs')
+    await page.goto('/dashboard/logs', { waitUntil: 'commit' })
     await page.waitForLoadState('domcontentloaded')
     await expect(page.getByRole('button', { name: /retry/i })).toBeVisible()
   })
@@ -633,7 +633,7 @@ test.describe('/dashboard/logs', () => {
       hasMore: false,
       services: ['hasura'],
     })
-    await page.goto('/dashboard/logs')
+    await page.goto('/dashboard/logs', { waitUntil: 'commit' })
     await page.waitForLoadState('domcontentloaded')
     const exportBtn = page.getByRole('button', { name: /export/i })
     if (await exportBtn.isVisible()) {
@@ -643,7 +643,7 @@ test.describe('/dashboard/logs', () => {
 
   test('redirect to login when unauthenticated', async ({ page }) => {
     await page.context().clearCookies()
-    await page.goto('/dashboard/logs')
+    await page.goto('/dashboard/logs', { waitUntil: 'commit' })
     await page.waitForLoadState('domcontentloaded')
     expect(
       page.url().includes('/login') ||
@@ -663,7 +663,7 @@ test.describe('/dashboard/metrics', () => {
   })
 
   test('navigates to /dashboard/metrics', async ({ page }) => {
-    await page.goto('/dashboard/metrics')
+    await page.goto('/dashboard/metrics', { waitUntil: 'commit' })
     await expect(page).toHaveURL(/\/dashboard\/metrics/)
   })
 
@@ -679,7 +679,7 @@ test.describe('/dashboard/metrics', () => {
       connections: { name: 'connections', value: 24, unit: '' },
       collectedAt: new Date().toISOString(),
     })
-    await page.goto('/dashboard/metrics')
+    await page.goto('/dashboard/metrics', { waitUntil: 'commit' })
     await page.waitForLoadState('domcontentloaded')
     await expect(
       page.getByText(/requests|latency|CPU|uptime|performance metrics/i).first()
@@ -688,14 +688,14 @@ test.describe('/dashboard/metrics', () => {
 
   test('offline state: shows retry on abort', async ({ page }) => {
     await page.route('**/api/metrics', (route) => route.abort('failed'))
-    await page.goto('/dashboard/metrics')
+    await page.goto('/dashboard/metrics', { waitUntil: 'commit' })
     await page.waitForLoadState('domcontentloaded')
     await expect(page.getByRole('button', { name: /retry/i })).toBeVisible()
   })
 
   test('redirect to login when unauthenticated', async ({ page }) => {
     await page.context().clearCookies()
-    await page.goto('/dashboard/metrics')
+    await page.goto('/dashboard/metrics', { waitUntil: 'commit' })
     await page.waitForLoadState('domcontentloaded')
     expect(
       page.url().includes('/login') ||
@@ -715,7 +715,7 @@ test.describe('/dashboard/status', () => {
   })
 
   test('navigates to /dashboard/status', async ({ page }) => {
-    await page.goto('/dashboard/status')
+    await page.goto('/dashboard/status', { waitUntil: 'commit' })
     await expect(page).toHaveURL(/\/dashboard\/status/)
   })
 
@@ -741,7 +741,7 @@ test.describe('/dashboard/status', () => {
       uptime: { day: 100, week: 99.99, month: 99.97 },
       checkedAt: new Date().toISOString(),
     })
-    await page.goto('/dashboard/status')
+    await page.goto('/dashboard/status', { waitUntil: 'commit' })
     await page.waitForLoadState('domcontentloaded')
     await expect(
       page.getByText(/all systems operational|PostgreSQL|operational/i).first()
@@ -763,7 +763,7 @@ test.describe('/dashboard/status', () => {
       uptime: { day: 98.5, week: 99.1, month: 99.5 },
       checkedAt: new Date().toISOString(),
     })
-    await page.goto('/dashboard/status')
+    await page.goto('/dashboard/status', { waitUntil: 'commit' })
     await page.waitForLoadState('domcontentloaded')
     await expect(page.getByText(/degraded|partial system/i).first()).toBeVisible()
   })
@@ -775,14 +775,14 @@ test.describe('/dashboard/status', () => {
       uptime: { day: 100, week: 99.99, month: 99.97 },
       checkedAt: new Date().toISOString(),
     })
-    await page.goto('/dashboard/status')
+    await page.goto('/dashboard/status', { waitUntil: 'commit' })
     await page.waitForLoadState('domcontentloaded')
     await expect(page.getByText(/uptime|100\.00/i).first()).toBeVisible()
   })
 
   test('offline state: shows retry on abort', async ({ page }) => {
     await page.route('**/api/monitor', (route) => route.abort('failed'))
-    await page.goto('/dashboard/status')
+    await page.goto('/dashboard/status', { waitUntil: 'commit' })
     await page.waitForLoadState('domcontentloaded')
     await expect(page.getByRole('button', { name: /retry/i })).toBeVisible()
   })
@@ -795,14 +795,14 @@ test.describe('/dashboard/status', () => {
         body: JSON.stringify({ error: 'Monitor unavailable' }),
       })
     )
-    await page.goto('/dashboard/status')
+    await page.goto('/dashboard/status', { waitUntil: 'commit' })
     await page.waitForLoadState('domcontentloaded')
     await expect(page.getByText(/failed|error|retry/i).first()).toBeVisible()
   })
 
   test('redirect to login when unauthenticated', async ({ page }) => {
     await page.context().clearCookies()
-    await page.goto('/dashboard/status')
+    await page.goto('/dashboard/status', { waitUntil: 'commit' })
     await page.waitForLoadState('domcontentloaded')
     expect(
       page.url().includes('/login') ||

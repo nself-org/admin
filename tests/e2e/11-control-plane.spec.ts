@@ -471,7 +471,10 @@ test.describe('Control-Plane Inventory Page', () => {
     })
 
     await page.goto('/environments', { waitUntil: 'domcontentloaded' })
-    expect(requestCount).toBeGreaterThanOrEqual(1)
+    // The initial /api/control-plane?action=list fetch fires from a React
+    // useEffect after hydration — under domcontentloaded waitUntil it may
+    // not have arrived yet.  Poll for it instead of asserting immediately.
+    await expect.poll(() => requestCount, { timeout: 10000 }).toBeGreaterThanOrEqual(1)
 
     const initialCount = requestCount
 

@@ -331,14 +331,14 @@ export async function setupAuth(page: Page, password = TEST_PASSWORD) {
   // /build, /, /start, or /dashboard depending on race order between
   // Layout's useEffect and the login page's getCorrectRoute call.
   //
-  // Use waitUntil: 'commit' so the wait resolves as soon as the URL changes
-  // (Next.js client-side navigation OR window.location.assign hard navigation).
-  // The default 'load' level waits for all resources including SSE/polling
-  // connections that never complete in CI, causing 30s timeouts on every
-  // shard past the first.
-  await page.waitForURL((url) => !url.pathname.includes('/login'), {
+  // Use page.waitForFunction(() => !location.pathname.includes('/login'))
+  // instead of page.waitForURL: window.location.assign() triggers a hard
+  // browser navigation that aborts in-flight requests, and Firefox surfaces
+  // this as NS_BINDING_ABORTED which page.waitForURL treats as a fatal error.
+  // waitForFunction polls the actual document.location inside the page,
+  // resilient to mid-flight navigation aborts.
+  await page.waitForFunction(() => !window.location.pathname.includes('/login'), null, {
     timeout: 30000,
-    waitUntil: 'commit',
   })
   // Let the redirect settle before the test body starts navigating.
   // domcontentloaded is sufficient — SSE streams keep 'load'/'networkidle'

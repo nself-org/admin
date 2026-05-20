@@ -81,8 +81,11 @@ test.describe('CORS Configuration page', () => {
     await page.waitForLoadState('domcontentloaded')
     const retry = page.getByRole('button', { name: /retry/i })
     const offlineMsg = page.getByText(/cannot (connect|reach)/i)
-    const hasOfflineIndicator = (await retry.isVisible()) || (await offlineMsg.isVisible())
-    expect(hasOfflineIndicator).toBe(true)
+    await expect
+      .poll(async () => (await retry.isVisible()) || (await offlineMsg.isVisible()), {
+        timeout: 20000,
+      })
+      .toBe(true)
   })
 
   test('error state: shows error when API returns 500', async ({ page }) => {
@@ -91,10 +94,14 @@ test.describe('CORS Configuration page', () => {
     )
     await page.goto('/config/cors')
     await page.waitForLoadState('domcontentloaded')
-    const hasError =
-      (await page.getByText(/failed to load/i).isVisible()) ||
-      (await page.getByRole('button', { name: /retry/i }).isVisible())
-    expect(hasError).toBe(true)
+    await expect
+      .poll(
+        async () =>
+          (await page.getByText(/failed to load/i).isVisible()) ||
+          (await page.getByRole('button', { name: /retry/i }).isVisible()),
+        { timeout: 20000 }
+      )
+      .toBe(true)
   })
 })
 
@@ -175,10 +182,14 @@ test.describe('Email Configuration page', () => {
     await page.route('/api/config/email', (route) => route.abort('failed'))
     await page.goto('/config/email')
     await page.waitForLoadState('domcontentloaded')
-    const hasOffline =
-      (await page.getByRole('button', { name: /retry/i }).isVisible()) ||
-      (await page.getByText(/cannot (connect|reach)/i).isVisible())
-    expect(hasOffline).toBe(true)
+    await expect
+      .poll(
+        async () =>
+          (await page.getByRole('button', { name: /retry/i }).isVisible()) ||
+          (await page.getByText(/cannot (connect|reach)/i).isVisible()),
+        { timeout: 20000 }
+      )
+      .toBe(true)
   })
 
   test('redirect to login when unauthenticated', async ({ page }) => {
@@ -276,10 +287,14 @@ test.describe('Rate Limits page', () => {
     )
     await page.goto('/config/rate-limits')
     await page.waitForLoadState('domcontentloaded')
-    const hasError =
-      (await page.getByText(/failed to load/i).isVisible()) ||
-      (await page.getByRole('button', { name: /retry/i }).isVisible())
-    expect(hasError).toBe(true)
+    await expect
+      .poll(
+        async () =>
+          (await page.getByText(/failed to load/i).isVisible()) ||
+          (await page.getByRole('button', { name: /retry/i }).isVisible()),
+        { timeout: 20000 }
+      )
+      .toBe(true)
   })
 
   test('redirect to login when unauthenticated', async ({ page }) => {
@@ -407,10 +422,14 @@ test.describe('Docker Configuration page', () => {
     await page.route('/api/config/docker', (route) => route.abort('failed'))
     await page.goto('/config/docker')
     await page.waitForLoadState('domcontentloaded')
-    const hasOffline =
-      (await page.getByRole('button', { name: /retry/i }).isVisible()) ||
-      (await page.getByText(/cannot (connect|reach)/i).isVisible())
-    expect(hasOffline).toBe(true)
+    await expect
+      .poll(
+        async () =>
+          (await page.getByRole('button', { name: /retry/i }).isVisible()) ||
+          (await page.getByText(/cannot (connect|reach)/i).isVisible()),
+        { timeout: 20000 }
+      )
+      .toBe(true)
   })
 
   test('error state: shows error when API returns failure', async ({ page }) => {
@@ -419,10 +438,14 @@ test.describe('Docker Configuration page', () => {
     )
     await page.goto('/config/docker')
     await page.waitForLoadState('domcontentloaded')
-    const hasError =
-      (await page.getByText(/failed to load/i).isVisible()) ||
-      (await page.getByRole('button', { name: /retry/i }).isVisible())
-    expect(hasError).toBe(true)
+    await expect
+      .poll(
+        async () =>
+          (await page.getByText(/failed to load/i).isVisible()) ||
+          (await page.getByRole('button', { name: /retry/i }).isVisible()),
+        { timeout: 20000 }
+      )
+      .toBe(true)
   })
 
   test('redirect to login when unauthenticated', async ({ page }) => {

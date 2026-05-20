@@ -20,7 +20,11 @@ export class BuildPage {
   }
 
   async goto() {
-    await this.page.goto('/build')
+    // waitUntil: 'commit' so the goto resolves as soon as the first
+    // response commits, even if the middleware issues a redirect to
+    // /login (which WebKit would otherwise surface as "Navigation
+    // interrupted by another navigation").
+    await this.page.goto('/build', { waitUntil: 'commit' })
   }
 
   async runPreCheck() {

@@ -1,4 +1,4 @@
-import { type Page } from '@playwright/test'
+import { expect, type Page } from '@playwright/test'
 
 // Must satisfy production password policy: ≥12 chars, upper, lower, digit, special
 export const TEST_PASSWORD = 'Test123!@#Xy'
@@ -346,6 +346,22 @@ export async function setupAuth(page: Page, password = TEST_PASSWORD) {
   await page.waitForLoadState('domcontentloaded').catch(() => {
     // ignore — rare race where navigation aborts before DOMContentLoaded
   })
+  // Explicitly wait for the nself-session cookie to land in the browser
+  // jar.  Without this, the next test-body navigation can race against
+  // window.location.assign's commit on WebKit, where the cookie has been
+  // set on the response but the jar hasn't been observably updated yet
+  // when the test fires its next page.goto — the middleware then sees
+  // no cookie and bounces back to /login, producing a "navigation
+  // interrupted" error.
+  await expect
+    .poll(
+      async () => {
+        const cookies = await page.context().cookies()
+        return cookies.some((c) => c.name === 'nself-session')
+      },
+      { timeout: 15000, message: 'nself-session cookie was not set within 15s of login' }
+    )
+    .toBe(true)
 }
 
 /**

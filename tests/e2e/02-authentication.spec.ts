@@ -94,8 +94,13 @@ test.describe('Authentication Flow', () => {
     // Clear cookies to simulate expired session
     await page.context().clearCookies()
 
-    // Try to access protected page
-    await page.goto('/dashboard')
+    // Try to access protected page.  The middleware will issue a 307
+    // redirect to /login mid-navigation, which WebKit surfaces as
+    // "Navigation interrupted by another navigation".  Use waitUntil:
+    // 'commit' so page.goto resolves as soon as the first response
+    // commits (the redirect), without waiting for the redirected page's
+    // full load to fire.
+    await page.goto('/dashboard', { waitUntil: 'commit' })
 
     // Should redirect to login
     await expect(page).toHaveURL(/\/login/)

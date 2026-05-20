@@ -36,11 +36,7 @@ test.describe('/dev/graphql', () => {
   test('success state: shows GraphQL editor UI', async ({ page }) => {
     await page.goto('/dev/graphql')
     await page.waitForLoadState('domcontentloaded')
-    const hasEditor = await page
-      .getByText(/GraphQL Explorer|query|Run/i)
-      .first()
-      .isVisible()
-    expect(hasEditor).toBe(true)
+    await expect(page.getByText(/GraphQL Explorer|query|Run/i).first()).toBeVisible()
   })
 
   test('run button is visible', async ({ page }) => {
@@ -81,8 +77,7 @@ test.describe('/dev/terminal', () => {
   test('success state: shows terminal input', async ({ page }) => {
     await page.goto('/dev/terminal')
     await page.waitForLoadState('domcontentloaded')
-    const hasInput = await page.getByPlaceholder(/nself status/i).isVisible()
-    expect(hasInput).toBe(true)
+    await expect(page.getByPlaceholder(/nself status/i)).toBeVisible()
   })
 
   test('shows allowed command warning or run button', async ({ page }) => {
@@ -132,11 +127,7 @@ test.describe('/dev/api', () => {
     })
     await page.goto('/dev/api')
     await page.waitForLoadState('domcontentloaded')
-    const hasService = await page
-      .getByText(/Hasura|Auth|API Explorer/i)
-      .first()
-      .isVisible()
-    expect(hasService).toBe(true)
+    await expect(page.getByText(/Hasura|Auth|API Explorer/i).first()).toBeVisible()
   })
 
   test('offline state: shows retry on abort', async ({ page }) => {
@@ -197,11 +188,7 @@ test.describe('/dev/scaffold', () => {
     })
     await page.goto('/dev/scaffold')
     await page.waitForLoadState('domcontentloaded')
-    const hasUI = await page
-      .getByText(/scaffold|template|table|generate/i)
-      .first()
-      .isVisible()
-    expect(hasUI).toBe(true)
+    await expect(page.getByText(/scaffold|template|table|generate/i).first()).toBeVisible()
   })
 
   test('offline state: shows retry on abort', async ({ page }) => {
@@ -232,11 +219,7 @@ test.describe('/dev/seed', () => {
     })
     await page.goto('/dev/seed')
     await page.waitForLoadState('domcontentloaded')
-    const hasStatus = await page
-      .getByText(/seeded|run seed|np_users/i)
-      .first()
-      .isVisible()
-    expect(hasStatus).toBe(true)
+    await expect(page.getByText(/seeded|run seed|np_users/i).first()).toBeVisible()
   })
 
   test('run seed button visible', async ({ page }) => {
@@ -300,11 +283,7 @@ test.describe('/dev/types', () => {
     })
     await page.goto('/dev/types')
     await page.waitForLoadState('domcontentloaded')
-    const hasTable = await page
-      .getByText(/np_users|TypeScript|types/i)
-      .first()
-      .isVisible()
-    expect(hasTable).toBe(true)
+    await expect(page.getByText(/np_users|TypeScript|types/i).first()).toBeVisible()
   })
 
   test('offline state: shows retry on abort', async ({ page }) => {
@@ -334,11 +313,7 @@ test.describe('/dev/webhooks', () => {
     })
     await page.goto('/dev/webhooks')
     await page.waitForLoadState('domcontentloaded')
-    const hasForm = await page
-      .getByText(/webhook|test|delivery/i)
-      .first()
-      .isVisible()
-    expect(hasForm).toBe(true)
+    await expect(page.getByText(/webhook|test|delivery/i).first()).toBeVisible()
   })
 
   test('offline state: shows retry on abort', async ({ page }) => {
@@ -364,11 +339,9 @@ test.describe('/dev/testing', () => {
   test('success state: shows built-in test suites', async ({ page }) => {
     await page.goto('/dev/testing')
     await page.waitForLoadState('domcontentloaded')
-    const hasSuites = await page
-      .getByText(/stack smoke test|URL Reachability|health check|testing utilities/i)
-      .first()
-      .isVisible()
-    expect(hasSuites).toBe(true)
+    await expect(
+      page.getByText(/stack smoke test|URL Reachability|health check|testing utilities/i).first()
+    ).toBeVisible()
   })
 
   test('run all button is visible', async ({ page }) => {
@@ -426,11 +399,7 @@ test.describe('/dashboard/alerts', () => {
     })
     await page.goto('/dashboard/alerts')
     await page.waitForLoadState('domcontentloaded')
-    const hasAlert = await page
-      .getByText(/High memory usage|alerts/i)
-      .first()
-      .isVisible()
-    expect(hasAlert).toBe(true)
+    await expect(page.getByText(/High memory usage|alerts/i).first()).toBeVisible()
   })
 
   test('empty state: shows no-alerts message', async ({ page }) => {
@@ -469,11 +438,7 @@ test.describe('/dashboard/alerts', () => {
     )
     await page.goto('/dashboard/alerts')
     await page.waitForLoadState('domcontentloaded')
-    const hasError = await page
-      .getByText(/failed|error|retry/i)
-      .first()
-      .isVisible()
-    expect(hasError).toBe(true)
+    await expect(page.getByText(/failed|error|retry/i).first()).toBeVisible()
   })
 
   test('filter tabs visible after success', async ({ page }) => {
@@ -527,11 +492,7 @@ test.describe('/dashboard/health', () => {
     })
     await page.goto('/dashboard/health')
     await page.waitForLoadState('domcontentloaded')
-    const hasService = await page
-      .getByText(/postgres|hasura|all systems healthy/i)
-      .first()
-      .isVisible()
-    expect(hasService).toBe(true)
+    await expect(page.getByText(/postgres|hasura|all systems healthy/i).first()).toBeVisible()
   })
 
   test('degraded overall shows warning banner', async ({ page }) => {
@@ -542,11 +503,7 @@ test.describe('/dashboard/health', () => {
     })
     await page.goto('/dashboard/health')
     await page.waitForLoadState('domcontentloaded')
-    const hasDegraded = await page
-      .getByText(/degraded|experiencing issues/i)
-      .first()
-      .isVisible()
-    expect(hasDegraded).toBe(true)
+    await expect(page.getByText(/degraded|experiencing issues/i).first()).toBeVisible()
   })
 
   test('offline state: shows retry on abort', async ({ page }) => {
@@ -599,11 +556,7 @@ test.describe('/dashboard/logs', () => {
     })
     await page.goto('/dashboard/logs')
     await page.waitForLoadState('domcontentloaded')
-    const hasLog = await page
-      .getByText(/Server started|hasura|logs/i)
-      .first()
-      .isVisible()
-    expect(hasLog).toBe(true)
+    await expect(page.getByText(/Server started|hasura|logs/i).first()).toBeVisible()
   })
 
   test('empty state shows when no log entries', async ({ page }) => {
@@ -693,11 +646,9 @@ test.describe('/dashboard/metrics', () => {
     })
     await page.goto('/dashboard/metrics')
     await page.waitForLoadState('domcontentloaded')
-    const hasKpi = await page
-      .getByText(/requests|latency|CPU|uptime|performance metrics/i)
-      .first()
-      .isVisible()
-    expect(hasKpi).toBe(true)
+    await expect(
+      page.getByText(/requests|latency|CPU|uptime|performance metrics/i).first()
+    ).toBeVisible()
   })
 
   test('offline state: shows retry on abort', async ({ page }) => {
@@ -757,11 +708,9 @@ test.describe('/dashboard/status', () => {
     })
     await page.goto('/dashboard/status')
     await page.waitForLoadState('domcontentloaded')
-    const hasBanner = await page
-      .getByText(/all systems operational|PostgreSQL|operational/i)
-      .first()
-      .isVisible()
-    expect(hasBanner).toBe(true)
+    await expect(
+      page.getByText(/all systems operational|PostgreSQL|operational/i).first()
+    ).toBeVisible()
   })
 
   test('degraded overall: shows warning banner', async ({ page }) => {
@@ -781,11 +730,7 @@ test.describe('/dashboard/status', () => {
     })
     await page.goto('/dashboard/status')
     await page.waitForLoadState('domcontentloaded')
-    const hasDeg = await page
-      .getByText(/degraded|partial system/i)
-      .first()
-      .isVisible()
-    expect(hasDeg).toBe(true)
+    await expect(page.getByText(/degraded|partial system/i).first()).toBeVisible()
   })
 
   test('uptime stats visible', async ({ page }) => {
@@ -797,11 +742,7 @@ test.describe('/dashboard/status', () => {
     })
     await page.goto('/dashboard/status')
     await page.waitForLoadState('domcontentloaded')
-    const hasUptime = await page
-      .getByText(/uptime|100\.00/i)
-      .first()
-      .isVisible()
-    expect(hasUptime).toBe(true)
+    await expect(page.getByText(/uptime|100\.00/i).first()).toBeVisible()
   })
 
   test('offline state: shows retry on abort', async ({ page }) => {
@@ -821,11 +762,7 @@ test.describe('/dashboard/status', () => {
     )
     await page.goto('/dashboard/status')
     await page.waitForLoadState('domcontentloaded')
-    const hasError = await page
-      .getByText(/failed|error|retry/i)
-      .first()
-      .isVisible()
-    expect(hasError).toBe(true)
+    await expect(page.getByText(/failed|error|retry/i).first()).toBeVisible()
   })
 
   test('redirect to login when unauthenticated', async ({ page }) => {

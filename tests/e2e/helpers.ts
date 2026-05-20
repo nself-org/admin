@@ -285,22 +285,31 @@ export async function mockProjectStatus(page: Page) {
 }
 
 /**
- * Setup authentication for tests
+ * Setup authentication for tests.
+ *
+ * Strategy: API-based login (not UI-based) to eliminate the WebKit cookie
+ * race.  UI-based login goes through LoginClient.tsx which calls
+ * window.location.assign('/build') after a successful login response — this
+ * triggers a hard browser navigation.  On WebKit specifically, the Set-Cookie
+ * header from the /api/auth/login response is committed to the cookie jar
+ * AFTER the subsequent window.location.assign navigation begins, and the
+ * very next test-body page.goto() then races against that pending
+ * navigation: WebKit aborts the goto with "Navigation interrupted by
+ * another navigation to /login" because middleware sees no session cookie
+ * on the goto's request.
+ *
+ * API-based login (page.request.post) issues the auth request through
+ * the Playwright APIRequestContext which shares the cookie jar with the
+ * page but performs NO client-side navigation.  When the request resolves,
+ * the cookie is in the jar and there is no pending navigation racing the
+ * next page.goto().  Works identically on chromium, firefox, and webkit.
  */
 export async function setupAuth(page: Page, password = TEST_PASSWORD) {
   // Mock project status so ProjectStateWrapper doesn't redirect to /init/1.
   await mockProjectStatus(page)
 
   // Pre-stamp the project-setup-confirmed flag via addInitScript so it is
-  // present on EVERY future document load in this browser context — including
-  // the post-login navigation triggered by window.location.assign() in
-  // LoginClient.  Setting it via page.evaluate() AFTER navigation races against
-  // the new document's execution context (Playwright errors with "Execution
-  // context was destroyed, most likely because of a navigation" on hard
-  // navigations).  addInitScript runs on every document before any other
-  // script, so the value is in place when React mounts and
-  // ProjectStateWrapper takes its silent path.
-  //
+  // present on EVERY future document load in this browser context.
   // ProjectStateWrapper renders a full-screen spinner (no children, no h1)
   // when isAuthenticated=true but localStorage['nself_project_setup_confirmed']
   // is absent.  Setting the flag here mirrors what happens for a real user
@@ -313,81 +322,35 @@ export async function setupAuth(page: Page, password = TEST_PASSWORD) {
     }
   })
 
-  // waitUntil: 'domcontentloaded' is enough here because globalSetup has
-  // already pre-warmed all Next.js JS bundles and compiled all routes.
-  // Using 'networkidle' risks a 30s hang when SSE / polling connections
-  // on adjacent pages keep the network busy.  The waitForSelector call
-  // below already waits for React to hydrate (input becomes enabled).
-  await page.goto('/login', { waitUntil: 'domcontentloaded' })
-  // Wait for the password input to become enabled (after /api/auth/init
-  // completes and React sets isCheckingSetup → false).
-  await page.waitForSelector('input[type="password"]:not([disabled])', {
-    state: 'visible',
-    timeout: 15000,
+  // API-based login: POST credentials directly to /api/auth/login through
+  // the page's APIRequestContext.  Shares the cookie jar with the page.
+  const loginResponse = await page.request.post('http://localhost:3021/api/auth/login', {
+    data: { password, rememberMe: false },
+    headers: { 'Content-Type': 'application/json' },
   })
-  await page.fill('input[type="password"]', password)
-  await page.click('button[type="submit"]')
-  // Wait until we've left /login.  With the mock, the app may route to
-  // /build, /, /start, or /dashboard depending on race order between
-  // Layout's useEffect and the login page's getCorrectRoute call.
-  //
-  // Use page.waitForFunction(() => !location.pathname.includes('/login'))
-  // instead of page.waitForURL: window.location.assign() triggers a hard
-  // browser navigation that aborts in-flight requests, and Firefox surfaces
-  // this as NS_BINDING_ABORTED which page.waitForURL treats as a fatal error.
-  // waitForFunction polls the actual document.location inside the page,
-  // resilient to mid-flight navigation aborts.
-  await page.waitForFunction(() => !window.location.pathname.includes('/login'), null, {
-    timeout: 30000,
-  })
-  // Let the redirect settle before the test body starts navigating.
-  // domcontentloaded is sufficient — SSE streams keep 'load'/'networkidle'
-  // busy indefinitely on dashboard pages.
-  await page.waitForLoadState('domcontentloaded').catch(() => {
-    // ignore — rare race where navigation aborts before DOMContentLoaded
-  })
-  // Explicitly wait for the nself-session cookie to land in the browser
-  // jar.  Without this, the next test-body navigation can race against
-  // window.location.assign's commit on WebKit, where the cookie has been
-  // set on the response but the jar hasn't been observably updated yet
-  // when the test fires its next page.goto — the middleware then sees
-  // no cookie and bounces back to /login, producing a "navigation
-  // interrupted" error.
+
+  if (!loginResponse.ok()) {
+    throw new Error(
+      `API login failed: ${loginResponse.status()} ${loginResponse.statusText()} — ${await loginResponse.text()}`
+    )
+  }
+
+  // Verify the session cookie landed in the jar.
   await expect
     .poll(
       async () => {
         const cookies = await page.context().cookies()
         return cookies.some((c) => c.name === 'nself-session')
       },
-      { timeout: 15000, message: 'nself-session cookie was not set within 15s of login' }
+      { timeout: 5000, message: 'nself-session cookie did not land after API login' }
     )
     .toBe(true)
 
-  // WebKit hardening: Playwright's webkit driver intermittently fails to
-  // include the freshly-set nself-session cookie on the very next page.goto(),
-  // causing middleware to redirect to /login with a "Navigation interrupted by
-  // another navigation" error.  Re-set the cookie explicitly through the
-  // context's cookie API with domain/path/sameSite/secure exactly as the
-  // server would have done.  This forces webkit to commit the cookie into its
-  // jar bound to the current origin so subsequent navigations include it
-  // deterministically.  This is a no-op on chromium/firefox but eliminates
-  // the race on webkit.
-  const allCookies = await page.context().cookies()
-  const session = allCookies.find((c) => c.name === 'nself-session')
-  if (session) {
-    await page.context().addCookies([
-      {
-        name: 'nself-session',
-        value: session.value,
-        domain: 'localhost',
-        path: '/',
-        httpOnly: true,
-        secure: false, // CI is plain HTTP; cookie was set with secure:false
-        sameSite: 'Lax',
-        expires: session.expires,
-      },
-    ])
-  }
+  // No need to navigate the page here.  After page.request.post, the
+  // session + CSRF cookies are in the shared cookie jar.  The test body's
+  // next page.goto() will be the first navigation; middleware sees the
+  // cookies on that request and lets it through.  This avoids the
+  // window.location.assign race that broke UI-based login on WebKit.
 }
 
 /**

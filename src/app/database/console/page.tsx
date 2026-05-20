@@ -630,7 +630,9 @@ export default function DatabaseConsolePage() {
     <Suspense
       fallback={
         <div>
-          <h1 className="mb-2 text-3xl font-bold text-zinc-900 dark:text-white">Database Console</h1>
+          <h1 className="mb-2 text-3xl font-bold text-zinc-900 dark:text-white">
+            Database Console
+          </h1>
           <CodeEditorSkeleton />
         </div>
       }

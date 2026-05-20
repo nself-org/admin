@@ -119,7 +119,7 @@ function StagingContent() {
   if (loading) {
     return (
       <>
-        <h1 className="sr-only">Staging Environment</h1>
+        <h1 className="mb-2 text-3xl font-bold text-zinc-900 dark:text-white">Staging Environment</h1>
         <HeroPattern />
         <div className="relative mx-auto max-w-7xl">
           <div className="flex items-center justify-center py-20">
@@ -597,7 +597,7 @@ export default function StagingPage() {
     <Suspense
       fallback={
         <div>
-          <h1 className="sr-only">Staging Environment</h1>
+          <h1 className="mb-2 text-3xl font-bold text-zinc-900 dark:text-white">Staging Environment</h1>
           <FormSkeleton />
         </div>
       }

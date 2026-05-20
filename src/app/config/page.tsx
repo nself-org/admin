@@ -418,7 +418,7 @@ export default function ConfigPage() {
     <Suspense
       fallback={
         <div>
-          <h1 className="sr-only">Configuration</h1>
+          <h1 className="mb-2 text-3xl font-bold text-zinc-900 dark:text-white">Configuration</h1>
           <FormSkeleton />
         </div>
       }

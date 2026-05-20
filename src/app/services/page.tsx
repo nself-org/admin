@@ -1354,7 +1354,7 @@ export default function ServicesPage() {
     <Suspense
       fallback={
         <div>
-          <h1 className="sr-only">Services</h1>
+          <h1 className="mb-2 text-3xl font-bold text-zinc-900 dark:text-white">Services</h1>
           <CardGridSkeleton />
         </div>
       }

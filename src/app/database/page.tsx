@@ -491,7 +491,7 @@ export default function DatabasePage() {
     <Suspense
       fallback={
         <div>
-          <h1 className="sr-only">Database</h1>
+          <h1 className="mb-2 text-3xl font-bold text-zinc-900 dark:text-white">Database</h1>
           <ListSkeleton />
         </div>
       }

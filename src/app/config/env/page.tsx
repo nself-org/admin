@@ -1189,7 +1189,7 @@ export default function EnvEditorPage() {
     <Suspense
       fallback={
         <div>
-          <h1 className="sr-only">Environment Editor</h1>
+          <h1 className="mb-2 text-3xl font-bold text-zinc-900 dark:text-white">Environment Editor</h1>
           <FormSkeleton />
         </div>
       }

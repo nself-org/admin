@@ -573,7 +573,7 @@ export default function DatabaseSchemaPage() {
     <Suspense
       fallback={
         <div>
-          <h1 className="sr-only">Database Schema</h1>
+          <h1 className="mb-2 text-3xl font-bold text-zinc-900 dark:text-white">Database Schema</h1>
           <TableSkeleton />
         </div>
       }

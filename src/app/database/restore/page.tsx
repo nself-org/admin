@@ -511,7 +511,7 @@ export default function DatabaseRestorePage() {
     <Suspense
       fallback={
         <div>
-          <h1 className="sr-only">Restore Database</h1>
+          <h1 className="mb-2 text-3xl font-bold text-zinc-900 dark:text-white">Restore Database</h1>
           <TableSkeleton />
         </div>
       }

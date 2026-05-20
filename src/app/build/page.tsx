@@ -3,7 +3,6 @@
 import { BuildProgress } from '@/components/build/BuildProgress'
 import { BuildStep, BuildTimeline } from '@/components/build/BuildTimeline'
 import { LogLine, LogViewer } from '@/components/build/LogViewer'
-import { FormSkeleton } from '@/components/skeletons'
 import { BuildProgressSkeleton } from '@/components/skeletons/BuildProgressSkeleton'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
@@ -731,7 +730,14 @@ function BuildContent() {
 
 export default function BuildPage() {
   return (
-    <Suspense fallback={<FormSkeleton />}>
+    <Suspense
+      fallback={
+        <div>
+          <h1 className="mb-2 text-3xl font-bold text-zinc-900 dark:text-white">Build Project</h1>
+          <BuildProgressSkeleton />
+        </div>
+      }
+    >
       <BuildContent />
     </Suspense>
   )

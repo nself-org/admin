@@ -83,12 +83,19 @@ test.describe('/dev/terminal', () => {
   test('shows allowed command warning or run button', async ({ page }) => {
     await page.goto('/dev/terminal')
     await page.waitForLoadState('domcontentloaded')
-    const hasBtn = await page
-      .getByRole('button', { name: /run|execute/i })
-      .first()
-      .isVisible()
-    const hasInput = await page.getByPlaceholder(/nself/i).first().isVisible()
-    expect(hasBtn || hasInput).toBe(true)
+    // OR-condition: poll until either the Run/Execute button OR the nself
+    // placeholder input renders.  Under domcontentloaded, fetch-driven UI
+    // may not be mounted yet.
+    await expect
+      .poll(
+        async () =>
+          (await page
+            .getByRole('button', { name: /run|execute/i })
+            .first()
+            .isVisible()) || (await page.getByPlaceholder(/nself/i).first().isVisible()),
+        { timeout: 20000 }
+      )
+      .toBe(true)
   })
 
   test('redirect to login when unauthenticated', async ({ page }) => {
@@ -410,15 +417,20 @@ test.describe('/dashboard/alerts', () => {
     })
     await page.goto('/dashboard/alerts')
     await page.waitForLoadState('domcontentloaded')
-    const hasEmpty = await page
-      .getByText(/no.*alert|all.*acknowledged/i)
-      .first()
-      .isVisible()
-    const hasFilter = await page
-      .getByText(/filter|all/i)
-      .first()
-      .isVisible()
-    expect(hasEmpty || hasFilter).toBe(true)
+    await expect
+      .poll(
+        async () =>
+          (await page
+            .getByText(/no.*alert|all.*acknowledged/i)
+            .first()
+            .isVisible()) ||
+          (await page
+            .getByText(/filter|all/i)
+            .first()
+            .isVisible()),
+        { timeout: 20000 }
+      )
+      .toBe(true)
   })
 
   test('offline state: shows retry on abort', async ({ page }) => {
@@ -568,12 +580,16 @@ test.describe('/dashboard/logs', () => {
     })
     await page.goto('/dashboard/logs')
     await page.waitForLoadState('domcontentloaded')
-    const hasEmpty = await page
-      .getByText(/no log entries|filter/i)
-      .first()
-      .isVisible()
-    const hasSearch = await page.getByPlaceholder(/search messages/i).isVisible()
-    expect(hasEmpty || hasSearch).toBe(true)
+    await expect
+      .poll(
+        async () =>
+          (await page
+            .getByText(/no log entries|filter/i)
+            .first()
+            .isVisible()) || (await page.getByPlaceholder(/search messages/i).isVisible()),
+        { timeout: 20000 }
+      )
+      .toBe(true)
   })
 
   test('offline state: shows retry on abort', async ({ page }) => {

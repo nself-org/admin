@@ -291,6 +291,28 @@ export async function setupAuth(page: Page, password = TEST_PASSWORD) {
   // Mock project status so ProjectStateWrapper doesn't redirect to /init/1.
   await mockProjectStatus(page)
 
+  // Pre-stamp the project-setup-confirmed flag via addInitScript so it is
+  // present on EVERY future document load in this browser context — including
+  // the post-login navigation triggered by window.location.assign() in
+  // LoginClient.  Setting it via page.evaluate() AFTER navigation races against
+  // the new document's execution context (Playwright errors with "Execution
+  // context was destroyed, most likely because of a navigation" on hard
+  // navigations).  addInitScript runs on every document before any other
+  // script, so the value is in place when React mounts and
+  // ProjectStateWrapper takes its silent path.
+  //
+  // ProjectStateWrapper renders a full-screen spinner (no children, no h1)
+  // when isAuthenticated=true but localStorage['nself_project_setup_confirmed']
+  // is absent.  Setting the flag here mirrors what happens for a real user
+  // after their first successful project visit.
+  await page.addInitScript(() => {
+    try {
+      localStorage.setItem('nself_project_setup_confirmed', 'true')
+    } catch {
+      // localStorage may be unavailable on about:blank — ignore.
+    }
+  })
+
   // waitUntil: 'domcontentloaded' is enough here because globalSetup has
   // already pre-warmed all Next.js JS bundles and compiled all routes.
   // Using 'networkidle' risks a 30s hang when SSE / polling connections
@@ -310,9 +332,10 @@ export async function setupAuth(page: Page, password = TEST_PASSWORD) {
   // Layout's useEffect and the login page's getCorrectRoute call.
   //
   // Use waitUntil: 'commit' so the wait resolves as soon as the URL changes
-  // (Next.js client-side navigation).  The default 'load' level waits for
-  // all resources including SSE/polling connections that never complete in
-  // CI, causing 30s timeouts on every shard past the first.
+  // (Next.js client-side navigation OR window.location.assign hard navigation).
+  // The default 'load' level waits for all resources including SSE/polling
+  // connections that never complete in CI, causing 30s timeouts on every
+  // shard past the first.
   await page.waitForURL((url) => !url.pathname.includes('/login'), {
     timeout: 30000,
     waitUntil: 'commit',
@@ -322,20 +345,6 @@ export async function setupAuth(page: Page, password = TEST_PASSWORD) {
   // busy indefinitely on dashboard pages.
   await page.waitForLoadState('domcontentloaded').catch(() => {
     // ignore — rare race where navigation aborts before DOMContentLoaded
-  })
-  // ProjectStateWrapper renders a full-screen spinner (no children, no h1) when
-  // isAuthenticated=true but localStorage['nself_project_setup_confirmed'] is
-  // absent.  Every test worker starts with a fresh browser context (empty
-  // localStorage), so without this flag the spinner blocks ALL page content
-  // until checkProjectStatus() resolves — but that fetch fires after React
-  // hydration, after mocks are registered, and the race means it sometimes
-  // never resolves within the 20 s timeout.
-  //
-  // Setting the flag here mirrors what happens for a real user after their first
-  // successful project visit.  ProjectStateWrapper then takes the silent path:
-  // loading stays false, children render immediately.
-  await page.evaluate(() => {
-    localStorage.setItem('nself_project_setup_confirmed', 'true')
   })
 }
 

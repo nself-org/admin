@@ -20,6 +20,36 @@ export const TEST_PASSWORD = 'Test123!@#Xy'
  * every authenticated page load).
  */
 export async function mockProjectStatus(page: Page) {
+  // Mock /api/auth/check so AuthProvider resolves immediately with an
+  // authenticated session.  Without this mock the AuthProvider spinner
+  // blocks ALL page content (no h1, no children) for up to 20 s in CI
+  // because each test worker starts with a fresh browser context that
+  // has no session cookie, causing /api/auth/check to return 401.
+  //
+  // The mock is cookie-aware: it returns 200 only when a nself-session
+  // cookie is present in the request (matching the real server behaviour).
+  // Tests that clear cookies to test unauthenticated states therefore
+  // still receive a 401, so redirect-to-login assertions continue to work.
+  await page.route('**/api/auth/check', (route) => {
+    const cookie = route.request().headers()['cookie'] ?? ''
+    if (cookie.includes('nself-session')) {
+      return route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          success: true,
+          userId: 'test-admin',
+          expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
+        }),
+      })
+    }
+    return route.fulfill({
+      status: 401,
+      contentType: 'application/json',
+      body: JSON.stringify({ success: false, error: 'No session' }),
+    })
+  })
+
   await page.route('**/api/project/status', (route) =>
     route.fulfill({
       status: 200,
@@ -166,6 +196,89 @@ export async function mockProjectStatus(page: Page) {
         status: 'not-configured',
         output: '',
         stderr: '',
+      }),
+    })
+  )
+
+  // /config/cors, /config/email, /config/rate-limits, /config/docker pages:
+  // These call their respective APIs on mount to populate form fields.  The
+  // real routes read .env files absent in CI, so they return errors slowly.
+  // Without mocks, waitForLoadState('networkidle') in 12-config-pages.spec.ts
+  // hangs for the full test timeout.
+  await page.route('**/api/config/cors**', (route) =>
+    route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({
+        success: true,
+        cors: {
+          allowedOrigins: '',
+          hasuraCorsDomain: '*',
+          authClientUrl: 'http://localhost:3000',
+        },
+      }),
+    })
+  )
+
+  await page.route('**/api/config/email**', (route) =>
+    route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({
+        success: true,
+        smtp: {
+          host: 'mailpit',
+          port: '1025',
+          secure: 'false',
+          user: '',
+          pass: '',
+          sender: 'noreply@nself.local',
+          hasPass: false,
+        },
+      }),
+    })
+  )
+
+  await page.route('**/api/config/rate-limits**', (route) =>
+    route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({
+        success: true,
+        rateLimits: {
+          apiEnabled: 'true',
+          apiRequests: '100',
+          apiWindow: '60',
+          globalEnabled: 'true',
+          globalMaxRequests: '100',
+          globalWindowSeconds: '60',
+          globalBurst: '20',
+        },
+      }),
+    })
+  )
+
+  await page.route('**/api/config/docker**', (route) =>
+    route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({
+        success: true,
+        docker: {
+          services: {
+            postgres: { version: '15', port: '5432' },
+            hasura: { version: 'latest' },
+            auth: { version: 'latest', port: '4000' },
+            storage: { version: 'latest' },
+            nginx: { version: 'alpine', port: '80', sslPort: '443' },
+            redis: { version: '7-alpine', port: '6379' },
+            mailpit: { version: 'latest', uiPort: '8025', smtpPort: '1025' },
+          },
+          raw: {
+            POSTGRES_VERSION: '15',
+            POSTGRES_PORT: '5432',
+          },
+        },
       }),
     })
   )

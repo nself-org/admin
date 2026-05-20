@@ -322,8 +322,19 @@ export async function setupAuth(page: Page, password = TEST_PASSWORD) {
     }
   })
 
+  // First, navigate to the login page so WebKit establishes a first-party
+  // context for localhost:3021.  Without this, WebKit's Intelligent Tracking
+  // Prevention (ITP) treats cookies set via APIRequestContext before any
+  // first-party page visit as third-party and refuses to send them on
+  // subsequent navigations.  /login is a public route (no auth required),
+  // so we can safely visit it.  waitUntil:'commit' resolves on first
+  // response without waiting for client-side hydration or SSE.
+  await page.goto('/login', { waitUntil: 'commit' })
+
   // API-based login: POST credentials directly to /api/auth/login through
   // the page's APIRequestContext.  Shares the cookie jar with the page.
+  // Because we already visited /login, the session cookie sets in the
+  // first-party context.
   const loginResponse = await page.request.post('http://localhost:3021/api/auth/login', {
     data: { password, rememberMe: false },
     headers: { 'Content-Type': 'application/json' },
@@ -346,11 +357,15 @@ export async function setupAuth(page: Page, password = TEST_PASSWORD) {
     )
     .toBe(true)
 
-  // No need to navigate the page here.  After page.request.post, the
-  // session + CSRF cookies are in the shared cookie jar.  The test body's
-  // next page.goto() will be the first navigation; middleware sees the
-  // cookies on that request and lets it through.  This avoids the
-  // window.location.assign race that broke UI-based login on WebKit.
+  // Warm-up navigation to a protected route to lock the session cookie into
+  // the page's first-party context.  WebKit requires the page to have
+  // navigated to an authenticated origin at least once before subsequent
+  // protected-route gotos reliably include the cookie.  We hit /build (the
+  // canonical post-login route), wait for commit, and continue.  If
+  // middleware were going to redirect to /login it would happen here, not
+  // in the test body — and the test body's first navigation then proceeds
+  // against a warm cookie context.
+  await page.goto('/build', { waitUntil: 'commit' })
 }
 
 /**

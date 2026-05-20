@@ -103,7 +103,9 @@ test.describe('/system/version', () => {
   })
 
   test('success state: shows version information', async ({ page }) => {
-    await mockApiEndpoint(page, '**/api/version', {
+    // The page fetches /api/nself/version (not /api/version) — see
+    // src/app/system/version/page.tsx.
+    await mockApiEndpoint(page, '**/api/nself/version', {
       cli: { version: '1.1.1', buildDate: '2026-05-01', commit: 'abc1234' },
       admin: { version: '1.1.1' },
       latestRelease: null,
@@ -116,7 +118,10 @@ test.describe('/system/version', () => {
   })
 
   test('offline state: shows retry on abort', async ({ page }) => {
-    await page.route('**/api/version', (route) => route.abort('failed'))
+    // Route the actual endpoint the page fetches (/api/nself/version) — the
+    // previous '**/api/version' pattern never matched, so the real request
+    // went through and the page never entered the offline state.
+    await page.route('**/api/nself/version', (route) => route.abort('failed'))
     await page.goto('/system/version')
     await page.waitForLoadState('domcontentloaded')
     await expect(page.getByRole('button', { name: /retry/i })).toBeVisible()

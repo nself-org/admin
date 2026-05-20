@@ -171,7 +171,7 @@ test.describe('T-0454: Admin dark/light mode', () => {
       test.beforeEach(async ({ page }) => {
         try {
           await page.goto(adminPage.path, { timeout: 8_000 })
-          await page.waitForLoadState('networkidle')
+          await page.waitForLoadState('domcontentloaded')
         } catch {
           test.skip(true, `Admin not running on port 3021 or ${adminPage.path} not available`)
         }

@@ -175,7 +175,7 @@ test.describe('Control-Plane Inventory Page', () => {
 
   test('01 — navigates to /environments and shows page title', async ({ page }) => {
     await mockInventory(page, MANAGE_INVENTORY)
-    await page.goto('/environments', { waitUntil: 'networkidle' })
+    await page.goto('/environments', { waitUntil: 'domcontentloaded' })
 
     // H1 gradient title
     const h1 = page.locator('h1').first()
@@ -187,7 +187,7 @@ test.describe('Control-Plane Inventory Page', () => {
 
   test('02 — server cards render with name, host, and role', async ({ page }) => {
     await mockInventory(page, MANAGE_INVENTORY)
-    await page.goto('/environments', { waitUntil: 'networkidle' })
+    await page.goto('/environments', { waitUntil: 'domcontentloaded' })
 
     // staging-app-01 card must appear
     const card = page.locator('text=staging-app-01').first()
@@ -207,7 +207,7 @@ test.describe('Control-Plane Inventory Page', () => {
 
   test('03 — "manage" capability badge is shown for manage-capable servers', async ({ page }) => {
     await mockInventory(page, MANAGE_INVENTORY)
-    await page.goto('/environments', { waitUntil: 'networkidle' })
+    await page.goto('/environments', { waitUntil: 'domcontentloaded' })
 
     // At least one "manage" badge should be visible
     const manageBadge = page.locator('text=manage').first()
@@ -218,7 +218,7 @@ test.describe('Control-Plane Inventory Page', () => {
 
   test('04 — "read-only" capability badge appears for partial-access servers', async ({ page }) => {
     await mockInventory(page, PARTIAL_INVENTORY)
-    await page.goto('/environments', { waitUntil: 'networkidle' })
+    await page.goto('/environments', { waitUntil: 'domcontentloaded' })
 
     const readOnlyBadge = page.locator('text=read-only').first()
     await expect(readOnlyBadge).toBeVisible()
@@ -228,7 +228,7 @@ test.describe('Control-Plane Inventory Page', () => {
 
   test('05 — partial-access banner renders when some servers are read-only', async ({ page }) => {
     await mockInventory(page, PARTIAL_INVENTORY)
-    await page.goto('/environments', { waitUntil: 'networkidle' })
+    await page.goto('/environments', { waitUntil: 'domcontentloaded' })
 
     // Banner contains "Partial access" text
     const banner = page.locator('text=Partial access').first()
@@ -243,7 +243,7 @@ test.describe('Control-Plane Inventory Page', () => {
 
   test('06 — hidden servers do not appear as cards', async ({ page }) => {
     await mockInventory(page, HIDDEN_INVENTORY)
-    await page.goto('/environments', { waitUntil: 'networkidle' })
+    await page.goto('/environments', { waitUntil: 'domcontentloaded' })
 
     // "hidden" badge must not appear in server card area
     // The page should show "All servers hidden" message
@@ -257,7 +257,7 @@ test.describe('Control-Plane Inventory Page', () => {
     page,
   }) => {
     await mockInventory(page, EMPTY_INVENTORY)
-    await page.goto('/environments', { waitUntil: 'networkidle' })
+    await page.goto('/environments', { waitUntil: 'domcontentloaded' })
 
     const emptyMsg = page.locator('text=No servers in inventory').first()
     await expect(emptyMsg).toBeVisible()
@@ -271,7 +271,7 @@ test.describe('Control-Plane Inventory Page', () => {
 
   test('08 — primary tag shown on primary server card', async ({ page }) => {
     await mockInventory(page, MANAGE_INVENTORY)
-    await page.goto('/environments', { waitUntil: 'networkidle' })
+    await page.goto('/environments', { waitUntil: 'domcontentloaded' })
 
     // "primary" span (sky-colored badge) should appear
     const primaryTag = page.locator('text=primary').first()
@@ -282,7 +282,7 @@ test.describe('Control-Plane Inventory Page', () => {
 
   test('09 — "Add Server" button opens modal with name, host, role inputs', async ({ page }) => {
     await mockInventory(page, MANAGE_INVENTORY)
-    await page.goto('/environments', { waitUntil: 'networkidle' })
+    await page.goto('/environments', { waitUntil: 'domcontentloaded' })
 
     // Click "Add Server" button in the page header
     const addBtn = page.locator('button:has-text("Add Server")').first()
@@ -337,7 +337,7 @@ test.describe('Control-Plane Inventory Page', () => {
       }
     })
 
-    await page.goto('/environments', { waitUntil: 'networkidle' })
+    await page.goto('/environments', { waitUntil: 'domcontentloaded' })
 
     // Click "Add First Server" in empty-state
     await page.locator('button:has-text("Add First Server")').click()
@@ -369,7 +369,7 @@ test.describe('Control-Plane Inventory Page', () => {
     page,
   }) => {
     await mockInventory(page, MANAGE_INVENTORY)
-    await page.goto('/environments', { waitUntil: 'networkidle' })
+    await page.goto('/environments', { waitUntil: 'domcontentloaded' })
 
     // The CLI reference at the bottom of the page
     const deployCmd = page.locator('text=nself deploy').first()
@@ -384,7 +384,7 @@ test.describe('Control-Plane Inventory Page', () => {
 
   test('12 — environment card header links to /environments/<name>', async ({ page }) => {
     await mockInventory(page, MANAGE_INVENTORY)
-    await page.goto('/environments', { waitUntil: 'networkidle' })
+    await page.goto('/environments', { waitUntil: 'domcontentloaded' })
 
     // Link to staging env detail page
     const stagingLink = page.locator('a[href="/environments/staging"]').first()
@@ -398,7 +398,7 @@ test.describe('Control-Plane Inventory Page', () => {
     page,
   }) => {
     await mockInventory(page, MANAGE_INVENTORY)
-    await page.goto('/environments', { waitUntil: 'networkidle' })
+    await page.goto('/environments', { waitUntil: 'domcontentloaded' })
 
     const fullAccessBadge = page.locator('text=full access').first()
     await expect(fullAccessBadge).toBeVisible()
@@ -410,7 +410,7 @@ test.describe('Control-Plane Inventory Page', () => {
     page,
   }) => {
     await mockInventory(page, PARTIAL_INVENTORY)
-    await page.goto('/environments', { waitUntil: 'networkidle' })
+    await page.goto('/environments', { waitUntil: 'domcontentloaded' })
 
     const partialBadge = page.locator('text=partial').first()
     await expect(partialBadge).toBeVisible()
@@ -435,7 +435,7 @@ test.describe('Control-Plane Inventory Page', () => {
       })
     })
 
-    await page.goto('/environments', { waitUntil: 'networkidle' })
+    await page.goto('/environments', { waitUntil: 'domcontentloaded' })
 
     const offlineMsg = page.locator('text=nself is not responding').first()
     await expect(offlineMsg).toBeVisible()
@@ -470,7 +470,7 @@ test.describe('Control-Plane Inventory Page', () => {
       }
     })
 
-    await page.goto('/environments', { waitUntil: 'networkidle' })
+    await page.goto('/environments', { waitUntil: 'domcontentloaded' })
     expect(requestCount).toBeGreaterThanOrEqual(1)
 
     const initialCount = requestCount

@@ -35,7 +35,7 @@ test.describe('/dev/graphql', () => {
 
   test('success state: shows GraphQL editor UI', async ({ page }) => {
     await page.goto('/dev/graphql')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
     const hasEditor = await page
       .getByText(/GraphQL Explorer|query|Run/i)
       .first()
@@ -45,7 +45,7 @@ test.describe('/dev/graphql', () => {
 
   test('run button is visible', async ({ page }) => {
     await page.goto('/dev/graphql')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
     const runBtn = page.getByRole('button', { name: /run|execute/i })
     if (await runBtn.first().isVisible()) {
       await expect(runBtn.first()).toBeVisible()
@@ -55,7 +55,7 @@ test.describe('/dev/graphql', () => {
   test('redirect to login when unauthenticated', async ({ page }) => {
     await page.context().clearCookies()
     await page.goto('/dev/graphql')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
     expect(
       page.url().includes('/login') ||
         (await page
@@ -80,14 +80,14 @@ test.describe('/dev/terminal', () => {
 
   test('success state: shows terminal input', async ({ page }) => {
     await page.goto('/dev/terminal')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
     const hasInput = await page.getByPlaceholder(/nself status/i).isVisible()
     expect(hasInput).toBe(true)
   })
 
   test('shows allowed command warning or run button', async ({ page }) => {
     await page.goto('/dev/terminal')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
     const hasBtn = await page
       .getByRole('button', { name: /run|execute/i })
       .first()
@@ -99,7 +99,7 @@ test.describe('/dev/terminal', () => {
   test('redirect to login when unauthenticated', async ({ page }) => {
     await page.context().clearCookies()
     await page.goto('/dev/terminal')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
     expect(
       page.url().includes('/login') ||
         (await page
@@ -131,7 +131,7 @@ test.describe('/dev/api', () => {
       generatedAt: new Date().toISOString(),
     })
     await page.goto('/dev/api')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
     const hasService = await page
       .getByText(/Hasura|Auth|API Explorer/i)
       .first()
@@ -142,7 +142,7 @@ test.describe('/dev/api', () => {
   test('offline state: shows retry on abort', async ({ page }) => {
     await page.route('**/api/nself/urls', (route) => route.abort('failed'))
     await page.goto('/dev/api')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
     await expect(page.getByRole('button', { name: /retry/i })).toBeVisible()
   })
 
@@ -152,7 +152,7 @@ test.describe('/dev/api', () => {
       generatedAt: new Date().toISOString(),
     })
     await page.goto('/dev/api')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
     const search = page.getByPlaceholder(/search services/i)
     if (await search.isVisible()) {
       await expect(search).toBeVisible()
@@ -162,7 +162,7 @@ test.describe('/dev/api', () => {
   test('redirect to login when unauthenticated', async ({ page }) => {
     await page.context().clearCookies()
     await page.goto('/dev/api')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
     expect(
       page.url().includes('/login') ||
         (await page
@@ -196,7 +196,7 @@ test.describe('/dev/scaffold', () => {
       ],
     })
     await page.goto('/dev/scaffold')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
     const hasUI = await page
       .getByText(/scaffold|template|table|generate/i)
       .first()
@@ -207,7 +207,7 @@ test.describe('/dev/scaffold', () => {
   test('offline state: shows retry on abort', async ({ page }) => {
     await page.route('**/api/graphql/hasura**', (route) => route.abort('failed'))
     await page.goto('/dev/scaffold')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
     await expect(page.getByRole('button', { name: /retry/i })).toBeVisible()
   })
 })
@@ -231,7 +231,7 @@ test.describe('/dev/seed', () => {
       lastSeededAt: new Date().toISOString(),
     })
     await page.goto('/dev/seed')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
     const hasStatus = await page
       .getByText(/seeded|run seed|np_users/i)
       .first()
@@ -245,7 +245,7 @@ test.describe('/dev/seed', () => {
       tables: [],
     })
     await page.goto('/dev/seed')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
     const btn = page.getByRole('button', { name: /run seed/i })
     if (await btn.isVisible()) {
       await expect(btn).toBeVisible()
@@ -255,14 +255,14 @@ test.describe('/dev/seed', () => {
   test('offline state: shows retry on abort', async ({ page }) => {
     await page.route('**/api/database/seed', (route) => route.abort('failed'))
     await page.goto('/dev/seed')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
     await expect(page.getByRole('button', { name: /retry/i })).toBeVisible()
   })
 
   test('redirect to login when unauthenticated', async ({ page }) => {
     await page.context().clearCookies()
     await page.goto('/dev/seed')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
     expect(
       page.url().includes('/login') ||
         (await page
@@ -299,7 +299,7 @@ test.describe('/dev/types', () => {
       ],
     })
     await page.goto('/dev/types')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
     const hasTable = await page
       .getByText(/np_users|TypeScript|types/i)
       .first()
@@ -310,7 +310,7 @@ test.describe('/dev/types', () => {
   test('offline state: shows retry on abort', async ({ page }) => {
     await page.route('**/api/graphql/hasura**', (route) => route.abort('failed'))
     await page.goto('/dev/types')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
     await expect(page.getByRole('button', { name: /retry/i })).toBeVisible()
   })
 })
@@ -333,7 +333,7 @@ test.describe('/dev/webhooks', () => {
       total: 0,
     })
     await page.goto('/dev/webhooks')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
     const hasForm = await page
       .getByText(/webhook|test|delivery/i)
       .first()
@@ -344,7 +344,7 @@ test.describe('/dev/webhooks', () => {
   test('offline state: shows retry on abort', async ({ page }) => {
     await page.route('**/api/workflows**', (route) => route.abort('failed'))
     await page.goto('/dev/webhooks')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
     await expect(page.getByRole('button', { name: /retry/i })).toBeVisible()
   })
 })
@@ -363,7 +363,7 @@ test.describe('/dev/testing', () => {
 
   test('success state: shows built-in test suites', async ({ page }) => {
     await page.goto('/dev/testing')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
     const hasSuites = await page
       .getByText(/stack smoke test|URL Reachability|health check|testing utilities/i)
       .first()
@@ -373,7 +373,7 @@ test.describe('/dev/testing', () => {
 
   test('run all button is visible', async ({ page }) => {
     await page.goto('/dev/testing')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
     const btn = page.getByRole('button', { name: /run all/i })
     if (await btn.isVisible()) {
       await expect(btn).toBeVisible()
@@ -383,7 +383,7 @@ test.describe('/dev/testing', () => {
   test('redirect to login when unauthenticated', async ({ page }) => {
     await page.context().clearCookies()
     await page.goto('/dev/testing')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
     expect(
       page.url().includes('/login') ||
         (await page
@@ -425,7 +425,7 @@ test.describe('/dashboard/alerts', () => {
       lastUpdatedAt: new Date().toISOString(),
     })
     await page.goto('/dashboard/alerts')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
     const hasAlert = await page
       .getByText(/High memory usage|alerts/i)
       .first()
@@ -440,7 +440,7 @@ test.describe('/dashboard/alerts', () => {
       lastUpdatedAt: new Date().toISOString(),
     })
     await page.goto('/dashboard/alerts')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
     const hasEmpty = await page
       .getByText(/no.*alert|all.*acknowledged/i)
       .first()
@@ -455,7 +455,7 @@ test.describe('/dashboard/alerts', () => {
   test('offline state: shows retry on abort', async ({ page }) => {
     await page.route('**/api/notifications', (route) => route.abort('failed'))
     await page.goto('/dashboard/alerts')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
     await expect(page.getByRole('button', { name: /retry/i })).toBeVisible()
   })
 
@@ -468,7 +468,7 @@ test.describe('/dashboard/alerts', () => {
       })
     )
     await page.goto('/dashboard/alerts')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
     const hasError = await page
       .getByText(/failed|error|retry/i)
       .first()
@@ -483,7 +483,7 @@ test.describe('/dashboard/alerts', () => {
       lastUpdatedAt: new Date().toISOString(),
     })
     await page.goto('/dashboard/alerts')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
     const allTab = page.getByRole('button', { name: /^all$/i })
     if (await allTab.isVisible()) {
       await expect(allTab).toBeVisible()
@@ -493,7 +493,7 @@ test.describe('/dashboard/alerts', () => {
   test('redirect to login when unauthenticated', async ({ page }) => {
     await page.context().clearCookies()
     await page.goto('/dashboard/alerts')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
     expect(
       page.url().includes('/login') ||
         (await page
@@ -526,7 +526,7 @@ test.describe('/dashboard/health', () => {
       checkedAt: new Date().toISOString(),
     })
     await page.goto('/dashboard/health')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
     const hasService = await page
       .getByText(/postgres|hasura|all systems healthy/i)
       .first()
@@ -541,7 +541,7 @@ test.describe('/dashboard/health', () => {
       checkedAt: new Date().toISOString(),
     })
     await page.goto('/dashboard/health')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
     const hasDegraded = await page
       .getByText(/degraded|experiencing issues/i)
       .first()
@@ -552,14 +552,14 @@ test.describe('/dashboard/health', () => {
   test('offline state: shows retry on abort', async ({ page }) => {
     await page.route('**/api/health**', (route) => route.abort('failed'))
     await page.goto('/dashboard/health')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
     await expect(page.getByRole('button', { name: /retry/i })).toBeVisible()
   })
 
   test('redirect to login when unauthenticated', async ({ page }) => {
     await page.context().clearCookies()
     await page.goto('/dashboard/health')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
     expect(
       page.url().includes('/login') ||
         (await page
@@ -598,7 +598,7 @@ test.describe('/dashboard/logs', () => {
       services: ['hasura'],
     })
     await page.goto('/dashboard/logs')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
     const hasLog = await page
       .getByText(/Server started|hasura|logs/i)
       .first()
@@ -614,7 +614,7 @@ test.describe('/dashboard/logs', () => {
       services: [],
     })
     await page.goto('/dashboard/logs')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
     const hasEmpty = await page
       .getByText(/no log entries|filter/i)
       .first()
@@ -626,7 +626,7 @@ test.describe('/dashboard/logs', () => {
   test('offline state: shows retry on abort', async ({ page }) => {
     await page.route('**/api/logs**', (route) => route.abort('failed'))
     await page.goto('/dashboard/logs')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
     await expect(page.getByRole('button', { name: /retry/i })).toBeVisible()
   })
 
@@ -646,7 +646,7 @@ test.describe('/dashboard/logs', () => {
       services: ['hasura'],
     })
     await page.goto('/dashboard/logs')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
     const exportBtn = page.getByRole('button', { name: /export/i })
     if (await exportBtn.isVisible()) {
       await expect(exportBtn).toBeVisible()
@@ -656,7 +656,7 @@ test.describe('/dashboard/logs', () => {
   test('redirect to login when unauthenticated', async ({ page }) => {
     await page.context().clearCookies()
     await page.goto('/dashboard/logs')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
     expect(
       page.url().includes('/login') ||
         (await page
@@ -692,7 +692,7 @@ test.describe('/dashboard/metrics', () => {
       collectedAt: new Date().toISOString(),
     })
     await page.goto('/dashboard/metrics')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
     const hasKpi = await page
       .getByText(/requests|latency|CPU|uptime|performance metrics/i)
       .first()
@@ -703,14 +703,14 @@ test.describe('/dashboard/metrics', () => {
   test('offline state: shows retry on abort', async ({ page }) => {
     await page.route('**/api/metrics', (route) => route.abort('failed'))
     await page.goto('/dashboard/metrics')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
     await expect(page.getByRole('button', { name: /retry/i })).toBeVisible()
   })
 
   test('redirect to login when unauthenticated', async ({ page }) => {
     await page.context().clearCookies()
     await page.goto('/dashboard/metrics')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
     expect(
       page.url().includes('/login') ||
         (await page
@@ -756,7 +756,7 @@ test.describe('/dashboard/status', () => {
       checkedAt: new Date().toISOString(),
     })
     await page.goto('/dashboard/status')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
     const hasBanner = await page
       .getByText(/all systems operational|PostgreSQL|operational/i)
       .first()
@@ -780,7 +780,7 @@ test.describe('/dashboard/status', () => {
       checkedAt: new Date().toISOString(),
     })
     await page.goto('/dashboard/status')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
     const hasDeg = await page
       .getByText(/degraded|partial system/i)
       .first()
@@ -796,7 +796,7 @@ test.describe('/dashboard/status', () => {
       checkedAt: new Date().toISOString(),
     })
     await page.goto('/dashboard/status')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
     const hasUptime = await page
       .getByText(/uptime|100\.00/i)
       .first()
@@ -807,7 +807,7 @@ test.describe('/dashboard/status', () => {
   test('offline state: shows retry on abort', async ({ page }) => {
     await page.route('**/api/monitor', (route) => route.abort('failed'))
     await page.goto('/dashboard/status')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
     await expect(page.getByRole('button', { name: /retry/i })).toBeVisible()
   })
 
@@ -820,7 +820,7 @@ test.describe('/dashboard/status', () => {
       })
     )
     await page.goto('/dashboard/status')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
     const hasError = await page
       .getByText(/failed|error|retry/i)
       .first()
@@ -831,7 +831,7 @@ test.describe('/dashboard/status', () => {
   test('redirect to login when unauthenticated', async ({ page }) => {
     await page.context().clearCookies()
     await page.goto('/dashboard/status')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
     expect(
       page.url().includes('/login') ||
         (await page

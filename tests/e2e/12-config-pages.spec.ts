@@ -21,14 +21,14 @@ test.describe('CORS Configuration page', () => {
 
   test('should render the page heading', async ({ page }) => {
     await page.goto('/config/cors')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
     const heading = page.getByRole('heading', { name: /CORS Configuration/i })
     await expect(heading).toBeVisible()
   })
 
   test('should show textarea for CORS_ALLOWED_ORIGINS', async ({ page }) => {
     await page.goto('/config/cors')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
     const textarea = page.locator('#allowed-origins')
     // May not be visible if loading/error state; check conditionally
     if (await textarea.isVisible()) {
@@ -38,7 +38,7 @@ test.describe('CORS Configuration page', () => {
 
   test('should show input for HASURA_GRAPHQL_CORS_DOMAIN', async ({ page }) => {
     await page.goto('/config/cors')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
     const input = page.locator('#hasura-cors')
     if (await input.isVisible()) {
       await expect(input).toBeVisible()
@@ -47,7 +47,7 @@ test.describe('CORS Configuration page', () => {
 
   test('should show input for AUTH_CLIENT_URL', async ({ page }) => {
     await page.goto('/config/cors')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
     const input = page.locator('#auth-client-url')
     if (await input.isVisible()) {
       await expect(input).toBeVisible()
@@ -56,7 +56,7 @@ test.describe('CORS Configuration page', () => {
 
   test('should show Save & Apply button when form is visible', async ({ page }) => {
     await page.goto('/config/cors')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
     const btn = page.getByRole('button', { name: /Save & Apply/i })
     if (await btn.isVisible()) {
       await expect(btn).toBeVisible()
@@ -67,7 +67,7 @@ test.describe('CORS Configuration page', () => {
     // Access without auth cookie
     await page.context().clearCookies()
     await page.goto('/config/cors')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
     // Should redirect to login or show unauth state
     const isAtLogin = page.url().includes('/login')
     const hasUnauthContent = await page.getByText(/not authenticated/i).isVisible()
@@ -78,7 +78,7 @@ test.describe('CORS Configuration page', () => {
   test('offline state: shows retry button on network failure', async ({ page }) => {
     await page.route('/api/config/cors', (route) => route.abort('failed'))
     await page.goto('/config/cors')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
     const retry = page.getByRole('button', { name: /retry/i })
     const offlineMsg = page.getByText(/cannot (connect|reach)/i)
     const hasOfflineIndicator = (await retry.isVisible()) || (await offlineMsg.isVisible())
@@ -90,7 +90,7 @@ test.describe('CORS Configuration page', () => {
       route.fulfill({ status: 500, body: JSON.stringify({ success: false, error: 'test error' }) })
     )
     await page.goto('/config/cors')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
     const hasError =
       (await page.getByText(/failed to load/i).isVisible()) ||
       (await page.getByRole('button', { name: /retry/i }).isVisible())
@@ -113,14 +113,14 @@ test.describe('Email Configuration page', () => {
 
   test('should render the Email Configuration heading', async ({ page }) => {
     await page.goto('/config/email')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
     const heading = page.getByRole('heading', { name: /email configuration/i })
     await expect(heading).toBeVisible()
   })
 
   test('should show SMTP host input', async ({ page }) => {
     await page.goto('/config/email')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
     const input = page.locator('#smtp-host')
     if (await input.isVisible()) {
       await expect(input).toBeVisible()
@@ -129,7 +129,7 @@ test.describe('Email Configuration page', () => {
 
   test('should show password field (masked, never shows plain text)', async ({ page }) => {
     await page.goto('/config/email')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
     const passInput = page.locator('#smtp-pass')
     if (await passInput.isVisible()) {
       // Must be type=password (masking enforced)
@@ -140,7 +140,7 @@ test.describe('Email Configuration page', () => {
 
   test('should show Send Test Email button', async ({ page }) => {
     await page.goto('/config/email')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
     const btn = page.getByRole('button', { name: /send test email/i })
     if (await btn.isVisible()) {
       await expect(btn).toBeVisible()
@@ -166,7 +166,7 @@ test.describe('Email Configuration page', () => {
       })
     )
     await page.goto('/config/email')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
     const notice = page.getByText(/local mailpit defaults|not delivered externally/i)
     await expect(notice).toBeVisible()
   })
@@ -174,7 +174,7 @@ test.describe('Email Configuration page', () => {
   test('offline state: shows retry button on network failure', async ({ page }) => {
     await page.route('/api/config/email', (route) => route.abort('failed'))
     await page.goto('/config/email')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
     const hasOffline =
       (await page.getByRole('button', { name: /retry/i }).isVisible()) ||
       (await page.getByText(/cannot (connect|reach)/i).isVisible())
@@ -184,7 +184,7 @@ test.describe('Email Configuration page', () => {
   test('redirect to login when unauthenticated', async ({ page }) => {
     await page.context().clearCookies()
     await page.goto('/config/email')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
     const isAtLogin = page.url().includes('/login')
     const hasUnauthContent = await page.getByText(/not authenticated/i).isVisible()
     expect(isAtLogin || hasUnauthContent).toBe(true)
@@ -206,7 +206,7 @@ test.describe('Rate Limits page', () => {
 
   test('should render Rate Limits heading', async ({ page }) => {
     await page.goto('/config/rate-limits')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
     // .first() because the page renders the heading in multiple places
     // (page title + section headers); any one visible is sufficient.
     const heading = page.getByRole('heading', { name: /rate limits/i }).first()
@@ -232,7 +232,7 @@ test.describe('Rate Limits page', () => {
       })
     )
     await page.goto('/config/rate-limits')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
     const apiSection = page.getByText(/API Rate Limits/i)
     const nginxSection = page.getByText(/Nginx Rate Limits/i)
     await expect(apiSection).toBeVisible()
@@ -241,7 +241,7 @@ test.describe('Rate Limits page', () => {
 
   test('should show API requests input', async ({ page }) => {
     await page.goto('/config/rate-limits')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
     const input = page.locator('#api-requests')
     if (await input.isVisible()) {
       await expect(input).toBeVisible()
@@ -250,7 +250,7 @@ test.describe('Rate Limits page', () => {
 
   test('should show Save & Apply button', async ({ page }) => {
     await page.goto('/config/rate-limits')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
     const btn = page.getByRole('button', { name: /Save & Apply/i })
     if (await btn.isVisible()) {
       await expect(btn).toBeVisible()
@@ -275,7 +275,7 @@ test.describe('Rate Limits page', () => {
       route.fulfill({ status: 500, body: JSON.stringify({ success: false, error: 'test error' }) })
     )
     await page.goto('/config/rate-limits')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
     const hasError =
       (await page.getByText(/failed to load/i).isVisible()) ||
       (await page.getByRole('button', { name: /retry/i }).isVisible())
@@ -285,7 +285,7 @@ test.describe('Rate Limits page', () => {
   test('redirect to login when unauthenticated', async ({ page }) => {
     await page.context().clearCookies()
     await page.goto('/config/rate-limits')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
     const isAtLogin = page.url().includes('/login')
     const hasUnauthContent = await page.getByText(/not authenticated/i).isVisible()
     expect(isAtLogin || hasUnauthContent).toBe(true)
@@ -307,7 +307,7 @@ test.describe('Docker Configuration page', () => {
 
   test('should render Docker Configuration heading', async ({ page }) => {
     await page.goto('/config/docker')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
     const heading = page.getByRole('heading', { name: /docker configuration/i })
     await expect(heading).toBeVisible()
   })
@@ -337,7 +337,7 @@ test.describe('Docker Configuration page', () => {
       })
     )
     await page.goto('/config/docker')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
     const pgCard = page.getByText('PostgreSQL')
     const redisCard = page.getByText('Redis')
     await expect(pgCard).toBeVisible()
@@ -366,7 +366,7 @@ test.describe('Docker Configuration page', () => {
       })
     )
     await page.goto('/config/docker')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
     // At least one version badge should appear
     const versionBadge = page.getByText('15').first()
     await expect(versionBadge).toBeVisible()
@@ -394,7 +394,7 @@ test.describe('Docker Configuration page', () => {
       })
     )
     await page.goto('/config/docker')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
     const editBtn = page.getByRole('button', { name: /edit postgresql/i })
     if (await editBtn.isVisible()) {
       await editBtn.click()
@@ -406,7 +406,7 @@ test.describe('Docker Configuration page', () => {
   test('offline state: shows retry button on network failure', async ({ page }) => {
     await page.route('/api/config/docker', (route) => route.abort('failed'))
     await page.goto('/config/docker')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
     const hasOffline =
       (await page.getByRole('button', { name: /retry/i }).isVisible()) ||
       (await page.getByText(/cannot (connect|reach)/i).isVisible())
@@ -418,7 +418,7 @@ test.describe('Docker Configuration page', () => {
       route.fulfill({ status: 500, body: JSON.stringify({ success: false, error: 'test error' }) })
     )
     await page.goto('/config/docker')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
     const hasError =
       (await page.getByText(/failed to load/i).isVisible()) ||
       (await page.getByRole('button', { name: /retry/i }).isVisible())
@@ -428,7 +428,7 @@ test.describe('Docker Configuration page', () => {
   test('redirect to login when unauthenticated', async ({ page }) => {
     await page.context().clearCookies()
     await page.goto('/config/docker')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
     const isAtLogin = page.url().includes('/login')
     const hasUnauthContent = await page.getByText(/not authenticated/i).isVisible()
     expect(isAtLogin || hasUnauthContent).toBe(true)

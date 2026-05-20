@@ -153,7 +153,7 @@ test.describe('/services/nestjs — 7 UI states', () => {
 
   test('02 error — error card renders when API returns success:false', async ({ page }) => {
     await mockNselfError(page, 'nself not found')
-    await page.goto('/services/nestjs', { waitUntil: 'networkidle' })
+    await page.goto('/services/nestjs', { waitUntil: 'domcontentloaded' })
 
     await expect(page.locator('text=Failed to load')).toBeVisible()
     await expect(page.locator('text=nself not found')).toBeVisible()
@@ -161,14 +161,14 @@ test.describe('/services/nestjs — 7 UI states', () => {
 
   test('03 empty — empty-state card when no services registered', async ({ page }) => {
     await mockNselfEmpty(page)
-    await page.goto('/services/nestjs', { waitUntil: 'networkidle' })
+    await page.goto('/services/nestjs', { waitUntil: 'domcontentloaded' })
 
     await expect(page.locator('text=No NestJS services registered')).toBeVisible()
   })
 
   test('04 success — service cards rendered with name and status badge', async ({ page }) => {
     await mockNselfSuccess(page, SERVICE_LIST_JSON)
-    await page.goto('/services/nestjs', { waitUntil: 'networkidle' })
+    await page.goto('/services/nestjs', { waitUntil: 'domcontentloaded' })
 
     await expect(page.locator('text=my-service').first()).toBeVisible()
     await expect(page.locator('text=running')).toBeVisible()
@@ -201,7 +201,7 @@ test.describe('/services/nestjs — 7 UI states', () => {
       })
     })
 
-    await page.goto('/services/nestjs', { waitUntil: 'networkidle' })
+    await page.goto('/services/nestjs', { waitUntil: 'domcontentloaded' })
     await expect(page.locator('text=my-service').first()).toBeVisible()
 
     // Click Restart for the first service (running)
@@ -219,7 +219,7 @@ test.describe('/services/nestjs — 7 UI states', () => {
       { success: true, data: { stdout: '', stderr: '' } }
     )
 
-    await page.goto('/services/nestjs', { waitUntil: 'networkidle' })
+    await page.goto('/services/nestjs', { waitUntil: 'domcontentloaded' })
     await expect(page.locator('text=my-service').first()).toBeVisible()
 
     await page.locator('button:has-text("Restart")').first().click()
@@ -235,7 +235,7 @@ test.describe('/services/nestjs — 7 UI states', () => {
       { success: false, error: 'restart failed: timeout' }
     )
 
-    await page.goto('/services/nestjs', { waitUntil: 'networkidle' })
+    await page.goto('/services/nestjs', { waitUntil: 'domcontentloaded' })
     await expect(page.locator('text=my-service').first()).toBeVisible()
 
     await page.locator('button:has-text("Restart")').first().click()
@@ -254,25 +254,25 @@ test.describe('/services/bullmq — 7 UI states', () => {
 
   test('01 error — error card renders', async ({ page }) => {
     await mockNselfError(page)
-    await page.goto('/services/bullmq', { waitUntil: 'networkidle' })
+    await page.goto('/services/bullmq', { waitUntil: 'domcontentloaded' })
     await expect(page.locator('text=Failed to load BullMQ services')).toBeVisible()
   })
 
   test('02 empty — no queues or workers registered', async ({ page }) => {
     await mockNselfEmpty(page)
-    await page.goto('/services/bullmq', { waitUntil: 'networkidle' })
+    await page.goto('/services/bullmq', { waitUntil: 'domcontentloaded' })
     await expect(page.locator('text=No BullMQ queues or workers registered')).toBeVisible()
   })
 
   test('03 success — service card visible', async ({ page }) => {
     await mockNselfSuccess(page, SERVICE_LIST_JSON)
-    await page.goto('/services/bullmq', { waitUntil: 'networkidle' })
+    await page.goto('/services/bullmq', { waitUntil: 'domcontentloaded' })
     await expect(page.locator('text=my-service').first()).toBeVisible()
   })
 
   test('04 stop-confirm — confirm card shown before stopping', async ({ page }) => {
     await mockNselfSuccess(page, SERVICE_LIST_JSON)
-    await page.goto('/services/bullmq', { waitUntil: 'networkidle' })
+    await page.goto('/services/bullmq', { waitUntil: 'domcontentloaded' })
 
     // Click Stop on the running service
     const stopBtn = page.locator('button:has-text("Stop")').first()
@@ -292,7 +292,7 @@ test.describe('/services/bullmq — 7 UI states', () => {
       { success: true, data: { stdout: '', stderr: '' } }
     )
 
-    await page.goto('/services/bullmq', { waitUntil: 'networkidle' })
+    await page.goto('/services/bullmq', { waitUntil: 'domcontentloaded' })
     await page.locator('button:has-text("Stop")').first().click()
     await page.locator('button:has-text("Confirm Stop")').click()
     await page.waitForTimeout(500)
@@ -307,7 +307,7 @@ test.describe('/services/bullmq — 7 UI states', () => {
       { success: false, error: 'stop failed: permission denied' }
     )
 
-    await page.goto('/services/bullmq', { waitUntil: 'networkidle' })
+    await page.goto('/services/bullmq', { waitUntil: 'domcontentloaded' })
     await page.locator('button:has-text("Stop")').first().click()
     await page.locator('button:has-text("Confirm Stop")').click()
     await page.waitForTimeout(500)
@@ -317,7 +317,7 @@ test.describe('/services/bullmq — 7 UI states', () => {
 
   test('07 start — stopped service shows Start button', async ({ page }) => {
     await mockNselfSuccess(page, SERVICE_LIST_JSON)
-    await page.goto('/services/bullmq', { waitUntil: 'networkidle' })
+    await page.goto('/services/bullmq', { waitUntil: 'domcontentloaded' })
 
     // "other-service" is stopped — Start button should appear
     await expect(page.locator('button:has-text("Start")')).toBeVisible()
@@ -333,25 +333,25 @@ test.describe('/services/custom — 7 UI states', () => {
 
   test('01 error — error card renders', async ({ page }) => {
     await mockNselfError(page)
-    await page.goto('/services/custom', { waitUntil: 'networkidle' })
+    await page.goto('/services/custom', { waitUntil: 'domcontentloaded' })
     await expect(page.locator('text=Failed to load custom services')).toBeVisible()
   })
 
   test('02 empty — no custom services registered', async ({ page }) => {
     await mockNselfEmpty(page)
-    await page.goto('/services/custom', { waitUntil: 'networkidle' })
+    await page.goto('/services/custom', { waitUntil: 'domcontentloaded' })
     await expect(page.locator('text=No custom services registered')).toBeVisible()
   })
 
   test('03 success — service card visible', async ({ page }) => {
     await mockNselfSuccess(page, SERVICE_LIST_JSON)
-    await page.goto('/services/custom', { waitUntil: 'networkidle' })
+    await page.goto('/services/custom', { waitUntil: 'domcontentloaded' })
     await expect(page.locator('text=my-service').first()).toBeVisible()
   })
 
   test('04 stop-confirm — confirm card appears on Stop click', async ({ page }) => {
     await mockNselfSuccess(page, SERVICE_LIST_JSON)
-    await page.goto('/services/custom', { waitUntil: 'networkidle' })
+    await page.goto('/services/custom', { waitUntil: 'domcontentloaded' })
     await page.locator('button:has-text("Stop")').first().click()
     await expect(page.locator('text=Stop my-service?')).toBeVisible()
     await expect(page.locator('button:has-text("Confirm Stop")')).toBeVisible()
@@ -364,7 +364,7 @@ test.describe('/services/custom — 7 UI states', () => {
       { success: true, data: { stdout: '', stderr: '' } }
     )
 
-    await page.goto('/services/custom', { waitUntil: 'networkidle' })
+    await page.goto('/services/custom', { waitUntil: 'domcontentloaded' })
     await page.locator('button:has-text("Restart")').first().click()
     await page.waitForTimeout(500)
 
@@ -378,7 +378,7 @@ test.describe('/services/custom — 7 UI states', () => {
       { success: false, error: 'restart failed' }
     )
 
-    await page.goto('/services/custom', { waitUntil: 'networkidle' })
+    await page.goto('/services/custom', { waitUntil: 'domcontentloaded' })
     await page.locator('button:has-text("Restart")').first().click()
     await page.waitForTimeout(500)
 
@@ -387,7 +387,7 @@ test.describe('/services/custom — 7 UI states', () => {
 
   test('07 raw output card — visible after successful fetch', async ({ page }) => {
     await mockNselfSuccess(page, SERVICE_LIST_JSON)
-    await page.goto('/services/custom', { waitUntil: 'networkidle' })
+    await page.goto('/services/custom', { waitUntil: 'domcontentloaded' })
 
     // Raw output card shows the nself command used
     await expect(page.locator('text=nself service ps --type custom')).toBeVisible()
@@ -403,26 +403,26 @@ test.describe('/services/python — 7 UI states', () => {
 
   test('01 error — error card renders', async ({ page }) => {
     await mockNselfError(page)
-    await page.goto('/services/python', { waitUntil: 'networkidle' })
+    await page.goto('/services/python', { waitUntil: 'domcontentloaded' })
     await expect(page.locator('text=Failed to load Python services')).toBeVisible()
   })
 
   test('02 empty — no Python services registered', async ({ page }) => {
     await mockNselfEmpty(page)
-    await page.goto('/services/python', { waitUntil: 'networkidle' })
+    await page.goto('/services/python', { waitUntil: 'domcontentloaded' })
     await expect(page.locator('text=No Python services registered')).toBeVisible()
   })
 
   test('03 success — service card visible with status badge', async ({ page }) => {
     await mockNselfSuccess(page, SERVICE_LIST_JSON)
-    await page.goto('/services/python', { waitUntil: 'networkidle' })
+    await page.goto('/services/python', { waitUntil: 'domcontentloaded' })
     await expect(page.locator('text=my-service').first()).toBeVisible()
     await expect(page.locator('text=running')).toBeVisible()
   })
 
   test('04 stop-confirm — confirm card with service name', async ({ page }) => {
     await mockNselfSuccess(page, SERVICE_LIST_JSON)
-    await page.goto('/services/python', { waitUntil: 'networkidle' })
+    await page.goto('/services/python', { waitUntil: 'domcontentloaded' })
     await page.locator('button:has-text("Stop")').first().click()
     await expect(page.locator('text=Stop my-service?')).toBeVisible()
   })
@@ -450,7 +450,7 @@ test.describe('/services/python — 7 UI states', () => {
       })
     })
 
-    await page.goto('/services/python', { waitUntil: 'networkidle' })
+    await page.goto('/services/python', { waitUntil: 'domcontentloaded' })
     await page.locator('button:has-text("Restart")').first().click()
     await expect(page.locator('.animate-spin').first()).toBeVisible()
     resolve?.()
@@ -464,7 +464,7 @@ test.describe('/services/python — 7 UI states', () => {
       { success: true, data: { stdout: '', stderr: '' } }
     )
 
-    await page.goto('/services/python', { waitUntil: 'networkidle' })
+    await page.goto('/services/python', { waitUntil: 'domcontentloaded' })
     await page.locator('button:has-text("Start")').first().click()
     await page.waitForTimeout(500)
 
@@ -479,7 +479,7 @@ test.describe('/services/python — 7 UI states', () => {
       { success: false, error: 'start failed: port in use' }
     )
 
-    await page.goto('/services/python', { waitUntil: 'networkidle' })
+    await page.goto('/services/python', { waitUntil: 'domcontentloaded' })
     await page.locator('button:has-text("Start")').first().click()
     await page.waitForTimeout(500)
 

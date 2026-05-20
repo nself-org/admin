@@ -171,7 +171,9 @@ test.describe('/services/nestjs — 7 UI states', () => {
     await page.goto('/services/nestjs', { waitUntil: 'domcontentloaded' })
 
     await expect(page.locator('text=my-service').first()).toBeVisible()
-    await expect(page.locator('text=running')).toBeVisible()
+    // 'running' appears as both a status badge and inside the raw JSON debug
+    // <pre> — use .first() to grab the badge unambiguously.
+    await expect(page.locator('text=running').first()).toBeVisible()
   })
 
   test('05 action-in-progress — restart spinner shown while request in flight', async ({
@@ -319,8 +321,10 @@ test.describe('/services/bullmq — 7 UI states', () => {
     await mockNselfSuccess(page, SERVICE_LIST_JSON)
     await page.goto('/services/bullmq', { waitUntil: 'domcontentloaded' })
 
-    // "other-service" is stopped — Start button should appear
-    await expect(page.locator('button:has-text("Start")')).toBeVisible()
+    // "other-service" is stopped — Start button should appear.  Use an exact
+    // accessible-name match so "Restart" buttons (which also contain "Start")
+    // don't trip strict mode.
+    await expect(page.getByRole('button', { name: 'Start', exact: true })).toBeVisible()
   })
 })
 
@@ -417,7 +421,9 @@ test.describe('/services/python — 7 UI states', () => {
     await mockNselfSuccess(page, SERVICE_LIST_JSON)
     await page.goto('/services/python', { waitUntil: 'domcontentloaded' })
     await expect(page.locator('text=my-service').first()).toBeVisible()
-    await expect(page.locator('text=running')).toBeVisible()
+    // 'running' status text appears in both the badge and the raw JSON dump —
+    // .first() picks the badge.
+    await expect(page.locator('text=running').first()).toBeVisible()
   })
 
   test('04 stop-confirm — confirm card with service name', async ({ page }) => {

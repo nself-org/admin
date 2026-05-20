@@ -70,7 +70,10 @@ test.describe('CORS Configuration page', () => {
     await page.waitForLoadState('domcontentloaded')
     // Should redirect to login or show unauth state
     const isAtLogin = page.url().includes('/login')
-    const hasUnauthContent = await page.getByText(/not authenticated/i).isVisible()
+    const hasUnauthContent = await page
+      .getByText(/not authenticated/i)
+      .first()
+      .isVisible()
     const hasLoginButton = await page.getByRole('button', { name: /go to login/i }).isVisible()
     expect(isAtLogin || hasUnauthContent || hasLoginButton).toBe(true)
   })
@@ -97,8 +100,10 @@ test.describe('CORS Configuration page', () => {
     await expect
       .poll(
         async () =>
-          (await page.getByText(/failed to load/i).isVisible()) ||
-          (await page.getByRole('button', { name: /retry/i }).isVisible()),
+          (await page
+            .getByText(/failed to load/i)
+            .first()
+            .isVisible()) || (await page.getByRole('button', { name: /retry/i }).isVisible()),
         { timeout: 20000 }
       )
       .toBe(true)
@@ -186,7 +191,10 @@ test.describe('Email Configuration page', () => {
       .poll(
         async () =>
           (await page.getByRole('button', { name: /retry/i }).isVisible()) ||
-          (await page.getByText(/cannot (connect|reach)/i).isVisible()),
+          (await page
+            .getByText(/cannot (connect|reach)/i)
+            .first()
+            .isVisible()),
         { timeout: 20000 }
       )
       .toBe(true)
@@ -197,7 +205,10 @@ test.describe('Email Configuration page', () => {
     await page.goto('/config/email')
     await page.waitForLoadState('domcontentloaded')
     const isAtLogin = page.url().includes('/login')
-    const hasUnauthContent = await page.getByText(/not authenticated/i).isVisible()
+    const hasUnauthContent = await page
+      .getByText(/not authenticated/i)
+      .first()
+      .isVisible()
     expect(isAtLogin || hasUnauthContent).toBe(true)
   })
 })
@@ -290,8 +301,10 @@ test.describe('Rate Limits page', () => {
     await expect
       .poll(
         async () =>
-          (await page.getByText(/failed to load/i).isVisible()) ||
-          (await page.getByRole('button', { name: /retry/i }).isVisible()),
+          (await page
+            .getByText(/failed to load/i)
+            .first()
+            .isVisible()) || (await page.getByRole('button', { name: /retry/i }).isVisible()),
         { timeout: 20000 }
       )
       .toBe(true)
@@ -302,7 +315,10 @@ test.describe('Rate Limits page', () => {
     await page.goto('/config/rate-limits')
     await page.waitForLoadState('domcontentloaded')
     const isAtLogin = page.url().includes('/login')
-    const hasUnauthContent = await page.getByText(/not authenticated/i).isVisible()
+    const hasUnauthContent = await page
+      .getByText(/not authenticated/i)
+      .first()
+      .isVisible()
     expect(isAtLogin || hasUnauthContent).toBe(true)
   })
 })
@@ -426,7 +442,10 @@ test.describe('Docker Configuration page', () => {
       .poll(
         async () =>
           (await page.getByRole('button', { name: /retry/i }).isVisible()) ||
-          (await page.getByText(/cannot (connect|reach)/i).isVisible()),
+          (await page
+            .getByText(/cannot (connect|reach)/i)
+            .first()
+            .isVisible()),
         { timeout: 20000 }
       )
       .toBe(true)
@@ -441,8 +460,10 @@ test.describe('Docker Configuration page', () => {
     await expect
       .poll(
         async () =>
-          (await page.getByText(/failed to load/i).isVisible()) ||
-          (await page.getByRole('button', { name: /retry/i }).isVisible()),
+          (await page
+            .getByText(/failed to load/i)
+            .first()
+            .isVisible()) || (await page.getByRole('button', { name: /retry/i }).isVisible()),
         { timeout: 20000 }
       )
       .toBe(true)
@@ -453,7 +474,10 @@ test.describe('Docker Configuration page', () => {
     await page.goto('/config/docker')
     await page.waitForLoadState('domcontentloaded')
     const isAtLogin = page.url().includes('/login')
-    const hasUnauthContent = await page.getByText(/not authenticated/i).isVisible()
+    const hasUnauthContent = await page
+      .getByText(/not authenticated/i)
+      .first()
+      .isVisible()
     expect(isAtLogin || hasUnauthContent).toBe(true)
   })
 })

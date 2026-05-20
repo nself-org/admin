@@ -344,6 +344,15 @@ test.describe('/dev/testing', () => {
   })
 
   test('success state: shows built-in test suites', async ({ page }) => {
+    // The page renders the BUILTIN_SUITES list only when the
+    // /api/nself/diagnostics fetch returns a successful payload — otherwise
+    // it falls through to the offline/error state which hides the suite
+    // cards.  Mock the diagnostics endpoint so the page reaches the
+    // success render branch.
+    await mockApiEndpoint(page, '**/api/nself/diagnostics', {
+      success: true,
+      data: { stdout: 'ok', stderr: '' },
+    })
     await page.goto('/dev/testing')
     await page.waitForLoadState('domcontentloaded')
     await expect(
@@ -384,7 +393,9 @@ test.describe('/dashboard/alerts', () => {
   })
 
   test('navigates to /dashboard/alerts', async ({ page }) => {
-    await page.goto('/dashboard/alerts')
+    // Default goto waitUntil is 'load' which can hang when SSE/polling
+    // connections on the dashboard keep the load event pending in CI.
+    await page.goto('/dashboard/alerts', { waitUntil: 'domcontentloaded' })
     await expect(page).toHaveURL(/\/dashboard\/alerts/)
   })
 

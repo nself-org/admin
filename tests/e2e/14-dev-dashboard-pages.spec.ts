@@ -50,8 +50,16 @@ test.describe('/dev/graphql', () => {
 
   test('redirect to login when unauthenticated', async ({ page }) => {
     await page.context().clearCookies()
-    await page.goto('/dev/graphql', { waitUntil: 'commit' })
-    await page.waitForLoadState('domcontentloaded')
+    // WebKit raises 'Navigation interrupted' when middleware redirects
+    // mid-navigation.  Catch and treat as 'redirect happened' — the URL
+    // assertion below validates the outcome regardless of how the
+    // navigation surface terminated.
+    try {
+      await page.goto('/dev/graphql', { waitUntil: 'commit' })
+      await page.waitForLoadState('domcontentloaded')
+    } catch (e) {
+      if (!/interrupted by another navigation/i.test(String(e))) throw e
+    }
     expect(
       page.url().includes('/login') ||
         (await page
@@ -100,8 +108,16 @@ test.describe('/dev/terminal', () => {
 
   test('redirect to login when unauthenticated', async ({ page }) => {
     await page.context().clearCookies()
-    await page.goto('/dev/terminal', { waitUntil: 'commit' })
-    await page.waitForLoadState('domcontentloaded')
+    // WebKit raises 'Navigation interrupted' when middleware redirects
+    // mid-navigation.  Catch and treat as 'redirect happened' — the URL
+    // assertion below validates the outcome regardless of how the
+    // navigation surface terminated.
+    try {
+      await page.goto('/dev/terminal', { waitUntil: 'commit' })
+      await page.waitForLoadState('domcontentloaded')
+    } catch (e) {
+      if (!/interrupted by another navigation/i.test(String(e))) throw e
+    }
     expect(
       page.url().includes('/login') ||
         (await page
@@ -162,8 +178,16 @@ test.describe('/dev/api', () => {
 
   test('redirect to login when unauthenticated', async ({ page }) => {
     await page.context().clearCookies()
-    await page.goto('/dev/api', { waitUntil: 'commit' })
-    await page.waitForLoadState('domcontentloaded')
+    // WebKit raises 'Navigation interrupted' when middleware redirects
+    // mid-navigation.  Catch and treat as 'redirect happened' — the URL
+    // assertion below validates the outcome regardless of how the
+    // navigation surface terminated.
+    try {
+      await page.goto('/dev/api', { waitUntil: 'commit' })
+      await page.waitForLoadState('domcontentloaded')
+    } catch (e) {
+      if (!/interrupted by another navigation/i.test(String(e))) throw e
+    }
     expect(
       page.url().includes('/login') ||
         (await page
@@ -256,8 +280,16 @@ test.describe('/dev/seed', () => {
 
   test('redirect to login when unauthenticated', async ({ page }) => {
     await page.context().clearCookies()
-    await page.goto('/dev/seed', { waitUntil: 'commit' })
-    await page.waitForLoadState('domcontentloaded')
+    // WebKit raises 'Navigation interrupted' when middleware redirects
+    // mid-navigation.  Catch and treat as 'redirect happened' — the URL
+    // assertion below validates the outcome regardless of how the
+    // navigation surface terminated.
+    try {
+      await page.goto('/dev/seed', { waitUntil: 'commit' })
+      await page.waitForLoadState('domcontentloaded')
+    } catch (e) {
+      if (!/interrupted by another navigation/i.test(String(e))) throw e
+    }
     expect(
       page.url().includes('/login') ||
         (await page
@@ -379,8 +411,16 @@ test.describe('/dev/testing', () => {
 
   test('redirect to login when unauthenticated', async ({ page }) => {
     await page.context().clearCookies()
-    await page.goto('/dev/testing', { waitUntil: 'commit' })
-    await page.waitForLoadState('domcontentloaded')
+    // WebKit raises 'Navigation interrupted' when middleware redirects
+    // mid-navigation.  Catch and treat as 'redirect happened' — the URL
+    // assertion below validates the outcome regardless of how the
+    // navigation surface terminated.
+    try {
+      await page.goto('/dev/testing', { waitUntil: 'commit' })
+      await page.waitForLoadState('domcontentloaded')
+    } catch (e) {
+      if (!/interrupted by another navigation/i.test(String(e))) throw e
+    }
     expect(
       page.url().includes('/login') ||
         (await page
@@ -488,8 +528,16 @@ test.describe('/dashboard/alerts', () => {
 
   test('redirect to login when unauthenticated', async ({ page }) => {
     await page.context().clearCookies()
-    await page.goto('/dashboard/alerts', { waitUntil: 'commit' })
-    await page.waitForLoadState('domcontentloaded')
+    // WebKit raises 'Navigation interrupted' when middleware redirects
+    // mid-navigation.  Catch and treat as 'redirect happened' — the URL
+    // assertion below validates the outcome regardless of how the
+    // navigation surface terminated.
+    try {
+      await page.goto('/dashboard/alerts', { waitUntil: 'commit' })
+      await page.waitForLoadState('domcontentloaded')
+    } catch (e) {
+      if (!/interrupted by another navigation/i.test(String(e))) throw e
+    }
     expect(
       page.url().includes('/login') ||
         (await page
@@ -546,8 +594,16 @@ test.describe('/dashboard/health', () => {
 
   test('redirect to login when unauthenticated', async ({ page }) => {
     await page.context().clearCookies()
-    await page.goto('/dashboard/health', { waitUntil: 'commit' })
-    await page.waitForLoadState('domcontentloaded')
+    // WebKit raises 'Navigation interrupted' when middleware redirects
+    // mid-navigation.  Catch and treat as 'redirect happened' — the URL
+    // assertion below validates the outcome regardless of how the
+    // navigation surface terminated.
+    try {
+      await page.goto('/dashboard/health', { waitUntil: 'commit' })
+      await page.waitForLoadState('domcontentloaded')
+    } catch (e) {
+      if (!/interrupted by another navigation/i.test(String(e))) throw e
+    }
     expect(
       page.url().includes('/login') ||
         (await page
@@ -643,8 +699,16 @@ test.describe('/dashboard/logs', () => {
 
   test('redirect to login when unauthenticated', async ({ page }) => {
     await page.context().clearCookies()
-    await page.goto('/dashboard/logs', { waitUntil: 'commit' })
-    await page.waitForLoadState('domcontentloaded')
+    // WebKit raises 'Navigation interrupted' when middleware redirects
+    // mid-navigation.  Catch and treat as 'redirect happened' — the URL
+    // assertion below validates the outcome regardless of how the
+    // navigation surface terminated.
+    try {
+      await page.goto('/dashboard/logs', { waitUntil: 'commit' })
+      await page.waitForLoadState('domcontentloaded')
+    } catch (e) {
+      if (!/interrupted by another navigation/i.test(String(e))) throw e
+    }
     expect(
       page.url().includes('/login') ||
         (await page
@@ -695,8 +759,16 @@ test.describe('/dashboard/metrics', () => {
 
   test('redirect to login when unauthenticated', async ({ page }) => {
     await page.context().clearCookies()
-    await page.goto('/dashboard/metrics', { waitUntil: 'commit' })
-    await page.waitForLoadState('domcontentloaded')
+    // WebKit raises 'Navigation interrupted' when middleware redirects
+    // mid-navigation.  Catch and treat as 'redirect happened' — the URL
+    // assertion below validates the outcome regardless of how the
+    // navigation surface terminated.
+    try {
+      await page.goto('/dashboard/metrics', { waitUntil: 'commit' })
+      await page.waitForLoadState('domcontentloaded')
+    } catch (e) {
+      if (!/interrupted by another navigation/i.test(String(e))) throw e
+    }
     expect(
       page.url().includes('/login') ||
         (await page
@@ -802,8 +874,16 @@ test.describe('/dashboard/status', () => {
 
   test('redirect to login when unauthenticated', async ({ page }) => {
     await page.context().clearCookies()
-    await page.goto('/dashboard/status', { waitUntil: 'commit' })
-    await page.waitForLoadState('domcontentloaded')
+    // WebKit raises 'Navigation interrupted' when middleware redirects
+    // mid-navigation.  Catch and treat as 'redirect happened' — the URL
+    // assertion below validates the outcome regardless of how the
+    // navigation surface terminated.
+    try {
+      await page.goto('/dashboard/status', { waitUntil: 'commit' })
+      await page.waitForLoadState('domcontentloaded')
+    } catch (e) {
+      if (!/interrupted by another navigation/i.test(String(e))) throw e
+    }
     expect(
       page.url().includes('/login') ||
         (await page

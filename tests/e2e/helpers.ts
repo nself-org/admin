@@ -362,6 +362,32 @@ export async function setupAuth(page: Page, password = TEST_PASSWORD) {
       { timeout: 15000, message: 'nself-session cookie was not set within 15s of login' }
     )
     .toBe(true)
+
+  // WebKit hardening: Playwright's webkit driver intermittently fails to
+  // include the freshly-set nself-session cookie on the very next page.goto(),
+  // causing middleware to redirect to /login with a "Navigation interrupted by
+  // another navigation" error.  Re-set the cookie explicitly through the
+  // context's cookie API with domain/path/sameSite/secure exactly as the
+  // server would have done.  This forces webkit to commit the cookie into its
+  // jar bound to the current origin so subsequent navigations include it
+  // deterministically.  This is a no-op on chromium/firefox but eliminates
+  // the race on webkit.
+  const allCookies = await page.context().cookies()
+  const session = allCookies.find((c) => c.name === 'nself-session')
+  if (session) {
+    await page.context().addCookies([
+      {
+        name: 'nself-session',
+        value: session.value,
+        domain: 'localhost',
+        path: '/',
+        httpOnly: true,
+        secure: false, // CI is plain HTTP; cookie was set with secure:false
+        sameSite: 'Lax',
+        expires: session.expires,
+      },
+    ])
+  }
 }
 
 /**

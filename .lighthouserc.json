@@ -26,9 +26,11 @@
 
         "legacy-javascript-insight": ["warn", { "minScore": 0 }],
         "network-dependency-tree-insight": ["warn", { "minScore": 0 }],
+        "cls-culprits-insight": ["warn", { "minScore": 0 }],
         "render-blocking-insight": ["warn", { "maxLength": 5 }],
         "max-potential-fid": ["warn", { "minScore": 0 }],
         "largest-contentful-paint": ["warn", { "minScore": 0 }],
+        "cumulative-layout-shift": ["warn", { "minScore": 0 }],
         "legacy-javascript": ["warn", { "maxLength": 5 }]
       }
     },

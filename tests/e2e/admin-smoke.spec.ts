@@ -110,7 +110,7 @@ test.describe('nAdmin smoke', () => {
     test.skip(skipAll, 'Skipped: set NSELF_ADMIN_URL and unset SKIP_E2E to run')
 
     await page.goto('/')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
 
     const results = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa']).analyze()
 

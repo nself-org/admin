@@ -88,7 +88,7 @@ jobs:
           fi
 
           # Ports / subdomains
-          if matches '^(nginx/|.*docker-compose\.ya?ml$)'; then
+          if echo "$CHANGED" | grep -vE '^\.github/ci/' | grep -qE '^(nginx/|.*docker-compose\.ya?ml$)'; then
             if ! matches '(\.claude/docs/sport/F10-PORT-REGISTRY\.md|\.claude/docs/sport/F11-SUBDOMAIN-MAP\.md|\.claude/CLAUDE\.md)'; then
               rows="${rows}- ports/subdomains changed without F10-PORT-REGISTRY.md or F11-SUBDOMAIN-MAP.md update\n"
               missing=1

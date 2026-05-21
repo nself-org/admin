@@ -112,6 +112,9 @@ function ProductionContent() {
   if (loading) {
     return (
       <>
+        <h1 className="mb-2 text-3xl font-bold text-zinc-900 dark:text-white">
+          Production Environment
+        </h1>
         <HeroPattern />
         <div className="relative mx-auto max-w-7xl">
           <div className="flex items-center justify-center py-20">
@@ -738,7 +741,16 @@ function ProductionContent() {
 
 export default function ProductionPage() {
   return (
-    <Suspense fallback={<FormSkeleton />}>
+    <Suspense
+      fallback={
+        <div>
+          <h1 className="mb-2 text-3xl font-bold text-zinc-900 dark:text-white">
+            Production Environment
+          </h1>
+          <FormSkeleton />
+        </div>
+      }
+    >
       <ProductionContent />
     </Suspense>
   )

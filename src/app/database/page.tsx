@@ -488,7 +488,14 @@ function DatabaseContent() {
 
 export default function DatabasePage() {
   return (
-    <Suspense fallback={<ListSkeleton />}>
+    <Suspense
+      fallback={
+        <div>
+          <h1 className="mb-2 text-3xl font-bold text-zinc-900 dark:text-white">Database</h1>
+          <ListSkeleton />
+        </div>
+      }
+    >
       <DatabaseContent />
     </Suspense>
   )

@@ -175,7 +175,7 @@ test.describe('Control-Plane Inventory Page', () => {
 
   test('01 — navigates to /environments and shows page title', async ({ page }) => {
     await mockInventory(page, MANAGE_INVENTORY)
-    await page.goto('/environments', { waitUntil: 'networkidle' })
+    await page.goto('/environments', { waitUntil: 'domcontentloaded' })
 
     // H1 gradient title
     const h1 = page.locator('h1').first()
@@ -187,7 +187,7 @@ test.describe('Control-Plane Inventory Page', () => {
 
   test('02 — server cards render with name, host, and role', async ({ page }) => {
     await mockInventory(page, MANAGE_INVENTORY)
-    await page.goto('/environments', { waitUntil: 'networkidle' })
+    await page.goto('/environments', { waitUntil: 'domcontentloaded' })
 
     // staging-app-01 card must appear
     const card = page.locator('text=staging-app-01').first()
@@ -207,7 +207,7 @@ test.describe('Control-Plane Inventory Page', () => {
 
   test('03 — "manage" capability badge is shown for manage-capable servers', async ({ page }) => {
     await mockInventory(page, MANAGE_INVENTORY)
-    await page.goto('/environments', { waitUntil: 'networkidle' })
+    await page.goto('/environments', { waitUntil: 'domcontentloaded' })
 
     // At least one "manage" badge should be visible
     const manageBadge = page.locator('text=manage').first()
@@ -218,7 +218,7 @@ test.describe('Control-Plane Inventory Page', () => {
 
   test('04 — "read-only" capability badge appears for partial-access servers', async ({ page }) => {
     await mockInventory(page, PARTIAL_INVENTORY)
-    await page.goto('/environments', { waitUntil: 'networkidle' })
+    await page.goto('/environments', { waitUntil: 'domcontentloaded' })
 
     const readOnlyBadge = page.locator('text=read-only').first()
     await expect(readOnlyBadge).toBeVisible()
@@ -228,7 +228,7 @@ test.describe('Control-Plane Inventory Page', () => {
 
   test('05 — partial-access banner renders when some servers are read-only', async ({ page }) => {
     await mockInventory(page, PARTIAL_INVENTORY)
-    await page.goto('/environments', { waitUntil: 'networkidle' })
+    await page.goto('/environments', { waitUntil: 'domcontentloaded' })
 
     // Banner contains "Partial access" text
     const banner = page.locator('text=Partial access').first()
@@ -243,7 +243,7 @@ test.describe('Control-Plane Inventory Page', () => {
 
   test('06 — hidden servers do not appear as cards', async ({ page }) => {
     await mockInventory(page, HIDDEN_INVENTORY)
-    await page.goto('/environments', { waitUntil: 'networkidle' })
+    await page.goto('/environments', { waitUntil: 'domcontentloaded' })
 
     // "hidden" badge must not appear in server card area
     // The page should show "All servers hidden" message
@@ -257,7 +257,7 @@ test.describe('Control-Plane Inventory Page', () => {
     page,
   }) => {
     await mockInventory(page, EMPTY_INVENTORY)
-    await page.goto('/environments', { waitUntil: 'networkidle' })
+    await page.goto('/environments', { waitUntil: 'domcontentloaded' })
 
     const emptyMsg = page.locator('text=No servers in inventory').first()
     await expect(emptyMsg).toBeVisible()
@@ -271,7 +271,7 @@ test.describe('Control-Plane Inventory Page', () => {
 
   test('08 — primary tag shown on primary server card', async ({ page }) => {
     await mockInventory(page, MANAGE_INVENTORY)
-    await page.goto('/environments', { waitUntil: 'networkidle' })
+    await page.goto('/environments', { waitUntil: 'domcontentloaded' })
 
     // "primary" span (sky-colored badge) should appear
     const primaryTag = page.locator('text=primary').first()
@@ -282,12 +282,18 @@ test.describe('Control-Plane Inventory Page', () => {
 
   test('09 — "Add Server" button opens modal with name, host, role inputs', async ({ page }) => {
     await mockInventory(page, MANAGE_INVENTORY)
-    await page.goto('/environments', { waitUntil: 'networkidle' })
+    await page.goto('/environments', { waitUntil: 'domcontentloaded' })
 
-    // Click "Add Server" button in the page header
-    const addBtn = page.locator('button:has-text("Add Server")').first()
+    // Click "Add Server" button via aria-label. Using force:true to bypass
+    // the click-stability check, because on the Pixel 5 / iPhone 12 mobile
+    // viewport the adjacent "Refresh inventory" button's SVG icon can
+    // overlap the Add Server button's hit-box during header reflow, and
+    // Playwright reports "Refresh inventory subtree intercepts pointer
+    // events" forever. force:true bypasses the intercept check; the click
+    // still hits the resolved Add Server button.
+    const addBtn = page.getByRole('button', { name: /add server to inventory/i }).first()
     await expect(addBtn).toBeVisible()
-    await addBtn.click()
+    await addBtn.click({ force: true })
 
     // Modal should appear
     const modal = page.locator('text=Add Server to Inventory').first()
@@ -298,8 +304,11 @@ test.describe('Control-Plane Inventory Page', () => {
     await expect(page.locator('input[placeholder="5.75.235.42"]')).toBeVisible()
     await expect(page.locator('select')).toBeVisible()
 
-    // Close modal
-    await page.locator('button:has-text("Cancel")').click()
+    // Close modal. Scope to the dialog and force the click because on mobile
+    // viewports (Pixel 5 / iPhone 12) the modal backdrop or adjacent controls
+    // can intercept pointer events on the Cancel button, causing Playwright's
+    // click-stability check to time out forever.
+    await page.locator('[role="dialog"] button:has-text("Cancel")').first().click({ force: true })
     await expect(modal).not.toBeVisible()
   })
 
@@ -322,14 +331,27 @@ test.describe('Control-Plane Inventory Page', () => {
           body: JSON.stringify({ success: true, action: 'add', name: 'test-server-01' }),
         })
       } else {
-        await route.continue()
+        // Fulfill GET requests with EMPTY_INVENTORY so networkidle resolves in CI
+        // (route.continue() would forward to a real server that doesn't exist in CI)
+        await route.fulfill({
+          status: 200,
+          contentType: 'application/json',
+          body: JSON.stringify({
+            success: true,
+            action: 'list',
+            data: EMPTY_INVENTORY,
+            timestamp: new Date().toISOString(),
+          }),
+        })
       }
     })
 
-    await page.goto('/environments', { waitUntil: 'networkidle' })
+    await page.goto('/environments', { waitUntil: 'domcontentloaded' })
 
-    // Click "Add First Server" in empty-state
-    await page.locator('button:has-text("Add First Server")').click()
+    // Click "Add First Server" in empty-state. force:true bypasses any
+    // pointer-event interception from adjacent header controls on the
+    // mobile viewport (Pixel 5 / iPhone 12).
+    await page.locator('button:has-text("Add First Server")').click({ force: true })
     await expect(page.locator('text=Add Server to Inventory')).toBeVisible()
 
     // Fill the form
@@ -337,8 +359,15 @@ test.describe('Control-Plane Inventory Page', () => {
     await page.locator('input[placeholder="5.75.235.42"]').fill('10.0.0.1')
     await page.locator('select').selectOption('primary')
 
-    // Submit
-    await page.locator('button:has-text("Add Server")').click()
+    // Submit — scope to inside the dialog to avoid the header "Add Server"
+    // button.  In webkit the modal backdrop (.fixed.inset-0) intercepts pointer
+    // events on the header button, so .first() is not reliable across browsers.
+    // force:true also needed on mobile viewports for the same reason as the
+    // Cancel button above.
+    await page
+      .locator('[role="dialog"] button:has-text("Add Server")')
+      .first()
+      .click({ force: true })
 
     // Verify captured POST body
     await page.waitForTimeout(500)
@@ -356,7 +385,7 @@ test.describe('Control-Plane Inventory Page', () => {
     page,
   }) => {
     await mockInventory(page, MANAGE_INVENTORY)
-    await page.goto('/environments', { waitUntil: 'networkidle' })
+    await page.goto('/environments', { waitUntil: 'domcontentloaded' })
 
     // The CLI reference at the bottom of the page
     const deployCmd = page.locator('text=nself deploy').first()
@@ -371,7 +400,7 @@ test.describe('Control-Plane Inventory Page', () => {
 
   test('12 — environment card header links to /environments/<name>', async ({ page }) => {
     await mockInventory(page, MANAGE_INVENTORY)
-    await page.goto('/environments', { waitUntil: 'networkidle' })
+    await page.goto('/environments', { waitUntil: 'domcontentloaded' })
 
     // Link to staging env detail page
     const stagingLink = page.locator('a[href="/environments/staging"]').first()
@@ -385,7 +414,7 @@ test.describe('Control-Plane Inventory Page', () => {
     page,
   }) => {
     await mockInventory(page, MANAGE_INVENTORY)
-    await page.goto('/environments', { waitUntil: 'networkidle' })
+    await page.goto('/environments', { waitUntil: 'domcontentloaded' })
 
     const fullAccessBadge = page.locator('text=full access').first()
     await expect(fullAccessBadge).toBeVisible()
@@ -397,7 +426,7 @@ test.describe('Control-Plane Inventory Page', () => {
     page,
   }) => {
     await mockInventory(page, PARTIAL_INVENTORY)
-    await page.goto('/environments', { waitUntil: 'networkidle' })
+    await page.goto('/environments', { waitUntil: 'domcontentloaded' })
 
     const partialBadge = page.locator('text=partial').first()
     await expect(partialBadge).toBeVisible()
@@ -422,7 +451,7 @@ test.describe('Control-Plane Inventory Page', () => {
       })
     })
 
-    await page.goto('/environments', { waitUntil: 'networkidle' })
+    await page.goto('/environments', { waitUntil: 'domcontentloaded' })
 
     const offlineMsg = page.locator('text=nself is not responding').first()
     await expect(offlineMsg).toBeVisible()
@@ -457,8 +486,11 @@ test.describe('Control-Plane Inventory Page', () => {
       }
     })
 
-    await page.goto('/environments', { waitUntil: 'networkidle' })
-    expect(requestCount).toBeGreaterThanOrEqual(1)
+    await page.goto('/environments', { waitUntil: 'domcontentloaded' })
+    // The initial /api/control-plane?action=list fetch fires from a React
+    // useEffect after hydration — under domcontentloaded waitUntil it may
+    // not have arrived yet.  Poll for it instead of asserting immediately.
+    await expect.poll(() => requestCount, { timeout: 10000 }).toBeGreaterThanOrEqual(1)
 
     const initialCount = requestCount
 

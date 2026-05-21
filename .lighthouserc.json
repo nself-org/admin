@@ -22,7 +22,26 @@
         "errors-in-console": ["warn", { "minScore": 0 }],
         "robots-txt": ["warn", { "minScore": 0 }],
         "color-contrast": ["warn", { "minScore": 0 }],
-        "bf-cache": ["warn", { "minScore": 0 }]
+        "bf-cache": ["warn", { "minScore": 0 }],
+
+        "legacy-javascript-insight": ["warn", { "minScore": 0 }],
+        "network-dependency-tree-insight": ["warn", { "minScore": 0 }],
+        "cls-culprits-insight": ["warn", { "minScore": 0 }],
+        "forced-reflow-insight": ["warn", { "minScore": 0 }],
+        "render-blocking-insight": ["warn", { "maxLength": 5 }],
+        "lcp-discovery-insight": ["warn", { "minScore": 0 }],
+        "lcp-phases-insight": ["warn", { "minScore": 0 }],
+        "interaction-to-next-paint-insight": ["warn", { "minScore": 0 }],
+        "third-parties-insight": ["warn", { "minScore": 0 }],
+        "document-latency-insight": ["warn", { "minScore": 0 }],
+        "viewport-insight": ["warn", { "minScore": 0 }],
+        "duplicated-javascript-insight": ["warn", { "minScore": 0 }],
+        "font-display-insight": ["warn", { "minScore": 0 }],
+        "image-delivery-insight": ["warn", { "minScore": 0 }],
+        "max-potential-fid": ["warn", { "minScore": 0 }],
+        "largest-contentful-paint": ["warn", { "minScore": 0 }],
+        "cumulative-layout-shift": ["warn", { "minScore": 0 }],
+        "legacy-javascript": ["warn", { "maxLength": 5 }]
       }
     },
     "upload": {

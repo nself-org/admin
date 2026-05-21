@@ -154,14 +154,14 @@ function CleanupContent() {
                   {status.reclaimable}
                 </p>
               )}
-              {status.items.length > 0 && (
+              {(status.items?.length ?? 0) > 0 && (
                 <ul className="text-muted-foreground list-inside list-disc space-y-1 text-sm">
-                  {status.items.map((item, i) => (
+                  {status.items!.map((item, i) => (
                     <li key={i}>{item.replace(/^[-*]\s*/, '')}</li>
                   ))}
                 </ul>
               )}
-              {!status.reclaimable && status.items.length === 0 && (
+              {!status.reclaimable && (status.items?.length ?? 0) === 0 && (
                 <p className="text-muted-foreground text-sm">Nothing to clean up.</p>
               )}
             </CardContent>

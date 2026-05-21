@@ -570,7 +570,14 @@ function DatabaseSchemaContent() {
 
 export default function DatabaseSchemaPage() {
   return (
-    <Suspense fallback={<TableSkeleton />}>
+    <Suspense
+      fallback={
+        <div>
+          <h1 className="mb-2 text-3xl font-bold text-zinc-900 dark:text-white">Database Schema</h1>
+          <TableSkeleton />
+        </div>
+      }
+    >
       <DatabaseSchemaContent />
     </Suspense>
   )

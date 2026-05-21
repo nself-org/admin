@@ -1351,7 +1351,14 @@ function ServicesContent() {
 
 export default function ServicesPage() {
   return (
-    <Suspense fallback={<CardGridSkeleton />}>
+    <Suspense
+      fallback={
+        <div>
+          <h1 className="mb-2 text-3xl font-bold text-zinc-900 dark:text-white">Services</h1>
+          <CardGridSkeleton />
+        </div>
+      }
+    >
       <ServicesContent />
     </Suspense>
   )

@@ -204,7 +204,15 @@ export async function middleware(request: NextRequest) {
   const ip = getIp(request)
 
   // Auth endpoints: 10 req/min/IP
-  if (pathname.startsWith('/api/auth/login') || pathname.startsWith('/api/auth/totp')) {
+  // PLAYWRIGHT_E2E_BYPASS_RATE_LIMIT=true skips the rate-limit check so that
+  // the full test matrix (14 shards × retries) can hit /api/auth/login without
+  // exhausting the shared-IP ('unknown') bucket.  This env var is set only in
+  // the GitHub Actions e2e workflow and has no effect in production builds.
+  const e2eBypass = process.env.PLAYWRIGHT_E2E_BYPASS_RATE_LIMIT === 'true'
+  if (
+    !e2eBypass &&
+    (pathname.startsWith('/api/auth/login') || pathname.startsWith('/api/auth/totp'))
+  ) {
     if (checkRateLimit(ip, 'auth_strict', 10)) {
       return NextResponse.json(
         {

@@ -6,7 +6,6 @@ import { useAuth } from '@/contexts/AuthContext'
 import { VERSION } from '@/lib/constants'
 import { getCorrectRoute } from '@/lib/routing-logic'
 import { AlertCircle, Eye, EyeOff, Loader2, Lock, ShieldCheck } from 'lucide-react'
-import { useRouter } from 'next/navigation'
 import { useEffect, useRef, useState } from 'react'
 
 // Password strength calculation
@@ -52,7 +51,6 @@ export default function LoginClient() {
     attempts: number
   }>({ locked: false, remainingSeconds: 0, attempts: 0 })
 
-  const router = useRouter()
   const { login, checkAuth } = useAuth()
   const passwordRef = useRef<HTMLInputElement>(null)
   const timerRef = useRef<NodeJS.Timeout | null>(null)
@@ -173,7 +171,14 @@ export default function LoginClient() {
           if (success) {
             // Use centralized routing logic
             const routingResult = await getCorrectRoute()
-            router.push(routingResult.route)
+            // window.location.assign instead of router.push: under strict CSP
+            // (script-src 'self' 'nonce-<random>') WebKit blocks the
+            // Next.js client-side router chunks that weren't stamped with
+            // the per-request nonce, so router.push() never navigates and
+            // the test stays on /login.  window.location.assign triggers a
+            // full browser navigation (no CSP gating on navigation itself),
+            // working identically on Chromium, Firefox, and WebKit.
+            window.location.assign(routingResult.route)
           } else {
             setError('Password set but login failed. Please try again.')
             setIsSetupMode(false)
@@ -210,7 +215,11 @@ export default function LoginClient() {
           await checkAuth()
           // Success - redirect
           const routingResult = await getCorrectRoute()
-          router.push(routingResult.route)
+          // Use window.location.assign instead of router.push: WebKit blocks
+          // unnonced Next.js router chunks under the strict nonce CSP, so
+          // router.push() never fires.  A full document navigation works
+          // identically across Chromium, Firefox, and WebKit.
+          window.location.assign(routingResult.route)
         } else if (response.status === 429) {
           // Rate limited
           const retryAfter = data.retryAfter || 60

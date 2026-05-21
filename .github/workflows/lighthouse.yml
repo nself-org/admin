@@ -41,43 +41,48 @@ jobs:
         run: |
           pnpm start > /tmp/app.log 2>&1 &
           echo "APP_PID=$!" >> $GITHUB_ENV
-          echo "Waiting for /api/health to respond..."
-          # Poll the health endpoint until ready or 180s deadline.
-          # Next.js 16 + next-intl 4.9 cold-start on slow CI can take 60-90s; the
-          # earlier 90s budget timed out before /login was server-renderable,
-          # producing NO_FCP failures in Lighthouse.
+          echo "Waiting for app to start (polling /login)..."
+          # IMPORTANT: do NOT poll /api/health on CI.
+          # The health endpoint runs docker/filesystem/nself-cli checks; on a bare
+          # GitHub Actions runner those checks fail and the route correctly returns
+          # HTTP 503, which `curl -sf` treats as failure and the wait loop
+          # times out at 180s even though Next.js is fully ready ("Ready in 138ms").
+          # We poll /login instead — a public route that returns 200/302/307 as
+          # soon as Next.js is serving requests. -s (no -f) so any HTTP response
+          # counts as success; only connection-refused (code 000) keeps us waiting.
+          # 180s budget covers Next.js 16 + next-intl 4.9 cold-start (60-90s typical).
           DEADLINE=$((SECONDS + 180))
-          until curl -sf http://localhost:3021/api/health >/dev/null 2>&1; do
+          until CODE=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:3021/login 2>/dev/null) && [ -n "$CODE" ] && [ "$CODE" != "000" ]; do
             if [ $SECONDS -ge $DEADLINE ]; then
-              echo "ERROR: /api/health did not respond within 180s"
+              echo "ERROR: /login did not respond within 180s"
               echo "--- app log (last 100 lines) ---"
               tail -100 /tmp/app.log || true
               exit 1
             fi
-            echo "  waiting on /api/health... ($SECONDS s elapsed)"
+            echo "  waiting on /login... ($SECONDS s elapsed)"
             sleep 3
           done
-          echo "/api/health is healthy after ${SECONDS}s"
+          echo "App is serving /login (HTTP $CODE) after ${SECONDS}s"
 
           # Pre-warm /login so the first JIT compile + dynamic import resolution
           # is done before Lighthouse opens Chrome. Without this, the first
-          # navigation runs the Next.js dev compile path and NO_FCP fires.
+          # navigation runs the Next.js compile path and NO_FCP can fire.
           echo "Pre-warming /login route..."
           WARM_DEADLINE=$((SECONDS + 120))
-          until curl -sf -o /dev/null -w '%{http_code}' http://localhost:3021/login | grep -qE '^(200|302|307)$'; do
+          until CODE=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:3021/login 2>/dev/null) && echo "$CODE" | grep -qE '^(200|302|307)$'; do
             if [ $SECONDS -ge $WARM_DEADLINE ]; then
-              echo "ERROR: /login did not respond with 200/302/307 within 120s"
+              echo "ERROR: /login did not respond with 200/302/307 within 120s (last code: $CODE)"
               echo "--- app log (last 100 lines) ---"
               tail -100 /tmp/app.log || true
               exit 1
             fi
-            echo "  warming /login... ($SECONDS s elapsed)"
+            echo "  warming /login... ($SECONDS s elapsed, last code: $CODE)"
             sleep 3
           done
           # Second warm pass to ensure cached compile output is stable.
-          curl -sf -o /dev/null http://localhost:3021/login || true
-          curl -sf -o /dev/null http://localhost:3021/login || true
-          echo "/login warmed successfully"
+          curl -s -o /dev/null http://localhost:3021/login || true
+          curl -s -o /dev/null http://localhost:3021/login || true
+          echo "/login warmed successfully (HTTP $CODE)"
 
       - name: Run Lighthouse audit
         id: lighthouse

@@ -3,7 +3,6 @@
 import { BuildProgress } from '@/components/build/BuildProgress'
 import { BuildStep, BuildTimeline } from '@/components/build/BuildTimeline'
 import { LogLine, LogViewer } from '@/components/build/LogViewer'
-import { FormSkeleton } from '@/components/skeletons'
 import { BuildProgressSkeleton } from '@/components/skeletons/BuildProgressSkeleton'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
@@ -79,6 +78,16 @@ function BuildContent() {
   const buildStartedRef = useRef(false)
   const startTimeRef = useRef<number>(0)
   const timerRef = useRef<NodeJS.Timeout | null>(null)
+  // Ref to track latest preBuildChecks without causing useEffect re-runs
+  const preBuildChecksRef = useRef(preBuildChecks)
+  useEffect(() => {
+    preBuildChecksRef.current = preBuildChecks
+  }, [preBuildChecks])
+  // Ref to track currentStep so startBuild doesn't need it as a dep
+  const currentStepRef = useRef(currentStep)
+  useEffect(() => {
+    currentStepRef.current = currentStep
+  }, [currentStep])
 
   // Sync WebSocket progress to local state
   useEffect(() => {
@@ -252,8 +261,10 @@ function BuildContent() {
       addLog('⚠ Could not verify nself CLI', 'warn')
     }
 
-    // Check if any checks failed
-    const anyFailed = preBuildChecks.some((c) => c.status === 'failed')
+    // Check if any checks failed (use ref to read latest state without stale closure)
+    const anyFailed = preBuildChecksRef.current.some(
+      (c) => c.status === 'failed',
+    )
     if (anyFailed) {
       addLog(
         'Pre-build checks failed. Please fix issues before building.',
@@ -265,7 +276,7 @@ function BuildContent() {
 
     addLog('All pre-build checks passed', 'info')
     return true
-  }, [addLog, preBuildChecks])
+  }, [addLog])
 
   // Start build process
   const startBuild = useCallback(async () => {
@@ -380,11 +391,11 @@ function BuildContent() {
       const message = error instanceof Error ? error.message : 'Build failed'
       setBuildStatus('error')
       setErrorMessage(message)
-      updateStep(currentStep - 1, 'failed', message)
+      updateStep(currentStepRef.current - 1, 'failed', message)
       addLog(`✗ Build failed: ${message}`, 'error')
       if (timerRef.current) clearInterval(timerRef.current)
     }
-  }, [updateStep, addLog, currentStep, router])
+  }, [updateStep, addLog, router])
 
   // Run checks and build on mount
   useEffect(() => {
@@ -443,7 +454,12 @@ function BuildContent() {
 
   // Loading state
   if (buildStatus === 'checking') {
-    return <BuildProgressSkeleton />
+    return (
+      <div>
+        <h1 className="mb-2 text-3xl font-bold text-zinc-900 dark:text-white">Build Project</h1>
+        <BuildProgressSkeleton />
+      </div>
+    )
   }
 
   return (
@@ -714,7 +730,14 @@ function BuildContent() {
 
 export default function BuildPage() {
   return (
-    <Suspense fallback={<FormSkeleton />}>
+    <Suspense
+      fallback={
+        <div>
+          <h1 className="mb-2 text-3xl font-bold text-zinc-900 dark:text-white">Build Project</h1>
+          <BuildProgressSkeleton />
+        </div>
+      }
+    >
       <BuildContent />
     </Suspense>
   )

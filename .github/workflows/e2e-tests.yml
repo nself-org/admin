@@ -7,14 +7,52 @@ on:
     branches: [main, develop]
 
 jobs:
+  # ── Build the production bundle once; all shards share it ──────────────────
+  build:
+    name: Build (production)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.28.0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build application
+        run: pnpm run build
+
+      - name: Upload .next build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: next-build
+          path: .next/
+          retention-days: 1
+          include-hidden-files: true
+
+  # ── Desktop browsers: 3 browsers × 4 shards = 12 parallel jobs ────────────
   e2e-tests:
-    name: E2E Tests (${{ matrix.browser }})
-    timeout-minutes: 60
+    name: E2E (${{ matrix.browser }}, shard ${{ matrix.shardIndex }}/${{ matrix.shardTotal }})
+    needs: build
+    timeout-minutes: 40
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
         browser: [chromium, firefox, webkit]
+        shardIndex: [1, 2, 3, 4]
+        shardTotal: [4]
 
     steps:
       - name: Checkout code
@@ -34,43 +72,168 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Install nself CLI
+      - name: Download .next build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: next-build
+          path: .next/
+
+      - name: Create minimal nself project for CI
         run: |
-          curl -fsSL https://install.nself.org | bash
-          echo "$HOME/.nself/bin" >> $GITHUB_PATH
+          mkdir -p /tmp/nself-ci-project
+          printf 'PROJECT_NAME=nself-admin-ci\n' > /tmp/nself-ci-project/.env.dev
+          printf 'BASE_DOMAIN=localhost\n' >> /tmp/nself-ci-project/.env.dev
+          printf 'HASURA_GRAPHQL_ADMIN_SECRET=hasura-admin-secret-ci-only-32chars\n' >> /tmp/nself-ci-project/.env.dev
+          printf 'DOCKER_NETWORK=admin_network\n' >> /tmp/nself-ci-project/.env.dev
+          printf 'HASURA_GRAPHQL_JWT_SECRET={"type":"HS256","key":"admin-ci-development-secret-key-minimum-32-characters"}\n' >> /tmp/nself-ci-project/.env.dev
+          cp /tmp/nself-ci-project/.env.dev /tmp/nself-ci-project/.env
+
+      # Pre-pull images BEFORE the health clock starts so image-download time on
+      # a cold runner does not eat the health-wait window.
+      - name: Pull nself backend images
+        run: docker compose -f .github/ci/docker-compose.yml pull --quiet
+        working-directory: .
+
+      - name: Start nself backend stack
+        run: docker compose -f .github/ci/docker-compose.yml up -d
+        working-directory: .
+
+      - name: Wait for Hasura health
+        run: |
+          echo "Waiting for Hasura at http://localhost:8080/healthz ..."
+          # 60 attempts × 5 s = 300 s.  120 s was too tight on cold / over-
+          # subscribed GitHub runners where Postgres + Hasura migrations take
+          # longer to settle, which previously failed slow-but-healthy shards.
+          for i in $(seq 1 60); do
+            if curl -sf http://localhost:8080/healthz > /dev/null 2>&1; then
+              echo "Hasura healthy (attempt $i)"
+              exit 0
+            fi
+            echo "Attempt $i/60 — waiting 5 s ..."
+            sleep 5
+          done
+          echo "ERROR: Hasura did not become healthy within 300 s" >&2
+          echo "=== hasura container logs ===" >&2
+          docker compose -f .github/ci/docker-compose.yml logs hasura >&2 || true
+          exit 1
+        working-directory: .
+
+      - name: Wait for Auth service health
+        run: |
+          echo "Waiting for Auth at http://localhost:4000/healthz ..."
+          # 72 attempts × 5 s = 360 s against the real readiness endpoint.
+          for i in $(seq 1 72); do
+            if curl -sf http://localhost:4000/healthz > /dev/null 2>&1; then
+              echo "Auth healthy (attempt $i)"
+              exit 0
+            fi
+            echo "Attempt $i/72 — waiting 5 s ..."
+            sleep 5
+          done
+          echo "ERROR: Auth service did not become healthy within 360 s" >&2
+          echo "=== hasura-auth container logs ===" >&2
+          docker compose -f .github/ci/docker-compose.yml logs auth >&2 || true
+          exit 1
+        working-directory: .
+
+      # Best-effort seeding of Hasura/Auth users.  The E2E suite does NOT depend
+      # on these users — every test authenticates through the admin's own LokiJS
+      # session (set in globalSetup) and mocks /api/auth/check — so a failure
+      # here must never fail the shard.  We still retry transient signup errors
+      # (proxy warm-up surfaces as 502/503/000 or a curl transport error) with
+      # exponential backoff so the users are seeded when the endpoint is healthy,
+      # but a persistent non-2xx is logged and the run continues.
+      - name: Seed E2E test users (best-effort)
+        run: |
+          AUTH_URL="http://localhost:4000"
+          PASSWORD="password123"
+          seed_user() {
+            local email="$1"
+            local display="$2"
+            local role="$3"
+            local http_code=""
+            local delay=2
+            for attempt in $(seq 1 6); do
+              # `|| echo 000` keeps a curl transport failure (e.g. connection
+              # refused, exit 56) from aborting the step under `set -e`; it is
+              # treated as a retryable not-ready signal.
+              http_code=$(curl -s -o /dev/null -w "%{http_code}" \
+                --max-time 15 \
+                -X POST "$AUTH_URL/v1/signup/email-password" \
+                -H "Content-Type: application/json" \
+                -d "{\"email\":\"$email\",\"password\":\"$PASSWORD\",\"options\":{\"displayName\":\"$display\",\"locale\":\"en\",\"metadata\":{\"role\":\"$role\"}}}" \
+                || echo 000)
+              case "$http_code" in
+                200|201)
+                  echo "Created: $email (attempt $attempt)"
+                  return 0
+                  ;;
+                409|422)
+                  echo "Already exists (ok): $email"
+                  return 0
+                  ;;
+                *)
+                  if [ "$attempt" -lt 6 ]; then
+                    echo "Auth not ready for $email (HTTP $http_code), attempt $attempt/6 — retrying in ${delay}s ..."
+                    sleep "$delay"
+                    if [ "$delay" -lt 16 ]; then delay=$((delay * 2)); fi
+                  else
+                    echo "WARNING: $email not seeded after 6 attempts (last HTTP $http_code) — continuing (tests do not require seeded users)"
+                  fi
+                  ;;
+              esac
+            done
+            return 0
+          }
+          seed_user "owner@nself.org"     "Test Owner"     "owner"
+          seed_user "admin@nself.org"     "Test Admin"     "admin"
+          seed_user "moderator@nself.org" "Test Moderator" "moderator"
+          seed_user "member@nself.org"    "Test Member"    "member"
+          seed_user "guest@nself.org"     "Test Guest"     "guest"
+          echo "Seeding complete."
+        working-directory: .
 
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps ${{ matrix.browser }}
 
-      - name: Run E2E tests
-        run: pnpm test:e2e --project=${{ matrix.browser }}
+      - name: Run E2E tests (shard ${{ matrix.shardIndex }}/${{ matrix.shardTotal }})
+        run: |
+          pnpm test:e2e \
+            --project=${{ matrix.browser }} \
+            --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
         env:
-          # globalSetup launches this browser for warmup.  Each matrix job only
-          # installs its own browser, so we must tell globalSetup which to use.
           WARMUP_BROWSER: ${{ matrix.browser }}
+          # Bypass the 10 req/min rate-limit on /api/auth/login so the full
+          # matrix (3 browsers × 4 shards + retries) can authenticate without
+          # exhausting the shared 'unknown' IP bucket.  Has no effect in prod.
+          PLAYWRIGHT_E2E_BYPASS_RATE_LIMIT: 'true'
+          # CI nself backend — points to the synthetic project directory created above.
+          # getProjectPath() reads this so all path-based API routes resolve correctly.
+          NSELF_PROJECT_PATH: /tmp/nself-ci-project
+          # Hasura admin secret for the CI stack.  Empty string would also be
+          # safe (guard only fires on non-empty dev-stub values), but setting the
+          # real CI value allows any non-mocked Hasura proxy calls to succeed.
+          HASURA_GRAPHQL_ADMIN_SECRET: hasura-admin-secret-ci-only-32chars
 
-      - name: Upload test results
+      - name: Upload blob report
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: playwright-results-${{ matrix.browser }}
-          path: |
-            test-results/
-            playwright-report/
-          retention-days: 30
+          name: blob-report-${{ matrix.browser }}-${{ matrix.shardIndex }}
+          path: blob-report/
+          retention-days: 7
 
-      - name: Upload test report
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: playwright-report-${{ matrix.browser }}
-          path: playwright-report/
-          retention-days: 30
-
+  # ── Mobile viewports: 2 shards ─────────────────────────────────────────────
   mobile-tests:
-    name: Mobile E2E Tests
-    timeout-minutes: 60
+    name: Mobile E2E (shard ${{ matrix.shardIndex }}/${{ matrix.shardTotal }})
+    needs: build
+    timeout-minutes: 40
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        shardIndex: [1, 2]
+        shardTotal: [2]
 
     steps:
       - name: Checkout code
@@ -90,44 +253,213 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Download .next build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: next-build
+          path: .next/
+
+      - name: Create minimal nself project for CI
+        run: |
+          mkdir -p /tmp/nself-ci-project
+          printf 'PROJECT_NAME=nself-admin-ci\n' > /tmp/nself-ci-project/.env.dev
+          printf 'BASE_DOMAIN=localhost\n' >> /tmp/nself-ci-project/.env.dev
+          printf 'HASURA_GRAPHQL_ADMIN_SECRET=hasura-admin-secret-ci-only-32chars\n' >> /tmp/nself-ci-project/.env.dev
+          printf 'DOCKER_NETWORK=admin_network\n' >> /tmp/nself-ci-project/.env.dev
+          printf 'HASURA_GRAPHQL_JWT_SECRET={"type":"HS256","key":"admin-ci-development-secret-key-minimum-32-characters"}\n' >> /tmp/nself-ci-project/.env.dev
+          cp /tmp/nself-ci-project/.env.dev /tmp/nself-ci-project/.env
+
+      # Pre-pull images BEFORE the health clock starts so image-download time on
+      # a cold runner does not eat the health-wait window.
+      - name: Pull nself backend images
+        run: docker compose -f .github/ci/docker-compose.yml pull --quiet
+        working-directory: .
+
+      - name: Start nself backend stack
+        run: docker compose -f .github/ci/docker-compose.yml up -d
+        working-directory: .
+
+      - name: Wait for Hasura health
+        run: |
+          echo "Waiting for Hasura at http://localhost:8080/healthz ..."
+          # 60 attempts × 5 s = 300 s.  120 s was too tight on cold / over-
+          # subscribed GitHub runners where Postgres + Hasura migrations take
+          # longer to settle, which previously failed slow-but-healthy shards.
+          for i in $(seq 1 60); do
+            if curl -sf http://localhost:8080/healthz > /dev/null 2>&1; then
+              echo "Hasura healthy (attempt $i)"
+              exit 0
+            fi
+            echo "Attempt $i/60 — waiting 5 s ..."
+            sleep 5
+          done
+          echo "ERROR: Hasura did not become healthy within 300 s" >&2
+          echo "=== hasura container logs ===" >&2
+          docker compose -f .github/ci/docker-compose.yml logs hasura >&2 || true
+          exit 1
+        working-directory: .
+
+      - name: Wait for Auth service health
+        run: |
+          echo "Waiting for Auth at http://localhost:4000/healthz ..."
+          # 72 attempts × 5 s = 360 s against the real readiness endpoint.
+          for i in $(seq 1 72); do
+            if curl -sf http://localhost:4000/healthz > /dev/null 2>&1; then
+              echo "Auth healthy (attempt $i)"
+              exit 0
+            fi
+            echo "Attempt $i/72 — waiting 5 s ..."
+            sleep 5
+          done
+          echo "ERROR: Auth service did not become healthy within 360 s" >&2
+          echo "=== hasura-auth container logs ===" >&2
+          docker compose -f .github/ci/docker-compose.yml logs auth >&2 || true
+          exit 1
+        working-directory: .
+
+      # Best-effort seeding of Hasura/Auth users.  The E2E suite does NOT depend
+      # on these users — every test authenticates through the admin's own LokiJS
+      # session (set in globalSetup) and mocks /api/auth/check — so a failure
+      # here must never fail the shard.  We still retry transient signup errors
+      # (proxy warm-up surfaces as 502/503/000 or a curl transport error) with
+      # exponential backoff so the users are seeded when the endpoint is healthy,
+      # but a persistent non-2xx is logged and the run continues.
+      - name: Seed E2E test users (best-effort)
+        run: |
+          AUTH_URL="http://localhost:4000"
+          PASSWORD="password123"
+          seed_user() {
+            local email="$1"
+            local display="$2"
+            local role="$3"
+            local http_code=""
+            local delay=2
+            for attempt in $(seq 1 6); do
+              # `|| echo 000` keeps a curl transport failure (e.g. connection
+              # refused, exit 56) from aborting the step under `set -e`; it is
+              # treated as a retryable not-ready signal.
+              http_code=$(curl -s -o /dev/null -w "%{http_code}" \
+                --max-time 15 \
+                -X POST "$AUTH_URL/v1/signup/email-password" \
+                -H "Content-Type: application/json" \
+                -d "{\"email\":\"$email\",\"password\":\"$PASSWORD\",\"options\":{\"displayName\":\"$display\",\"locale\":\"en\",\"metadata\":{\"role\":\"$role\"}}}" \
+                || echo 000)
+              case "$http_code" in
+                200|201)
+                  echo "Created: $email (attempt $attempt)"
+                  return 0
+                  ;;
+                409|422)
+                  echo "Already exists (ok): $email"
+                  return 0
+                  ;;
+                *)
+                  if [ "$attempt" -lt 6 ]; then
+                    echo "Auth not ready for $email (HTTP $http_code), attempt $attempt/6 — retrying in ${delay}s ..."
+                    sleep "$delay"
+                    if [ "$delay" -lt 16 ]; then delay=$((delay * 2)); fi
+                  else
+                    echo "WARNING: $email not seeded after 6 attempts (last HTTP $http_code) — continuing (tests do not require seeded users)"
+                  fi
+                  ;;
+              esac
+            done
+            return 0
+          }
+          seed_user "owner@nself.org"     "Test Owner"     "owner"
+          seed_user "admin@nself.org"     "Test Admin"     "admin"
+          seed_user "moderator@nself.org" "Test Moderator" "moderator"
+          seed_user "member@nself.org"    "Test Member"    "member"
+          seed_user "guest@nself.org"     "Test Guest"     "guest"
+          echo "Seeding complete."
+        working-directory: .
+
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps chromium webkit
 
-      - name: Run Mobile E2E tests
-        run: pnpm test:e2e:mobile
+      - name: Run Mobile E2E tests (shard ${{ matrix.shardIndex }}/${{ matrix.shardTotal }})
+        run: |
+          pnpm test:e2e:mobile \
+            --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
         env:
-          # Mobile job installs chromium + webkit; use chromium for the warmup.
           WARMUP_BROWSER: chromium
+          # Bypass the 10 req/min rate-limit on /api/auth/login for the same
+          # reason as the desktop shards — mobile shards share the same server.
+          PLAYWRIGHT_E2E_BYPASS_RATE_LIMIT: 'true'
+          # CI nself backend — points to the synthetic project directory created above.
+          NSELF_PROJECT_PATH: /tmp/nself-ci-project
+          HASURA_GRAPHQL_ADMIN_SECRET: hasura-admin-secret-ci-only-32chars
 
-      - name: Upload test results
+      - name: Upload blob report
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: playwright-results-mobile
-          path: |
-            test-results/
-            playwright-report/
-          retention-days: 30
+          name: blob-report-mobile-${{ matrix.shardIndex }}
+          path: blob-report/
+          retention-days: 7
 
+  # ── Merge all shard reports + aggregate pass/fail gate ─────────────────────
   summary:
     name: Test Summary
     needs: [e2e-tests, mobile-tests]
     if: always()
     runs-on: ubuntu-latest
     steps:
-      - name: Download all test results
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.28.0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install Playwright (for merge-reports)
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Download all blob reports
         uses: actions/download-artifact@v4
         with:
-          path: all-test-results
+          path: all-blob-reports
+          pattern: blob-report-*
+          merge-multiple: true
 
-      - name: Create test summary
+      - name: Merge shard reports into HTML report
+        run: pnpm exec playwright merge-reports --reporter html ./all-blob-reports
+
+      - name: Upload merged HTML report
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report-merged
+          path: playwright-report/
+          retention-days: 30
+
+      - name: Write step summary
         run: |
           echo "## E2E Test Results" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "### Browser Tests" >> $GITHUB_STEP_SUMMARY
+          echo "### Desktop Browsers (4 shards each)" >> $GITHUB_STEP_SUMMARY
           echo "- Chromium: ${{ needs.e2e-tests.result }}" >> $GITHUB_STEP_SUMMARY
-          echo "- Firefox: ${{ needs.e2e-tests.result }}" >> $GITHUB_STEP_SUMMARY
-          echo "- WebKit: ${{ needs.e2e-tests.result }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Firefox:  ${{ needs.e2e-tests.result }}" >> $GITHUB_STEP_SUMMARY
+          echo "- WebKit:   ${{ needs.e2e-tests.result }}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "### Mobile Tests" >> $GITHUB_STEP_SUMMARY
-          echo "- Mobile: ${{ needs.mobile-tests.result }}" >> $GITHUB_STEP_SUMMARY
+          echo "### Mobile (2 shards)" >> $GITHUB_STEP_SUMMARY
+          echo "- Mobile Chrome + Safari: ${{ needs.mobile-tests.result }}" >> $GITHUB_STEP_SUMMARY
+
+      - name: Fail if any shard failed
+        if: >
+          needs.e2e-tests.result == 'failure' ||
+          needs.e2e-tests.result == 'cancelled' ||
+          needs.mobile-tests.result == 'failure' ||
+          needs.mobile-tests.result == 'cancelled'
+        run: |
+          echo "One or more E2E shards failed or were cancelled."
+          exit 1

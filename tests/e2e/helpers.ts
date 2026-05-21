@@ -354,35 +354,91 @@ export async function setupAuth(page: Page, _password = TEST_PASSWORD): Promise<
 }
 
 /**
- * Purpose:    Guarantee the `nself-session` cookie is present in the page's
- *             browser context, re-injecting it from the saved storageState file
- *             if the engine (WebKit) dropped it during storageState replay.
- * Inputs:     `page` — the Playwright Page whose context is checked/repaired.
- * Outputs:    Resolves once the cookie is present, or after a best-effort
- *             re-injection attempt.  Never throws on a missing state file —
+ * Purpose:    Guarantee the `nself-session` cookie is BOTH present in the page's
+ *             browser context AND attached to the next top-level navigation, so
+ *             the server middleware does not redirect the test to /login.
+ * Inputs:     `page` — the Playwright Page whose context is repaired/warmed.
+ * Outputs:    Resolves once the session is confirmed active (or after a
+ *             best-effort attempt).  Never throws on a missing state file —
  *             local runs against a real backend may not have one.
- * Constraints: Cookies are origin-scoped; only the `nself-session` (and CSRF)
- *             cookies for the test baseURL are injected.  httpOnly/sameSite
- *             attributes are preserved from the saved state so the re-injected
- *             cookie behaves identically to the globalSetup-minted one.
+ * Constraints: WebKit keeps storageState-restored cookies in the jar but does
+ *             NOT send them on the FIRST cross-document navigation over plain
+ *             http://localhost, so `context.cookies()` reports the cookie while
+ *             middleware still sees no cookie and bounces to /login.  We
+ *             therefore (1) re-add the cookies with an explicit `url` +
+ *             normalized attributes so WebKit binds them to the origin for
+ *             navigations, and (2) warm the origin with a bounded navigation and
+ *             confirm the session holds before the test's real navigation.  This
+ *             is idempotent on Chromium/Firefox (cookie already attaches) and
+ *             deterministically self-heals WebKit.  No assertion is weakened.
  */
 async function ensureSessionCookie(page: Page): Promise<void> {
   const context = page.context()
-  const existing = await context.cookies()
-  if (existing.some((c) => c.name === 'nself-session')) {
-    return // Fast path: Chromium/Firefox already have the cookie.
-  }
+  const baseURL = baseUrlFor(page)
 
   const saved = await readStorageStateCookies()
-  const sessionCookies = saved.filter(
-    (c) => c.name === 'nself-session' || c.name === 'nself-csrf'
-  )
+  const sessionCookies = saved
+    .filter((c) => c.name === 'nself-session' || c.name === 'nself-csrf')
+    // Re-bind to the test origin with attributes that match the production CI
+    // cookie (sameSite=Lax, non-secure over HTTP).  Passing `url` makes WebKit
+    // attach the cookie to navigations instead of only keeping it in the jar.
+    .map((c) => ({
+      name: c.name,
+      value: c.value,
+      url: baseURL,
+      path: '/',
+      httpOnly: c.name === 'nself-session',
+      secure: false,
+      sameSite: 'Lax' as const,
+    }))
+
   if (sessionCookies.length === 0) {
     // No saved state (e.g. local run without globalSetup, or a spec that
     // intentionally starts unauthenticated).  Nothing to repair.
     return
   }
+
   await context.addCookies(sessionCookies)
+
+  // Warm the origin so WebKit commits the cookie to its navigation store, then
+  // confirm middleware accepts the session.  Bounded retry: re-add + re-warm
+  // if the first navigation still lands on /login (WebKit cold-jar race).
+  for (let attempt = 1; attempt <= 3; attempt++) {
+    try {
+      await page.goto('/dashboard', { waitUntil: 'domcontentloaded', timeout: 15000 })
+    } catch {
+      // Navigation may be interrupted by a same-site redirect on WebKit; the
+      // URL check below is the source of truth, not the goto resolution.
+    }
+    if (!/\/login(\b|\/|$)/.test(page.url())) {
+      return // Session is active — middleware did not bounce us to /login.
+    }
+    await context.addCookies(sessionCookies)
+  }
+  // Exhausted retries: leave state as-is.  The test's own assertions will
+  // surface a genuine auth failure rather than this helper masking it.
+}
+
+/**
+ * Purpose:    Resolve the base URL configured for this page's context, falling
+ *             back to the conventional admin dev URL.
+ * Inputs:     `page` — the Playwright Page.
+ * Outputs:    The base URL string used to origin-scope injected cookies.
+ * Constraints: Pure; no navigation or side effects.
+ */
+function baseUrlFor(page: Page): string {
+  // The context baseURL is not directly exposed, so derive it from the current
+  // URL when available, else use the project default.  All projects share the
+  // same baseURL (http://localhost:3021), so the constant is a safe fallback.
+  const current = page.url()
+  if (current && current.startsWith('http')) {
+    try {
+      return new URL(current).origin
+    } catch {
+      // fall through to default
+    }
+  }
+  return 'http://localhost:3021'
 }
 
 /**

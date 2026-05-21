@@ -1,4 +1,4 @@
-import { expect, type Page } from '@playwright/test'
+import { type Page } from '@playwright/test'
 
 // Must satisfy production password policy: ≥12 chars, upper, lower, digit, special
 export const TEST_PASSWORD = 'Test123!@#Xy'
@@ -287,85 +287,46 @@ export async function mockProjectStatus(page: Page) {
 /**
  * Setup authentication for tests.
  *
- * Strategy: API-based login (not UI-based) to eliminate the WebKit cookie
- * race.  UI-based login goes through LoginClient.tsx which calls
- * window.location.assign('/build') after a successful login response — this
- * triggers a hard browser navigation.  On WebKit specifically, the Set-Cookie
- * header from the /api/auth/login response is committed to the cookie jar
- * AFTER the subsequent window.location.assign navigation begins, and the
- * very next test-body page.goto() then races against that pending
- * navigation: WebKit aborts the goto with "Navigation interrupted by
- * another navigation to /login" because middleware sees no session cookie
- * on the goto's request.
+ * Strategy: **storageState pre-authentication** (canonical Playwright
+ * https://playwright.dev/docs/auth pattern).  globalSetup performs the API
+ * login exactly once and saves the resulting cookie + localStorage to
+ * `playwright/.auth/admin.json`.  Every browser project in
+ * playwright.config.ts loads that file via `use.storageState`, so every test
+ * context starts already authenticated — no per-test login required.
  *
- * API-based login (page.request.post) issues the auth request through
- * the Playwright APIRequestContext which shares the cookie jar with the
- * page but performs NO client-side navigation.  When the request resolves,
- * the cookie is in the jar and there is no pending navigation racing the
- * next page.goto().  Works identically on chromium, firefox, and webkit.
+ * Why this exists as a function still:
+ *   • The mock for /api/project/status is registered at the fixtures level
+ *     (only in CI) but tests that import `setupAuth` may run against a real
+ *     backend locally where the fixture mock is skipped.  Calling
+ *     `mockProjectStatus` here is harmless in CI (route handlers are
+ *     accumulated, last-registered wins) and guarantees the mock is present
+ *     when needed.
+ *   • Keeping the function preserves the import surface for all 13 spec files
+ *     that import `setupAuth` from `./helpers`, avoiding a sweeping
+ *     non-functional refactor.
+ *   • The `password` parameter is retained for backward compatibility but is
+ *     no longer used — the session cookie in storageState was minted with
+ *     `TEST_PASSWORD` already.
+ *
+ * Why this fixes the WebKit cookie race definitively:
+ *   The previous per-test API login (page.request.post) raced against the
+ *   browser's cookie-jar commit on WebKit.  storageState writes the cookie
+ *   into the context BEFORE the first navigation begins, so middleware on
+ *   the first page.goto() always sees `nself-session` and never bounces the
+ *   test to /login mid-navigation.  The race window does not exist.
  */
-export async function setupAuth(page: Page, password = TEST_PASSWORD) {
-  // Mock project status so ProjectStateWrapper doesn't redirect to /init/1.
+export async function setupAuth(page: Page, _password = TEST_PASSWORD): Promise<void> {
+  // Ensure the project-status + auth-check + CLI mock surface is registered
+  // for this page.  Idempotent enough: the fixture installs the mocks once at
+  // the start of every CI test, so this call is a no-op cost in CI; in local
+  // runs without the CI fixture it provides the same mocks setupAuth used to
+  // install.
   await mockProjectStatus(page)
-
-  // Pre-stamp the project-setup-confirmed flag via addInitScript so it is
-  // present on EVERY future document load in this browser context.
-  // ProjectStateWrapper renders a full-screen spinner (no children, no h1)
-  // when isAuthenticated=true but localStorage['nself_project_setup_confirmed']
-  // is absent.  Setting the flag here mirrors what happens for a real user
-  // after their first successful project visit.
-  await page.addInitScript(() => {
-    try {
-      localStorage.setItem('nself_project_setup_confirmed', 'true')
-    } catch {
-      // localStorage may be unavailable on about:blank — ignore.
-    }
-  })
-
-  // First, navigate to the login page so WebKit establishes a first-party
-  // context for localhost:3021.  Without this, WebKit's Intelligent Tracking
-  // Prevention (ITP) treats cookies set via APIRequestContext before any
-  // first-party page visit as third-party and refuses to send them on
-  // subsequent navigations.  /login is a public route (no auth required),
-  // so we can safely visit it.  waitUntil:'commit' resolves on first
-  // response without waiting for client-side hydration or SSE.
-  await page.goto('/login', { waitUntil: 'commit' })
-
-  // API-based login: POST credentials directly to /api/auth/login through
-  // the page's APIRequestContext.  Shares the cookie jar with the page.
-  // Because we already visited /login, the session cookie sets in the
-  // first-party context.
-  const loginResponse = await page.request.post('http://localhost:3021/api/auth/login', {
-    data: { password, rememberMe: false },
-    headers: { 'Content-Type': 'application/json' },
-  })
-
-  if (!loginResponse.ok()) {
-    throw new Error(
-      `API login failed: ${loginResponse.status()} ${loginResponse.statusText()} — ${await loginResponse.text()}`
-    )
-  }
-
-  // Verify the session cookie landed in the jar.
-  await expect
-    .poll(
-      async () => {
-        const cookies = await page.context().cookies()
-        return cookies.some((c) => c.name === 'nself-session')
-      },
-      { timeout: 5000, message: 'nself-session cookie did not land after API login' }
-    )
-    .toBe(true)
-
-  // Warm-up navigation to a protected route to lock the session cookie into
-  // the page's first-party context.  WebKit requires the page to have
-  // navigated to an authenticated origin at least once before subsequent
-  // protected-route gotos reliably include the cookie.  We hit /build (the
-  // canonical post-login route), wait for commit, and continue.  If
-  // middleware were going to redirect to /login it would happen here, not
-  // in the test body — and the test body's first navigation then proceeds
-  // against a warm cookie context.
-  await page.goto('/build', { waitUntil: 'commit' })
+  // No login flow needed — `playwright.config.ts` loads
+  // `playwright/.auth/admin.json` for every browser project, so the
+  // `nself-session` cookie and `nself_project_setup_confirmed` localStorage
+  // flag are already present in this context.  Tests may proceed directly
+  // to their target route.
 }
 
 /**

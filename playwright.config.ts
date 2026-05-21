@@ -62,17 +62,35 @@ export default defineConfig({
     video: 'retain-on-failure',
   },
 
-  /* Configure projects for major browsers */
+  /* Configure projects for major browsers.
+   *
+   * Every browser project loads the same authenticated storage state file
+   * produced by globalSetup.  This file contains the `nself-session` cookie
+   * and the `nself_project_setup_confirmed` localStorage flag, so every test
+   * begins already logged in and project-confirmed.  Tests that need an
+   * unauthenticated context (login spec, initial-setup spec) call
+   * `clearAppState()` in `beforeEach` to wipe the loaded state.
+   *
+   * Why per-project, not top-level `use`: tests that exercise the login flow
+   * itself need to start unauthenticated, and storageState set at the top
+   * level can be overridden per-test via `test.use({ storageState: ... })`
+   * — but the cleanest split is to keep auth setup at the project level so
+   * the relationship between globalSetup and per-project state is explicit.
+   */
   projects: [
     {
       name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
+      use: {
+        ...devices['Desktop Chrome'],
+        storageState: 'playwright/.auth/admin.json',
+      },
     },
 
     {
       name: 'firefox',
       use: {
         ...devices['Desktop Firefox'],
+        storageState: 'playwright/.auth/admin.json',
         // Relax Firefox's strict origin policy so that page.evaluate() does not
         // throw "The operation is insecure" when running against localhost.
         // The root cause is fixed in helpers.ts (navigate before evaluate), but
@@ -88,17 +106,26 @@ export default defineConfig({
 
     {
       name: 'webkit',
-      use: { ...devices['Desktop Safari'] },
+      use: {
+        ...devices['Desktop Safari'],
+        storageState: 'playwright/.auth/admin.json',
+      },
     },
 
     /* Test against mobile viewports. */
     {
       name: 'Mobile Chrome',
-      use: { ...devices['Pixel 5'] },
+      use: {
+        ...devices['Pixel 5'],
+        storageState: 'playwright/.auth/admin.json',
+      },
     },
     {
       name: 'Mobile Safari',
-      use: { ...devices['iPhone 12'] },
+      use: {
+        ...devices['iPhone 12'],
+        storageState: 'playwright/.auth/admin.json',
+      },
     },
 
     /* Test against branded browsers. */

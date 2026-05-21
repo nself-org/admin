@@ -106,7 +106,8 @@ test.describe('CORS Configuration page', () => {
           (await page
             .getByText(/failed to load/i)
             .first()
-            .isVisible()) || (await page.getByRole('button', { name: /retry/i }).first().isVisible()),
+            .isVisible()) ||
+          (await page.getByRole('button', { name: /retry/i }).first().isVisible()),
         { timeout: 20000 }
       )
       .toBe(true)
@@ -307,7 +308,8 @@ test.describe('Rate Limits page', () => {
           (await page
             .getByText(/failed to load/i)
             .first()
-            .isVisible()) || (await page.getByRole('button', { name: /retry/i }).first().isVisible()),
+            .isVisible()) ||
+          (await page.getByRole('button', { name: /retry/i }).first().isVisible()),
         { timeout: 20000 }
       )
       .toBe(true)
@@ -466,7 +468,8 @@ test.describe('Docker Configuration page', () => {
           (await page
             .getByText(/failed to load/i)
             .first()
-            .isVisible()) || (await page.getByRole('button', { name: /retry/i }).first().isVisible()),
+            .isVisible()) ||
+          (await page.getByRole('button', { name: /retry/i }).first().isVisible()),
         { timeout: 20000 }
       )
       .toBe(true)

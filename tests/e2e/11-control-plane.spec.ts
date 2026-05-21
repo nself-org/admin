@@ -308,10 +308,7 @@ test.describe('Control-Plane Inventory Page', () => {
     // viewports (Pixel 5 / iPhone 12) the modal backdrop or adjacent controls
     // can intercept pointer events on the Cancel button, causing Playwright's
     // click-stability check to time out forever.
-    await page
-      .locator('[role="dialog"] button:has-text("Cancel")')
-      .first()
-      .click({ force: true })
+    await page.locator('[role="dialog"] button:has-text("Cancel")').first().click({ force: true })
     await expect(modal).not.toBeVisible()
   })
 

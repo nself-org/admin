@@ -382,11 +382,13 @@ async function ensureSessionCookie(page: Page): Promise<void> {
     // Re-bind to the test origin with attributes that match the production CI
     // cookie (sameSite=Lax, non-secure over HTTP).  Passing `url` makes WebKit
     // attach the cookie to navigations instead of only keeping it in the jar.
+    // Playwright's addCookies requires EITHER `url` OR (`domain` + `path`),
+    // never both `url` and `path` together.  We pass `url` (which implies
+    // path "/") so WebKit binds the cookie to the origin for navigations.
     .map((c) => ({
       name: c.name,
       value: c.value,
       url: baseURL,
-      path: '/',
       httpOnly: c.name === 'nself-session',
       secure: false,
       sameSite: 'Lax' as const,

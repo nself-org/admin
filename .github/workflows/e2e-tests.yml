@@ -136,26 +136,33 @@ jobs:
           exit 1
         working-directory: .
 
-      - name: Seed E2E test users
+      # Best-effort seeding of Hasura/Auth users.  The E2E suite does NOT depend
+      # on these users — every test authenticates through the admin's own LokiJS
+      # session (set in globalSetup) and mocks /api/auth/check — so a failure
+      # here must never fail the shard.  We still retry transient signup errors
+      # (proxy warm-up surfaces as 502/503/000 or a curl transport error) with
+      # exponential backoff so the users are seeded when the endpoint is healthy,
+      # but a persistent non-2xx is logged and the run continues.
+      - name: Seed E2E test users (best-effort)
         run: |
           AUTH_URL="http://localhost:4000"
           PASSWORD="password123"
-          # A passing /healthz can still precede the signup route being fully
-          # ready (proxy warm-up), surfacing as transient 502/503/000.  Retry
-          # each user with exponential backoff and treat only a persistent
-          # non-2xx (excluding 409/422 = already-exists) as fatal.
           seed_user() {
             local email="$1"
             local display="$2"
             local role="$3"
             local http_code=""
             local delay=2
-            for attempt in $(seq 1 10); do
+            for attempt in $(seq 1 6); do
+              # `|| echo 000` keeps a curl transport failure (e.g. connection
+              # refused, exit 56) from aborting the step under `set -e`; it is
+              # treated as a retryable not-ready signal.
               http_code=$(curl -s -o /dev/null -w "%{http_code}" \
                 --max-time 15 \
                 -X POST "$AUTH_URL/v1/signup/email-password" \
                 -H "Content-Type: application/json" \
-                -d "{\"email\":\"$email\",\"password\":\"$PASSWORD\",\"options\":{\"displayName\":\"$display\",\"locale\":\"en\",\"metadata\":{\"role\":\"$role\"}}}")
+                -d "{\"email\":\"$email\",\"password\":\"$PASSWORD\",\"options\":{\"displayName\":\"$display\",\"locale\":\"en\",\"metadata\":{\"role\":\"$role\"}}}" \
+                || echo 000)
               case "$http_code" in
                 200|201)
                   echo "Created: $email (attempt $attempt)"
@@ -165,19 +172,18 @@ jobs:
                   echo "Already exists (ok): $email"
                   return 0
                   ;;
-                502|503|000)
-                  echo "Auth not ready for $email (HTTP $http_code), attempt $attempt/10 — retrying in ${delay}s ..."
-                  sleep "$delay"
-                  if [ "$delay" -lt 30 ]; then delay=$((delay * 2)); fi
-                  ;;
                 *)
-                  echo "ERROR: unexpected HTTP $http_code for $email" >&2
-                  return 1
+                  if [ "$attempt" -lt 6 ]; then
+                    echo "Auth not ready for $email (HTTP $http_code), attempt $attempt/6 — retrying in ${delay}s ..."
+                    sleep "$delay"
+                    if [ "$delay" -lt 16 ]; then delay=$((delay * 2)); fi
+                  else
+                    echo "WARNING: $email not seeded after 6 attempts (last HTTP $http_code) — continuing (tests do not require seeded users)"
+                  fi
                   ;;
               esac
             done
-            echo "ERROR: $email never seeded after 10 attempts (last HTTP $http_code)" >&2
-            return 1
+            return 0
           }
           seed_user "owner@nself.org"     "Test Owner"     "owner"
           seed_user "admin@nself.org"     "Test Admin"     "admin"
@@ -311,26 +317,33 @@ jobs:
           exit 1
         working-directory: .
 
-      - name: Seed E2E test users
+      # Best-effort seeding of Hasura/Auth users.  The E2E suite does NOT depend
+      # on these users — every test authenticates through the admin's own LokiJS
+      # session (set in globalSetup) and mocks /api/auth/check — so a failure
+      # here must never fail the shard.  We still retry transient signup errors
+      # (proxy warm-up surfaces as 502/503/000 or a curl transport error) with
+      # exponential backoff so the users are seeded when the endpoint is healthy,
+      # but a persistent non-2xx is logged and the run continues.
+      - name: Seed E2E test users (best-effort)
         run: |
           AUTH_URL="http://localhost:4000"
           PASSWORD="password123"
-          # A passing /healthz can still precede the signup route being fully
-          # ready (proxy warm-up), surfacing as transient 502/503/000.  Retry
-          # each user with exponential backoff and treat only a persistent
-          # non-2xx (excluding 409/422 = already-exists) as fatal.
           seed_user() {
             local email="$1"
             local display="$2"
             local role="$3"
             local http_code=""
             local delay=2
-            for attempt in $(seq 1 10); do
+            for attempt in $(seq 1 6); do
+              # `|| echo 000` keeps a curl transport failure (e.g. connection
+              # refused, exit 56) from aborting the step under `set -e`; it is
+              # treated as a retryable not-ready signal.
               http_code=$(curl -s -o /dev/null -w "%{http_code}" \
                 --max-time 15 \
                 -X POST "$AUTH_URL/v1/signup/email-password" \
                 -H "Content-Type: application/json" \
-                -d "{\"email\":\"$email\",\"password\":\"$PASSWORD\",\"options\":{\"displayName\":\"$display\",\"locale\":\"en\",\"metadata\":{\"role\":\"$role\"}}}")
+                -d "{\"email\":\"$email\",\"password\":\"$PASSWORD\",\"options\":{\"displayName\":\"$display\",\"locale\":\"en\",\"metadata\":{\"role\":\"$role\"}}}" \
+                || echo 000)
               case "$http_code" in
                 200|201)
                   echo "Created: $email (attempt $attempt)"
@@ -340,19 +353,18 @@ jobs:
                   echo "Already exists (ok): $email"
                   return 0
                   ;;
-                502|503|000)
-                  echo "Auth not ready for $email (HTTP $http_code), attempt $attempt/10 — retrying in ${delay}s ..."
-                  sleep "$delay"
-                  if [ "$delay" -lt 30 ]; then delay=$((delay * 2)); fi
-                  ;;
                 *)
-                  echo "ERROR: unexpected HTTP $http_code for $email" >&2
-                  return 1
+                  if [ "$attempt" -lt 6 ]; then
+                    echo "Auth not ready for $email (HTTP $http_code), attempt $attempt/6 — retrying in ${delay}s ..."
+                    sleep "$delay"
+                    if [ "$delay" -lt 16 ]; then delay=$((delay * 2)); fi
+                  else
+                    echo "WARNING: $email not seeded after 6 attempts (last HTTP $http_code) — continuing (tests do not require seeded users)"
+                  fi
                   ;;
               esac
             done
-            echo "ERROR: $email never seeded after 10 attempts (last HTTP $http_code)" >&2
-            return 1
+            return 0
           }
           seed_user "owner@nself.org"     "Test Owner"     "owner"
           seed_user "admin@nself.org"     "Test Admin"     "admin"

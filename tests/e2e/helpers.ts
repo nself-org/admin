@@ -34,13 +34,24 @@ export async function mockProjectStatus(page: Page) {
   // because each test worker starts with a fresh browser context that
   // has no session cookie, causing /api/auth/check to return 401.
   //
-  // The mock is cookie-aware: it returns 200 only when a nself-session
-  // cookie is present in the request (matching the real server behaviour).
-  // Tests that clear cookies to test unauthenticated states therefore
-  // still receive a 401, so redirect-to-login assertions continue to work.
-  await page.route('**/api/auth/check', (route) => {
-    const cookie = route.request().headers()['cookie'] ?? ''
-    if (cookie.includes('nself-session')) {
+  // The mock is auth-aware: it returns 200 only when a nself-session cookie
+  // is present in the browser context (matching the real server behaviour),
+  // so tests that clear cookies to exercise unauthenticated states still
+  // receive a 401 and redirect-to-login assertions continue to work.
+  //
+  // WHY WE READ context.cookies() INSTEAD OF route.request().headers():
+  //   On WebKit, intercepted requests do NOT expose the Cookie header to the
+  //   route handler (route.request().headers()['cookie'] is always empty even
+  //   when the cookie IS in the jar and document.cookie shows it).  Gating on
+  //   the request header therefore returned 401 on every WebKit test, bouncing
+  //   the whole shard to /login.  context.cookies() reflects the real cookie
+  //   jar on every engine, so it is the reliable source of truth for whether
+  //   the test context is authenticated.  Chromium/Firefox behave identically.
+  const authContext = page.context()
+  await page.route('**/api/auth/check', async (route) => {
+    const cookies = await authContext.cookies()
+    const authed = cookies.some((c) => c.name === 'nself-session')
+    if (authed) {
       return route.fulfill({
         status: 200,
         contentType: 'application/json',
@@ -354,23 +365,21 @@ export async function setupAuth(page: Page, _password = TEST_PASSWORD): Promise<
 }
 
 /**
- * Purpose:    Guarantee the `nself-session` cookie is BOTH present in the page's
- *             browser context AND attached to the next top-level navigation, so
- *             the server middleware does not redirect the test to /login.
- * Inputs:     `page` — the Playwright Page whose context is repaired/warmed.
- * Outputs:    Resolves once the session is confirmed active (or after a
- *             best-effort attempt).  Never throws on a missing state file —
- *             local runs against a real backend may not have one.
- * Constraints: WebKit keeps storageState-restored cookies in the jar but does
- *             NOT send them on the FIRST cross-document navigation over plain
- *             http://localhost, so `context.cookies()` reports the cookie while
- *             middleware still sees no cookie and bounces to /login.  We
- *             therefore (1) re-add the cookies with an explicit `url` +
- *             normalized attributes so WebKit binds them to the origin for
- *             navigations, and (2) warm the origin with a bounded navigation and
- *             confirm the session holds before the test's real navigation.  This
- *             is idempotent on Chromium/Firefox (cookie already attaches) and
- *             deterministically self-heals WebKit.  No assertion is weakened.
+ * Purpose:    Normalize the saved session cookies in the test's context so they
+ *             carry the production CI attributes (sameSite=Lax, non-secure) and
+ *             are origin-bound.
+ * Inputs:     `page` — the Playwright Page whose context is repaired.
+ * Outputs:    Resolves after re-binding the saved session cookies to the
+ *             origin.  Never throws on a missing state file — local runs
+ *             against a real backend may not have one.
+ * Constraints: This keeps the cookie jar consistent across engines.  Note the
+ *             actual WebKit auth fix lives in mockProjectStatus: WebKit does not
+ *             expose the Cookie header to intercepted `/api/auth/check`
+ *             requests, so that mock gates on context.cookies() rather than the
+ *             request header.  This helper does not navigate (a warm-up goto
+ *             left the page mid-load and made WebKit abort the test's own goto
+ *             with "Frame load interrupted").  Idempotent on Chromium/Firefox;
+ *             no assertion weakened, no test skipped.
  */
 async function ensureSessionCookie(page: Page): Promise<void> {
   const context = page.context()
@@ -383,8 +392,7 @@ async function ensureSessionCookie(page: Page): Promise<void> {
     // cookie (sameSite=Lax, non-secure over HTTP).  Passing `url` makes WebKit
     // attach the cookie to navigations instead of only keeping it in the jar.
     // Playwright's addCookies requires EITHER `url` OR (`domain` + `path`),
-    // never both `url` and `path` together.  We pass `url` (which implies
-    // path "/") so WebKit binds the cookie to the origin for navigations.
+    // never both `url` and `path` together — `url` implies path "/".
     .map((c) => ({
       name: c.name,
       value: c.value,
@@ -401,24 +409,6 @@ async function ensureSessionCookie(page: Page): Promise<void> {
   }
 
   await context.addCookies(sessionCookies)
-
-  // Warm the origin so WebKit commits the cookie to its navigation store, then
-  // confirm middleware accepts the session.  Bounded retry: re-add + re-warm
-  // if the first navigation still lands on /login (WebKit cold-jar race).
-  for (let attempt = 1; attempt <= 3; attempt++) {
-    try {
-      await page.goto('/dashboard', { waitUntil: 'domcontentloaded', timeout: 15000 })
-    } catch {
-      // Navigation may be interrupted by a same-site redirect on WebKit; the
-      // URL check below is the source of truth, not the goto resolution.
-    }
-    if (!/\/login(\b|\/|$)/.test(page.url())) {
-      return // Session is active — middleware did not bounce us to /login.
-    }
-    await context.addCookies(sessionCookies)
-  }
-  // Exhausted retries: leave state as-is.  The test's own assertions will
-  // surface a genuine auth failure rather than this helper masking it.
 }
 
 /**

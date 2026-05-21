@@ -374,8 +374,11 @@ test.describe('Docker Configuration page', () => {
     )
     await page.goto('/config/docker')
     await page.waitForLoadState('domcontentloaded')
-    const pgCard = page.getByText('PostgreSQL')
-    const redisCard = page.getByText('Redis')
+    // Target the service-card headings specifically.  Plain getByText('Redis')
+    // matches more than one node (the card title plus a value/label elsewhere),
+    // which trips strict-mode visibility assertions; the heading role is unique.
+    const pgCard = page.getByRole('heading', { name: 'PostgreSQL' })
+    const redisCard = page.getByRole('heading', { name: 'Redis' })
     await expect(pgCard).toBeVisible()
     await expect(redisCard).toBeVisible()
   })

@@ -88,30 +88,40 @@ jobs:
           printf 'HASURA_GRAPHQL_JWT_SECRET={"type":"HS256","key":"admin-ci-development-secret-key-minimum-32-characters"}\n' >> /tmp/nself-ci-project/.env.dev
           cp /tmp/nself-ci-project/.env.dev /tmp/nself-ci-project/.env
 
+      # Pre-pull images BEFORE the health clock starts so image-download time on
+      # a cold runner does not eat the health-wait window.
+      - name: Pull nself backend images
+        run: docker compose -f .github/ci/docker-compose.yml pull --quiet
+        working-directory: .
+
       - name: Start nself backend stack
-        run: |
-          docker compose -f .github/ci/docker-compose.yml pull --quiet
-          docker compose -f .github/ci/docker-compose.yml up -d
+        run: docker compose -f .github/ci/docker-compose.yml up -d
         working-directory: .
 
       - name: Wait for Hasura health
         run: |
           echo "Waiting for Hasura at http://localhost:8080/healthz ..."
-          for i in $(seq 1 24); do
+          # 60 attempts × 5 s = 300 s.  120 s was too tight on cold / over-
+          # subscribed GitHub runners where Postgres + Hasura migrations take
+          # longer to settle, which previously failed slow-but-healthy shards.
+          for i in $(seq 1 60); do
             if curl -sf http://localhost:8080/healthz > /dev/null 2>&1; then
               echo "Hasura healthy (attempt $i)"
               exit 0
             fi
-            echo "Attempt $i/24 — waiting 5 s ..."
+            echo "Attempt $i/60 — waiting 5 s ..."
             sleep 5
           done
-          echo "ERROR: Hasura did not become healthy within 120 s" >&2
+          echo "ERROR: Hasura did not become healthy within 300 s" >&2
+          echo "=== hasura container logs ===" >&2
+          docker compose -f .github/ci/docker-compose.yml logs hasura >&2 || true
           exit 1
         working-directory: .
 
       - name: Wait for Auth service health
         run: |
           echo "Waiting for Auth at http://localhost:4000/healthz ..."
+          # 72 attempts × 5 s = 360 s against the real readiness endpoint.
           for i in $(seq 1 72); do
             if curl -sf http://localhost:4000/healthz > /dev/null 2>&1; then
               echo "Auth healthy (attempt $i)"
@@ -130,22 +140,44 @@ jobs:
         run: |
           AUTH_URL="http://localhost:4000"
           PASSWORD="password123"
+          # A passing /healthz can still precede the signup route being fully
+          # ready (proxy warm-up), surfacing as transient 502/503/000.  Retry
+          # each user with exponential backoff and treat only a persistent
+          # non-2xx (excluding 409/422 = already-exists) as fatal.
           seed_user() {
             local email="$1"
             local display="$2"
             local role="$3"
-            local http_code
-            http_code=$(curl -s -o /dev/null -w "%{http_code}" \
-              -X POST "$AUTH_URL/v1/signup/email-password" \
-              -H "Content-Type: application/json" \
-              -d "{\"email\":\"$email\",\"password\":\"$PASSWORD\",\"options\":{\"displayName\":\"$display\",\"locale\":\"en\",\"metadata\":{\"role\":\"$role\"}}}")
-            if [ "$http_code" = "200" ] || [ "$http_code" = "201" ]; then
-              echo "Created: $email"
-            elif [ "$http_code" = "409" ] || [ "$http_code" = "422" ]; then
-              echo "Already exists (ok): $email"
-            else
-              echo "WARNING: unexpected HTTP $http_code for $email"
-            fi
+            local http_code=""
+            local delay=2
+            for attempt in $(seq 1 10); do
+              http_code=$(curl -s -o /dev/null -w "%{http_code}" \
+                --max-time 15 \
+                -X POST "$AUTH_URL/v1/signup/email-password" \
+                -H "Content-Type: application/json" \
+                -d "{\"email\":\"$email\",\"password\":\"$PASSWORD\",\"options\":{\"displayName\":\"$display\",\"locale\":\"en\",\"metadata\":{\"role\":\"$role\"}}}")
+              case "$http_code" in
+                200|201)
+                  echo "Created: $email (attempt $attempt)"
+                  return 0
+                  ;;
+                409|422)
+                  echo "Already exists (ok): $email"
+                  return 0
+                  ;;
+                502|503|000)
+                  echo "Auth not ready for $email (HTTP $http_code), attempt $attempt/10 — retrying in ${delay}s ..."
+                  sleep "$delay"
+                  if [ "$delay" -lt 30 ]; then delay=$((delay * 2)); fi
+                  ;;
+                *)
+                  echo "ERROR: unexpected HTTP $http_code for $email" >&2
+                  return 1
+                  ;;
+              esac
+            done
+            echo "ERROR: $email never seeded after 10 attempts (last HTTP $http_code)" >&2
+            return 1
           }
           seed_user "owner@nself.org"     "Test Owner"     "owner"
           seed_user "admin@nself.org"     "Test Admin"     "admin"
@@ -231,30 +263,40 @@ jobs:
           printf 'HASURA_GRAPHQL_JWT_SECRET={"type":"HS256","key":"admin-ci-development-secret-key-minimum-32-characters"}\n' >> /tmp/nself-ci-project/.env.dev
           cp /tmp/nself-ci-project/.env.dev /tmp/nself-ci-project/.env
 
+      # Pre-pull images BEFORE the health clock starts so image-download time on
+      # a cold runner does not eat the health-wait window.
+      - name: Pull nself backend images
+        run: docker compose -f .github/ci/docker-compose.yml pull --quiet
+        working-directory: .
+
       - name: Start nself backend stack
-        run: |
-          docker compose -f .github/ci/docker-compose.yml pull --quiet
-          docker compose -f .github/ci/docker-compose.yml up -d
+        run: docker compose -f .github/ci/docker-compose.yml up -d
         working-directory: .
 
       - name: Wait for Hasura health
         run: |
           echo "Waiting for Hasura at http://localhost:8080/healthz ..."
-          for i in $(seq 1 24); do
+          # 60 attempts × 5 s = 300 s.  120 s was too tight on cold / over-
+          # subscribed GitHub runners where Postgres + Hasura migrations take
+          # longer to settle, which previously failed slow-but-healthy shards.
+          for i in $(seq 1 60); do
             if curl -sf http://localhost:8080/healthz > /dev/null 2>&1; then
               echo "Hasura healthy (attempt $i)"
               exit 0
             fi
-            echo "Attempt $i/24 — waiting 5 s ..."
+            echo "Attempt $i/60 — waiting 5 s ..."
             sleep 5
           done
-          echo "ERROR: Hasura did not become healthy within 120 s" >&2
+          echo "ERROR: Hasura did not become healthy within 300 s" >&2
+          echo "=== hasura container logs ===" >&2
+          docker compose -f .github/ci/docker-compose.yml logs hasura >&2 || true
           exit 1
         working-directory: .
 
       - name: Wait for Auth service health
         run: |
           echo "Waiting for Auth at http://localhost:4000/healthz ..."
+          # 72 attempts × 5 s = 360 s against the real readiness endpoint.
           for i in $(seq 1 72); do
             if curl -sf http://localhost:4000/healthz > /dev/null 2>&1; then
               echo "Auth healthy (attempt $i)"
@@ -273,22 +315,44 @@ jobs:
         run: |
           AUTH_URL="http://localhost:4000"
           PASSWORD="password123"
+          # A passing /healthz can still precede the signup route being fully
+          # ready (proxy warm-up), surfacing as transient 502/503/000.  Retry
+          # each user with exponential backoff and treat only a persistent
+          # non-2xx (excluding 409/422 = already-exists) as fatal.
           seed_user() {
             local email="$1"
             local display="$2"
             local role="$3"
-            local http_code
-            http_code=$(curl -s -o /dev/null -w "%{http_code}" \
-              -X POST "$AUTH_URL/v1/signup/email-password" \
-              -H "Content-Type: application/json" \
-              -d "{\"email\":\"$email\",\"password\":\"$PASSWORD\",\"options\":{\"displayName\":\"$display\",\"locale\":\"en\",\"metadata\":{\"role\":\"$role\"}}}")
-            if [ "$http_code" = "200" ] || [ "$http_code" = "201" ]; then
-              echo "Created: $email"
-            elif [ "$http_code" = "409" ] || [ "$http_code" = "422" ]; then
-              echo "Already exists (ok): $email"
-            else
-              echo "WARNING: unexpected HTTP $http_code for $email"
-            fi
+            local http_code=""
+            local delay=2
+            for attempt in $(seq 1 10); do
+              http_code=$(curl -s -o /dev/null -w "%{http_code}" \
+                --max-time 15 \
+                -X POST "$AUTH_URL/v1/signup/email-password" \
+                -H "Content-Type: application/json" \
+                -d "{\"email\":\"$email\",\"password\":\"$PASSWORD\",\"options\":{\"displayName\":\"$display\",\"locale\":\"en\",\"metadata\":{\"role\":\"$role\"}}}")
+              case "$http_code" in
+                200|201)
+                  echo "Created: $email (attempt $attempt)"
+                  return 0
+                  ;;
+                409|422)
+                  echo "Already exists (ok): $email"
+                  return 0
+                  ;;
+                502|503|000)
+                  echo "Auth not ready for $email (HTTP $http_code), attempt $attempt/10 — retrying in ${delay}s ..."
+                  sleep "$delay"
+                  if [ "$delay" -lt 30 ]; then delay=$((delay * 2)); fi
+                  ;;
+                *)
+                  echo "ERROR: unexpected HTTP $http_code for $email" >&2
+                  return 1
+                  ;;
+              esac
+            done
+            echo "ERROR: $email never seeded after 10 attempts (last HTTP $http_code)" >&2
+            return 1
           }
           seed_user "owner@nself.org"     "Test Owner"     "owner"
           seed_user "admin@nself.org"     "Test Admin"     "admin"

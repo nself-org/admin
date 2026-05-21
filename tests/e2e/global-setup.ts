@@ -39,9 +39,11 @@ import {
   chromium,
   firefox,
   webkit,
+  type APIResponse,
   type BrowserContext,
   type BrowserType,
   type FullConfig,
+  type Page,
 } from '@playwright/test'
 
 import { mockProjectStatus, TEST_PASSWORD } from './helpers'
@@ -71,6 +73,14 @@ export default async function globalSetup(config: FullConfig) {
   const page = await context.newPage()
 
   try {
+    // Step 0: Poll the admin server until it answers before doing anything
+    // else.  playwright.config.ts already waits for `next start` to bind, but
+    // a cold / over-subscribed runner can accept the TCP connection a few
+    // seconds before the route handlers compile.  Polling /login here (bounded
+    // to 180 s) absorbs that gap so the auth flow below never races a
+    // not-yet-ready server.
+    await waitForServerReady(page, base, 180000)
+
     // Mock /api/project/status so ProjectStateWrapper routes to /build
     // instead of /init/1 (CI has no real nself project).
     await mockProjectStatus(page)
@@ -126,16 +136,12 @@ export default async function globalSetup(config: FullConfig) {
     // 5a: Fetch CSRF token (warms the /api/auth/csrf route).
     await page.request.get('/api/auth/csrf')
 
-    // 5b: POST login credentials.
-    const loginRes = await page.request.post('/api/auth/login', {
-      data: { password: TEST_PASSWORD, rememberMe: false },
-      headers: { 'Content-Type': 'application/json' },
-    })
-    if (!loginRes.ok()) {
-      throw new Error(
-        `[globalSetup] Login API failed: ${loginRes.status()} ${loginRes.statusText()} — ${await loginRes.text()}`
-      )
-    }
+    // 5b: POST login credentials.  Retry on transient server-side failures
+    // (5xx / connection resets) with exponential backoff so a slow-but-
+    // eventually-ready admin server on a cold runner does not abort the entire
+    // shard.  A genuine auth failure (4xx) is fatal immediately — retrying it
+    // would only mask a real problem.
+    const loginRes = await postLoginWithRetry(page, base)
 
     // 5c: Verify the session cookie landed in the browser context's cookie jar
     // BEFORE we save the storageState.  WebKit occasionally commits the
@@ -210,4 +216,88 @@ async function waitForCookie(
     await new Promise((r) => setTimeout(r, 100))
   }
   return false
+}
+
+/**
+ * Purpose:    Poll the admin server's /login route until it responds, so the
+ *             auth flow never races a server that has bound its port but not
+ *             yet compiled its route handlers on a cold CI runner.
+ * Inputs:     `page` — Playwright page for issuing requests; `base` — server
+ *             base URL; `timeoutMs` — total budget before giving up.
+ * Outputs:    Resolves once /login returns any HTTP response; throws with a
+ *             clear message only after the full budget is exhausted.
+ * Constraints: Treats any HTTP status as "server is up" — a 200 on /login and a
+ *             307 redirect both prove the handler is live.  Only a connection
+ *             error (server not yet accepting requests) is retried.
+ */
+async function waitForServerReady(page: Page, base: string, timeoutMs: number): Promise<void> {
+  const deadline = Date.now() + timeoutMs
+  let lastError = 'no attempt made'
+  let attempt = 0
+  while (Date.now() < deadline) {
+    attempt++
+    try {
+      const res = await page.request.get(`${base}/login`, { timeout: 15000 })
+      console.log(`[globalSetup] Server ready — /login returned ${res.status()} (attempt ${attempt})`)
+      return
+    } catch (err) {
+      lastError = (err as Error).message
+      console.log(`[globalSetup] Server not ready (attempt ${attempt}): ${lastError} — retrying in 3s …`)
+      await new Promise((r) => setTimeout(r, 3000))
+    }
+  }
+  throw new Error(
+    `[globalSetup] Admin server did not become ready within ${Math.round(timeoutMs / 1000)} s — last error: ${lastError}`
+  )
+}
+
+/**
+ * Purpose:    POST the admin login credentials, retrying on transient
+ *             server-side failures (5xx / connection resets) with exponential
+ *             backoff so a slow-but-eventually-ready server does not abort the
+ *             shard.
+ * Inputs:     `page` — Playwright page for issuing the request; `base` — server
+ *             base URL (for clearer error messages).
+ * Outputs:    The successful APIResponse.  Throws on a genuine auth failure
+ *             (4xx) immediately, or after retries are exhausted on persistent
+ *             5xx / connection errors.
+ * Constraints: 4xx is never retried — retrying a real auth rejection would mask
+ *             a true failure rather than absorb startup latency.
+ */
+async function postLoginWithRetry(page: Page, base: string): Promise<APIResponse> {
+  const maxAttempts = 8
+  let delayMs = 1000
+  let lastDetail = 'no attempt made'
+  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+    try {
+      const res = await page.request.post('/api/auth/login', {
+        data: { password: TEST_PASSWORD, rememberMe: false },
+        headers: { 'Content-Type': 'application/json' },
+      })
+      if (res.ok()) return res
+
+      const status = res.status()
+      lastDetail = `${status} ${res.statusText()} — ${await res.text()}`
+      // 4xx = genuine auth failure; do not retry, surface immediately.
+      if (status < 500) {
+        throw new Error(`[globalSetup] Login API rejected credentials: ${lastDetail}`)
+      }
+      // 5xx = server still warming up; retry with backoff.
+      console.log(
+        `[globalSetup] Login API ${status} (attempt ${attempt}/${maxAttempts}) — retrying in ${delayMs / 1000}s …`
+      )
+    } catch (err) {
+      // Re-throw the explicit 4xx rejection above; retry connection errors.
+      if (/rejected credentials/.test((err as Error).message)) throw err
+      lastDetail = (err as Error).message
+      console.log(
+        `[globalSetup] Login API request error (attempt ${attempt}/${maxAttempts}): ${lastDetail} — retrying in ${delayMs / 1000}s …`
+      )
+    }
+    await new Promise((r) => setTimeout(r, delayMs))
+    if (delayMs < 16000) delayMs *= 2
+  }
+  throw new Error(
+    `[globalSetup] Login API never succeeded against ${base} after ${maxAttempts} attempts — last: ${lastDetail}`
+  )
 }

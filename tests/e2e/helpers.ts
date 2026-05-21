@@ -1,7 +1,15 @@
-import { type Page } from '@playwright/test'
+import { promises as fs } from 'node:fs'
+import path from 'node:path'
+
+import { type Cookie, type Page } from '@playwright/test'
 
 // Must satisfy production password policy: ≥12 chars, upper, lower, digit, special
 export const TEST_PASSWORD = 'Test123!@#Xy'
+
+// Path to the authenticated storage state produced once by globalSetup.  Kept
+// in sync with STORAGE_STATE_PATH in global-setup.ts.  setupAuth() reads the
+// session cookie back from this file as a WebKit fallback (see below).
+const STORAGE_STATE_PATH = path.resolve('playwright/.auth/admin.json')
 
 /**
  * Mock /api/project/status and all CLI-dependent API endpoints that pages
@@ -322,11 +330,77 @@ export async function setupAuth(page: Page, _password = TEST_PASSWORD): Promise<
   // runs without the CI fixture it provides the same mocks setupAuth used to
   // install.
   await mockProjectStatus(page)
-  // No login flow needed — `playwright.config.ts` loads
-  // `playwright/.auth/admin.json` for every browser project, so the
-  // `nself-session` cookie and `nself_project_setup_confirmed` localStorage
-  // flag are already present in this context.  Tests may proceed directly
-  // to their target route.
+
+  // WebKit fallback: guarantee the session cookie is in this context before the
+  // first navigation.
+  //
+  // The storageState file produced by globalSetup is loaded by every browser
+  // project via `use.storageState`.  Chromium and Firefox replay the
+  // httpOnly `nself-session` cookie from that file faithfully.  WebKit,
+  // however, intermittently drops httpOnly cookies when replaying storageState
+  // over plain http://localhost — the cookie is in the file but absent from the
+  // live context's cookie jar.  When that happens the cookie-aware
+  // /api/auth/check mock returns 401 and the app bounces the test to /login,
+  // failing every storageState-dependent test in the WebKit shards.
+  //
+  // Re-injecting the saved cookie into the context closes that gap
+  // deterministically.  It is a no-op on Chromium/Firefox (the cookie is
+  // already present) and self-heals WebKit without weakening any assertion or
+  // changing the production cookie code.
+  await ensureSessionCookie(page)
+  // No login flow needed beyond the cookie guarantee above — the
+  // `nself_project_setup_confirmed` localStorage flag also rides in the saved
+  // storageState, so tests may proceed directly to their target route.
+}
+
+/**
+ * Purpose:    Guarantee the `nself-session` cookie is present in the page's
+ *             browser context, re-injecting it from the saved storageState file
+ *             if the engine (WebKit) dropped it during storageState replay.
+ * Inputs:     `page` — the Playwright Page whose context is checked/repaired.
+ * Outputs:    Resolves once the cookie is present, or after a best-effort
+ *             re-injection attempt.  Never throws on a missing state file —
+ *             local runs against a real backend may not have one.
+ * Constraints: Cookies are origin-scoped; only the `nself-session` (and CSRF)
+ *             cookies for the test baseURL are injected.  httpOnly/sameSite
+ *             attributes are preserved from the saved state so the re-injected
+ *             cookie behaves identically to the globalSetup-minted one.
+ */
+async function ensureSessionCookie(page: Page): Promise<void> {
+  const context = page.context()
+  const existing = await context.cookies()
+  if (existing.some((c) => c.name === 'nself-session')) {
+    return // Fast path: Chromium/Firefox already have the cookie.
+  }
+
+  const saved = await readStorageStateCookies()
+  const sessionCookies = saved.filter(
+    (c) => c.name === 'nself-session' || c.name === 'nself-csrf'
+  )
+  if (sessionCookies.length === 0) {
+    // No saved state (e.g. local run without globalSetup, or a spec that
+    // intentionally starts unauthenticated).  Nothing to repair.
+    return
+  }
+  await context.addCookies(sessionCookies)
+}
+
+/**
+ * Purpose:    Read the cookie array out of the storageState JSON written by
+ *             globalSetup.
+ * Inputs:     none (reads STORAGE_STATE_PATH).
+ * Outputs:    The parsed cookies, or an empty array if the file is missing or
+ *             malformed.
+ * Constraints: Pure read; tolerant of absence so callers can no-op gracefully.
+ */
+async function readStorageStateCookies(): Promise<Cookie[]> {
+  try {
+    const raw = await fs.readFile(STORAGE_STATE_PATH, 'utf8')
+    const parsed = JSON.parse(raw) as { cookies?: Cookie[] }
+    return parsed.cookies ?? []
+  } catch {
+    return []
+  }
 }
 
 /**

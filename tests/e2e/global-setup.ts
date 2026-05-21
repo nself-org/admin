@@ -238,11 +238,15 @@ async function waitForServerReady(page: Page, base: string, timeoutMs: number): 
     attempt++
     try {
       const res = await page.request.get(`${base}/login`, { timeout: 15000 })
-      console.log(`[globalSetup] Server ready — /login returned ${res.status()} (attempt ${attempt})`)
+      console.log(
+        `[globalSetup] Server ready — /login returned ${res.status()} (attempt ${attempt})`
+      )
       return
     } catch (err) {
       lastError = (err as Error).message
-      console.log(`[globalSetup] Server not ready (attempt ${attempt}): ${lastError} — retrying in 3s …`)
+      console.log(
+        `[globalSetup] Server not ready (attempt ${attempt}): ${lastError} — retrying in 3s …`
+      )
       await new Promise((r) => setTimeout(r, 3000))
     }
   }

@@ -16,6 +16,7 @@ import {
   recordNomination,
   type NominationInput,
 } from '@/lib/bus-factor'
+import { requireAuth } from '@/lib/require-auth'
 import { NextRequest, NextResponse } from 'next/server'
 
 export async function GET(): Promise<NextResponse> {
@@ -44,6 +45,9 @@ interface PostBody {
 }
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
+  const authError = await requireAuth(request)
+  if (authError) return authError
+
   let body: PostBody
   try {
     body = (await request.json()) as PostBody

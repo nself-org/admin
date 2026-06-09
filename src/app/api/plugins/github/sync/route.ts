@@ -1,4 +1,5 @@
-import { NextResponse } from 'next/server'
+import { requireAuth } from '@/lib/require-auth'
+import { NextRequest, NextResponse } from 'next/server'
 
 /**
  * POST /api/plugins/github/sync
@@ -10,7 +11,10 @@ import { NextResponse } from 'next/server'
  * unconfigured — identical pattern to sibling routes (repos, prs, issues,
  * actions).
  */
-export async function POST(): Promise<NextResponse> {
+export async function POST(request: NextRequest): Promise<NextResponse> {
+  const authError = await requireAuth(request)
+  if (authError) return authError
+
   try {
     const token = process.env.GITHUB_TOKEN
     if (!token) {

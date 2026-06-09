@@ -6,6 +6,7 @@
  */
 
 import type { AuthToken } from '@/features/auth/types'
+import { requireAuth } from '@/lib/require-auth'
 import { execFile, spawn } from 'child_process'
 import { NextRequest, NextResponse } from 'next/server'
 import { promisify } from 'util'
@@ -100,6 +101,9 @@ async function storeInKeychain(token: AuthToken): Promise<void> {
 }
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
+  const authError = await requireAuth(request)
+  if (authError) return authError
+
   try {
     const body = (await request.json().catch(() => null)) as {
       refreshToken?: string

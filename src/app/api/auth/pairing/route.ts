@@ -7,6 +7,7 @@
  */
 
 import type { PairingInitResponse } from '@/features/auth/types'
+import { requireAuth } from '@/lib/require-auth'
 import { execFile } from 'child_process'
 import crypto from 'crypto'
 import { NextRequest, NextResponse } from 'next/server'
@@ -105,7 +106,10 @@ export async function GET(_request: NextRequest): Promise<NextResponse> {
   }
 }
 
-export async function DELETE(_request: NextRequest): Promise<NextResponse> {
+export async function DELETE(request: NextRequest): Promise<NextResponse> {
+  const authError = await requireAuth(request)
+  if (authError) return authError
+
   try {
     await clearKeychainServerSide()
     return NextResponse.json({ ok: true })

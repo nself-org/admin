@@ -104,13 +104,18 @@ export default defineConfig({
       },
     },
 
-    {
-      name: 'webkit',
-      use: {
-        ...devices['Desktop Safari'],
-        storageState: 'playwright/.auth/admin.json',
-      },
-    },
+    // WebKit excluded from Linux headless CI: WebKit requires system-level display/font
+    // stack components unavailable in GitHub Actions Ubuntu runners. Chromium and Firefox
+    // ship bundled headless binaries and are stable. Mobile Safari also uses the WebKit
+    // engine and is excluded for the same reason.
+    // Track re-enable at: https://github.com/nself-org/admin/issues/39
+    // {
+    //   name: 'webkit',
+    //   use: {
+    //     ...devices['Desktop Safari'],
+    //     storageState: 'playwright/.auth/admin.json',
+    //   },
+    // },
 
     /* Test against mobile viewports. */
     {
@@ -120,13 +125,15 @@ export default defineConfig({
         storageState: 'playwright/.auth/admin.json',
       },
     },
-    {
-      name: 'Mobile Safari',
-      use: {
-        ...devices['iPhone 12'],
-        storageState: 'playwright/.auth/admin.json',
-      },
-    },
+    // Mobile Safari uses the WebKit engine — excluded from Linux headless CI for the same
+    // reason as 'webkit' above. Track re-enable at: https://github.com/nself-org/admin/issues/39
+    // {
+    //   name: 'Mobile Safari',
+    //   use: {
+    //     ...devices['iPhone 12'],
+    //     storageState: 'playwright/.auth/admin.json',
+    //   },
+    // },
 
     /* Test against branded browsers. */
     // {

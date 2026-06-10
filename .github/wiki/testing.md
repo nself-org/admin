@@ -8,13 +8,13 @@ E2E tests live in `tests/e2e/` and run against a production build (`pnpm run bui
 
 ### Browser Matrix
 
-| Browser | CI (Linux headless) | Local macOS dev |
-|---|---|---|
-| Chromium | Included | Included |
-| Firefox | Included | Included |
-| WebKit (Desktop Safari) | **Excluded** — see below | Valid via `--project=webkit` |
-| Mobile Chrome | Included | Included |
-| Mobile Safari | **Excluded** — see below | Valid via `--project='Mobile Safari'` |
+| Browser                 | CI (Linux headless)      | Local macOS dev                       |
+| ----------------------- | ------------------------ | ------------------------------------- |
+| Chromium                | Included                 | Included                              |
+| Firefox                 | Included                 | Included                              |
+| WebKit (Desktop Safari) | **Excluded** — see below | Valid via `--project=webkit`          |
+| Mobile Chrome           | Included                 | Included                              |
+| Mobile Safari           | **Excluded** — see below | Valid via `--project='Mobile Safari'` |
 
 ### WebKit CI Exclusion
 

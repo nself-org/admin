@@ -50,7 +50,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        browser: [chromium, firefox, webkit]
+        browser: [chromium, firefox]
         shardIndex: [1, 2, 3, 4]
         shardTotal: [4]
 
@@ -375,7 +375,9 @@ jobs:
         working-directory: .
 
       - name: Install Playwright Browsers
-        run: npx playwright install --with-deps chromium webkit
+        # Mobile Safari (WebKit) excluded from Linux CI — only Mobile Chrome runs.
+        # Track re-enable at: https://github.com/nself-org/admin/issues/39
+        run: npx playwright install --with-deps chromium
 
       - name: Run Mobile E2E tests (shard ${{ matrix.shardIndex }}/${{ matrix.shardTotal }})
         run: |

@@ -164,12 +164,12 @@ The audit covers:
 
 All 447 HTTP route handlers in `src/app/api/` were audited against the middleware and handler-level auth chain.
 
-| Finding | Count | Status |
-|---|---|---|
-| CRITICAL (no auth) | 0 | None found |
-| MEDIUM (session only, no CSRF on mutations) | 5 | Fix tickets FIX-M-01, FIX-M-02 pending |
-| LOW (GET-only, session via middleware) | 155 | Acceptable |
-| Justified public routes | 9 | By design (bootstrap/login flow) |
+| Finding                                     | Count | Status                                 |
+| ------------------------------------------- | ----- | -------------------------------------- |
+| CRITICAL (no auth)                          | 0     | None found                             |
+| MEDIUM (session only, no CSRF on mutations) | 5     | Fix tickets FIX-M-01, FIX-M-02 pending |
+| LOW (GET-only, session via middleware)      | 155   | Acceptable                             |
+| Justified public routes                     | 9     | By design (bootstrap/login flow)       |
 
 Key finding: middleware validates session for all non-public API routes. Handler-level `requireAuth()` adds CSRF for mutating methods. Five mutating routes (auth/pairing, bus-factor, plugins/github/sync) use middleware session check only — no CSRF. Marked MEDIUM, fix tickets created.
 

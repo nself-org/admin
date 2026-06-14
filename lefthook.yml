@@ -1,0 +1,29 @@
+# lefthook.yml — nself/admin (Next.js, pnpm)
+# Install: brew install lefthook && lefthook install (at repo root)
+
+pre-commit:
+  parallel: true
+  commands:
+    lint:
+      glob: "src/**/*.{ts,tsx,js,jsx}"
+      run: pnpm lint
+    format-check:
+      glob: "**/*.{ts,tsx,js,jsx,json,md}"
+      run: pnpm exec prettier --check {staged_files}
+    secrets-scan:
+      run: |
+        if [ -f .github/gitleaks.toml ]; then
+          gitleaks protect --staged --config .github/gitleaks.toml
+        else
+          gitleaks protect --staged
+        fi
+
+pre-push:
+  parallel: false
+  commands:
+    type-check:
+      run: pnpm type-check
+    test:
+      run: pnpm test:ci
+    build:
+      run: pnpm build

@@ -55,7 +55,8 @@
     "version:bump:patch": "npm version patch --no-git-tag-version",
     "version:bump:minor": "npm version minor --no-git-tag-version",
     "version:bump:major": "npm version major --no-git-tag-version",
-    "release": "pnpm build && pnpm docker:push"
+    "release": "pnpm build && pnpm docker:push",
+    "ci:local": "pnpm lint && pnpm type-check && pnpm format:check && pnpm test:ci && pnpm build"
   },
   "packageManager": "pnpm@10.28.0",
   "browserslist": "defaults, not ie <= 11",

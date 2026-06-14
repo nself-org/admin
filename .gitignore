@@ -161,3 +161,6 @@ PLAN.md
 .gemini/
 .codeium/
 .claude/
+
+# Turbo cache (Mega P1 T-E3-03 hardening)
+.turbo/

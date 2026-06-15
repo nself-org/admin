@@ -279,6 +279,7 @@ function RolesContent() {
 
   const toggleCategoryPermissions = (category: string) => {
     const perms = PERMISSION_CATEGORIES[category]
+    if (!perms) return
     const allSelected = perms.every((p) => selectedPermissions.includes(p))
     if (allSelected) {
       setSelectedPermissions((prev) => prev.filter((p) => !perms.includes(p)))

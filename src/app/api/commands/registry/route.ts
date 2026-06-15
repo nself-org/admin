@@ -84,7 +84,7 @@ function parseTopLevelCommands(helpOutput: string): Array<{ name: string; descri
     // Lines inside the section start with two or more spaces followed by the command name
     const match = /^ {2,}(\S+)\s{2,}(.+)$/.exec(line)
     if (match) {
-      commands.push({ name: match[1], description: match[2].trim() })
+      commands.push({ name: match[1] ?? '', description: (match[2] ?? '').trim() })
     }
   }
 
@@ -135,7 +135,7 @@ function parseFlags(helpOutput: string): FlagDef[] {
     if (!match) continue
 
     const shorthand = match[1] ?? undefined
-    const name = match[2]
+    const name = match[2] ?? ''
     const rawType = match[3] ?? 'bool'
     const rest = match[4] ?? ''
 
@@ -147,7 +147,7 @@ function parseFlags(helpOutput: string): FlagDef[] {
 
     // Extract default value
     const defaultMatch = /\(default\s+"?([^")\s]+)"?\)/.exec(rest)
-    const defaultValue = defaultMatch ? defaultMatch[1] : undefined
+    const defaultValue = defaultMatch ? (defaultMatch[1] ?? undefined) : undefined
 
     // Strip default annotation from description
     const description = rest.replace(/\s*\(default\s+"?[^")]*"?\)\s*$/, '').trim()

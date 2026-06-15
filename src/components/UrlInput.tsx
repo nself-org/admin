@@ -58,7 +58,7 @@ export function UrlInput({
 
       // In dev, we don't want full domains (no .com, .org, etc)
       // Just subdomains that will be under base domain
-      const lastSegment = segments[segments.length - 1]
+      const lastSegment = segments[segments.length - 1] ?? ''
       // Common TLDs that indicate a full domain (not exhaustive, but covers common cases)
       const commonTlds = [
         'com',
@@ -116,7 +116,7 @@ export function UrlInput({
         }
 
         // Check TLD
-        const lastPart = parts[parts.length - 1]
+        const lastPart = parts[parts.length - 1] ?? ''
         if (lastPart.length < 2) {
           return 'Invalid top-level domain'
         }

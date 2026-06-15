@@ -96,6 +96,7 @@ function AddFrontendContent() {
 
   const handleFrameworkSelect = (frameworkId: string) => {
     const defaults = defaultSettings[frameworkId]
+    if (!defaults) return
     setFormData({
       ...formData,
       framework: frameworkId,
@@ -114,7 +115,8 @@ function AddFrontendContent() {
 
   const updateEnvVar = (index: number, field: 'key' | 'value', value: string) => {
     const updated = [...formData.environmentVariables]
-    updated[index][field] = value
+    const item = updated[index]
+    if (item) item[field] = value
     setFormData({ ...formData, environmentVariables: updated })
   }
 

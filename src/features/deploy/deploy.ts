@@ -50,9 +50,9 @@ function parseSteps(output: string, success: boolean): DeployStep[] {
     if (!match) {
       return { name: line.trim(), status: 'done' }
     }
-    const rawStatus = match[1].toLowerCase() as DeployStep['status']
+    const rawStatus = (match[1] ?? '').toLowerCase() as DeployStep['status']
     return {
-      name: match[2].trim(),
+      name: (match[2] ?? '').trim(),
       status: rawStatus,
     }
   })

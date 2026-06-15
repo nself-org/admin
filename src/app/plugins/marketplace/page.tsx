@@ -52,7 +52,7 @@ function getPluginEmoji(plugin: MarketplacePlugin): string {
   if (plugin.icon && plugin.icon.length <= 4) {
     return plugin.icon
   }
-  return categoryEmoji[plugin.category] ?? categoryEmoji.default
+  return categoryEmoji[plugin.category] ?? categoryEmoji['default'] ?? '🔌'
 }
 
 const categoryColors: Record<PluginCategory, string> = {

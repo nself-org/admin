@@ -638,7 +638,7 @@ export class DataCollectionService {
           const parseMemory = (str: string): number => {
             if (!str) return 0
             const match = str.match(/([\d.]+)/)
-            return match ? parseFloat(match[1]) : 0
+            return match ? parseFloat(match[1] ?? '0') : 0
           }
 
           const metrics: RedisMetrics = {

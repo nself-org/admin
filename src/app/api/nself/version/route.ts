@@ -29,13 +29,13 @@ function parseVersion(stdout: string): string {
   // build metadata (+build.5).
   const prefixed = stdout.match(/(v\d+\.\d+\.\d+(?:[-+][0-9A-Za-z.-]+)*)/)
   if (prefixed) {
-    return prefixed[1]
+    return prefixed[1] ?? ''
   }
 
   // Fallback: bare version without the `v` prefix.
   const bare = stdout.match(/version\s+(\d+\.\d+\.\d+(?:[-+][0-9A-Za-z.-]+)*)/)
   if (bare) {
-    return bare[1]
+    return bare[1] ?? ''
   }
 
   return stdout.trim()

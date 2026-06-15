@@ -928,7 +928,7 @@ function parseEnvContent(content: string): Record<string, string> {
     const trimmed = line.trim()
     if (trimmed && !trimmed.startsWith('#') && trimmed.includes('=')) {
       const [key, ...valueParts] = trimmed.split('=')
-      parsed[key] = valueParts.join('=')
+      if (key !== undefined) parsed[key] = valueParts.join('=')
     }
   })
 

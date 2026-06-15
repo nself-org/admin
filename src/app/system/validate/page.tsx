@@ -239,7 +239,7 @@ function ValidateContent() {
                   : 'border border-white/10 bg-white/5 text-gray-400 hover:bg-white/10'
               }`}
             >
-              {cat} ({categories[cat].total})
+              {cat} ({categories[cat]?.total ?? 0})
             </button>
           ))}
         </div>

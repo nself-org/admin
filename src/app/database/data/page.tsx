@@ -214,7 +214,7 @@ function DatabaseDataContent() {
         try {
           const parsed = JSON.parse(text)
           const arr: Record<string, string>[] = Array.isArray(parsed) ? parsed : [parsed]
-          const columns = arr.length > 0 ? Object.keys(arr[0]) : []
+          const columns = arr.length > 0 ? Object.keys(arr[0] ?? {}) : []
           setImportPreview({
             fileName: file.name,
             format,

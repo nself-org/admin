@@ -34,12 +34,12 @@ const pluginIcons: Record<string, React.ComponentType<{ className?: string }>> =
   default: Plug,
 }
 
-function getPluginIcon(name: string) {
+function getPluginIcon(name: string): React.ComponentType<{ className?: string }> {
   const lowerName = name.toLowerCase()
   for (const [key, Icon] of Object.entries(pluginIcons)) {
     if (lowerName.includes(key)) return Icon
   }
-  return pluginIcons.default
+  return pluginIcons['default'] ?? Plug
 }
 
 // Metric Card Component

@@ -47,6 +47,7 @@ export function DiffViewer({ generation }: DiffViewerProps) {
           }
         // Show first file by default
         const firstKey = keys[0]
+        if (!firstKey) return { value: '', language: 'typescript' }
         return {
           value: files[firstKey] ?? '',
           language:

@@ -61,7 +61,7 @@ function LogsContent() {
       const list = parseServiceList(json.data?.stdout || '')
       setServices(list)
       if (list.length > 0 && !selectedService) {
-        setSelectedService(list[0].name)
+        setSelectedService(list[0]?.name ?? '')
       }
     } catch (err) {
       setServicesError(err instanceof Error ? err.message : 'Unknown error')

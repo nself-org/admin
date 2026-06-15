@@ -187,6 +187,7 @@ export async function updateWidget(
   }
 
   const widget = dashboard.widgets[widgetIndex]
+  if (!widget) return null
 
   // Update widget fields
   if (data.type !== undefined) widget.type = data.type

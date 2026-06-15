@@ -64,7 +64,9 @@ function useVisibleSections(sectionStore: StoreApi<SectionState>) {
       let newVisibleSections = []
 
       for (let sectionIndex = 0; sectionIndex < sections.length; sectionIndex++) {
-        let { id, headingRef, offsetRem = 0 } = sections[sectionIndex]
+        const _section = sections[sectionIndex]
+        if (!_section) continue
+        let { id, headingRef, offsetRem = 0 } = _section
 
         if (!headingRef?.current) {
           continue

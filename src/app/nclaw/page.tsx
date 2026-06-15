@@ -810,13 +810,16 @@ function SecuritySection({ pluginDown }: { pluginDown: boolean }) {
                 <p className="text-xs text-zinc-500">{s.label}</p>
               </div>
               <div className="flex items-center gap-3">
-                {rotateResult[s.key] && (
-                  <span
-                    className={`text-xs ${rotateResult[s.key].ok ? 'text-green-400' : 'text-red-400'}`}
-                  >
-                    {rotateResult[s.key].msg}
-                  </span>
-                )}
+                {rotateResult[s.key] && (() => {
+                  const rr = rotateResult[s.key]
+                  return (
+                    <span
+                      className={`text-xs ${rr?.ok ? 'text-green-400' : 'text-red-400'}`}
+                    >
+                      {rr?.msg}
+                    </span>
+                  )
+                })()}
                 {s.critical && (
                   <span title="Critical — requires service restart">
                     <ShieldAlert className="h-4 w-4 text-yellow-500" />

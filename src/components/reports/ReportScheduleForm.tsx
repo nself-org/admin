@@ -183,11 +183,11 @@ export function ReportScheduleForm({
       case 'once':
         return `Will run once at ${time} ${timezone}`
       case 'hourly':
-        return `Runs every hour at ${time.split(':')[1]} minutes past`
+        return `Runs every hour at ${time.split(':')[1] ?? '00'} minutes past`
       case 'daily':
         return `Runs daily at ${time} ${timezone}`
       case 'weekly':
-        return `Runs every ${dayOfWeekOptions[dayOfWeek].label} at ${time} ${timezone}`
+        return `Runs every ${dayOfWeekOptions[dayOfWeek]?.label ?? 'day'} at ${time} ${timezone}`
       case 'monthly':
         return `Runs on day ${dayOfMonth} of each month at ${time} ${timezone}`
       default:

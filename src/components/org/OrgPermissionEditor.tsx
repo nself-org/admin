@@ -25,7 +25,7 @@ export function OrgPermissionEditor({
   const groupedPermissions = permissions.reduce(
     (acc, perm) => {
       if (!acc[perm.category]) acc[perm.category] = []
-      acc[perm.category].push(perm)
+      acc[perm.category]?.push(perm)
       return acc
     },
     {} as Record<string, OrgPermission[]>

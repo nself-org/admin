@@ -306,9 +306,9 @@ describe('Usage Tracking', () => {
     const usage = await apiKeys.apiKeysApi.getUsage(result.key.id)
 
     expect(usage.length).toBeGreaterThan(0)
-    expect(usage[0].endpoint).toBe('/api/test')
-    expect(usage[0].method).toBe('GET')
-    expect(usage[0].statusCode).toBe(200)
+    expect(usage[0]?.endpoint).toBe('/api/test')
+    expect(usage[0]?.method).toBe('GET')
+    expect(usage[0]?.statusCode).toBe(200)
   })
 
   test('generates usage statistics', async () => {

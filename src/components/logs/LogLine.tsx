@@ -56,7 +56,7 @@ function getServiceColor(service: string): string {
   const hash = service
     .split('')
     .reduce((acc, char) => acc + char.charCodeAt(0), 0)
-  return serviceColors[hash % serviceColors.length]
+  return serviceColors[hash % serviceColors.length] ?? 'text-zinc-400'
 }
 
 function tryParseJSON(line: string): { parsed: boolean; content: string } {

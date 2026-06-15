@@ -25,7 +25,7 @@ export function StepWrapper({ children }: StepWrapperProps) {
       return
     }
 
-    const currentStep = parseInt(stepMatch[1], 10)
+    const currentStep = parseInt(stepMatch[1] ?? '0', 10)
     if (currentStep <= 1) {
       setStepValidated(true)
       return

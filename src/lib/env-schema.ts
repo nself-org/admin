@@ -235,6 +235,7 @@ export function validateEnvVars(
   const missing = getMissingRequired(keys)
   for (const key of missing) {
     const schema = KNOWN_SCHEMAS[key]
+    if (!schema) continue
     results.push({
       key,
       value: '',

@@ -129,9 +129,9 @@ async function getRedisInfo() {
       keyspace: Object.keys(info)
         .filter((key) => key.startsWith('db'))
         .reduce((acc: any, key) => {
-          const dbInfo = info[key].split(',').reduce((dbAcc: any, item: string) => {
+          const dbInfo = (info[key] ?? '').split(',').reduce((dbAcc: any, item: string) => {
             const [k, v] = item.split('=')
-            dbAcc[k] = parseInt(v)
+            if (k !== undefined) dbAcc[k] = parseInt(v ?? '0')
             return dbAcc
           }, {})
           acc[key] = dbInfo
@@ -262,7 +262,7 @@ async function getRedisMemory() {
   const memory: any = {}
 
   for (let i = 0; i < lines.length; i += 2) {
-    const key = lines[i].replace(/^\d+\) "/, '').replace(/"$/, '')
+    const key = (lines[i] ?? '').replace(/^\d+\) "/, '').replace(/"$/, '')
     const value = lines[i + 1]?.replace(/^\d+\) /, '')
     if (key && value) {
       memory[key] = isNaN(Number(value)) ? value : parseInt(value)

@@ -52,7 +52,7 @@ function parseCLIOutput(output: string): ValidationCheck[] {
       trimmed.match(/^\[([A-Z][a-zA-Z\s]+)\]$/) ||
       trimmed.match(/^#{1,3}\s+(.+)$/)
     if (categoryMatch) {
-      currentCategory = categoryMatch[1]
+      currentCategory = (categoryMatch[1] ?? '')
         .toLowerCase()
         .replace(/\s+checks?$/i, '')
         .trim()
@@ -62,8 +62,8 @@ function parseCLIOutput(output: string): ValidationCheck[] {
     // Parse [PASS], [FAIL], [WARN] format
     const bracketMatch = trimmed.match(/^\[(PASS|FAIL|WARN|OK|ERROR|WARNING|INFO)\]\s*(.+)$/i)
     if (bracketMatch) {
-      const rawStatus = bracketMatch[1].toUpperCase()
-      const message = bracketMatch[2].trim()
+      const rawStatus = (bracketMatch[1] ?? '').toUpperCase()
+      const message = (bracketMatch[2] ?? '').trim()
       let status: 'pass' | 'fail' | 'warning' = 'pass'
       if (rawStatus === 'FAIL' || rawStatus === 'ERROR') status = 'fail'
       else if (rawStatus === 'WARN' || rawStatus === 'WARNING') status = 'warning'
@@ -81,8 +81,8 @@ function parseCLIOutput(output: string): ValidationCheck[] {
     // Parse checkmark/cross format: ✓ / ✗ / ⚠ or [x] / [ ] patterns
     const symbolMatch = trimmed.match(/^([✓✔☑]|[✗✘☒❌]|[⚠⚡]|PASS|FAIL|WARN)\s+(.+)$/)
     if (symbolMatch) {
-      const symbol = symbolMatch[1]
-      const message = symbolMatch[2].trim()
+      const symbol = symbolMatch[1] ?? ''
+      const message = (symbolMatch[2] ?? '').trim()
       let status: 'pass' | 'fail' | 'warning' = 'pass'
       if (/[✗✘☒❌]|FAIL/.test(symbol)) status = 'fail'
       else if (/[⚠⚡]|WARN/.test(symbol)) status = 'warning'
@@ -102,8 +102,8 @@ function parseCLIOutput(output: string): ValidationCheck[] {
       /^(.+?):\s*(PASS|FAIL|OK|ERROR|WARN|WARNING|HEALTHY|UNHEALTHY|UP|DOWN|RUNNING|STOPPED)$/i
     )
     if (colonMatch) {
-      const name = colonMatch[1].trim()
-      const rawStatus = colonMatch[2].toUpperCase()
+      const name = (colonMatch[1] ?? '').trim()
+      const rawStatus = (colonMatch[2] ?? '').toUpperCase()
       let status: 'pass' | 'fail' | 'warning' = 'pass'
       if (['FAIL', 'ERROR', 'UNHEALTHY', 'DOWN', 'STOPPED'].includes(rawStatus)) status = 'fail'
       else if (['WARN', 'WARNING'].includes(rawStatus)) status = 'warning'
@@ -265,10 +265,13 @@ function buildCategorySummary(
         warnings: 0,
       }
     }
-    categories[check.category].total++
-    if (check.status === 'pass') categories[check.category].passed++
-    else if (check.status === 'fail') categories[check.category].failed++
-    else if (check.status === 'warning') categories[check.category].warnings++
+    const cat = categories[check.category]
+    if (cat) {
+      cat.total++
+      if (check.status === 'pass') cat.passed++
+      else if (check.status === 'fail') cat.failed++
+      else if (check.status === 'warning') cat.warnings++
+    }
   }
 
   return categories

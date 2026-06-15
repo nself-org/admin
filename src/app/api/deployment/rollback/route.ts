@@ -103,8 +103,8 @@ function parseDeploymentHistory(output: string) {
       const match = line.match(/v(\S+)\s+(\S+)\s+(.*)/)
       if (match) {
         deployments.push({
-          version: match[1],
-          timestamp: match[2],
+          version: match[1] ?? '',
+          timestamp: match[2] ?? '',
           status: match[3] || 'unknown',
         })
       }

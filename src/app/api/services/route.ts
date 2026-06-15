@@ -144,8 +144,8 @@ async function getServicesList() {
           })),
           labels: container.Labels,
           created: container.Created,
-          serviceType: getServiceType(container.Names[0], container.Labels),
-          category: getServiceCategory(container.Names[0], container.Labels),
+          serviceType: getServiceType(container.Names[0] ?? '', container.Labels),
+          category: getServiceCategory(container.Names[0] ?? '', container.Labels),
           health: getHealthStatus(container.Status, container.State),
 
           // Enhanced information

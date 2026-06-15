@@ -287,7 +287,7 @@ function DashboardContent() {
         </div>
 
         {/* Alerts */}
-        {alerts.length > 0 && !alerts[0].acknowledged && (
+        {alerts.length > 0 && !alerts[0]?.acknowledged && (
           <div className="mb-6 rounded-lg border border-yellow-200 bg-yellow-50 p-4 dark:border-yellow-800 dark:bg-yellow-900/20">
             <div className="flex items-start gap-3">
               <AlertCircle className="mt-0.5 h-5 w-5 text-yellow-600 dark:text-yellow-400" />

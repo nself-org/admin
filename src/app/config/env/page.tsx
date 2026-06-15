@@ -365,8 +365,9 @@ function EnvEditorContent() {
       for (const [key, value] of Object.entries(vars)) {
         const existingIndex = newVars.findIndex((v) => v.key === key)
         if (existingIndex >= 0) {
-          newVars[existingIndex] = {
-            ...newVars[existingIndex],
+          const existingVar = newVars[existingIndex]
+          if (existingVar) newVars[existingIndex] = {
+            ...existingVar,
             value,
             hasChanges: true,
           }

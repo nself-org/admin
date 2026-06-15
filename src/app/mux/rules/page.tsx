@@ -543,7 +543,7 @@ function ruleToYaml(rule: MuxRule): string {
   }
 
   const actions = Array.isArray(rule.action) ? rule.action : [rule.action]
-  if (actions.length === 1) {
+  if (actions.length === 1 && actions[0]) {
     lines.push(`  action:`)
     lines.push(singleActionToYaml(actions[0], '    '))
   } else {
@@ -1316,7 +1316,12 @@ function ActionChainBuilder({
     const newIdx = idx + dir
     if (newIdx < 0 || newIdx >= actions.length) return
     const updated = [...actions]
-    ;[updated[idx], updated[newIdx]] = [updated[newIdx], updated[idx]]
+    const a = updated[idx]
+    const b = updated[newIdx]
+    if (a !== undefined && b !== undefined) {
+      updated[idx] = b
+      updated[newIdx] = a
+    }
     onChange(updated)
   }
 
@@ -2268,7 +2273,7 @@ export default function MuxRulesPage() {
       }
 
       // Serialize actions: single action as "action", multiple as "actions"
-      if (actions.length === 1) {
+      if (actions.length === 1 && actions[0]) {
         payload.action = actionFormToApi(actions[0])
       } else {
         payload.actions = actions.map(actionFormToApi)
@@ -2468,10 +2473,11 @@ export default function MuxRulesPage() {
             <tbody>
               {rules.map((rule) => {
                 const actions = normalizeActions(rule.action)
+                const firstAction = actions[0]
                 const actionLabel =
-                  actions.length === 1
-                    ? (ACTION_LABELS.find((a) => a.value === actions[0].type)?.label ??
-                      actions[0].type)
+                  actions.length === 1 && firstAction
+                    ? (ACTION_LABELS.find((a) => a.value === firstAction.type)?.label ??
+                      firstAction.type)
                     : `${actions.length} steps`
 
                 return (

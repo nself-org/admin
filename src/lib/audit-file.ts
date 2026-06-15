@@ -83,10 +83,10 @@ export function extractSourceIp(
     if (headers instanceof Headers) return headers.get(key)
     const v = (headers as Record<string, string | string[] | undefined>)[key]
     if (!v) return null
-    return Array.isArray(v) ? v[0] : v
+    return Array.isArray(v) ? (v[0] ?? null) : v
   }
 
   const forwarded = get('x-forwarded-for')
-  if (forwarded) return forwarded.split(',')[0].trim()
+  if (forwarded) return (forwarded.split(',')[0] ?? '').trim()
   return get('x-real-ip') || 'unknown'
 }

@@ -74,7 +74,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       const lastMatch = linkHeader.match(/page=(\d+)>; rel="last"/)
       if (lastMatch) {
         // per_page=1 so last page number = total count
-        repoCount = parseInt(lastMatch[1], 10)
+        repoCount = parseInt(lastMatch[1] ?? '0', 10)
       }
     }
 

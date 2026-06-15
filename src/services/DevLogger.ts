@@ -359,6 +359,7 @@ class DevLogger {
     try {
       performance.measure(name, `${name}-start`, `${name}-end`)
       const measure = performance.getEntriesByName(name)[0]
+      if (!measure) return
       this.log('info', 'performance', `Timer ${name}: ${Math.round(measure.duration)}ms`, {
         name,
         duration: Math.round(measure.duration),

@@ -1287,7 +1287,7 @@ function applyOperationToContent(
     }
   }
 
-  const line = lines[position.line]
+  const line = lines[position.line] ?? ''
   const before = line.substring(0, position.column)
   const after = line.substring(position.column)
 

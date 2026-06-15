@@ -61,5 +61,5 @@ export function getDockerSocketPath(): string {
     `/Users/${user}/.docker/run/docker.sock`,
   ]
 
-  return possiblePaths[0] // Default to standard path
+  return possiblePaths[0] ?? '/var/run/docker.sock' // Default to standard path
 }

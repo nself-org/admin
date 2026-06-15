@@ -129,7 +129,7 @@ function ChannelForm({
   const [form, setForm] = useState<ChannelFormData>(initial)
   const [configError, setConfigError] = useState('')
 
-  const typeMeta = CHANNEL_TYPES.find((t) => t.value === form.channel_type) ?? CHANNEL_TYPES[5]
+  const typeMeta = CHANNEL_TYPES.find((t) => t.value === form.channel_type) ?? CHANNEL_TYPES[5] ?? CHANNEL_TYPES[0]
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -183,7 +183,7 @@ function ChannelForm({
       <div>
         <label className="mb-1 block text-sm font-medium text-zinc-300">Config (JSON)</label>
         <p className="mb-1.5 text-xs text-zinc-500">
-          Example: <code className="font-mono">{typeMeta.configHint}</code>
+          Example: <code className="font-mono">{typeMeta?.configHint}</code>
         </p>
         <textarea
           required

@@ -88,8 +88,8 @@ export async function GET(_request: Request): Promise<NextResponse> {
       const intervalStr = String(interval)
       const match = intervalStr.match(/(\d+) days? (\d+):(\d+):(\d+)/)
       if (match) {
-        const days = parseInt(match[1])
-        const hours = parseInt(match[2])
+        const days = parseInt(match[1] ?? '0')
+        const hours = parseInt(match[2] ?? '0')
         if (days > 0) {
           return `${days} day${days > 1 ? 's' : ''}, ${hours} hour${hours > 1 ? 's' : ''}`
         }

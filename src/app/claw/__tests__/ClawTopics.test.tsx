@@ -174,7 +174,8 @@ describe('TopicsPage', () => {
     })
     const deleteButtons = screen.getAllByRole('button', { name: '' })
     // First delete button (trash icon)
-    await user.click(deleteButtons[0])
+    const firstDeleteBtn = deleteButtons[0]
+    if (firstDeleteBtn) await user.click(firstDeleteBtn)
     await waitFor(() => {
       expect(screen.getByText('Confirm')).toBeInTheDocument()
     })

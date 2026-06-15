@@ -46,9 +46,9 @@ export async function GET(): Promise<NextResponse> {
       )
       const parts = stdout.trim().split(' ')
       diskInfo = {
-        total: parseFloat(parts[0]) || 100,
-        used: parseFloat(parts[1]) || 50,
-        percentage: parseInt(parts[2]) || 50,
+        total: parseFloat(parts[0] ?? '100') || 100,
+        used: parseFloat(parts[1] ?? '50') || 50,
+        percentage: parseInt(parts[2] ?? '50') || 50,
       }
     } catch {
       // Keep defaults

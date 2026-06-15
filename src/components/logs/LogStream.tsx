@@ -143,6 +143,7 @@ export function LogStream({
           >
             {rowVirtualizer.getVirtualItems().map((virtualRow) => {
               const log = limitedLogs[virtualRow.index]
+              if (!log) return null
               return (
                 <div
                   key={virtualRow.key}

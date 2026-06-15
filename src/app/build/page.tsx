@@ -121,8 +121,9 @@ function BuildContent() {
     (index: number, status: BuildStep['status'], message?: string) => {
       setBuildSteps((prev) => {
         const updated = [...prev]
-        updated[index] = {
-          ...updated[index],
+        const step = updated[index]
+        if (step) updated[index] = {
+          ...step,
           status,
           message,
           timestamp: new Date().toISOString(),

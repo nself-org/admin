@@ -280,7 +280,7 @@ export default function EnvironmentDetailPage() {
       setEnvironment(envData)
       if (envData && envData.servers.length > 0) {
         const primary = envData.servers.find((s) => s.primary)
-        setSelectedServer(primary?.name ?? envData.servers[0].name)
+        setSelectedServer(primary?.name ?? envData.servers[0]?.name ?? '')
       }
     } catch {
       setOffline(true)

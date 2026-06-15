@@ -413,7 +413,7 @@ function generateTimeline(activities: Activity[], days: number): { date: string;
   for (let i = days - 1; i >= 0; i--) {
     const date = new Date(now)
     date.setDate(date.getDate() - i)
-    const dateStr = date.toISOString().split('T')[0]
+    const dateStr = date.toISOString().split('T')[0] ?? ''
 
     const count = activities.filter((a) => {
       const activityDate = new Date(a.timestamp).toISOString().split('T')[0]

@@ -46,7 +46,7 @@ function CompareContent() {
       const arr: BenchmarkBaseline[] = data.data ? [data.data] : []
       setBaselines(arr)
       // Auto-select the single baseline in both slots so comparison is immediately visible
-      if (arr.length >= 1) {
+      if (arr.length >= 1 && arr[0]) {
         setSelectedBaseline(arr[0].id)
         setSelectedCurrent(arr[0].id)
       }

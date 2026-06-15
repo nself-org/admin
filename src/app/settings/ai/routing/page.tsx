@@ -102,7 +102,9 @@ export default function RoutingPage() {
     const chain = [...editForm.tier_chain]
     const target = index + direction
     if (target < 0 || target >= chain.length) return
-    ;[chain[index], chain[target]] = [chain[target], chain[index]]
+    const tmp = chain[index] ?? ''
+    chain[index] = chain[target] ?? ''
+    chain[target] = tmp
     setEditForm({ ...editForm, tier_chain: chain })
   }
 

@@ -13,6 +13,7 @@ import {
   generateReverseDDL,
   pgIdent,
   resetIdCounter,
+  type CanvasColumn,
   type CanvasRelationship,
   type CanvasState,
   type CanvasTable,
@@ -223,7 +224,7 @@ describe('generateIndexes', () => {
   it('skips primary key columns', () => {
     const table: CanvasTable = {
       ...usersTable,
-      columns: [{ ...usersTable.columns[0], hasIndex: true }],
+      columns: [{ ...usersTable.columns[0], hasIndex: true } as CanvasColumn],
     }
     expect(generateIndexes(table)).toHaveLength(0)
   })

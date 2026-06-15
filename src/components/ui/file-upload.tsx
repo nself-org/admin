@@ -58,6 +58,7 @@ export function FileUpload({
 
     for (let i = 0; i < fileList.length; i++) {
       const file = fileList[i]
+      if (!file) continue
 
       // Check file size
       if (file.size > maxSize) {

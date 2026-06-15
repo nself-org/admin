@@ -134,7 +134,7 @@ describe('ServiceSelector', () => {
 
     // Click on postgres in the service list
     const postgresButtons = screen.getAllByText('postgres')
-    fireEvent.click(postgresButtons[0])
+    if (postgresButtons[0]) fireEvent.click(postgresButtons[0])
 
     await waitFor(() => {
       expect(mockOnChange).toHaveBeenCalledWith(['postgres'])

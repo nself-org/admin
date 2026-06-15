@@ -177,7 +177,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         const dockerComposeContent = await fs.readFile(dockerComposePath, 'utf8')
         const projectMatch = dockerComposeContent.match(/# Project: ([^\s\n]+)/)
         if (projectMatch) {
-          projectPrefix = projectMatch[1].trim()
+          projectPrefix = (projectMatch[1] ?? '').trim()
         }
       } catch {
         // File doesn't exist or can't read, use default
@@ -306,8 +306,8 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
               const match = p.match(/(\d+)->(\d+)/)
               return match
                 ? {
-                    private: parseInt(match[2]),
-                    public: parseInt(match[1]),
+                    private: parseInt(match[2] ?? '0'),
+                    public: parseInt(match[1] ?? '0'),
                     type: 'tcp',
                   }
                 : null

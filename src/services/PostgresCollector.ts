@@ -138,10 +138,13 @@ export class PostgresCollector {
       )
 
       // Parse output (format: "active | idle | max")
-      const [active, idle, max] = stdout
+      const parsed = stdout
         .trim()
         .split('|')
         .map((s) => parseInt(s.trim()) || 0)
+      const active = parsed[0] ?? 0
+      const idle = parsed[1] ?? 0
+      const max = parsed[2] ?? 100
       const total = active + idle
 
       return {
@@ -189,9 +192,9 @@ export class PostgresCollector {
         if (parts.length >= 3) {
           const [name, size, tableCount] = parts
           databases.push({
-            name,
-            size,
-            tableCount: parseInt(tableCount) || 0,
+            name: name ?? '',
+            size: size ?? '',
+            tableCount: parseInt(tableCount ?? '0') || 0,
             connections: 0, // Would need separate query per DB
           })
         }
@@ -237,10 +240,14 @@ export class PostgresCollector {
       )
 
       // Parse output
-      const [activeQueries, slowQueries, cacheHitRatio, tps] = stdout
+      const perfParsed = stdout
         .trim()
         .split('|')
         .map((s) => parseFloat(s.trim()) || 0)
+      const activeQueries = perfParsed[0] ?? 0
+      const slowQueries = perfParsed[1] ?? 0
+      const cacheHitRatio = perfParsed[2] ?? 0
+      const tps = perfParsed[3] ?? 0
 
       return {
         activeQueries: Math.round(activeQueries),

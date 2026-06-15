@@ -39,23 +39,23 @@ export async function GET(): Promise<NextResponse> {
       const envContent = await fs.readFile(envPath, 'utf-8')
 
       const sslModeMatch = envContent.match(/^SSL_MODE=(.+)$/m)
-      if (sslModeMatch && sslModeMatch[1].trim() === 'letsencrypt') {
+      if (sslModeMatch && (sslModeMatch[1] ?? '').trim() === 'letsencrypt') {
         status.configured = true
       }
 
       const domainMatch = envContent.match(/^LETSENCRYPT_DOMAIN=(.+)$/m)
       if (domainMatch) {
-        status.domain = domainMatch[1].trim()
+        status.domain = (domainMatch[1] ?? '').trim()
       }
 
       const emailMatch = envContent.match(/^LETSENCRYPT_EMAIL=(.+)$/m)
       if (emailMatch) {
-        status.email = emailMatch[1].trim()
+        status.email = (emailMatch[1] ?? '').trim()
       }
 
       const stagingMatch = envContent.match(/^LETSENCRYPT_STAGING=(.+)$/m)
       if (stagingMatch) {
-        status.staging = stagingMatch[1].trim().toLowerCase() === 'true'
+        status.staging = (stagingMatch[1] ?? '').trim().toLowerCase() === 'true'
       }
     } catch {
       // No .env or can't read

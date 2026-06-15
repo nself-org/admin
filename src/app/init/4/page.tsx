@@ -624,8 +624,9 @@ export default function InitStep4() {
     if (field === 'name' && typeof value === 'string') {
       value = value.toLowerCase().replace(/[^a-z0-9_-]/g, '')
     }
-    updated[index] = {
-      ...updated[index],
+    const svc = updated[index]
+    if (svc) updated[index] = {
+      ...svc,
       [field]: value,
     }
     setLocalServices(updated)
@@ -781,7 +782,7 @@ export default function InitStep4() {
                                     <div className="mb-2">
                                       {tooltip?.description || fw.description}
                                     </div>
-                                    {tooltip?.performance > 0 && (
+                                    {(tooltip?.performance ?? 0) > 0 && tooltip && (
                                       <div className="border-t border-zinc-700 pt-2">
                                         <span className="font-semibold">Performance Score: </span>
                                         <span
@@ -895,7 +896,7 @@ export default function InitStep4() {
                           <option
                             key={fw.value}
                             value={fw.value}
-                            title={`${tooltip?.description || fw.description}${tooltip?.performance > 0 ? `\n\nPerformance Score: ${tooltip.performance}/10` : ''}`}
+                            title={`${tooltip?.description || fw.description}${(tooltip?.performance ?? 0) > 0 ? `\n\nPerformance Score: ${tooltip?.performance ?? 0}/10` : ''}`}
                           >
                             {fw.label}
                           </option>

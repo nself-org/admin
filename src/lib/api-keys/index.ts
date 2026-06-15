@@ -105,7 +105,7 @@ function generateSecureApiKey(prefix: string): string {
   let secret = ''
 
   for (let i = 0; i < randomBytes.length; i++) {
-    const byte = randomBytes[i]
+    const byte = randomBytes[i] ?? 0
     secret += base62Chars[byte % base62Chars.length]
   }
 
@@ -125,7 +125,7 @@ export function generateKeyPrefix(): string {
 
   let suffix = ''
   for (let i = 0; i < 2; i++) {
-    suffix += chars[randomBytes[i] % chars.length]
+    suffix += chars[(randomBytes[i] ?? 0) % chars.length]
   }
 
   return `nself_${suffix}`
@@ -669,14 +669,14 @@ export async function getApiKeyUsageStats(keyId: string): Promise<ApiKeyUsageSta
     endpointCounts[u.endpoint] = (endpointCounts[u.endpoint] || 0) + 1
     statusCounts[u.statusCode] = (statusCounts[u.statusCode] || 0) + 1
     if (!endpointTimes[u.endpoint]) endpointTimes[u.endpoint] = []
-    endpointTimes[u.endpoint].push(u.responseTime)
+    endpointTimes[u.endpoint]?.push(u.responseTime)
   }
 
   const topEndpoints = Object.entries(endpointCounts)
     .map(([endpoint, count]) => ({
       endpoint,
       count,
-      avgTime: endpointTimes[endpoint].reduce((a, b) => a + b, 0) / endpointTimes[endpoint].length,
+      avgTime: (endpointTimes[endpoint] ?? []).reduce((a, b) => a + b, 0) / ((endpointTimes[endpoint] ?? []).length || 1),
     }))
     .sort((a, b) => b.count - a.count)
     .slice(0, 10)

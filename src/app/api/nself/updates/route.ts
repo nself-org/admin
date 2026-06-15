@@ -31,9 +31,9 @@ function compareVersions(current: string, latest: string): boolean {
   const normalize = (v: string) => v.replace(/^v/, '').split('.').map(Number)
   const [ca, cb, cc] = normalize(current)
   const [la, lb, lc] = normalize(latest)
-  if (ca !== la) return ca >= la
-  if (cb !== lb) return cb >= lb
-  return cc >= lc
+  if ((ca ?? 0) !== (la ?? 0)) return (ca ?? 0) >= (la ?? 0)
+  if ((cb ?? 0) !== (lb ?? 0)) return (cb ?? 0) >= (lb ?? 0)
+  return (cc ?? 0) >= (lc ?? 0)
 }
 
 export async function GET(): Promise<NextResponse> {
@@ -47,7 +47,7 @@ export async function GET(): Promise<NextResponse> {
     })
 
     const currentRaw = versionOut.match(/(v?\d+\.\d+\.\d+(?:[-+][0-9A-Za-z.-]+)*)/)
-    const currentVersion = currentRaw ? normalizeVersion(currentRaw[1]) : 'unknown'
+    const currentVersion = currentRaw ? normalizeVersion(currentRaw[1] ?? '') : 'unknown'
 
     // Fetch latest GitHub release
     let latestVersion = currentVersion

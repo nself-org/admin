@@ -26,7 +26,7 @@ function getCSRFToken(): string | null {
   for (const cookie of cookies) {
     const [name, value] = cookie.trim().split('=')
     if (name === 'nself-csrf') {
-      return value
+      return value ?? null
     }
   }
   return null

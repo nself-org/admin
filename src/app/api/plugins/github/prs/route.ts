@@ -78,7 +78,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         userLogin: ((item.user as Record<string, unknown>)?.login as string) ?? '',
         head: '',
         base: '',
-        labels: ((item.labels as Array<Record<string, string>>) ?? []).map((l) => l.name),
+        labels: ((item.labels as Array<Record<string, string>>) ?? []).map((l) => l.name ?? ''),
         reviewers: [],
         draft: !!item.draft,
         mergeable: undefined,

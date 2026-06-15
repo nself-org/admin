@@ -186,7 +186,7 @@ export async function writeEnvFile(config: EnvConfig): Promise<void> {
   const coreValues = coreSettings.filter((key) => config[key] !== undefined && config[key] !== '')
   if (coreValues.length > 0) {
     for (const key of coreValues) {
-      lines.push(`${key}=${quoteEnvValue(config[key])}`)
+      lines.push(`${key}=${quoteEnvValue(config[key] ?? '')}`)
     }
     lines.push('')
   }
@@ -197,7 +197,7 @@ export async function writeEnvFile(config: EnvConfig): Promise<void> {
   if (dbValues.length > 0) {
     lines.push('# Database')
     for (const key of dbValues) {
-      lines.push(`${key}=${quoteEnvValue(config[key])}`)
+      lines.push(`${key}=${quoteEnvValue(config[key] ?? '')}`)
     }
     lines.push('')
   }
@@ -213,7 +213,7 @@ export async function writeEnvFile(config: EnvConfig): Promise<void> {
   if (hasuraValues.length > 0) {
     lines.push('# Hasura GraphQL')
     for (const key of hasuraValues) {
-      lines.push(`${key}=${quoteEnvValue(config[key])}`)
+      lines.push(`${key}=${quoteEnvValue(config[key] ?? '')}`)
     }
     lines.push('')
   }
@@ -234,7 +234,7 @@ export async function writeEnvFile(config: EnvConfig): Promise<void> {
       return numA - numB
     })
     for (const key of sortedServices) {
-      lines.push(`${key}=${quoteEnvValue(config[key])}`)
+      lines.push(`${key}=${quoteEnvValue(config[key] ?? '')}`)
     }
     lines.push('')
   }
@@ -250,7 +250,7 @@ export async function writeEnvFile(config: EnvConfig): Promise<void> {
       const matchA = a.match(/FRONTEND_APP_(\d+)_(.+)/)
       const matchB = b.match(/FRONTEND_APP_(\d+)_(.+)/)
       if (matchA && matchB) {
-        const numDiff = parseInt(matchA[1]) - parseInt(matchB[1])
+        const numDiff = parseInt(matchA[1] ?? '0') - parseInt(matchB[1] ?? '0')
         if (numDiff !== 0) return numDiff
         // Order fields consistently
         const fieldOrder = [
@@ -262,14 +262,14 @@ export async function writeEnvFile(config: EnvConfig): Promise<void> {
           'REMOTE_SCHEMA_NAME',
           'REMOTE_SCHEMA_URL',
         ]
-        const indexA = fieldOrder.indexOf(matchA[2])
-        const indexB = fieldOrder.indexOf(matchB[2])
+        const indexA = fieldOrder.indexOf(matchA[2] ?? '')
+        const indexB = fieldOrder.indexOf(matchB[2] ?? '')
         return indexA - indexB
       }
       return a.localeCompare(b)
     })
     for (const key of sortedFrontend) {
-      lines.push(`${key}=${quoteEnvValue(config[key])}`)
+      lines.push(`${key}=${quoteEnvValue(config[key] ?? '')}`)
     }
     lines.push('')
   }
@@ -330,7 +330,7 @@ export async function writeEnvFile(config: EnvConfig): Promise<void> {
   if (credentialsToWrite.length > 0) {
     lines.push('# Service Credentials')
     for (const key of credentialsToWrite) {
-      lines.push(`${key}=${quoteEnvValue(config[key])}`)
+      lines.push(`${key}=${quoteEnvValue(config[key] ?? '')}`)
     }
     lines.push('')
   }
@@ -348,7 +348,7 @@ export async function writeEnvFile(config: EnvConfig): Promise<void> {
     ]
     for (const key of backupKeys) {
       if (config[key] !== undefined) {
-        lines.push(`${key}=${quoteEnvValue(config[key])}`)
+        lines.push(`${key}=${quoteEnvValue(config[key] ?? '')}`)
       }
     }
     lines.push('')
@@ -386,7 +386,7 @@ export async function writeEnvFile(config: EnvConfig): Promise<void> {
   if (remainingKeys.length > 0) {
     lines.push('# Additional Settings')
     for (const key of remainingKeys.sort()) {
-      lines.push(`${key}=${quoteEnvValue(config[key])}`)
+      lines.push(`${key}=${quoteEnvValue(config[key] ?? '')}`)
     }
     lines.push('')
   }
@@ -698,7 +698,7 @@ export function envToWizardConfig(env: EnvConfig): any {
     hasuraConfig: Object.keys(env).reduce(
       (acc, key) => {
         if (key.startsWith('HASURA_')) {
-          acc[key] = env[key]
+          acc[key] = env[key] ?? ''
         }
         return acc
       },
@@ -709,7 +709,7 @@ export function envToWizardConfig(env: EnvConfig): any {
     authConfig: Object.keys(env).reduce(
       (acc, key) => {
         if (key.startsWith('AUTH_')) {
-          acc[key] = env[key]
+          acc[key] = env[key] ?? ''
         }
         return acc
       },
@@ -720,7 +720,7 @@ export function envToWizardConfig(env: EnvConfig): any {
     nginxConfig: Object.keys(env).reduce(
       (acc, key) => {
         if (key.startsWith('NGINX_')) {
-          acc[key] = env[key]
+          acc[key] = env[key] ?? ''
         }
         return acc
       },
@@ -827,7 +827,7 @@ export function envToWizardConfig(env: EnvConfig): any {
         tablePrefix: tablePrefix || '',
         localPort:
           env[`FRONTEND_APP_${i}_PORT`] || env[`FRONTEND_APP_${i}_LOCAL_PORT`]
-            ? parseInt(env[`FRONTEND_APP_${i}_PORT`] || env[`FRONTEND_APP_${i}_LOCAL_PORT`])
+            ? parseInt(env[`FRONTEND_APP_${i}_PORT`] ?? env[`FRONTEND_APP_${i}_LOCAL_PORT`] ?? '')
             : undefined,
         productionUrl:
           env[`FRONTEND_APP_${i}_ROUTE`] || env[`FRONTEND_APP_${i}_PRODUCTION_URL`] || undefined,

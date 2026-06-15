@@ -36,7 +36,7 @@ export function PullToRefresh({
 
     const handleTouchStart = (e: TouchEvent) => {
       if (container.scrollTop === 0) {
-        startY.current = e.touches[0].clientY
+        startY.current = e.touches[0]?.clientY ?? 0
         setIsPulling(true)
       }
     }
@@ -44,7 +44,7 @@ export function PullToRefresh({
     const handleTouchMove = (e: TouchEvent) => {
       if (!isPulling || isRefreshing) return
 
-      currentY.current = e.touches[0].clientY
+      currentY.current = e.touches[0]?.clientY ?? 0
       const diff = currentY.current - startY.current
 
       if (diff > 0 && diff < threshold * 2) {

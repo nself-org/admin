@@ -36,7 +36,7 @@ describe('tenantNameSchema', () => {
     const result = tenantNameSchema.safeParse('a')
     expect(result.success).toBe(false)
     if (!result.success) {
-      expect(result.error.issues[0].message).toContain('at least 2 characters')
+      expect(result.error.issues[0]?.message).toContain('at least 2 characters')
     }
   })
 
@@ -45,7 +45,7 @@ describe('tenantNameSchema', () => {
     const result = tenantNameSchema.safeParse(longName)
     expect(result.success).toBe(false)
     if (!result.success) {
-      expect(result.error.issues[0].message).toContain('less than 100 characters')
+      expect(result.error.issues[0]?.message).toContain('less than 100 characters')
     }
   })
 
@@ -97,7 +97,7 @@ describe('tenantSlugSchema', () => {
     const result = tenantSlugSchema.safeParse('a')
     expect(result.success).toBe(false)
     if (!result.success) {
-      expect(result.error.issues[0].message).toContain('at least 2 characters')
+      expect(result.error.issues[0]?.message).toContain('at least 2 characters')
     }
   })
 
@@ -106,7 +106,7 @@ describe('tenantSlugSchema', () => {
     const result = tenantSlugSchema.safeParse(longSlug)
     expect(result.success).toBe(false)
     if (!result.success) {
-      expect(result.error.issues[0].message).toContain('less than 50 characters')
+      expect(result.error.issues[0]?.message).toContain('less than 50 characters')
     }
   })
 })
@@ -124,7 +124,7 @@ describe('domainSchema', () => {
     const result = domainSchema.safeParse('nodot')
     expect(result.success).toBe(false)
     if (!result.success) {
-      expect(result.error.issues[0].message).toContain('Invalid domain format')
+      expect(result.error.issues[0]?.message).toContain('Invalid domain format')
     }
   })
 
@@ -168,7 +168,7 @@ describe('hexColorSchema', () => {
     const result = hexColorSchema.safeParse('#F57')
     expect(result.success).toBe(false)
     if (!result.success) {
-      expect(result.error.issues[0].message).toContain('valid hex color')
+      expect(result.error.issues[0]?.message).toContain('valid hex color')
     }
   })
 

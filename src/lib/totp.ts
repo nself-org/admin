@@ -170,7 +170,7 @@ function generateRecoveryCodes(count: number): string[] {
     const bytes = randomBytes(8)
     let code = ''
     for (let b = 0; b < 8; b++) {
-      code += ALPHABET[bytes[b] % ALPHABET.length]
+      code += ALPHABET[(bytes[b] ?? 0) % ALPHABET.length]
     }
     codes.push(code)
   }

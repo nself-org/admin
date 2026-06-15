@@ -64,7 +64,7 @@ export default function NetworkSpeedTest() {
       if (samples.length > 0) {
         // Take the median of samples and multiply by factor for overhead
         samples.sort((a, b) => a - b)
-        const median = samples[Math.floor(samples.length / 2)]
+        const median = samples[Math.floor(samples.length / 2)] ?? 0
         const estimatedSpeed = Math.round(median * 10) // Factor for actual capacity
 
         setTestResult(estimatedSpeed)

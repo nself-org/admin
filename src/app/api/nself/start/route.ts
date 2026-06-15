@@ -59,7 +59,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       if (line.includes('http') && (line.includes('://') || line.includes('local.nself.org'))) {
         const urlMatch = line.match(/(https?:\/\/[^\s]+)/)
         if (urlMatch) {
-          urls.push(urlMatch[1])
+          urls.push(urlMatch[1] ?? '')
         }
       }
     })

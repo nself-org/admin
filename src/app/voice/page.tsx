@@ -225,7 +225,7 @@ export default function VoiceConfigPage() {
       const data = (await res.json()) as { voices: ElevenLabsVoice[] }
       const list = data.voices ?? []
       setVoices(list)
-      if (list.length > 0 && !selectedVoiceId) {
+      if (list.length > 0 && !selectedVoiceId && list[0]) {
         setSelectedVoiceId(list[0].voice_id)
         try {
           sessionStorage.setItem('voice_elevenlabs_voice_id', list[0].voice_id)

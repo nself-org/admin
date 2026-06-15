@@ -46,7 +46,7 @@ function RollbackContent() {
     if (deployment) {
       setRollbackInfo({
         deploymentId: id,
-        currentVersion: deployments[0].version,
+        currentVersion: deployments[0]?.version ?? '',
         targetVersion: deployment.version,
         changes: deployment.changes || [],
         estimatedDowntime: '< 30 seconds',

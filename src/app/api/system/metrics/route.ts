@@ -39,7 +39,7 @@ export async function GET(): Promise<NextResponse> {
           )
           return parseFloat(stdout.trim()) || 0
         } catch {
-          const load = os.loadavg()[0]
+          const load = os.loadavg()[0] ?? 0
           const cpus = os.cpus().length
           return Math.min(Math.round((load / cpus) * 100), 100)
         }
@@ -65,9 +65,9 @@ export async function GET(): Promise<NextResponse> {
             "df -h / | tail -1 | awk '{print $2 \" \" $3 \" \" $5}' | sed 's/G//g' | sed 's/%//'"
           )
           const parts = stdout.trim().split(' ')
-          const total = parseFloat(parts[0]) || 100
-          const used = parseFloat(parts[1]) || 50
-          const percentage = parseInt(parts[2]) || 50
+          const total = parseFloat(parts[0] ?? '100') || 100
+          const used = parseFloat(parts[1] ?? '50') || 50
+          const percentage = parseInt(parts[2] ?? '50') || 50
 
           return { used, total, percentage }
         } catch {
@@ -114,8 +114,8 @@ export async function GET(): Promise<NextResponse> {
         const parts = line.trim().split(/\s+/)
         if (parts.length >= 2) {
           // Parse network I/O (e.g., "1.2MB", "500kB")
-          const rxStr = parts[0]
-          const txStr = parts[1]
+          const rxStr = parts[0] ?? ''
+          const txStr = parts[1] ?? ''
 
           // Convert to bytes
           const parseBytes = (str: string): number => {

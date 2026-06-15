@@ -370,6 +370,7 @@ function ConfigValidateContent() {
               {sortedCategories.map((category) => {
                 const categoryChecks = validationData.checks.filter((c) => c.category === category)
                 const categorySummary = validationData.categories[category]
+                if (!categorySummary) return null
                 // Auto-open categories with failures
                 const hasProblems = categorySummary.failed > 0 || categorySummary.warnings > 0
 

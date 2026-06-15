@@ -53,7 +53,7 @@ export async function GET(): Promise<NextResponse> {
       const envContent = await fs.readFile(envPath, 'utf-8')
       const sslModeMatch = envContent.match(/^SSL_MODE=(.+)$/m)
       if (sslModeMatch) {
-        const mode = sslModeMatch[1].trim().toLowerCase()
+        const mode = (sslModeMatch[1] ?? '').trim().toLowerCase()
         if (mode === 'local' || mode === 'letsencrypt') {
           status.mode = mode
           status.configured = true
@@ -90,7 +90,7 @@ export async function GET(): Promise<NextResponse> {
           // Parse expiry date
           const expiryMatch = stdout.match(/notAfter=(.+)/)
           if (expiryMatch) {
-            const expiryDate = new Date(expiryMatch[1])
+            const expiryDate = new Date(expiryMatch[1] ?? '')
             status.certificates.expiresAt = expiryDate.toISOString()
             const now = new Date()
             const daysUntil = Math.floor(
@@ -103,13 +103,13 @@ export async function GET(): Promise<NextResponse> {
           // Parse issuer
           const issuerMatch = stdout.match(/issuer=(.+)/)
           if (issuerMatch) {
-            status.certificates.issuer = issuerMatch[1].trim()
+            status.certificates.issuer = (issuerMatch[1] ?? '').trim()
           }
 
           // Parse subject/domain
           const subjectMatch = stdout.match(/subject=.*CN\s*=\s*([^,\n]+)/)
           if (subjectMatch) {
-            status.certificates.domain = subjectMatch[1].trim()
+            status.certificates.domain = (subjectMatch[1] ?? '').trim()
           }
         } catch {
           // openssl not available or cert parsing failed

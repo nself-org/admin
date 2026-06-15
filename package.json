@@ -3,7 +3,7 @@
   "version": "1.1.7",
   "private": false,
   "description": "Web-based administration interface for nself CLI backend stack",
-  "license": "SEE LICENSE IN LICENSE",
+  "license": "MIT",
   "keywords": [
     "nself",
     "docker",

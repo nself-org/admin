@@ -38,12 +38,16 @@ export async function GET(_request: Request): Promise<NextResponse> {
     }
 
     // If CLI command fails, try direct database query as fallback
+    const password = process.env.POSTGRES_PASSWORD
+    if (!password) {
+      throw new Error('POSTGRES_PASSWORD must be set — refusing to use default credentials')
+    }
     const { Client } = await import('pg')
     const client = new Client({
       host: process.env.POSTGRES_HOST || 'localhost',
       port: parseInt(process.env.POSTGRES_PORT || '5432'),
       user: process.env.POSTGRES_USER || 'postgres',
-      password: process.env.POSTGRES_PASSWORD || 'postgres-dev-password',
+      password,
       database: process.env.POSTGRES_DB || 'nself',
     })
 

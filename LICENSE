@@ -1,50 +1,21 @@
-nself License
+MIT License
 
-Copyright (c) 2024-2026 nself (https://nself.org)
+Copyright (c) 2024-2026 nSelf Contributors
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to use
-the Software for personal, educational, and non-commercial purposes, subject 
-to the following conditions:
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-1. PERSONAL AND NON-COMMERCIAL USE
-   The Software may be used, copied, modified, and distributed for personal,
-   educational, research, and other non-commercial purposes without charge.
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
 
-2. COMMERCIAL USE
-   The Software may not be used for commercial purposes without obtaining a
-   commercial license. Commercial purposes include, but are not limited to:
-   - Use in a business environment for profit-generating activities
-   - Integration into commercial products or services
-   - Use by organizations with revenue exceeding $1M annually
-   - Providing paid services using the Software
-
-   For commercial licensing, please contact:
-   - Email: license@nself.org
-   - Website: https://nself.org/commercial
-
-3. ATTRIBUTION
-   The above copyright notice and this permission notice shall be included in
-   all copies or substantial portions of the Software.
-
-4. DERIVATIVE WORKS
-   Derivative works based on this Software must:
-   - Include this license notice
-   - Clearly indicate modifications made
-   - Not be used for commercial purposes without a commercial license
-
-5. OPEN SOURCE PROJECTS
-   Use of this Software in open source projects is permitted regardless of
-   commercial use, provided the project is publicly available under an OSI
-   approved open source license.
-
-6. DISCLAIMER
-   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-   FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-   AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-   LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-   SOFTWARE.
-
-For questions about this license, please contact license@nself.org
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.

@@ -1,5 +1,6 @@
 'use client'
 
+import { createScopedTranslator } from '@/features/i18n'
 import { HeroPattern } from '@/components/HeroPattern'
 import { ChartSkeleton } from '@/components/skeletons'
 import type { BenchmarkBaseline, BenchmarkComparison } from '@/types/performance'
@@ -27,6 +28,7 @@ import {
 } from 'recharts'
 
 function CompareContent() {
+  const t = createScopedTranslator('en', 'benchmark.compare')
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [baselines, setBaselines] = useState<BenchmarkBaseline[]>([])
@@ -206,28 +208,33 @@ function CompareContent() {
             className="mb-4 inline-flex items-center gap-2 text-sm text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white"
           >
             <ArrowLeft className="h-4 w-4" />
-            Back to Benchmarks
+            {t('backToBenchmarks')}
           </Link>
           <h1 className="bg-gradient-to-r from-green-600 to-emerald-400 bg-clip-text text-4xl font-bold text-transparent dark:from-green-400 dark:to-emerald-300">
-            Benchmark Comparison
+            {t('title')}
           </h1>
           <p className="mt-3 text-lg text-zinc-600 dark:text-zinc-400">
-            Compare benchmark results to track performance changes
+            {t('subtitle')}
           </p>
         </div>
 
         {/* Selection */}
         <div className="mb-8 grid gap-6 md:grid-cols-2">
           <div className="rounded-xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-zinc-700 dark:bg-zinc-800">
-            <label className="mb-2 block text-sm font-medium text-zinc-700 dark:text-zinc-300">
-              Baseline (Before)
+            <label
+              htmlFor="benchmark-baseline"
+              className="mb-2 block text-sm font-medium text-zinc-700 dark:text-zinc-300"
+            >
+              {t('selectBaseline')}
             </label>
             <select
+              id="benchmark-baseline"
+              aria-label={t('selectBaseline')}
               value={selectedBaseline}
               onChange={(e) => setSelectedBaseline(e.target.value)}
               className="w-full rounded-lg border border-zinc-300 bg-white px-4 py-2 text-zinc-900 focus:border-green-500 focus:outline-none dark:border-zinc-600 dark:bg-zinc-800 dark:text-white"
             >
-              <option value="">Select baseline...</option>
+              <option value="">{t('selectBaselinePlaceholder')}</option>
               {baselines.map((b) => (
                 <option key={b.id} value={b.id}>
                   {b.name} ({new Date(b.createdAt).toLocaleDateString()})
@@ -237,15 +244,20 @@ function CompareContent() {
           </div>
 
           <div className="rounded-xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-zinc-700 dark:bg-zinc-800">
-            <label className="mb-2 block text-sm font-medium text-zinc-700 dark:text-zinc-300">
-              Compare With (After)
+            <label
+              htmlFor="benchmark-current"
+              className="mb-2 block text-sm font-medium text-zinc-700 dark:text-zinc-300"
+            >
+              {t('selectCurrent')}
             </label>
             <select
+              id="benchmark-current"
+              aria-label={t('selectCurrent')}
               value={selectedCurrent}
               onChange={(e) => setSelectedCurrent(e.target.value)}
               className="w-full rounded-lg border border-zinc-300 bg-white px-4 py-2 text-zinc-900 focus:border-green-500 focus:outline-none dark:border-zinc-600 dark:bg-zinc-800 dark:text-white"
             >
-              <option value="">Select benchmark...</option>
+              <option value="">{t('selectCurrentPlaceholder')}</option>
               {baselines.map((b) => (
                 <option key={b.id} value={b.id}>
                   {b.name} ({new Date(b.createdAt).toLocaleDateString()})
@@ -261,7 +273,7 @@ function CompareContent() {
             <div className="mb-8 rounded-xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-zinc-700 dark:bg-zinc-800">
               <h2 className="mb-4 flex items-center gap-2 text-lg font-semibold text-zinc-900 dark:text-white">
                 <GitCompare className="h-5 w-5" />
-                Comparison Summary
+                {t('comparisonSummary')}
               </h2>
               <div className="grid gap-4 md:grid-cols-3">
                 {comparison.changes.slice(0, 6).map((change) => (
@@ -311,7 +323,7 @@ function CompareContent() {
             <div className="mb-8 grid gap-6 lg:grid-cols-2">
               <div className="rounded-xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-zinc-700 dark:bg-zinc-800">
                 <h3 className="mb-4 text-lg font-semibold text-zinc-900 dark:text-white">
-                  Latency Comparison (ms)
+                  {t('latencyChart')}
                 </h3>
                 <ResponsiveContainer width="100%" height={250}>
                   <BarChart data={chartData}>
@@ -328,7 +340,7 @@ function CompareContent() {
 
               <div className="rounded-xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-zinc-700 dark:bg-zinc-800">
                 <h3 className="mb-4 text-lg font-semibold text-zinc-900 dark:text-white">
-                  Throughput Comparison (req/s)
+                  {t('throughputChart')}
                 </h3>
                 <ResponsiveContainer width="100%" height={250}>
                   <BarChart data={throughputData}>
@@ -347,26 +359,26 @@ function CompareContent() {
             {/* Detailed Changes */}
             <div className="rounded-xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-zinc-700 dark:bg-zinc-800">
               <h3 className="mb-4 text-lg font-semibold text-zinc-900 dark:text-white">
-                Detailed Comparison
+                {t('detailedComparison')}
               </h3>
               <div className="overflow-x-auto">
                 <table className="w-full">
                   <thead>
                     <tr className="border-b border-zinc-200 dark:border-zinc-700">
                       <th className="py-3 text-left text-sm font-medium text-zinc-500 dark:text-zinc-400">
-                        Metric
+                        {t('tableMetric')}
                       </th>
                       <th className="py-3 text-right text-sm font-medium text-zinc-500 dark:text-zinc-400">
-                        Baseline
+                        {t('tableBaseline')}
                       </th>
                       <th className="py-3 text-right text-sm font-medium text-zinc-500 dark:text-zinc-400">
-                        Current
+                        {t('tableCurrent')}
                       </th>
                       <th className="py-3 text-right text-sm font-medium text-zinc-500 dark:text-zinc-400">
-                        Change
+                        {t('tableChange')}
                       </th>
                       <th className="py-3 text-right text-sm font-medium text-zinc-500 dark:text-zinc-400">
-                        Status
+                        {t('tableStatus')}
                       </th>
                     </tr>
                   </thead>
@@ -401,17 +413,17 @@ function CompareContent() {
                           {change.improved ? (
                             <span className="inline-flex items-center gap-1 rounded-full bg-green-100 px-2 py-1 text-xs font-medium text-green-700 dark:bg-green-900/30 dark:text-green-400">
                               <TrendingUp className="h-3 w-3" />
-                              Improved
+                              {t('improved')}
                             </span>
                           ) : change.changePercentage === 0 ? (
                             <span className="inline-flex items-center gap-1 rounded-full bg-zinc-100 px-2 py-1 text-xs font-medium text-zinc-700 dark:bg-zinc-700 dark:text-zinc-300">
                               <Minus className="h-3 w-3" />
-                              No Change
+                              {t('noChange')}
                             </span>
                           ) : (
                             <span className="inline-flex items-center gap-1 rounded-full bg-red-100 px-2 py-1 text-xs font-medium text-red-700 dark:bg-red-900/30 dark:text-red-400">
                               <TrendingDown className="h-3 w-3" />
-                              Regressed
+                              {t('regressed')}
                             </span>
                           )}
                         </td>
@@ -427,7 +439,7 @@ function CompareContent() {
         {!comparison && selectedBaseline && selectedCurrent && (
           <div className="rounded-xl border border-zinc-200 bg-white p-12 text-center shadow-sm dark:border-zinc-700 dark:bg-zinc-800">
             <RefreshCw className="mx-auto mb-4 h-12 w-12 animate-spin text-zinc-400" />
-            <p className="text-zinc-600 dark:text-zinc-400">Calculating comparison...</p>
+            <p className="text-zinc-600 dark:text-zinc-400">{t('calculating')}</p>
           </div>
         )}
 
@@ -435,10 +447,10 @@ function CompareContent() {
           <div className="rounded-xl border border-zinc-200 bg-white p-12 text-center shadow-sm dark:border-zinc-700 dark:bg-zinc-800">
             <GitCompare className="mx-auto mb-4 h-12 w-12 text-zinc-400" />
             <h3 className="mb-2 text-lg font-semibold text-zinc-900 dark:text-white">
-              Select Benchmarks to Compare
+              {t('selectPromptTitle')}
             </h3>
             <p className="text-zinc-600 dark:text-zinc-400">
-              Choose a baseline and a benchmark to compare above.
+              {t('selectPromptDesc')}
             </p>
           </div>
         )}
@@ -446,20 +458,17 @@ function CompareContent() {
         {/* CLI Reference */}
         <div className="mt-8 rounded-xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-zinc-700 dark:bg-zinc-800">
           <h3 className="mb-4 text-lg font-semibold text-zinc-900 dark:text-white">
-            CLI Commands Reference
+            {t('cliReference')}
           </h3>
           <div className="space-y-2 font-mono text-sm">
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-green-500">nself bench --compare=baseline-name</span> - Compare
-              with baseline
+              <span className="text-green-500">{t('cliCompareBaseline')}</span> - {t('cliCompareBaselineDesc')}
             </p>
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-green-500">nself bench compare baseline1 baseline2</span> -
-              Compare two baselines
+              <span className="text-green-500">{t('cliCompareTwoBaselines')}</span> - {t('cliCompareTwoBaselinesDesc')}
             </p>
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-green-500">nself bench compare --json</span> - Output comparison
-              as JSON
+              <span className="text-green-500">{t('cliCompareJson')}</span> - {t('cliCompareJsonDesc')}
             </p>
           </div>
         </div>

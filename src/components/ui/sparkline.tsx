@@ -43,8 +43,9 @@ export function Sparkline({
   const chartData = data.map((value, index) => ({ index, value }))
 
   // Calculate trend
-  const trend = data.length >= 2 ? data[data.length - 1] - data[0] : 0
-  const trendPercentage = data[0] !== 0 ? ((trend / data[0]) * 100).toFixed(1) : '0.0'
+  const trend = data.length >= 2 ? (data[data.length - 1] ?? 0) - (data[0] ?? 0) : 0
+  const first = data[0] ?? 0
+  const trendPercentage = first !== 0 ? ((trend / first) * 100).toFixed(1) : '0.0'
 
   // Determine color
   const variantColors = {

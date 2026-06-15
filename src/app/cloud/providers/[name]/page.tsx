@@ -105,7 +105,7 @@ function ProviderConfigContent({ name }: { name: string }) {
 
   const provider = data?.provider
 
-  const fields = credentialFields[providerName] || credentialFields.default
+  const fields = credentialFields[providerName] ?? credentialFields['default'] ?? []
 
   const handleCredentialChange = (field: string, value: string) => {
     setCredentials((prev) => ({ ...prev, [field]: value }))

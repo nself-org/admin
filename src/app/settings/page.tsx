@@ -3,6 +3,7 @@
 import { Button } from '@/components/Button'
 import { HeroPattern } from '@/components/HeroPattern'
 import { FormSkeleton } from '@/components/skeletons'
+import { createScopedTranslator } from '@/features/i18n'
 import {
   Bell,
   CheckCircle,
@@ -102,6 +103,7 @@ function SettingsSection({
 }
 
 function UserPreferencesSection() {
+  const t = createScopedTranslator('en', 'settings')
   const [preferences, setPreferences] = useState<UserPreferences>({
     theme: 'system',
     language: 'en',
@@ -130,65 +132,81 @@ function UserPreferencesSection() {
 
   return (
     <SettingsSection
-      title="Settings"
-      description="Customize your experience and interface settings"
+      title={t('userSettingsTitle')}
+      description={t('userSettingsDesc')}
       icon={User}
     >
       <div className="space-y-6">
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
           <div>
-            <label className="mb-2 block text-sm font-medium text-zinc-700 dark:text-zinc-300">
-              Theme
+            <label
+              htmlFor="pref-theme"
+              className="mb-2 block text-sm font-medium text-zinc-700 dark:text-zinc-300"
+            >
+              {t('theme')}
             </label>
             <select
+              id="pref-theme"
               value={preferences.theme}
               onChange={(e) => setPreferences({ ...preferences, theme: e.target.value as any })}
               className="w-full rounded-lg border border-zinc-200 bg-white px-3 py-2 dark:border-zinc-700 dark:bg-zinc-900"
             >
-              <option value="light">Light</option>
-              <option value="dark">Dark</option>
-              <option value="system">System</option>
+              <option value="light">{t('themeLight')}</option>
+              <option value="dark">{t('themeDark')}</option>
+              <option value="system">{t('themeSystem')}</option>
             </select>
           </div>
 
           <div>
-            <label className="mb-2 block text-sm font-medium text-zinc-700 dark:text-zinc-300">
-              Language
+            <label
+              htmlFor="pref-language"
+              className="mb-2 block text-sm font-medium text-zinc-700 dark:text-zinc-300"
+            >
+              {t('language')}
             </label>
             <select
+              id="pref-language"
               value={preferences.language}
               onChange={(e) => setPreferences({ ...preferences, language: e.target.value })}
               className="w-full rounded-lg border border-zinc-200 bg-white px-3 py-2 dark:border-zinc-700 dark:bg-zinc-900"
             >
-              <option value="en">English</option>
-              <option value="es">Spanish</option>
-              <option value="fr">French</option>
-              <option value="de">German</option>
+              <option value="en">{t('langEnglish')}</option>
+              <option value="es">{t('langSpanish')}</option>
+              <option value="fr">{t('langFrench')}</option>
+              <option value="de">{t('langGerman')}</option>
             </select>
           </div>
 
           <div>
-            <label className="mb-2 block text-sm font-medium text-zinc-700 dark:text-zinc-300">
-              Timezone
+            <label
+              htmlFor="pref-timezone"
+              className="mb-2 block text-sm font-medium text-zinc-700 dark:text-zinc-300"
+            >
+              {t('timezone')}
             </label>
             <select
+              id="pref-timezone"
               value={preferences.timezone}
               onChange={(e) => setPreferences({ ...preferences, timezone: e.target.value })}
               className="w-full rounded-lg border border-zinc-200 bg-white px-3 py-2 dark:border-zinc-700 dark:bg-zinc-900"
             >
-              <option value="UTC">UTC</option>
-              <option value="America/New_York">Eastern Time</option>
-              <option value="America/Los_Angeles">Pacific Time</option>
-              <option value="Europe/London">London</option>
-              <option value="Asia/Tokyo">Tokyo</option>
+              <option value="UTC">{t('tzUTC')}</option>
+              <option value="America/New_York">{t('tzEastern')}</option>
+              <option value="America/Los_Angeles">{t('tzPacific')}</option>
+              <option value="Europe/London">{t('tzLondon')}</option>
+              <option value="Asia/Tokyo">{t('tzTokyo')}</option>
             </select>
           </div>
 
           <div>
-            <label className="mb-2 block text-sm font-medium text-zinc-700 dark:text-zinc-300">
-              Date Format
+            <label
+              htmlFor="pref-date-format"
+              className="mb-2 block text-sm font-medium text-zinc-700 dark:text-zinc-300"
+            >
+              {t('dateFormat')}
             </label>
             <select
+              id="pref-date-format"
               value={preferences.dateFormat}
               onChange={(e) => setPreferences({ ...preferences, dateFormat: e.target.value })}
               className="w-full rounded-lg border border-zinc-200 bg-white px-3 py-2 dark:border-zinc-700 dark:bg-zinc-900"
@@ -204,9 +222,9 @@ function UserPreferencesSection() {
           <div className="flex items-center justify-between">
             <div>
               <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
-                Auto Refresh
+                {t('autoRefresh')}
               </label>
-              <p className="text-xs text-zinc-500">Automatically refresh dashboard data</p>
+              <p className="text-xs text-zinc-500">{t('autoRefreshDesc')}</p>
             </div>
             <input
               type="checkbox"
@@ -224,7 +242,7 @@ function UserPreferencesSection() {
           {preferences.autoRefresh && (
             <div>
               <label className="mb-2 block text-sm font-medium text-zinc-700 dark:text-zinc-300">
-                Refresh Interval (seconds)
+                {t('refreshInterval')}
               </label>
               <input
                 type="number"
@@ -245,7 +263,7 @@ function UserPreferencesSection() {
 
         <Button onClick={handleSave} disabled={saving} className="flex items-center gap-2">
           {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
-          Save Preferences
+          {t('savePreferences')}
         </Button>
       </div>
     </SettingsSection>
@@ -253,6 +271,7 @@ function UserPreferencesSection() {
 }
 
 function NotificationSettingsSection() {
+  const t = createScopedTranslator('en', 'settings')
   const [notifications, setNotifications] = useState<NotificationSettings>({
     email: {
       enabled: true,
@@ -304,8 +323,8 @@ function NotificationSettingsSection() {
 
   return (
     <SettingsSection
-      title="Notifications"
-      description="Configure how and when you receive notifications"
+      title={t('notificationsTitle')}
+      description={t('notificationsDesc')}
       icon={Bell}
     >
       <div className="space-y-8">
@@ -314,7 +333,7 @@ function NotificationSettingsSection() {
           <div className="mb-4 flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Mail className="h-4 w-4 text-zinc-500" />
-              <h4 className="font-medium">Email Notifications</h4>
+              <h4 className="font-medium">{t('emailNotifications')}</h4>
             </div>
             <input
               type="checkbox"
@@ -332,10 +351,14 @@ function NotificationSettingsSection() {
           {notifications.email.enabled && (
             <div className="ml-6 space-y-4">
               <div>
-                <label className="mb-2 block text-sm font-medium text-zinc-700 dark:text-zinc-300">
-                  Frequency
+                <label
+                  htmlFor="notif-email-frequency"
+                  className="mb-2 block text-sm font-medium text-zinc-700 dark:text-zinc-300"
+                >
+                  {t('emailFrequency')}
                 </label>
                 <select
+                  id="notif-email-frequency"
                   value={notifications.email.frequency}
                   onChange={(e) =>
                     setNotifications({
@@ -348,15 +371,15 @@ function NotificationSettingsSection() {
                   }
                   className="w-40 rounded-lg border border-zinc-200 bg-white px-3 py-2 dark:border-zinc-700 dark:bg-zinc-900"
                 >
-                  <option value="realtime">Real-time</option>
-                  <option value="hourly">Hourly Digest</option>
-                  <option value="daily">Daily Digest</option>
+                  <option value="realtime">{t('emailFreqRealtime')}</option>
+                  <option value="hourly">{t('emailFreqHourly')}</option>
+                  <option value="daily">{t('emailFreqDaily')}</option>
                 </select>
               </div>
 
               <div>
                 <label className="mb-3 block text-sm font-medium text-zinc-700 dark:text-zinc-300">
-                  Event Types
+                  {t('emailEventTypes')}
                 </label>
                 <div className="space-y-2">
                   {eventTypes.map((event) => (
@@ -392,7 +415,7 @@ function NotificationSettingsSection() {
           <div className="mb-4 flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Smartphone className="h-4 w-4 text-zinc-500" />
-              <h4 className="font-medium">Push Notifications</h4>
+              <h4 className="font-medium">{t('pushNotifications')}</h4>
             </div>
             <input
               type="checkbox"
@@ -410,7 +433,7 @@ function NotificationSettingsSection() {
           {notifications.push.enabled && (
             <div className="ml-6">
               <p className="mb-3 text-sm text-zinc-600 dark:text-zinc-400">
-                Select events for push notifications:
+                {t('pushSelectEvents')}
               </p>
               <div className="space-y-2">
                 {eventTypes.slice(0, 3).map((event) => (
@@ -442,7 +465,7 @@ function NotificationSettingsSection() {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Monitor className="h-4 w-4 text-zinc-500" />
-              <h4 className="font-medium">In-App Notifications</h4>
+              <h4 className="font-medium">{t('inAppNotifications')}</h4>
             </div>
             <input
               type="checkbox"
@@ -460,7 +483,7 @@ function NotificationSettingsSection() {
 
         <Button className="flex items-center gap-2">
           <Save className="h-4 w-4" />
-          Save Notification Settings
+          {t('saveNotifications')}
         </Button>
       </div>
     </SettingsSection>
@@ -468,6 +491,7 @@ function NotificationSettingsSection() {
 }
 
 function APITokensSection() {
+  const t = createScopedTranslator('en', 'settings')
   const [tokens, setTokens] = useState<APIToken[]>([
     {
       id: '1',
@@ -530,14 +554,14 @@ function APITokensSection() {
 
   return (
     <SettingsSection
-      title="API Keys"
-      description="Manage API tokens for programmatic access"
+      title={t('apiKeysTitle')}
+      description={t('apiKeysDesc')}
       icon={Key}
     >
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <p className="text-sm text-zinc-600 dark:text-zinc-400">
-            Create and manage API tokens for external integrations
+            {t('apiKeysIntro')}
           </p>
           <Button onClick={() => setShowCreateForm(true)} className="flex items-center gap-2">
             <Plus className="h-4 w-4" />
@@ -547,11 +571,11 @@ function APITokensSection() {
 
         {showCreateForm && (
           <div className="rounded-lg border border-zinc-200 bg-zinc-50 p-4 dark:border-zinc-700 dark:bg-zinc-900/50">
-            <h4 className="mb-4 font-medium">Create New API Token</h4>
+            <h4 className="mb-4 font-medium">{t('createToken')}</h4>
             <div className="space-y-4">
               <div>
                 <label className="mb-2 block text-sm font-medium text-zinc-700 dark:text-zinc-300">
-                  Token Name
+                  {t('tokenName')}
                 </label>
                 <input
                   type="text"
@@ -564,7 +588,7 @@ function APITokensSection() {
 
               <div>
                 <label className="mb-3 block text-sm font-medium text-zinc-700 dark:text-zinc-300">
-                  Permissions
+                  {t('tokenPermissions')}
                 </label>
                 <div className="space-y-2">
                   {permissionOptions.map((permission) => (
@@ -594,10 +618,10 @@ function APITokensSection() {
                   onClick={createToken}
                   disabled={!newToken.name || newToken.permissions.length === 0}
                 >
-                  Create Token
+                  {t('createTokenBtn')}
                 </Button>
                 <Button variant="outline" onClick={() => setShowCreateForm(false)}>
-                  Cancel
+                  {t('cancelCreate')}
                 </Button>
               </div>
             </div>
@@ -653,6 +677,7 @@ function APITokensSection() {
 }
 
 function SecuritySettingsSection() {
+  const t = createScopedTranslator('en', 'settings')
   const [security, setSecurity] = useState<SecuritySettings>({
     twoFactorEnabled: false,
     sessionTimeout: 30,
@@ -685,8 +710,8 @@ function SecuritySettingsSection() {
 
   return (
     <SettingsSection
-      title="Security"
-      description="Configure security policies and access controls"
+      title={t('securityTitle')}
+      description={t('securityDesc')}
       icon={Shield}
     >
       <div className="space-y-8">
@@ -694,9 +719,9 @@ function SecuritySettingsSection() {
         <div>
           <div className="mb-4 flex items-center justify-between">
             <div>
-              <h4 className="font-medium">Two-Factor Authentication</h4>
+              <h4 className="font-medium">{t('twoFactor')}</h4>
               <p className="text-sm text-zinc-600 dark:text-zinc-400">
-                Add an extra layer of security to your account
+                {t('twoFactorDesc')}
               </p>
             </div>
             <Button
@@ -726,7 +751,7 @@ function SecuritySettingsSection() {
         {/* Session Timeout */}
         <div>
           <label className="mb-2 block text-sm font-medium text-zinc-700 dark:text-zinc-300">
-            Session Timeout (minutes)
+            {t('sessionTimeoutLabel')}
           </label>
           <input
             type="number"
@@ -742,7 +767,7 @@ function SecuritySettingsSection() {
             className="w-32 rounded-lg border border-zinc-200 bg-white px-3 py-2 dark:border-zinc-700 dark:bg-zinc-900"
           />
           <p className="mt-1 text-xs text-zinc-500">
-            Automatically log out after this period of inactivity
+            {t('sessionTimeoutDesc')}
           </p>
         </div>
 
@@ -858,7 +883,7 @@ function SecuritySettingsSection() {
 
         <Button className="flex items-center gap-2">
           <Save className="h-4 w-4" />
-          Save Security Settings
+          {t('saveSecurity')}
         </Button>
       </div>
     </SettingsSection>
@@ -866,6 +891,7 @@ function SecuritySettingsSection() {
 }
 
 function IntegrationSettingsSection() {
+  const t = createScopedTranslator('en', 'settings')
   const [integrations, setIntegrations] = useState({
     slack: { enabled: false, webhook: '', channel: '#alerts' },
     discord: { enabled: false, webhook: '', channel: 'alerts' },
@@ -875,8 +901,8 @@ function IntegrationSettingsSection() {
 
   return (
     <SettingsSection
-      title="Integrations"
-      description="Configure external service integrations"
+      title={t('integrationsTitle')}
+      description={t('integrationsDesc')}
       icon={Globe}
     >
       <div className="space-y-6">
@@ -1005,7 +1031,7 @@ function IntegrationSettingsSection() {
 
         <Button className="flex items-center gap-2">
           <Save className="h-4 w-4" />
-          Save Integration Settings
+          {t('saveIntegrations')}
         </Button>
       </div>
     </SettingsSection>
@@ -1013,6 +1039,7 @@ function IntegrationSettingsSection() {
 }
 
 function ExportImportSection() {
+  const t = createScopedTranslator('en', 'settings')
   const [exportOptions, setExportOptions] = useState({
     configuration: true,
     userPreferences: true,
@@ -1069,15 +1096,15 @@ function ExportImportSection() {
 
   return (
     <SettingsSection
-      title="Backup & Restore"
-      description="Backup and restore your configuration"
+      title={t('backupRestoreTitle')}
+      description={t('backupRestoreDesc')}
       icon={Database}
     >
       <div className="space-y-6">
         <div>
-          <h4 className="mb-4 font-medium">Export Settings</h4>
+          <h4 className="mb-4 font-medium">{t('exportSettings')}</h4>
           <p className="mb-4 text-sm text-zinc-600 dark:text-zinc-400">
-            Choose which settings to include in the export:
+            {t('exportDesc')}
           </p>
 
           <div className="mb-6 space-y-3">
@@ -1125,14 +1152,14 @@ function ExportImportSection() {
 
           <Button onClick={handleExport} className="flex items-center gap-2">
             <Download className="h-4 w-4" />
-            Export Settings
+            {t('exportBtn')}
           </Button>
         </div>
 
         <div className="border-t border-zinc-200 pt-6 dark:border-zinc-700">
-          <h4 className="mb-4 font-medium">Import Settings</h4>
+          <h4 className="mb-4 font-medium">{t('importSettings')}</h4>
           <p className="mb-4 text-sm text-zinc-600 dark:text-zinc-400">
-            Upload a previously exported settings file to restore configuration:
+            {t('importDesc')}
           </p>
 
           <div className="rounded-lg border-2 border-dashed border-zinc-300 p-6 text-center dark:border-zinc-600">
@@ -1152,7 +1179,7 @@ function ExportImportSection() {
               className="inline-flex cursor-pointer items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
             >
               <Upload className="h-4 w-4" />
-              Choose File
+              {t('importBtn')}
             </label>
           </div>
         </div>

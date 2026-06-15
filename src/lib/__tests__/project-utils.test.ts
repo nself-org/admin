@@ -170,7 +170,7 @@ describe('project-utils', () => {
 
       expect(status.running).toBe(true)
       expect(status.containers).toHaveLength(1)
-      expect(status.containers[0].name).toBe('postgres')
+      expect(status.containers[0]?.name).toBe('postgres')
       expect(status.error).toBeNull()
     })
 

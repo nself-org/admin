@@ -69,22 +69,22 @@ export async function GET(_request: NextRequest): Promise<NextResponse> {
         let customServiceCount = 0
         for (let i = 1; i <= 99; i++) {
           const csMatch = envContent.match(new RegExp(`CS_${i}=(.+)`))
-          if (csMatch && csMatch[1].trim()) {
+          if (csMatch && (csMatch[1] ?? '').trim()) {
             customServiceCount++
           } else {
             break // Stop when we hit an empty slot
           }
         }
 
-        if (projectNameMatch) projectInfo.projectName = projectNameMatch[1].trim()
-        if (envMatch) projectInfo.environment = envMatch[1].trim()
-        if (domainMatch) projectInfo.domain = domainMatch[1].trim()
-        if (dbNameMatch) projectInfo.databaseName = dbNameMatch[1].trim()
-        if (dbPasswordMatch) projectInfo.dbPassword = dbPasswordMatch[1].trim()
-        if (backupEnabledMatch) projectInfo.backupEnabled = backupEnabledMatch[1].trim() === 'true'
-        if (backupScheduleMatch) projectInfo.backupSchedule = backupScheduleMatch[1].trim()
+        if (projectNameMatch) projectInfo.projectName = (projectNameMatch[1] ?? '').trim()
+        if (envMatch) projectInfo.environment = (envMatch[1] ?? '').trim()
+        if (domainMatch) projectInfo.domain = (domainMatch[1] ?? '').trim()
+        if (dbNameMatch) projectInfo.databaseName = (dbNameMatch[1] ?? '').trim()
+        if (dbPasswordMatch) projectInfo.dbPassword = (dbPasswordMatch[1] ?? '').trim()
+        if (backupEnabledMatch) projectInfo.backupEnabled = (backupEnabledMatch[1] ?? '').trim() === 'true'
+        if (backupScheduleMatch) projectInfo.backupSchedule = (backupScheduleMatch[1] ?? '').trim()
         if (monitoringEnabledMatch)
-          projectInfo.monitoringEnabled = monitoringEnabledMatch[1].trim() === 'true'
+          projectInfo.monitoringEnabled = (monitoringEnabledMatch[1] ?? '').trim() === 'true'
 
         // Calculate total services based on enabled flags
         let totalServices = 4 // Core services: PostgreSQL, Hasura, Auth, Nginx (always enabled)
@@ -100,7 +100,7 @@ export async function GET(_request: NextRequest): Promise<NextResponse> {
 
         // Monitoring adds 8 services when enabled:
         // Prometheus, Grafana, Loki, Tempo, Alertmanager, Node Exporter, PostgreSQL Exporter, cAdvisor
-        if (monitoringEnabledMatch && monitoringEnabledMatch[1].trim() === 'true') {
+        if (monitoringEnabledMatch && (monitoringEnabledMatch[1] ?? '').trim() === 'true') {
           totalServices += 8
         }
 
@@ -112,10 +112,10 @@ export async function GET(_request: NextRequest): Promise<NextResponse> {
 
         // Debug logging
         const _monitoringEnabled =
-          monitoringEnabledMatch && monitoringEnabledMatch[1].trim() === 'true'
+          monitoringEnabledMatch && (monitoringEnabledMatch[1] ?? '').trim() === 'true'
         // Parse frontend apps
         if (frontendAppsMatch) {
-          const appsStr = frontendAppsMatch[1]
+          const appsStr = frontendAppsMatch[1] ?? ''
           projectInfo.frontendApps = appsStr.split(',').map((app) => {
             const [name, label, , port] = app.split(':')
             return { name, label, port }

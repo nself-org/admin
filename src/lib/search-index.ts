@@ -220,8 +220,8 @@ async function searchContainerLogs(
           ) {
             // Extract timestamp and message
             const timestampMatch = line.match(/^(\S+)\s+(.+)$/)
-            const timestamp = timestampMatch ? new Date(timestampMatch[1]) : new Date()
-            const message = timestampMatch ? timestampMatch[2] : line
+            const timestamp = timestampMatch ? new Date(timestampMatch[1] ?? '') : new Date()
+            const message = timestampMatch ? (timestampMatch[2] ?? line) : line
 
             // Detect log level
             let level: 'error' | 'warn' | 'info' | 'debug' = 'info'
@@ -350,17 +350,19 @@ async function searchFiles(
       for (const line of lines) {
         const [filePath, lineNum, ...contentParts] = line.split(':')
         const content = contentParts.join(':')
+        const safeFilePath = filePath ?? ''
+        const safeLineNum = lineNum ?? '0'
 
         results.push({
-          id: `file-${filePath}-${lineNum}`,
+          id: `file-${safeFilePath}-${safeLineNum}`,
           type: 'file',
-          title: path.basename(filePath),
+          title: path.basename(safeFilePath),
           description: content.substring(0, 200),
           content,
           score: 0,
           metadata: {
-            file: filePath,
-            line: parseInt(lineNum, 10),
+            file: safeFilePath,
+            line: parseInt(safeLineNum, 10),
           },
         })
       }

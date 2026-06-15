@@ -24,7 +24,7 @@ export function ResourceSparkline({
   maxValue = 100,
   currentValue,
 }: ResourceSparklineProps) {
-  const displayValue = currentValue ?? (data.length > 0 ? data[data.length - 1].value : 0)
+  const displayValue = currentValue ?? (data.length > 0 ? (data[data.length - 1]?.value ?? 0) : 0)
   const percentageUsed = maxValue > 0 ? (displayValue / maxValue) * 100 : 0
 
   const getColorByUsage = (percentage: number) => {

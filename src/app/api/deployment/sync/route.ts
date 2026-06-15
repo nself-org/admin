@@ -113,16 +113,16 @@ function parseChanges(output: string) {
   for (const line of lines) {
     if (line.includes('code:')) {
       const match = line.match(/code:\s+(\d+)/)
-      if (match) changes.code = parseInt(match[1], 10)
+      if (match) changes.code = parseInt(match[1] ?? '0', 10)
     } else if (line.includes('database:')) {
       const match = line.match(/database:\s+(\d+)/)
-      if (match) changes.database = parseInt(match[1], 10)
+      if (match) changes.database = parseInt(match[1] ?? '0', 10)
     } else if (line.includes('files:')) {
       const match = line.match(/files:\s+(\d+)/)
-      if (match) changes.files = parseInt(match[1], 10)
+      if (match) changes.files = parseInt(match[1] ?? '0', 10)
     } else if (line.includes('env:')) {
       const match = line.match(/env:\s+(\d+)/)
-      if (match) changes.env = parseInt(match[1], 10)
+      if (match) changes.env = parseInt(match[1] ?? '0', 10)
     }
   }
 

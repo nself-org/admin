@@ -1893,7 +1893,7 @@ function KeyboardShortcutsSection() {
   const groupedShortcuts = shortcuts.reduce(
     (acc, shortcut) => {
       if (!acc[shortcut.category]) acc[shortcut.category] = []
-      acc[shortcut.category].push(shortcut)
+      acc[shortcut.category]?.push(shortcut)
       return acc
     },
     {} as Record<string, KeyboardShortcut[]>

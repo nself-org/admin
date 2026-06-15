@@ -25,8 +25,8 @@ export async function GET(): Promise<NextResponse> {
         `netstat -ibn | grep -E "^${iface}\\s" | awk '{print $7 " " $10}'`
       )
       const parts = stdout.trim().split(' ')
-      rxBytes = parseInt(parts[0]) || 0
-      txBytes = parseInt(parts[1]) || 0
+      rxBytes = parseInt(parts[0] ?? '0') || 0
+      txBytes = parseInt(parts[1] ?? '0') || 0
     } catch {
       // Try Linux method
       try {
@@ -40,8 +40,8 @@ export async function GET(): Promise<NextResponse> {
           const { stdout } = await execAsync(`ifconfig ${iface} | grep 'RX bytes\\|TX bytes'`)
           const rxMatch = stdout.match(/RX bytes[:\s]+(\d+)/)
           const txMatch = stdout.match(/TX bytes[:\s]+(\d+)/)
-          rxBytes = rxMatch ? parseInt(rxMatch[1]) : 0
-          txBytes = txMatch ? parseInt(txMatch[1]) : 0
+          rxBytes = rxMatch ? parseInt(rxMatch[1] ?? '0') : 0
+          txBytes = txMatch ? parseInt(txMatch[1] ?? '0') : 0
         } catch {
           // No method worked
         }

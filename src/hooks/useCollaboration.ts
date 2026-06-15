@@ -38,7 +38,7 @@ function getUserColor(userId: string): string {
   for (let i = 0; i < userId.length; i++) {
     hash = userId.charCodeAt(i) + ((hash << 5) - hash)
   }
-  return USER_COLORS[Math.abs(hash) % USER_COLORS.length]
+  return USER_COLORS[Math.abs(hash) % USER_COLORS.length] ?? USER_COLORS[0] ?? '#FF6B6B'
 }
 
 /**

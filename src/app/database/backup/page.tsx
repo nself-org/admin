@@ -59,7 +59,7 @@ export default function BackupRestorePage() {
       const data = (await res.json()) as { backups: BackupEntry[] }
       setBackups(data.backups ?? [])
       if (!selectedRestore && (data.backups ?? []).length > 0) {
-        setSelectedRestore(data.backups[0].filename)
+        setSelectedRestore(data.backups[0]?.filename ?? '')
       }
     } catch {
       setBackups([])

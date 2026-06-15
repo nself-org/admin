@@ -54,13 +54,13 @@ export function TimePicker({
     if (value) {
       const [h, m] = value.split(':')
       if (use12Hour) {
-        const hourNum = parseInt(h, 10)
+        const hourNum = parseInt(h ?? '0', 10)
         setHours(String(hourNum > 12 ? hourNum - 12 : hourNum || 12))
         setPeriod(hourNum >= 12 ? 'PM' : 'AM')
       } else {
-        setHours(h)
+        setHours(h ?? '')
       }
-      setMinutes(m)
+      setMinutes(m ?? '')
     }
   }, [value, use12Hour])
 

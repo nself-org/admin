@@ -204,8 +204,8 @@ describe('Activity Tracking', () => {
       const { activities } = await getActivityFeed({ limit: 1 })
 
       if (activities.length > 0) {
-        const activityId = activities[0].id
-        const activity = await getActivityById(activityId)
+        const activityId = activities[0]?.id
+        const activity = activityId ? await getActivityById(activityId) : null
 
         expect(activity).toBeDefined()
         expect(activity?.id).toBe(activityId)
@@ -219,6 +219,7 @@ describe('Activity Tracking', () => {
 
       if (activities.length > 0) {
         const activity = activities[0]
+        if (!activity) return
 
         expect(activity).toHaveProperty('id')
         expect(activity).toHaveProperty('actor')

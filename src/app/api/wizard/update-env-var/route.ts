@@ -50,7 +50,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
         // Check if this line contains our key
         const match = line.match(/^([^=]+)=(.*)$/)
-        if (match && match[1].trim() === key) {
+        if (match && (match[1] ?? '').trim() === key) {
           found = true
           if (remove) {
             return null // Remove this line
@@ -124,7 +124,7 @@ export async function PUT(req: NextRequest): Promise<NextResponse> {
     lines.forEach((line) => {
       if (!line.trim().startsWith('#') && line.includes('=')) {
         const [key, ...valueParts] = line.split('=')
-        envVars[key.trim()] = valueParts.join('=').trim()
+        envVars[(key ?? '').trim()] = valueParts.join('=').trim()
       }
     })
 

@@ -133,7 +133,7 @@ export class RedisCollector {
     for (const line of lines) {
       if (line.includes(':')) {
         const [key, value] = line.split(':').map((s) => s.trim())
-        stats[key] = value
+        if (key !== undefined) stats[key] = value
       }
     }
 
@@ -167,7 +167,7 @@ export class RedisCollector {
     for (const line of lines) {
       if (line.includes(':')) {
         const [key, value] = line.split(':').map((s) => s.trim())
-        stats[key] = value
+        if (key !== undefined) stats[key] = value
       }
     }
 
@@ -194,7 +194,7 @@ export class RedisCollector {
     for (const line of lines) {
       if (line.includes(':')) {
         const [key, value] = line.split(':').map((s) => s.trim())
-        stats[key] = value
+        if (key !== undefined) stats[key] = value
       }
     }
 
@@ -220,9 +220,9 @@ export class RedisCollector {
       const dbMatch = line.match(/^db(\d+):keys=(\d+),expires=(\d+)/)
       if (dbMatch) {
         const [, dbNum, keys, expires] = dbMatch
-        databases[`db${dbNum}`] = {
-          keys: parseInt(keys),
-          expires: parseInt(expires),
+        databases[`db${dbNum ?? ''}`] = {
+          keys: parseInt(keys ?? '0'),
+          expires: parseInt(expires ?? '0'),
         }
       }
     }

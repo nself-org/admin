@@ -117,6 +117,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         if (env[`CS_${i}`]) {
           hasServices = true
           const serviceDef = env[`CS_${i}`]
+          if (!serviceDef) continue
           const parts = serviceDef.split(':')
           if (parts.length < 3) {
             issues.push({
@@ -194,7 +195,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     // Check custom service ports
     for (let i = 1; i <= 99; i++) {
       if (env[`CS_${i}`]) {
-        const parts = env[`CS_${i}`].split(':')
+        const parts = (env[`CS_${i}`] ?? '').split(':')
         if (parts[2]) {
           if (usedPorts.has(parts[2])) {
             issues.push({

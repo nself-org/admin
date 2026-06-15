@@ -484,9 +484,9 @@ async function getCurrentDiskUsage() {
       "df -h / | tail -1 | awk '{print $2 \" \" $3 \" \" $5}' | sed 's/G//g' | sed 's/%//'"
     )
     const parts = stdout.trim().split(' ')
-    const total = parseFloat(parts[0]) || 100
-    const used = parseFloat(parts[1]) || 50
-    const percentage = parseInt(parts[2]) || 50
+    const total = parseFloat(parts[0] ?? '100') || 100
+    const used = parseFloat(parts[1] ?? '50') || 50
+    const percentage = parseInt(parts[2] ?? '50') || 50
 
     return { used, total, percentage }
   } catch {
@@ -500,8 +500,8 @@ async function getCurrentNetworkUsage() {
       "netstat -ib | grep -E 'en0|eth0' | head -1 | awk '{print $7 \" \" $10}'"
     )
     const parts = stdout.trim().split(' ')
-    const bytesIn = parseInt(parts[0]) || 0
-    const bytesOut = parseInt(parts[1]) || 0
+    const bytesIn = parseInt(parts[0] ?? '0') || 0
+    const bytesOut = parseInt(parts[1] ?? '0') || 0
 
     return {
       rx: Math.round(bytesIn / (1024 * 1024) / 60), // Rough MB/s
@@ -653,7 +653,7 @@ function parseDockerLogs(logs: string, _level: string) {
       if (parts.length >= 2) {
         return {
           timestamp: new Date().toISOString(),
-          service: parts[0].trim(),
+          service: (parts[0] ?? '').trim(),
           message: parts.slice(1).join('|').trim(),
           level: detectLogLevel(line),
         }

@@ -44,7 +44,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       .filter((k) => k.startsWith('HASURA_') && !k.includes('METADATA_DATABASE_URL'))
       .sort()
     for (const key of hasuraKeys) {
-      organized[key] = currentEnv[key]
+      organized[key] = currentEnv[key] ?? ''
     }
 
     // 4. Auth Configuration
@@ -52,7 +52,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       .filter((k) => k.startsWith('AUTH_'))
       .sort()
     for (const key of authKeys) {
-      organized[key] = currentEnv[key]
+      organized[key] = currentEnv[key] ?? ''
     }
 
     // 5. Service Enable Flags (Core Services)
@@ -109,7 +109,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       .filter((k) => k.startsWith('NGINX_'))
       .sort()
     for (const key of nginxKeys) {
-      organized[key] = currentEnv[key]
+      organized[key] = currentEnv[key] ?? ''
     }
 
     // 9. Custom Services
@@ -126,7 +126,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         return numA - numB
       })
     for (const key of csKeys) {
-      organized[key] = currentEnv[key]
+      organized[key] = currentEnv[key] ?? ''
     }
 
     // 10. Frontend Apps

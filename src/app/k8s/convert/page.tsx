@@ -42,7 +42,7 @@ function K8sConvertContent() {
       const data = await res.json()
       const result: K8sManifest[] = data?.manifests ?? []
       setManifests(result)
-      if (result.length > 0) setSelectedManifest(result[0])
+      if (result.length > 0) setSelectedManifest(result[0] ?? null)
     } finally {
       setConverting(false)
     }

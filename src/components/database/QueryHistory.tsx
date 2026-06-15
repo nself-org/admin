@@ -124,7 +124,18 @@ function HistoryItemCard({
   return (
     <div className="group bg-card cursor-pointer rounded-lg border p-3 transition-colors hover:bg-zinc-50 dark:hover:bg-zinc-800/50">
       <div className="flex items-start justify-between gap-2">
-        <div className="min-w-0 flex-1" onClick={() => onLoad(item)}>
+        <div
+          className="min-w-0 flex-1"
+          role="button"
+          tabIndex={0}
+          onClick={() => onLoad(item)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault()
+              onLoad(item)
+            }
+          }}
+        >
           <div className="mb-1 flex items-center gap-2">
             {item.status === 'success' ? (
               <CheckCircle className="h-4 w-4 flex-shrink-0 text-green-500" />

@@ -73,7 +73,7 @@ export async function POST(request: NextRequest): Promise<Response | NextRespons
       const envContent = await fs.readFile(envPath, 'utf-8')
       const domainMatch = envContent.match(/^BASE_DOMAIN=(.+)$/m)
       if (domainMatch) {
-        baseDomain = domainMatch[1].trim()
+        baseDomain = (domainMatch[1] ?? '').trim()
       }
     } catch {
       // Use default

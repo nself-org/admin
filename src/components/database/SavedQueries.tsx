@@ -243,7 +243,18 @@ function QueryCard({
   return (
     <div className="group bg-card cursor-pointer rounded-lg border p-3 transition-colors hover:bg-zinc-50 dark:hover:bg-zinc-800/50">
       <div className="flex items-start justify-between gap-2">
-        <div className="min-w-0 flex-1" onClick={() => onLoad(query)}>
+        <div
+          className="min-w-0 flex-1"
+          role="button"
+          tabIndex={0}
+          onClick={() => onLoad(query)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault()
+              onLoad(query)
+            }
+          }}
+        >
           <div className="mb-1 flex items-center gap-2">
             <span className="text-sm font-medium">{query.name}</span>
             <Badge variant="outline" className="text-xs">

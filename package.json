@@ -3,7 +3,7 @@
   "version": "1.1.7",
   "private": false,
   "description": "Web-based administration interface for nself CLI backend stack",
-  "license": "SEE LICENSE IN LICENSE",
+  "license": "MIT",
   "keywords": [
     "nself",
     "docker",
@@ -55,7 +55,8 @@
     "version:bump:patch": "npm version patch --no-git-tag-version",
     "version:bump:minor": "npm version minor --no-git-tag-version",
     "version:bump:major": "npm version major --no-git-tag-version",
-    "release": "pnpm build && pnpm docker:push"
+    "release": "pnpm build && pnpm docker:push",
+    "ci:local": "pnpm lint && pnpm type-check && pnpm format:check && pnpm test:ci && pnpm build"
   },
   "packageManager": "pnpm@10.28.0",
   "browserslist": "defaults, not ie <= 11",
@@ -75,8 +76,11 @@
       "serialize-javascript": ">=7.0.3",
       "dompurify": ">=3.4.0",
       "webpack": ">=5.104.1",
-      "protobufjs": ">=7.5.5",
-      "lodash": ">=4.18.1"
+      "protobufjs": ">=7.2.4 <8.0.0",
+      "lodash": ">=4.18.1",
+      "@grpc/grpc-js": ">=1.14.4",
+      "fast-uri": ">=3.1.2",
+      "fast-xml-builder": ">=1.1.7"
     }
   },
   "dependencies": {
@@ -134,7 +138,7 @@
     "mdast-util-to-string": "^4.0.0",
     "mdx-annotations": "^0.1.4",
     "minio": "^8.0.7",
-    "next": "^16.2.4",
+    "next": ">=16.2.6",
     "next-intl": "^4.9.1",
     "next-themes": "^0.4.6",
     "otplib": "^13.4.0",

@@ -9,6 +9,7 @@ import {
   getAllSessions,
   getSession,
   hasAdminPassword,
+  insertSessionWithToken,
   revokeAllSessionsExcept,
   revokeSession,
   rotateSession,
@@ -132,6 +133,21 @@ export async function createLoginSession(
   const token = await createSession('admin', ip, userAgent, rememberMe)
   await addAuditLog('login_success', { ip, userAgent, rememberMe }, true, 'admin')
   return token
+}
+
+/**
+ * Register a CLI-generated session token in the session store without requiring
+ * a password. Used exclusively by POST /api/auth/bootstrap which is only
+ * reachable from localhost after the SSH tunnel is open.
+ *
+ * Purpose: Convert the token delivered by `nself admin connect` into a DB
+ *   session so the admin middleware can validate it via the normal session-cookie
+ *   path — no URL ?token= embedding required.
+ * Inputs:  token — 64-char hex string (validated by the route handler).
+ * Outputs: Registers session in DB; throws on DB error.
+ */
+export async function bootstrapCliSession(token: string, ip?: string): Promise<void> {
+  await insertSessionWithToken(token, ip, 'nself-cli/bootstrap', 24 * 60 * 60 * 1000)
 }
 
 // Validate session token

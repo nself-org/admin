@@ -52,7 +52,8 @@ function DevelopmentEnvironmentContent() {
 
   const handleEnvVarChange = (index: number, field: keyof EnvVariable, value: string | boolean) => {
     const updated = [...envVariables]
-    updated[index] = { ...updated[index], [field]: value }
+    const item = updated[index]
+    if (item) updated[index] = { ...item, [field]: value }
     setEnvVariables(updated)
   }
 

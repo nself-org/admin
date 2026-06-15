@@ -686,7 +686,7 @@ async function executeCommandAction(
   // Parse nself command
   if (command.startsWith('nself ')) {
     const parts = command.slice(6).trim().split(' ')
-    const nselfCommand = parts[0]
+    const nselfCommand = parts[0] ?? ''
     const args = parts.slice(1)
 
     const result = await nselfCLI.executeNselfCommand(
@@ -956,6 +956,8 @@ async function executeWorkflowInternal(
       const action = workflow.actions[i]
       // eslint-disable-next-line security/detect-object-injection
       const step = execution.steps[i]
+
+      if (!action || !step) continue
 
       step.status = 'running'
       step.startedAt = getCurrentTimestamp()
@@ -1231,7 +1233,10 @@ export async function duplicateWorkflow(
   const actionIdMap = new Map<string, string>()
   original.actions.forEach((action, index) => {
     // eslint-disable-next-line security/detect-object-injection
-    actionIdMap.set(action.id, duplicatedWorkflow.actions[index].id)
+    const duplicatedAction = duplicatedWorkflow.actions[index]
+    if (duplicatedAction) {
+      actionIdMap.set(action.id, duplicatedAction.id)
+    }
   })
 
   duplicatedWorkflow.connections = original.connections.map((conn) => ({
@@ -1416,9 +1421,12 @@ export async function getWorkflowStats(): Promise<WorkflowStats> {
     if (!workflowExecutionCounts[e.workflowId]) {
       workflowExecutionCounts[e.workflowId] = { count: 0, successful: 0 }
     }
-    workflowExecutionCounts[e.workflowId].count++
-    if (e.status === 'completed') {
-      workflowExecutionCounts[e.workflowId].successful++
+    const wec = workflowExecutionCounts[e.workflowId]
+    if (wec) {
+      wec.count++
+      if (e.status === 'completed') {
+        wec.successful++
+      }
     }
   })
 

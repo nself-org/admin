@@ -201,7 +201,7 @@ export function isRateLimitedPerMin(request: NextRequest, type: 'auth_strict' | 
   const clientId = getClientId(request)
   const key = `permin:${type}:${clientId}`
   const now = Date.now()
-  const maxRequests = MAX_REQUESTS_PER_MIN[type]
+  const maxRequests = MAX_REQUESTS_PER_MIN[type] ?? 10
 
   // Clean stale entries
   for (const [k, entry] of rateLimitStore.entries()) {
@@ -242,7 +242,7 @@ export function getRateLimitInfoPerMin(
   const clientId = getClientId(request)
   const key = `permin:${type}:${clientId}`
   const now = Date.now()
-  const maxRequests = MAX_REQUESTS_PER_MIN[type]
+  const maxRequests = MAX_REQUESTS_PER_MIN[type] ?? 10
 
   const entry = rateLimitStore.get(key)
 

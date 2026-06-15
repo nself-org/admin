@@ -178,8 +178,8 @@ export async function POST(request: NextRequest): Promise<Response> {
             if (line.includes('Downloading')) {
               const match = line.match(/\[([=>]+)\s*\]\s*([\d.]+)MB\/([\d.]+)MB/)
               if (match) {
-                const current = parseFloat(match[2])
-                const total = parseFloat(match[3])
+                const current = parseFloat(match[2] ?? '0')
+                const total = parseFloat(match[3] ?? '0')
                 const percentage = Math.round((current / total) * 100)
                 const progressMsg = `Downloading: ${percentage}% (${current.toFixed(1)}MB/${total.toFixed(1)}MB)`
 
@@ -221,9 +221,9 @@ export async function POST(request: NextRequest): Promise<Response> {
                   encoder.encode(
                     JSON.stringify({
                       type: 'container',
-                      message: `${match[1]} ${match[2]}...`,
-                      action: match[1].toLowerCase(),
-                      container: match[2],
+                      message: `${match[1] ?? ''} ${match[2] ?? ''}...`,
+                      action: (match[1] ?? '').toLowerCase(),
+                      container: match[2] ?? '',
                       startedContainers,
                     }) + '\n'
                   )
@@ -248,8 +248,8 @@ export async function POST(request: NextRequest): Promise<Response> {
               // Parse "Starting Docker containers... (12/20)" format
               const containerMatch = line.match(/Starting Docker containers.*\((\d+)\/(\d+)\)/)
               if (containerMatch) {
-                const current = parseInt(containerMatch[1])
-                const total = parseInt(containerMatch[2])
+                const current = parseInt(containerMatch[1] ?? '0')
+                const total = parseInt(containerMatch[2] ?? '0')
                 const percentage = Math.round((current / total) * 100)
                 controller.enqueue(
                   encoder.encode(

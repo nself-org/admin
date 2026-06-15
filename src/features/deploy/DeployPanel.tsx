@@ -363,6 +363,7 @@ export function DeployPanel({ onComplete }: DeployPanelProps) {
       // Auto-select first environment + first manageable server
       if (selectedEnvName === null) {
         const firstEnv = envs[0]
+        if (!firstEnv) return
         setSelectedEnvName(firstEnv.name)
         const firstManageable = firstEnv.servers.find((s) => s.capability === 'manage')
         setSelectedServerName(firstManageable?.name ?? null)

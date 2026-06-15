@@ -22,7 +22,7 @@ function buildTree(files: Record<string, string>): TreeNode[] {
     let current = root
 
     for (let i = 0; i < parts.length; i++) {
-      const part = parts[i]
+      const part = parts[i] ?? ''
       const isLast = i === parts.length - 1
       const fullPath = parts.slice(0, i + 1).join('/')
 

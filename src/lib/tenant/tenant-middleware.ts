@@ -142,7 +142,7 @@ export async function requireTenantId(
  */
 export function extractTenantIdFromPath(pathname: string): string | null {
   const tenantMatch = pathname.match(/\/api\/tenant\/([^/]+)/)
-  return tenantMatch ? tenantMatch[1] : null
+  return tenantMatch ? (tenantMatch[1] ?? null) : null
 }
 
 /**
@@ -150,5 +150,5 @@ export function extractTenantIdFromPath(pathname: string): string | null {
  */
 export function extractOrgIdFromPath(pathname: string): string | null {
   const orgMatch = pathname.match(/\/api\/org\/([^/]+)/)
-  return orgMatch ? orgMatch[1] : null
+  return orgMatch ? (orgMatch[1] ?? null) : null
 }

@@ -199,8 +199,8 @@ function parseEnvFile(content: string): Record<string, string> {
 
     const match = trimmed.match(/^([^=]+)=(.*)$/)
     if (match) {
-      const key = match[1].trim()
-      const value = match[2].trim().replace(/^["']|["']$/g, '') // Remove quotes
+      const key = (match[1] ?? '').trim()
+      const value = (match[2] ?? '').trim().replace(/^["']|["']$/g, '') // Remove quotes
       vars[key] = value
     }
   }
@@ -243,7 +243,7 @@ function formatEnvFile(vars: Record<string, { value: string; category?: string }
     if (header) content += header + '\n'
 
     // Sort variables within category for consistency
-    const sortedVars = categories[category].sort((a, b) => {
+    const sortedVars = (categories[category] ?? []).sort((a, b) => {
       // Keep certain vars at top of their sections
       const priority: Record<string, number> = {
         ENV: 1,

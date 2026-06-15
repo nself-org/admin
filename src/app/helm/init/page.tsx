@@ -219,7 +219,7 @@ app.kubernetes.io/instance: {{ .Release.Name }}
     ]
 
     setFiles(generatedFiles)
-    setSelectedFile(generatedFiles[0])
+    setSelectedFile(generatedFiles[0] ?? null)
     setGenerated(true)
     setGenerating(false)
   }

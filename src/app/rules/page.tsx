@@ -24,10 +24,10 @@ function parseRule(raw: Record<string, unknown>): MuxRule {
 
   if (rawAction) {
     const keys = Object.keys(rawAction).filter((k) => k !== '_when')
-    if (keys.length > 0) actionType = keys[0] as MuxRule['action']
+    if (keys.length > 0 && keys[0]) actionType = keys[0] as MuxRule['action']
   } else if (rawActions && rawActions.length > 0) {
-    const keys = Object.keys(rawActions[0]).filter((k) => k !== '_when')
-    if (keys.length > 0) actionType = keys[0] as MuxRule['action']
+    const keys = Object.keys(rawActions[0] ?? {}).filter((k) => k !== '_when')
+    if (keys.length > 0 && keys[0]) actionType = keys[0] as MuxRule['action']
   }
 
   return {

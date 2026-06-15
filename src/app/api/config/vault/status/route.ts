@@ -57,5 +57,5 @@ export async function GET(): Promise<NextResponse> {
 function extractField(output: string, field: string): string | null {
   const regex = new RegExp(`${field}[:\\s]+(.+)`, 'i')
   const match = output.match(regex)
-  return match ? match[1].trim() : null
+  return match ? (match[1] ?? '').trim() : null
 }

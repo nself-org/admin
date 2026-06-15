@@ -440,6 +440,7 @@ export default function SchemaBuilderPage() {
       if (directions[e.key]) {
         e.preventDefault()
         const d = directions[e.key]
+        if (!d) return
         setState((prev) => ({
           ...prev,
           tables: prev.tables.map((t) =>
@@ -456,7 +457,7 @@ export default function SchemaBuilderPage() {
         e.preventDefault()
         const ids = state.tables.map((t) => t.id)
         const idx = ids.indexOf(selectedTableId)
-        const nextId = ids[(idx + 1) % ids.length]
+        const nextId = ids[(idx + 1) % ids.length] ?? null
         setSelectedTableId(nextId)
         const next = state.tables.find((t) => t.id === nextId)
         if (next) announce(`Selected table: ${next.name}`)

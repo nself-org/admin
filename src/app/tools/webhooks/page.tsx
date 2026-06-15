@@ -259,8 +259,8 @@ function WebhookForm({
           </label>
           <div className="grid max-h-64 grid-cols-1 gap-3 overflow-y-auto md:grid-cols-2">
             {EVENT_TYPES.map((event) => {
-              const category = event.id.split('.')[0]
-              const Icon = EVENT_ICONS[category] || EVENT_ICONS.default
+              const category = event.id.split('.')[0] ?? 'default'
+              const Icon = EVENT_ICONS[category] ?? EVENT_ICONS['default']
               const isSelected = formData.events?.includes(event.id)
 
               return (

@@ -186,20 +186,23 @@ export function EndpointList({
           </div>
 
           {/* Test result inline */}
-          {testResult[ep.id]?.msg && (
-            <div
-              className={`mt-2 rounded-lg px-3 py-2 text-xs ${
-                testResult[ep.id].success
-                  ? 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-400'
-                  : 'bg-red-50 text-red-700 dark:bg-red-950/30 dark:text-red-400'
-              }`}
-            >
-              <span className="font-semibold">
-                {testResult[ep.id].success ? 'Test sent: ' : 'Test failed: '}
-              </span>
-              <span className="font-mono">{testResult[ep.id].msg}</span>
-            </div>
-          )}
+          {testResult[ep.id]?.msg && (() => {
+            const tr = testResult[ep.id]
+            return (
+              <div
+                className={`mt-2 rounded-lg px-3 py-2 text-xs ${
+                  tr?.success
+                    ? 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-400'
+                    : 'bg-red-50 text-red-700 dark:bg-red-950/30 dark:text-red-400'
+                }`}
+              >
+                <span className="font-semibold">
+                  {tr?.success ? 'Test sent: ' : 'Test failed: '}
+                </span>
+                <span className="font-mono">{tr?.msg}</span>
+              </div>
+            )
+          })()}
         </div>
       ))}
     </div>

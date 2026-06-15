@@ -54,6 +54,7 @@ function formatMetrics(metricsArray: Metric[]): string {
   // Format each metric group
   for (const [name, metrics] of groupedMetrics) {
     const firstMetric = metrics[0]
+    if (!firstMetric) continue
     lines.push(`# HELP ${name} ${firstMetric.help}`)
     lines.push(`# TYPE ${name} ${firstMetric.type}`)
 

@@ -26,7 +26,7 @@ export async function GET(): Promise<NextResponse> {
         const dockerComposeContent = await fs.readFile(dockerComposePath, 'utf8')
         const projectMatch = dockerComposeContent.match(/# Project: ([^\s\n]+)/)
         if (projectMatch) {
-          projectPrefix = projectMatch[1].trim()
+          projectPrefix = (projectMatch[1] ?? '').trim()
         }
       } catch {
         // File doesn't exist or can't read, use default
@@ -89,8 +89,8 @@ export async function GET(): Promise<NextResponse> {
 
             if (parts.length >= 10) {
               // rx_bytes is at index 1, tx_bytes is at index 9
-              const rxBytes = parseInt(parts[1]) || 0
-              const txBytes = parseInt(parts[9]) || 0
+              const rxBytes = parseInt(parts[1] ?? '0') || 0
+              const txBytes = parseInt(parts[9] ?? '0') || 0
 
               return {
                 name: containerName,

@@ -344,7 +344,7 @@ export function ServiceCard({
                     <span className="text-zinc-600 dark:text-zinc-400">{key}=</span>
                     <span className="text-zinc-800 dark:text-zinc-200">
                       {value?.substring(0, 30)}
-                      {value?.length > 30 ? '...' : ''}
+                      {(value?.length ?? 0) > 30 ? '...' : ''}
                     </span>
                   </div>
                 )

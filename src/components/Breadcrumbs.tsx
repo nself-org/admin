@@ -76,7 +76,7 @@ export function MobileBreadcrumbs() {
 
   if (segments.length === 0) return null
 
-  const currentSegment = segments[segments.length - 1]
+  const currentSegment = segments[segments.length - 1] ?? ''
   const currentLabel =
     pathLabels[currentSegment] || currentSegment.charAt(0).toUpperCase() + currentSegment.slice(1)
 

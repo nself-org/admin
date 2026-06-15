@@ -50,7 +50,7 @@ function K8sLogsPageContent() {
   // Set initial container when pod changes
   useEffect(() => {
     if (selectedPodData?.containers.length) {
-      setSelectedContainer(selectedPodData.containers[0].name)
+      setSelectedContainer(selectedPodData.containers[0]?.name ?? '')
     }
   }, [selectedPodData])
 

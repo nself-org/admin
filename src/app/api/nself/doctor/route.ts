@@ -47,17 +47,19 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     const containers = await Promise.all(
       containerLines.map(async (line) => {
         const [name, statusRaw, restarts] = line.split('|')
+        const containerName = name ?? ''
+        const statusStr = statusRaw ?? ''
         let status: 'running' | 'stopped' | 'restarting' | 'error' = 'stopped'
         let health: 'healthy' | 'unhealthy' | 'starting' | undefined
 
-        if (statusRaw.includes('Up')) {
+        if (statusStr.includes('Up')) {
           status = 'running'
-          if (statusRaw.includes('healthy')) health = 'healthy'
-          else if (statusRaw.includes('unhealthy')) health = 'unhealthy'
-          else if (statusRaw.includes('starting')) health = 'starting'
-        } else if (statusRaw.includes('Restarting')) {
+          if (statusStr.includes('healthy')) health = 'healthy'
+          else if (statusStr.includes('unhealthy')) health = 'unhealthy'
+          else if (statusStr.includes('starting')) health = 'starting'
+        } else if (statusStr.includes('Restarting')) {
           status = 'restarting'
-        } else if (statusRaw.includes('Exited')) {
+        } else if (statusStr.includes('Exited')) {
           status = 'stopped'
         }
 
@@ -67,7 +69,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           try {
             const { stdout: logOutput } = await execFileAsync(
               'docker',
-              ['logs', name, '--tail', '10'],
+              ['logs', containerName, '--tail', '10'],
               { timeout: 5000 }
             )
             logs = logOutput.split('\n').filter((l) => l.trim())
@@ -77,10 +79,10 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         }
 
         return {
-          name,
+          name: containerName,
           status,
           health,
-          restarts: parseInt(restarts) || 0,
+          restarts: parseInt(restarts ?? '0') || 0,
           logs,
         }
       })

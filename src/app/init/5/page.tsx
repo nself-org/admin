@@ -183,7 +183,8 @@ export default function InitStep5() {
       // Sanitize subdomain - lowercase, alphanumeric and dash only
       value = value.toLowerCase().replace(/[^a-z0-9-]/g, '')
     }
-    updated[index] = { ...updated[index], [field]: value }
+    const app = updated[index]
+    if (app) updated[index] = { ...app, [field]: value }
     setFrontendApps(updated)
   }
 

@@ -365,7 +365,7 @@ export class WebSocketServer {
     if (cookies) {
       const sessionMatch = cookies.match(/session=([^;]+)/)
       if (sessionMatch) {
-        const sessionToken = sessionMatch[1]
+        const sessionToken = sessionMatch[1] ?? ''
 
         // Validate session token against database
         try {

@@ -421,7 +421,7 @@ function TerminalContent() {
     setSessions((prev) => prev.filter((s) => s.id !== sessionId))
     if (activeSessionId === sessionId && sessions.length > 1) {
       const remainingSessions = sessions.filter((s) => s.id !== sessionId)
-      setActiveSessionId(remainingSessions[0].id)
+      setActiveSessionId(remainingSessions[0]?.id ?? '')
     }
   }
 

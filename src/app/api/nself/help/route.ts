@@ -40,8 +40,8 @@ function parseCommands(stdout: string): HelpCommand[] {
     const match = line.match(/^\s{2,}(\S+)\s{2,}(.+)$/)
     if (match) {
       commands.push({
-        name: match[1],
-        description: match[2].trim(),
+        name: match[1] ?? '',
+        description: (match[2] ?? '').trim(),
       })
     }
   }

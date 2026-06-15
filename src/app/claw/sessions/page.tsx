@@ -367,7 +367,8 @@ function IdentitiesTab({ clawDown }: { clawDown: boolean }) {
 
       {identities.map((identity) => {
         const isExpanded = expandedId === identity.id
-        const hasDraft = drafts[identity.id] && Object.keys(drafts[identity.id]).length > 0
+        const identityDraft = drafts[identity.id]
+        const hasDraft = identityDraft && Object.keys(identityDraft).length > 0
 
         return (
           <div

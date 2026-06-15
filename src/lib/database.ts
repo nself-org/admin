@@ -433,6 +433,58 @@ const SESSION_DURATION_HOURS = 7 * 24 // 7 days by default
 const SESSION_EXTEND_ON_ACTIVITY = true // Extend session on each request
 
 // Session operations
+
+/**
+ * Insert a session using a pre-generated token (e.g. from the CLI bootstrap
+ * flow). Unlike createSession(), this does NOT generate a new token — it
+ * registers the caller-supplied token directly into the session store so it
+ * can be validated by subsequent requests.
+ *
+ * Purpose: Used by /api/auth/bootstrap to convert the CLI-generated token into
+ *   a valid DB session without requiring a password login.
+ * Inputs:  token — 64-char hex string (32 random bytes, already verified by the
+ *   route handler); ip/userAgent — metadata for audit; durationMs — session TTL.
+ * Outputs: Inserts into sessionsCollection and flushes to disk; returns the token.
+ * Constraints: Token must be unique; callers should validate format before calling.
+ */
+export async function insertSessionWithToken(
+  token: string,
+  ip?: string,
+  userAgent?: string,
+  durationMs: number = 24 * 60 * 60 * 1000
+): Promise<void> {
+  await initDatabase()
+
+  const csrfToken = crypto.randomBytes(32).toString('hex')
+  const now = new Date()
+  const session: SessionItem = {
+    token,
+    userId: 'admin',
+    createdAt: now,
+    expiresAt: new Date(Date.now() + durationMs),
+    lastActive: now,
+    ip,
+    userAgent,
+    rememberMe: false,
+    csrfToken,
+  }
+
+  sessionsCollection?.insert(session)
+  await addAuditLog('bootstrap_session_created', { ip, userAgent }, true, 'admin')
+
+  // Flush to disk immediately so other route workers can see the session.
+  await new Promise<void>((resolve) => {
+    if (!db) {
+      resolve()
+      return
+    }
+    ;(db as any).saveDatabase((err: unknown) => {
+      if (err) console.warn('Failed to persist bootstrap session to disk:', err)
+      resolve()
+    })
+  })
+}
+
 export async function createSession(
   userId: string,
   ip?: string,
@@ -1235,7 +1287,7 @@ function applyOperationToContent(
     }
   }
 
-  const line = lines[position.line]
+  const line = lines[position.line] ?? ''
   const before = line.substring(0, position.column)
   const after = line.substring(position.column)
 

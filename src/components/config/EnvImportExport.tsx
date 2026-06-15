@@ -55,8 +55,8 @@ export function EnvImportExport({
 
       const match = trimmed.match(/^([^=]+)=(.*)$/)
       if (match) {
-        const key = match[1].trim()
-        const value = match[2].trim().replace(/^["']|["']$/g, '')
+        const key = (match[1] ?? '').trim()
+        const value = (match[2] ?? '').trim().replace(/^["']|["']$/g, '')
         vars[key] = value
       }
     }

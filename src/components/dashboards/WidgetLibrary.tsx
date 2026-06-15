@@ -291,7 +291,7 @@ export function WidgetLibrary({
       if (!groups[template.category]) {
         groups[template.category] = []
       }
-      groups[template.category].push(template)
+      groups[template.category]?.push(template)
     })
     return groups
   }, [filteredTemplates])

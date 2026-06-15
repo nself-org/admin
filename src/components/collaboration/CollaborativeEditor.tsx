@@ -53,7 +53,7 @@ export function CollaborativeEditor({
       if (diff) {
         const lines = oldContent.substring(0, diff.start).split('\n')
         const line = lines.length - 1
-        const column = lines[lines.length - 1].length
+        const column = (lines[lines.length - 1] ?? '').length
 
         if (diff.type === 'insert') {
           applyEdit('insert', line, column, diff.text)
@@ -81,7 +81,7 @@ export function CollaborativeEditor({
     const text = textarea.value.substring(0, start)
     const lines = text.split('\n')
     const line = lines.length - 1
-    const column = lines[lines.length - 1].length
+    const column = (lines[lines.length - 1] ?? '').length
 
     setCursorPosition({ line, column })
     updateCursor(line, column)
@@ -91,7 +91,7 @@ export function CollaborativeEditor({
       const endText = textarea.value.substring(0, textarea.selectionEnd)
       const endLines = endText.split('\n')
       const endLine = endLines.length - 1
-      const endColumn = endLines[endLines.length - 1].length
+      const endColumn = (endLines[endLines.length - 1] ?? '').length
 
       updateSelection(line, column, endLine, endColumn)
     }

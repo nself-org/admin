@@ -68,7 +68,7 @@ describe('campaigns.list', () => {
       })
     )
     expect(result.items).toHaveLength(1)
-    expect(result.items[0].title).toBe('Hello')
+    expect(result.items[0]?.title).toBe('Hello')
   })
 
   it('appends status query param', async () => {
@@ -158,7 +158,7 @@ describe('topics.list', () => {
       },
     ])
     const result = await topics.list()
-    expect(result[0].name).toBe('news')
+    expect(result[0]?.name).toBe('news')
   })
 })
 

@@ -174,9 +174,9 @@ async function getCpuUsage(): Promise<number> {
     const stat2 = await fs.readFile('/proc/stat', 'utf-8')
 
     const getCpuValues = (stat: string) => {
-      const cpuLine = stat.split('\n')[0]
+      const cpuLine = stat.split('\n')[0] ?? ''
       const values = cpuLine.split(/\s+/).slice(1).map(Number)
-      const idle = values[3]
+      const idle = values[3] ?? 0
       const total = values.reduce((a, b) => a + b, 0)
       return { idle, total }
     }

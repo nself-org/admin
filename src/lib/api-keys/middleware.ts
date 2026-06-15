@@ -221,7 +221,7 @@ function getClientIp(request: NextRequest): string {
   // Check common headers
   const forwarded = request.headers.get('x-forwarded-for')
   if (forwarded) {
-    return forwarded.split(',')[0].trim()
+    return (forwarded.split(',')[0] ?? '').trim()
   }
 
   const realIp = request.headers.get('x-real-ip')
@@ -260,10 +260,10 @@ function isIpAllowed(clientIp: string, allowedIps: string[]): boolean {
 function isIpInCidr(ip: string, cidr: string): boolean {
   // Simple IPv4 CIDR check
   const [range, bits] = cidr.split('/')
-  const mask = ~(2 ** (32 - parseInt(bits)) - 1)
+  const mask = ~(2 ** (32 - parseInt(bits ?? '32')) - 1)
 
   const ipNum = ipToNumber(ip)
-  const rangeNum = ipToNumber(range)
+  const rangeNum = ipToNumber(range ?? '')
 
   return (ipNum & mask) === (rangeNum & mask)
 }
@@ -274,10 +274,10 @@ function isIpInCidr(ip: string, cidr: string): boolean {
 function ipToNumber(ip: string): number {
   const parts = ip.split('.')
   return (
-    (parseInt(parts[0]) << 24) +
-    (parseInt(parts[1]) << 16) +
-    (parseInt(parts[2]) << 8) +
-    parseInt(parts[3])
+    (parseInt(parts[0] ?? '0') << 24) +
+    (parseInt(parts[1] ?? '0') << 16) +
+    (parseInt(parts[2] ?? '0') << 8) +
+    parseInt(parts[3] ?? '0')
   )
 }
 

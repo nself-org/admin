@@ -1,5 +1,6 @@
 'use client'
 
+import { createScopedTranslator } from '@/features/i18n'
 import { Clock, Database, FileText, HardDrive, Image, Shield, Wrench } from 'lucide-react'
 import { useState } from 'react'
 
@@ -28,6 +29,7 @@ interface BackupConfigurationProps {
 }
 
 export function BackupConfiguration({ value, onChange }: BackupConfigurationProps) {
+  const t = createScopedTranslator('en', 'backup_config')
   const [showModal, setShowModal] = useState(false)
 
   const updateConfig = (updates: Partial<BackupConfig>) => {
@@ -134,7 +136,16 @@ export function BackupConfiguration({ value, onChange }: BackupConfigurationProp
               ? 'border-zinc-500/40 bg-zinc-50/40 dark:bg-zinc-900/10'
               : 'cursor-pointer border-zinc-200 bg-zinc-50/50 hover:border-zinc-300 dark:border-zinc-700 dark:bg-zinc-800/30 dark:hover:border-zinc-600'
           }`}
+          role="button"
+          tabIndex={value.enabled ? -1 : 0}
+          aria-label={t('enableBtn')}
           onClick={enableBackup}
+          onKeyDown={(e) => {
+            if (!value.enabled && (e.key === 'Enter' || e.key === ' ')) {
+              e.preventDefault()
+              enableBackup()
+            }
+          }}
         >
           <div className="flex items-start justify-between">
             <div className="flex flex-1 items-start space-x-4" onClick={enableBackup}>
@@ -161,10 +172,10 @@ export function BackupConfiguration({ value, onChange }: BackupConfigurationProp
                       : 'text-zinc-700 dark:text-zinc-300'
                   }`}
                 >
-                  Automated Backups
+                  {t('automatedBackups')}
                 </h3>
                 <p className="mb-2 text-sm text-zinc-600 dark:text-zinc-400">
-                  Schedule regular backups of your project data
+                  {t('automatedBackupsDesc')}
                 </p>
                 {value.enabled && (
                   <div className="text-xs text-zinc-500 dark:text-zinc-500">
@@ -209,7 +220,7 @@ export function BackupConfiguration({ value, onChange }: BackupConfigurationProp
                   className="inline-flex items-center gap-1 text-xs text-zinc-600 transition-colors hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-300"
                 >
                   <Wrench className="h-3 w-3" />
-                  <span>Configure</span>
+                  <span>{t('configure')}</span>
                 </button>
               )}
             </div>
@@ -223,14 +234,14 @@ export function BackupConfiguration({ value, onChange }: BackupConfigurationProp
           <div className="max-h-[80vh] w-full max-w-2xl overflow-y-auto rounded-lg bg-white dark:bg-zinc-900">
             <div className="p-6">
               <h2 className="mb-4 text-lg font-semibold text-zinc-900 dark:text-white">
-                Configure Backup Settings
+                {t('configureTitle')}
               </h2>
 
               <div className="space-y-6">
                 {/* Backup Types */}
                 <div>
                   <label className="mb-3 block text-sm font-medium text-zinc-700 dark:text-zinc-300">
-                    What to Backup
+                    {t('whatToBackup')}
                   </label>
                   <div className="grid grid-cols-3 gap-3">
                     <label
@@ -260,7 +271,7 @@ export function BackupConfiguration({ value, onChange }: BackupConfigurationProp
                             : 'text-zinc-600 dark:text-zinc-400'
                         }`}
                       >
-                        Database
+                        {t('database')}
                       </span>
                     </label>
 
@@ -291,7 +302,7 @@ export function BackupConfiguration({ value, onChange }: BackupConfigurationProp
                             : 'text-zinc-600 dark:text-zinc-400'
                         }`}
                       >
-                        Images
+                        {t('images')}
                       </span>
                     </label>
 
@@ -322,7 +333,7 @@ export function BackupConfiguration({ value, onChange }: BackupConfigurationProp
                             : 'text-zinc-600 dark:text-zinc-400'
                         }`}
                       >
-                        Config Files
+                        {t('configs')}
                       </span>
                     </label>
                   </div>
@@ -331,7 +342,7 @@ export function BackupConfiguration({ value, onChange }: BackupConfigurationProp
                 {/* Schedule */}
                 <div>
                   <label className="mb-3 block text-sm font-medium text-zinc-700 dark:text-zinc-300">
-                    Backup Schedule
+                    {t('schedule')}
                   </label>
                   <div className="space-y-3">
                     <div className="grid grid-cols-2 gap-3">
@@ -345,10 +356,10 @@ export function BackupConfiguration({ value, onChange }: BackupConfigurationProp
                           }
                           className="focus:ring-opacity-20 w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 focus:ring-2 focus:ring-zinc-500 focus:outline-none dark:border-zinc-600 dark:bg-zinc-800 dark:text-white"
                         >
-                          <option value="daily">Daily</option>
-                          <option value="weekly">Weekly</option>
-                          <option value="monthly">Monthly</option>
-                          <option value="custom">Custom (Cron)</option>
+                          <option value="daily">{t('freqDaily')}</option>
+                          <option value="weekly">{t('freqWeekly')}</option>
+                          <option value="monthly">{t('freqMonthly')}</option>
+                          <option value="custom">{t('freqCustom')}</option>
                         </select>
                       </div>
 
@@ -373,13 +384,13 @@ export function BackupConfiguration({ value, onChange }: BackupConfigurationProp
                         }
                         className="focus:ring-opacity-20 w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 focus:ring-2 focus:ring-zinc-500 focus:outline-none dark:border-zinc-600 dark:bg-zinc-800 dark:text-white"
                       >
-                        <option value="0">Sunday</option>
-                        <option value="1">Monday</option>
-                        <option value="2">Tuesday</option>
-                        <option value="3">Wednesday</option>
-                        <option value="4">Thursday</option>
-                        <option value="5">Friday</option>
-                        <option value="6">Saturday</option>
+                        <option value="0">{t('day_sunday')}</option>
+                        <option value="1">{t('day_monday')}</option>
+                        <option value="2">{t('day_tuesday')}</option>
+                        <option value="3">{t('day_wednesday')}</option>
+                        <option value="4">{t('day_thursday')}</option>
+                        <option value="5">{t('day_friday')}</option>
+                        <option value="6">{t('day_saturday')}</option>
                       </select>
                     )}
 
@@ -423,12 +434,12 @@ export function BackupConfiguration({ value, onChange }: BackupConfigurationProp
                 {/* Advanced Options */}
                 <div>
                   <label className="mb-3 block text-sm font-medium text-zinc-700 dark:text-zinc-300">
-                    Advanced Options
+                    {t('advancedOptions')}
                   </label>
                   <div className="space-y-3">
                     <div>
                       <label className="mb-1 block text-sm text-zinc-600 dark:text-zinc-400">
-                        Retention Period (days)
+                        {t('retentionPeriod')}
                       </label>
                       <input
                         type="number"
@@ -454,7 +465,7 @@ export function BackupConfiguration({ value, onChange }: BackupConfigurationProp
                         />
                         <span className="text-sm text-zinc-700 dark:text-zinc-300">
                           <HardDrive className="mr-1 inline h-3 w-3" />
-                          Enable Compression
+                          {t('enableCompression')}
                         </span>
                       </label>
 
@@ -467,7 +478,7 @@ export function BackupConfiguration({ value, onChange }: BackupConfigurationProp
                         />
                         <span className="text-sm text-zinc-700 dark:text-zinc-300">
                           <Shield className="mr-1 inline h-3 w-3" />
-                          Enable Encryption
+                          {t('enableEncryption')}
                         </span>
                       </label>
                     </div>
@@ -481,14 +492,14 @@ export function BackupConfiguration({ value, onChange }: BackupConfigurationProp
                   onClick={() => setShowModal(false)}
                   className="px-4 py-2 text-sm text-zinc-600 transition-colors hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white"
                 >
-                  Cancel
+                  {t('cancelBtn')}
                 </button>
                 <button
                   type="button"
                   onClick={() => setShowModal(false)}
                   className="rounded-lg bg-zinc-900 px-4 py-2 text-sm text-white transition-colors hover:bg-zinc-800 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200"
                 >
-                  Save Changes
+                  {t('saveChanges')}
                 </button>
               </div>
             </div>

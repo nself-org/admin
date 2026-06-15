@@ -131,7 +131,8 @@ export function ReportBuilder({ templateId, onGenerated, onCancel }: ReportBuild
   const handleAddFilter = () => {
     if (template && template.columns.length > 0) {
       const filterableColumn = template.columns.find((c) => c.filterable)
-      const firstColumn = filterableColumn || template.columns[0]
+      const firstColumn = filterableColumn ?? template.columns[0]
+      if (!firstColumn) return
       setFilters((prev) => [
         ...prev,
         {
@@ -158,7 +159,8 @@ export function ReportBuilder({ templateId, onGenerated, onCancel }: ReportBuild
   const handleAddSort = () => {
     if (template && template.columns.length > 0) {
       const sortableColumn = template.columns.find((c) => c.sortable)
-      const firstColumn = sortableColumn || template.columns[0]
+      const firstColumn = sortableColumn ?? template.columns[0]
+      if (!firstColumn) return
       setSorts((prev) => [
         ...prev,
         {

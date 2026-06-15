@@ -16,7 +16,7 @@ function parseEnvFile(content: string): Record<string, string> {
     if (!trimmed || trimmed.startsWith('#')) continue
     const match = trimmed.match(/^([^=]+)=(.*)$/)
     if (match) {
-      vars[match[1].trim()] = match[2].trim().replace(/^["']|["']$/g, '')
+      vars[(match[1] ?? '').trim()] = (match[2] ?? '').trim().replace(/^["']|["']$/g, '')
     }
   }
   return vars
@@ -39,10 +39,10 @@ async function writeEnvKeys(filePath: string, updates: Record<string, string>): 
     if (trimmed.startsWith('#') || !trimmed) return line
     const match = trimmed.match(/^([^=]+)=/)
     if (!match) return line
-    const key = match[1].trim()
+    const key = (match[1] ?? '').trim()
     if (key in updates) {
       written.add(key)
-      const val = updates[key]
+      const val = updates[key] ?? ''
       return `${key}=${val.includes(' ') || val.includes('#') ? `"${val}"` : val}`
     }
     return line

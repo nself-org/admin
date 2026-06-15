@@ -90,9 +90,9 @@ function parseCompose(raw: string): { services: string[]; images: string[] } {
   for (const line of lines) {
     if (/^[^\s#]/.test(line)) break
     const svcMatch = line.match(/^ {2}([A-Za-z0-9_.-]+):\s*$/)
-    if (svcMatch !== null) services.push(svcMatch[1])
+    if (svcMatch !== null) services.push(svcMatch[1] ?? '')
     const imgMatch = line.match(/^ {4}image:\s*(.+)$/)
-    if (imgMatch !== null) images.push(imgMatch[1].trim())
+    if (imgMatch !== null) images.push((imgMatch[1] ?? '').trim())
   }
   return { services, images }
 }

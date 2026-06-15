@@ -5,12 +5,8 @@
     "paths": {
       "@/*": ["./src/*"]
     },
-    // Pre-existing legacy debt: admin/src/ has ~423 violations of noUncheckedIndexedAccess
-    // and noImplicitOverride introduced by @nself/config base. These are tracked in
-    // admin/.claude/tasks/backlog.md for remediation. Override here to maintain green
-    // type-check without touching admin/src/ (T08 scope boundary).
-    "noUncheckedIndexedAccess": false,
-    "noImplicitOverride": false
+    "noUncheckedIndexedAccess": true,
+    "noImplicitOverride": true
   },
   "include": [
     "next-env.d.ts",

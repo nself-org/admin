@@ -163,7 +163,7 @@ function SystemBackupsContent() {
                   <p className="text-sm text-zinc-600 dark:text-zinc-400">Last Backup</p>
                   <p className="text-2xl font-bold">
                     {backups.length > 0
-                      ? new Date(backups[0].createdAt).toLocaleDateString()
+                      ? new Date(backups[0]?.createdAt ?? '').toLocaleDateString()
                       : 'Never'}
                   </p>
                 </div>

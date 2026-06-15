@@ -33,7 +33,7 @@ export async function GET(): Promise<NextResponse> {
       if (line && !line.startsWith('#')) {
         const [key, ...valueParts] = line.split('=')
         const value = valueParts.join('=').replace(/^["']|["']$/g, '') // Remove quotes
-        envVars[key] = value
+        if (key) envVars[key] = value
       }
     })
 

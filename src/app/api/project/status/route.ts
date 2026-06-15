@@ -48,7 +48,7 @@ async function computeStatus(): Promise<StatusPayload> {
       if (!projectNameFromEnv) {
         const match = content.match(/PROJECT_NAME=(.+)/)
         if (match) {
-          projectNameFromEnv = match[1].trim().replace(/["']/g, '')
+          projectNameFromEnv = (match[1] ?? '').trim().replace(/["']/g, '')
         }
       }
     } catch {
@@ -114,7 +114,7 @@ async function computeStatus(): Promise<StatusPayload> {
         const dockerComposeContent = await fs.readFile(dockerComposePath, 'utf8')
         const projectMatch = dockerComposeContent.match(/# Project: ([^\s\n]+)/)
         if (projectMatch) {
-          projectPrefix = projectMatch[1].trim()
+          projectPrefix = (projectMatch[1] ?? '').trim()
         }
       } catch {
         // docker-compose read failed, keep default
@@ -129,7 +129,7 @@ async function computeStatus(): Promise<StatusPayload> {
 
     // Filter for containers from this project (flexible matching)
     const projectContainers = lines.filter((line) => {
-      const containerName = line.split('\t')[0].toLowerCase()
+      const containerName = (line.split('\t')[0] ?? '').toLowerCase()
       const prefixLower = projectPrefix.toLowerCase()
       return (
         containerName.startsWith(prefixLower + '_') ||
@@ -187,7 +187,7 @@ async function computeStatus(): Promise<StatusPayload> {
 
     // Use already extracted projectName or try to find it in combined content
     projectName = projectNameFromEnv
-    baseDomain = baseDomainMatch ? baseDomainMatch[1].trim().replace(/["']/g, '') : null
+    baseDomain = baseDomainMatch ? (baseDomainMatch[1] ?? '').trim().replace(/["']/g, '') : null
 
     // Check if this is a minimal setup (only basic env vars, no service configuration)
     // A minimal setup has PROJECT_NAME and BASE_DOMAIN but lacks service-specific configuration

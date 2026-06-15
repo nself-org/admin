@@ -60,7 +60,7 @@ export default function OrgPermissionsPage() {
   const groupedPermissions = filteredPermissions.reduce(
     (acc, perm) => {
       if (!acc[perm.category]) acc[perm.category] = []
-      acc[perm.category].push(perm)
+      acc[perm.category]?.push(perm)
       return acc
     },
     {} as Record<string, typeof standardPermissions>

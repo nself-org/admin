@@ -194,7 +194,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         // Extract filename from output if possible
         const filenameMatch = result.stdout.match(/Created backup:\s*(.+\.(?:sql|dump)(?:\.gz)?)/i)
         if (filenameMatch) {
-          backupInfo.filename = filenameMatch[1].trim()
+          backupInfo.filename = (filenameMatch[1] ?? '').trim()
         }
       }
     }

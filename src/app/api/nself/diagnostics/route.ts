@@ -41,7 +41,7 @@ function parseChecks(stdout: string): DiagnosticCheck[] {
       if (msg) {
         const [name, ...rest] = msg.split(':')
         checks.push({
-          name: name.trim() || msg,
+          name: (name ?? '').trim() || msg,
           status: 'pass',
           message: rest.join(':').trim() || 'OK',
         })
@@ -59,7 +59,7 @@ function parseChecks(stdout: string): DiagnosticCheck[] {
       if (msg) {
         const [name, ...rest] = msg.split(':')
         checks.push({
-          name: name.trim() || msg,
+          name: (name ?? '').trim() || msg,
           status: 'fail',
           message: rest.join(':').trim() || 'Failed',
         })
@@ -76,7 +76,7 @@ function parseChecks(stdout: string): DiagnosticCheck[] {
       if (msg) {
         const [name, ...rest] = msg.split(':')
         checks.push({
-          name: name.trim() || msg,
+          name: (name ?? '').trim() || msg,
           status: 'warning',
           message: rest.join(':').trim() || 'Warning',
         })

@@ -75,7 +75,7 @@ describe('CampaignBuilder form validation', () => {
 
     // Click Segment target button
     const segmentBtn = screen.getAllByRole('button', { name: /segment/i })[0]
-    fireEvent.click(segmentBtn)
+    if (segmentBtn) fireEvent.click(segmentBtn)
 
     const segmentArea = screen.getByPlaceholderText(/\{"country"/i)
     fireEvent.change(segmentArea, { target: { value: 'not-json' } })

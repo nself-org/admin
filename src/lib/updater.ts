@@ -144,8 +144,8 @@ class AutoUpdater {
     if (!pre1 && pre2) return 1
     if (pre1 && pre2) {
       const order = ['alpha', 'beta', 'rc']
-      const idx1 = order.indexOf(pre1[1])
-      const idx2 = order.indexOf(pre2[1])
+      const idx1 = order.indexOf(pre1[1] ?? '')
+      const idx2 = order.indexOf(pre2[1] ?? '')
 
       if (idx1 !== idx2) return idx1 - idx2
 

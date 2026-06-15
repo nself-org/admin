@@ -265,8 +265,24 @@ export async function middleware(request: NextRequest) {
     }
   }
 
-  // Check for session cookie
-  const sessionToken = request.cookies.get('nself-session')?.value
+  // Also add /api/auth/bootstrap to PUBLIC_ROUTES so the CLI can reach it
+  // before a session exists. This is safe: the endpoint validates the token
+  // format and rate-limits to 1 call/60s from localhost.
+  if (pathname.startsWith('/api/auth/bootstrap')) {
+    const nonce = generateNonce()
+    const csp = buildCsp(nonce)
+    const response = nextResponseWithNonce(request, csp)
+    return applySecurityHeaders(response, nonce, csp)
+  }
+
+  // Accept session token from HttpOnly cookie OR Authorization: Bearer header.
+  // The Bearer path is used by API clients that cannot set cookies (e.g. the
+  // nself CLI making direct API calls after bootstrapping). The cookie path is
+  // the primary browser path.
+  const sessionToken =
+    request.cookies.get('nself-session')?.value ??
+    request.headers.get('authorization')?.replace(/^Bearer\s+/i, '') ??
+    undefined
 
   // If no session token, redirect to login
   if (!sessionToken) {

@@ -46,7 +46,7 @@ function parseStatusOutput(output: string): ServiceStatus[] {
     const parts = line.split(/\s+/)
     if (parts.length < 2) continue
 
-    const name = parts[0]
+    const name = parts[0] ?? ''
     const rawState = (parts[1] ?? '').toLowerCase()
 
     let state: ServiceStatus['state'] = 'unknown'

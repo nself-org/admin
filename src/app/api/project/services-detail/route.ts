@@ -28,6 +28,7 @@ function parseDockerCompose(content: string): Record<string, ServiceDetail> {
 
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i]
+    if (line === undefined) continue
     const trimmed = line.trim()
 
     // Check if we're entering services section
@@ -100,7 +101,7 @@ function parseDockerCompose(content: string): Record<string, ServiceDetail> {
         currentServiceData.ports.push(item.replace(/"/g, ''))
       } else if (currentSection === 'depends_on' && currentServiceData.depends_on) {
         // Handle both simple list and object format
-        const serviceName = item.split(':')[0].trim()
+        const serviceName = (item.split(':')[0] ?? '').trim()
         if (!currentServiceData.depends_on.includes(serviceName)) {
           currentServiceData.depends_on.push(serviceName)
         }
@@ -172,8 +173,8 @@ export async function GET(_request: NextRequest): Promise<NextResponse> {
         // Parse custom service definitions (CS_1, CS_2, etc.)
         for (let i = 1; i <= 99; i++) {
           const csMatch = envContent.match(new RegExp(`CS_${i}=(.+)`))
-          if (csMatch && csMatch[1].trim()) {
-            const parts = csMatch[1].split(':')
+          if (csMatch && (csMatch[1] ?? '').trim()) {
+            const parts = (csMatch[1] ?? '').split(':')
             const serviceName = parts[0]?.trim()
             if (serviceName) {
               customServiceInfo[serviceName] = {
@@ -193,9 +194,10 @@ export async function GET(_request: NextRequest): Promise<NextResponse> {
 
     // Merge custom service info with docker-compose data
     Object.keys(services).forEach((name) => {
-      if (customServiceInfo[name]) {
+      const svc = services[name]
+      if (customServiceInfo[name] && svc) {
         services[name] = {
-          ...services[name],
+          ...svc,
           customInfo: customServiceInfo[name],
         }
       }

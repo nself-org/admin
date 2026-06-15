@@ -186,7 +186,7 @@ function parseEnvironments(output: string) {
       const match = line.match(/(\w+)\s+\((.*?)\)/)
       if (match) {
         environments.push({
-          name: match[1],
+          name: match[1] ?? '',
           type: match[2] || 'custom',
           active: line.includes('*'),
           hasEnv: line.includes('.env'),

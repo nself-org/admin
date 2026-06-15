@@ -127,7 +127,7 @@ function NpTablesContent() {
         const fetchedRows = Array.isArray(data.rows) ? data.rows : []
         setRows(fetchedRows)
         setTotal(data.total ?? fetchedRows.length)
-        setColumns(fetchedRows.length > 0 ? Object.keys(fetchedRows[0]) : [])
+        setColumns(fetchedRows.length > 0 ? Object.keys(fetchedRows[0] ?? {}) : [])
       } else {
         setRowsError(`Error ${res.status}`)
         setRows([])

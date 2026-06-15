@@ -38,12 +38,16 @@ export async function GET(_request: Request): Promise<NextResponse> {
     }
 
     // If CLI command fails, try direct database query as fallback
+    const password = process.env.POSTGRES_PASSWORD
+    if (!password) {
+      throw new Error('POSTGRES_PASSWORD must be set — refusing to use default credentials')
+    }
     const { Client } = await import('pg')
     const client = new Client({
       host: process.env.POSTGRES_HOST || 'localhost',
       port: parseInt(process.env.POSTGRES_PORT || '5432'),
       user: process.env.POSTGRES_USER || 'postgres',
-      password: process.env.POSTGRES_PASSWORD || 'postgres-dev-password',
+      password,
       database: process.env.POSTGRES_DB || 'nself',
     })
 
@@ -88,8 +92,8 @@ export async function GET(_request: Request): Promise<NextResponse> {
       const intervalStr = String(interval)
       const match = intervalStr.match(/(\d+) days? (\d+):(\d+):(\d+)/)
       if (match) {
-        const days = parseInt(match[1])
-        const hours = parseInt(match[2])
+        const days = parseInt(match[1] ?? '0')
+        const hours = parseInt(match[2] ?? '0')
         if (days > 0) {
           return `${days} day${days > 1 ? 's' : ''}, ${hours} hour${hours > 1 ? 's' : ''}`
         }

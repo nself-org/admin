@@ -129,7 +129,7 @@ function DatabaseConsoleContent() {
         setIsLoading(false)
       }
 
-      setQuery(QUERY_TEMPLATES[0].query)
+      setQuery(QUERY_TEMPLATES[0]?.query ?? '')
     }
 
     load()
@@ -263,7 +263,7 @@ function DatabaseConsoleContent() {
       query,
       database: selectedDatabase,
       folder: saveQueryFolder || undefined,
-      createdAt: new Date().toISOString().split('T')[0],
+      createdAt: new Date().toISOString().split('T')[0] ?? '',
       starred: false,
     }
 
@@ -569,7 +569,7 @@ function DatabaseConsoleContent() {
                       const newQuery: SavedQuery = {
                         ...query,
                         id: Date.now().toString(),
-                        createdAt: new Date().toISOString().split('T')[0],
+                        createdAt: new Date().toISOString().split('T')[0] ?? '',
                       }
                       setSavedQueries((prev) => [newQuery, ...prev])
                     }}

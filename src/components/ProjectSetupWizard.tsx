@@ -1126,14 +1126,16 @@ export function ProjectSetupWizard({ mode = 'new' }: ProjectSetupWizardProps) {
     }
 
     if (currentStepIndex < steps.length - 1) {
-      setCurrentStep(steps[currentStepIndex + 1])
+      const nextStep = steps[currentStepIndex + 1]
+      if (nextStep) setCurrentStep(nextStep)
       setValidationErrors({})
     }
   }
 
   const handleBack = () => {
     if (currentStepIndex > 0) {
-      setCurrentStep(steps[currentStepIndex - 1])
+      const prevStep = steps[currentStepIndex - 1]
+      if (prevStep) setCurrentStep(prevStep)
     }
   }
 
@@ -2629,7 +2631,8 @@ nself start`}
                           value={service.name}
                           onChange={(e) => {
                             const updatedServices = [...config.customServices]
-                            updatedServices[index].name = e.target.value
+                            const svc = updatedServices[index]
+                            if (svc) svc.name = e.target.value
                               .toLowerCase()
                               .replace(/[^a-z0-9_-]/g, '')
                             setConfig({
@@ -2666,7 +2669,8 @@ nself start`}
                           value={service.framework}
                           onChange={(e) => {
                             const updatedServices = [...config.customServices]
-                            updatedServices[index].framework = e.target.value
+                            const svc2 = updatedServices[index]
+                            if (svc2) svc2.framework = e.target.value
                             setConfig({
                               ...config,
                               customServices: updatedServices,
@@ -2750,7 +2754,8 @@ nself start`}
                           value={service.port}
                           onChange={(e) => {
                             const updatedServices = [...config.customServices]
-                            updatedServices[index].port = parseInt(e.target.value) || 3000
+                            const svc3 = updatedServices[index]
+                            if (svc3) svc3.port = parseInt(e.target.value) || 3000
                             setConfig({
                               ...config,
                               customServices: updatedServices,
@@ -2778,7 +2783,8 @@ nself start`}
                           value={service.route}
                           onChange={(e) => {
                             const updatedServices = [...config.customServices]
-                            updatedServices[index].route = e.target.value
+                            const svc4 = updatedServices[index]
+                            if (svc4) svc4.route = e.target.value
                             setConfig({
                               ...config,
                               customServices: updatedServices,
@@ -2996,7 +3002,8 @@ nself start`}
                           value={app.displayName}
                           onChange={(e) => {
                             const updatedApps = [...config.frontendApps]
-                            updatedApps[index].displayName = e.target.value
+                            const app0 = updatedApps[index]
+                            if (app0) app0.displayName = e.target.value
                             setConfig({ ...config, frontendApps: updatedApps })
                           }}
                           className="-ml-1 border-b border-transparent bg-transparent px-1 text-lg font-medium outline-none hover:border-zinc-300 focus:border-blue-500 dark:hover:border-zinc-600 dark:focus:border-blue-400"
@@ -3024,7 +3031,8 @@ nself start`}
                           value={app.name}
                           onChange={(e) => {
                             const updatedApps = [...config.frontendApps]
-                            updatedApps[index].name = e.target.value
+                            const app1 = updatedApps[index]
+                            if (app1) app1.name = e.target.value
                               .toLowerCase()
                               .replace(/[^a-z0-9_]/g, '')
                             setConfig({ ...config, frontendApps: updatedApps })
@@ -3043,7 +3051,8 @@ nself start`}
                           value={app.tablePrefix}
                           onChange={(e) => {
                             const updatedApps = [...config.frontendApps]
-                            updatedApps[index].tablePrefix = e.target.value
+                            const app2 = updatedApps[index]
+                            if (app2) app2.tablePrefix = e.target.value
                               .toLowerCase()
                               .replace(/[^a-z0-9_]/g, '')
                             setConfig({ ...config, frontendApps: updatedApps })
@@ -3062,7 +3071,8 @@ nself start`}
                           value={app.framework}
                           onChange={(e) => {
                             const updatedApps = [...config.frontendApps]
-                            updatedApps[index].framework = e.target.value
+                            const app3 = updatedApps[index]
+                            if (app3) app3.framework = e.target.value
                             setConfig({ ...config, frontendApps: updatedApps })
                           }}
                           className="w-full rounded border border-zinc-300 bg-white px-2 py-1 text-sm text-zinc-900 dark:border-zinc-600 dark:bg-zinc-800 dark:text-white"
@@ -3099,7 +3109,8 @@ nself start`}
                           value={app.port}
                           onChange={(e) => {
                             const updatedApps = [...config.frontendApps]
-                            updatedApps[index].port = parseInt(e.target.value) || 3000
+                            const app4 = updatedApps[index]
+                            if (app4) app4.port = parseInt(e.target.value) || 3000
                             setConfig({ ...config, frontendApps: updatedApps })
                           }}
                           className="w-full rounded border border-zinc-300 bg-white px-2 py-1 text-sm text-zinc-900 dark:border-zinc-600 dark:bg-zinc-800 dark:text-white"
@@ -3117,7 +3128,8 @@ nself start`}
                             value={app.subdomain}
                             onChange={(e) => {
                               const updatedApps = [...config.frontendApps]
-                              updatedApps[index].subdomain = e.target.value
+                              const app5 = updatedApps[index]
+                              if (app5) app5.subdomain = e.target.value
                                 .toLowerCase()
                                 .replace(/[^a-z0-9-]/g, '')
                               setConfig({
@@ -3142,7 +3154,8 @@ nself start`}
                           value={app.deployment}
                           onChange={(e) => {
                             const updatedApps = [...config.frontendApps]
-                            updatedApps[index].deployment = e.target.value as any
+                            const app6 = updatedApps[index]
+                            if (app6) app6.deployment = e.target.value as any
                             setConfig({ ...config, frontendApps: updatedApps })
                           }}
                           className="w-full rounded border border-zinc-300 bg-white px-2 py-1 text-sm text-zinc-900 dark:border-zinc-600 dark:bg-zinc-800 dark:text-white"

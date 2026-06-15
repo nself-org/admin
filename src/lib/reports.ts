@@ -351,7 +351,9 @@ function calculateNextRun(
   schedule: Omit<ReportSchedule, 'id' | 'lastRun' | 'nextRun'> | ReportSchedule
 ): string {
   const now = new Date()
-  const [hours, minutes] = schedule.time.split(':').map(Number)
+  const timeParts = schedule.time.split(':').map(Number)
+  const hours = timeParts[0] ?? 0
+  const minutes = timeParts[1] ?? 0
 
   let nextRun = new Date(now)
   nextRun.setHours(hours, minutes, 0, 0)

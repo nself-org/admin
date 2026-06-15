@@ -258,7 +258,7 @@ function SQLConsoleContent() {
 
     if (activeTab === tabId) {
       const newActiveIndex = tabIndex > 0 ? tabIndex - 1 : 0
-      setActiveTab(tabs[newActiveIndex]?.id || tabs[0]?.id)
+      setActiveTab(tabs[newActiveIndex]?.id ?? tabs[0]?.id ?? '')
     }
   }
 
@@ -290,7 +290,7 @@ function SQLConsoleContent() {
         name: `Query ${savedQueries.length + 1}`,
         query: activeTabData.query,
         database: activeTabData.database,
-        createdAt: new Date().toISOString().split('T')[0],
+        createdAt: new Date().toISOString().split('T')[0] ?? '',
         starred: false,
       }
       setSavedQueries((prev) => [newSavedQuery, ...prev])

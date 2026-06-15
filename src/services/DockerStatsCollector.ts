@@ -171,8 +171,8 @@ export class DockerStatsCollector {
   private parseToMiB(str: string): number {
     const match = str.trim().match(/^([0-9.]+)\s*([a-zA-Z]+)$/)
     if (!match) return 0
-    const value = parseFloat(match[1])
-    const unit = match[2].toLowerCase()
+    const value = parseFloat(match[1] ?? '0')
+    const unit = (match[2] ?? '').toLowerCase()
     if (unit.startsWith('g')) return value * 1024
     if (unit.startsWith('m')) return value
     if (unit.startsWith('k')) return value / 1024
@@ -267,8 +267,8 @@ export class DockerStatsCollector {
             if (!str) return 0
             const match = str.match(/([0-9.]+)([A-Z]+)/i)
             if (!match) return 0
-            const value = parseFloat(match[1])
-            const unit = match[2].toUpperCase()
+            const value = parseFloat(match[1] ?? '0')
+            const unit = (match[2] ?? '').toUpperCase()
             if (unit.startsWith('G')) return value
             if (unit.startsWith('M')) return value / 1024
             if (unit.startsWith('K')) return value / (1024 * 1024)
@@ -324,8 +324,8 @@ export class DockerStatsCollector {
               if (!str) return 0
               const match = str.match(/([0-9.]+)([A-Z]+)/i)
               if (!match) return 0
-              const value = parseFloat(match[1])
-              const unit = match[2].toUpperCase()
+              const value = parseFloat(match[1] ?? '0')
+              const unit = (match[2] ?? '').toUpperCase()
               // Convert to MB
               if (unit.startsWith('G')) return value * 1024
               if (unit.startsWith('M')) return value
@@ -334,8 +334,8 @@ export class DockerStatsCollector {
               return value
             }
 
-            totalRx += parseNetIO(rx)
-            totalTx += parseNetIO(tx)
+            totalRx += parseNetIO(rx ?? '')
+            totalTx += parseNetIO(tx ?? '')
           }
         } catch {
           // Intentionally empty - skip invalid JSON lines

@@ -50,8 +50,8 @@ export async function GET(_request: NextRequest): Promise<NextResponse> {
 
         const match = trimmed.match(/^([^=]+)=(.*)$/)
         if (match) {
-          const key = match[1].trim()
-          const value = match[2].trim().replace(/^["']|["']$/g, '')
+          const key = (match[1] ?? '').trim()
+          const value = (match[2] ?? '').trim().replace(/^["']|["']$/g, '')
 
           // Map env variables to config
           switch (key) {
@@ -99,10 +99,10 @@ export async function GET(_request: NextRequest): Promise<NextResponse> {
                 config.customServices = services.map((s) => {
                   const [name, framework, port, route] = s.split(':')
                   return {
-                    name,
-                    framework,
-                    port: parseInt(port) || 4000,
-                    route: route || '',
+                    name: name ?? '',
+                    framework: framework ?? '',
+                    port: parseInt(port ?? '4000') || 4000,
+                    route: route ?? '',
                   }
                 })
               }
@@ -114,11 +114,11 @@ export async function GET(_request: NextRequest): Promise<NextResponse> {
                 config.frontendApps = apps.map((a) => {
                   const [name, displayName, tablePrefix, port, subdomain] = a.split(':')
                   return {
-                    name,
-                    displayName,
-                    tablePrefix,
-                    port: parseInt(port) || 3000,
-                    subdomain,
+                    name: name ?? '',
+                    displayName: displayName ?? '',
+                    tablePrefix: tablePrefix ?? '',
+                    port: parseInt(port ?? '3000') || 3000,
+                    subdomain: subdomain ?? '',
                   }
                 })
               }

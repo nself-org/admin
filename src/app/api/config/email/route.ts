@@ -5,8 +5,8 @@ import fs from 'fs/promises'
 import { NextRequest, NextResponse } from 'next/server'
 import path from 'path'
 
-// SMTP env keys managed by this route
-const SMTP_KEYS = [
+// SMTP env keys managed by this route (kept for reference/future use)
+const _SMTP_KEYS = [
   'AUTH_SMTP_HOST',
   'AUTH_SMTP_PORT',
   'AUTH_SMTP_SECURE',
@@ -64,8 +64,8 @@ async function writeEnvKeys(filePath: string, updates: Record<string, string>): 
   await fs.writeFile(filePath, newLines.join('\n'), 'utf-8')
 }
 
-/** Check if a key holds a secret value (mask on read). */
-function isSecret(key: string): boolean {
+/** Check if a key holds a secret value (mask on read). Reserved for future bulk env masking. */
+function _isSecret(key: string): boolean {
   const lower = key.toLowerCase()
   return (
     lower.includes('password') ||

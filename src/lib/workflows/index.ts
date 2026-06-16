@@ -608,17 +608,14 @@ function resolveTemplateVariables(
 
   for (const [key, value] of Object.entries(config)) {
     if (typeof value === 'string') {
-      // eslint-disable-next-line security/detect-object-injection
       resolved[key] = resolveStringTemplate(value, variables, previousSteps)
     } else if (typeof value === 'object' && value !== null) {
-      // eslint-disable-next-line security/detect-object-injection
       resolved[key] = resolveTemplateVariables(
         value as Record<string, unknown>,
         variables,
         previousSteps
       )
     } else {
-      // eslint-disable-next-line security/detect-object-injection
       resolved[key] = value
     }
   }
@@ -651,7 +648,6 @@ function resolveStringTemplate(
     }
 
     // Check if it's a direct variable
-    // eslint-disable-next-line security/detect-object-injection
     return String(variables[trimmedPath] ?? '')
   })
 }
@@ -662,7 +658,6 @@ function getNestedValue(obj: unknown, path: string): unknown {
 
   for (const part of parts) {
     if (current && typeof current === 'object' && part in current) {
-      // eslint-disable-next-line security/detect-object-injection
       current = (current as Record<string, unknown>)[part]
     } else {
       return undefined
@@ -833,7 +828,6 @@ function executeSetVariableAction(
     return { success: false, error: 'Variable name is required' }
   }
 
-  // eslint-disable-next-line security/detect-object-injection
   context.variables[name] = value
 
   return { success: true, output: { [name]: value } }
@@ -952,9 +946,7 @@ async function executeWorkflowInternal(
   try {
     // Execute actions in sequence (following connections)
     for (let i = 0; i < workflow.actions.length; i++) {
-      // eslint-disable-next-line security/detect-object-injection
       const action = workflow.actions[i]
-      // eslint-disable-next-line security/detect-object-injection
       const step = execution.steps[i]
 
       if (!action || !step) continue
@@ -1232,7 +1224,6 @@ export async function duplicateWorkflow(
   // Remap connections to use new action IDs
   const actionIdMap = new Map<string, string>()
   original.actions.forEach((action, index) => {
-    // eslint-disable-next-line security/detect-object-injection
     const duplicatedAction = duplicatedWorkflow.actions[index]
     if (duplicatedAction) {
       actionIdMap.set(action.id, duplicatedAction.id)
@@ -1489,7 +1480,6 @@ export function getTriggerTypeLabel(type: TriggerType): string {
     condition: 'Condition',
     workflow: 'Workflow',
   }
-  // eslint-disable-next-line security/detect-object-injection
   return labels[type]
 }
 

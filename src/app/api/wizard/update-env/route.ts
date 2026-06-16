@@ -13,9 +13,6 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     // Convert wizard config to env variables based on the step
     let envUpdates: Record<string, string> = {}
 
-    if (step === 'initial') {
-    }
-
     switch (step) {
       case 'initial':
         // Update basic project settings

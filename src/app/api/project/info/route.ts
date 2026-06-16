@@ -410,7 +410,9 @@ export async function GET(_request: NextRequest): Promise<NextResponse> {
             return 0
           })
         }
-      } catch {}
+      } catch {
+        // Ignore parse error — proceed with unsorted results
+      }
     }
 
     return NextResponse.json({

@@ -67,9 +67,7 @@ const mockRequireAuth = requireAuth as jest.MockedFunction<typeof requireAuth>
 
 // Access both the outer mock (for call-count assertions) and the custom
 // promisify target (for resolving promises).
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const mockExecFile = execFile as jest.MockedFunction<any>
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const mockExecFileCustom = (jest.requireMock('child_process') as any)
   .__execFileCustom as jest.MockedFunction<() => Promise<{ stdout: string; stderr: string }>>
 

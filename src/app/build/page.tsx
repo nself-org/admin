@@ -114,6 +114,7 @@ function BuildContent() {
         )
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- updateStep declared below to avoid TDZ; stable at runtime
   }, [wsProgress])
 
   // Update step helper

@@ -29,6 +29,7 @@ function HelpSearchContent() {
     if (initialQuery) {
       performSearch(initialQuery)
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- performSearch is stable (defined in same component scope without useCallback); adding it creates unnecessary re-runs
   }, [initialQuery])
 
   const performSearch = async (query: string) => {

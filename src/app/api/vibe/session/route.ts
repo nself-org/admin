@@ -100,7 +100,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   }
 }
 
-export async function GET(request: NextRequest): Promise<NextResponse> {
+export async function GET(_request: NextRequest): Promise<NextResponse> {
   if (!VIBE_ENABLED) {
     return NextResponse.json({ sessions: [], total: 0 })
   }

@@ -35,7 +35,7 @@ function parseChecks(stdout: string): DiagnosticCheck[] {
       trimmed.toLowerCase().includes('[pass]')
     ) {
       const msg = trimmed
-        .replace(/[✓\[\]]/g, '')
+        .replace(/[✓[\]]/g, '')
         .replace(/ok|pass/i, '')
         .trim()
       if (msg) {
@@ -53,7 +53,7 @@ function parseChecks(stdout: string): DiagnosticCheck[] {
       trimmed.toLowerCase().includes('error:')
     ) {
       const msg = trimmed
-        .replace(/[✗\[\]]/g, '')
+        .replace(/[✗[\]]/g, '')
         .replace(/fail|error/i, '')
         .trim()
       if (msg) {
@@ -70,7 +70,7 @@ function parseChecks(stdout: string): DiagnosticCheck[] {
       trimmed.toLowerCase().includes('warning:')
     ) {
       const msg = trimmed
-        .replace(/[⚠\[\]]/g, '')
+        .replace(/[⚠[\]]/g, '')
         .replace(/warn(ing)?/i, '')
         .trim()
       if (msg) {

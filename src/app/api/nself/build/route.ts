@@ -78,9 +78,6 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       // Run nself build using secure CLI wrapper
       const result = await nselfBuild({ force: true })
 
-      if (result.stderr) {
-      }
-
       // Check if build failed
       if (!result.success) {
         throw new Error(result.error || result.stderr || 'Build command failed')

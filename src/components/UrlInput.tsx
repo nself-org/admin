@@ -50,7 +50,6 @@ export function UrlInput({
           return 'Empty segment not allowed'
         }
         // Each segment must be valid subdomain format
-        // eslint-disable-next-line security/detect-unsafe-regex
         if (!/^[a-z0-9]([a-z0-9-]*[a-z0-9])?$/.test(segment)) {
           return `Invalid segment: ${segment}`
         }
@@ -109,7 +108,6 @@ export function UrlInput({
           if (!part) {
             return 'Empty domain segment'
           }
-          // eslint-disable-next-line security/detect-unsafe-regex
           if (!/^[a-z0-9]([a-z0-9-]*[a-z0-9])?$/.test(part)) {
             return `Invalid segment: ${part}`
           }

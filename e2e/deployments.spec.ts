@@ -32,7 +32,7 @@ test.describe('Deployments UI', () => {
     ).toBeVisible()
 
     // Check for a deployment list or table
-    const list = page.locator('[data-testid="deployment-list"], table tbody tr').first()
+    const _list = page.locator('[data-testid="deployment-list"], table tbody tr').first()
     // It might be empty if no deployments, so we just ensure the container exists
     await expect(page.locator('main').first()).toBeVisible()
   })

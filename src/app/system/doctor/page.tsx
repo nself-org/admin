@@ -120,7 +120,6 @@ function DoctorContent() {
 
   useEffect(() => {
     runDiagnostics()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const getStatusIcon = (status: string) => {

@@ -667,6 +667,7 @@ export default function SchemaBuilderPage() {
     } finally {
       setIsSaving(false)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- loadJobs declared below to avoid TDZ; stable at runtime
   }, [state, announce])
 
   // ── Apply migration ───────────────────────────────────────────────────────────
@@ -692,6 +693,7 @@ export default function SchemaBuilderPage() {
         })
       }
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- loadJobs declared below to avoid TDZ; stable at runtime
     [announce]
   )
 
@@ -720,6 +722,7 @@ export default function SchemaBuilderPage() {
         setShowRollbackWarning(null)
       }
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- loadJobs declared below to avoid TDZ; stable at runtime
     [announce]
   )
 

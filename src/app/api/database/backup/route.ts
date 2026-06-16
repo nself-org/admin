@@ -9,7 +9,7 @@ import { NextRequest, NextResponse } from 'next/server'
  * GET /api/database/backup - List database backups
  * Executes `nself db backup list --json`
  */
-export async function GET(request: NextRequest): Promise<NextResponse> {
+export async function GET(_request: NextRequest): Promise<NextResponse> {
   const startTime = Date.now()
 
   try {

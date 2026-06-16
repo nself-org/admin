@@ -190,8 +190,7 @@ function DashboardContent() {
   }, [
     healthMetrics.cpuUsage,
     healthMetrics.memoryUsage,
-    healthMetrics.errorCount,
-    services.length,
+    services,
     dismissedAlertIds,
   ])
 

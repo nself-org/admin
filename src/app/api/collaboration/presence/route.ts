@@ -12,7 +12,7 @@ import { NextRequest, NextResponse } from 'next/server'
 /**
  * GET /api/collaboration/presence - Get online users
  */
-export async function GET(request: NextRequest): Promise<NextResponse> {
+export async function GET(_request: NextRequest): Promise<NextResponse> {
   try {
     const onlineUsers = await getOnlineUsers()
 

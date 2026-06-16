@@ -5,8 +5,8 @@ import fs from 'fs/promises'
 import { NextRequest, NextResponse } from 'next/server'
 import path from 'path'
 
-// Rate-limit env keys managed by this route
-const RATE_LIMIT_KEYS = [
+// Rate-limit env keys managed by this route (kept for reference)
+const _RATE_LIMIT_KEYS = [
   'API_RATE_LIMIT_ENABLED',
   'API_RATE_LIMIT_REQUESTS',
   'API_RATE_LIMIT_WINDOW',

@@ -6,7 +6,7 @@ pre-commit:
   commands:
     lint:
       glob: "src/**/*.{ts,tsx,js,jsx}"
-      run: pnpm lint
+      run: pnpm lint --max-warnings=0
     format-check:
       glob: "**/*.{ts,tsx,js,jsx,json,md}"
       run: pnpm exec prettier --check {staged_files}

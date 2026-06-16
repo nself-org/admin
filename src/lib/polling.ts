@@ -168,6 +168,7 @@ export function usePolling(
         }
       }
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- spread deps array is intentional (polling hook API design); ESLint cannot statically verify spread deps
   }, [interval, ...deps])
 }
 

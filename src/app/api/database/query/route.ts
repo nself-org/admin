@@ -96,7 +96,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 }
 
 // Get database list
-export async function GET(request: NextRequest): Promise<NextResponse> {
+export async function GET(_request: NextRequest): Promise<NextResponse> {
   try {
     // Get list of databases
     const result = await executeNselfCommand('db', ['list', '--json'])

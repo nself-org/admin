@@ -27,3 +27,9 @@ pre-push:
       run: pnpm test:ci
     build:
       run: pnpm build
+    ci-suppression-guard:
+      run: bash ../.github/ci-suppression-guard.sh
+    ci-line-count-gate:
+      run: bash ../.github/ci-line-count-gate.sh
+    ci-stub-gate:
+      run: bash ../.github/ci-stub-gate.sh

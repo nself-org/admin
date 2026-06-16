@@ -109,6 +109,8 @@ jobs:
         uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: trivy-results.sarif
+        # ACCEPTED: SARIF upload requires GHAS; upload failure must not block CI gate.
+        # Expiry: permanent — SARIF upload is best-effort telemetry; blocking gate is "Fail on CRITICAL" step.
         continue-on-error: true
 
       - name: Trivy scan — CRITICAL gate (blocks push)
@@ -167,6 +169,8 @@ jobs:
 
       - name: Update Docker Hub description
         uses: peter-evans/dockerhub-description@v3
+        # ACCEPTED: Docker Hub description update is best-effort; credentials may be absent in fork PRs.
+        # Expiry: permanent — description update is informational, not a gate.
         continue-on-error: true
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}

@@ -35,6 +35,9 @@ jobs:
 
       - name: Run pnpm audit
         id: audit
+        # ACCEPTED: pnpm audit exits non-zero on any finding; continue-on-error captures the result
+        # for the parse step below, which is the real gate ("Fail on critical" step).
+        # Expiry: permanent — advisory count capture is the purpose of this step.
         continue-on-error: true
         run: |
           pnpm audit --json > audit-results.json || true

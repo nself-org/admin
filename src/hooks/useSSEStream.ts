@@ -92,6 +92,7 @@ export function useSSEStream() {
       }))
       scheduleReconnect()
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- handleMessage and scheduleReconnect are stable functions in same component scope; circular dependency prevents wrapping in useCallback
   }, [])
 
   /**

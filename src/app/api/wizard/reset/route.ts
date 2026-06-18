@@ -22,7 +22,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
     // Execute nself reset command with force flag
     try {
-      const { stdout, stderr } = await execAsync(`echo "Y" | ${nselfCommand} reset --force`, {
+      const { stdout, stderr: _stderr } = await execAsync(`echo "Y" | ${nselfCommand} reset --force`, {
         cwd: absoluteProjectPath,
         env: {
           ...process.env,
@@ -31,9 +31,6 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
         maxBuffer: 10 * 1024 * 1024, // 10MB buffer for output
         timeout: 30000, // 30 second timeout
       })
-
-      if (stderr) {
-      }
 
       return NextResponse.json({
         success: true,

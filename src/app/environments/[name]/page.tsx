@@ -61,7 +61,7 @@ interface ServerStatusPanelProps {
   deploying: boolean
 }
 
-function ServerStatusPanel({ server, envName, onDeploy, deploying }: ServerStatusPanelProps) {
+function ServerStatusPanel({ server, envName: _envName, onDeploy, deploying }: ServerStatusPanelProps) {
   const canDeploy = server.capability === 'manage'
 
   return (

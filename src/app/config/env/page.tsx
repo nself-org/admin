@@ -323,7 +323,7 @@ function EnvEditorContent() {
     setHasChanges(false)
     setEditingKey(null)
     setRebuildRequired(false)
-  }, [originalVariables, environment])
+  }, [originalVariables])
 
   const toggleSection = useCallback((section: string) => {
     setCollapsedSections((prev) => {

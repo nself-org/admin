@@ -226,9 +226,6 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
               'functions',
             ].some((service) => name.includes(service))
 
-          if (matches) {
-          }
-
           return matches
         })
 
@@ -286,8 +283,6 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
               healthNote = dockerSaysUnhealthy
                 ? 'Docker healthcheck unavailable (distroless) - verified healthy via HTTP'
                 : 'Verified via HTTP endpoint'
-              if (dockerSaysUnhealthy) {
-              }
             } else {
               health = 'unhealthy'
               healthNote = 'HTTP endpoint check failed'

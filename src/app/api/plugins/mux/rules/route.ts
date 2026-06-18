@@ -12,7 +12,7 @@ function muxBase(): string {
   return `http://${MUX_URL}`
 }
 
-export async function GET(request: NextRequest): Promise<NextResponse> {
+export async function GET(_request: NextRequest): Promise<NextResponse> {
   try {
     const res = await fetch(`${muxBase()}/mux/rules`)
     if (!res.ok) {

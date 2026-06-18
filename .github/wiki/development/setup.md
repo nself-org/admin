@@ -215,13 +215,17 @@ chmod +x ../nself/nself
 
 ### ESLint Configuration
 
+The lint gate enforces `--max-warnings=0` — zero warnings are permitted. All warnings are treated as errors.
+
 ```bash
-# Run linter
-npm run lint
+# Run linter (enforces zero warnings)
+pnpm lint
 
 # Fix auto-fixable issues
-npm run lint:fix
+pnpm exec eslint src --fix
 ```
+
+Security rules (`security/detect-*`) are disabled project-wide with linked GitHub issues (#45–48) — they produced false positives on admin-internal API routes that are not public-facing. All other warning categories (unused vars, react-hooks/exhaustive-deps) must be clean before merging.
 
 ### TypeScript
 

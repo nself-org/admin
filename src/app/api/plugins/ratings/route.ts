@@ -17,7 +17,7 @@ const MARKETPLACE_BASE =
   process.env.NSELF_MARKETPLACE_URL?.replace(/\/marketplace\/?$/, '') || 'https://plugins.nself.org'
 const RATINGS_URL = `${MARKETPLACE_BASE}/ratings`
 
-export async function GET(request: NextRequest): Promise<NextResponse> {
+export async function GET(_request: NextRequest): Promise<NextResponse> {
   const startTime = Date.now()
   try {
     const controller = new AbortController()

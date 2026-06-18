@@ -3,7 +3,7 @@ import { requireWizardNotComplete } from '@/lib/require-auth'
 import { NextRequest, NextResponse } from 'next/server'
 
 // GET wizard state
-export async function GET(request: NextRequest): Promise<NextResponse> {
+export async function GET(_request: NextRequest): Promise<NextResponse> {
   try {
     const db = await getDatabase()
     if (!db) {

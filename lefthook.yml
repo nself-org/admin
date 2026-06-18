@@ -6,7 +6,7 @@ pre-commit:
   commands:
     lint:
       glob: "src/**/*.{ts,tsx,js,jsx}"
-      run: pnpm lint
+      run: pnpm lint --max-warnings=0
     format-check:
       glob: "**/*.{ts,tsx,js,jsx,json,md}"
       run: pnpm exec prettier --check {staged_files}
@@ -27,3 +27,9 @@ pre-push:
       run: pnpm test:ci
     build:
       run: pnpm build
+    ci-suppression-guard:
+      run: bash ../.github/ci-suppression-guard.sh
+    ci-line-count-gate:
+      run: bash ../.github/ci-line-count-gate.sh
+    ci-stub-gate:
+      run: bash ../.github/ci-stub-gate.sh

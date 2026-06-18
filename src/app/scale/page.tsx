@@ -23,7 +23,7 @@ type ScaleUIState = 'loading' | 'empty' | 'error' | 'data' | 'partial'
 
 function ScaleContent() {
   const [uiState, setUiState] = useState<ScaleUIState>('loading')
-  const [loading, setLoading] = useState(true)
+  const [_loading, setLoading] = useState(true)
   const [services, setServices] = useState<ScalingConfig[]>([])
   const [actionLoading, setActionLoading] = useState<string | null>(null)
   const [actionSuccess, setActionSuccess] = useState<string | null>(null)

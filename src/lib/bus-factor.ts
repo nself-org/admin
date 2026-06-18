@@ -268,7 +268,7 @@ async function verifyGitHubMember(handle: string): Promise<VerificationResult> {
   }
 }
 
-async function verifyHetznerMember(email: string): Promise<VerificationResult> {
+async function verifyHetznerMember(_email: string): Promise<VerificationResult> {
   const token = process.env.HETZNER_NSELF_TOKEN
   if (!token) {
     return {
@@ -319,7 +319,7 @@ async function verifyVercelMember(email: string): Promise<VerificationResult> {
       }
 }
 
-async function verifyCloudflareMember(email: string): Promise<VerificationResult> {
+async function verifyCloudflareMember(_email: string): Promise<VerificationResult> {
   const token = process.env.CLOUDFLARE_API_KEY
   if (!token) {
     return {
@@ -348,7 +348,7 @@ async function verifyCloudflareMember(email: string): Promise<VerificationResult
   }
 }
 
-async function verifyStripeMember(email: string): Promise<VerificationResult> {
+async function verifyStripeMember(_email: string): Promise<VerificationResult> {
   // Stripe team members API requires a session-scoped key — restricted keys
   // cannot read team membership. Mark as awaiting_attestation so the operator
   // confirms via Stripe dashboard.
@@ -434,7 +434,6 @@ export async function logBusFactorEvent(
 // by PRE-CRUNCH-LOCKDOWN §USER-1.
 
 declare global {
-  // eslint-disable-next-line no-var
   var __busFactorNominations: Map<string, Nomination> | undefined
 }
 

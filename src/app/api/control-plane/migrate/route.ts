@@ -134,7 +134,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
     const safeName =
       (conn.name ?? conn.id ?? `remote-${results.length}`)
-        .replace(/[^a-zA-Z0-9_\-]/g, '-')
+        .replace(/[^a-zA-Z0-9_-]/g, '-')
         .replace(/^-+|-+$/g, '')
         .slice(0, 63) || `remote-${results.length}`
 

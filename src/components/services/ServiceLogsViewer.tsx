@@ -13,7 +13,7 @@ import {
 import { useWebSocket } from '@/hooks/useWebSocket'
 import { EventType, LogStreamEvent } from '@/lib/websocket/events'
 import { Download, Pause, Play, RefreshCw, Trash2, Wifi, WifiOff } from 'lucide-react'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 
 export interface LogEntry {
   timestamp: string
@@ -75,8 +75,8 @@ export function ServiceLogsViewer({
     }
   }, [connected, isStreaming, serviceName, on])
 
-  // Merge static logs with real-time logs
-  const allLogs = [...logs, ...realtimeLogs]
+  // Merge static logs with real-time logs — memoized to keep useEffect deps stable
+  const allLogs = useMemo(() => [...logs, ...realtimeLogs], [logs, realtimeLogs])
 
   const filteredLogs = allLogs.filter((log) => {
     const matchesLevel = levelFilter === 'all' || log.level === levelFilter

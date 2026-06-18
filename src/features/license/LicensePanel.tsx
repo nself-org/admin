@@ -264,8 +264,9 @@ export function LicensePanel() {
 
   useEffect(() => {
     loadStatus()
+    const timeouts = flashTimeouts.current
     return () => {
-      for (const id of flashTimeouts.current) clearTimeout(id)
+      for (const id of timeouts) clearTimeout(id)
     }
   }, [loadStatus])
 

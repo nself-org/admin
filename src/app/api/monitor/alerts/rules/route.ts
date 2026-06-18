@@ -8,7 +8,7 @@ import { promisify } from 'util'
 
 const execAsync = promisify(exec)
 
-export async function GET(request: NextRequest): Promise<NextResponse> {
+export async function GET(_request: NextRequest): Promise<NextResponse> {
   const startTime = Date.now()
   try {
     const projectPath = getProjectPath()

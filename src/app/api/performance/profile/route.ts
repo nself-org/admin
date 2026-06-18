@@ -5,7 +5,7 @@ import type { PerformanceProfile } from '@/types/performance'
 import { NextRequest, NextResponse } from 'next/server'
 
 // GET /api/performance/profile - Get system-wide performance profile
-export async function GET(request: NextRequest): Promise<NextResponse> {
+export async function GET(_request: NextRequest): Promise<NextResponse> {
   const startTime = Date.now()
 
   try {

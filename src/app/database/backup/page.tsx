@@ -70,6 +70,7 @@ export default function BackupRestorePage() {
 
   useEffect(() => {
     void fetchBackups()
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- fetchBackups is intentionally not memoized; runs once on mount
   }, [])
 
   // ── Create backup ────────────────────────────────────────────────────────────

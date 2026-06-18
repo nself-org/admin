@@ -908,7 +908,7 @@ function ApiExplorerContent() {
   })
 
   const [currentResponse, setCurrentResponse] = useState<ApiResponse | null>(null)
-  const [collections, setCollections] = useState<Collection[]>([])
+  const [collections, _setCollections] = useState<Collection[]>([])
   const [requestHistory, setRequestHistory] = useState<ApiRequest[]>([])
   const [environments, setEnvironments] = useState<Environment[]>([])
   const [loading, setLoading] = useState(false)

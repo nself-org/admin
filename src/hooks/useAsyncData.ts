@@ -99,13 +99,14 @@ export function useAsyncData<T>(
         abortControllerRef.current.abort()
       }
     }
-  }, [])
+  }, [fetchData, fetchOnMount])
 
   // Refetch when dependencies change
   useEffect(() => {
     if (dependencies.length > 0 && !loading) {
       fetchData()
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- spread deps array is intentional (hook API); ESLint cannot statically verify dynamic deps arrays
   }, dependencies)
 
   // Set up polling if enabled

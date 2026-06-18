@@ -20,7 +20,7 @@ type SyncUIState = 'loading' | 'empty' | 'error' | 'data'
 
 function SyncContent() {
   const [uiState, setUiState] = useState<SyncUIState>('loading')
-  const [loading, setLoading] = useState(true)
+  const [_loading, setLoading] = useState(true)
   const [syncing, setSyncing] = useState(false)
   const [syncSuccess, setSyncSuccess] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)

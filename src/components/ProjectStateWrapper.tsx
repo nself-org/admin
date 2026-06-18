@@ -60,6 +60,7 @@ export function ProjectStateWrapper({ children }: ProjectStateWrapperProps) {
       setLoading(false)
       checkProjectStatus()
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- checkProjectStatus and checkProjectStatusSilently are stable within the render cycle; adding them would cause infinite loops (no useCallback wrapping intended by design)
   }, [isAuthenticated])
 
   const checkProjectStatus = async () => {

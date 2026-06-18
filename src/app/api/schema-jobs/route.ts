@@ -28,7 +28,7 @@ function getJobsCollection() {
   )
 }
 
-export async function GET(request: NextRequest): Promise<NextResponse> {
+export async function GET(_request: NextRequest): Promise<NextResponse> {
   try {
     const col = getJobsCollection()
     const jobs = col

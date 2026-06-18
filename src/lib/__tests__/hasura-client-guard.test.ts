@@ -13,7 +13,6 @@ const VALID_SECRET = 'b'.repeat(32) // 32-char placeholder that passes validatio
 // Re-require after env mutation to trigger module-level guard.
 function freshModule() {
   jest.resetModules()
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
   return require('@/lib/hasura-client')
 }
 

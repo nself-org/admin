@@ -128,6 +128,7 @@ export default function FlagsPage() {
 
   useEffect(() => {
     fetchFlags()
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- fetchFlags is not memoized; typeFilter is the real dep that triggers refetch
   }, [typeFilter])
 
   const handleToggle = async (flag: FeatureFlag) => {

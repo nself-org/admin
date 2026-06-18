@@ -36,7 +36,9 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         if (env) {
           savedConfig = envToWizardConfig(env)
         }
-      } catch (_err) {}
+      } catch {
+        // Ignore load error — proceed with defaults
+      }
     }
 
     // Run nself reset with --force to stop and clean

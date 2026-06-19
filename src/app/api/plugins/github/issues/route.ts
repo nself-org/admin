@@ -1,5 +1,5 @@
-import type { GitHubIssue } from '@/types/github'
 import { requireAuth } from '@/lib/require-auth'
+import type { GitHubIssue } from '@/types/github'
 import { NextRequest, NextResponse } from 'next/server'
 
 /**

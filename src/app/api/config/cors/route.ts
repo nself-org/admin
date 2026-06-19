@@ -6,7 +6,11 @@ import { NextRequest, NextResponse } from 'next/server'
 import path from 'path'
 
 // CORS-related env var keys managed by this route (kept for reference)
-const _CORS_KEYS = ['CORS_ALLOWED_ORIGINS', 'HASURA_GRAPHQL_CORS_DOMAIN', 'AUTH_CLIENT_URL'] as const
+const _CORS_KEYS = [
+  'CORS_ALLOWED_ORIGINS',
+  'HASURA_GRAPHQL_CORS_DOMAIN',
+  'AUTH_CLIENT_URL',
+] as const
 
 /** Parse an env file into a key→value map. */
 function parseEnvFile(content: string): Record<string, string> {

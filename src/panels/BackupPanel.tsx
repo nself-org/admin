@@ -17,11 +17,11 @@
 
 import { AdminLoginOverlay } from '@/components/AdminLoginOverlay'
 import { AsyncScreen, type AsyncScreenState } from '@/components/AsyncScreen'
+import { useStackStatus } from '@/hooks/useStackStatus'
 import { backupFailedError, err, ok, toAdminError, type Result } from '@/lib/result'
 import { backupNameSchema } from '@/lib/validation/admin-forms'
 import { Archive, HardDrive, Plus } from 'lucide-react'
 import { useCallback, useEffect, useState } from 'react'
-import { useStackStatus } from '@/hooks/useStackStatus'
 
 // ---------------------------------------------------------------------------
 // Types
@@ -77,7 +77,10 @@ export function BackupPanel() {
     setLoading(true)
     try {
       const res = await fetch('/api/system/backups')
-      if (res.status === 401) { setSessionExpired(true); return }
+      if (res.status === 401) {
+        setSessionExpired(true)
+        return
+      }
       if (!res.ok) throw new Error(`HTTP ${res.status}`)
       const data: { backups: Backup[] } = await res.json()
       setResult(ok(data.backups))
@@ -107,7 +110,10 @@ export function BackupPanel() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name: parsed.data.name }),
       })
-      if (res.status === 401) { setSessionExpired(true); return }
+      if (res.status === 401) {
+        setSessionExpired(true)
+        return
+      }
       if (!res.ok) {
         const data = await res.json().catch(() => ({}))
         setCreateError(backupFailedError(data?.error).userMessage)
@@ -162,7 +168,7 @@ export function BackupPanel() {
               onChange={(e) => setBackupName(e.target.value)}
               placeholder="my-backup-2026-06-16"
               maxLength={50}
-              className="w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm placeholder-zinc-400 focus:border-zinc-500 focus:outline-none focus:ring-1 focus:ring-zinc-500 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100 dark:placeholder-zinc-600"
+              className="w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm placeholder-zinc-400 focus:border-zinc-500 focus:ring-1 focus:ring-zinc-500 focus:outline-none dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100 dark:placeholder-zinc-600"
             />
             {nameError && <p className="text-xs text-red-600 dark:text-red-400">{nameError}</p>}
             {createError && <p className="text-xs text-red-600 dark:text-red-400">{createError}</p>}
@@ -187,7 +193,9 @@ export function BackupPanel() {
         errorMessage={result && !result.ok ? result.error.userMessage : undefined}
         emptyMessage="No backups yet — create your first backup above."
         emptyAction="Create backup"
-        onEmptyAction={() => document.querySelector<HTMLInputElement>('input[placeholder*="backup"]')?.focus()}
+        onEmptyAction={() =>
+          document.querySelector<HTMLInputElement>('input[placeholder*="backup"]')?.focus()
+        }
       >
         <ul className="divide-y divide-zinc-100 rounded-lg border border-zinc-200 bg-white dark:divide-zinc-800 dark:border-zinc-800 dark:bg-zinc-900">
           {backups.map((backup) => (

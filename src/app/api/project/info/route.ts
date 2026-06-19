@@ -1,4 +1,5 @@
 import { getProjectPath } from '@/lib/paths'
+import { requireAuth } from '@/lib/require-auth'
 import { exec } from 'child_process'
 import fs from 'fs'
 import { NextRequest, NextResponse } from 'next/server'
@@ -7,7 +8,10 @@ import { promisify } from 'util'
 
 const execAsync = promisify(exec)
 
-export async function GET(_request: NextRequest): Promise<NextResponse> {
+export async function GET(request: NextRequest): Promise<NextResponse> {
+  const authError = await requireAuth(request)
+  if (authError) return authError
+
   try {
     // Use the same project path as the build API uses (from getProjectPath)
     const projectPath = getProjectPath()
@@ -81,7 +85,8 @@ export async function GET(_request: NextRequest): Promise<NextResponse> {
         if (domainMatch) projectInfo.domain = (domainMatch[1] ?? '').trim()
         if (dbNameMatch) projectInfo.databaseName = (dbNameMatch[1] ?? '').trim()
         if (dbPasswordMatch) projectInfo.dbPassword = (dbPasswordMatch[1] ?? '').trim()
-        if (backupEnabledMatch) projectInfo.backupEnabled = (backupEnabledMatch[1] ?? '').trim() === 'true'
+        if (backupEnabledMatch)
+          projectInfo.backupEnabled = (backupEnabledMatch[1] ?? '').trim() === 'true'
         if (backupScheduleMatch) projectInfo.backupSchedule = (backupScheduleMatch[1] ?? '').trim()
         if (monitoringEnabledMatch)
           projectInfo.monitoringEnabled = (monitoringEnabledMatch[1] ?? '').trim() === 'true'

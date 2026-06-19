@@ -187,12 +187,7 @@ function DashboardContent() {
     }
 
     return derived.filter((a) => !dismissedAlertIds.has(a.id))
-  }, [
-    healthMetrics.cpuUsage,
-    healthMetrics.memoryUsage,
-    services,
-    dismissedAlertIds,
-  ])
+  }, [healthMetrics.cpuUsage, healthMetrics.memoryUsage, services, dismissedAlertIds])
 
   // Service action handlers
   const handleStartService = async (name: string) => {

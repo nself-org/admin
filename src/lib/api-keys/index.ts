@@ -676,7 +676,9 @@ export async function getApiKeyUsageStats(keyId: string): Promise<ApiKeyUsageSta
     .map(([endpoint, count]) => ({
       endpoint,
       count,
-      avgTime: (endpointTimes[endpoint] ?? []).reduce((a, b) => a + b, 0) / ((endpointTimes[endpoint] ?? []).length || 1),
+      avgTime:
+        (endpointTimes[endpoint] ?? []).reduce((a, b) => a + b, 0) /
+        ((endpointTimes[endpoint] ?? []).length || 1),
     }))
     .sort((a, b) => b.count - a.count)
     .slice(0, 10)

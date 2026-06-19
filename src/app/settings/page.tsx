@@ -131,11 +131,7 @@ function UserPreferencesSection() {
   }
 
   return (
-    <SettingsSection
-      title={t('userSettingsTitle')}
-      description={t('userSettingsDesc')}
-      icon={User}
-    >
+    <SettingsSection title={t('userSettingsTitle')} description={t('userSettingsDesc')} icon={User}>
       <div className="space-y-6">
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
           <div>
@@ -553,16 +549,10 @@ function APITokensSection() {
   }
 
   return (
-    <SettingsSection
-      title={t('apiKeysTitle')}
-      description={t('apiKeysDesc')}
-      icon={Key}
-    >
+    <SettingsSection title={t('apiKeysTitle')} description={t('apiKeysDesc')} icon={Key}>
       <div className="space-y-6">
         <div className="flex items-center justify-between">
-          <p className="text-sm text-zinc-600 dark:text-zinc-400">
-            {t('apiKeysIntro')}
-          </p>
+          <p className="text-sm text-zinc-600 dark:text-zinc-400">{t('apiKeysIntro')}</p>
           <Button onClick={() => setShowCreateForm(true)} className="flex items-center gap-2">
             <Plus className="h-4 w-4" />
             Create Token
@@ -709,20 +699,14 @@ function SecuritySettingsSection() {
   }
 
   return (
-    <SettingsSection
-      title={t('securityTitle')}
-      description={t('securityDesc')}
-      icon={Shield}
-    >
+    <SettingsSection title={t('securityTitle')} description={t('securityDesc')} icon={Shield}>
       <div className="space-y-8">
         {/* Two-Factor Authentication */}
         <div>
           <div className="mb-4 flex items-center justify-between">
             <div>
               <h4 className="font-medium">{t('twoFactor')}</h4>
-              <p className="text-sm text-zinc-600 dark:text-zinc-400">
-                {t('twoFactorDesc')}
-              </p>
+              <p className="text-sm text-zinc-600 dark:text-zinc-400">{t('twoFactorDesc')}</p>
             </div>
             <Button
               variant={security.twoFactorEnabled ? 'outline' : 'primary'}
@@ -766,9 +750,7 @@ function SecuritySettingsSection() {
             }
             className="w-32 rounded-lg border border-zinc-200 bg-white px-3 py-2 dark:border-zinc-700 dark:bg-zinc-900"
           />
-          <p className="mt-1 text-xs text-zinc-500">
-            {t('sessionTimeoutDesc')}
-          </p>
+          <p className="mt-1 text-xs text-zinc-500">{t('sessionTimeoutDesc')}</p>
         </div>
 
         {/* Active Sessions */}
@@ -1103,9 +1085,7 @@ function ExportImportSection() {
       <div className="space-y-6">
         <div>
           <h4 className="mb-4 font-medium">{t('exportSettings')}</h4>
-          <p className="mb-4 text-sm text-zinc-600 dark:text-zinc-400">
-            {t('exportDesc')}
-          </p>
+          <p className="mb-4 text-sm text-zinc-600 dark:text-zinc-400">{t('exportDesc')}</p>
 
           <div className="mb-6 space-y-3">
             {[
@@ -1158,9 +1138,7 @@ function ExportImportSection() {
 
         <div className="border-t border-zinc-200 pt-6 dark:border-zinc-700">
           <h4 className="mb-4 font-medium">{t('importSettings')}</h4>
-          <p className="mb-4 text-sm text-zinc-600 dark:text-zinc-400">
-            {t('importDesc')}
-          </p>
+          <p className="mb-4 text-sm text-zinc-600 dark:text-zinc-400">{t('importDesc')}</p>
 
           <div className="rounded-lg border-2 border-dashed border-zinc-300 p-6 text-center dark:border-zinc-600">
             <Upload className="mx-auto mb-2 h-8 w-8 text-zinc-400" />

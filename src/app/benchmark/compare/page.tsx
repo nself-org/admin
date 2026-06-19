@@ -1,8 +1,8 @@
 'use client'
 
-import { createScopedTranslator } from '@/features/i18n'
 import { HeroPattern } from '@/components/HeroPattern'
 import { ChartSkeleton } from '@/components/skeletons'
+import { createScopedTranslator } from '@/features/i18n'
 import type { BenchmarkBaseline, BenchmarkComparison } from '@/types/performance'
 import {
   ArrowDown,
@@ -213,9 +213,7 @@ function CompareContent() {
           <h1 className="bg-gradient-to-r from-green-600 to-emerald-400 bg-clip-text text-4xl font-bold text-transparent dark:from-green-400 dark:to-emerald-300">
             {t('title')}
           </h1>
-          <p className="mt-3 text-lg text-zinc-600 dark:text-zinc-400">
-            {t('subtitle')}
-          </p>
+          <p className="mt-3 text-lg text-zinc-600 dark:text-zinc-400">{t('subtitle')}</p>
         </div>
 
         {/* Selection */}
@@ -449,9 +447,7 @@ function CompareContent() {
             <h3 className="mb-2 text-lg font-semibold text-zinc-900 dark:text-white">
               {t('selectPromptTitle')}
             </h3>
-            <p className="text-zinc-600 dark:text-zinc-400">
-              {t('selectPromptDesc')}
-            </p>
+            <p className="text-zinc-600 dark:text-zinc-400">{t('selectPromptDesc')}</p>
           </div>
         )}
 
@@ -462,13 +458,16 @@ function CompareContent() {
           </h3>
           <div className="space-y-2 font-mono text-sm">
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-green-500">{t('cliCompareBaseline')}</span> - {t('cliCompareBaselineDesc')}
+              <span className="text-green-500">{t('cliCompareBaseline')}</span> -{' '}
+              {t('cliCompareBaselineDesc')}
             </p>
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-green-500">{t('cliCompareTwoBaselines')}</span> - {t('cliCompareTwoBaselinesDesc')}
+              <span className="text-green-500">{t('cliCompareTwoBaselines')}</span> -{' '}
+              {t('cliCompareTwoBaselinesDesc')}
             </p>
             <p className="text-zinc-600 dark:text-zinc-400">
-              <span className="text-green-500">{t('cliCompareJson')}</span> - {t('cliCompareJsonDesc')}
+              <span className="text-green-500">{t('cliCompareJson')}</span> -{' '}
+              {t('cliCompareJsonDesc')}
             </p>
           </div>
         </div>

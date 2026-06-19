@@ -9,9 +9,7 @@
  * SPORT: REGISTRY-WEB-SURFACES.md — admin typed errors
  */
 
-export type Result<T, E = AdminError> =
-  | { ok: true; value: T }
-  | { ok: false; error: E }
+export type Result<T, E = AdminError> = { ok: true; value: T } | { ok: false; error: E }
 
 /** Wrap a successful value in a Result. */
 export function ok<T>(value: T): Result<T, never> {

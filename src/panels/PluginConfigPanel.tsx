@@ -16,10 +16,10 @@
 
 import { AdminLoginOverlay } from '@/components/AdminLoginOverlay'
 import { AsyncScreen, type AsyncScreenState } from '@/components/AsyncScreen'
+import { useStackStatus } from '@/hooks/useStackStatus'
 import { err, ok, toAdminError, type Result } from '@/lib/result'
 import { Package, ToggleLeft, ToggleRight } from 'lucide-react'
 import { useCallback, useEffect, useState } from 'react'
-import { useStackStatus } from '@/hooks/useStackStatus'
 
 // ---------------------------------------------------------------------------
 // Types
@@ -49,7 +49,10 @@ export function PluginConfigPanel() {
     setLoading(true)
     try {
       const res = await fetch('/api/plugins/config')
-      if (res.status === 401) { setSessionExpired(true); return }
+      if (res.status === 401) {
+        setSessionExpired(true)
+        return
+      }
       if (!res.ok) throw new Error(`HTTP ${res.status}`)
       const data: { plugins: PluginConfig[] } = await res.json()
       setResult(ok(data.plugins))
@@ -72,7 +75,10 @@ export function PluginConfigPanel() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ enabled }),
       })
-      if (res.status === 401) { setSessionExpired(true); return }
+      if (res.status === 401) {
+        setSessionExpired(true)
+        return
+      }
       if (!res.ok) return
       // Optimistic update
       setResult((prev) => {

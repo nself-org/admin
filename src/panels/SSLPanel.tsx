@@ -16,10 +16,10 @@
 
 import { AdminLoginOverlay } from '@/components/AdminLoginOverlay'
 import { AsyncScreen, type AsyncScreenState } from '@/components/AsyncScreen'
+import { useStackStatus } from '@/hooks/useStackStatus'
 import { err, ok, toAdminError, type Result } from '@/lib/result'
 import { AlertTriangle, CheckCircle2, Globe, Lock, XCircle } from 'lucide-react'
 import { useCallback, useEffect, useState } from 'react'
-import { useStackStatus } from '@/hooks/useStackStatus'
 
 // ---------------------------------------------------------------------------
 // Types
@@ -39,23 +39,29 @@ interface CertStatus {
 
 function certStatusIcon(status: CertStatus['status']) {
   switch (status) {
-    case 'valid':    return <CheckCircle2 className="h-4 w-4 text-green-500" />
-    case 'expiring': return <AlertTriangle className="h-4 w-4 text-amber-500" />
-    case 'expired':  return <XCircle className="h-4 w-4 text-red-500" />
-    case 'missing':  return <Lock className="h-4 w-4 text-zinc-400" />
+    case 'valid':
+      return <CheckCircle2 className="h-4 w-4 text-green-500" />
+    case 'expiring':
+      return <AlertTriangle className="h-4 w-4 text-amber-500" />
+    case 'expired':
+      return <XCircle className="h-4 w-4 text-red-500" />
+    case 'missing':
+      return <Lock className="h-4 w-4 text-zinc-400" />
   }
 }
 
 function certStatusLabel(status: CertStatus['status']): string {
-  return { valid: 'Valid', expiring: 'Expiring soon', expired: 'Expired', missing: 'Missing' }[status]
+  return { valid: 'Valid', expiring: 'Expiring soon', expired: 'Expired', missing: 'Missing' }[
+    status
+  ]
 }
 
 function certStatusClass(status: CertStatus['status']): string {
   return {
-    valid:    'text-green-600 dark:text-green-400',
+    valid: 'text-green-600 dark:text-green-400',
     expiring: 'text-amber-600 dark:text-amber-400',
-    expired:  'text-red-600 dark:text-red-400',
-    missing:  'text-zinc-400',
+    expired: 'text-red-600 dark:text-red-400',
+    missing: 'text-zinc-400',
   }[status]
 }
 
@@ -73,7 +79,10 @@ export function SSLPanel() {
     setLoading(true)
     try {
       const res = await fetch('/api/ssl/status')
-      if (res.status === 401) { setSessionExpired(true); return }
+      if (res.status === 401) {
+        setSessionExpired(true)
+        return
+      }
       if (!res.ok) throw new Error(`HTTP ${res.status}`)
       const data: { certs: CertStatus[] } = await res.json()
       setResult(ok(data.certs))
@@ -131,9 +140,7 @@ export function SSLPanel() {
                       {cert.domain}
                     </span>
                   </div>
-                  {cert.issuer && (
-                    <p className="text-xs text-zinc-400">{cert.issuer}</p>
-                  )}
+                  {cert.issuer && <p className="text-xs text-zinc-400">{cert.issuer}</p>}
                 </div>
               </div>
               <div className="text-right">

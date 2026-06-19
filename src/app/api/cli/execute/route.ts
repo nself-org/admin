@@ -173,7 +173,8 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
       // Add validated arguments
       if (parsedCommand.args) {
-        const allowedArgs = (ALLOWED_NSELF_COMMANDS[parsedCommand.command] ?? { args: [] }).args || []
+        const allowedArgs =
+          (ALLOWED_NSELF_COMMANDS[parsedCommand.command] ?? { args: [] }).args || []
         for (const arg of parsedCommand.args) {
           // Validate argument is allowed or matches pattern
           if (
@@ -193,7 +194,8 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
       // Add validated options
       if (parsedCommand.options) {
-        const allowedOptions = (ALLOWED_NSELF_COMMANDS[parsedCommand.command] ?? { options: [] }).options || []
+        const allowedOptions =
+          (ALLOWED_NSELF_COMMANDS[parsedCommand.command] ?? { options: [] }).options || []
         for (const [opt, value] of Object.entries(parsedCommand.options)) {
           if (allowedOptions.includes(opt)) {
             cmdArgs.push(opt)

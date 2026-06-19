@@ -625,10 +625,11 @@ export default function InitStep4() {
       value = value.toLowerCase().replace(/[^a-z0-9_-]/g, '')
     }
     const svc = updated[index]
-    if (svc) updated[index] = {
-      ...svc,
-      [field]: value,
-    }
+    if (svc)
+      updated[index] = {
+        ...svc,
+        [field]: value,
+      }
     setLocalServices(updated)
   }
 

@@ -16,7 +16,15 @@
 
 'use client'
 
-import { AlertCircle, Clock, Loader2, RefreshCw, ServerCrash, ShieldOff, WifiOff } from 'lucide-react'
+import {
+  AlertCircle,
+  Clock,
+  Loader2,
+  RefreshCw,
+  ServerCrash,
+  ShieldOff,
+  WifiOff,
+} from 'lucide-react'
 import type { ReactNode } from 'react'
 
 // ---------------------------------------------------------------------------
@@ -149,13 +157,7 @@ function AuthExpiredState({ onReauth }: { onReauth?: () => void }) {
   )
 }
 
-function ErrorState({
-  message,
-  onRetry,
-}: {
-  message?: string
-  onRetry?: () => void
-}) {
+function ErrorState({ message, onRetry }: { message?: string; onRetry?: () => void }) {
   return (
     <StateCard>
       <StateIcon icon={AlertCircle} className="text-red-500" />

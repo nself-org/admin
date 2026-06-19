@@ -366,11 +366,12 @@ function EnvEditorContent() {
         const existingIndex = newVars.findIndex((v) => v.key === key)
         if (existingIndex >= 0) {
           const existingVar = newVars[existingIndex]
-          if (existingVar) newVars[existingIndex] = {
-            ...existingVar,
-            value,
-            hasChanges: true,
-          }
+          if (existingVar)
+            newVars[existingIndex] = {
+              ...existingVar,
+              value,
+              hasChanges: true,
+            }
         } else {
           newVars.push({
             key,

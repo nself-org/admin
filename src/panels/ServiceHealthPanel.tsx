@@ -16,10 +16,10 @@
 
 import { AdminLoginOverlay } from '@/components/AdminLoginOverlay'
 import { AsyncScreen, type AsyncScreenState } from '@/components/AsyncScreen'
+import { useStackStatus } from '@/hooks/useStackStatus'
 import { err, ok, toAdminError, type Result } from '@/lib/result'
 import { Activity, CheckCircle2, Circle, XCircle } from 'lucide-react'
 import { useCallback, useEffect, useState } from 'react'
-import { useStackStatus } from '@/hooks/useStackStatus'
 
 // ---------------------------------------------------------------------------
 // Types
@@ -128,10 +128,7 @@ export function ServiceHealthPanel() {
       >
         <ul className="divide-y divide-zinc-100 rounded-lg border border-zinc-200 bg-white dark:divide-zinc-800 dark:border-zinc-800 dark:bg-zinc-900">
           {services.map((svc) => (
-            <li
-              key={svc.name}
-              className="flex items-center justify-between px-4 py-3"
-            >
+            <li key={svc.name} className="flex items-center justify-between px-4 py-3">
               <div className="flex items-center gap-3">
                 {statusIcon(svc.status)}
                 <span className="text-sm font-medium text-zinc-800 dark:text-zinc-100">

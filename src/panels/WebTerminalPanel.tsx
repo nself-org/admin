@@ -17,10 +17,10 @@
 
 import { AdminLoginOverlay } from '@/components/AdminLoginOverlay'
 import { AsyncScreen, type AsyncScreenState } from '@/components/AsyncScreen'
+import { useStackStatus } from '@/hooks/useStackStatus'
 import { err, ok, toAdminError, type Result } from '@/lib/result'
 import { Play, Terminal } from 'lucide-react'
 import { useCallback, useRef, useState } from 'react'
-import { useStackStatus } from '@/hooks/useStackStatus'
 
 // ---------------------------------------------------------------------------
 // Types
@@ -54,7 +54,10 @@ export function WebTerminalPanel() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ command: command.trim() }),
       })
-      if (res.status === 401) { setSessionExpired(true); return }
+      if (res.status === 401) {
+        setSessionExpired(true)
+        return
+      }
       if (!res.ok) throw new Error(`HTTP ${res.status}`)
       const data: CommandResult = await res.json()
       const cmdResult = ok(data)
@@ -87,11 +90,7 @@ export function WebTerminalPanel() {
 
   return (
     <section aria-label="Web Terminal" className="space-y-4">
-      {sessionExpired && (
-        <AdminLoginOverlay
-          onSuccess={() => setSessionExpired(false)}
-        />
-      )}
+      {sessionExpired && <AdminLoginOverlay onSuccess={() => setSessionExpired(false)} />}
 
       {/* Command input */}
       {!stackIsDown && (
@@ -138,7 +137,9 @@ export function WebTerminalPanel() {
                 <span className="text-zinc-500">$ </span>
                 {entry.command}
               </p>
-              <pre className={`whitespace-pre-wrap text-xs ${entry.exitCode === 0 ? 'text-zinc-300' : 'text-red-400'}`}>
+              <pre
+                className={`text-xs whitespace-pre-wrap ${entry.exitCode === 0 ? 'text-zinc-300' : 'text-red-400'}`}
+              >
                 {entry.output}
               </pre>
               {entry.exitCode !== 0 && (

@@ -80,13 +80,20 @@ const fulfillmentStatusConfig: Record<
 }
 
 function OrderRow({ order }: { order: ShopifyOrder }) {
-  const financialStatus =
-    financialStatusConfig[order.financialStatus] ??
+  const financialStatus = financialStatusConfig[order.financialStatus] ??
     financialStatusConfig.pending ?? { label: 'Unknown', className: 'bg-zinc-500/20 text-zinc-400' }
   const fulfillmentStatus = order.fulfillmentStatus
     ? (fulfillmentStatusConfig[order.fulfillmentStatus] ??
-      fulfillmentStatusConfig.unfulfilled ?? { label: 'Unknown', icon: Package, className: 'bg-zinc-500/20 text-zinc-400' })
-    : (fulfillmentStatusConfig.unfulfilled ?? { label: 'Unknown', icon: Package, className: 'bg-zinc-500/20 text-zinc-400' })
+      fulfillmentStatusConfig.unfulfilled ?? {
+        label: 'Unknown',
+        icon: Package,
+        className: 'bg-zinc-500/20 text-zinc-400',
+      })
+    : (fulfillmentStatusConfig.unfulfilled ?? {
+        label: 'Unknown',
+        icon: Package,
+        className: 'bg-zinc-500/20 text-zinc-400',
+      })
   const FulfillmentIcon = fulfillmentStatus.icon
 
   return (

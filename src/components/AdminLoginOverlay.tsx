@@ -15,7 +15,7 @@
 
 'use client'
 
-import { Eye, EyeOff, Lock, Loader2 } from 'lucide-react'
+import { Eye, EyeOff, Loader2, Lock } from 'lucide-react'
 import { useState } from 'react'
 
 interface AdminLoginOverlayProps {
@@ -70,7 +70,9 @@ export function AdminLoginOverlay({ onSuccess }: AdminLoginOverlayProps) {
           <div className="flex h-12 w-12 items-center justify-center rounded-full bg-zinc-100 dark:bg-zinc-800">
             <Lock className="h-6 w-6 text-zinc-600 dark:text-zinc-400" />
           </div>
-          <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100">Session expired</h2>
+          <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100">
+            Session expired
+          </h2>
           <p className="text-center text-sm text-zinc-500 dark:text-zinc-400">
             Your admin session has expired. Enter your password to continue.
           </p>
@@ -85,21 +87,19 @@ export function AdminLoginOverlay({ onSuccess }: AdminLoginOverlayProps) {
               placeholder="Admin password"
               autoFocus
               required
-              className="w-full rounded-md border border-zinc-300 bg-white px-3 py-2 pr-10 text-sm placeholder-zinc-400 focus:border-zinc-500 focus:outline-none focus:ring-1 focus:ring-zinc-500 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100 dark:placeholder-zinc-600"
+              className="w-full rounded-md border border-zinc-300 bg-white px-3 py-2 pr-10 text-sm placeholder-zinc-400 focus:border-zinc-500 focus:ring-1 focus:ring-zinc-500 focus:outline-none dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100 dark:placeholder-zinc-600"
             />
             <button
               type="button"
               onClick={() => setShowPassword((v) => !v)}
-              className="absolute right-2 top-2 p-1 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300"
+              className="absolute top-2 right-2 p-1 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300"
               tabIndex={-1}
             >
               {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
             </button>
           </div>
 
-          {error && (
-            <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
-          )}
+          {error && <p className="text-sm text-red-600 dark:text-red-400">{error}</p>}
 
           <button
             type="submit"

@@ -1,4 +1,5 @@
 import type { GitHubIssue } from '@/types/github'
+import { requireAuth } from '@/lib/require-auth'
 import { NextRequest, NextResponse } from 'next/server'
 
 /**
@@ -7,6 +8,9 @@ import { NextRequest, NextResponse } from 'next/server'
  * Requires GITHUB_TOKEN env var. Returns honest empty with a note when unconfigured.
  */
 export async function GET(request: NextRequest): Promise<NextResponse> {
+  const authError = await requireAuth(request)
+  if (authError) return authError
+
   try {
     const searchParams = request.nextUrl.searchParams
     const page = parseInt(searchParams.get('page') || '1')
@@ -66,7 +70,9 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       userId: ((item.user as Record<string, unknown>)?.id as number) ?? 0,
       userLogin: ((item.user as Record<string, unknown>)?.login as string) ?? '',
       labels: ((item.labels as Array<Record<string, string>>) ?? []).map((l) => l.name ?? ''),
-      assignees: ((item.assignees as Array<Record<string, string>>) ?? []).map((a) => a.login ?? ''),
+      assignees: ((item.assignees as Array<Record<string, string>>) ?? []).map(
+        (a) => a.login ?? ''
+      ),
       milestone: (item.milestone as Record<string, string> | null)?.title ?? undefined,
       commentsCount: (item.comments as number) ?? 0,
       createdAt: item.created_at as string,

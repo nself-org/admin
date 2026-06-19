@@ -2632,9 +2632,8 @@ nself start`}
                           onChange={(e) => {
                             const updatedServices = [...config.customServices]
                             const svc = updatedServices[index]
-                            if (svc) svc.name = e.target.value
-                              .toLowerCase()
-                              .replace(/[^a-z0-9_-]/g, '')
+                            if (svc)
+                              svc.name = e.target.value.toLowerCase().replace(/[^a-z0-9_-]/g, '')
                             setConfig({
                               ...config,
                               customServices: updatedServices,
@@ -3032,9 +3031,8 @@ nself start`}
                           onChange={(e) => {
                             const updatedApps = [...config.frontendApps]
                             const app1 = updatedApps[index]
-                            if (app1) app1.name = e.target.value
-                              .toLowerCase()
-                              .replace(/[^a-z0-9_]/g, '')
+                            if (app1)
+                              app1.name = e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, '')
                             setConfig({ ...config, frontendApps: updatedApps })
                           }}
                           className="w-full rounded border border-zinc-300 bg-white px-2 py-1 text-sm text-zinc-900 dark:border-zinc-600 dark:bg-zinc-800 dark:text-white"
@@ -3052,9 +3050,10 @@ nself start`}
                           onChange={(e) => {
                             const updatedApps = [...config.frontendApps]
                             const app2 = updatedApps[index]
-                            if (app2) app2.tablePrefix = e.target.value
-                              .toLowerCase()
-                              .replace(/[^a-z0-9_]/g, '')
+                            if (app2)
+                              app2.tablePrefix = e.target.value
+                                .toLowerCase()
+                                .replace(/[^a-z0-9_]/g, '')
                             setConfig({ ...config, frontendApps: updatedApps })
                           }}
                           className="w-full rounded border border-zinc-300 bg-white px-2 py-1 text-sm text-zinc-900 dark:border-zinc-600 dark:bg-zinc-800 dark:text-white"
@@ -3129,9 +3128,10 @@ nself start`}
                             onChange={(e) => {
                               const updatedApps = [...config.frontendApps]
                               const app5 = updatedApps[index]
-                              if (app5) app5.subdomain = e.target.value
-                                .toLowerCase()
-                                .replace(/[^a-z0-9-]/g, '')
+                              if (app5)
+                                app5.subdomain = e.target.value
+                                  .toLowerCase()
+                                  .replace(/[^a-z0-9-]/g, '')
                               setConfig({
                                 ...config,
                                 frontendApps: updatedApps,

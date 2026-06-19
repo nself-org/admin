@@ -17,10 +17,10 @@
 
 import { AdminLoginOverlay } from '@/components/AdminLoginOverlay'
 import { AsyncScreen, type AsyncScreenState } from '@/components/AsyncScreen'
+import { useStackStatus } from '@/hooks/useStackStatus'
 import { err, ok, toAdminError, type Result } from '@/lib/result'
 import { CheckCircle2, Circle, Clock, Loader2, Rocket, XCircle } from 'lucide-react'
 import { useCallback, useEffect, useState } from 'react'
-import { useStackStatus } from '@/hooks/useStackStatus'
 
 // ---------------------------------------------------------------------------
 // Types
@@ -53,10 +53,14 @@ const ENV_LABELS: Record<Env, string> = {
 
 function stepIcon(status: DeploymentStep['status']) {
   switch (status) {
-    case 'done':    return <CheckCircle2 className="h-4 w-4 text-green-500" />
-    case 'failed':  return <XCircle className="h-4 w-4 text-red-500" />
-    case 'running': return <Loader2 className="h-4 w-4 animate-spin text-amber-500" />
-    case 'pending': return <Circle className="h-4 w-4 text-zinc-300 dark:text-zinc-600" />
+    case 'done':
+      return <CheckCircle2 className="h-4 w-4 text-green-500" />
+    case 'failed':
+      return <XCircle className="h-4 w-4 text-red-500" />
+    case 'running':
+      return <Loader2 className="h-4 w-4 animate-spin text-amber-500" />
+    case 'pending':
+      return <Circle className="h-4 w-4 text-zinc-300 dark:text-zinc-600" />
   }
 }
 
@@ -75,7 +79,10 @@ export function DeploymentUIPanel() {
     setLoading(true)
     try {
       const res = await fetch(`/api/deploy/status?env=${env}`)
-      if (res.status === 401) { setSessionExpired(true); return }
+      if (res.status === 401) {
+        setSessionExpired(true)
+        return
+      }
       if (!res.ok) throw new Error(`HTTP ${res.status}`)
       const data: DeploymentStatus = await res.json()
       setResult(ok(data))

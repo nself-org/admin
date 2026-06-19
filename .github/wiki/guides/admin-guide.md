@@ -19,15 +19,15 @@ nginx health endpoint and API routes.
 Every admin panel implements the **7-state AsyncScreen contract**. Regardless
 of which panel you open, you will see one of these states:
 
-| State | When shown | What to do |
-|---|---|---|
-| **Loading** | Data fetch in progress | Wait |
-| **Offline** | nSelf stack not running | Run `nself start` in your terminal, then click **Check again** |
-| **Auth-expired** | 24h session ended | Enter password in the login overlay |
-| **Error** | Fetch or API failure | Click **Retry**; check logs if persistent |
-| **Empty** | No data to display | Follow the in-panel CTA |
-| **Rate-limited** | Too many requests | Wait for the timer, then retry |
-| **Ready** | Data loaded | Use the panel normally |
+| State            | When shown              | What to do                                                     |
+| ---------------- | ----------------------- | -------------------------------------------------------------- |
+| **Loading**      | Data fetch in progress  | Wait                                                           |
+| **Offline**      | nSelf stack not running | Run `nself start` in your terminal, then click **Check again** |
+| **Auth-expired** | 24h session ended       | Enter password in the login overlay                            |
+| **Error**        | Fetch or API failure    | Click **Retry**; check logs if persistent                      |
+| **Empty**        | No data to display      | Follow the in-panel CTA                                        |
+| **Rate-limited** | Too many requests       | Wait for the timer, then retry                                 |
+| **Ready**        | Data loaded             | Use the panel normally                                         |
 
 The "Offline" state means the **nSelf stack is not running** — not a network
 or permission problem. Run `nself start` to resolve it.
@@ -121,10 +121,10 @@ Run these to verify admin works after a stack update:
 
 ## Troubleshooting
 
-| Problem | Likely cause | Fix |
-|---|---|---|
-| All panels show "offline" | nSelf stack not running | `nself start` |
-| Login overlay appears | Session expired (24h) | Re-enter admin password |
-| SQL returns an error | Invalid query | Check syntax; admin has full access so all queries are forwarded as-is |
-| Backup fails | Disk space | `df -h` on the host; free space or adjust retention |
-| Grafana iframe blank | Grafana service not healthy | `nself status grafana`; check logs |
+| Problem                   | Likely cause                | Fix                                                                    |
+| ------------------------- | --------------------------- | ---------------------------------------------------------------------- |
+| All panels show "offline" | nSelf stack not running     | `nself start`                                                          |
+| Login overlay appears     | Session expired (24h)       | Re-enter admin password                                                |
+| SQL returns an error      | Invalid query               | Check syntax; admin has full access so all queries are forwarded as-is |
+| Backup fails              | Disk space                  | `df -h` on the host; free space or adjust retention                    |
+| Grafana iframe blank      | Grafana service not healthy | `nself status grafana`; check logs                                     |

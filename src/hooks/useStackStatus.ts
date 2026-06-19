@@ -21,9 +21,8 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 
 const POLL_INTERVAL = 5_000 // 5 s polling cadence
-const FAILURE_THRESHOLD = 2  // consecutive failures before flagging offline
-const HEALTH_URL =
-  process.env.NEXT_PUBLIC_NSELF_HEALTH_URL ?? 'http://localhost:8080/health'
+const FAILURE_THRESHOLD = 2 // consecutive failures before flagging offline
+const HEALTH_URL = process.env.NEXT_PUBLIC_NSELF_HEALTH_URL ?? 'http://localhost:8080/health'
 
 export interface UseStackStatusResult {
   /** true when 2+ consecutive health-check failures have been observed. */

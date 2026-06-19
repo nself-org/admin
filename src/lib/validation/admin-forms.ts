@@ -22,10 +22,7 @@ import { z } from 'zod'
  * Admin has full, unrestricted SQL access; we only prevent empty submissions.
  */
 export const sqlInputSchema = z.object({
-  query: z
-    .string()
-    .min(1, 'SQL query cannot be empty — enter a statement above.')
-    .trim(),
+  query: z.string().min(1, 'SQL query cannot be empty — enter a statement above.').trim(),
 })
 
 export type SqlInput = z.infer<typeof sqlInputSchema>

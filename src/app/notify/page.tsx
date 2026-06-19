@@ -129,7 +129,8 @@ function ChannelForm({
   const [form, setForm] = useState<ChannelFormData>(initial)
   const [configError, setConfigError] = useState('')
 
-  const typeMeta = CHANNEL_TYPES.find((t) => t.value === form.channel_type) ?? CHANNEL_TYPES[5] ?? CHANNEL_TYPES[0]
+  const typeMeta =
+    CHANNEL_TYPES.find((t) => t.value === form.channel_type) ?? CHANNEL_TYPES[5] ?? CHANNEL_TYPES[0]
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()

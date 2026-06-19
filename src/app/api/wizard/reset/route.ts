@@ -1,6 +1,6 @@
 import { findNselfPath, getEnhancedPath } from '@/lib/nself-path'
 import { getProjectPath } from '@/lib/paths'
-import { requireWizardNotComplete } from '@/lib/require-auth'
+import { requireAuth, requireWizardNotComplete } from '@/lib/require-auth'
 import { exec } from 'child_process'
 import { promises as fs } from 'fs'
 import { NextRequest, NextResponse } from 'next/server'
@@ -10,6 +10,9 @@ import { promisify } from 'util'
 const execAsync = promisify(exec)
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
+  const authError = await requireAuth(req)
+  if (authError) return authError
+
   const wizardError = await requireWizardNotComplete(req)
   if (wizardError) return wizardError
 
@@ -22,15 +25,18 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
     // Execute nself reset command with force flag
     try {
-      const { stdout, stderr: _stderr } = await execAsync(`echo "Y" | ${nselfCommand} reset --force`, {
-        cwd: absoluteProjectPath,
-        env: {
-          ...process.env,
-          PATH: getEnhancedPath(),
-        },
-        maxBuffer: 10 * 1024 * 1024, // 10MB buffer for output
-        timeout: 30000, // 30 second timeout
-      })
+      const { stdout, stderr: _stderr } = await execAsync(
+        `echo "Y" | ${nselfCommand} reset --force`,
+        {
+          cwd: absoluteProjectPath,
+          env: {
+            ...process.env,
+            PATH: getEnhancedPath(),
+          },
+          maxBuffer: 10 * 1024 * 1024, // 10MB buffer for output
+          timeout: 30000, // 30 second timeout
+        }
+      )
 
       return NextResponse.json({
         success: true,

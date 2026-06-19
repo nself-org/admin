@@ -17,11 +17,11 @@
 
 import { AdminLoginOverlay } from '@/components/AdminLoginOverlay'
 import { AsyncScreen, type AsyncScreenState } from '@/components/AsyncScreen'
+import { useStackStatus } from '@/hooks/useStackStatus'
 import { err, ok, sqlError, toAdminError, type Result } from '@/lib/result'
 import { sqlInputSchema } from '@/lib/validation/admin-forms'
 import { Play } from 'lucide-react'
 import { useCallback, useState } from 'react'
-import { useStackStatus } from '@/hooks/useStackStatus'
 
 // ---------------------------------------------------------------------------
 // Types
@@ -119,11 +119,9 @@ export function DatabaseConsolePanel() {
           rows={6}
           placeholder="SELECT * FROM np_users LIMIT 20;"
           disabled={stackIsDown}
-          className="w-full rounded-md border border-zinc-300 bg-white px-3 py-2 font-mono text-sm placeholder-zinc-400 focus:border-zinc-500 focus:outline-none focus:ring-1 focus:ring-zinc-500 disabled:cursor-not-allowed disabled:opacity-50 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100 dark:placeholder-zinc-600"
+          className="w-full rounded-md border border-zinc-300 bg-white px-3 py-2 font-mono text-sm placeholder-zinc-400 focus:border-zinc-500 focus:ring-1 focus:ring-zinc-500 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100 dark:placeholder-zinc-600"
         />
-        {queryError && (
-          <p className="text-sm text-red-600 dark:text-red-400">{queryError}</p>
-        )}
+        {queryError && <p className="text-sm text-red-600 dark:text-red-400">{queryError}</p>}
         <button
           onClick={runQuery}
           disabled={stackIsDown || loading}
@@ -170,9 +168,11 @@ export function DatabaseConsolePanel() {
                         key={col}
                         className="px-4 py-2 font-mono text-xs text-zinc-700 dark:text-zinc-300"
                       >
-                        {row[col] === null
-                          ? <span className="italic text-zinc-400">null</span>
-                          : String(row[col])}
+                        {row[col] === null ? (
+                          <span className="text-zinc-400 italic">null</span>
+                        ) : (
+                          String(row[col])
+                        )}
                       </td>
                     ))}
                   </tr>

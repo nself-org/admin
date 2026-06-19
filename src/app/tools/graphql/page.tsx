@@ -122,7 +122,9 @@ function QueryCard({
         </div>
       </div>
 
-      <p className="mb-2 font-mono text-xs text-zinc-500">{(query.query.split('\n')[0] ?? '').trim()}...</p>
+      <p className="mb-2 font-mono text-xs text-zinc-500">
+        {(query.query.split('\n')[0] ?? '').trim()}...
+      </p>
 
       <div className="flex items-center justify-between text-xs text-zinc-500">
         <span>{query.lastExecuted ? formatDate(query.lastExecuted) : 'Never executed'}</span>

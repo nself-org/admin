@@ -1,12 +1,16 @@
 import { getUserSessions } from '@/lib/auth-db'
+import { requireAuth } from '@/lib/require-auth'
 import { cookies } from 'next/headers'
 import { NextRequest, NextResponse } from 'next/server'
 import { UAParser } from 'ua-parser-js'
 
-export async function GET(_request: NextRequest): Promise<NextResponse> {
+export async function GET(request: NextRequest): Promise<NextResponse> {
+  const authError = await requireAuth(request, { csrf: false })
+  if (authError) return authError
+
   try {
     const cookieStore = await cookies()
-    const sessionToken = cookieStore.get('session')?.value
+    const sessionToken = cookieStore.get('nself-session')?.value
 
     if (!sessionToken) {
       return NextResponse.json({ success: false, error: 'Not authenticated' }, { status: 401 })

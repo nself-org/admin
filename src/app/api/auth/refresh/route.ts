@@ -10,7 +10,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
   try {
     const cookieStore = await cookies()
-    const sessionToken = cookieStore.get('session')?.value
+    const sessionToken = cookieStore.get('nself-session')?.value
 
     if (!sessionToken) {
       return NextResponse.json({ success: false, error: 'No session found' }, { status: 401 })

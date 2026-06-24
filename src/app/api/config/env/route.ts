@@ -263,8 +263,12 @@ function formatEnvFile(vars: Record<string, { value: string; category?: string }
     })
 
     for (const { key, value } of sortedVars) {
+      // Strip CR/LF so a value can't inject extra KEY=VALUE lines (defense in
+      // depth — keys are regex-validated, values are not).
+      const safeValue = value.replace(/[\r\n]/g, '')
       // Add quotes if value contains spaces or special characters
-      const quotedValue = value.includes(' ') || value.includes('#') ? `"${value}"` : value
+      const quotedValue =
+        safeValue.includes(' ') || safeValue.includes('#') ? `"${safeValue}"` : safeValue
       content += `${key}=${quotedValue}\n`
     }
   }

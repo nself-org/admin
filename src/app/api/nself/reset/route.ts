@@ -1,14 +1,10 @@
 import { envToWizardConfig, readEnvFile } from '@/lib/env-handler'
-import { findNselfPath, getEnhancedPath } from '@/lib/nself-path'
+import { executeNselfCommand } from '@/lib/nselfCLI'
 import { getProjectPath } from '@/lib/paths'
 import { requireAuth } from '@/lib/require-auth'
-import { exec } from 'child_process'
 import fs from 'fs/promises'
 import { NextRequest, NextResponse } from 'next/server'
 import path from 'path'
-import { promisify } from 'util'
-
-const execAsync = promisify(exec)
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
   const authError = await requireAuth(request)
@@ -17,9 +13,6 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
     const { mode } = await request.json() // mode can be 'edit' or 'reset'
     const projectPath = getProjectPath()
-
-    // Find nself CLI using the centralized utility
-    const nselfPath = await findNselfPath()
 
     // If mode is 'edit', save current .env.local BEFORE reset
     const envPath = path.join(projectPath, '.env.local')
@@ -41,46 +34,38 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       }
     }
 
-    // Run nself reset with --force to stop and clean
-
+    // Run nself reset with --yes to stop containers, remove volumes, and clean
+    // generated files non-interactively. executeNselfCommand uses execFile with
+    // array args (no shell), so there is no shell-interpolation surface, and the
+    // nSelf CLI owns the docker-compose teardown (nSelf-First doctrine: no compose
+    // outside nself build/start).
     let stdout = ''
-    let stderr = ''
 
-    try {
-      // Try running with a shorter timeout first
-      const result = await execAsync(`echo y | ${nselfPath} reset --force`, {
-        cwd: projectPath,
-        env: {
-          ...process.env,
-          PATH: getEnhancedPath(),
+    const result = await executeNselfCommand('reset', ['--yes'], {
+      cwd: projectPath,
+      timeout: 60000, // reset tears down containers + volumes; allow time
+    })
+
+    if (result.success) {
+      stdout = result.stdout || 'Reset complete'
+    } else if (mode === 'edit') {
+      // Edit mode only needs the config preserved/restored below, so a failed
+      // reset is non-fatal here.
+      stdout = 'Reset skipped for edit mode'
+    } else {
+      // Full reset failed and there is no side-channel fallback by design.
+      console.error('Reset failed:', result.stderr || result.error)
+      return NextResponse.json(
+        {
+          error: 'Failed to reset project',
+          details: 'Reset failed. Check server logs for details.',
         },
-        timeout: 5000, // 5 seconds
-      })
-      stdout = result.stdout
-      stderr = result.stderr
-    } catch (_execError) {
-      // If it times out or fails, assume it's because reset isn't fully implemented
-      // For edit mode, we just need to preserve the config
-
-      // For edit mode, we can continue since we're preserving config
-      if (mode === 'edit') {
-        stdout = 'Reset simulated for edit mode'
-      } else {
-        // For full reset, we should at least try to clean up docker
-        try {
-          const dockerResult = await execAsync('docker-compose down -v 2>/dev/null || true', {
-            cwd: projectPath,
-            timeout: 5000,
-          })
-          stdout = 'Docker containers cleaned: ' + dockerResult.stdout
-        } catch {
-          stdout = 'Reset attempted'
-        }
-      }
+        { status: 500 }
+      )
     }
 
-    if (stderr && !stderr.includes('warning')) {
-      console.error('Reset stderr:', stderr)
+    if (result.stderr && !result.stderr.includes('warning')) {
+      console.error('Reset stderr:', result.stderr)
     }
 
     // If mode is 'edit', restore the saved config

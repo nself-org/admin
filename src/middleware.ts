@@ -252,16 +252,19 @@ export async function middleware(request: NextRequest) {
   }
 
   // ── SSO header auto-login ────────────────────────────────────────────────
+  // T03: SSO email is now JWT-verified in sso.ts (getSSOEmail calls
+  // verifyCFAccessJWT). The redirect to /api/auth/sso only fires when the
+  // email header is backed by a valid CF Access JWT.
   if (process.env.NSELF_ADMIN_SSO_HEADER_ENABLED === 'true') {
-    const ssoHeaderName =
-      process.env.NSELF_ADMIN_SSO_HEADER_NAME || 'CF-Access-Authenticated-User-Email'
-    const ssoEmail = request.headers.get(ssoHeaderName)
     const existingSession = request.cookies.get('nself-session')?.value
-
-    if (ssoEmail && !existingSession && !pathname.startsWith('/api/')) {
-      const ssoUrl = new URL('/api/auth/sso', request.url)
-      ssoUrl.searchParams.set('redirect', pathname)
-      return NextResponse.redirect(ssoUrl)
+    if (!existingSession && !pathname.startsWith('/api/')) {
+      const { getSSOEmail: getSSOEmailFn } = await import('./lib/sso')
+      const ssoEmail = await getSSOEmailFn(request)
+      if (ssoEmail) {
+        const ssoUrl = new URL('/api/auth/sso', request.url)
+        ssoUrl.searchParams.set('redirect', pathname)
+        return NextResponse.redirect(ssoUrl)
+      }
     }
   }
 
@@ -292,17 +295,11 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL('/login', request.url))
   }
 
-  // For page routes: cookie existence is sufficient. The client-side
-  // AuthContext validates the session via /api/auth/check on mount, and
-  // Layout redirects to /login if isAuthenticated becomes false.
-  if (!pathname.startsWith('/api/')) {
-    const nonce = generateNonce()
-    const csp = buildCsp(nonce)
-    const response = nextResponseWithNonce(request, csp)
-    return applySecurityHeaders(response, nonce, csp)
-  }
-
-  // For API routes: validate session token via internal API call.
+  // T03-B: validate session token server-side for ALL routes (page + API).
+  // Previously page routes only checked cookie existence; expired/revoked tokens
+  // were accepted until the client-side AuthContext caught them on mount.
+  // Server-side validation closes the window where a revoked token could render
+  // any page (including sensitive logs/config pages) before the client fires.
   const baseUrl = request.nextUrl.origin
   try {
     const validateResponse = await fetch(`${baseUrl}/api/auth/validate-session`, {
@@ -314,9 +311,22 @@ export async function middleware(request: NextRequest) {
     })
 
     if (!validateResponse.ok) {
+      // For page routes: redirect to login (not JSON 401, which shows a blank page).
+      if (!pathname.startsWith('/api/')) {
+        return NextResponse.redirect(new URL('/login', request.url))
+      }
       return NextResponse.json({ error: 'Invalid session' }, { status: 401 })
     }
   } catch {
+    // If the validation endpoint is unavailable (e.g. cold start), fail-open for
+    // page routes (allows the page to load; client-side will catch it) but
+    // fail-closed for API routes to prevent data exfiltration.
+    if (!pathname.startsWith('/api/')) {
+      const nonce = generateNonce()
+      const csp = buildCsp(nonce)
+      const response = nextResponseWithNonce(request, csp)
+      return applySecurityHeaders(response, nonce, csp)
+    }
     return NextResponse.json({ error: 'Session validation failed' }, { status: 401 })
   }
 

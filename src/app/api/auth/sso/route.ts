@@ -34,7 +34,7 @@ async function handleSSO(request: NextRequest): Promise<NextResponse> {
     )
   }
 
-  const email = getSSOEmail(request)
+  const email = await getSSOEmail(request)
 
   if (!email) {
     return NextResponse.json(

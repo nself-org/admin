@@ -41,6 +41,7 @@ export async function executeNselfCommand(
       'start',
       'stop',
       'restart',
+      'reset',
       'status',
       'logs',
       'doctor',

@@ -1,6 +1,16 @@
 import { NextRequest } from 'next/server'
 import { POST } from '../route'
 
+// Mock @/lib/sso to avoid importing the jose ESM-only module in a jest/CJS environment.
+// The sso module is unit-tested independently in src/lib/__tests__/sso.test.ts (14 tests).
+// getSSOConfig and getSSOEmail are mocked dynamically so individual tests can control behavior.
+const mockGetSSOConfig = jest.fn()
+const mockGetSSOEmail = jest.fn()
+jest.mock('@/lib/sso', () => ({
+  getSSOConfig: (...args: unknown[]) => mockGetSSOConfig(...args),
+  getSSOEmail: (...args: unknown[]) => mockGetSSOEmail(...args),
+}))
+
 jest.mock('@/lib/auth-db', () => ({
   createLoginSession: jest.fn(),
 }))
@@ -29,6 +39,22 @@ describe('POST /api/auth/sso', () => {
   beforeEach(() => {
     jest.clearAllMocks()
     process.env = { ...originalEnv }
+    // Default: derive enabled/headerName from env; getSSOEmail extracts email from the
+    // standard header (mirrors pre-T03 header-only behavior for route-level tests).
+    // JWT verification is tested in src/lib/__tests__/sso.test.ts.
+    mockGetSSOConfig.mockImplementation(() => {
+      const enabled = process.env.NSELF_ADMIN_SSO_HEADER_ENABLED === 'true'
+      const headerName =
+        process.env.NSELF_ADMIN_SSO_HEADER_NAME ?? 'CF-Access-Authenticated-User-Email'
+      return { enabled, headerName }
+    })
+    mockGetSSOEmail.mockImplementation(async (req: import('next/server').NextRequest) => {
+      const cfg = mockGetSSOConfig()
+      if (!cfg.enabled) return null
+      const val = req.headers.get(cfg.headerName)
+      if (!val || !val.includes('@')) return null
+      return val.toLowerCase().trim()
+    })
   })
 
   afterEach(() => {

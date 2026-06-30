@@ -74,8 +74,7 @@ function getJwks(teamDomain: string): ReturnType<typeof createRemoteJWKSet> {
 export function getSSOConfig(): SSOConfig {
   return {
     enabled: process.env.NSELF_ADMIN_SSO_HEADER_ENABLED === 'true',
-    headerName:
-      process.env.NSELF_ADMIN_SSO_HEADER_NAME || 'CF-Access-Authenticated-User-Email',
+    headerName: process.env.NSELF_ADMIN_SSO_HEADER_NAME || 'CF-Access-Authenticated-User-Email',
     autoProvision: process.env.NSELF_ADMIN_SSO_AUTO_PROVISION === 'true',
     cfTeamDomain: process.env.NSELF_ADMIN_CF_TEAM_DOMAIN || '',
     cfAud: process.env.NSELF_ADMIN_CF_AUD || '',

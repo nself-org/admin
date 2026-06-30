@@ -32,8 +32,7 @@ function buildRequest(opts: {
   return {
     headers,
     cookies: {
-      get: (name: string) =>
-        cookieMap.has(name) ? { value: cookieMap.get(name)! } : undefined,
+      get: (name: string) => (cookieMap.has(name) ? { value: cookieMap.get(name)! } : undefined),
     },
   } as unknown as NextRequest
 }

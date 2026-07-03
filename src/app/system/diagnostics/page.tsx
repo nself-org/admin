@@ -11,14 +11,7 @@
 
 import { Button } from '@/components/Button'
 import { ListSkeleton } from '@/components/skeletons'
-import {
-  AlertTriangle,
-  CheckCircle,
-  RefreshCw,
-  Stethoscope,
-  WifiOff,
-  XCircle,
-} from 'lucide-react'
+import { AlertTriangle, CheckCircle, RefreshCw, Stethoscope, WifiOff, XCircle } from 'lucide-react'
 import { Suspense, useCallback, useEffect, useState } from 'react'
 
 interface DiagnosticCheck {
@@ -169,9 +162,7 @@ function DiagnosticsContent() {
       {/* Overall status banner */}
       <div
         className={`flex items-center gap-3 rounded-lg border p-4 ${
-          isHealthy
-            ? 'border-green-500/30 bg-green-500/10'
-            : 'border-red-500/30 bg-red-500/10'
+          isHealthy ? 'border-green-500/30 bg-green-500/10' : 'border-red-500/30 bg-red-500/10'
         }`}
       >
         {isHealthy ? (
@@ -215,9 +206,7 @@ function DiagnosticsContent() {
               <div className="min-w-0 flex-1">
                 <p className="font-medium text-white">{check.name}</p>
                 <p className="mt-0.5 text-sm text-gray-400">{check.message}</p>
-                {check.detail && (
-                  <p className="mt-1 text-xs text-gray-500">{check.detail}</p>
-                )}
+                {check.detail && <p className="mt-1 text-xs text-gray-500">{check.detail}</p>}
               </div>
               <span
                 className={`shrink-0 rounded px-2 py-0.5 text-xs font-medium ${

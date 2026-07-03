@@ -175,9 +175,7 @@ function ValidateContent() {
       {/* Overall status */}
       <div
         className={`flex items-center gap-3 rounded-lg border p-4 ${
-          isValid
-            ? 'border-green-500/30 bg-green-500/10'
-            : 'border-red-500/30 bg-red-500/10'
+          isValid ? 'border-green-500/30 bg-green-500/10' : 'border-red-500/30 bg-red-500/10'
         }`}
       >
         {isValid ? (
@@ -187,7 +185,9 @@ function ValidateContent() {
         )}
         <div>
           <p className={`font-medium ${isValid ? 'text-green-400' : 'text-red-400'}`}>
-            {isValid ? 'Configuration is valid' : `${failed} validation error${failed !== 1 ? 's' : ''} found`}
+            {isValid
+              ? 'Configuration is valid'
+              : `${failed} validation error${failed !== 1 ? 's' : ''} found`}
           </p>
           <p className="mt-0.5 text-sm text-gray-400">
             {passed} passed · {failed} failed · {warnings} warnings
@@ -202,18 +202,14 @@ function ValidateContent() {
           <ClipboardCheck className="mx-auto mb-3 h-8 w-8 text-gray-500" />
           <p className="text-gray-400">No validation checks found.</p>
           <p className="mt-1 text-sm text-gray-500">
-            Run{' '}
-            <code className="font-mono text-sky-400">nself config validate</code> to generate
+            Run <code className="font-mono text-sky-400">nself config validate</code> to generate
             results.
           </p>
         </div>
       ) : (
         <div className="space-y-2">
           {checks.map((check, i) => (
-            <div
-              key={i}
-              className="rounded-lg border border-white/10 bg-white/[0.02] px-4 py-3"
-            >
+            <div key={i} className="rounded-lg border border-white/10 bg-white/[0.02] px-4 py-3">
               <div className="flex items-start gap-3">
                 {check.status === 'pass' ? (
                   <CheckCircle className="mt-0.5 h-4 w-4 flex-shrink-0 text-green-400" />
@@ -233,9 +229,7 @@ function ValidateContent() {
                   </div>
                   <p className="mt-0.5 text-sm text-gray-400">{check.message}</p>
                   {check.suggestion && (
-                    <p className="mt-1 text-xs text-sky-400">
-                      Fix: {check.suggestion}
-                    </p>
+                    <p className="mt-1 text-xs text-sky-400">Fix: {check.suggestion}</p>
                   )}
                 </div>
                 <span

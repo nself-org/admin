@@ -15,8 +15,14 @@
  *   /services/python   /services/logs
  *   /stack/auth        /stack/hasura      /stack/postgresql   /stack/redis
  *   /stack/minio       /stack/mailhog     /stack/nginx
- *   /operations/scale  /operations/cleanup /operations/data   /operations/monitor
- *   /operations/snapshots /operations/deploy /operations/rollback
+ *
+ * Note: /operations/scale, /operations/cleanup, /operations/data,
+ * /operations/monitor, /operations/snapshots, /operations/deploy, and
+ * /operations/rollback were quarantined as dead pages (commit 6bf776a) and no
+ * longer exist under src/app/operations/ — their coverage was removed here.
+ * The modern replacement is /scale (src/app/scale/page.tsx), which has a
+ * different API contract (/api/scale, not /api/nself) and is not a drop-in
+ * equivalent; add fresh 7-state coverage for it as a separate ticket if desired.
  *
  * All tests mock /api/nself (POST) to avoid requiring a live CLI.
  * Tests that need two sequential API responses use request-count logic.
@@ -31,11 +37,6 @@ import { setupAuth } from './helpers'
 const SERVICE_LIST_JSON = JSON.stringify([
   { name: 'my-service', status: 'running', uptime: '2d', port: '3000' },
   { name: 'other-service', status: 'stopped', uptime: '', port: '' },
-])
-
-const SCALE_LIST_JSON = JSON.stringify([
-  { name: 'api', status: 'running', replicas: 2 },
-  { name: 'worker', status: 'stopped', replicas: 1 },
 ])
 
 const LOG_SERVICE_LIST = JSON.stringify([
@@ -649,112 +650,6 @@ test.describe('/services/logs — 7 UI states', () => {
     await page.waitForTimeout(600)
 
     expect(logCallCount).toBeGreaterThan(before)
-  })
-})
-
-// ── Operations / Scale ─────────────────────────────────────────────────────────
-
-test.describe('/operations/scale — 7 UI states', () => {
-  test.beforeEach(async ({ page }) => {
-    await setupAuth(page)
-  })
-
-  test('01 error — error card renders', async ({ page }) => {
-    await mockNselfError(page)
-    await page.goto('/operations/scale', { waitUntil: 'domcontentloaded' })
-    await expect(page.locator('text=Failed to load services')).toBeVisible()
-  })
-
-  test('02 empty — no services found', async ({ page }) => {
-    await mockNselfEmpty(page)
-    await page.goto('/operations/scale', { waitUntil: 'domcontentloaded' })
-    await expect(page.locator('text=No services found')).toBeVisible()
-  })
-
-  test('03 success — service cards with replica inputs', async ({ page }) => {
-    await mockNselfSuccess(page, SCALE_LIST_JSON)
-    await page.goto('/operations/scale', { waitUntil: 'domcontentloaded' })
-
-    // Use exact match scoped to main content to avoid strict-mode violation
-    // (sidebar nav may contain "API Keys" and "API Explorer" which also match 'text=api')
-    await expect(page.locator('main').getByText('api', { exact: true }).first()).toBeVisible()
-    await expect(page.locator('input[type="number"]').first()).toBeVisible()
-    await expect(page.locator('button:has-text("Apply")').first()).toBeVisible()
-  })
-
-  test('04 action-in-progress — Apply spinner shown', async ({ page }) => {
-    let resolve: (() => void) | undefined
-    const gate = new Promise<void>((r) => {
-      resolve = r
-    })
-    let callCount = 0
-    await page.route('**/api/nself', async (route) => {
-      callCount++
-      if (callCount === 1) {
-        return route.fulfill({
-          status: 200,
-          contentType: 'application/json',
-          body: JSON.stringify({ success: true, data: { stdout: SCALE_LIST_JSON, stderr: '' } }),
-        })
-      }
-      await gate
-      return route.fulfill({
-        status: 200,
-        contentType: 'application/json',
-        body: JSON.stringify({ success: true, data: { stdout: '', stderr: '' } }),
-      })
-    })
-
-    await page.goto('/operations/scale', { waitUntil: 'domcontentloaded' })
-    await expect(page.locator('main').getByText('api', { exact: true }).first()).toBeVisible()
-    await page.locator('button:has-text("Apply")').first().click()
-    await expect(page.locator('.animate-spin').first()).toBeVisible()
-    resolve?.()
-  })
-
-  test('05 action-success — scale success badge shown', async ({ page }) => {
-    await mockNselfSequential(
-      page,
-      { success: true, data: { stdout: SCALE_LIST_JSON, stderr: '' } },
-      { success: true, data: { stdout: '', stderr: '' } }
-    )
-
-    await page.goto('/operations/scale', { waitUntil: 'domcontentloaded' })
-    await expect(page.locator('main').getByText('api', { exact: true }).first()).toBeVisible()
-    await page.locator('button:has-text("Apply")').first().click()
-    await page.waitForTimeout(500)
-
-    await expect(page.locator('text=scaled to')).toBeVisible()
-  })
-
-  test('06 action-error — scale error badge shown', async ({ page }) => {
-    await mockNselfSequential(
-      page,
-      { success: true, data: { stdout: SCALE_LIST_JSON, stderr: '' } },
-      { success: false, error: 'scale failed: quota exceeded' }
-    )
-
-    await page.goto('/operations/scale', { waitUntil: 'domcontentloaded' })
-    await expect(page.locator('main').getByText('api', { exact: true }).first()).toBeVisible()
-    await page.locator('button:has-text("Apply")').first().click()
-
-    await expect(page.locator('text=scale failed')).toBeVisible({ timeout: 15000 })
-  })
-
-  test('07 invalid-replica — error badge for non-numeric input', async ({ page }) => {
-    await mockNselfSuccess(page, SCALE_LIST_JSON)
-    await page.goto('/operations/scale', { waitUntil: 'domcontentloaded' })
-    await expect(page.locator('main').getByText('api', { exact: true }).first()).toBeVisible()
-
-    // Clear the input and enter an invalid value
-    const input = page.locator('input[type="number"]').first()
-    await input.fill('')
-    await input.type('abc')
-
-    await page.locator('button:has-text("Apply")').first().click()
-    await page.waitForTimeout(300)
-
-    await expect(page.locator('text=Invalid replica count')).toBeVisible()
   })
 })
 

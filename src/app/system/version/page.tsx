@@ -159,21 +159,17 @@ function VersionContent() {
       {/* Version cards */}
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="rounded-lg border border-white/10 bg-white/5 p-5">
-          <div className="flex items-center gap-2 text-gray-400 text-sm mb-3">
+          <div className="mb-3 flex items-center gap-2 text-sm text-gray-400">
             <Tag className="h-4 w-4" />
             <span>CLI Version</span>
           </div>
           <p className="font-mono text-2xl font-bold text-white">{cliVersion}</p>
-          {buildDate && (
-            <p className="mt-1 text-xs text-gray-500">Built {buildDate}</p>
-          )}
-          {commit && (
-            <p className="mt-0.5 font-mono text-xs text-gray-600">{commit}</p>
-          )}
+          {buildDate && <p className="mt-1 text-xs text-gray-500">Built {buildDate}</p>}
+          {commit && <p className="mt-0.5 font-mono text-xs text-gray-600">{commit}</p>}
         </div>
 
         <div className="rounded-lg border border-white/10 bg-white/5 p-5">
-          <div className="flex items-center gap-2 text-gray-400 text-sm mb-3">
+          <div className="mb-3 flex items-center gap-2 text-sm text-gray-400">
             <Tag className="h-4 w-4" />
             <span>Admin Panel</span>
           </div>

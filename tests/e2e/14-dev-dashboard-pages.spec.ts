@@ -2,9 +2,15 @@
  * E2E tests for S32 dev/* and dashboard/* pages:
  *
  * dev:       /dev/graphql · /dev/terminal · /dev/api · /dev/scaffold
- *            /dev/seed · /dev/types · /dev/webhooks · /dev/testing
+ *            /dev/types · /dev/webhooks · /dev/testing
  * dashboard: /dashboard/alerts · /dashboard/health · /dashboard/logs
- *            /dashboard/metrics · /dashboard/status
+ *            /dashboard/metrics
+ *
+ * Note: /dev/seed and /dashboard/status were quarantined as dead pages
+ * (commit 6bf776a). Their live successors — /database/seed
+ * (src/app/database/seed/page.tsx) and /uptime (src/app/uptime/page.tsx) —
+ * are covered under their own describe blocks below with the correct
+ * /api/database/seed and /api/uptime contracts.
  *
  * Each suite verifies all 7 UI states:
  *   1. Initial skeleton rendered while loading
@@ -237,45 +243,57 @@ test.describe('/dev/scaffold', () => {
 
 // ─────────────────────────────────────────────────────────────────────────────
 
-test.describe('/dev/seed', () => {
+// NOTE: the real page for seed management lives at /database/seed
+// (src/app/database/seed/page.tsx), not /dev/seed — /dev/seed was quarantined
+// as a dead page (commit 6bf776a). It GETs /api/database/seed, which returns
+// `{ success, data: Seed[] }` (see src/types/database.ts) — not the
+// `{ seeded, tables }` shape this suite previously mocked. There is also no
+// retry button on fetch failure: fetchSeeds() catches the error and falls
+// back to an empty seed list silently. This block mirrors the actual
+// component contract instead of the stale dead-route assumptions.
+test.describe('/database/seed', () => {
   test.beforeEach(async ({ page }) => {
     await setupAuth(page)
   })
 
-  test('navigates to /dev/seed', async ({ page }) => {
-    await page.goto('/dev/seed', { waitUntil: 'commit' })
-    await expect(page).toHaveURL(/\/dev\/seed/)
+  test('navigates to /database/seed', async ({ page }) => {
+    await mockApiEndpoint(page, '**/api/database/seed', { success: true, data: [] })
+    await page.goto('/database/seed', { waitUntil: 'commit' })
+    await expect(page).toHaveURL(/\/database\/seed/)
   })
 
-  test('success state: shows seed status and action buttons', async ({ page }) => {
+  test('success state: shows seed list and action buttons', async ({ page }) => {
     await mockApiEndpoint(page, '**/api/database/seed', {
-      seeded: true,
-      tables: [{ name: 'np_users', rowCount: 5 }],
-      lastSeededAt: new Date().toISOString(),
+      success: true,
+      data: [{ name: 'np_users.sql', type: 'local', status: 'available', recordCount: 5 }],
     })
-    await page.goto('/dev/seed', { waitUntil: 'commit' })
+    await page.goto('/database/seed', { waitUntil: 'commit' })
     await page.waitForLoadState('domcontentloaded')
-    await expect(page.getByText(/seeded|run seed|np_users/i).first()).toBeVisible()
+    await expect(page.getByText(/np_users\.sql/i).first()).toBeVisible()
+    await expect(page.getByRole('button', { name: /run all seeds/i })).toBeVisible()
   })
 
-  test('run seed button visible', async ({ page }) => {
-    await mockApiEndpoint(page, '**/api/database/seed', {
-      seeded: false,
-      tables: [],
-    })
-    await page.goto('/dev/seed', { waitUntil: 'commit' })
+  test('empty state: shows zero-count stats and no seed files', async ({ page }) => {
+    await mockApiEndpoint(page, '**/api/database/seed', { success: true, data: [] })
+    await page.goto('/database/seed', { waitUntil: 'commit' })
     await page.waitForLoadState('domcontentloaded')
-    const btn = page.getByRole('button', { name: /run seed/i })
-    if (await btn.isVisible()) {
-      await expect(btn).toBeVisible()
-    }
+    // Rendered as "No common seeds seeds found" — renderSeedList interpolates
+    // `No ${title.toLowerCase()} seeds found` with title "Common Seeds", so
+    // match on the stable prefix only.
+    await expect(page.getByText(/no common seeds/i).first()).toBeVisible()
   })
 
-  test('offline state: shows retry on abort', async ({ page }) => {
+  test('offline: fetch abort falls back to empty seed list (no crash)', async ({ page }) => {
     await page.route('**/api/database/seed', (route) => route.abort('failed'))
-    await page.goto('/dev/seed', { waitUntil: 'commit' })
+    await page.goto('/database/seed', { waitUntil: 'commit' })
     await page.waitForLoadState('domcontentloaded')
-    await expect(page.getByRole('button', { name: /retry/i })).toBeVisible()
+    // fetchSeeds() swallows the error and renders the empty state — there is
+    // no retry affordance on this page, so assert the page stays usable.
+    await expect(page.getByText(/database seeding/i).first()).toBeVisible()
+    // Rendered as "No common seeds seeds found" — renderSeedList interpolates
+    // `No ${title.toLowerCase()} seeds found` with title "Common Seeds", so
+    // match on the stable prefix only.
+    await expect(page.getByText(/no common seeds/i).first()).toBeVisible()
   })
 
   test('redirect to login when unauthenticated', async ({ page }) => {
@@ -285,7 +303,7 @@ test.describe('/dev/seed', () => {
     // assertion below validates the outcome regardless of how the
     // navigation surface terminated.
     try {
-      await page.goto('/dev/seed', { waitUntil: 'commit' })
+      await page.goto('/database/seed', { waitUntil: 'commit' })
       await page.waitForLoadState('domcontentloaded')
     } catch (e) {
       if (!/interrupted by another navigation/i.test(String(e))) throw e
@@ -781,95 +799,114 @@ test.describe('/dashboard/metrics', () => {
 
 // ─────────────────────────────────────────────────────────────────────────────
 
-test.describe('/dashboard/status', () => {
+// NOTE: /dashboard/status was quarantined as a dead page (commit 6bf776a).
+// The live successor is /uptime (src/app/uptime/page.tsx): it GETs /api/uptime
+// which returns `{ generatedAt, services: ServiceUptime[], overallUptimePct }`.
+// On fetch failure it renders an inline error banner (no dedicated retry
+// button — the always-present "Refresh" button re-triggers the load), so the
+// assertions below match that actual contract.
+test.describe('/uptime', () => {
   test.beforeEach(async ({ page }) => {
     await setupAuth(page)
   })
 
-  test('navigates to /dashboard/status', async ({ page }) => {
-    await page.goto('/dashboard/status', { waitUntil: 'commit' })
-    await expect(page).toHaveURL(/\/dashboard\/status/)
+  const upReport = {
+    generatedAt: new Date().toISOString(),
+    overallUptimePct: 100,
+    services: [
+      {
+        name: 'PostgreSQL',
+        url: 'http://localhost:5432',
+        status: 'up',
+        latencyMs: 2,
+        checkedAt: new Date().toISOString(),
+        uptimePct24h: 100,
+        lastIncidentAt: null,
+        httpStatus: 200,
+        errorMessage: null,
+      },
+      {
+        name: 'Hasura GraphQL',
+        url: 'http://localhost:8080',
+        status: 'up',
+        latencyMs: 8,
+        checkedAt: new Date().toISOString(),
+        uptimePct24h: 99.99,
+        lastIncidentAt: null,
+        httpStatus: 200,
+        errorMessage: null,
+      },
+    ],
+  }
+
+  test('navigates to /uptime', async ({ page }) => {
+    await mockApiEndpoint(page, '**/api/uptime**', upReport)
+    await page.goto('/uptime', { waitUntil: 'commit' })
+    await expect(page).toHaveURL(/\/uptime/)
   })
 
-  test('success state: shows overall banner and component list', async ({ page }) => {
-    await mockApiEndpoint(page, '**/api/monitor', {
-      overall: 'operational',
-      components: [
-        {
-          id: 'pg',
-          name: 'PostgreSQL',
-          category: 'core',
-          status: 'operational',
-          responseTimeMs: 2,
-        },
-        {
-          id: 'hasura',
-          name: 'Hasura GraphQL',
-          category: 'core',
-          status: 'operational',
-          responseTimeMs: 8,
-        },
-      ],
-      uptime: { day: 100, week: 99.99, month: 99.97 },
-      checkedAt: new Date().toISOString(),
-    })
-    await page.goto('/dashboard/status', { waitUntil: 'commit' })
+  test('success state: shows overall uptime and service list', async ({ page }) => {
+    await mockApiEndpoint(page, '**/api/uptime**', upReport)
+    await page.goto('/uptime', { waitUntil: 'commit' })
     await page.waitForLoadState('domcontentloaded')
-    await expect(
-      page.getByText(/all systems operational|PostgreSQL|operational/i).first()
-    ).toBeVisible()
+    await expect(page.getByText('24h overall uptime')).toBeVisible()
+    await expect(page.getByText('PostgreSQL')).toBeVisible()
   })
 
-  test('degraded overall: shows warning banner', async ({ page }) => {
-    await mockApiEndpoint(page, '**/api/monitor', {
-      overall: 'degraded',
-      components: [
+  test('degraded service: shows error message and uptime badge', async ({ page }) => {
+    await mockApiEndpoint(page, '**/api/uptime**', {
+      generatedAt: new Date().toISOString(),
+      overallUptimePct: 98.5,
+      services: [
         {
-          id: 'redis',
           name: 'Redis',
-          category: 'optional',
+          url: 'http://localhost:6379',
           status: 'degraded',
-          message: 'High latency',
+          latencyMs: 420,
+          checkedAt: new Date().toISOString(),
+          uptimePct24h: 98.5,
+          lastIncidentAt: new Date().toISOString(),
+          httpStatus: 200,
+          errorMessage: 'High latency',
         },
       ],
-      uptime: { day: 98.5, week: 99.1, month: 99.5 },
-      checkedAt: new Date().toISOString(),
     })
-    await page.goto('/dashboard/status', { waitUntil: 'commit' })
+    await page.goto('/uptime', { waitUntil: 'commit' })
     await page.waitForLoadState('domcontentloaded')
-    await expect(page.getByText(/degraded|partial system/i).first()).toBeVisible()
+    await expect(page.getByText('Redis')).toBeVisible()
+    await expect(page.getByText(/high latency/i)).toBeVisible()
   })
 
   test('uptime stats visible', async ({ page }) => {
-    await mockApiEndpoint(page, '**/api/monitor', {
-      overall: 'operational',
-      components: [],
-      uptime: { day: 100, week: 99.99, month: 99.97 },
-      checkedAt: new Date().toISOString(),
-    })
-    await page.goto('/dashboard/status', { waitUntil: 'commit' })
+    await mockApiEndpoint(page, '**/api/uptime**', upReport)
+    await page.goto('/uptime', { waitUntil: 'commit' })
     await page.waitForLoadState('domcontentloaded')
-    await expect(page.getByText(/uptime|100\.00/i).first()).toBeVisible()
+    await expect(page.getByText('100.00%').first()).toBeVisible()
   })
 
-  test('offline state: shows retry on abort', async ({ page }) => {
-    await page.route('**/api/monitor', (route) => route.abort('failed'))
-    await page.goto('/dashboard/status', { waitUntil: 'commit' })
+  test('offline state: shows error banner on abort, Refresh stays available', async ({ page }) => {
+    await page.route('**/api/uptime**', (route) => route.abort('failed'))
+    await page.goto('/uptime', { waitUntil: 'commit' })
     await page.waitForLoadState('domcontentloaded')
-    await expect(page.getByRole('button', { name: /retry/i })).toBeVisible()
+    // load() surfaces err.message in the error banner. The message text varies
+    // by engine ("Failed to fetch" / "NetworkError when attempting to fetch
+    // resource." / "Load failed"), so match the common fragments.
+    await expect(page.getByText(/failed|network/i).first()).toBeVisible()
+    await expect(page.getByRole('button', { name: /refresh/i })).toBeVisible()
   })
 
-  test('error state: shows error on 500', async ({ page }) => {
-    await page.route('**/api/monitor', (route) =>
+  test('error state: shows error banner on 500', async ({ page }) => {
+    await page.route('**/api/uptime**', (route) =>
       route.fulfill({
         status: 500,
         contentType: 'application/json',
         body: JSON.stringify({ error: 'Monitor unavailable' }),
       })
     )
-    await page.goto('/dashboard/status', { waitUntil: 'commit' })
+    await page.goto('/uptime', { waitUntil: 'commit' })
     await page.waitForLoadState('domcontentloaded')
-    await expect(page.getByText(/failed|error|retry/i).first()).toBeVisible()
+    // load() throws `Server ${res.status}` for non-OK responses.
+    await expect(page.getByText(/server 500/i)).toBeVisible()
   })
 
   test('redirect to login when unauthenticated', async ({ page }) => {
@@ -879,7 +916,7 @@ test.describe('/dashboard/status', () => {
     // assertion below validates the outcome regardless of how the
     // navigation surface terminated.
     try {
-      await page.goto('/dashboard/status', { waitUntil: 'commit' })
+      await page.goto('/uptime', { waitUntil: 'commit' })
       await page.waitForLoadState('domcontentloaded')
     } catch (e) {
       if (!/interrupted by another navigation/i.test(String(e))) throw e

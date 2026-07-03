@@ -102,7 +102,7 @@ jobs:
           format: sarif
           output: trivy-results.sarif
           severity: CRITICAL,HIGH
-          exit-code: "0"
+          exit-code: '0'
 
       - name: Upload SARIF to GitHub Security tab
         if: always()
@@ -119,7 +119,7 @@ jobs:
           image-ref: ${{ env.DOCKER_IMAGE }}:scan-${{ github.sha }}
           format: table
           severity: CRITICAL
-          exit-code: "1"
+          exit-code: '1'
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v5

@@ -19,8 +19,8 @@ on:
         type: string
 
 permissions:
-  contents: write       # attach SBOM to GitHub Release
-  id-token: write       # needed for cosign keyless signing
+  contents: write # attach SBOM to GitHub Release
+  id-token: write # needed for cosign keyless signing
 
 jobs:
   sbom:

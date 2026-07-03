@@ -21,8 +21,7 @@ let highlighter
 
 function rehypeShiki() {
   return async (tree) => {
-    highlighter =
-      highlighter ?? (await shiki.getHighlighter({ theme: 'css-variables' }))
+    highlighter = highlighter ?? (await shiki.getHighlighter({ theme: 'css-variables' }))
 
     visit(tree, 'element', (node) => {
       if (node.tagName === 'pre' && node.children[0]?.tagName === 'code') {
@@ -32,10 +31,7 @@ function rehypeShiki() {
         node.properties.code = textNode.value
 
         if (node.properties.language) {
-          let tokens = highlighter.codeToThemedTokens(
-            textNode.value,
-            node.properties.language,
-          )
+          let tokens = highlighter.codeToThemedTokens(textNode.value, node.properties.language)
 
           textNode.value = shiki.renderToHtml(tokens, {
             elements: {

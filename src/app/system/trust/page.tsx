@@ -11,7 +11,16 @@
 
 import { Button } from '@/components/Button'
 import { ListSkeleton } from '@/components/skeletons'
-import { AlertTriangle, CheckCircle, Globe, Lock, Network, RefreshCw, WifiOff, XCircle } from 'lucide-react'
+import {
+  AlertTriangle,
+  CheckCircle,
+  Globe,
+  Lock,
+  Network,
+  RefreshCw,
+  WifiOff,
+  XCircle,
+} from 'lucide-react'
 import { Suspense, useCallback, useEffect, useState } from 'react'
 
 interface TrustData {
@@ -131,7 +140,8 @@ function TrustContent() {
   }
 
   // Normalise between real API shape and test-mock shape
-  const sslTrusted = data.ssl?.trusted ?? data.ssl?.caInstalled ?? data.certificateInstalled ?? false
+  const sslTrusted =
+    data.ssl?.trusted ?? data.ssl?.caInstalled ?? data.certificateInstalled ?? false
   const dnsConfigured = data.dns?.configured ?? data.dnsConfigured ?? false
   const portsForwarded = data.ports?.forwarded ?? data.portForwardingActive ?? false
 

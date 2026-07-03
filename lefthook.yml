@@ -5,10 +5,10 @@ pre-commit:
   parallel: true
   commands:
     lint:
-      glob: "src/**/*.{ts,tsx,js,jsx}"
+      glob: 'src/**/*.{ts,tsx,js,jsx}'
       run: pnpm lint --max-warnings=0
     format-check:
-      glob: "**/*.{ts,tsx,js,jsx,json,md}"
+      glob: '**/*.{ts,tsx,js,jsx,json,md}'
       run: pnpm exec prettier --check {staged_files}
     secrets-scan:
       run: |

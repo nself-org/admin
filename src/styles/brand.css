@@ -45,11 +45,7 @@
 
 /* Indigo gradient text */
 .nself-gradient-text {
-  background: linear-gradient(
-    135deg,
-    var(--color-nself-primary-light) 0%,
-    #a78bfa 100%
-  );
+  background: linear-gradient(135deg, var(--color-nself-primary-light) 0%, #a78bfa 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;

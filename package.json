@@ -125,13 +125,13 @@
     "critters": "^0.0.23",
     "date-fns": "^4.1.0",
     "dockerode": "^4.0.10",
-    "dompurify": "^3.4.12",
+    "dompurify": "^3.4.13",
     "dotenv": "^17.3.1",
     "fast-glob": "^3.3.3",
     "flexsearch": "^0.8.212",
     "framer-motion": "^12.38.0",
     "jose": "^6.2.3",
-    "js-yaml": "^4.2.0",
+    "js-yaml": "^4.3.1",
     "lightningcss": "^1.32.0",
     "lodash": "^4.18.1",
     "lokijs": "^1.5.12",
@@ -139,7 +139,7 @@
     "mdast-util-to-string": "^4.0.0",
     "mdx-annotations": "^0.1.4",
     "minio": "^8.0.7",
-    "next": ">=16.2.6",
+    "next": ">=16.2.11",
     "next-intl": "^4.9.2",
     "next-themes": "^0.4.6",
     "otplib": "^13.4.0",
@@ -203,6 +203,6 @@
     "jest-environment-jsdom": "^30.3.0",
     "prettier": "^3.8.1",
     "prettier-plugin-tailwindcss": "^0.6.14",
-    "sharp": "0.34.3"
+    "sharp": "0.35.0"
   }
 }

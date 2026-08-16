@@ -28,16 +28,28 @@ jobs:
       - name: Disable git-lfs filters
         # Binaries under this repo's `filter=lfs` .gitattributes patterns (png/jpg/...)
         # were committed as raw content, never migrated to real LFS pointers. With the
-        # lfs smudge/clean filter active (git-lfs is preinstalled + globally registered
-        # on GitHub-hosted runners even though Checkout above doesn't pass lfs:true),
-        # git recomputes each file's "clean" pointer form and diffs it against the real
-        # binary blob actually committed, so these files show as perpetually modified —
-        # "Encountered N files that should have been pointers, but weren't". That trips
-        # peter-evans/create-pull-request's internal `git stash push`/`stash pop` dance
-        # in the next step ("local changes would be overwritten by merge"), unrelated to
-        # any real doc-audit change. Uninstalling the filter locally makes git compare
-        # raw content on both sides (no transform), which always matches.
-        run: git lfs uninstall --local || true
+        # lfs smudge/clean filter active, git recomputes each file's "clean" pointer
+        # form and diffs it against the real binary blob actually committed, so these
+        # files show as perpetually modified — "Encountered N files that should have
+        # been pointers, but weren't". That trips peter-evans/create-pull-request's
+        # internal `git stash push`/`stash pop` dance in the next step ("local changes
+        # would be overwritten by merge"), unrelated to any real doc-audit change.
+        #
+        # `git lfs uninstall --local` alone is NOT enough: on this runner the filter is
+        # registered at GLOBAL scope, not local (confirmed live — `--local` errored
+        # with "no such section: filter.lfs", i.e. nothing to remove there, while the
+        # very next Checkout still printed "Encountered N files that should have been
+        # pointers"). Local removal of a section that doesn't exist locally is a no-op;
+        # the global registration silently wins. Explicitly clear the global filter
+        # definitions too so nothing is left to shadow, then run both uninstall scopes
+        # for good measure.
+        run: |
+          git config --global --unset-all filter.lfs.clean || true
+          git config --global --unset-all filter.lfs.smudge || true
+          git config --global --unset-all filter.lfs.process || true
+          git config --global --unset-all filter.lfs.required || true
+          git lfs uninstall --local || true
+          git lfs uninstall || true
 
       - name: Set up Go
         uses: actions/setup-go@v5

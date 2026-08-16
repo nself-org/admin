@@ -17,6 +17,14 @@ const nextConfig = {
   experimental: {
     optimizeCss: true,
   },
+  // Type-checking is enforced by the "TypeScript Coverage Gate (admin)" GitHub
+  // Action pre-merge, not by the Vercel production build. Running `tsc` again
+  // inside `next build` on a cold-cache prod build was hanging past Vercel's
+  // 46-minute ceiling (BUILD_EXCEEDED_MAXIMUM_TIME). Types are still fully
+  // enforced in CI — this only removes the redundant in-build check.
+  typescript: {
+    ignoreBuildErrors: true,
+  },
   // Image optimization
   images: {
     formats: ['image/avif', 'image/webp'],

@@ -108,6 +108,28 @@ jobs:
             --fix
           echo "ran=true" >> "$GITHUB_OUTPUT"
 
+      # The audit run leaves unrelated files modified in the working tree —
+      # observed: public/icon.png, public/favicon-*.png, public/apple-touch-icon.png,
+      # public/android-chrome-*.png, src/images/nself.png. Those are NOT in
+      # add-paths, so create-pull-request stashes them, switches branch, and the
+      # subsequent `git stash pop` dies with
+      #   "error: Your local changes to the following files would be overwritten by merge"
+      # failing the whole workflow even though the audit itself succeeded.
+      # Discard everything outside the doc paths we actually intend to commit,
+      # so the tree is clean apart from the auto-fixes.
+      - name: Discard non-doc changes before opening PR
+        if: ${{ github.event.inputs.apply_autofix != 'false' }}
+        run: |
+          set -euo pipefail
+          echo "Working tree before cleanup:"
+          git status --porcelain | head -20
+          # restore every modified/untracked path that is not a doc artefact
+          git checkout -- . \
+            ':(exclude)*.md' ':(exclude)*.mdx' ':(exclude).claude/qa/findings/*.json' 2>/dev/null || true
+          git clean -fd -e '*.md' -e '*.mdx' -e '.claude/qa/findings' 2>/dev/null || true
+          echo "Working tree after cleanup:"
+          git status --porcelain | head -20
+
       - name: Open auto-fix PR
         if: ${{ github.event.inputs.apply_autofix != 'false' }}
         uses: peter-evans/create-pull-request@v6

@@ -142,7 +142,6 @@ jobs:
           add-paths: |
             **/*.md
             **/*.mdx
-            .claude/qa/findings/*.json
 
       - name: Upload JSON report
         uses: actions/upload-artifact@v4

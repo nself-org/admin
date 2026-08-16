@@ -28,16 +28,23 @@ jobs:
       - name: Disable git-lfs filters
         # Binaries under this repo's `filter=lfs` .gitattributes patterns (png/jpg/...)
         # were committed as raw content, never migrated to real LFS pointers. With the
-        # lfs smudge/clean filter active (git-lfs is preinstalled + globally registered
-        # on GitHub-hosted runners even though Checkout above doesn't pass lfs:true),
-        # git recomputes each file's "clean" pointer form and diffs it against the real
-        # binary blob actually committed, so these files show as perpetually modified —
-        # "Encountered N files that should have been pointers, but weren't". That trips
-        # peter-evans/create-pull-request's internal `git stash push`/`stash pop` dance
-        # in the next step ("local changes would be overwritten by merge"), unrelated to
-        # any real doc-audit change. Uninstalling the filter locally makes git compare
-        # raw content on both sides (no transform), which always matches.
-        run: git lfs uninstall --local || true
+        # lfs smudge/clean filter active, git recomputes each file's "clean" pointer
+        # form and diffs it against the real binary blob actually committed, so these
+        # files show as perpetually modified — "Encountered N files that should have
+        # been pointers, but weren't". That trips peter-evans/create-pull-request's
+        # internal `git stash push`/`stash pop` dance in the next step ("local changes
+        # would be overwritten by merge"), unrelated to any real doc-audit change.
+        #
+        # Two prior attempts here didn't work: `git lfs uninstall --local` was a no-op
+        # (the filter is registered at GLOBAL scope on this runner, not local — PR #70),
+        # and unsetting it at --global scope worked but mutates config outside this
+        # checkout (unsafe on shared/persistent runners — PR #71 draft). `.git/info/
+        # attributes` has higher precedence than any in-tree .gitattributes and is
+        # local to this one checkout only: `* -filter` unconditionally clears the
+        # filter attribute for every path here, so git always compares raw content,
+        # without touching git config at any scope. Verified locally that this
+        # actually neutralizes an active clean/smudge filter for status/diff purposes.
+        run: echo '* -filter' >> .git/info/attributes
 
       - name: Set up Go
         uses: actions/setup-go@v5

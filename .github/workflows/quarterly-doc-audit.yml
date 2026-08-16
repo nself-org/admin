@@ -25,6 +25,20 @@ jobs:
         with:
           fetch-depth: 1
 
+      - name: Disable git-lfs filters
+        # Binaries under this repo's `filter=lfs` .gitattributes patterns (png/jpg/...)
+        # were committed as raw content, never migrated to real LFS pointers. With the
+        # lfs smudge/clean filter active (git-lfs is preinstalled + globally registered
+        # on GitHub-hosted runners even though Checkout above doesn't pass lfs:true),
+        # git recomputes each file's "clean" pointer form and diffs it against the real
+        # binary blob actually committed, so these files show as perpetually modified —
+        # "Encountered N files that should have been pointers, but weren't". That trips
+        # peter-evans/create-pull-request's internal `git stash push`/`stash pop` dance
+        # in the next step ("local changes would be overwritten by merge"), unrelated to
+        # any real doc-audit change. Uninstalling the filter locally makes git compare
+        # raw content on both sides (no transform), which always matches.
+        run: git lfs uninstall --local || true
+
       - name: Set up Go
         uses: actions/setup-go@v5
         with:

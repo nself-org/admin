@@ -25,6 +25,20 @@ jobs:
         with:
           fetch-depth: 1
 
+      - name: Disable git-lfs filters
+        # Binaries under this repo's `filter=lfs` .gitattributes patterns (png/jpg/...)
+        # were committed as raw content, never migrated to real LFS pointers. With the
+        # lfs smudge/clean filter active (git-lfs is preinstalled + globally registered
+        # on GitHub-hosted runners even though Checkout above doesn't pass lfs:true),
+        # git recomputes each file's "clean" pointer form and diffs it against the real
+        # binary blob actually committed, so these files show as perpetually modified —
+        # "Encountered N files that should have been pointers, but weren't". That trips
+        # peter-evans/create-pull-request's internal `git stash push`/`stash pop` dance
+        # in the next step ("local changes would be overwritten by merge"), unrelated to
+        # any real doc-audit change. Uninstalling the filter locally makes git compare
+        # raw content on both sides (no transform), which always matches.
+        run: git lfs uninstall --local || true
+
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
@@ -94,6 +108,28 @@ jobs:
             --fix
           echo "ran=true" >> "$GITHUB_OUTPUT"
 
+      # The audit run leaves unrelated files modified in the working tree —
+      # observed: public/icon.png, public/favicon-*.png, public/apple-touch-icon.png,
+      # public/android-chrome-*.png, src/images/nself.png. Those are NOT in
+      # add-paths, so create-pull-request stashes them, switches branch, and the
+      # subsequent `git stash pop` dies with
+      #   "error: Your local changes to the following files would be overwritten by merge"
+      # failing the whole workflow even though the audit itself succeeded.
+      # Discard everything outside the doc paths we actually intend to commit,
+      # so the tree is clean apart from the auto-fixes.
+      - name: Discard non-doc changes before opening PR
+        if: ${{ github.event.inputs.apply_autofix != 'false' }}
+        run: |
+          set -euo pipefail
+          echo "Working tree before cleanup:"
+          git status --porcelain | head -20
+          # restore every modified/untracked path that is not a doc artefact
+          git checkout -- . \
+            ':(exclude)*.md' ':(exclude)*.mdx' ':(exclude).claude/qa/findings/*.json' 2>/dev/null || true
+          git clean -fd -e '*.md' -e '*.mdx' -e '.claude/qa/findings' 2>/dev/null || true
+          echo "Working tree after cleanup:"
+          git status --porcelain | head -20
+
       - name: Open auto-fix PR
         if: ${{ github.event.inputs.apply_autofix != 'false' }}
         uses: peter-evans/create-pull-request@v6
@@ -106,7 +142,6 @@ jobs:
           add-paths: |
             **/*.md
             **/*.mdx
-            .claude/qa/findings/*.json
 
       - name: Upload JSON report
         uses: actions/upload-artifact@v4

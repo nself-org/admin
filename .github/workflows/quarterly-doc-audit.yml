@@ -35,21 +35,16 @@ jobs:
         # internal `git stash push`/`stash pop` dance in the next step ("local changes
         # would be overwritten by merge"), unrelated to any real doc-audit change.
         #
-        # `git lfs uninstall --local` alone is NOT enough: on this runner the filter is
-        # registered at GLOBAL scope, not local (confirmed live — `--local` errored
-        # with "no such section: filter.lfs", i.e. nothing to remove there, while the
-        # very next Checkout still printed "Encountered N files that should have been
-        # pointers"). Local removal of a section that doesn't exist locally is a no-op;
-        # the global registration silently wins. Explicitly clear the global filter
-        # definitions too so nothing is left to shadow, then run both uninstall scopes
-        # for good measure.
-        run: |
-          git config --global --unset-all filter.lfs.clean || true
-          git config --global --unset-all filter.lfs.smudge || true
-          git config --global --unset-all filter.lfs.process || true
-          git config --global --unset-all filter.lfs.required || true
-          git lfs uninstall --local || true
-          git lfs uninstall || true
+        # Two prior attempts here didn't work: `git lfs uninstall --local` was a no-op
+        # (the filter is registered at GLOBAL scope on this runner, not local — PR #70),
+        # and unsetting it at --global scope worked but mutates config outside this
+        # checkout (unsafe on shared/persistent runners — PR #71 draft). `.git/info/
+        # attributes` has higher precedence than any in-tree .gitattributes and is
+        # local to this one checkout only: `* -filter` unconditionally clears the
+        # filter attribute for every path here, so git always compares raw content,
+        # without touching git config at any scope. Verified locally that this
+        # actually neutralizes an active clean/smudge filter for status/diff purposes.
+        run: echo '* -filter' >> .git/info/attributes
 
       - name: Set up Go
         uses: actions/setup-go@v5

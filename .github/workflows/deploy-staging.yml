@@ -57,12 +57,25 @@ jobs:
           # and the build dies on a bare `curl 404`. docker-publish.yml already
           # resolves this; this build did not, so it broke on every bump.
           ADMIN_VER="$(node -p "require('./package.json').version")"
-          if gh release view "v${ADMIN_VER}" --repo nself-org/cli &>/dev/null; then
+          # Test for the ASSET, not merely the release. nself-org/cli also hosts
+          # @nself/sdk releases, which carry the same tag and zero CLI binaries,
+          # so "the release exists" is not the same as "the tarball exists".
+          # v1.2.7 was exactly that: a real release with no assets.
+          has_tarball() {
+            gh release view "v$1" --repo nself-org/cli --json assets \
+              --jq '.assets[].name' 2>/dev/null | grep -q "^nself-$1-linux-amd64.tar.gz$"
+          }
+          ADMIN_VER="$(node -p "require('./package.json').version")"
+          if has_tarball "$ADMIN_VER"; then
             CLI_VER="$ADMIN_VER"
-            echo "CLI v${CLI_VER} is published; using it."
+            echo "CLI v${CLI_VER} publishes a linux-amd64 tarball; using it."
           else
-            CLI_VER="$(gh release view --repo nself-org/cli --json tagName --jq '.tagName' | sed 's/^v//')"
-            echo "CLI v${ADMIN_VER} not published yet — falling back to latest stable: ${CLI_VER}"
+            CLI_VER="$(gh release list --repo nself-org/cli --limit 30 --json tagName --jq '.[].tagName' \
+              | sed 's/^v//' | while read -r v; do has_tarball "$v" && { echo "$v"; break; }; done)"
+            echo "CLI v${ADMIN_VER} has no tarball — using newest release that does: ${CLI_VER}"
+          fi
+          if [ -z "$CLI_VER" ]; then
+            echo "::error::No nself-org/cli release publishes a linux-amd64 tarball"; exit 1
           fi
           echo "cli_version=$CLI_VER" >> "$GITHUB_OUTPUT"
 

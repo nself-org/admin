@@ -46,12 +46,46 @@ jobs:
             type=raw,value=${{ env.DOCKER_TAG_STAGING }}
             type=sha,prefix=${{ env.DOCKER_TAG_STAGING }}-
 
+      - name: Resolve CLI version for Dockerfile
+        id: cli_version
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          # The Dockerfile's ARG NSELF_VERSION default tracks the in-development
+          # version (admin is version-locked to the CLI), so between a version
+          # bump and that version's CLI release there is no tarball to download
+          # and the build dies on a bare `curl 404`. docker-publish.yml already
+          # resolves this; this build did not, so it broke on every bump.
+          ADMIN_VER="$(node -p "require('./package.json').version")"
+          # Test for the ASSET, not merely the release. nself-org/cli also hosts
+          # @nself/sdk releases, which carry the same tag and zero CLI binaries,
+          # so "the release exists" is not the same as "the tarball exists".
+          # v1.2.7 was exactly that: a real release with no assets.
+          has_tarball() {
+            gh release view "v$1" --repo nself-org/cli --json assets \
+              --jq '.assets[].name' 2>/dev/null | grep -q "^nself-$1-linux-amd64.tar.gz$"
+          }
+          ADMIN_VER="$(node -p "require('./package.json').version")"
+          if has_tarball "$ADMIN_VER"; then
+            CLI_VER="$ADMIN_VER"
+            echo "CLI v${CLI_VER} publishes a linux-amd64 tarball; using it."
+          else
+            CLI_VER="$(gh release list --repo nself-org/cli --limit 30 --json tagName --jq '.[].tagName' \
+              | sed 's/^v//' | while read -r v; do has_tarball "$v" && { echo "$v"; break; }; done)"
+            echo "CLI v${ADMIN_VER} has no tarball — using newest release that does: ${CLI_VER}"
+          fi
+          if [ -z "$CLI_VER" ]; then
+            echo "::error::No nself-org/cli release publishes a linux-amd64 tarball"; exit 1
+          fi
+          echo "cli_version=$CLI_VER" >> "$GITHUB_OUTPUT"
+
       - name: Build and push Docker image
         if: steps.docker-login.outcome == 'success'
         uses: docker/build-push-action@v5
         with:
           context: .
           push: true
+          build-args: NSELF_VERSION=${{ steps.cli_version.outputs.cli_version }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=registry,ref=${{ env.DOCKER_IMAGE }}:buildcache

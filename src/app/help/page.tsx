@@ -112,6 +112,16 @@ interface CLICommandGroup {
   description: string
   commandCount: number
   commands: CLICommand[]
+  /**
+   * Set when this group's commands live in a plugin rather than the CLI core.
+   *
+   * nSelf 1.3.0 moved 43 commands out of the binary. They still work exactly as
+   * documented here, but only once the plugin is installed — so listing them
+   * without saying that sends someone to a command their machine does not have.
+   * The value is the plugin name to install, which is not always the command
+   * name: `nself sentry` lives in `sentry-cli`, `nself billing` in `tenant`.
+   */
+  plugin?: string
 }
 
 const CATEGORIES = [
@@ -216,7 +226,8 @@ const CLI_COMMAND_GROUPS: CLICommandGroup[] = [
       },
       {
         command: 'nself monitor',
-        description: 'Open the monitoring dashboard with real-time service metrics',
+        description:
+          'Open the monitoring dashboard with real-time service metrics (plugin: nself install monitor)',
         uiPath: '/monitor',
         uiLabel: 'Monitor',
       },
@@ -254,7 +265,8 @@ const CLI_COMMAND_GROUPS: CLICommandGroup[] = [
       },
       {
         command: 'nself audit',
-        description: 'Run a security and configuration audit on the project setup',
+        description:
+          'Run a security and configuration audit on the project setup (plugin: nself install audit)',
         uiPath: '/system/security',
         uiLabel: 'Security',
       },
@@ -337,6 +349,7 @@ const CLI_COMMAND_GROUPS: CLICommandGroup[] = [
     icon: Users,
     description: 'Tenant lifecycle, members, settings, billing, branding, and more',
     commandCount: 50,
+    plugin: 'tenant',
     commands: [
       {
         command: 'nself tenant init',
@@ -525,6 +538,7 @@ const CLI_COMMAND_GROUPS: CLICommandGroup[] = [
     icon: Server,
     description: 'Cloud providers, Kubernetes, and Helm chart management',
     commandCount: 38,
+    plugin: 'infra',
     commands: [
       {
         command: 'nself infra provider list',
@@ -2081,6 +2095,12 @@ function CLIReferenceSection() {
                     <p className="mt-0.5 text-sm text-zinc-500 dark:text-zinc-400">
                       {group.description}
                     </p>
+                    {group.plugin && (
+                      <p className="mt-1 text-xs text-amber-600 dark:text-amber-500">
+                        Ships as a plugin since 1.3.0 — install with{' '}
+                        <code className="font-mono">nself install {group.plugin}</code>
+                      </p>
+                    )}
                   </div>
                   {isExpanded ? (
                     <ChevronDown className="h-5 w-5 flex-shrink-0 text-zinc-400" />

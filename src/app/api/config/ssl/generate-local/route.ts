@@ -1,4 +1,3 @@
-import { findNselfPath } from '@/lib/nself-path'
 import { getProjectPath } from '@/lib/paths'
 import { requireAuth } from '@/lib/require-auth'
 import { execFile, spawn } from 'child_process'
@@ -44,27 +43,17 @@ export async function POST(request: NextRequest): Promise<Response | NextRespons
       )
     }
 
-    // Try nself ssl bootstrap first
-    try {
-      const nselfPath = await findNselfPath()
-      await fs.access(nselfPath)
-
-      const { stdout, stderr } = await execFileAsync(nselfPath, ['ssl', 'bootstrap'], {
-        cwd: projectPath,
-        timeout: 60000,
-      })
-
-      return NextResponse.json({
-        success: true,
-        data: {
-          method: 'nself',
-          output: stdout,
-          warnings: stderr || undefined,
-        },
-      })
-    } catch {
-      // nself not available, use mkcert directly
-    }
+    // This used to try `nself ssl bootstrap` first and fall back to mkcert when
+    // that failed. The fallback never ran, because the attempt never failed:
+    // `bootstrap` has never been a subcommand of `nself ssl`, and cobra answers
+    // an unknown subcommand by printing help and exiting 0. So this endpoint
+    // reported { success: true, method: 'nself' } while generating no
+    // certificates at all, and the working path below was unreachable.
+    //
+    // There is no nself command to call here. `nself trust ssl` provisions via
+    // certbot with DNS-01, which needs a public domain; local development certs
+    // are mkcert's job, which is what the rest of this handler does. So the
+    // attempt is gone rather than repointed.
 
     // Read domain from .env
     let baseDomain = 'localhost'

@@ -10,6 +10,7 @@ on:
     paths:
       - 'src/**'
       - 'public/**'
+      - '.github/workflows/lighthouse.yml'
 
 jobs:
   audit:

@@ -21,6 +21,7 @@ on:
     paths:
       - 'src/**/*.tsx'
       - 'src/**/*.ts'
+      - '.github/workflows/price-drift-check.yml'
 
 jobs:
   price-drift:

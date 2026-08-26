@@ -16,6 +16,13 @@ jobs:
   docker-platform:
     name: Docker multi-platform check
     runs-on: ubuntu-latest
+    # This job emulates arm64 through QEMU and normally takes about 40 minutes.
+    # With no timeout it inherits GitHub's 360-minute default, so when a QEMU
+    # build hangs — which it did on 2026-08-26, sitting at 62 minutes with no
+    # output before being cancelled by hand — it burns six hours of runner time
+    # and blocks the release behind it. 75 gives the normal run comfortable
+    # headroom and turns a hang into a failed check within the hour.
+    timeout-minutes: 75
 
     steps:
       - uses: actions/checkout@v4

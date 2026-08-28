@@ -125,6 +125,15 @@ jobs:
         with:
           name: build
           path: .next/
-          retention-days: 7
+          # 1 day, not 7. This is a ~177 MB .next/ tree and NOTHING downloads
+          # it — the only artifact any workflow in this repo consumes is
+          # "next-build", which already uses 1 day. At 7 days it was holding
+          # ~1 GB of the org's 0.5 GB Actions storage quota on its own, which
+          # took the whole org to 100% and started failing artifact and cache
+          # steps everywhere.
+          #
+          # Kept at 1 day rather than deleted so it is still there for
+          # same-day debugging of a failed build.
+          retention-days: 1
           include-hidden-files: true
           if-no-files-found: error

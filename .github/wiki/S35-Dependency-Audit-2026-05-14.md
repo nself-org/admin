@@ -96,7 +96,7 @@ Remaining 37 outdated entries are patch-level bumps with no advisories.
 ## Verification Method
 
 ```bash
-cd /Volumes/X9/Sites/nself/admin
+cd /Volumes/UG/Sites/nself/admin
 pnpm audit --json   # detailed CVE list
 pnpm outdated       # outdated direct deps
 ```

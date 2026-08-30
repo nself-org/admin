@@ -23,7 +23,7 @@ Workflow: `admin/.github/workflows/release.yml` (triggered by CLI release dispat
 ## Manual publish (fallback if automation fails)
 
 ```bash
-cd /Volumes/X9/Sites/nself/admin
+cd /Volumes/UG/Sites/nself/admin
 source ~/.claude/vault.env
 
 # Build

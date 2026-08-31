@@ -75,7 +75,17 @@ RUN apk add --no-cache \
     nss-tools \
     ca-certificates \
     && addgroup -g 1001 -S nodejs \
-    && adduser -S nextjs -u 1001
+    && adduser -S nextjs -u 1001 \
+    # Remove npm from the RUNTIME image. The entrypoint runs `node server.js`
+    # and nothing here invokes npm or npx — the build stages use pnpm via
+    # corepack. But node:22-alpine ships npm 10.9.8, whose BUNDLED tar is
+    # 7.5.11, and that carries CVE-2026-59873. Trivy's CRITICAL gate correctly
+    # blocked the publish on it. Deleting npm removes the vulnerable code from
+    # the shipped image rather than suppressing the finding or chasing base-image
+    # tags for a package we do not run.
+    && rm -rf /usr/local/lib/node_modules/npm \
+              /usr/local/bin/npm \
+              /usr/local/bin/npx
 
 # Install mkcert for local SSL certificate generation
 # Using pre-built binary for Alpine Linux

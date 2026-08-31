@@ -1,0 +1,18 @@
+# Trivy ignore rules for nself-admin.
+#
+# Scope every entry to a path and give it a reason. A bare rule id here would
+# switch the finding off repo-wide, which is how a scanner stops being a gate.
+
+secrets:
+  - id: gcp-service-account
+    paths:
+      - "app/.next/server/app/cloud/gcp/page.js"
+      - "app/.next/static/chunks/app/cloud/gcp/*.js"
+    statement: >-
+      False positive. The match is a `placeholder` attribute on the service-account
+      textarea in src/app/cloud/gcp/page.tsx:266, which shows users the JSON shape to
+      paste: '{"type": "service_account", "project_id": "...", ...}'. The literal
+      ellipses are in the source; there is no key material. Trivy's secret scanner
+      matches on the JSON shape, and the built Next.js bundles inline the attribute.
+      Scoped to the two GCP page bundles so a real credential landing anywhere else in
+      the image still fails the gate.

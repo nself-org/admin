@@ -1,6 +1,6 @@
 'use client'
 
-import { ProjectSetupWizard } from '@/components/ProjectSetupWizard'
+import { ProjectSetupWizard } from '@/components/wizard/ProjectSetupWizard'
 import { useProjectStore } from '@/stores/projectStore'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Loader2 } from 'lucide-react'

@@ -1,0 +1,62 @@
+name: Release Tag Drift Check
+
+# Purpose: catch the exact failure mode found 2026-08-31 — a "chore(release): X.Y.Z"
+# commit lands on main (bumping package.json / cli-version.ts / Dockerfile) but no
+# matching `git tag vX.Y.Z` is ever pushed. Because release.yml and docker-publish.yml
+# both trigger only on `push: tags: v*`, a missing tag means the release + Docker
+# Hub publish pipeline silently never runs — with no red X anywhere to notice.
+# This check makes that drift loud: it runs on every push to main and fails the
+# build if HEAD's package.json version has no reachable git tag.
+#
+# WHY a separate workflow instead of folding into version-lockstep.yml:
+# version-lockstep.yml checks admin-vs-CLI version agreement; this checks
+# version-vs-tag agreement. Different failure classes, different fixes, kept
+# distinct so the failure message tells you exactly which one broke.
+
+on:
+  push:
+    branches: [main]
+  schedule:
+    # Daily safety net — catches drift even if the pushing commit's own
+    # workflow run was skipped, cancelled, or the tag was deleted after the fact.
+    - cron: '17 6 * * *'
+  workflow_dispatch: {}
+
+jobs:
+  check-tag-matches-version:
+    name: package.json version must have a matching git tag
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout with full tag history
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Read package.json version
+        id: pkg
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
+          echo "package.json version: ${VERSION}"
+
+      - name: Assert v${{ steps.pkg.outputs.version }} tag exists and points at HEAD's release lineage
+        run: |
+          VERSION="${{ steps.pkg.outputs.version }}"
+          TAG="v${VERSION}"
+
+          if ! git rev-parse "refs/tags/${TAG}" >/dev/null 2>&1; then
+            echo "::error::Release tag drift: package.json is at ${VERSION} but tag ${TAG} does not exist."
+            echo "::error::The release/docker-publish workflows trigger ONLY on 'push: tags: v*' —"
+            echo "::error::without this tag, v${VERSION} was never built or published to Docker Hub."
+            echo "::error::Fix: git tag ${TAG} <release-commit-sha> && git push origin ${TAG}"
+            exit 1
+          fi
+
+          TAG_SHA=$(git rev-parse "refs/tags/${TAG}")
+          if ! git merge-base --is-ancestor "${TAG_SHA}" HEAD; then
+            echo "::error::Release tag drift: ${TAG} exists but does not point to a commit on this branch's history."
+            echo "::error::package.json says ${VERSION} but the tagged commit (${TAG_SHA}) is not an ancestor of HEAD."
+            exit 1
+          fi
+
+          echo "OK: ${TAG} exists and is part of main's history — package.json/tag are in sync."

@@ -164,3 +164,7 @@ PLAN.md
 
 # Turbo cache (Mega P1 T-E3-03 hardening)
 .turbo/
+backend/docker-compose.yml
+backend/docker-compose.override.yml
+*.generated.env
+**/*.gen.yml

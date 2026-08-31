@@ -10,18 +10,28 @@
  * Outputs: saveState, handleNext, handleBack, clearWizardState, handleBuild.
  * Constraints: The 3 useEffects' dep arrays are copied verbatim — don't
  *              simplify without re-checking original trigger conditions. */
-import { useCallback, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
 import { useProjectStore } from '@/stores/projectStore'
+import { useRouter } from 'next/navigation'
+import { useCallback, useEffect } from 'react'
 import type { WizardConfigState } from './useWizardConfigState'
 
 export function useWizardPersistence(mode: 'new' | 'edit' | 'reset', state: WizardConfigState) {
   const router = useRouter()
   const { projectStatus, checkProjectStatus, setProjectSetup } = useProjectStore()
   const {
-    config, setConfig, currentStep, setCurrentStep, steps, currentStepIndex,
-    isLoading, setIsLoading, setIsExecuting, setCommandOutput,
-    setDomainPreview, setValidationErrors, validateInitialSetup,
+    config,
+    setConfig,
+    currentStep,
+    setCurrentStep,
+    steps,
+    currentStepIndex,
+    isLoading,
+    setIsLoading,
+    setIsExecuting,
+    setCommandOutput,
+    setDomainPreview,
+    setValidationErrors,
+    validateInitialSetup,
   } = state
 
   const saveState = useCallback(async () => {

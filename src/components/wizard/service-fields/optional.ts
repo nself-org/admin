@@ -8,7 +8,7 @@
  */
 
 export const optionalServiceFields = {
-    monitoring: [
+  monitoring: [
     {
       key: 'grafanaPort',
       label: 'Grafana Port',
@@ -186,5 +186,4 @@ export const optionalServiceFields = {
       advanced: true,
     },
   ],
-
 }

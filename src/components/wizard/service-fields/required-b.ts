@@ -8,7 +8,7 @@
  */
 
 export const requiredServiceFieldsB = {
-    auth: [
+  auth: [
     {
       key: 'jwtExpiresIn',
       label: 'JWT Expires In (seconds)',

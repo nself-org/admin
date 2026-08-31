@@ -23,61 +23,107 @@ import {
   Settings,
   Shield,
 } from 'lucide-react'
-import type { WizardStep } from './types'
 import { SERVICE_FIELDS } from './service-fields'
+import { AppsStep } from './steps/AppsStep'
+import { InitialStep } from './steps/InitialStep'
+import { OptionalServicesStep } from './steps/OptionalServicesStep'
+import { RequiredServicesStep } from './steps/RequiredServicesStep'
+import { ReviewStep } from './steps/ReviewStep'
+import { UserServicesStep } from './steps/UserServicesStep'
+import type { WizardStep } from './types'
 import { useWizardConfigState } from './useWizardConfigState'
 import { useWizardPersistence } from './useWizardPersistence'
-import { InitialStep } from './steps/InitialStep'
-import { RequiredServicesStep } from './steps/RequiredServicesStep'
-import { OptionalServicesStep } from './steps/OptionalServicesStep'
-import { UserServicesStep } from './steps/UserServicesStep'
-import { AppsStep } from './steps/AppsStep'
-import { ReviewStep } from './steps/ReviewStep'
 
 interface ProjectSetupWizardProps {
   mode?: 'new' | 'edit' | 'reset'
 }
 
-
 export function ProjectSetupWizard({ mode = 'new' }: ProjectSetupWizardProps) {
   const state = useWizardConfigState()
   const {
-    currentStep, setCurrentStep, isExecuting, commandOutput, showCliInstructions,
-    setShowCliInstructions, domainPreview, setDomainPreview, showPassword,
-    setShowPassword, isLoading, validationErrors, setValidationErrors,
-    selectedService, setSelectedService, showTemplateInfo, setShowTemplateInfo,
-    showFrameworkExamples, setShowFrameworkExamples, showWhyRegister,
-    setShowWhyRegister, serviceNameRefs, appNameRefs, config, setConfig,
-    steps, currentStepIndex, validateDomain,
+    currentStep,
+    setCurrentStep,
+    isExecuting,
+    commandOutput,
+    showCliInstructions,
+    setShowCliInstructions,
+    domainPreview,
+    setDomainPreview,
+    showPassword,
+    setShowPassword,
+    isLoading,
+    validationErrors,
+    setValidationErrors,
+    selectedService,
+    setSelectedService,
+    showTemplateInfo,
+    setShowTemplateInfo,
+    showFrameworkExamples,
+    setShowFrameworkExamples,
+    showWhyRegister,
+    setShowWhyRegister,
+    serviceNameRefs,
+    appNameRefs,
+    config,
+    setConfig,
+    steps,
+    currentStepIndex,
+    validateDomain,
   } = state
-  const { handleNext, handleBack, clearWizardState, handleBuild } = useWizardPersistence(mode, state)
+  const { handleNext, handleBack, clearWizardState, handleBuild } = useWizardPersistence(
+    mode,
+    state
+  )
 
   const renderStepContent = () => {
     switch (currentStep) {
       case 'initial':
         return (
-          <InitialStep config={config} setConfig={setConfig} validationErrors={validationErrors}
-            setValidationErrors={setValidationErrors} domainPreview={domainPreview}
-            setDomainPreview={setDomainPreview} showPassword={showPassword} setShowPassword={setShowPassword}
-            showCliInstructions={showCliInstructions} setShowCliInstructions={setShowCliInstructions}
-            validateDomain={validateDomain} />
+          <InitialStep
+            config={config}
+            setConfig={setConfig}
+            validationErrors={validationErrors}
+            setValidationErrors={setValidationErrors}
+            domainPreview={domainPreview}
+            setDomainPreview={setDomainPreview}
+            showPassword={showPassword}
+            setShowPassword={setShowPassword}
+            showCliInstructions={showCliInstructions}
+            setShowCliInstructions={setShowCliInstructions}
+            validateDomain={validateDomain}
+          />
         )
       case 'required-services':
         return <RequiredServicesStep config={config} setSelectedService={setSelectedService} />
       case 'optional-services':
         return (
-          <OptionalServicesStep config={config} setConfig={setConfig} setSelectedService={setSelectedService} />
+          <OptionalServicesStep
+            config={config}
+            setConfig={setConfig}
+            setSelectedService={setSelectedService}
+          />
         )
       case 'user-services':
         return (
-          <UserServicesStep config={config} setConfig={setConfig} showTemplateInfo={showTemplateInfo}
-            setShowTemplateInfo={setShowTemplateInfo} serviceNameRefs={serviceNameRefs} />
+          <UserServicesStep
+            config={config}
+            setConfig={setConfig}
+            showTemplateInfo={showTemplateInfo}
+            setShowTemplateInfo={setShowTemplateInfo}
+            serviceNameRefs={serviceNameRefs}
+          />
         )
       case 'apps':
         return (
-          <AppsStep config={config} setConfig={setConfig} showFrameworkExamples={showFrameworkExamples}
-            setShowFrameworkExamples={setShowFrameworkExamples} showWhyRegister={showWhyRegister}
-            setShowWhyRegister={setShowWhyRegister} appNameRefs={appNameRefs} />
+          <AppsStep
+            config={config}
+            setConfig={setConfig}
+            showFrameworkExamples={showFrameworkExamples}
+            setShowFrameworkExamples={setShowFrameworkExamples}
+            showWhyRegister={showWhyRegister}
+            setShowWhyRegister={setShowWhyRegister}
+            appNameRefs={appNameRefs}
+          />
         )
       case 'review':
         return <ReviewStep config={config} commandOutput={commandOutput} />

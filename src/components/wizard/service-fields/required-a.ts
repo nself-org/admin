@@ -10,7 +10,7 @@
  */
 
 export const requiredServiceFieldsA = {
-    postgres: [
+  postgres: [
     // Most important settings at top
     {
       key: 'version',

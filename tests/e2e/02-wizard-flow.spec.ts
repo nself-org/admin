@@ -98,16 +98,18 @@ test.describe('Project Setup Wizard flow (post P6-E11-W2-S3-T17 split)', () => {
   })
 
   test('carries project name across steps to Review', async ({ page }) => {
-    await expect(
-      page.getByRole('heading', { name: 'Initial Project Configuration' })
-    ).toBeVisible({ timeout: 15000 })
+    await expect(page.getByRole('heading', { name: 'Initial Project Configuration' })).toBeVisible({
+      timeout: 15000,
+    })
 
     const projectNameInput = page.locator('input[type="text"]').first()
     await projectNameInput.fill('e2e_test_project')
 
     // Step 1 -> 2: Required Services
     await page.getByRole('button', { name: 'Next' }).click()
-    await expect(page.getByRole('heading', { name: 'Required Services Configuration' })).toBeVisible()
+    await expect(
+      page.getByRole('heading', { name: 'Required Services Configuration' })
+    ).toBeVisible()
 
     // Step 2 -> 3: Optional Services
     await page.getByRole('button', { name: 'Next' }).click()
@@ -123,7 +125,9 @@ test.describe('Project Setup Wizard flow (post P6-E11-W2-S3-T17 split)', () => {
 
     // Step 5 -> 6: Review
     await page.getByRole('button', { name: 'Next' }).click()
-    await expect(page.getByRole('heading', { name: 'Review Configuration & Build Process' })).toBeVisible()
+    await expect(
+      page.getByRole('heading', { name: 'Review Configuration & Build Process' })
+    ).toBeVisible()
 
     // The name typed on step 1 must still be reflected in the Review summary —
     // proves useWizardConfigState's `config` is the single source both
@@ -133,23 +137,27 @@ test.describe('Project Setup Wizard flow (post P6-E11-W2-S3-T17 split)', () => {
   })
 
   test('Back button returns to the previous step without losing state', async ({ page }) => {
-    await expect(
-      page.getByRole('heading', { name: 'Initial Project Configuration' })
-    ).toBeVisible({ timeout: 15000 })
+    await expect(page.getByRole('heading', { name: 'Initial Project Configuration' })).toBeVisible({
+      timeout: 15000,
+    })
 
     await page.getByRole('button', { name: 'Next' }).click()
-    await expect(page.getByRole('heading', { name: 'Required Services Configuration' })).toBeVisible()
+    await expect(
+      page.getByRole('heading', { name: 'Required Services Configuration' })
+    ).toBeVisible()
 
     await page.getByRole('button', { name: 'Back' }).click()
     await expect(page.getByRole('heading', { name: 'Initial Project Configuration' })).toBeVisible()
   })
 
   test('opens the ServiceDetailModal from a Required Services card', async ({ page }) => {
-    await expect(
-      page.getByRole('heading', { name: 'Initial Project Configuration' })
-    ).toBeVisible({ timeout: 15000 })
+    await expect(page.getByRole('heading', { name: 'Initial Project Configuration' })).toBeVisible({
+      timeout: 15000,
+    })
     await page.getByRole('button', { name: 'Next' }).click()
-    await expect(page.getByRole('heading', { name: 'Required Services Configuration' })).toBeVisible()
+    await expect(
+      page.getByRole('heading', { name: 'Required Services Configuration' })
+    ).toBeVisible()
 
     // Confirms setSelectedService threaded through RequiredServicesStep's
     // props still opens the orchestrator-owned modal after the split.
@@ -158,9 +166,9 @@ test.describe('Project Setup Wizard flow (post P6-E11-W2-S3-T17 split)', () => {
   })
 
   test('progress stepper allows jumping back to a completed step', async ({ page }) => {
-    await expect(
-      page.getByRole('heading', { name: 'Initial Project Configuration' })
-    ).toBeVisible({ timeout: 15000 })
+    await expect(page.getByRole('heading', { name: 'Initial Project Configuration' })).toBeVisible({
+      timeout: 15000,
+    })
     await page.getByRole('button', { name: 'Next' }).click()
     await page.getByRole('button', { name: 'Next' }).click()
     await expect(page.getByRole('heading', { name: 'Optional Services' })).toBeVisible()

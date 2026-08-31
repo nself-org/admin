@@ -6,9 +6,9 @@
  *          original monolithic const).
  * Constraints: none — pure merge.
  */
+import { optionalServiceFields } from './service-fields/optional'
 import { requiredServiceFieldsA } from './service-fields/required-a'
 import { requiredServiceFieldsB } from './service-fields/required-b'
-import { optionalServiceFields } from './service-fields/optional'
 
 export const SERVICE_FIELDS = {
   ...requiredServiceFieldsA,

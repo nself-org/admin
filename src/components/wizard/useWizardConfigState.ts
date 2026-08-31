@@ -18,7 +18,7 @@
  *              300-line cap without changing when any state actually updates.
  */
 import { useRef, useState } from 'react'
-import type { WizardStep, ProjectConfig, ValidationErrors } from './types'
+import type { ProjectConfig, ValidationErrors, WizardStep } from './types'
 
 export function useWizardConfigState() {
   const [currentStep, setCurrentStep] = useState<WizardStep>('initial')
@@ -228,22 +228,38 @@ export function useWizardConfigState() {
   }
 
   return {
-    currentStep, setCurrentStep,
-    isExecuting, setIsExecuting,
-    commandOutput, setCommandOutput,
-    showCliInstructions, setShowCliInstructions,
-    domainPreview, setDomainPreview,
-    showPassword, setShowPassword,
-    isLoading, setIsLoading,
-    validationErrors, setValidationErrors,
-    selectedService, setSelectedService,
-    showTemplateInfo, setShowTemplateInfo,
-    showFrameworkExamples, setShowFrameworkExamples,
-    showWhyRegister, setShowWhyRegister,
-    serviceNameRefs, appNameRefs,
-    config, setConfig,
-    steps, currentStepIndex,
-    validateDomain, validateInitialSetup,
+    currentStep,
+    setCurrentStep,
+    isExecuting,
+    setIsExecuting,
+    commandOutput,
+    setCommandOutput,
+    showCliInstructions,
+    setShowCliInstructions,
+    domainPreview,
+    setDomainPreview,
+    showPassword,
+    setShowPassword,
+    isLoading,
+    setIsLoading,
+    validationErrors,
+    setValidationErrors,
+    selectedService,
+    setSelectedService,
+    showTemplateInfo,
+    setShowTemplateInfo,
+    showFrameworkExamples,
+    setShowFrameworkExamples,
+    showWhyRegister,
+    setShowWhyRegister,
+    serviceNameRefs,
+    appNameRefs,
+    config,
+    setConfig,
+    steps,
+    currentStepIndex,
+    validateDomain,
+    validateInitialSetup,
   }
 }
 

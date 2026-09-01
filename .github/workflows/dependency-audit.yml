@@ -12,6 +12,9 @@ on:
       - 'pnpm-lock.yaml'
       - '.github/workflows/dependency-audit.yml'
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 jobs:
   audit:
     name: Security Audit

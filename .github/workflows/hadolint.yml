@@ -15,6 +15,9 @@ on:
       - '**/.hadolint.yaml'
       - '.github/workflows/hadolint.yml'
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 jobs:
   hadolint:
     runs-on: ubuntu-latest

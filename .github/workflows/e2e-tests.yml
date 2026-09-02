@@ -6,6 +6,9 @@ on:
   pull_request:
     branches: [main, develop]
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 jobs:
   # ── Build the production bundle once; all shards share it ──────────────────
   build:

@@ -35,9 +35,13 @@ const REPO_ROOT = path.resolve(__dirname, '..')
 const ALLOWLIST_PATH = path.join(REPO_ROOT, 'eslint-max-lines-allowlist.json')
 const MAX_LINES = 300
 
+// 'build'/'out' deliberately NOT excluded: admin has a real route at
+// src/app/build/ (the Build feature page) that collided with this list
+// (bug found + fixed 2026-09-04, nself-org/admin#97) -- Next.js build
+// output never lands inside src/, which is all this script walks, so
+// excluding generic build-artifact names here was never actually needed.
 const EXCLUDED_DIR_NAMES = new Set([
-  'node_modules', 'dist', 'build', '.next', '.turbo', '.cache',
-  'coverage', 'out', '.git', 'public', 'e2e',
+  'node_modules', '.next', '.turbo', '.cache', '.git', 'e2e',
 ])
 const SOURCE_ROOTS = ['src']
 const SOURCE_EXTENSIONS = new Set(['.ts', '.tsx', '.js', '.jsx'])

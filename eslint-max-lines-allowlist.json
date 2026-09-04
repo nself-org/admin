@@ -30,6 +30,8 @@
     "src/app/benchmark/compare/page.tsx",
     "src/app/benchmark/page.tsx",
     "src/app/benchmark/run/page.tsx",
+    "src/app/build/__tests__/Build.test.tsx",
+    "src/app/build/page.tsx",
     "src/app/claw/bios/page.tsx",
     "src/app/claw/chat/page.tsx",
     "src/app/claw/conversations/page.tsx",

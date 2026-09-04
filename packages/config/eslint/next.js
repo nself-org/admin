@@ -1,10 +1,12 @@
 // @nself/config — Next.js flat-config preset (extends base, adds React + Next.js rules).
 // Consumers: `import nextConfig from '@nself/config/eslint/next'`
 import { baseConfig } from './base.js'
+import { maxLinesConfig } from './max-lines.js'
 
 /** @type {import('eslint').Linter.Config[]} */
 export const nextEslintConfig = [
   ...baseConfig,
+  ...maxLinesConfig,
   {
     files: ['**/*.{ts,tsx,js,jsx}'],
     rules: {

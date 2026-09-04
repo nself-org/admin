@@ -81,6 +81,7 @@
       "@grpc/grpc-js": ">=1.14.4",
       "fast-uri": ">=3.1.2",
       "fast-xml-builder": ">=1.1.7",
+      "stream-json": ">=3.5.0",
       "browserslist@<4.28.7": "^4.28.7"
     }
   },

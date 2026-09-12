@@ -1,12 +1,26 @@
 name: Docker — Build & Publish nself-admin
 
 # Separate from release.yml — this workflow handles Docker Hub publish only
-# Triggers on: release tag push OR manual dispatch
+# Triggers on: release tag push, CLI release dispatch, OR manual dispatch
+#
+# CLI <-> Admin lockstep (S34-T12, MASTER-VERSIONS.md Hard Rule):
+#   "When CLI tags vX.Y.Z, Admin's Docker image nself/nself-admin:X.Y.Z must
+#    publish on the same release day. A release is not complete until CLI
+#    binary + homebrew formula + admin Docker image are all published at the
+#    matching version and :latest points to the new version."
+#
+# nself-org/cli release.yml has dispatched `cli-release` here since S34-T12 to
+# satisfy that rule. Nothing in this repo listened for it, so the dispatch went
+# into the void on every release and the image was never rebuilt — Docker Hub
+# sat at 1.0.13 while CLI reached 1.3.6. The repository_dispatch trigger below
+# is the missing half.
 
 on:
   push:
     tags:
       - 'v*'
+  repository_dispatch:
+    types: [cli-release]
   workflow_dispatch:
     inputs:
       version:
@@ -31,12 +45,33 @@ jobs:
 
       - name: Resolve version
         id: version
+        env:
+          # Passed through env, never interpolated straight into the script: a
+          # repository_dispatch payload is controlled by whatever holds the
+          # dispatching token, so it is untrusted input.
+          INPUT_VERSION: ${{ github.event.inputs.version }}
+          PAYLOAD_VERSION: ${{ github.event.client_payload.version }}
         run: |
-          if [ -n "${{ github.event.inputs.version }}" ]; then
-            VERSION="${{ github.event.inputs.version }}"
-          else
-            VERSION="${GITHUB_REF#refs/tags/v}"
+          set -euo pipefail
+          case "${GITHUB_EVENT_NAME}" in
+            workflow_dispatch)    VERSION="${INPUT_VERSION}" ;;
+            repository_dispatch)  VERSION="${PAYLOAD_VERSION}" ;;
+            push)                 VERSION="${GITHUB_REF#refs/tags/v}" ;;
+            *) echo "::error::unsupported trigger: ${GITHUB_EVENT_NAME}"; exit 1 ;;
+          esac
+
+          # The cli dispatch sends the tag ("v1.3.6"); tags and inputs may not.
+          VERSION="${VERSION#v}"
+
+          # Validate before anything can reach a Docker tag. Without this a
+          # trigger that supplies no version silently produced "refs/heads/main"
+          # as $VERSION and would have pushed nonsense over the :latest tag.
+          if ! printf '%s' "${VERSION}" | grep -qE '^[0-9]+\.[0-9]+\.[0-9]+$'; then
+            echo "::error::resolved version '${VERSION}' is not a plain X.Y.Z semver"
+            echo "  trigger: ${GITHUB_EVENT_NAME}"
+            exit 1
           fi
+
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
           echo "major=$(echo $VERSION | cut -d. -f1)" >> "$GITHUB_OUTPUT"
           # major_minor already includes the major segment (1.3), so the tag
@@ -44,6 +79,34 @@ jobs:
           # version 1.3.5, a tag that could overwrite a real historical image.
           echo "major_minor=$(echo $VERSION | cut -d. -f1-2)" >> "$GITHUB_OUTPUT"
           echo "Building nself-admin v$VERSION"
+
+      - name: Verify CLI/Admin lockstep before publishing
+        # Only on the dispatch path: the CLI has just released vX.Y.Z and this
+        # image is about to be published as X.Y.Z. If admin's source has not
+        # been bumped to match, the image would carry a version its code does
+        # not implement. MASTER-VERSIONS.md: "Any desync ... is a hard error."
+        #
+        # scripts/check-version-lockstep.sh (run on every push/PR by
+        # version-lockstep.yml) proves package.json and cli-version.ts agree
+        # with each other; this proves they agree with the release being cut.
+        if: github.event_name == 'repository_dispatch'
+        env:
+          RELEASE_VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          set -euo pipefail
+          PKG_VERSION="$(node -p "require('./package.json').version")"
+          echo "cli release : ${RELEASE_VERSION}"
+          echo "package.json: ${PKG_VERSION}"
+          if [ "${PKG_VERSION}" != "${RELEASE_VERSION}" ]; then
+            echo "::error::CLI/Admin lockstep break — refusing to publish"
+            echo "  CLI released v${RELEASE_VERSION} but admin package.json is ${PKG_VERSION}."
+            echo "  Publishing now would tag nself/nself-admin:${RELEASE_VERSION} with code"
+            echo "  that still identifies itself as ${PKG_VERSION}."
+            echo "  Bump package.json + src/lib/cli-version.ts to ${RELEASE_VERSION}, merge,"
+            echo "  then re-run this workflow via workflow_dispatch with version=${RELEASE_VERSION}."
+            exit 1
+          fi
+          echo "Lockstep verified: admin source matches CLI v${RELEASE_VERSION}"
 
       - name: Resolve CLI version for Dockerfile
         id: cli_version

@@ -5,7 +5,15 @@
 
 secrets:
   - id: gcp-service-account
+    # Trivy reports image paths with a LEADING SLASH — the gate log shows
+    # "/app/.next/server/app/cloud/gcp/page.js". These entries were written
+    # without it, so they matched nothing and this finding kept blocking the
+    # publish even though the suppression was in place. Both forms are listed:
+    # the absolute form is what the image scan emits, the relative form is what
+    # a filesystem scan of the repo would emit.
     paths:
+      - "/app/.next/server/app/cloud/gcp/page.js"
+      - "/app/.next/static/chunks/app/cloud/gcp/*.js"
       - "app/.next/server/app/cloud/gcp/page.js"
       - "app/.next/static/chunks/app/cloud/gcp/*.js"
     statement: >-

@@ -39,18 +39,27 @@ jobs:
       - name: Build application
         run: pnpm run build
 
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Login to Docker Hub
-        id: docker-login
-        uses: docker/login-action@v3
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      # The Docker build/push that used to live here has been REMOVED.
+      #
+      # It pushed nself/nself-admin:<version>, :<major>.<minor>, :<major> and
+      # :latest with `push: true` and NO vulnerability scan, on the same
+      # `push: tags: v*` trigger as docker-publish.yml. docker-publish.yml has a
+      # Trivy CRITICAL gate; this workflow did not. So every tag push raced two
+      # publishers, and the ungated one could ship an image the gate had just
+      # rejected — which makes the gate decorative.
+      #
+      # That is exactly what happened on v1.3.6 (2026-09-12): docker-publish
+      # correctly blocked on four CRITICAL Go stdlib CVEs in mkcert, while this
+      # workflow was mid-push of the same image and had to be cancelled by hand
+      # to keep :latest from moving to a known-vulnerable build.
+      #
+      # Image publication now belongs to docker-publish.yml alone — it owns the
+      # Trivy gate, the multi-arch manifest verification, and the NSELF_VERSION
+      # build-arg that this job did not even pass. This workflow owns the GitHub
+      # Release only. Do not reintroduce a push here without the gate.
+      #
+      # Security-Always-Free doctrine: a security gate that another workflow can
+      # walk around is not a gate.
 
       - name: Extract version from tag
         id: version
@@ -59,36 +68,6 @@ jobs:
           echo "version=$VERSION" >> $GITHUB_OUTPUT
           echo "major=$(echo $VERSION | cut -d. -f1)" >> $GITHUB_OUTPUT
           echo "minor=$(echo $VERSION | cut -d. -f1-2)" >> $GITHUB_OUTPUT
-
-      - name: Extract metadata
-        if: steps.docker-login.outcome == 'success'
-        id: meta
-        uses: docker/metadata-action@v5
-        with:
-          images: ${{ env.DOCKER_IMAGE }}
-          tags: |
-            type=semver,pattern={{version}}
-            type=semver,pattern={{major}}.{{minor}}
-            type=semver,pattern={{major}}
-            type=raw,value=latest
-
-      - name: Build and push Docker image
-        if: steps.docker-login.outcome == 'success'
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
-          platforms: linux/amd64,linux/arm64
-          cache-from: type=registry,ref=${{ env.DOCKER_IMAGE }}:buildcache
-          cache-to: type=registry,ref=${{ env.DOCKER_IMAGE }}:buildcache,mode=max
-
-      - name: Docker Hub credentials not configured
-        if: steps.docker-login.outcome != 'success'
-        run: |
-          echo "::warning::Docker Hub credentials not configured. Skipping Docker image build."
-          echo "To enable Docker image publishing, add DOCKERHUB_USERNAME and DOCKERHUB_TOKEN secrets to this repository."
 
       - name: Generate changelog
         id: changelog

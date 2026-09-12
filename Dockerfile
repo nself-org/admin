@@ -1,3 +1,29 @@
+# mkcert, built from source rather than taken from upstream's pre-built binary.
+#
+# The upstream binary (v1.4.4, published 2022-04-26) is compiled with Go 1.18,
+# and Trivy's CRITICAL gate flagged four Go stdlib vulnerabilities baked into it:
+# CVE-2023-24538, CVE-2023-24540, CVE-2024-24790 and CVE-2025-68121. That gate
+# blocked every docker-publish run, which is why Docker Hub sat at 1.0.13 while
+# the CLI reached 1.3.6.
+#
+# There is no newer mkcert release to bump to — v1.4.4 IS the latest and has been
+# since 2022. So compile the same source with a current Go toolchain: identical
+# mkcert behaviour, patched stdlib.
+#
+# --platform=$BUILDPLATFORM + GOOS/GOARCH cross-compilation keeps this stage
+# native on the builder instead of emulated per-arch under QEMU. `go build -o` is
+# used rather than `go install` because when cross-compiling `go install` writes
+# to /go/bin/${GOOS}_${GOARCH}/ rather than /go/bin, and the COPY would silently
+# miss it.
+FROM --platform=$BUILDPLATFORM golang:1.27-alpine AS mkcert-builder
+ARG TARGETOS
+ARG TARGETARCH
+RUN apk add --no-cache git
+RUN git clone --depth 1 --branch v1.4.4 https://github.com/FiloSottile/mkcert /src
+WORKDIR /src
+RUN CGO_ENABLED=0 GOOS=${TARGETOS} GOARCH=${TARGETARCH} \
+    go build -trimpath -ldflags "-s -w" -o /out/mkcert .
+
 # Multi-stage production Dockerfile for nself-admin
 # Optimized for minimal size with standalone Next.js build
 # Multi-platform support: linux/amd64, linux/arm64
@@ -87,15 +113,11 @@ RUN apk add --no-cache \
               /usr/local/bin/npm \
               /usr/local/bin/npx
 
-# Install mkcert for local SSL certificate generation
-# Using pre-built binary for Alpine Linux
-RUN ARCH=$(uname -m) && \
-    if [ "$ARCH" = "x86_64" ]; then MKCERT_ARCH="amd64"; \
-    elif [ "$ARCH" = "aarch64" ]; then MKCERT_ARCH="arm64"; \
-    else MKCERT_ARCH="amd64"; fi && \
-    curl -fsSL "https://github.com/FiloSottile/mkcert/releases/download/v1.4.4/mkcert-v1.4.4-linux-${MKCERT_ARCH}" \
-    -o /usr/local/bin/mkcert && \
-    chmod +x /usr/local/bin/mkcert
+# Install mkcert for local SSL certificate generation.
+# Built from source in the mkcert-builder stage at the top of this file — see
+# there for why the upstream pre-built binary cannot be used.
+COPY --from=mkcert-builder /out/mkcert /usr/local/bin/mkcert
+RUN chmod +x /usr/local/bin/mkcert
 
 # Install nself CLI pre-built binary
 ARG NSELF_VERSION=1.3.6

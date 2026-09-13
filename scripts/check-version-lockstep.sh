@@ -95,7 +95,48 @@ else
   info "cli/internal/version/version.go not found at expected sibling path — skipping Go cross-check."
 fi
 
-# ── 5. Final result ───────────────────────────────────────────────────────────
+# ── 5. Wiki version note (.github/wiki/Home.md) ──────────────────────────────
+#
+# Home.md states the version twice — a subtitle line and a "Current Version"
+# entry — and nothing ever compared either against package.json. Both sat at
+# 0.0.8 while the package reached 1.3.6 (found 2026-09-13), i.e. the public
+# admin documentation advertised a pre-1.0 release for the whole 1.x line.
+# Blocking, not a warning: these two strings are the version a reader actually
+# sees, so a stale one is worse than a stale internal constant.
+
+WIKI_HOME="${ADMIN_ROOT}/.github/wiki/Home.md"
+
+if [ -f "${WIKI_HOME}" ]; then
+  WIKI_SUBTITLE=$(grep -oE '^Version [0-9]+\.[0-9]+\.[0-9]+' "${WIKI_HOME}" \
+    | head -1 | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' || true)
+  WIKI_CURRENT=$(grep -oE '^\*\*v[0-9]+\.[0-9]+\.[0-9]+\*\* - See' "${WIKI_HOME}" \
+    | head -1 | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' || true)
+
+  if [ -z "${WIKI_SUBTITLE}" ] || [ -z "${WIKI_CURRENT}" ]; then
+    error "Could not find both version strings in ${WIKI_HOME}."
+    error "Expected a 'Version X.Y.Z · ...' subtitle line and a"
+    error "'**vX.Y.Z** - See [CHANGELOG](CHANGELOG) for details.' line."
+    error "Removing either silently disables this check — restore it, don't delete it."
+    FAIL=1
+  else
+    info "wiki Home.md subtitle    : ${WIKI_SUBTITLE}"
+    info "wiki Home.md current     : ${WIKI_CURRENT}"
+
+    if [ "${PACKAGE_VERSION}" != "${WIKI_SUBTITLE}" ] || [ "${PACKAGE_VERSION}" != "${WIKI_CURRENT}" ]; then
+      error "Wiki version note is out of lockstep with admin/package.json (${PACKAGE_VERSION})."
+      error "  .github/wiki/Home.md subtitle       : ${WIKI_SUBTITLE}"
+      error "  .github/wiki/Home.md Current Version: ${WIKI_CURRENT}"
+      error "Bump both wiki strings in the same commit as the version bump."
+      FAIL=1
+    else
+      ok "wiki Home.md matches: ${PACKAGE_VERSION}"
+    fi
+  fi
+else
+  info "${WIKI_HOME} not found — skipping wiki version check."
+fi
+
+# ── 6. Final result ───────────────────────────────────────────────────────────
 
 if [ "${FAIL}" -eq 1 ]; then
   error "Version lockstep check FAILED. Fix the mismatch before committing."

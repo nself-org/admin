@@ -18,33 +18,16 @@ jobs:
       - name: Checkout admin
         uses: actions/checkout@v4
 
-      - name: Read admin package.json version
-        id: admin_version
-        run: |
-          VERSION=$(node -p "require('./package.json').version")
-          echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
-          echo "Admin version: ${VERSION}"
-
-      - name: Read cli-version.ts expected CLI version
-        id: cli_version_ts
-        run: |
-          # Extract the CLI_VERSION string from src/lib/cli-version.ts
-          VERSION=$(grep -E "^export const CLI_VERSION" src/lib/cli-version.ts \
-            | sed "s/export const CLI_VERSION = '//;s/'.*//")
-          echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
-          echo "cli-version.ts CLI_VERSION: ${VERSION}"
-
-      - name: Assert package.json == cli-version.ts
-        run: |
-          ADMIN="${{ steps.admin_version.outputs.version }}"
-          CLI_TS="${{ steps.cli_version_ts.outputs.version }}"
-
-          if [ "${ADMIN}" != "${CLI_TS}" ]; then
-            echo "::error::Version lockstep violation:"
-            echo "::error::  admin/package.json version  = ${ADMIN}"
-            echo "::error::  src/lib/cli-version.ts CLI_VERSION = ${CLI_TS}"
-            echo "::error::These must be identical. Update both files atomically when bumping the version."
-            exit 1
-          fi
-
-          echo "Version lockstep OK: admin == CLI == ${ADMIN}"
+      # Delegates to scripts/check-version-lockstep.sh — the same script the
+      # pre-commit hook runs — so CI and local checks can never disagree about
+      # what lockstep means. This step previously re-implemented the
+      # package.json vs cli-version.ts comparison inline, which meant a source
+      # added to the script (the .github/wiki/Home.md version note, added
+      # 2026-09-13 after it sat at 0.0.8 against a 1.3.6 package) was silently
+      # not enforced in CI.
+      #
+      # The script's cli/internal/version/version.go cross-check is a warning
+      # and self-skips when the sibling repo is absent, which it always is on a
+      # single-repo checkout — so this stays a pure admin-side gate.
+      - name: Verify version lockstep (package.json, cli-version.ts, wiki)
+        run: bash scripts/check-version-lockstep.sh

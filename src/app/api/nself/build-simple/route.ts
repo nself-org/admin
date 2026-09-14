@@ -62,7 +62,7 @@ async function generateDockerCompose(config: any): Promise<string> {
   // Storage/MinIO (if enabled)
   if (config.STORAGE_ENABLED === 'true' || config.MINIO_ENABLED === 'true') {
     services.push(`  minio:
-    image: minio/minio:latest
+    image: quay.io/minio/minio:latest
     ports:
       - "9000:9000"
       - "9001:9001"

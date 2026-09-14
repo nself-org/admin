@@ -199,7 +199,7 @@ function getServiceInfo(name: string): {
       description: 'MinIO Object Storage',
       details: [
         'Container: minio',
-        'Image: minio/minio:latest',
+        'Image: quay.io/minio/minio:latest',
         'Ports: 9000, 9001',
         'S3-compatible storage',
       ],

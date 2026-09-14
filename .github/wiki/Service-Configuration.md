@@ -365,7 +365,7 @@ queue:
 
 ```yaml
 minio:
-  image: minio/minio:latest
+  image: quay.io/minio/minio:latest
   command: server /data --console-address ":9001"
   environment:
     MINIO_ROOT_USER: ${MINIO_ROOT_USER:-minioadmin}

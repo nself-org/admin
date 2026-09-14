@@ -173,7 +173,7 @@ Building nself project...
   ✓ postgres:15-alpine
   ✓ redis:7-alpine
   ↻ hasura/graphql-engine:latest (45%)
-  ⏳ minio/minio:latest
+  ⏳ quay.io/minio/minio:latest
   ⏳ nginx:alpine
   ...
 ```

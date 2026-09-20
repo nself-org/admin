@@ -1,4 +1,7 @@
 import { VERSION } from '@/lib/constants'
+import type { DependencyCheck, OutboundStatus } from '@/lib/health-dependencies'
+import { checkHasura, checkOutbound, checkPostgres } from '@/lib/health-dependencies'
+import { checkMemory, formatUptime, getCpuUsage, getMemoryUsage } from '@/lib/health-system'
 import { getEnhancedPath } from '@/lib/nself-path'
 import { exec } from 'child_process'
 import fs from 'fs/promises'
@@ -18,9 +21,22 @@ interface HealthStatus {
     docker: boolean
     filesystem: boolean
     memory: boolean
-    network: boolean
+    postgres: boolean
+    hasura: boolean
     nself: boolean
   }
+  /** Per-dependency probe detail (reachability, or why a probe was skipped). */
+  dependencies: {
+    postgres: DependencyCheck
+    hasura: DependencyCheck
+  }
+  /**
+   * Outbound internet reachability. Informational ONLY — never folded into
+   * `status`. nSelf supports offline / air-gapped operation, so an install with
+   * no internet is healthy, not degraded. 'not-checked' unless the operator
+   * sets NSELF_ADMIN_HEALTH_OUTBOUND_URL.
+   */
+  outbound: OutboundStatus
   resources: {
     memory: {
       used: number
@@ -31,19 +47,6 @@ interface HealthStatus {
       usage: number
     }
   }
-}
-
-function formatUptime(seconds: number): string {
-  const days = Math.floor(seconds / 86400)
-  const hours = Math.floor((seconds % 86400) / 3600)
-  const minutes = Math.floor((seconds % 3600) / 60)
-
-  const parts: string[] = []
-  if (days > 0) parts.push(`${days}d`)
-  if (hours > 0) parts.push(`${hours}h`)
-  if (minutes > 0 || parts.length === 0) parts.push(`${minutes}m`)
-
-  return parts.join(' ')
 }
 
 async function checkDocker(): Promise<boolean> {
@@ -113,87 +116,6 @@ async function checkFilesystem(): Promise<boolean> {
   }
 }
 
-async function checkMemory(): Promise<boolean> {
-  try {
-    const memInfo = await fs.readFile('/proc/meminfo', 'utf-8')
-    const lines = memInfo.split('\n')
-    const memTotal = parseInt(lines.find((l) => l.startsWith('MemTotal'))?.split(/\s+/)[1] || '0')
-    const memAvailable = parseInt(
-      lines.find((l) => l.startsWith('MemAvailable'))?.split(/\s+/)[1] || '0'
-    )
-
-    // Check if we have at least 10% memory available
-    return memAvailable / memTotal > 0.1
-  } catch {
-    // Fallback for non-Linux systems
-    return true
-  }
-}
-
-async function checkNetwork(): Promise<boolean> {
-  try {
-    // Try to resolve a common domain
-    const { stdout } = await execAsync('ping -c 1 -W 1 google.com 2>/dev/null || echo "failed"')
-    return !stdout.includes('failed')
-  } catch {
-    return false
-  }
-}
-
-async function getMemoryUsage(): Promise<{
-  used: number
-  total: number
-  percentage: number
-}> {
-  try {
-    const memInfo = await fs.readFile('/proc/meminfo', 'utf-8')
-    const lines = memInfo.split('\n')
-    const memTotal =
-      parseInt(lines.find((l) => l.startsWith('MemTotal'))?.split(/\s+/)[1] || '0') / 1024 / 1024
-    const memAvailable =
-      parseInt(lines.find((l) => l.startsWith('MemAvailable'))?.split(/\s+/)[1] || '0') /
-      1024 /
-      1024
-    const memUsed = memTotal - memAvailable
-
-    return {
-      used: Math.round(memUsed * 100) / 100,
-      total: Math.round(memTotal * 100) / 100,
-      percentage: Math.round((memUsed / memTotal) * 100),
-    }
-  } catch {
-    // Fallback values
-    return { used: 0, total: 0, percentage: 0 }
-  }
-}
-
-async function getCpuUsage(): Promise<number> {
-  try {
-    const stat1 = await fs.readFile('/proc/stat', 'utf-8')
-    await new Promise((resolve) => setTimeout(resolve, 100))
-    const stat2 = await fs.readFile('/proc/stat', 'utf-8')
-
-    const getCpuValues = (stat: string) => {
-      const cpuLine = stat.split('\n')[0] ?? ''
-      const values = cpuLine.split(/\s+/).slice(1).map(Number)
-      const idle = values[3] ?? 0
-      const total = values.reduce((a, b) => a + b, 0)
-      return { idle, total }
-    }
-
-    const cpu1 = getCpuValues(stat1)
-    const cpu2 = getCpuValues(stat2)
-
-    const idleDiff = cpu2.idle - cpu1.idle
-    const totalDiff = cpu2.total - cpu1.total
-
-    const usage = 100 - (100 * idleDiff) / totalDiff
-    return Math.round(usage * 10) / 10
-  } catch {
-    return 0
-  }
-}
-
 interface ServiceHealth {
   name: string
   status: 'healthy' | 'degraded' | 'unhealthy' | 'unknown'
@@ -215,7 +137,8 @@ function checksToServiceHealthList(
     docker: 'Docker',
     filesystem: 'Filesystem',
     memory: 'Memory',
-    network: 'Network',
+    postgres: 'PostgreSQL',
+    hasura: 'Hasura',
     nself: 'nSelf CLI',
   }
   return Object.entries(checks).map(([key, ok]) => ({
@@ -232,35 +155,45 @@ export async function GET(request: Request): Promise<NextResponse> {
   try {
     const startTime = process.hrtime()
 
-    // Run all checks in parallel
-    const [dockerOk, filesystemOk, memoryOk, networkOk, nselfCheck, memoryUsage, cpuUsage] =
-      await Promise.all([
-        checkDocker(),
-        checkFilesystem(),
-        checkMemory(),
-        checkNetwork(),
-        checkNselfCli(),
-        getMemoryUsage(),
-        getCpuUsage(),
-      ])
+    // Run all checks in parallel.
+    // `outbound` is deliberately NOT part of `checks`: it is informational and
+    // must never influence `status` (see HealthStatus.outbound).
+    const [
+      dockerOk,
+      filesystemOk,
+      memoryOk,
+      postgresCheck,
+      hasuraCheck,
+      outbound,
+      nselfCheck,
+      memoryUsage,
+      cpuUsage,
+    ] = await Promise.all([
+      checkDocker(),
+      checkFilesystem(),
+      checkMemory(),
+      checkPostgres(),
+      checkHasura(),
+      checkOutbound(),
+      checkNselfCli(),
+      getMemoryUsage(),
+      getCpuUsage(),
+    ])
 
     const checks = {
       docker: dockerOk,
       filesystem: filesystemOk,
       memory: memoryOk,
-      network: networkOk,
+      postgres: postgresCheck.ok,
+      hasura: hasuraCheck.ok,
       nself: nselfCheck.available,
     }
 
-    const allChecksPass = Object.values(checks).every((check) => check === true)
-    const someChecksFail = Object.values(checks).some((check) => check === false)
-
-    let status: 'healthy' | 'degraded' | 'unhealthy' = 'healthy'
-    if (!allChecksPass && !someChecksFail) {
-      status = 'degraded'
-    } else if (someChecksFail) {
-      status = allChecksPass ? 'healthy' : 'degraded'
-    }
+    let status: 'healthy' | 'degraded' | 'unhealthy' = Object.values(checks).some(
+      (check) => check === false
+    )
+      ? 'degraded'
+      : 'healthy'
 
     // Critical checks that make the service unhealthy
     if (!dockerOk || !filesystemOk) {
@@ -294,6 +227,11 @@ export async function GET(request: Request): Promise<NextResponse> {
       uptime: uptimeSeconds,
       uptimeFormatted: formatUptime(uptimeSeconds),
       checks,
+      dependencies: {
+        postgres: postgresCheck,
+        hasura: hasuraCheck,
+      },
+      outbound,
       resources: {
         memory: memoryUsage,
         cpu: {
@@ -328,7 +266,8 @@ export async function GET(request: Request): Promise<NextResponse> {
           docker: false,
           filesystem: false,
           memory: false,
-          network: false,
+          postgres: false,
+          hasura: false,
           nself: false,
         },
       },

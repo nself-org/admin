@@ -1,4 +1,6 @@
 import { VERSION } from '@/lib/constants'
+import type { DependencyCheck, OutboundStatus } from '@/lib/health-dependencies'
+import { checkHasura, checkOutbound, checkPostgres } from '@/lib/health-dependencies'
 import { getEnhancedPath } from '@/lib/nself-path'
 import { exec } from 'child_process'
 import fs from 'fs/promises'
@@ -18,9 +20,22 @@ interface HealthStatus {
     docker: boolean
     filesystem: boolean
     memory: boolean
-    network: boolean
+    postgres: boolean
+    hasura: boolean
     nself: boolean
   }
+  /** Per-dependency probe detail (reachability, or why a probe was skipped). */
+  dependencies: {
+    postgres: DependencyCheck
+    hasura: DependencyCheck
+  }
+  /**
+   * Outbound internet reachability. Informational ONLY — never folded into
+   * `status`. nSelf supports offline / air-gapped operation, so an install with
+   * no internet is healthy, not degraded. 'not-checked' unless the operator
+   * sets NSELF_ADMIN_HEALTH_OUTBOUND_URL.
+   */
+  outbound: OutboundStatus
   resources: {
     memory: {
       used: number
@@ -130,16 +145,6 @@ async function checkMemory(): Promise<boolean> {
   }
 }
 
-async function checkNetwork(): Promise<boolean> {
-  try {
-    // Try to resolve a common domain
-    const { stdout } = await execAsync('ping -c 1 -W 1 google.com 2>/dev/null || echo "failed"')
-    return !stdout.includes('failed')
-  } catch {
-    return false
-  }
-}
-
 async function getMemoryUsage(): Promise<{
   used: number
   total: number
@@ -215,7 +220,8 @@ function checksToServiceHealthList(
     docker: 'Docker',
     filesystem: 'Filesystem',
     memory: 'Memory',
-    network: 'Network',
+    postgres: 'PostgreSQL',
+    hasura: 'Hasura',
     nself: 'nSelf CLI',
   }
   return Object.entries(checks).map(([key, ok]) => ({
@@ -232,35 +238,45 @@ export async function GET(request: Request): Promise<NextResponse> {
   try {
     const startTime = process.hrtime()
 
-    // Run all checks in parallel
-    const [dockerOk, filesystemOk, memoryOk, networkOk, nselfCheck, memoryUsage, cpuUsage] =
-      await Promise.all([
-        checkDocker(),
-        checkFilesystem(),
-        checkMemory(),
-        checkNetwork(),
-        checkNselfCli(),
-        getMemoryUsage(),
-        getCpuUsage(),
-      ])
+    // Run all checks in parallel.
+    // `outbound` is deliberately NOT part of `checks`: it is informational and
+    // must never influence `status` (see HealthStatus.outbound).
+    const [
+      dockerOk,
+      filesystemOk,
+      memoryOk,
+      postgresCheck,
+      hasuraCheck,
+      outbound,
+      nselfCheck,
+      memoryUsage,
+      cpuUsage,
+    ] = await Promise.all([
+      checkDocker(),
+      checkFilesystem(),
+      checkMemory(),
+      checkPostgres(),
+      checkHasura(),
+      checkOutbound(),
+      checkNselfCli(),
+      getMemoryUsage(),
+      getCpuUsage(),
+    ])
 
     const checks = {
       docker: dockerOk,
       filesystem: filesystemOk,
       memory: memoryOk,
-      network: networkOk,
+      postgres: postgresCheck.ok,
+      hasura: hasuraCheck.ok,
       nself: nselfCheck.available,
     }
 
-    const allChecksPass = Object.values(checks).every((check) => check === true)
-    const someChecksFail = Object.values(checks).some((check) => check === false)
-
-    let status: 'healthy' | 'degraded' | 'unhealthy' = 'healthy'
-    if (!allChecksPass && !someChecksFail) {
-      status = 'degraded'
-    } else if (someChecksFail) {
-      status = allChecksPass ? 'healthy' : 'degraded'
-    }
+    let status: 'healthy' | 'degraded' | 'unhealthy' = Object.values(checks).some(
+      (check) => check === false
+    )
+      ? 'degraded'
+      : 'healthy'
 
     // Critical checks that make the service unhealthy
     if (!dockerOk || !filesystemOk) {
@@ -294,6 +310,11 @@ export async function GET(request: Request): Promise<NextResponse> {
       uptime: uptimeSeconds,
       uptimeFormatted: formatUptime(uptimeSeconds),
       checks,
+      dependencies: {
+        postgres: postgresCheck,
+        hasura: hasuraCheck,
+      },
+      outbound,
       resources: {
         memory: memoryUsage,
         cpu: {
@@ -328,7 +349,8 @@ export async function GET(request: Request): Promise<NextResponse> {
           docker: false,
           filesystem: false,
           memory: false,
-          network: false,
+          postgres: false,
+          hasura: false,
           nself: false,
         },
       },

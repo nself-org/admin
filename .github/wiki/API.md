@@ -361,11 +361,45 @@ Response:
   "checks": {
     "docker": true,
     "filesystem": true,
-    "database": true,
-    "cli": true
-  }
+    "memory": true,
+    "postgres": true,
+    "hasura": true,
+    "nself": true
+  },
+  "dependencies": {
+    "postgres": {
+      "ok": true,
+      "configured": true,
+      "detail": "connected to postgres:5432",
+      "latencyMs": 2
+    },
+    "hasura": {
+      "ok": true,
+      "configured": true,
+      "detail": "http://hasura:8080/healthz returned 200",
+      "latencyMs": 6
+    }
+  },
+  "outbound": "not-checked"
 }
 ```
+
+`docker` and `filesystem` are the only fatal checks — either one failing returns
+`503` with `"status": "unhealthy"`. Any other failing check returns `200` with
+`"status": "degraded"`.
+
+`postgres` and `hasura` probe the services the admin actually depends on:
+PostgreSQL by TCP reachability (no credentials are used), Hasura by `GET
+/healthz` derived from `HASURA_GRAPHQL_ENDPOINT`. A dependency that is not
+configured in the environment is not a fault — the admin runs standalone in CI
+and before a stack exists — so it reports `"ok": true` with
+`"configured": false`, and the reason appears in `detail`.
+
+`outbound` reports public-internet reachability and is **informational only** —
+it never affects `status`. nSelf supports offline / air-gapped operation, so an
+install with no internet is healthy. It is `"not-checked"` unless the operator
+sets `NSELF_ADMIN_HEALTH_OUTBOUND_URL` to a URL of their choosing; there is no
+phone-home default, and ICMP is never used.
 
 **GET `/api/system/resources`** - System resources
 

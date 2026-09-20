@@ -9,8 +9,9 @@
  */
 
 import type { ConnectedProject, PluginStatus } from '@/lib/health-checks'
+import type { DependencyCheck, OutboundStatus } from '@/lib/health-dependencies'
 
-export type { ConnectedProject, PluginStatus }
+export type { ConnectedProject, DependencyCheck, OutboundStatus, PluginStatus }
 
 export interface HealthStatus {
   status: 'healthy' | 'degraded' | 'unhealthy'
@@ -27,9 +28,24 @@ export interface HealthStatus {
     docker: boolean
     filesystem: boolean
     memory: boolean
-    network: boolean
+    /** PostgreSQL reachable (or not configured — see `dependencies`). */
+    postgres: boolean
+    /** Hasura /healthz reachable and green (or not configured). */
+    hasura: boolean
     nself: boolean
   }
+  /** Per-dependency probe detail: reachability, or why a probe was skipped. */
+  dependencies: {
+    postgres: DependencyCheck
+    hasura: DependencyCheck
+  }
+  /**
+   * Outbound internet reachability — informational ONLY, never part of
+   * `status`. nSelf supports offline / air-gapped operation, so an install with
+   * no internet is healthy, not degraded. 'not-checked' unless the operator
+   * sets NSELF_ADMIN_HEALTH_OUTBOUND_URL.
+   */
+  outbound: OutboundStatus
   resources: {
     memory: {
       used: number

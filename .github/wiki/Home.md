@@ -1,6 +1,6 @@
 # nself Admin Documentation
 
-Version 1.4.0 · MIT License · Docker-ready
+Version 1.4.1 · MIT License · Docker-ready
 
 **The web UI for the nself CLI. Manage your self-hosted backend stack from a browser.**
 
@@ -92,7 +92,7 @@ Version 1.4.0 · MIT License · Docker-ready
 
 ## Current Version
 
-**v1.4.0** - See [CHANGELOG](CHANGELOG) for details.
+**v1.4.1** - See [CHANGELOG](CHANGELOG) for details.
 
 ## License
 

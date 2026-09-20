@@ -79,7 +79,9 @@ const mockFilesystemAndMemoryOk = () => {
 /** Default: both in-stack dependencies up, no outbound probe configured. */
 const mockDependenciesHealthy = () => {
   ;(checkPostgres as jest.Mock).mockResolvedValue(reachable('connected to postgres:5432'))
-  ;(checkHasura as jest.Mock).mockResolvedValue(reachable('http://hasura:8080/healthz returned 200'))
+  ;(checkHasura as jest.Mock).mockResolvedValue(
+    reachable('http://hasura:8080/healthz returned 200')
+  )
   ;(checkOutbound as jest.Mock).mockResolvedValue('not-checked')
 }
 

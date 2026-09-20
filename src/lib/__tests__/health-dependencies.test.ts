@@ -7,8 +7,8 @@
  * blocked in most container/CI images).
  */
 
-import net from 'net'
 import type { AddressInfo } from 'net'
+import net from 'net'
 import {
   checkHasura,
   checkOutbound,
@@ -30,9 +30,10 @@ async function withTcpServer(): Promise<{ port: number; close: () => Promise<voi
 
 describe('resolvePostgresTarget', () => {
   it('prefers DATABASE_URL and extracts host + port', () => {
-    expect(
-      resolvePostgresTarget({ DATABASE_URL: 'postgres://u:p@postgres:5433/nself' })
-    ).toEqual({ host: 'postgres', port: 5433 })
+    expect(resolvePostgresTarget({ DATABASE_URL: 'postgres://u:p@postgres:5433/nself' })).toEqual({
+      host: 'postgres',
+      port: 5433,
+    })
   })
 
   it('defaults to 5432 when the URL omits a port', () => {
@@ -58,9 +59,10 @@ describe('resolvePostgresTarget', () => {
   })
 
   it('falls back to the discrete vars when the URL is malformed', () => {
-    expect(
-      resolvePostgresTarget({ DATABASE_URL: 'not a url', POSTGRES_HOST: 'pg' })
-    ).toEqual({ host: 'pg', port: 5432 })
+    expect(resolvePostgresTarget({ DATABASE_URL: 'not a url', POSTGRES_HOST: 'pg' })).toEqual({
+      host: 'pg',
+      port: 5432,
+    })
   })
 
   it('returns null when nothing is configured', () => {
@@ -70,9 +72,9 @@ describe('resolvePostgresTarget', () => {
 
 describe('resolveHasuraHealthUrl', () => {
   it('rewrites the GraphQL endpoint to /healthz', () => {
-    expect(resolveHasuraHealthUrl({ HASURA_GRAPHQL_ENDPOINT: 'http://hasura:8080/v1/graphql' })).toBe(
-      'http://hasura:8080/healthz'
-    )
+    expect(
+      resolveHasuraHealthUrl({ HASURA_GRAPHQL_ENDPOINT: 'http://hasura:8080/v1/graphql' })
+    ).toBe('http://hasura:8080/healthz')
   })
 
   it('drops any query string on the endpoint', () => {
@@ -139,7 +141,9 @@ describe('checkHasura', () => {
   })
 
   it('reports a fault on a non-2xx (e.g. inconsistent metadata)', async () => {
-    global.fetch = jest.fn().mockResolvedValue({ ok: false, status: 500 }) as unknown as typeof fetch
+    global.fetch = jest
+      .fn()
+      .mockResolvedValue({ ok: false, status: 500 }) as unknown as typeof fetch
 
     const result = await checkHasura({ HASURA_GRAPHQL_ENDPOINT: 'http://hasura:8080/v1/graphql' })
 

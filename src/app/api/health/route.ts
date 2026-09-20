@@ -1,6 +1,7 @@
 import { VERSION } from '@/lib/constants'
 import type { DependencyCheck, OutboundStatus } from '@/lib/health-dependencies'
 import { checkHasura, checkOutbound, checkPostgres } from '@/lib/health-dependencies'
+import { checkMemory, formatUptime, getCpuUsage, getMemoryUsage } from '@/lib/health-system'
 import { getEnhancedPath } from '@/lib/nself-path'
 import { exec } from 'child_process'
 import fs from 'fs/promises'
@@ -46,19 +47,6 @@ interface HealthStatus {
       usage: number
     }
   }
-}
-
-function formatUptime(seconds: number): string {
-  const days = Math.floor(seconds / 86400)
-  const hours = Math.floor((seconds % 86400) / 3600)
-  const minutes = Math.floor((seconds % 3600) / 60)
-
-  const parts: string[] = []
-  if (days > 0) parts.push(`${days}d`)
-  if (hours > 0) parts.push(`${hours}h`)
-  if (minutes > 0 || parts.length === 0) parts.push(`${minutes}m`)
-
-  return parts.join(' ')
 }
 
 async function checkDocker(): Promise<boolean> {
@@ -125,77 +113,6 @@ async function checkFilesystem(): Promise<boolean> {
     return true
   } catch {
     return false
-  }
-}
-
-async function checkMemory(): Promise<boolean> {
-  try {
-    const memInfo = await fs.readFile('/proc/meminfo', 'utf-8')
-    const lines = memInfo.split('\n')
-    const memTotal = parseInt(lines.find((l) => l.startsWith('MemTotal'))?.split(/\s+/)[1] || '0')
-    const memAvailable = parseInt(
-      lines.find((l) => l.startsWith('MemAvailable'))?.split(/\s+/)[1] || '0'
-    )
-
-    // Check if we have at least 10% memory available
-    return memAvailable / memTotal > 0.1
-  } catch {
-    // Fallback for non-Linux systems
-    return true
-  }
-}
-
-async function getMemoryUsage(): Promise<{
-  used: number
-  total: number
-  percentage: number
-}> {
-  try {
-    const memInfo = await fs.readFile('/proc/meminfo', 'utf-8')
-    const lines = memInfo.split('\n')
-    const memTotal =
-      parseInt(lines.find((l) => l.startsWith('MemTotal'))?.split(/\s+/)[1] || '0') / 1024 / 1024
-    const memAvailable =
-      parseInt(lines.find((l) => l.startsWith('MemAvailable'))?.split(/\s+/)[1] || '0') /
-      1024 /
-      1024
-    const memUsed = memTotal - memAvailable
-
-    return {
-      used: Math.round(memUsed * 100) / 100,
-      total: Math.round(memTotal * 100) / 100,
-      percentage: Math.round((memUsed / memTotal) * 100),
-    }
-  } catch {
-    // Fallback values
-    return { used: 0, total: 0, percentage: 0 }
-  }
-}
-
-async function getCpuUsage(): Promise<number> {
-  try {
-    const stat1 = await fs.readFile('/proc/stat', 'utf-8')
-    await new Promise((resolve) => setTimeout(resolve, 100))
-    const stat2 = await fs.readFile('/proc/stat', 'utf-8')
-
-    const getCpuValues = (stat: string) => {
-      const cpuLine = stat.split('\n')[0] ?? ''
-      const values = cpuLine.split(/\s+/).slice(1).map(Number)
-      const idle = values[3] ?? 0
-      const total = values.reduce((a, b) => a + b, 0)
-      return { idle, total }
-    }
-
-    const cpu1 = getCpuValues(stat1)
-    const cpu2 = getCpuValues(stat2)
-
-    const idleDiff = cpu2.idle - cpu1.idle
-    const totalDiff = cpu2.total - cpu1.total
-
-    const usage = 100 - (100 * idleDiff) / totalDiff
-    return Math.round(usage * 10) / 10
-  } catch {
-    return 0
   }
 }
 

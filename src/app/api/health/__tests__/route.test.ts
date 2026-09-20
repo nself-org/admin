@@ -233,6 +233,25 @@ describe('GET /api/health', () => {
     expect(commands.some((cmd: string) => cmd.includes('ping'))).toBe(false)
   })
 
+  it('exposes the dependency checks as named services for ?all=true', async () => {
+    // The health dashboard consumes this shape. checksToServiceHealthList maps
+    // check keys through a label map, so new checks must arrive labelled.
+    mockAllShellChecksPass()
+    mockFilesystemAndMemoryOk()
+    ;(checkPostgres as jest.Mock).mockResolvedValue(unreachable('postgres:5432 - ECONNREFUSED'))
+
+    const response = await GET(makeRequest('http://localhost:3021/api/health?all=true'))
+    const data = await response.json()
+
+    expect(data.overall).toBe('degraded')
+    const byName = Object.fromEntries(
+      data.services.map((s: { name: string; status: string }) => [s.name, s.status])
+    )
+    expect(byName['PostgreSQL']).toBe('unhealthy')
+    expect(byName['Hasura']).toBe('healthy')
+    expect(byName['Network']).toBeUndefined()
+  })
+
   it('includes resource usage in response', async () => {
     getMockExecAsync().mockResolvedValue({ stdout: 'OK', stderr: '' })
     ;(fs.writeFile as jest.Mock).mockResolvedValue(undefined)

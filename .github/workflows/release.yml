@@ -117,17 +117,3 @@ jobs:
           draft: false
           prerelease: ${{ contains(github.ref, 'alpha') || contains(github.ref, 'beta') || contains(github.ref, 'rc') }}
 
-      - name: Notify release
-        uses: 8398a7/action-slack@v3
-        if: success()
-        with:
-          status: custom
-          custom_payload: |
-            {
-              text: 'New release: nself-admin v${{ steps.version.outputs.version }}',
-              attachments: [{
-                color: 'good',
-                text: 'Docker image available at ${{ env.DOCKER_IMAGE }}:${{ steps.version.outputs.version }}'
-              }]
-            }
-          webhook_url: ${{ secrets.SLACK_WEBHOOK }}

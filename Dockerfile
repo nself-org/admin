@@ -1,12 +1,12 @@
 # mkcert, built from source rather than taken from upstream's pre-built binary.
 #
-# The upstream binary (v1.4.4, published 2022-04-26) is compiled with Go 1.18,
+# The upstream binary (v1.4.5, published 2022-04-26) is compiled with Go 1.18,
 # and Trivy's CRITICAL gate flagged four Go stdlib vulnerabilities baked into it:
 # CVE-2023-24538, CVE-2023-24540, CVE-2024-24790 and CVE-2025-68121. That gate
 # blocked every docker-publish run, which is why Docker Hub sat at 1.0.13 while
 # the CLI reached 1.3.6.
 #
-# There is no newer mkcert release to bump to — v1.4.4 IS the latest and has been
+# There is no newer mkcert release to bump to — v1.4.5 IS the latest and has been
 # since 2022. So compile the same source with a current Go toolchain: identical
 # mkcert behaviour, patched stdlib.
 #
@@ -120,7 +120,7 @@ COPY --from=mkcert-builder /out/mkcert /usr/local/bin/mkcert
 RUN chmod +x /usr/local/bin/mkcert
 
 # Install nself CLI pre-built binary
-ARG NSELF_VERSION=1.4.4
+ARG NSELF_VERSION=1.4.5
 RUN ARCH=$(uname -m) && \
     if [ "$ARCH" = "x86_64" ]; then NSELF_ARCH="amd64"; \
     elif [ "$ARCH" = "aarch64" ]; then NSELF_ARCH="arm64"; \
@@ -154,7 +154,7 @@ ENV NEXT_TELEMETRY_DISABLED=1
 ENV HOSTNAME="0.0.0.0"
 # Port 3021 is the reserved port for nself-admin (not 3100, which is for Loki)
 ENV PORT=3021
-ENV ADMIN_VERSION=1.4.4
+ENV ADMIN_VERSION=1.4.5
 
 # Environment variables that can be set at runtime:
 # NSELF_PROJECT_PATH - Path to mounted project (default: /workspace)
@@ -164,7 +164,7 @@ ENV ADMIN_VERSION=1.4.4
 # Add labels for container metadata
 LABEL org.opencontainers.image.title="nself-admin"
 LABEL org.opencontainers.image.description="Web-based administration interface for nself CLI"
-LABEL org.opencontainers.image.version="1.4.4"
+LABEL org.opencontainers.image.version="1.4.5"
 LABEL org.opencontainers.image.vendor="nself.org"
 LABEL org.opencontainers.image.source="https://github.com/nself-org/admin"
 LABEL org.opencontainers.image.licenses="Proprietary - Free for personal use, Commercial license required"

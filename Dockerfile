@@ -19,7 +19,7 @@ FROM --platform=$BUILDPLATFORM golang:1.27-alpine AS mkcert-builder
 ARG TARGETOS
 ARG TARGETARCH
 RUN apk add --no-cache git
-RUN git clone --depth 1 --branch v1.4.5 https://github.com/FiloSottile/mkcert /src
+RUN git clone --depth 1 --branch v1.4.4 https://github.com/FiloSottile/mkcert /src
 WORKDIR /src
 RUN CGO_ENABLED=0 GOOS=${TARGETOS} GOARCH=${TARGETARCH} \
     go build -trimpath -ldflags "-s -w" -o /out/mkcert .

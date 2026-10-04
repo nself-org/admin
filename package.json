@@ -61,9 +61,14 @@
   "packageManager": "pnpm@10.28.0",
   "browserslist": "defaults, not ie <= 11",
   "pnpm": {
+    "//auditConfig": [
+      "GHSA-528h-pc64-c93x: stream-json 1.9.1 via minio 8.0.7 (moderate DoS from the operator's own object store; the 3.x override breaks minio). Debt D-0202 (D-HYG-admin-stream-json), re-entry: P8 admin rewrite or a minio release on stream-json 3.",
+      "GHSA-vfj7-8cjw-p6xm: braces <=3.0.3, no patched release exists; reached via direct dep fast-glob > micromatch (build-time MDX search glob over fixed repo paths in src/mdx/search.mjs) and dev eslint-config-next. Lead decision, HYG EPIC Invalidations. Review date 2026-11-01."
+    ],
     "auditConfig": {
       "ignoreGhsas": [
-        "GHSA-528h-pc64-c93x"
+        "GHSA-528h-pc64-c93x",
+        "GHSA-vfj7-8cjw-p6xm"
       ]
     },
     "onlyBuiltDependencies": [

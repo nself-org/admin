@@ -63,6 +63,9 @@ jobs:
   docker-publish:
     name: Build and push Docker image
     runs-on: ubuntu-latest
+    # Bound the multi-arch build and push. Without it a hung build inherits
+    # GitHub's 360-minute default.
+    timeout-minutes: 90
     permissions:
       contents: read
       packages: write

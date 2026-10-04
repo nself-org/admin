@@ -13,7 +13,7 @@ const MANAGE_INVENTORY = {
       servers: [
         {
           name: 'staging-app-01',
-          host: 'nself@167.235.233.65',
+          host: 'nself@203.0.113.10',
           role: 'app',
           capability: 'manage',
           primary: true,
@@ -61,7 +61,7 @@ const PARTIAL_INVENTORY = {
       servers: [
         {
           name: 'staging-app-01',
-          host: 'nself@167.235.233.65',
+          host: 'nself@203.0.113.10',
           role: 'app',
           capability: 'manage',
           primary: true,

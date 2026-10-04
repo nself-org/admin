@@ -25,8 +25,8 @@ jest.mock('@/lib/require-auth', () => ({ requireAuth: jest.fn() }))
 // malformed input, so a plain decodeURIComponent stands in for it.
 jest.mock('decode-uri-component', () => (s: string) => decodeURIComponent(s))
 
-import { readEnvFile } from '@/lib/env-handler'
 import { GET } from '@/app/api/storage/route'
+import { readEnvFile } from '@/lib/env-handler'
 
 const XMLNS = 'http://s3.amazonaws.com/doc/2006-03-01/'
 
@@ -108,9 +108,7 @@ afterAll(async () => {
 
 describe('storage route object listing (minio client, stub S3 endpoint)', () => {
   it('lists files and folders with names and sizes', async () => {
-    const req = new NextRequest(
-      'http://localhost/api/storage?action=files&bucket=assets&path=/'
-    )
+    const req = new NextRequest('http://localhost/api/storage?action=files&bucket=assets&path=/')
     const res = await GET(req)
     const body = await res.json()
 
@@ -137,9 +135,9 @@ describe('minio bucket-notification stream (stream-json JSON-lines parser)', () 
     })
     const poller = client.listenBucketNotification('assets', '', '', ['s3:ObjectCreated:*'])
     const record = await new Promise<{ eventName: string }>((resolve, reject) => {
-      poller.on('notification', (r: { eventName: string }) => {
+      poller.on('notification', (r: unknown) => {
         poller.stop()
-        resolve(r)
+        resolve(r as { eventName: string })
       })
       poller.on('error', reject)
     })

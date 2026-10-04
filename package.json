@@ -61,6 +61,11 @@
   "packageManager": "pnpm@10.28.0",
   "browserslist": "defaults, not ie <= 11",
   "pnpm": {
+    "auditConfig": {
+      "ignoreGhsas": [
+        "GHSA-528h-pc64-c93x"
+      ]
+    },
     "onlyBuiltDependencies": [
       "@tailwindcss/oxide",
       "sharp",

@@ -17,21 +17,22 @@ concurrency:
   cancel-in-progress: true
 jobs:
   docker-platform:
-    name: Docker multi-platform check
-    runs-on: ubuntu-latest
-    # This job emulates arm64 through QEMU and normally takes about 40 minutes.
-    # With no timeout it inherits GitHub's 360-minute default, so when a QEMU
-    # build hangs — which it did on 2026-08-26, sitting at 62 minutes with no
-    # output before being cancelled by hand — it burns six hours of runner time
-    # and blocks the release behind it. 75 gives the normal run comfortable
-    # headroom and turns a hang into a failed check within the hour.
-    timeout-minutes: 75
+    name: Docker platform check (${{ matrix.platform }})
+    runs-on: ${{ matrix.runner }}
+    # Each platform builds natively on its own runner (no QEMU emulation), so a
+    # normal run takes minutes. 30 turns a hang into a failed check quickly.
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: linux/amd64
+            runner: ubuntu-latest
+          - platform: linux/arm64
+            runner: ubuntu-24.04-arm
 
     steps:
       - uses: actions/checkout@v4
-
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -72,12 +73,12 @@ jobs:
       - name: Verify multi-platform Docker build
         run: |
           docker buildx build \
-            --platform linux/amd64,linux/arm64 \
+            --platform ${{ matrix.platform }} \
             --build-arg NSELF_VERSION=${{ steps.cli_version.outputs.cli_version }} \
             --file Dockerfile \
             --output type=cacheonly \
             . || {
-            echo "FAIL: Docker multi-arch build failed"
+            echo "FAIL: Docker ${{ matrix.platform }} build failed"
             exit 1
           }
-          echo "PASS: Docker linux/amd64 + linux/arm64 build succeeded"
+          echo "PASS: Docker ${{ matrix.platform }} build succeeded"

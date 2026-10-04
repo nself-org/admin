@@ -30,10 +30,9 @@ The Admin UI v2 (P94 modernization) is organized into 17 distinct zones. Each zo
 
 ## Environment Switcher (Z17)
 
-The environment switcher allows the Admin UI (running locally) to target three backend environments:
+The environment switcher allows the Admin UI (running locally) to target two backend environments (no staging tier, ADR 0014):
 
 - **Local**, `nself start` stack on the user's machine
-- **Staging**, Hetzner `167.235.233.65`
 - **Production**, Hetzner `5.75.235.42` (red-tint guard active)
 
 When targeting Production, the UI activates a red-tint overlay on all destructive action buttons. The user must confirm a "You are in PRODUCTION" banner before any state-changing CLI command is dispatched.

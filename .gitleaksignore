@@ -1,50 +1,38 @@
 # .gitleaksignore — gitleaks v8 false-positive fingerprints
 #
 # All entries below are placeholder / example values in tests, docs, or UI fixtures.
-# None are real credentials. Allowlisted here so CI stays green.
-# Format: one fingerprint per line (commit:file:rule:line)
+# None are real credentials. Format: one fingerprint per line (commit:file:rule:line).
+# Every fingerprint needs its own "# Reviewed <date> by <who>: <reason>" line directly above it
+# (nself-ci gate gitleaksignore-reviewed); add new ones with `cam ci ignore-add`.
+#
+# .gitleaks.toml already allowlists these paths/values, but .github/gitleaks.toml (Gitleaks workflow,
+# lefthook pre-commit) does not, so the fingerprints stay. Stale entries for commit cadfc1d2 (a prettier
+# reformat commit on no branch, never scanned) were dropped 2026-10-11 (D-0410).
 # See .github/wiki/architecture/auth-bypass-fix.md for audit trail.
 
-# pk_test_abc123 placeholder in plugin-config.test.ts (test fixture)
+# Reviewed 2026-10-11 by crunch D-0410: pk_test_abc123 placeholder in a jest fixture; 14 chars, carries "test" and "abc123", not a Stripe key
 a54c97fe3d3d49e551070a0c7670da280892e93e:src/tests/plugin-config.test.ts:generic-api-key:67
 
-# nself_ab_1234... placeholder in api-keys test (test fixture)
+# Reviewed 2026-10-11 by crunch D-0410: nself_ab_ prefix plus a 1234567890 digit run in an api-keys unit test; synthetic, never issued
 7dc8a41bc7c8aad20e18141efb85349a6e12006a:src/lib/api-keys/__tests__/api-keys.test.ts:generic-api-key:388
 
-# JWT_SECRET=jwt-secret-key-32-chars example in docs/Build-Process.md
+# Reviewed 2026-10-11 by crunch D-0410: JWT_SECRET=jwt-secret-key-32-chars, a literal docs example (value is exactly that string); file since deleted
 041260292f555d77c1f1e603dcb9595391388f83:docs/Build-Process.md:generic-api-key:220
 
-# eyJhbGci... truncated JWT example in docs/api/Reference.md
+# Reviewed 2026-10-11 by crunch D-0410: the public JWT header eyJhbGci... ({"alg":"HS256","typ":"JWT"}) followed by "..." only; no payload or signature; file since deleted
 041260292f555d77c1f1e603dcb9595391388f83:docs/api/Reference.md:generic-api-key:52
 
-# token: "a3f2d8c9b1e4..." placeholder in docs/architecture/database.md
+# Reviewed 2026-10-11 by crunch D-0410: token a3f2d8c9b1e4 followed by "..." only (12 hex chars) in a schema doc example; file since moved to the wiki
 de380efade95986b7d6e886827f1683c6d03c3fb:docs/architecture/database.md:generic-api-key:82
 
-# Slack T00000000/B00000000/XXX... example URL in cicd/page.tsx (UI placeholder)
+# Reviewed 2026-10-11 by crunch D-0410: Slack URL T00000000/B00000000/XXXX... shown as a form placeholder in the CI/CD page; not a real workspace
 807a5b2fab1a25b3a6c1f62b107912e980794ef9:src/app/deployment/cicd/page.tsx:slack-webhook-url:514
 
-# Slack T00000000/B00000000/XXX... example URL in webhooks/page.tsx (UI placeholder)
+# Reviewed 2026-10-11 by crunch D-0410: Slack URL T00000000/B00000000/XXXX... shown as a form placeholder in the webhooks page; not a real workspace
 807a5b2fab1a25b3a6c1f62b107912e980794ef9:src/app/tools/webhooks/page.tsx:slack-webhook-url:616
 
-# nsf_ci_abcdef... placeholder token in settings/page.tsx (UI example)
+# Reviewed 2026-10-11 by crunch D-0410: nsf_ci_ prefix plus abcdef/123456 runs, a UI example token on the settings page; synthetic, never issued
 807a5b2fab1a25b3a6c1f62b107912e980794ef9:src/app/settings/page.tsx:generic-api-key:423
 
-# cadfc1d prettier reformat — same false positives at new line numbers
-# pk_test_abc123 placeholder in plugin-config.test.ts (line shifted by prettier)
-cadfc1d2e0192b204224b0c2402e896da37dc20c:src/tests/plugin-config.test.ts:generic-api-key:76
-
-# nself_ab_1234... placeholder in api-keys test (line shifted by prettier)
-cadfc1d2e0192b204224b0c2402e896da37dc20c:src/lib/api-keys/__tests__/api-keys.test.ts:generic-api-key:377
-
-# token: "a3f2d8c9b1e4..." placeholder in database.md (line shifted by prettier)
-cadfc1d2e0192b204224b0c2402e896da37dc20c:.github/wiki/architecture/database.md:generic-api-key:84
-
-# Slack T00000000/B00000000/XXX... example URL in webhooks/page.tsx (line shifted by prettier)
-cadfc1d2e0192b204224b0c2402e896da37dc20c:src/app/tools/webhooks/page.tsx:slack-webhook-url:737
-
-# nsf_ci_abcdef... placeholder token in settings/page.tsx (line shifted by prettier)
-cadfc1d2e0192b204224b0c2402e896da37dc20c:src/app/settings/page.tsx:generic-api-key:484
-
-# SSH key FORMAT example (-----BEGIN/END OPENSSH PRIVATE KEY----- comment block) in docs/CICD.md
-# File deleted in later commit; this is historical false-positive from docs example block
+# Reviewed 2026-10-11 by crunch D-0410: OpenSSH private-key FORMAT example; BEGIN/END header lines with only "..." between (0 base64 chars); file since deleted
 9dd678b0842b1842eab69d48cd6c48a0043d701d:docs/CICD.md:private-key:964

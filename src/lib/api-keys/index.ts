@@ -92,9 +92,8 @@ async function initApiKeyCollections(): Promise<void> {
 /**
  * Generate a cryptographically secure API key
  * Format: prefix_secret
- * - prefix: 8 chars for identification (nself_XX)
- * - secret: 40 chars cryptographically random
- * Total: ~48 characters
+ * - prefix: nself_ + 10 random base32 chars (see generateKeyPrefix)
+ * - secret: 30 chars cryptographically random (base62)
  */
 function generateSecureApiKey(prefix: string): string {
   // Generate 30 bytes of random data (40 chars in base62)
@@ -115,16 +114,21 @@ function generateSecureApiKey(prefix: string): string {
   return `${prefix}_${secret}`
 }
 
+const KEY_PREFIX_LENGTH = 10
+
 /**
- * Generate an 8-character prefix for API keys
- * Format: nself_XX where XX are random lowercase letters
+ * Generate a near-unique lookup prefix for API keys
+ * Format: nself_ + 10 random lowercase base32 chars (a-z, 2-7), 50 bits.
+ * Keys created before this format carry nself_ + 2 letters; validateApiKey
+ * still accepts them because it matches every record with the prefix by hash.
  */
 export function generateKeyPrefix(): string {
-  const chars = 'abcdefghijklmnopqrstuvwxyz'
-  const randomBytes = crypto.randomBytes(2)
+  const chars = 'abcdefghijklmnopqrstuvwxyz234567'
+  const randomBytes = crypto.randomBytes(KEY_PREFIX_LENGTH)
 
   let suffix = ''
-  for (let i = 0; i < 2; i++) {
+  for (let i = 0; i < KEY_PREFIX_LENGTH; i++) {
+    // 256 is a multiple of 32, so the modulo is unbiased
     suffix += chars[(randomBytes[i] ?? 0) % chars.length]
   }
 
@@ -459,16 +463,22 @@ export async function validateApiKey(
 
   const prefix = `${parts[0]}_${parts[1]}`
 
-  // Find key by prefix
-  const apiKey = apiKeysCollection?.findOne({ keyPrefix: prefix })
+  // The prefix is a lookup hint, not an identity: several records can share
+  // it (legacy 2-letter prefixes collide often), so match each by hash.
+  const candidates = apiKeysCollection?.find({ keyPrefix: prefix }) || []
 
-  if (!apiKey) {
+  if (candidates.length === 0) {
     return { valid: false, error: 'API key not found' }
   }
 
-  // Verify the hash
-  const isValid = await verifyApiKey(key, apiKey.keyHash)
-  if (!isValid) {
+  let apiKey: ApiKey | undefined
+  for (const candidate of candidates) {
+    if (await verifyApiKey(key, candidate.keyHash)) {
+      apiKey = candidate
+      break
+    }
+  }
+  if (!apiKey) {
     return { valid: false, error: 'Invalid API key' }
   }
 

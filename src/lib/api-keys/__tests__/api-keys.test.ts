@@ -4,6 +4,8 @@
  */
 
 import { getDatabase, initDatabase } from '@/lib/database'
+import type { ApiKey } from '@/types/api-key'
+import bcrypt from 'bcryptjs'
 import * as apiKeys from '../index'
 
 // Ensure database is initialized before tests
@@ -28,9 +30,10 @@ describe('API Key Generation', () => {
     const prefix1 = apiKeys.generateKeyPrefix()
     const prefix2 = apiKeys.generateKeyPrefix()
 
-    expect(prefix1).toMatch(/^nself_[a-z]{2}$/)
-    expect(prefix2).toMatch(/^nself_[a-z]{2}$/)
-    // Low probability of collision but technically possible
+    expect(prefix1).toMatch(/^nself_[a-z2-7]{10}$/)
+    expect(prefix2).toMatch(/^nself_[a-z2-7]{10}$/)
+    // 50 random bits: a collision here means the generator is broken
+    expect(prefix1).not.toBe(prefix2)
   })
 
   test('creates cryptographically secure API keys', async () => {
@@ -42,8 +45,8 @@ describe('API Key Generation', () => {
 
     expect(result.key).toBeDefined()
     expect(result.secretKey).toBeDefined()
-    expect(result.key.keyPrefix).toMatch(/^nself_[a-z]{2}$/)
-    expect(result.secretKey).toMatch(/^nself_[a-z]{2}_[A-Za-z0-9]{30}$/)
+    expect(result.key.keyPrefix).toMatch(/^nself_[a-z2-7]{10}$/)
+    expect(result.secretKey).toMatch(/^nself_[a-z2-7]{10}_[A-Za-z0-9]{30}$/)
     expect(result.key.keyHash).toBeDefined()
     expect(result.key.keyHash).toMatch(/^\$2[aby]\$/) // bcrypt hash pattern
   })
@@ -132,6 +135,89 @@ describe('API Key Validation', () => {
 
     expect(updated?.usageCount).toBe(initialUsageCount + 2)
     expect(updated?.lastUsedAt).toBeDefined()
+  })
+})
+
+// D-0527: the prefix is only a lookup hint. Records that share it (legacy
+// 2-letter prefixes, or any future collision) must each validate by hash.
+describe('API Key Prefix Collisions', () => {
+  // Synthetic test-only secrets, never real keys
+  const FAKE_SECRET_A = 'FAKEtestSECRETnotArealKEYaaaaa'
+  const FAKE_SECRET_B = 'FAKEtestSECRETnotArealKEYbbbbb'
+
+  async function insertKeyWithSecret(
+    template: ApiKey,
+    id: string,
+    secretKey: string,
+    status: ApiKey['status'] = 'active'
+  ): Promise<void> {
+    const keyPrefix = secretKey.split('_').slice(0, 2).join('_')
+    const keyHash = await bcrypt.hash(secretKey, 4)
+    // Copy only data fields; LokiJS metadata ($loki, meta) must not be reused
+    const {
+      $loki: _loki,
+      meta: _meta,
+      ...fields
+    } = template as ApiKey & {
+      $loki?: number
+      meta?: unknown
+    }
+    getDatabase()
+      ?.getCollection('apiKeys')
+      .insert({ ...fields, id, keyPrefix, keyHash, status })
+  }
+
+  test('two keys with a forced shared prefix both validate', async () => {
+    const created = await apiKeys.apiKeysApi.create({ name: 'Collision A', scope: 'read' })
+    const prefix = created.key.keyPrefix
+    const secretB = `${prefix}_${FAKE_SECRET_B}`
+    await insertKeyWithSecret(created.key, 'key_collision_b', secretB)
+
+    const collection = getDatabase()?.getCollection('apiKeys')
+    expect(collection?.find({ keyPrefix: prefix })).toHaveLength(2)
+
+    const first = await apiKeys.validateApiKey(created.secretKey)
+    expect(first.valid).toBe(true)
+    expect(first.key?.id).toBe(created.key.id)
+
+    const second = await apiKeys.validateApiKey(secretB)
+    expect(second.valid).toBe(true)
+    expect(second.key?.id).toBe('key_collision_b')
+  })
+
+  test('a revoked key sharing the prefix does not block an active one', async () => {
+    const created = await apiKeys.apiKeysApi.create({ name: 'Collision tmpl', scope: 'read' })
+    const revokedSecret = `nself_ab_${FAKE_SECRET_A}`
+    const activeSecret = `nself_ab_${FAKE_SECRET_B}`
+    await insertKeyWithSecret(created.key, 'key_legacy_revoked', revokedSecret, 'revoked')
+    await insertKeyWithSecret(created.key, 'key_legacy_active', activeSecret)
+
+    const active = await apiKeys.validateApiKey(activeSecret)
+    expect(active.valid).toBe(true)
+    expect(active.key?.id).toBe('key_legacy_active')
+
+    const revoked = await apiKeys.validateApiKey(revokedSecret)
+    expect(revoked.valid).toBe(false)
+    expect(revoked.error).toBe('API key has been revoked')
+  })
+
+  test('still accepts an existing short-prefix (legacy) key', async () => {
+    const created = await apiKeys.apiKeysApi.create({ name: 'Legacy tmpl', scope: 'read' })
+    const legacySecret = `nself_zq_${FAKE_SECRET_A}`
+    await insertKeyWithSecret(created.key, 'key_legacy_short', legacySecret)
+
+    const result = await apiKeys.validateApiKey(legacySecret)
+    expect(result.valid).toBe(true)
+    expect(result.key?.id).toBe('key_legacy_short')
+  })
+
+  test('rejects a wrong secret under a shared prefix', async () => {
+    const created = await apiKeys.apiKeysApi.create({ name: 'Wrong tmpl', scope: 'read' })
+    await insertKeyWithSecret(created.key, 'key_legacy_one', `nself_zq_${FAKE_SECRET_A}`)
+
+    const result = await apiKeys.validateApiKey(`nself_zq_${FAKE_SECRET_B}`)
+    expect(result.valid).toBe(false)
+    expect(result.error).toBe('Invalid API key')
   })
 })
 

@@ -10,7 +10,7 @@ name: Hygiene
 #   - price-lint.yml             (canonical pricing string check)
 #   - sec-lint.yml                (TypeScript security lint script)
 #   - price-drift-check.yml      (superseded price string / bundle-price check)
-#   - release-tag-drift-check.yml (package.json version <-> git tag drift, push/schedule only)
+#   - release-tag-drift-check.yml (package.json version <-> git tag drift, push/schedule only; 6h grace for a pending release)
 # Sharing one checkout + one runner cuts 8 queued runner allocations per push
 # down to 1. None of these steps are required branch-protection checks
 # (Test Summary, in e2e-tests.yml, is untouched).
@@ -404,12 +404,33 @@ jobs:
 
       - name: Assert release tag exists and points at HEAD's release lineage
         if: github.event_name != 'pull_request'
+        env:
+          # The cli release pushes v<version> 10 min to ~2.5 h AFTER the admin
+          # version-bump commit merges. A missing tag is only a failure once the
+          # bump commit is older than this many hours (D-0067).
+          GRACE_HOURS: 6
         run: |
           VERSION="${{ steps.pkg.outputs.version }}"
           TAG="v${VERSION}"
 
           if ! git rev-parse "refs/tags/${TAG}" >/dev/null 2>&1; then
+            # Last commit that changed the version line of package.json.
+            BUMP_SHA=$(git log -1 --format=%H -G'"version"[[:space:]]*:' -- package.json)
+            AGE_MSG=""
+            if [ -n "${BUMP_SHA}" ]; then
+              BUMP_TS=$(git log -1 --format=%ct "${BUMP_SHA}")
+              AGE_SEC=$(( $(date +%s) - BUMP_TS ))
+              AGE_MIN=$(( AGE_SEC / 60 ))
+              AGE_MSG="bump commit ${BUMP_SHA:0:7} is ${AGE_MIN} minutes old"
+              if [ "${AGE_SEC}" -lt $(( GRACE_HOURS * 3600 )) ]; then
+                echo "::warning::Release tag ${TAG} is missing but the ${AGE_MSG}; the release is presumed pending."
+                echo "::warning::This check will fail if ${TAG} is still missing ${GRACE_HOURS}h after the bump commit."
+                echo "::warning::Fix if the release is stuck: git tag ${TAG} <release-commit-sha> && git push origin ${TAG}"
+                exit 0
+              fi
+            fi
             echo "::error::Release tag drift: package.json is at ${VERSION} but tag ${TAG} does not exist."
+            [ -n "${AGE_MSG}" ] && echo "::error::The ${AGE_MSG} (grace window ${GRACE_HOURS}h expired)."
             echo "::error::The release/docker-publish workflows trigger ONLY on 'push: tags: v*' —"
             echo "::error::without this tag, v${VERSION} was never built or published to Docker Hub."
             echo "::error::Fix: git tag ${TAG} <release-commit-sha> && git push origin ${TAG}"

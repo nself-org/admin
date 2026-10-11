@@ -18,13 +18,17 @@ Real implementation of API key management with cryptographic security, database-
 ## API Key Format
 
 ```
-nself_ab_1234567890123456789012345678901234567890
-└─┬─┘ └┬┘ └────────────────┬───────────────────┘
-  │    │                   │
-  │    │                   └─ Secret (40 chars, base62)
-  │    └───────────────────── Random suffix (2 chars)
-  └────────────────────────── Prefix (nself)
+nself_k3x7qa2mzp_123456789012345678901234567890
+└─┬─┘ └───┬────┘ └─────────────┬──────────────┘
+  │       │                    │
+  │       │                    └─ Secret (30 chars, base62)
+  │       └────────────────────── Lookup prefix (10 chars, base32 a-z2-7)
+  └────────────────────────────── Prefix (nself)
 ```
+
+The lookup prefix only narrows the search: validation checks the key against
+every stored record with that prefix by bcrypt hash. Keys issued before the
+10-char prefix carry a 2-letter suffix (`nself_ab_...`) and keep working.
 
 ## Basic Usage
 

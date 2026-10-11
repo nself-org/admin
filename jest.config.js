@@ -64,6 +64,9 @@ const customJestConfig = {
   // Allow next/jest SWC to transpile ESM-only unified/rehype packages
   transformIgnorePatterns: [`/node_modules/(?!(${esmPackages.join('|')})/)`],
   testMatch: ['**/__tests__/**/*.test.ts?(x)', '**/*.test.ts?(x)'],
+  // Ticket worktrees live under .claude/worktrees; without this a run in the
+  // main checkout also runs every worktree's copy of the suite.
+  testPathIgnorePatterns: ['<rootDir>/.claude/'],
   collectCoverageFrom: [
     'src/**/*.{ts,tsx}',
     '!src/**/*.d.ts',

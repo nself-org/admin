@@ -144,6 +144,7 @@ describe('API Key Prefix Collisions', () => {
   // Synthetic test-only secrets, never real keys
   const FAKE_SECRET_A = 'FAKEtestSECRETnotArealKEYaaaaa'
   const FAKE_SECRET_B = 'FAKEtestSECRETnotArealKEYbbbbb'
+  const FAKE_SECRET_C = 'FAKEtestSECRETnotArealKEYccccc'
 
   async function insertKeyWithSecret(
     template: ApiKey,
@@ -214,8 +215,9 @@ describe('API Key Prefix Collisions', () => {
   test('rejects a wrong secret under a shared prefix', async () => {
     const created = await apiKeys.apiKeysApi.create({ name: 'Wrong tmpl', scope: 'read' })
     await insertKeyWithSecret(created.key, 'key_legacy_one', `nself_zq_${FAKE_SECRET_A}`)
+    await insertKeyWithSecret(created.key, 'key_legacy_two', `nself_zq_${FAKE_SECRET_B}`)
 
-    const result = await apiKeys.validateApiKey(`nself_zq_${FAKE_SECRET_B}`)
+    const result = await apiKeys.validateApiKey(`nself_zq_${FAKE_SECRET_C}`)
     expect(result.valid).toBe(false)
     expect(result.error).toBe('Invalid API key')
   })

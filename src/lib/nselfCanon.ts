@@ -116,6 +116,8 @@ const CANON_MOVES: Record<string, (args: string[]) => NselfArgv> = {
     // Not a row of the canon table: leave it for the cli to refuse. Never widen it to `db <sub>`.
     return { command: 'migrate', args }
   },
+  urls: (args) => ({ command: 'status', args: ['urls', ...args] }),
+  health: (args) => ({ command: 'status', args: ['health', ...args] }),
   plugin: (args) => {
     // `plugin test|debug|dev|init|link|new|unlink` are breakouts to the plugin-dev plugin.
     if (args[0] !== undefined && PLUGIN_DEV_SUBCOMMANDS.includes(args[0]))

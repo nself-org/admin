@@ -850,8 +850,6 @@ describe('nself CLI Module', () => {
       ['migrate', ['run'], 'update', ['project', 'run']],
       ['migrate', ['firebase', '--dry-run'], 'db', ['import', 'firebase', '--dry-run']],
       ['migrate', ['watch'], 'db', ['migrate', 'watch']],
-      ['migrate', ['drop'], 'migrate', ['drop']],
-      ['migrate', ['restore', 'backups/x.sql'], 'migrate', ['restore', 'backups/x.sql']],
       ['plugin', ['install', 'stripe'], 'add', ['stripe']],
       ['plugin', ['remove', 'stripe'], 'remove', ['stripe']],
     ])('rewrites old spelling %s %j to the canonical argv', async (cmd, args, want, wantArgs) => {
@@ -875,6 +873,19 @@ describe('nself CLI Module', () => {
       spawn.mockClear()
       nselfCLI.streamNselfCommand('health', ['--all'], () => {})
       expect(spawn.mock.calls[0][1]).toEqual(['status', 'health', '--all'])
+    })
+
+    it('does not widen an unlisted migrate subcommand to db', async () => {
+      const { canonicalizeArgv } = require('../nselfCanon')
+      expect(canonicalizeArgv('migrate', ['drop'])).toEqual({ command: 'migrate', args: ['drop'] })
+      expect(canonicalizeArgv('migrate', ['restore', 'x.sql'])).toEqual({
+        command: 'migrate',
+        args: ['restore', 'x.sql'],
+      })
+      mockExecFile.mockClear()
+      const result = await nselfCLI.executeNselfCommand('migrate', ['drop'])
+      expect(result.success).toBe(false)
+      expect(mockExecFile).not.toHaveBeenCalled()
     })
 
     it('canonicalizeArgs rewrites a whole argv and leaves canonical argv alone', () => {

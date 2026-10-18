@@ -7,7 +7,7 @@
 #   1. Extracts every nself argv prefix admin builds from src/ (non-test files)
 #      into scripts/cli-argv-inventory.txt, sorted, at most three words each:
 #        executeNselfCommand('<cmd>', ['a', 'b', ...])  and streamNselfCommand
-#        execFile/spawn(<nself binary>, ['a', 'b', ...])
+#        execFile/spawn(<expression naming nself>, ['a', 'b', ...])
 #        `${nselfPath} a b ...` and exec('nself a b ...') strings
 #        runCLI(['a', 'b', ...])
 #      A variable argument (execFile(bin, args)) is resolved to the literal
@@ -98,7 +98,7 @@ read -r -d '' PERL_PROG <<'PERL_EOF' || true
         emit($cmd, @w);
       }
       # execFile / spawn of the nself binary
-      while ($t =~ /\b(?:execFileAsync|execFileSync|execFile|spawnSync|spawn)\(\s*(?:nselfPath|nselfCommand|nselfBin|nselfBinary|\x27nself\x27|"nself")\s*,\s*/g) {
+      while ($t =~ /\b(?:execFileAsync|execFileSync|execFile|spawnSync|spawn)\(\s*[^,()]*nself[^,()]*,\s*/g) {
         my @w;
         if ($t =~ /\G\[/gc) { @w = words($t); }
         elsif ($t =~ /\G(\w+)\s*[,)]/gc) { @w = $lookup->($1, pos($t)); }

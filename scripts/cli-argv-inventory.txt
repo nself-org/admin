@@ -1,4 +1,5 @@
 @dynamic src/app/api/auth/roles/route.ts
+@dynamic src/app/api/cli/execute/route.ts
 @dynamic src/app/api/commands/registry/route.ts
 @dynamic src/app/api/commands/run/route.ts
 @dynamic src/app/api/control-plane/route.ts

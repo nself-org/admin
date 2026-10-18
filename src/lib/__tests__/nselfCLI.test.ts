@@ -850,6 +850,8 @@ describe('nself CLI Module', () => {
       ['migrate', ['run'], 'update', ['project', 'run']],
       ['migrate', ['firebase', '--dry-run'], 'db', ['import', 'firebase', '--dry-run']],
       ['migrate', ['watch'], 'db', ['migrate', 'watch']],
+      ['migrate', ['drop'], 'migrate', ['drop']],
+      ['migrate', ['restore', 'backups/x.sql'], 'migrate', ['restore', 'backups/x.sql']],
       ['plugin', ['install', 'stripe'], 'add', ['stripe']],
       ['plugin', ['remove', 'stripe'], 'remove', ['stripe']],
     ])('rewrites old spelling %s %j to the canonical argv', async (cmd, args, want, wantArgs) => {
@@ -940,10 +942,13 @@ describe('nself-path NSELF_BIN seam (P7-CANON-20)', () => {
   })
 
   it('re-reads NSELF_BIN on every sync call (not cached)', () => {
+    // Prime the module cache with no override, then set one: the override must still win.
+    delete process.env.NSELF_BIN
+    const discovered = actual.findNselfPathSync()
     process.env.NSELF_BIN = __filename
     expect(actual.findNselfPathSync()).toBe(__filename)
-    process.env.NSELF_BIN = `${__filename}.missing`
-    expect(actual.findNselfPathSync()).not.toBe(`${__filename}.missing`)
+    delete process.env.NSELF_BIN
+    expect(actual.findNselfPathSync()).toBe(discovered)
   })
 
   it('ignores an NSELF_BIN that does not exist, with a warning', () => {

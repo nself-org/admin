@@ -108,15 +108,14 @@ const CANON_MOVES: Record<string, (args: string[]) => NselfArgv> = {
   server: (args) => ({ command: 'infra', args: ['server', ...args] }),
   migrate: (args) => {
     const sub = args[0]
-    if (sub !== undefined && MIGRATE_UPDATE_PROJECT.includes(sub))
+    if (sub === undefined) return { command: 'db', args }
+    if (MIGRATE_UPDATE_PROJECT.includes(sub))
       return { command: 'update', args: ['project', ...args] }
-    if (sub !== undefined && MIGRATE_DB_IMPORT.includes(sub))
-      return { command: 'db', args: ['import', ...args] }
+    if (MIGRATE_DB_IMPORT.includes(sub)) return { command: 'db', args: ['import', ...args] }
     if (sub === 'generate' || sub === 'watch') return { command: 'db', args: ['migrate', ...args] }
-    return { command: 'db', args }
+    // Not a row of the canon table: leave it for the cli to refuse. Never widen it to `db <sub>`.
+    return { command: 'migrate', args }
   },
-  urls: (args) => ({ command: 'status', args: ['urls', ...args] }),
-  health: (args) => ({ command: 'status', args: ['health', ...args] }),
   plugin: (args) => {
     // `plugin test|debug|dev|init|link|new|unlink` are breakouts to the plugin-dev plugin.
     if (args[0] !== undefined && PLUGIN_DEV_SUBCOMMANDS.includes(args[0]))

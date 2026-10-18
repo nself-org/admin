@@ -195,11 +195,38 @@ while IFS= read -r line; do
   fi
 done <"$INVENTORY"
 
+# Canonical spellings are a v1.5 feature: in v1.4 mode they are not commands, so
+# admin 1.5.x needs cli 1.5.x. Report them (never a failure here); in v1.5 mode
+# every one of them was checked above.
+: >"$WORK/v15only.txt"
+while IFS="$(printf '\t')" read -r _old target; do
+  [ -n "$target" ] || continue
+  if ! grep -Fxq -- "$target" "$WORK/paths.txt"; then
+    grep -E "^$(printf '%s' "$target" | sed 's/[][\.*^$/]/\\&/g')( |$)" "$INVENTORY" >>"$WORK/v15only.txt" || true
+  fi
+done <"$WORK/shims.tsv"
+V15ONLY_COUNT="$(sort -u "$WORK/v15only.txt" | wc -l | tr -d ' ')"
+[ "$V15ONLY_COUNT" -eq 0 ] || echo "cli-compat [$MODE]: $V15ONLY_COUNT admin prefixes use v1.5 canonical spellings this cli does not have (admin 1.5.x needs cli 1.5.x)"
+
+# Commands that moved into plugins (functions, plugin-dev, infra): in v1.5 mode with
+# auto-add off the cli must answer E404 naming `nself add <plugin>` (or run, when the
+# plugin is installed), never "unknown command".
+if [ -n "${NSELF_V15:-}" ]; then
+  for root in functions plugin-dev infra; do
+    grep -Eq "^$root( |$)" "$INVENTORY" || continue
+    out="$(nself_run $root --help 2>&1)" && rc=0 || rc=$?
+    if [ "$rc" -ne 0 ] && ! printf '%s' "$out" | grep -q "nself add $root"; then
+      echo "FAIL plugin command: 'nself $root' is neither routed to the $root plugin nor runnable"
+      FAIL=1
+    fi
+  done
+fi
+
 # Routes that run a user-chosen command must make its root canonical.
 DYNAMIC_COUNT="$(grep -c '^@dynamic ' "$INVENTORY" || true)"
 for guarded in src/app/api/cli/execute/route.ts src/app/api/commands/run/route.ts \
   src/app/api/nself/route.ts src/app/api/ws/terminal/route.ts; do
-  if ! grep -qE 'canonicalizeArgs|canonicalizeArgv' "$ROOT/$guarded"; then
+  if ! grep -qE 'canonicalizeArg[sv]\(' "$ROOT/$guarded"; then
     echo "FAIL dynamic argv: $guarded runs a user-chosen command but does not call canonicalizeArgs"
     FAIL=1
   fi

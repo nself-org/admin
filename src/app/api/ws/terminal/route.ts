@@ -6,6 +6,7 @@
  */
 
 import { findNselfPath, getEnhancedPath } from '@/lib/nself-path'
+import { canonicalizeArgs } from '@/lib/nselfCanon'
 import { getProjectPath } from '@/lib/paths'
 import { requireAuth } from '@/lib/require-auth'
 import { spawn } from 'child_process'
@@ -137,7 +138,7 @@ export async function POST(request: NextRequest): Promise<NextResponse | Respons
         }
       }
 
-      const child = spawn(nselfBin, fullArgs, {
+      const child = spawn(nselfBin, canonicalizeArgs(fullArgs), {
         cwd: projectPath,
         env: {
           ...process.env,

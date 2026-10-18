@@ -12,6 +12,11 @@
 #        runCLI(['a', 'b', ...])
 #      A variable argument (execFile(bin, args)) is resolved to the literal
 #      array it was declared with, when there is one.
+#      A call whose argv cannot be read statically (a variable that is not a
+#      literal array, a dynamic command) is listed as `@dynamic <file>` in the
+#      inventory, so a new dynamic exec site shows up in the committed diff.
+#      The routes that run a user-chosen command must call canonicalizeArgs
+#      (checked below).
 #   2. Fails when a prefix starts with an old spelling, i.e. a command that cli
 #      v1.5 keeps only as a deprecated shim until v1.6.0 (read from
 #      `NSELF_V15=1 nself help --json`, canon == deprecated-shim).
@@ -56,8 +61,8 @@ nself_run() {
 
 # ── 1. inventory ─────────────────────────────────────────────────────────────
 
-extract() {
-  perl -0777 -e '
+read -r -d '' PERL_PROG <<'PERL_EOF' || true
+
     use strict; use warnings;
     my %seen;
     sub words {            # consume string-literal words from an array body at pos()
@@ -85,6 +90,7 @@ extract() {
         return @w;
       };
       # executeNselfCommand / streamNselfCommand
+      while ($t =~ /(?<!function )\b(?:executeNselfCommand|streamNselfCommand)\(\s*(?![\x27"\s])/g) { $seen{"\@dynamic $file"} = 1; }
       while ($t =~ /\b(?:executeNselfCommand|streamNselfCommand)\(\s*(?:\x27([a-z][a-z0-9-]*)\x27|"([a-z][a-z0-9-]*)")/g) {
         my $cmd = defined $1 ? $1 : $2; my @w;
         if ($t =~ /\G\s*,\s*\[/gc) { @w = words($t); }
@@ -96,6 +102,7 @@ extract() {
         my @w;
         if ($t =~ /\G\[/gc) { @w = words($t); }
         elsif ($t =~ /\G(\w+)\s*[,)]/gc) { @w = $lookup->($1, pos($t)); }
+        $seen{"\@dynamic $file"} = 1 unless @w;
         emit(@w);
       }
       # runCLI([...]) wrappers that prepend the nself binary
@@ -107,29 +114,40 @@ extract() {
       for my $p (@starts) {
         pos($t) = $p; my @w;
         while ($t =~ /\G([a-z][a-z0-9-]*)(?=[\s`\x27"]|\$|$)\s*/gc) { push @w, $1; }
+        $seen{"\@dynamic $file"} = 1 unless @w;
         emit(@w);
       }
     }
     print "$_\n" for sort keys %seen;
-  ' "$@"
-}
+  
+PERL_EOF
 
 FILES="$WORK/files.txt"
-(cd "$ROOT" && find src -type f \( -name '*.ts' -o -name '*.tsx' \) \
+(cd "$ROOT" && find -L src -type f \( -name '*.ts' -o -name '*.tsx' \) \
   ! -path '*/__tests__/*' ! -name '*.test.*' ! -name '*.spec.*' | sort) >"$FILES"
-(cd "$ROOT" && extract $(cat "$FILES")) | sort -u >"$INVENTORY"
+tr '\n' '\0' <"$FILES" | (cd "$ROOT" && xargs -0 perl -0777 -e "$PERL_PROG") | sort -u >"$INVENTORY"
 FILE_COUNT="$(wc -l <"$FILES" | tr -d ' ')"
-LINES="$(wc -l <"$INVENTORY" | tr -d ' ')"
+if [ "$FILE_COUNT" -eq 0 ] || [ ! -s "$INVENTORY" ]; then
+  echo "cli-compat: FAIL: no source files or no argv prefixes found (is $ROOT/src missing or empty?)" >&2
+  exit 1
+fi
+LINES="$(grep -vc '^@dynamic ' "$INVENTORY" || true)"
 echo "cli-compat [$MODE] $BIN: read $FILE_COUNT source files, $LINES argv prefixes -> scripts/cli-argv-inventory.txt"
 
 # ── 2. cli command tables ────────────────────────────────────────────────────
 
 nself_run help --json >"$WORK/help.json" 2>/dev/null || { echo "cli-compat: nself help --json failed" >&2; exit 1; }
 jq -r '.data.commands[].path | sub("^nself ";"")' "$WORK/help.json" | sort -u >"$WORK/paths.txt"
-NSELF_V15=1 nself_run help --json 2>/dev/null \
-  | jq -r '.data.commands[] | select(.canon == "deprecated-shim") | [(.path | sub("^nself ";"")), ((.target // "") | sub("^nself ";""))] | @tsv' \
-  | sort -u >"$WORK/shims.tsv" || true
-[ -s "$WORK/shims.tsv" ] || echo "cli-compat: note: this cli lists no deprecated shims (pre-canon build); old-spelling check is empty"
+if ! NSELF_V15=1 nself_run help --json >"$WORK/help15.json" 2>/dev/null; then
+  echo "cli-compat: FAIL: NSELF_V15=1 nself help --json failed, cannot read the v1.5 shims" >&2
+  exit 1
+fi
+jq -r '.data.commands[] | select(.canon == "deprecated-shim") | [(.path | sub("^nself ";"")), ((.target // "") | sub("^nself ";""))] | @tsv' "$WORK/help15.json" \
+  | sort -u >"$WORK/shims.tsv"
+if [ ! -s "$WORK/shims.tsv" ]; then
+  echo "cli-compat: FAIL: this cli lists no deprecated shims in v1.5 mode (no canon data), the old-spelling check would prove nothing" >&2
+  exit 1
+fi
 
 # ── 3. checks ────────────────────────────────────────────────────────────────
 
@@ -138,6 +156,7 @@ CHECKED=0
 : >"$WORK/unknown.txt"
 while IFS= read -r line; do
   [ -n "$line" ] || continue
+  case "$line" in "@dynamic "*) continue ;; esac
 
   # old spelling: the prefix starts with a path that is only a shim in v1.5
   while IFS="$(printf '\t')" read -r old target; do
@@ -176,7 +195,18 @@ while IFS= read -r line; do
   fi
 done <"$INVENTORY"
 
+# Routes that run a user-chosen command must make its root canonical.
+DYNAMIC_COUNT="$(grep -c '^@dynamic ' "$INVENTORY" || true)"
+for guarded in src/app/api/cli/execute/route.ts src/app/api/commands/run/route.ts \
+  src/app/api/nself/route.ts src/app/api/ws/terminal/route.ts; do
+  if ! grep -qE 'canonicalizeArgs|canonicalizeArgv' "$ROOT/$guarded"; then
+    echo "FAIL dynamic argv: $guarded runs a user-chosen command but does not call canonicalizeArgs"
+    FAIL=1
+  fi
+done
+
 UNKNOWN_COUNT="$(sort -u "$WORK/unknown.txt" | wc -l | tr -d ' ')"
+echo "cli-compat [$MODE]: $DYNAMIC_COUNT files exec the cli with an argv not readable statically (@dynamic in the inventory)"
 echo "cli-compat [$MODE]: $CHECKED commands run with --help, $UNKNOWN_COUNT prefixes not (fully) in this cli (UNKNOWN, pre-existing drift)"
 sort -u "$WORK/unknown.txt" | sed 's/^/UNKNOWN nself /'
 

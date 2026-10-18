@@ -1,4 +1,5 @@
 import { getEnhancedPath } from '@/lib/nself-path'
+import { canonicalizeArgs } from '@/lib/nselfCanon'
 import { getProjectPath } from '@/lib/paths'
 import { requireAuth } from '@/lib/require-auth'
 import { execFile } from 'child_process'
@@ -109,7 +110,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     const projectPath = getProjectPath()
     const execArgs = [command, ...validatedArgs]
 
-    const { stdout, stderr } = await execFileAsync('nself', execArgs, {
+    const { stdout, stderr } = await execFileAsync('nself', canonicalizeArgs(execArgs), {
       cwd: projectPath,
       env: {
         ...process.env,
@@ -165,7 +166,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
   try {
     const projectPath = getProjectPath()
 
-    const { stdout, stderr } = await execFileAsync('nself', [action], {
+    const { stdout, stderr } = await execFileAsync('nself', canonicalizeArgs([action]), {
       cwd: projectPath,
       env: {
         ...process.env,

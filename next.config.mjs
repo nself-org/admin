@@ -2,8 +2,10 @@ import withBundleAnalyzer from '@next/bundle-analyzer'
 import createNextIntlPlugin from 'next-intl/plugin'
 
 // cli 1.5 prints the v1 JSON envelope by default; admin parses the bare cli 1.4
-// shape. Set once here so every route that runs `nself` inherits it, including
-// the ones that spawn a bare `nself` and never call findNselfPath (P7-CANON-20).
+// shape. Set once here so `next dev` and `next start` give every route that runs
+// `nself` the legacy shape, including the ones that spawn a bare `nself` and never
+// call findNselfPath. The Docker image sets the same variable in the Dockerfile,
+// because its standalone server.js does not evaluate this file (P7-CANON-20).
 // An explicit NSELF_JSON_LEGACY in the environment wins.
 process.env.NSELF_JSON_LEGACY ??= '1'
 

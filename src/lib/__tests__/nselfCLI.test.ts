@@ -843,6 +843,13 @@ describe('nself CLI Module', () => {
       ['plugin', ['list', '--json'], 'config', ['plugins', 'list', '--json']],
       ['plugin', ['status', 'stripe'], 'config', ['plugins', 'status', 'stripe']],
       ['plugin', ['test', 'stripe'], 'plugin-dev', ['test', 'stripe']],
+      ['env', ['list'], 'config', ['env', 'list']],
+      ['trust', ['status'], 'config', ['trust', 'status']],
+      ['server', ['list'], 'infra', ['server', 'list']],
+      ['migrate', [], 'db', []],
+      ['migrate', ['run'], 'update', ['project', 'run']],
+      ['migrate', ['firebase', '--dry-run'], 'db', ['import', 'firebase', '--dry-run']],
+      ['migrate', ['watch'], 'db', ['migrate', 'watch']],
       ['plugin', ['install', 'stripe'], 'add', ['stripe']],
       ['plugin', ['remove', 'stripe'], 'remove', ['stripe']],
     ])('rewrites old spelling %s %j to the canonical argv', async (cmd, args, want, wantArgs) => {
@@ -868,9 +875,37 @@ describe('nself CLI Module', () => {
       expect(spawn.mock.calls[0][1]).toEqual(['status', 'health', '--all'])
     })
 
+    it('canonicalizeArgs rewrites a whole argv and leaves canonical argv alone', () => {
+      const { canonicalizeArgs } = require('../nselfCanon')
+      expect(canonicalizeArgs(['urls', '--json'])).toEqual(['status', 'urls', '--json'])
+      expect(canonicalizeArgs(['config', 'env', 'list'])).toEqual(['config', 'env', 'list'])
+      expect(canonicalizeArgs(['deploy', 'staging'])).toEqual(['deploy', 'staging'])
+      expect(canonicalizeArgs([])).toEqual([])
+    })
+
+    it('routes that run a user-chosen command canonicalize its root', () => {
+      const fs = jest.requireActual('fs') as typeof import('fs')
+      const path = jest.requireActual('path') as typeof import('path')
+      for (const route of ['cli/execute', 'commands/run', 'nself', 'ws/terminal']) {
+        const file = path.join(__dirname, '../../app/api', route, 'route.ts')
+        expect(fs.readFileSync(file, 'utf8')).toContain('canonicalizeArgs(')
+      }
+    })
+
     it('names no relocated root in the allowlists', () => {
       const { ALLOWED_COMMANDS, STREAM_COMMANDS } = require('../nselfCanon')
-      const moved = ['service', 'secrets', 'urls', 'health', 'plugin', 'dev']
+      const moved = [
+        'service',
+        'secrets',
+        'urls',
+        'health',
+        'plugin',
+        'dev',
+        'env',
+        'trust',
+        'server',
+        'migrate',
+      ]
       for (const root of moved) {
         expect(ALLOWED_COMMANDS).not.toContain(root)
         expect(STREAM_COMMANDS).not.toContain(root)

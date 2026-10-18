@@ -8,8 +8,10 @@
  * dynamically (workflow steps, `nself service ...` text) are rewritten here
  * before the exec, so no shim warning reaches a response.
  *
- * Only roots that the helpers accepted before v1.5 appear in CANON_MOVES;
- * scripts/cli-compat.sh proves each target exists and is not itself a shim.
+ * CANON_MOVES holds the roots admin builds or passes through (the helpers and
+ * the routes that run a user-chosen command: cli/execute, commands/run,
+ * nself, ws/terminal). scripts/cli-compat.sh proves the canonical targets exist
+ * and are not shims, and that those routes call canonicalizeArgs.
  *
  * Reusable by: nselfCLI.ts (executeNselfCommand, streamNselfCommand).
  */
@@ -82,6 +84,18 @@ export const STREAM_COMMANDS: readonly string[] = [
   'metrics',
 ]
 
+/** `migrate <sub>` was retired into db and update project (Command-Canon.md). */
+const MIGRATE_UPDATE_PROJECT = ['detect', 'from-bash', 'from-v099', 'rollback', 'run']
+const MIGRATE_DB_IMPORT = [
+  'appwrite',
+  'firebase',
+  'hasura-cloud',
+  'nhost',
+  'nself',
+  'postgres',
+  'supabase',
+]
+
 const PLUGIN_DEV_SUBCOMMANDS = ['debug', 'dev', 'init', 'link', 'new', 'test', 'unlink']
 
 /** Old root -> rewrite of that root's argv, from the cli canon table. */
@@ -89,6 +103,18 @@ const CANON_MOVES: Record<string, (args: string[]) => NselfArgv> = {
   service: (args) => ({ command: 'config', args: ['services', ...args] }),
   secrets: (args) => ({ command: 'config', args: ['secrets', ...args] }),
   dev: (args) => ({ command: 'start', args: ['dev', ...args] }),
+  env: (args) => ({ command: 'config', args: ['env', ...args] }),
+  trust: (args) => ({ command: 'config', args: ['trust', ...args] }),
+  server: (args) => ({ command: 'infra', args: ['server', ...args] }),
+  migrate: (args) => {
+    const sub = args[0]
+    if (sub !== undefined && MIGRATE_UPDATE_PROJECT.includes(sub))
+      return { command: 'update', args: ['project', ...args] }
+    if (sub !== undefined && MIGRATE_DB_IMPORT.includes(sub))
+      return { command: 'db', args: ['import', ...args] }
+    if (sub === 'generate' || sub === 'watch') return { command: 'db', args: ['migrate', ...args] }
+    return { command: 'db', args }
+  },
   urls: (args) => ({ command: 'status', args: ['urls', ...args] }),
   health: (args) => ({ command: 'status', args: ['health', ...args] }),
   plugin: (args) => {
@@ -108,4 +134,12 @@ export function canonicalizeArgv(command: string, args: string[] = []): NselfArg
     ? CANON_MOVES[command]
     : undefined
   return move ? move(args) : { command, args }
+}
+
+/** canonicalizeArgv for a whole argv ([command, ...args]); an empty argv is returned as is. */
+export function canonicalizeArgs(argv: string[]): string[] {
+  const [command, ...args] = argv
+  if (command === undefined) return argv
+  const out = canonicalizeArgv(command, args)
+  return [out.command, ...out.args]
 }

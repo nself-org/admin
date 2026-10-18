@@ -11,7 +11,7 @@ export async function POST(request: NextRequest, context: { params: Promise<{ na
     return NextResponse.json({ error: 'Invalid plugin name.' }, { status: 400 })
   }
   try {
-    const result = await executeNselfCommand('plugin', ['uninstall', name])
+    const result = await executeNselfCommand('config', ['plugins', 'uninstall', name])
     if (!result.success) {
       return NextResponse.json(
         {

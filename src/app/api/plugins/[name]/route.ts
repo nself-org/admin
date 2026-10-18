@@ -35,11 +35,14 @@ export async function GET(request: NextRequest, context: RouteContext): Promise<
     const projectPath = getProjectPath()
     const nselfPath = await findNselfPath()
 
-    const { stdout, stderr } = await execAsync(`${nselfPath} plugin status ${name} --json`, {
-      cwd: projectPath,
-      env: { ...process.env, PATH: getEnhancedPath() },
-      timeout: 30000,
-    })
+    const { stdout, stderr } = await execAsync(
+      `${nselfPath} config plugins status ${name} --json`,
+      {
+        cwd: projectPath,
+        env: { ...process.env, PATH: getEnhancedPath() },
+        timeout: 30000,
+      }
+    )
 
     if (stderr && !stdout) {
       logger.warn('Plugin status returned stderr', { name, stderr })
@@ -106,7 +109,7 @@ export async function DELETE(request: NextRequest, context: RouteContext): Promi
 
     logger.info('Removing plugin', { name })
 
-    const { stdout, stderr } = await execAsync(`${nselfPath} plugin remove ${name}`, {
+    const { stdout, stderr } = await execAsync(`${nselfPath} remove ${name}`, {
       cwd: projectPath,
       env: { ...process.env, PATH: getEnhancedPath() },
       timeout: 60000,

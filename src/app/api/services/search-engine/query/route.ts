@@ -21,7 +21,12 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       )
     }
 
-    const result = await executeNselfCommand('service', ['search', 'query', `--q=${query.trim()}`])
+    const result = await executeNselfCommand('config', [
+      'services',
+      'search',
+      'query',
+      `--q=${query.trim()}`,
+    ])
 
     if (!result.success) {
       return NextResponse.json(

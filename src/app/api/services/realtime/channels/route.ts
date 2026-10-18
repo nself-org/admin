@@ -7,7 +7,7 @@ import { NextResponse } from 'next/server'
  */
 export async function GET(): Promise<NextResponse> {
   try {
-    const result = await executeNselfCommand('service', ['realtime', 'channels'])
+    const result = await executeNselfCommand('config', ['services', 'realtime', 'channels'])
 
     if (!result.success) {
       return NextResponse.json(

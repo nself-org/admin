@@ -58,7 +58,7 @@ export async function GET(_request: NextRequest): Promise<NextResponse> {
       const projectPath = getProjectPath()
       const nselfPath = await findNselfPath()
 
-      const { stdout } = await execAsync(`${nselfPath} plugin list --available --json`, {
+      const { stdout } = await execAsync(`${nselfPath} config plugins list --available --json`, {
         cwd: projectPath,
         env: { ...process.env, PATH: getEnhancedPath() },
         timeout: 30000,

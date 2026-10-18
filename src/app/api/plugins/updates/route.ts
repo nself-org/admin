@@ -96,7 +96,7 @@ async function fetchInstalled(): Promise<InstalledPlugin[]> {
   try {
     const projectPath = getProjectPath()
     const nselfPath = await findNselfPath()
-    const { stdout } = await execAsync(`${nselfPath} plugin list --installed --json`, {
+    const { stdout } = await execAsync(`${nselfPath} config plugins list --installed --json`, {
       cwd: projectPath,
       env: { ...process.env, PATH: getEnhancedPath() },
       timeout: 30000,

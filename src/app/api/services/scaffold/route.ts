@@ -108,7 +108,8 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       )
     }
 
-    const result = await executeNselfCommand('service', [
+    const result = await executeNselfCommand('config', [
+      'services',
       'scaffold',
       `--template=${template.toLowerCase()}`,
       `--name=${name}`,
@@ -151,7 +152,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
  */
 export async function GET(): Promise<NextResponse> {
   try {
-    const result = await executeNselfCommand('service', ['scaffold', '--list'])
+    const result = await executeNselfCommand('config', ['services', 'scaffold', '--list'])
 
     if (!result.success) {
       return NextResponse.json(

@@ -179,10 +179,10 @@ describe('POST /api/deployment/environments — valid payloads', () => {
     const req = makeRequest({ action: 'list' })
     const response = await POST(req)
     expect(response.status).toBe(200)
-    // execFile first arg = 'nself', second = ['env', 'list', ...]
+    // execFile first arg = 'nself', second = ['config', 'env', 'list', ...]
     expect(mockExecFile).toHaveBeenCalledWith(
       'nself',
-      ['env', 'list'],
+      ['config', 'env', 'list'],
       expect.objectContaining({ cwd: '/tmp/test-project' }),
       expect.any(Function)
     )
@@ -193,7 +193,7 @@ describe('POST /api/deployment/environments — valid payloads', () => {
     await POST(req)
     expect(mockExecFile).toHaveBeenCalledWith(
       'nself',
-      ['env', 'create', '--', 'staging'],
+      ['config', 'env', 'create', '--', 'staging'],
       expect.any(Object),
       expect.any(Function)
     )
@@ -204,7 +204,7 @@ describe('POST /api/deployment/environments — valid payloads', () => {
     await POST(req)
     expect(mockExecFile).toHaveBeenCalledWith(
       'nself',
-      ['env', 'delete', '--', 'staging', '--force'],
+      ['config', 'env', 'delete', '--', 'staging', '--force'],
       expect.any(Object),
       expect.any(Function)
     )
@@ -219,7 +219,7 @@ describe('POST /api/deployment/environments — valid payloads', () => {
     await POST(req)
     expect(mockExecFile).toHaveBeenCalledWith(
       'nself',
-      ['env', 'diff', '--', 'staging', 'prod'],
+      ['config', 'env', 'diff', '--', 'staging', 'prod'],
       expect.any(Object),
       expect.any(Function)
     )
@@ -235,7 +235,7 @@ describe('POST /api/deployment/environments — valid payloads', () => {
     // Correct POSIX order: option flags before '--', user-controlled positional after '--'
     expect(mockExecFile).toHaveBeenCalledWith(
       'nself',
-      ['env', 'create', '--template', 'minimal', '--', 'myenv'],
+      ['config', 'env', 'create', '--template', 'minimal', '--', 'myenv'],
       expect.any(Object),
       expect.any(Function)
     )
@@ -249,6 +249,6 @@ describe('POST /api/deployment/environments — valid payloads', () => {
     })
     await POST(req)
     const [, argv] = mockExecFile.mock.calls[0] as [string, string[]]
-    expect(argv).toEqual(['env', 'create', '--template', 'minimal', '--', 'myenv'])
+    expect(argv).toEqual(['config', 'env', 'create', '--template', 'minimal', '--', 'myenv'])
   })
 })

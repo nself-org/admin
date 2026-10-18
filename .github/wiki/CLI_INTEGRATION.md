@@ -292,6 +292,34 @@ npm test
 3. Make changes and test
 4. Submit pull request
 
+## Compatibility with cli v1.5
+
+Admin ships in lockstep with the cli (release train P7-SHIP-06): **admin 1.5.x needs cli 1.5.x**. Admin 1.5 builds its argv with the canonical spellings of the v1.5 command canon (cli wiki: `Command-Canon.md`), which a cli 1.4 does not know.
+
+| What admin does | Where |
+|---|---|
+| Every child process gets `NSELF_JSON_LEGACY=1` (the caller can override it), so the JSON admin parses keeps the bare cli 1.4 shape instead of the v1 envelope. | `getNselfChildEnv` and `ensureLegacyJsonEnv` in `src/lib/nself-path.ts`; `next.config.mjs` sets the process default |
+| `NSELF_BIN` names the binary to run, ahead of `NSELF_CLI_PATH` and discovery. A path that does not exist is ignored with a warning. | `getNselfBinOverride` in `src/lib/nself-path.ts` |
+| Relocated commands use the canonical spelling: `service` is `config services`, `secrets` is `config secrets`, `env` is `config env`, `urls` is `status urls`, `health` is `status health`, `trust` is `config trust`, `plugin install\|remove` is `add\|remove`, other `plugin` commands are `config plugins`, `plugin test` is `plugin-dev test`. | call sites under `src/` |
+| `executeNselfCommand` and `streamNselfCommand` rewrite an old root passed by a dynamic caller (a workflow step, a typed command) to the canonical argv before the exec. | `src/lib/nselfCanon.ts` |
+| `functions` and `plugin-dev` are plugin commands; the cli installs them on first use (auto-add). | allowlist in `src/lib/nselfCanon.ts` |
+
+### The compat check
+
+```bash
+NSELF_BIN=/path/to/nself NSELF_V15=1 bash scripts/cli-compat.sh   # v1.5 mode
+NSELF_BIN=/path/to/nself bash scripts/cli-compat.sh               # v1.4 mode
+```
+
+`scripts/cli-compat.sh` needs bash, perl and jq. It writes the sorted argv prefixes admin builds to `scripts/cli-argv-inventory.txt` (commit the file; CI-style check: `git diff --exit-code scripts/cli-argv-inventory.txt` after a run). It then fails when
+
+- a prefix starts with an old spelling that cli v1.5 keeps only as a deprecated shim (read from `nself help --json`), or
+- the longest prefix that is a cli command exits non-zero on `--help` or prints a `moved to` warning.
+
+A prefix whose full path is not a cli command is printed as `UNKNOWN`. That is admin calling something the cli does not have (`tenant`, `auth`, `perf`, `bench`, `ssl`, ...), or a v1.5 spelling when the binary runs in v1.4 mode. UNKNOWN is a report, not a failure. The pre-existing drift is tracked in `hq/quality/debt.yaml`.
+
+The check never installs a plugin and never reaches the network: it runs with `NSELF_NO_AUTO_ADD=1` and an empty `HOME`.
+
 ## Support
 
 - GitHub Issues: https://github.com/nself-org/admin/issues

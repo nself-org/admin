@@ -118,7 +118,7 @@ export async function POST(request: NextRequest, context: RouteContext): Promise
 
     logger.info('Installing plugin', { name, pro: isPro })
 
-    const { stdout, stderr } = await execFileAsync(nselfPath, ['plugin', 'install', name], {
+    const { stdout, stderr } = await execFileAsync(nselfPath, ['add', name], {
       cwd: projectPath,
       env: { ...process.env, PATH: getEnhancedPath() },
       timeout: 120000,
@@ -167,7 +167,7 @@ export async function DELETE(request: NextRequest, context: RouteContext): Promi
 
     logger.info('Removing plugin', { name })
 
-    const { stdout, stderr } = await execFileAsync(nselfPath, ['plugin', 'remove', name], {
+    const { stdout, stderr } = await execFileAsync(nselfPath, ['remove', name], {
       cwd: projectPath,
       env: { ...process.env, PATH: getEnhancedPath() },
       timeout: 60000,

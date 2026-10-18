@@ -35,7 +35,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       )
     }
 
-    const result = await executeNselfCommand('service', ['init', `--name=${name}`])
+    const result = await executeNselfCommand('config', ['services', 'init', `--name=${name}`])
 
     if (!result.success) {
       return NextResponse.json(

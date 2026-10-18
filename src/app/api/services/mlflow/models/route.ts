@@ -7,7 +7,7 @@ import { NextResponse } from 'next/server'
  */
 export async function GET(): Promise<NextResponse> {
   try {
-    const result = await executeNselfCommand('service', ['mlflow', 'models'])
+    const result = await executeNselfCommand('config', ['services', 'mlflow', 'models'])
 
     if (!result.success) {
       return NextResponse.json(

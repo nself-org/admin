@@ -37,7 +37,7 @@ export async function GET(): Promise<NextResponse> {
   try {
     // Parallel: fetch URLs (routes) + SSL status.
     const [urlsRaw, sslRaw] = await Promise.allSettled([
-      runCLI(['urls', '--json']),
+      runCLI(['status', 'urls', '--json']),
       runCLI(['ssl', 'status', '--json']),
     ])
 

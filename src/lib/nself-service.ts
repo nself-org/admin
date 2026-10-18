@@ -20,7 +20,7 @@ export async function execNselfService(serviceCommand: string): Promise<NselfSer
     const projectPath = getProjectPath()
     const enhancedPath = getEnhancedPath()
 
-    const { stdout, stderr } = await execAsync(`${nselfPath} service ${serviceCommand}`, {
+    const { stdout, stderr } = await execAsync(`${nselfPath} config services ${serviceCommand}`, {
       cwd: projectPath,
       env: {
         ...process.env,

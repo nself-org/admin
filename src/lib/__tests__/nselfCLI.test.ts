@@ -27,10 +27,14 @@ jest.mock('util', () => ({
 }))
 
 // Mock nself-path to return a known path
-jest.mock('../nself-path', () => ({
-  findNselfPathSync: jest.fn(() => '/usr/local/bin/nself'),
-  getEnhancedPath: jest.fn(() => '/usr/local/bin:/usr/bin'),
-}))
+jest.mock('../nself-path', () => {
+  const actual = jest.requireActual('../nself-path')
+  return {
+    ...actual,
+    findNselfPathSync: jest.fn(() => '/usr/local/bin/nself'),
+    getEnhancedPath: jest.fn(() => '/usr/local/bin:/usr/bin'),
+  }
+})
 
 // Mock paths to return a known project path
 jest.mock('../paths', () => ({
@@ -597,7 +601,7 @@ describe('nself CLI Module', () => {
       expect(result.success).toBe(true)
       expect(mockExecFile).toHaveBeenCalledWith(
         '/usr/local/bin/nself',
-        ['urls'],
+        ['status', 'urls'],
         expect.any(Object)
       )
     })
@@ -607,7 +611,7 @@ describe('nself CLI Module', () => {
       expect(result.success).toBe(true)
       expect(mockExecFile).toHaveBeenCalledWith(
         '/usr/local/bin/nself',
-        ['urls', '--format', 'json'],
+        ['status', 'urls', '--format', 'json'],
         expect.any(Object)
       )
     })
@@ -617,7 +621,7 @@ describe('nself CLI Module', () => {
       expect(result.success).toBe(true)
       expect(mockExecFile).toHaveBeenCalledWith(
         '/usr/local/bin/nself',
-        ['secrets', 'generate'],
+        ['config', 'secrets', 'generate'],
         expect.any(Object)
       )
     })
@@ -627,7 +631,7 @@ describe('nself CLI Module', () => {
       expect(result.success).toBe(true)
       expect(mockExecFile).toHaveBeenCalledWith(
         '/usr/local/bin/nself',
-        ['secrets', 'rotate', 'postgres'],
+        ['config', 'secrets', 'rotate', 'postgres'],
         expect.any(Object)
       )
     })
@@ -667,7 +671,7 @@ describe('nself CLI Module', () => {
       expect(result.success).toBe(true)
       expect(mockExecFile).toHaveBeenCalledWith(
         '/usr/local/bin/nself',
-        ['health', '--all'],
+        ['status', 'health', '--all'],
         expect.any(Object)
       )
     })
@@ -677,7 +681,7 @@ describe('nself CLI Module', () => {
       expect(result.success).toBe(true)
       expect(mockExecFile).toHaveBeenCalledWith(
         '/usr/local/bin/nself',
-        ['health', 'postgres'],
+        ['status', 'health', 'postgres'],
         expect.any(Object)
       )
     })
@@ -803,5 +807,122 @@ describe('nself CLI Module', () => {
         expect.any(Object)
       )
     })
+  })
+
+  describe('cli v1.5 compatibility (P7-CANON-20)', () => {
+    const execArgs = () => mockExecFile.mock.calls[mockExecFile.mock.calls.length - 1]
+
+    it('passes NSELF_JSON_LEGACY=1 in the child env', async () => {
+      delete process.env.NSELF_JSON_LEGACY
+      await nselfCLI.executeNselfCommand('status')
+      expect(execArgs()[2].env.NSELF_JSON_LEGACY).toBe('1')
+    })
+
+    it('lets the caller override NSELF_JSON_LEGACY and keeps custom env', async () => {
+      await nselfCLI.executeNselfCommand('status', [], {
+        env: { NSELF_JSON_LEGACY: '0', CUSTOM_VAR: 'value' },
+      })
+      expect(execArgs()[2].env).toEqual(
+        expect.objectContaining({ NSELF_JSON_LEGACY: '0', CUSTOM_VAR: 'value' })
+      )
+    })
+
+    it('passes NSELF_JSON_LEGACY=1 to streamed commands', () => {
+      const { spawn } = require('child_process')
+      spawn.mockClear()
+      nselfCLI.streamNselfCommand('logs', [], () => {})
+      expect(spawn.mock.calls[0][2].env.NSELF_JSON_LEGACY).toBe('1')
+    })
+
+    it.each([
+      ['service', ['ps', 'redis'], 'config', ['services', 'ps', 'redis']],
+      ['secrets', ['list'], 'config', ['secrets', 'list']],
+      ['urls', ['--json'], 'status', ['urls', '--json']],
+      ['health', ['api'], 'status', ['health', 'api']],
+      ['dev', [], 'start', ['dev']],
+      ['plugin', ['list', '--json'], 'config', ['plugins', 'list', '--json']],
+      ['plugin', ['status', 'stripe'], 'config', ['plugins', 'status', 'stripe']],
+      ['plugin', ['test', 'stripe'], 'plugin-dev', ['test', 'stripe']],
+      ['plugin', ['install', 'stripe'], 'add', ['stripe']],
+      ['plugin', ['remove', 'stripe'], 'remove', ['stripe']],
+    ])('rewrites old spelling %s %j to the canonical argv', async (cmd, args, want, wantArgs) => {
+      await nselfCLI.executeNselfCommand(cmd, args)
+      expect(mockExecFile).toHaveBeenCalledWith(
+        '/usr/local/bin/nself',
+        [want, ...wantArgs],
+        expect.any(Object)
+      )
+    })
+
+    it('accepts the canonical plugin commands add, remove and functions', async () => {
+      for (const cmd of ['add', 'remove', 'functions']) {
+        const result = await nselfCLI.executeNselfCommand(cmd, ['x'])
+        expect(result.success).toBe(true)
+      }
+    })
+
+    it('rewrites streamed health to status health', () => {
+      const { spawn } = require('child_process')
+      spawn.mockClear()
+      nselfCLI.streamNselfCommand('health', ['--all'], () => {})
+      expect(spawn.mock.calls[0][1]).toEqual(['status', 'health', '--all'])
+    })
+
+    it('names no relocated root in the allowlists', () => {
+      const { ALLOWED_COMMANDS, STREAM_COMMANDS } = require('../nselfCanon')
+      const moved = ['service', 'secrets', 'urls', 'health', 'plugin', 'dev']
+      for (const root of moved) {
+        expect(ALLOWED_COMMANDS).not.toContain(root)
+        expect(STREAM_COMMANDS).not.toContain(root)
+      }
+    })
+  })
+})
+
+describe('nself-path NSELF_BIN seam (P7-CANON-20)', () => {
+  const actual = jest.requireActual('../nself-path') as typeof import('../nself-path')
+  const saved = process.env.NSELF_BIN
+
+  // jest.setup.js stubs fs.existsSync to true; only this file exists here.
+  const existsSync = require('fs').existsSync as jest.Mock
+
+  beforeEach(() => {
+    existsSync.mockImplementation((p: string) => p === __filename)
+    jest.spyOn(console, 'warn').mockImplementation(() => {})
+  })
+
+  afterEach(() => {
+    jest.restoreAllMocks()
+    existsSync.mockImplementation(() => true)
+    if (saved === undefined) delete process.env.NSELF_BIN
+    else process.env.NSELF_BIN = saved
+  })
+
+  it('honours NSELF_BIN before discovery, async and sync', async () => {
+    process.env.NSELF_BIN = __filename
+    expect(await actual.findNselfPath()).toBe(__filename)
+    expect(actual.findNselfPathSync()).toBe(__filename)
+  })
+
+  it('re-reads NSELF_BIN on every sync call (not cached)', () => {
+    process.env.NSELF_BIN = __filename
+    expect(actual.findNselfPathSync()).toBe(__filename)
+    process.env.NSELF_BIN = `${__filename}.missing`
+    expect(actual.findNselfPathSync()).not.toBe(`${__filename}.missing`)
+  })
+
+  it('ignores an NSELF_BIN that does not exist, with a warning', () => {
+    const warn = jest.spyOn(console, 'warn')
+    process.env.NSELF_BIN = `${__filename}.missing`
+    expect(actual.getNselfBinOverride()).toBeNull()
+    expect(warn).toHaveBeenCalledWith(
+      expect.stringContaining('NSELF_BIN is set but does not exist')
+    )
+  })
+
+  it('getNselfChildEnv sets NSELF_JSON_LEGACY=1 and lets extras win', () => {
+    delete process.env.NSELF_JSON_LEGACY
+    expect(actual.getNselfChildEnv().NSELF_JSON_LEGACY).toBe('1')
+    expect(actual.getNselfChildEnv({ NSELF_JSON_LEGACY: '0' }).NSELF_JSON_LEGACY).toBe('0')
   })
 })

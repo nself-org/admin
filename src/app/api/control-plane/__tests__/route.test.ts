@@ -162,7 +162,7 @@ describe('GET /api/control-plane', () => {
     // execFileCustom is what the route actually invokes (no callback arg).
     expect(mockExecFileCustom).toHaveBeenCalledWith(
       'nself',
-      expect.arrayContaining(['env', 'target', 'probe', '--json']),
+      expect.arrayContaining(['config', 'env', 'target', 'probe', '--json']),
       expect.any(Object)
     )
   })
@@ -244,7 +244,7 @@ describe('POST /api/control-plane — add', () => {
     // Verify CLI args via the promisified mock (execFileCustom — no callback arg).
     expect(mockExecFileCustom).toHaveBeenCalledWith(
       'nself',
-      ['env', 'target', 'add', 'prod', '--host', '5.5.5.5', '--role', 'primary'],
+      ['config', 'env', 'target', 'add', 'prod', '--host', '5.5.5.5', '--role', 'primary'],
       expect.any(Object)
     )
   })
@@ -266,6 +266,7 @@ describe('POST /api/control-plane — add', () => {
     expect(mockExecFileCustom).toHaveBeenCalledWith(
       'nself',
       [
+        'config',
         'env',
         'target',
         'add',
@@ -342,7 +343,7 @@ describe('POST /api/control-plane — remove', () => {
     expect(json.action).toBe('remove')
     expect(mockExecFileCustom).toHaveBeenCalledWith(
       'nself',
-      ['env', 'target', 'remove', 'prod'],
+      ['config', 'env', 'target', 'remove', 'prod'],
       expect.any(Object)
     )
   })

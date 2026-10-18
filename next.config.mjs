@@ -1,6 +1,12 @@
 import withBundleAnalyzer from '@next/bundle-analyzer'
 import createNextIntlPlugin from 'next-intl/plugin'
 
+// cli 1.5 prints the v1 JSON envelope by default; admin parses the bare cli 1.4
+// shape. Set once here so every route that runs `nself` inherits it, including
+// the ones that spawn a bare `nself` and never call findNselfPath (P7-CANON-20).
+// An explicit NSELF_JSON_LEGACY in the environment wins.
+process.env.NSELF_JSON_LEGACY ??= '1'
+
 const bundleAnalyzer = withBundleAnalyzer({
   enabled: process.env.ANALYZE === 'true',
 })

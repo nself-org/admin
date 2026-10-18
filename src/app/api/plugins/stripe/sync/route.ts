@@ -29,7 +29,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     }
 
     // Delegate sync to the nSelf CLI plugin system
-    const result = await executeNselfCommand('plugin', ['stripe', 'sync'])
+    const result = await executeNselfCommand('config', ['plugins', 'stripe', 'sync'])
 
     if (!result.success) {
       logger.error('Stripe sync failed', { error: result.error })

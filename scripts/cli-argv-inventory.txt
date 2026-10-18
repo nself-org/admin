@@ -1,0 +1,204 @@
+add
+apply
+audit
+auth devices list
+auth devices register
+auth devices revoke
+auth devices trust
+auth mfa backup-codes
+auth mfa disable
+auth mfa enable
+auth mfa reset
+auth mfa verify
+auth oauth config
+auth oauth disable
+auth oauth enable
+auth oauth install
+auth oauth list
+auth oauth status
+auth oauth test
+auth rate-limit config
+auth rate-limit reset
+auth rate-limit status
+auth security audit
+auth security report
+auth security scan
+auth webhooks create
+auth webhooks delete
+auth webhooks list
+auth webhooks logs
+auth webhooks show
+auth webhooks test
+backup
+backup create
+backup list
+backup restore
+backup schedule
+bench baseline
+bench compare
+bench run
+bench stress
+build
+claw import
+cloud server create
+cloud server destroy
+cloud server status
+config
+config env
+config env diff
+config env list
+config env target
+config export
+config import
+config plugins
+config plugins disable
+config plugins list
+config plugins logs
+config plugins status
+config plugins stripe
+config plugins uninstall
+config plugins update
+config secrets
+config secrets delete
+config secrets get
+config secrets list
+config secrets rotate
+config secrets set
+config services
+config services admin
+config services cache
+config services email
+config services functions
+config services init
+config services mlflow
+config services realtime
+config services scaffold
+config services search
+config services storage
+config sync
+config trust status
+config validate
+config vault config
+config vault init
+config vault status
+db analyze
+db backup
+db backup list
+db list
+db migrate
+db query
+db reset
+db restore
+db seed
+db stats
+db status
+db sync
+db table-data
+db tables
+deploy
+deploy blue-green status
+deploy canary status
+deploy environments
+deploy environments configure
+deploy environments diff
+deploy preview destroy
+deploy preview list
+deploy production
+deploy staging
+deploy status
+doctor
+export
+frontend get
+frontend list
+frontend remove
+functions delete
+functions deploy
+functions invoke
+functions list
+functions logs
+helm install
+helm repos list
+help
+init
+k8s clusters
+k8s logs
+k8s namespaces
+k8s namespaces delete
+k8s namespaces get
+k8s status
+logs
+monitor
+monitor alerts rules
+perf analyze
+perf profile
+perf report
+perf slow-queries
+perf suggest
+plugin-dev test transactional-email
+prod status
+remove
+reset
+restart
+restore
+scale
+scale auto status
+scale status
+ssl generate
+ssl letsencrypt
+ssl provision
+ssl renew
+ssl revoke
+ssl status
+ssl trust
+staging
+staging status
+start
+status
+status health
+status urls
+stop
+sync status
+tenant activate
+tenant branding colors
+tenant branding logo
+tenant branding preview
+tenant branding reset
+tenant branding show
+tenant create
+tenant delete
+tenant domain add
+tenant domain list
+tenant domain primary
+tenant domain remove
+tenant domain show
+tenant domain verify
+tenant email edit
+tenant email list
+tenant email show
+tenant list
+tenant member add
+tenant member list
+tenant member remove
+tenant member resend-invite
+tenant member show
+tenant member update
+tenant org create
+tenant org delete
+tenant org list
+tenant org member
+tenant org permission
+tenant org role
+tenant org show
+tenant org team
+tenant org update
+tenant settings list
+tenant settings set
+tenant show
+tenant stats
+tenant suspend
+tenant theme apply
+tenant theme customize
+tenant theme list
+tenant update
+update
+version

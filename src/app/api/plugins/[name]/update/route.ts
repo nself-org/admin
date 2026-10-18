@@ -38,11 +38,15 @@ export async function POST(request: NextRequest, context: RouteContext): Promise
 
     logger.info('Updating plugin', { name })
 
-    const { stdout, stderr } = await execFileAsync(nselfPath, ['plugin', 'update', name], {
-      cwd: projectPath,
-      env: { ...process.env, PATH: getEnhancedPath() },
-      timeout: 120000, // 2 minute timeout for update operations
-    })
+    const { stdout, stderr } = await execFileAsync(
+      nselfPath,
+      ['config', 'plugins', 'update', name],
+      {
+        cwd: projectPath,
+        env: { ...process.env, PATH: getEnhancedPath() },
+        timeout: 120000, // 2 minute timeout for update operations
+      }
+    )
 
     logger.cli(`plugin update ${name}`, true, Date.now() - startTime)
     logger.api('POST', `/api/plugins/${name}/update`, 200, Date.now() - startTime)

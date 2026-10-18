@@ -45,7 +45,7 @@ export async function GET(): Promise<NextResponse> {
     const nselfCommand = await findNselfPath()
     const projectPath = await getProjectPath()
 
-    const { stdout, stderr } = await execAsync(`${nselfCommand} urls --json`, {
+    const { stdout, stderr } = await execAsync(`${nselfCommand} status urls --json`, {
       cwd: projectPath,
       env: { ...process.env, PATH: getEnhancedPath() },
       timeout: 10000,

@@ -95,13 +95,14 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   let args: string[]
   switch (action) {
     case 'list':
-      args = ['env', 'list']
+      args = ['config', 'env', 'list']
       break
 
     case 'create': {
       // Flag arguments (--template) must precede the '--' end-of-options separator.
       // User-controlled positionals come after '--' so they cannot be misinterpreted as flags.
       args = [
+        'config',
         'env',
         'create',
         ...(options.template ? ['--template', options.template] : []),
@@ -112,14 +113,14 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     }
 
     case 'delete':
-      args = ['env', 'delete', '--', environment as string]
+      args = ['config', 'env', 'delete', '--', environment as string]
       if (options.force) {
         args.push('--force')
       }
       break
 
     case 'diff':
-      args = ['env', 'diff', '--', environment as string, options.compare as string]
+      args = ['config', 'env', 'diff', '--', environment as string, options.compare as string]
       break
   }
 

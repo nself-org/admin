@@ -25,7 +25,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     const projectPath = getProjectPath()
     const nselfPath = await findNselfPath()
 
-    const { stdout, stderr } = await execAsync(`${nselfPath} plugin list --json`, {
+    const { stdout, stderr } = await execAsync(`${nselfPath} config plugins list --json`, {
       cwd: projectPath,
       env: { ...process.env, PATH: getEnhancedPath() },
       timeout: 30000,
@@ -104,7 +104,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
     // Build install command with optional version
     const versionSuffix = version ? `@${version}` : ''
-    const command = `${nselfPath} plugin install ${name}${versionSuffix}`
+    const command = `${nselfPath} add ${name}${versionSuffix}`
 
     logger.info('Installing plugin', { name, version })
 

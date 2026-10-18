@@ -1,4 +1,5 @@
 import { getEnhancedPath } from '@/lib/nself-path'
+import { canonicalizeArgs } from '@/lib/nselfCanon'
 import { getProjectPath } from '@/lib/paths'
 import { requireAuth } from '@/lib/require-auth'
 import { execFile } from 'child_process'
@@ -228,7 +229,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       // Pass command and args separately, use cwd option instead of cd
       const { stdout, stderr } = await execFileAsync(
         cmdArgs[0] ?? 'nself', // 'nself'
-        cmdArgs.slice(1), // remaining args
+        canonicalizeArgs(cmdArgs.slice(1)), // remaining args, old roots made canonical
         {
           cwd: backendPath,
           env: {

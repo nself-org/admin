@@ -23,7 +23,11 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       return NextResponse.json({ success: false, error: 'Invalid search query' }, { status: 400 })
     }
 
-    const result = await executeNselfCommand('service', ['search', `--query=${sanitized}`])
+    const result = await executeNselfCommand('config', [
+      'services',
+      'search',
+      `--query=${sanitized}`,
+    ])
 
     if (!result.success) {
       return NextResponse.json(

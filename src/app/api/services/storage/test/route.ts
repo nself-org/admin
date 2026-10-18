@@ -25,7 +25,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       args.push(`--bucket=${bucket}`)
     }
 
-    const result = await executeNselfCommand('service', args)
+    const result = await executeNselfCommand('config', ['services', ...args])
 
     if (!result.success) {
       return NextResponse.json(

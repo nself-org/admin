@@ -56,7 +56,7 @@ function buildExecEnv(): NodeJS.ProcessEnv {
  */
 async function runEnvCommand(args: string[]): Promise<string> {
   try {
-    const { stdout } = await execFileAsync('nself', ['env', ...args], {
+    const { stdout } = await execFileAsync('nself', ['config', 'env', ...args], {
       env: buildExecEnv(),
       timeout: CLI_TIMEOUT_MS,
     })

@@ -151,7 +151,17 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
     const role = conn.mode === 'production' ? 'production' : 'staging'
 
-    const execArgs = ['env', 'target', 'add', safeName, '--host', conn.host, '--role', role]
+    const execArgs = [
+      'config',
+      'env',
+      'target',
+      'add',
+      safeName,
+      '--host',
+      conn.host,
+      '--role',
+      role,
+    ]
     if (conn.sshUser && validateSafeArg(conn.sshUser)) {
       execArgs.push('--ssh-user', conn.sshUser)
     }

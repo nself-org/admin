@@ -127,7 +127,7 @@ export async function GET(): Promise<NextResponse> {
 
     // Also try nself env list command
     try {
-      const { stdout } = await execFileAsync('nself', ['env', 'list'], {
+      const { stdout } = await execFileAsync('nself', ['config', 'env', 'list'], {
         cwd: projectPath,
         env: { ...process.env, PATH: getEnhancedPath() },
         timeout: 10000,
@@ -182,7 +182,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       return NextResponse.json({ success: false, error: 'Invalid template name' }, { status: 400 })
     }
 
-    const execArgs: string[] = ['env']
+    const execArgs: string[] = ['config', 'env']
 
     switch (action) {
       case 'create': {

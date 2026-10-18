@@ -7,7 +7,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   if (authError) return authError
 
   try {
-    const result = await executeNselfCommand('service', ['cache', 'flush'])
+    const result = await executeNselfCommand('config', ['services', 'cache', 'flush'])
 
     if (!result.success) {
       return NextResponse.json(

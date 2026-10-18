@@ -6,6 +6,49 @@ import { promisify } from 'util'
 const execAsync = promisify(exec)
 
 /**
+ * NSELF_BIN: absolute path of the nself binary to run, ahead of all discovery.
+ * The cli compat check (scripts/cli-compat.sh) and tests point it at a build of
+ * cli main. A value that does not exist on disk is ignored with a warning, so a
+ * typo never silently runs a different binary than the one named.
+ */
+export function getNselfBinOverride(): string | null {
+  const bin = process.env.NSELF_BIN
+  if (!bin) return null
+  if (fs.existsSync(bin)) return bin
+  console.warn(`NSELF_BIN is set but does not exist (${bin}); falling back to discovery`)
+  return null
+}
+
+/**
+ * Admin parses the pre-envelope JSON of cli 1.4 everywhere. From cli 1.5 the
+ * default `--json` shape is the v1 envelope; NSELF_JSON_LEGACY=1 keeps the bare
+ * shape for one minor release. Setting it once on the process reaches the
+ * helpers in nselfCLI.ts and every route that spawns the binary found by
+ * findNselfPath*, because those inherit process.env. An explicit value (for
+ * example NSELF_JSON_LEGACY=0 in a test of the envelope) is never overwritten.
+ */
+export function ensureLegacyJsonEnv(): void {
+  if (process.env.NSELF_JSON_LEGACY === undefined) {
+    process.env.NSELF_JSON_LEGACY = '1'
+  }
+}
+
+/**
+ * Child environment for an nself invocation: process env, the enhanced PATH,
+ * NSELF_JSON_LEGACY=1 unless set, then the caller's extras (which win).
+ */
+export function getNselfChildEnv(
+  extra: Record<string, string | undefined> = {}
+): NodeJS.ProcessEnv {
+  return {
+    ...process.env,
+    PATH: getEnhancedPath(),
+    NSELF_JSON_LEGACY: process.env.NSELF_JSON_LEGACY ?? '1',
+    ...extra,
+  }
+}
+
+/**
  * Get the nself CLI development path from environment or derive from HOME
  * Supports NSELF_CLI_PATH env var for explicit override
  * Handles both container and local development environments
@@ -49,12 +92,21 @@ function getCommonPaths(): string[] {
 /**
  * Find the nself CLI executable
  * Priority order:
+ * 0. NSELF_BIN environment variable (test and compat-check seam, see getNselfBinOverride)
  * 1. NSELF_CLI_PATH environment variable (explicit override)
  * 2. Development location ($HOME/Sites/nself/bin/nself)
  * 3. Common installation paths (container + system + user)
  * 4. nself in PATH via which — last resort for non-standard installs
  */
 export async function findNselfPath(): Promise<string> {
+  ensureLegacyJsonEnv()
+
+  // 0. NSELF_BIN beats every discovery step
+  const binOverride = getNselfBinOverride()
+  if (binOverride) {
+    return binOverride
+  }
+
   // 1. Check explicit environment variable first
   if (process.env.NSELF_CLI_PATH && fs.existsSync(process.env.NSELF_CLI_PATH)) {
     return process.env.NSELF_CLI_PATH
@@ -106,6 +158,7 @@ let _nselfPathSyncCache: string | null = null
 /**
  * Synchronous version for use in API routes.
  * Priority order (fast static checks first, slow shell lookup last):
+ * 0. NSELF_BIN environment variable (checked before the cache, so it can change between calls)
  * 1. NSELF_CLI_PATH environment variable (explicit override)
  * 2. Development location ($HOME/Sites/nself/bin/nself)
  * 3. Common installation paths (container + system + user)
@@ -115,6 +168,11 @@ let _nselfPathSyncCache: string | null = null
  * blocking execSync entirely, preventing event-loop stalls during E2E tests.
  */
 export function findNselfPathSync(): string {
+  ensureLegacyJsonEnv()
+
+  const binOverride = getNselfBinOverride()
+  if (binOverride) return binOverride
+
   if (_nselfPathSyncCache !== null) return _nselfPathSyncCache
 
   // 1. Check explicit environment variable first

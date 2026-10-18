@@ -1,4 +1,5 @@
 import { findNselfPathSync, getEnhancedPath } from '@/lib/nself-path'
+import { canonicalizeArgs } from '@/lib/nselfCanon'
 import { getProjectPath } from '@/lib/paths'
 import { requireAuth } from '@/lib/require-auth'
 import { execFile } from 'child_process'
@@ -185,7 +186,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
   let result: RunCommandResult
   try {
-    const { stdout, stderr } = await execFileAsync(nselfBin, args, {
+    const { stdout, stderr } = await execFileAsync(nselfBin, canonicalizeArgs(args), {
       cwd,
       env,
       timeout: timeoutMs,

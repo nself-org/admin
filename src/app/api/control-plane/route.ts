@@ -78,7 +78,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     }
 
     // Build args: `nself env target list --json` or `nself env target probe --json`
-    const execArgs = ['env', 'target', action, '--json']
+    const execArgs = ['config', 'env', 'target', action, '--json']
     if (env) {
       execArgs.push('--env', env)
     }
@@ -185,7 +185,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         return NextResponse.json({ success: false, error: 'Invalid sshUser' }, { status: 400 })
       }
 
-      const execArgs = ['env', 'target', 'add', name, '--host', host, '--role', role]
+      const execArgs = ['config', 'env', 'target', 'add', name, '--host', host, '--role', role]
       if (sshUser) execArgs.push('--ssh-user', sshUser)
       if (sshKeyPath) execArgs.push('--ssh-key', sshKeyPath)
 
@@ -211,7 +211,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         )
       }
 
-      const execArgs = ['env', 'target', 'remove', name]
+      const execArgs = ['config', 'env', 'target', 'remove', name]
       const { stdout, stderr } = await runNselfCommand(execArgs, 30000)
 
       return NextResponse.json({

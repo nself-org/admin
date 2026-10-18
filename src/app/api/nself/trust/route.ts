@@ -23,7 +23,7 @@ export async function GET(): Promise<NextResponse> {
     // Run nself trust status — may not exist on all versions; fall back to nself doctor
     let raw = ''
     try {
-      const { stdout, stderr } = await execAsync(`${nselfCommand} trust status`, {
+      const { stdout, stderr } = await execAsync(`${nselfCommand} config trust status`, {
         cwd: projectPath,
         env: { ...process.env, PATH: getEnhancedPath() },
         timeout: 10000,

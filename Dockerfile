@@ -194,6 +194,10 @@ HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
 # Expose port 3021 (reserved for nself-admin, distinct from Loki on 3100)
 EXPOSE 3021
 
+# cli 1.5 prints the v1 JSON envelope by default; admin parses the bare cli 1.4 shape.
+# The standalone server.js does not evaluate next.config.mjs, so set it here (P7-CANON-20).
+ENV NSELF_JSON_LEGACY=1
+
 # Use STOPSIGNAL for proper graceful shutdown
 STOPSIGNAL SIGTERM
 

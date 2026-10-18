@@ -7,7 +7,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   if (authError) return authError
 
   try {
-    const result = await executeNselfCommand('service', ['search', 'index'], {
+    const result = await executeNselfCommand('config', ['services', 'search', 'index'], {
       timeout: 120000,
     })
 

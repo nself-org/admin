@@ -141,7 +141,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
     // Test email action — delegates to CLI plugin test
     if (action === 'test') {
-      const result = await executeNselfCommand('plugin', ['test', 'transactional-email'], {})
+      const result = await executeNselfCommand('plugin-dev', ['test', 'transactional-email'], {})
       return NextResponse.json({
         success: result.success,
         message: result.success ? 'Test email sent successfully' : 'Test email failed',

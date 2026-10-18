@@ -34,7 +34,7 @@ async function getLogsSnapshot(
 
   try {
     const { stdout, stderr } = await execAsync(
-      `${nselfPath} plugin logs ${name} --lines ${lines} --no-follow --no-color`,
+      `${nselfPath} config plugins logs ${name} --lines ${lines} --no-follow --no-color`,
       {
         cwd: projectPath,
         env: { ...process.env, PATH: getEnhancedPath() },
@@ -98,7 +98,7 @@ async function streamLogs(
     start(controller) {
       const child = spawn(
         nselfPath,
-        ['plugin', 'logs', name, '--lines', String(lines), '--follow', '--no-color'],
+        ['config', 'plugins', 'logs', name, '--lines', String(lines), '--follow', '--no-color'],
         {
           cwd: projectPath,
           env: { ...process.env, PATH: getEnhancedPath() },

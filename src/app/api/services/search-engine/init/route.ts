@@ -23,9 +23,13 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       )
     }
 
-    const result = await executeNselfCommand('service', ['search', 'init', `--engine=${engine}`], {
-      timeout: 120000,
-    })
+    const result = await executeNselfCommand(
+      'config',
+      ['services', 'search', 'init', `--engine=${engine}`],
+      {
+        timeout: 120000,
+      }
+    )
 
     if (!result.success) {
       return NextResponse.json(

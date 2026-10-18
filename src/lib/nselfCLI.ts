@@ -1,7 +1,8 @@
 import { execFile, spawn } from 'child_process'
 import { promisify } from 'util'
 import { getErrorMessage } from './errors/utils'
-import { findNselfPathSync, getEnhancedPath } from './nself-path'
+import { findNselfPathSync, getNselfChildEnv } from './nself-path'
+import { ALLOWED_COMMANDS, STREAM_COMMANDS, canonicalizeArgv } from './nselfCanon'
 import { getProjectPath } from './paths'
 
 const execFileAsync = promisify(execFile)
@@ -33,66 +34,16 @@ export async function executeNselfCommand(
   options: Record<string, any> = {}
 ): Promise<CLIResult> {
   try {
-    // Validate command
-    const allowedCommands = [
-      // Core lifecycle
-      'init',
-      'build',
-      'start',
-      'stop',
-      'restart',
-      'reset',
-      'status',
-      'logs',
-      'doctor',
-      // Data management
-      'backup',
-      'restore',
-      'db',
-      // Configuration & environment
-      'config',
-      'secrets',
-      'ssl',
-      'apply',
-      'export',
-      // Deployment & infrastructure
-      'deploy',
-      'scale',
-      'infra',
-      // Monitoring & health
-      'monitor',
-      'health',
-      'metrics',
-      'perf',
-      // Service & container management
-      'service',
-      'exec',
-      // Multi-tenancy & auth
-      'tenant',
-      'auth',
-      // Developer tools
-      'dev',
-      'plugin',
-      'bench',
-      'completion',
-      // Audit & history
-      'history',
-      'audit',
-      // User management
-      'user',
-      // Info & utility
-      'update',
-      'version',
-      'help',
-      'urls',
-    ]
+    // Old spellings of moved commands become canonical before validation
+    const argv = canonicalizeArgv(command, args)
 
-    if (!allowedCommands.includes(command)) {
+    // Validate command
+    if (!ALLOWED_COMMANDS.includes(argv.command)) {
       throw new Error(`Invalid nself command: ${command}`)
     }
 
     // Build arguments safely
-    const cmdArgs = [command, ...args.filter((arg) => arg && typeof arg === 'string')]
+    const cmdArgs = [argv.command, ...argv.args.filter((arg) => arg && typeof arg === 'string')]
 
     // Execute with timeout using execFile for safety
     const timeout = options.timeout || 60000 // Increased default timeout
@@ -102,7 +53,7 @@ export async function executeNselfCommand(
       timeout,
       maxBuffer: 10 * 1024 * 1024, // 10MB
       cwd, // Run in project directory
-      env: { ...process.env, PATH: getEnhancedPath(), ...options.env },
+      env: getNselfChildEnv(options.env), // NSELF_JSON_LEGACY=1 unless the caller sets it
     })
 
     return {
@@ -138,18 +89,18 @@ export function streamNselfCommand(
   onError?: (error: string) => void,
   onClose?: (code: number) => void
 ): () => void {
-  // Validate command
-  const allowedCommands = ['logs', 'monitor', 'watch', 'tail', 'health', 'metrics']
+  const argv = canonicalizeArgv(command, args)
 
-  if (!allowedCommands.includes(command)) {
+  // Validate command
+  if (!STREAM_COMMANDS.includes(argv.command)) {
     throw new Error(`Invalid streaming command: ${command}`)
   }
 
   const cwd = getWorkingDirectory()
   const nselfPath = getNselfCliPath()
-  const child = spawn(nselfPath, [command, ...args], {
+  const child = spawn(nselfPath, [argv.command, ...argv.args], {
     cwd,
-    env: { ...process.env, PATH: getEnhancedPath() },
+    env: getNselfChildEnv(),
   })
 
   child.stdout.on('data', (data) => {
@@ -308,7 +259,7 @@ export async function nselfMonitor(action?: 'enable' | 'disable' | 'status'): Pr
 
 export async function nselfUrls(format?: 'json' | 'table'): Promise<CLIResult> {
   const args = format ? ['--format', format] : []
-  return executeNselfCommand('urls', args)
+  return executeNselfCommand('status', ['urls', ...args])
 }
 
 export async function nselfApply(configPath?: string): Promise<CLIResult> {
@@ -322,7 +273,7 @@ export async function nselfSecrets(
 ): Promise<CLIResult> {
   const args: string[] = [action]
   if (service) args.push(service)
-  return executeNselfCommand('secrets', args)
+  return executeNselfCommand('config', ['secrets', ...args])
 }
 
 export async function nselfExport(
@@ -340,7 +291,7 @@ export async function nselfScale(service: string, replicas: number): Promise<CLI
 
 export async function nselfHealth(service?: string): Promise<CLIResult> {
   const args = service ? [service] : ['--all']
-  return executeNselfCommand('health', args)
+  return executeNselfCommand('status', ['health', ...args])
 }
 
 // Deployment commands

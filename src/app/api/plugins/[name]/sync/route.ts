@@ -39,7 +39,7 @@ export async function POST(request: NextRequest, context: RouteContext): Promise
 
     logger.info('Triggering plugin sync', { name })
 
-    const { stdout, stderr } = await execAsync(`${nselfPath} plugin ${name} sync`, {
+    const { stdout, stderr } = await execAsync(`${nselfPath} config plugins ${name} sync`, {
       cwd: projectPath,
       env: { ...process.env, PATH: getEnhancedPath() },
       timeout: 300000, // 5 minute timeout for sync operations

@@ -11,7 +11,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   if (authError) return authError
 
   try {
-    const result = await executeNselfCommand('service', ['mlflow', 'init'])
+    const result = await executeNselfCommand('config', ['services', 'mlflow', 'init'])
 
     if (!result.success) {
       return NextResponse.json(

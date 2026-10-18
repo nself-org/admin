@@ -44,7 +44,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       args.push(`--port=${port}`)
     }
 
-    const result = await executeNselfCommand('service', args)
+    const result = await executeNselfCommand('config', ['services', ...args])
 
     if (!result.success) {
       return NextResponse.json(

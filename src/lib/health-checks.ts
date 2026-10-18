@@ -7,7 +7,7 @@ import { getProjectPath } from './paths'
 const execAsync = promisify(exec)
 
 /**
- * A single installed plugin as reported by `nself plugin list --json`.
+ * A single installed plugin as reported by `nself config plugins list --json`.
  */
 export interface PluginStatus {
   name: string
@@ -103,7 +103,7 @@ export async function getActiveEnv(): Promise<'local' | 'staging' | 'prod'> {
 }
 
 /**
- * Raw shape returned by `nself plugin list --json`.
+ * Raw shape returned by `nself config plugins list --json`.
  * We accept an array of objects with at least name/version and optionally
  * enabled/tier fields to guard against CLI version differences.
  */
@@ -122,14 +122,14 @@ function isRawPluginEntry(value: unknown): value is RawPluginEntry {
 }
 
 /**
- * Run `nself plugin list --json` and return normalised plugin status array.
+ * Run `nself config plugins list --json` and return normalised plugin status array.
  * Returns an empty array if the CLI is unavailable or returns unparseable output.
  */
 export async function getPluginStatus(): Promise<PluginStatus[]> {
   try {
     const projectPath = getProjectPath()
 
-    const { stdout } = await execAsync('nself plugin list --json', {
+    const { stdout } = await execAsync('nself config plugins list --json', {
       env: { ...process.env, PATH: getEnhancedPath() },
       cwd: projectPath,
       timeout: 10_000,

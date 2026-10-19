@@ -63,12 +63,17 @@
   "pnpm": {
     "//auditConfig": [
       "GHSA-528h-pc64-c93x: stream-json 1.9.1 via minio 8.0.7 (moderate DoS from the operator's own object store; the 3.x override breaks minio). Debt D-0202 (D-HYG-admin-stream-json), re-entry: P8 admin rewrite or a minio release on stream-json 3.",
-      "GHSA-vfj7-8cjw-p6xm: braces <=3.0.3, no patched release exists; reached via direct dep fast-glob > micromatch (build-time MDX search glob over fixed repo paths in src/mdx/search.mjs) and dev eslint-config-next. Lead decision, HYG EPIC Invalidations. Review date 2026-11-01."
+      "GHSA-hqr4-qq8f-hg3x and GHSA-mjw6-4jj6-33hc: same stream-json 1.9.1 via minio 8.0.7 (JSONC parser rescan DoS, Assembler prototype pollution); fix is stream-json 3.6.0, but minio 8.0.7 (latest) requires stream-json/jsonl/Parser.js which 3.x does not export. Debt D-0202, re-entry: a minio release on stream-json 3 or P8 admin rewrite.",
+      "GHSA-vfj7-8cjw-p6xm: braces <=3.0.3, no patched release exists; reached via direct dep fast-glob > micromatch (build-time MDX search glob over fixed repo paths in src/mdx/search.mjs) and dev eslint-config-next. Lead decision, HYG EPIC Invalidations. Review date 2026-11-01.",
+      "GHSA-hp3w-g68c-fv3c: sprintf-js 1.0.3 (<=1.1.3, no patched release), dev-only via jest > babel-plugin-istanbul > @istanbuljs/load-nyc-config > js-yaml > argparse; never in the runtime image. Debt D-0207, review date 2026-11-01."
     ],
     "auditConfig": {
       "ignoreGhsas": [
         "GHSA-528h-pc64-c93x",
-        "GHSA-vfj7-8cjw-p6xm"
+        "GHSA-hqr4-qq8f-hg3x",
+        "GHSA-mjw6-4jj6-33hc",
+        "GHSA-vfj7-8cjw-p6xm",
+        "GHSA-hp3w-g68c-fv3c"
       ]
     },
     "onlyBuiltDependencies": [

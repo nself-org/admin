@@ -138,10 +138,10 @@ export const BUS_FACTOR_ACCOUNTS: readonly BusFactorAccount[] = [
   },
   {
     id: 'pub-dev',
-    label: 'pub.dev (Flutter SDK)',
+    label: 'pub.dev (Dart packages)',
     category: 'pub-dev',
     verificationMethod: 'manual',
-    description: 'Supply-chain — Flutter SDK publishing.',
+    description: 'Supply-chain — Dart package publishing.',
   },
   {
     id: 'license-keypair',

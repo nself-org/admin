@@ -206,7 +206,7 @@
     "ua-parser-js": "^1.0.41",
     "unist-util-filter": "^5.0.1",
     "unist-util-visit": "^5.1.0",
-    "zod": "^4.3.6",
+    "zod": "^4.6.7",
     "zustand": "^5.0.12",
     "zxcvbn": "^4.4.2"
   },

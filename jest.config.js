@@ -110,7 +110,7 @@ const nextJestConfig = createJestConfig(customJestConfig)
 module.exports = async () => {
   const config = await nextJestConfig()
   config.transformIgnorePatterns = config.transformIgnorePatterns.map((pattern) =>
-    pattern.split('(geist|').join('(decode-uri-component|geist|'),
+    pattern.split('(geist|').join('(decode-uri-component|geist|')
   )
   return config
 }

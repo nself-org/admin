@@ -37,6 +37,7 @@ WORKDIR /app
 
 # Copy package files first for better layer caching
 COPY package.json pnpm-lock.yaml ./
+COPY patches ./patches
 # Copy vendored local workspace packages (referenced in pnpm-lock.yaml as type:directory)
 COPY packages ./packages
 

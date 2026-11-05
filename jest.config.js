@@ -52,6 +52,7 @@ const esmPackages = [
   'micromark',
   'mdast-util-gfm',
   'micromark-extension-gfm',
+  'decode-uri-component',
 ]
 
 /** @type {import('jest').Config} */
@@ -62,7 +63,10 @@ const customJestConfig = {
     '^@/(.*)$': '<rootDir>/src/$1',
   },
   // Allow next/jest SWC to transpile ESM-only unified/rehype packages
-  transformIgnorePatterns: [`/node_modules/(?!(${esmPackages.join('|')})/)`],
+  // decode-uri-component is ESM and pnpm nests it under .pnpm/<pkg>@<ver>/node_modules/.
+  transformIgnorePatterns: [
+    `/node_modules/(?!(${esmPackages.join('|')})/|\\.pnpm/decode-uri-component@[^/]+/node_modules/)`,
+  ],
   testMatch: ['**/__tests__/**/*.test.ts?(x)', '**/*.test.ts?(x)'],
   // Ticket worktrees live under .claude/worktrees; without this a run in the
   // main checkout also runs every worktree's copy of the suite.
@@ -98,4 +102,15 @@ const customJestConfig = {
   },
 }
 
-module.exports = createJestConfig(customJestConfig)
+const nextJestConfig = createJestConfig(customJestConfig)
+
+// next/jest's own ignore patterns skip every pnpm-nested package except a short
+// allowlist (geist, next/dist/...). Add decode-uri-component to it so the ESM
+// build is transformed, as Metro/Node hand it to query-string at runtime.
+module.exports = async () => {
+  const config = await nextJestConfig()
+  config.transformIgnorePatterns = config.transformIgnorePatterns.map((pattern) =>
+    pattern.split('(geist|').join('(decode-uri-component|geist|')
+  )
+  return config
+}

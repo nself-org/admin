@@ -37,6 +37,7 @@ WORKDIR /app
 
 # Copy package files first for better layer caching
 COPY package.json pnpm-lock.yaml ./
+COPY patches ./patches
 # Copy vendored local workspace packages (referenced in pnpm-lock.yaml as type:directory)
 COPY packages ./packages
 
@@ -58,6 +59,7 @@ WORKDIR /app
 # Copy dependencies from deps stage
 COPY --from=deps /app/node_modules ./node_modules
 COPY package.json pnpm-lock.yaml ./
+COPY patches ./patches
 # Copy vendored local workspace packages (required for pnpm prune --prod to resolve linked deps)
 COPY packages ./packages
 
